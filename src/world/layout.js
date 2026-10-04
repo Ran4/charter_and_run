@@ -49,13 +49,15 @@ export const MAP = [
   ['fyren',     'playa',     'playa',     'playa',     'playa',     'hamn',      'playa'],     // j=6 sea
 ];
 
-// Minimap lot colours per MAP type (WP-B tunes them).
+// Minimap lot colours per MAP type (WP-B): whitewash and pale sand for the town, warm sand for
+// the resort centres, greens for fields and golf, beach sand on the coast, the marina blue.
+// Buildings (white), pools (blue) are drawn on top from the collision blocks.
 export const BLOCK_MAP_COLORS = {
-  flamenco: '#f4efe6', suntrip: '#f2d98a', kasbah: '#d8b48a', cita: '#c8c0b0', plaza: '#e8d8b0',
-  marknad: '#e0b878', kyrka: '#f4f0e6', bensin: '#9a9a96', guardia: '#c9a26b', tomat: '#7aa04a',
-  grisfest: '#b89a6a', fataga: '#c9a26b', golf: '#7cc456', bungalow: '#e8dcc4', bygge: '#c09a64',
-  dromplan: '#b8a07a', flygplats: '#a8a8a0', dyner: '#e8cf98', fyren: '#e8cf98', playa: '#e8cf98',
-  hamn: '#5aa0c8', bungalowR: '#e6d6b8', lagenhet: '#dccbb0',
+  flamenco: '#f6f1e6', suntrip: '#f4d77e', kasbah: '#e4bc8e', cita: '#d6cdbc', plaza: '#ecd9ae',
+  marknad: '#ecc488', kyrka: '#f2ede2', bensin: '#b0aea6', guardia: '#d8bf86', tomat: '#8fb05a',
+  grisfest: '#c9a774', fataga: '#d9be92', golf: '#7cc456', bungalow: '#ead9bf', bygge: '#c8ad84',
+  dromplan: '#c4ab84', flygplats: '#b9b8b0', dyner: '#efd6a0', fyren: '#e9d29e', playa: '#f1dba6',
+  hamn: '#7ab4d4', bungalowR: '#dcc0a0', lagenhet: '#ddcfb6',
 };
 export const blockType = (i, j) => MAP[j][i];
 
