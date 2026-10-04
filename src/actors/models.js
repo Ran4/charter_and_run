@@ -25,7 +25,7 @@ const NO_SUIT = { suit: null, tie: null, bowtie: null, coat: null, vest: null };
 
 export const CHARS = {
   // "Giraffen": tall, thin, long neck, round brown glasses, a cowlick. Base look = kostym.
-  stig: A({ name: 'Stig-Helmer', scale: 1.1, legK: 1.12, neckK: 1.9, armK: 1.06, wide: 0.8, skin: 0xf1c9a5, hair: 'swoop', hairC: 0x2a1e18, tuft: true, brows: 0x2a1e18,
+  stig: A({ name: 'Stig-Helmer', scale: 1.12, legK: 1.12, neckK: 1.9, armK: 1.06, wide: 0.85, skin: 0xf1c9a5, hair: 'swoop', hairC: 0x2a1e18, tuft: true, brows: 0x2a1e18,
     mustache: 0x2a1e18, stache: 'thin', glasses: 0x6b4a2a, nose: 'long', shoes: 0x3a2618,
     shirt: 0x4a3426, longSleeves: true, suit: 0xe8e0d0, tie: 0x7a2a2a, pants: 0x3a2a1e, voice: 250, ring: '#4a9ad6',
     outfits: {
@@ -221,22 +221,27 @@ function headParts(g, d, R, lo = false) {
   }
 }
 
+// Hair domes are tipped back so their front rim (the hairline) sits at ~0.65 R, clear of the
+// eyes (whites up to 0.45 R) and the brows (~0.58 R): a flatter dome would cover the eyes, and the
+// eyes' outline hulls would show through the hair as black scribbles.
+const HAIR_TILT = -0.62;
+
 function hair(g, d, R) {
   const c = d.hairC;
   const hatted = !!d.hat;
   switch (d.hat === 'scarf' ? 'none' : d.hair) {
     case 'swoop':
-      g.add(PRIM.dome(), c, mat(0, R * 0.02, -R * 0.05, -0.18, 0, 0, R * 2.14, R * 2.3, R * 2.1));
-      // The side-swept fringe and a flat back of the head.
-      g.sphere(c, R * 0.25, R * 0.78, R * 0.52, R * 1.15, R * 0.42, R * 0.72, 0.35, 0, -0.38);
-      g.sphere(c, -R * 0.38, R * 0.72, R * 0.48, R * 0.66, R * 0.38, R * 0.62, 0.2, 0, 0.3);
+      g.add(PRIM.dome(), c, mat(0, R * 0.02, -R * 0.05, HAIR_TILT, 0, 0, R * 2.14, R * 2.3, R * 2.1));
+      // The side-swept fringe (above the brows) and a flat back of the head.
+      g.sphere(c, R * 0.25, R * 0.86, R * 0.5, R * 1.15, R * 0.36, R * 0.7, 0.35, 0, -0.38);
+      g.sphere(c, -R * 0.38, R * 0.8, R * 0.46, R * 0.66, R * 0.32, R * 0.6, 0.2, 0, 0.3);
       for (const s of [-1, 1]) g.box(c, s * R * 0.92, R * 0.2, R * 0.08, R * 0.16, R * 0.5, R * 0.4);
       break;
     case 'page':
       // A pageboy bob with a fringe: crown, rounded sides to the jaw, bangs over the brows.
-      g.add(PRIM.dome(), c, mat(0, R * 0.04, -R * 0.04, -0.12, 0, 0, R * 2.2, R * 2.36, R * 2.16));
+      g.add(PRIM.dome(), c, mat(0, R * 0.04, -R * 0.04, HAIR_TILT, 0, 0, R * 2.2, R * 2.36, R * 2.16));
       g.sphere(c, 0, -R * 0.12, -R * 0.26, R * 2.34, R * 1.72, R * 2.0, 0, 0, 0, 16);
-      g.sphere(c, 0, R * 0.66, R * 0.62, R * 1.82, R * 0.42, R * 0.6, 0.35);
+      g.sphere(c, 0, R * 0.78, R * 0.58, R * 1.76, R * 0.3, R * 0.54, 0.35);
       for (const s of [-1, 1]) g.sphere(c, s * R * 0.92, -R * 0.42, R * 0.18, R * 0.42, R * 0.6, R * 0.62);
       break;
     case 'curly':
@@ -258,8 +263,8 @@ function hair(g, d, R) {
       break;
     }
     case 'slick':
-      g.add(PRIM.dome(), c, mat(0, R * 0.08, -R * 0.08, -0.1, 0, 0, R * 2.14, R * 2.1, R * 2.12));
-      if (!hatted) g.sphere(c, 0, R * 0.82, R * 0.42, R * 1.4, R * 0.42, R * 0.8, 0.4);
+      g.add(PRIM.dome(), c, mat(0, R * 0.08, -R * 0.08, HAIR_TILT, 0, 0, R * 2.14, R * 2.1, R * 2.12));
+      if (!hatted) g.sphere(c, 0, R * 0.88, R * 0.4, R * 1.4, R * 0.38, R * 0.78, 0.4);
       for (const s of [-1, 1]) g.box(c, s * R * 0.93, R * 0.18, R * 0.1, R * 0.14, R * 0.46, R * 0.4);
       break;
     case 'balding':
@@ -269,11 +274,11 @@ function hair(g, d, R) {
       if (!hatted) for (let k = 0; k < 3; k++) g.box(c, (k - 1) * R * 0.18, R * 1.06, R * 0.1, R * 0.04, R * 0.04, R * 1.1, 0, 0, (k - 1) * 0.2);
       break;
     case 'bun':
-      g.add(PRIM.dome(), c, mat(0, R * 0.05, -R * 0.05, -0.15, 0, 0, R * 2.16, R * 2.24, R * 2.14));
+      g.add(PRIM.dome(), c, mat(0, R * 0.05, -R * 0.05, HAIR_TILT, 0, 0, R * 2.16, R * 2.24, R * 2.14));
       if (!hatted) { g.sphere(c, 0, R * 0.95, -R * 0.62, R * 0.86); g.box(shade(c, 0.8), 0, R * 0.62, -R * 0.72, R * 0.6, R * 0.08, R * 0.2); }
       break;
     case 'long':
-      g.add(PRIM.dome(), c, mat(0, R * 0.02, -R * 0.05, -0.15, 0, 0, R * 2.16, R * 2.24, R * 2.14));
+      g.add(PRIM.dome(), c, mat(0, R * 0.02, -R * 0.05, HAIR_TILT, 0, 0, R * 2.16, R * 2.24, R * 2.14));
       g.sphere(c, 0, -R * 0.42, -R * 0.42, R * 2.12, R * 1.8, R * 1.2);
       for (const s of [-1, 1]) g.sphere(c, s * R * 0.9, -R * 0.45, R * 0.05, R * 0.42, R * 1.4, R * 0.7);
       break;
@@ -292,7 +297,7 @@ function hair(g, d, R) {
       if (d.thin) {
         g.add(PRIM.dome(), c, mat(0, R * 0.04, -R * 0.2, -0.45, 0, 0, R * 2.1, R * 1.9, R * 2.06));
         for (let k = 0; k < 4; k++) g.box(c, (k - 1.5) * R * 0.16, R * 1.05, R * 0.25, R * 0.04, R * 0.04, R * 0.6, 0, 0, (k - 1.5) * 0.15);
-      } else g.add(PRIM.dome(), c, mat(0, R * 0.12, -R * 0.06, -0.12, 0, 0, R * 2.12, R * 1.9, R * 2.1));
+      } else g.add(PRIM.dome(), c, mat(0, R * 0.1, -R * 0.08, HAIR_TILT, 0, 0, R * 2.14, R * 2.0, R * 2.12));
       for (const s of [-1, 1]) g.box(c, s * R * 0.92, R * 0.2, R * 0.05, R * 0.14, R * 0.4, R * 0.36);
       break;
     case 'cap':   // legacy: a plain cap in the hair colour
@@ -321,10 +326,11 @@ function hat(g, d, R) {
         g.sphere(shade(c, 0.85), 0, R * 0.58, R * 0.96, R * 1.3, R * 0.16, R * 0.6, 0.35);
         g.sphere(c, 0, R * 1.0, R * 0.0, R * 0.22);
       } else {
-        g.add(PRIM.dome(), c, mat(0, R * 0.32, -R * 0.02, -0.12, 0, 0, R * 2.26, R * 1.86, R * 2.26));
-        g.cyl(c, 0, R * 0.36, R * 1.12, R * 0.72, R * 0.07, 14, 0.18, 0, 0);
-        g.box(c, 0, R * 0.36, R * 0.98, R * 1.3, R * 0.07, R * 0.5, 0, 0.18);
-        g.sphere(dark, 0, R * 1.24, 0, R * 0.2);
+        // Tipped back so the peak sits on the forehead, above the brows, and the eyes stay visible.
+        g.add(PRIM.dome(), c, mat(0, R * 0.42, -R * 0.02, -0.3, 0, 0, R * 2.26, R * 1.86, R * 2.26));
+        g.cyl(c, 0, R * 0.7, R * 1.1, R * 0.72, R * 0.07, 14, 0.18, 0, 0);
+        g.box(c, 0, R * 0.7, R * 0.96, R * 1.3, R * 0.07, R * 0.5, 0, 0.18);
+        g.sphere(dark, 0, R * 1.3, -R * 0.12, R * 0.2);
       }
       break;
     case 'trilby':
@@ -344,7 +350,11 @@ function hat(g, d, R) {
       // Guardia Civil tricornio: glossy black crown, a turned-up front brim and the flat back wall.
       g.add(PRIM.dome(), c, mat(0, R * 0.48, -R * 0.04, 0, 0, 0, R * 2.2, R * 1.6, R * 2.16));
       g.sphere(c, 0, R * 0.56, R * 0.55, R * 2.5, R * 0.14, R * 1.3, -0.28);
-      g.sphere(c, 0, R * 1.08, -R * 0.82, R * 2.3, R * 1.3, R * 0.26, -0.18);
+      // The flat back wall: a wide plate with a straight top and rounded corners that rises well
+      // above the crown, so the hat reads as a tricornio from the front and three-quarter too.
+      g.box(c, 0, R * 0.975, -R * 0.8, R * 2.5, R * 0.85, R * 0.16);
+      g.box(c, 0, R * 1.6, -R * 0.8, R * 1.8, R * 0.3, R * 0.16);
+      for (const s of [-1, 1]) g.cyl(c, s * R * 0.9, R * 1.4, -R * 0.8, R * 0.35, R * 0.16, 12, Math.PI / 2, 0, 0);
       g.box(0x3a3a3a, 0, R * 0.58, R * 0.98, R * 0.8, R * 0.05, R * 0.05, 0, -0.28);
       break;
     case 'bucket':
@@ -369,10 +379,10 @@ function hat(g, d, R) {
     }
     case 'scarf':
       // Headscarf: covers the top and the back, side flaps to the jaw, a knot under the chin.
-      g.add(PRIM.dome(), c, mat(0, -R * 0.02, -R * 0.12, -0.55, 0, 0, R * 2.3, R * 2.36, R * 2.26));
+      g.add(PRIM.dome(), c, mat(0, -R * 0.02, -R * 0.12, -0.72, 0, 0, R * 2.3, R * 2.36, R * 2.26));
       for (const s of [-1, 1]) g.sphere(c, s * R * 0.84, -R * 0.38, R * 0.08, R * 0.5, R * 1.1, R * 0.86);
       g.sphere(c, 0, -R * 1.02, R * 0.38, R * 0.36, R * 0.26, R * 0.3);
-      g.box(shade(c, 0.8), 0, R * 0.58, R * 0.78, R * 1.7, R * 0.12, R * 0.2, 0, 0.3);
+      g.box(shade(c, 0.8), 0, R * 0.7, R * 0.74, R * 1.6, R * 0.12, R * 0.2, 0, 0.3);
       break;
     default:
   }
@@ -1109,7 +1119,6 @@ export function randomPed(r = Math.random, opts = {}) {
     } else {
       d.shirt = pick(LOUD, r); d.longSleeves = r() < 0.15; d.pants = pick(T_PANTS, r);
       if (r() < 0.3) { d.print = pick(HAWAII, r); d.printStyle = 'floral'; d.collar = true; }
-      if (r() < 0.55) d.shorts = true;
       if (r() < 0.35) { d.hat = r() < 0.5 ? 'sunhat' : 'bucket'; d.hatC = d.hat === 'bucket' ? pick([0xf4f1e8, 0xf7c31b, 0x4a6a9a], r) : 0xe8cf8a; }
       if (r() < 0.1) d.held = 'camera';
       if (r() < 0.25) d.shades = 0x2a2a2a;
@@ -1117,7 +1126,7 @@ export function randomPed(r = Math.random, opts = {}) {
     if (woman) {
       d.hair = pick(['page', 'long', 'bun', 'curly', 'curlyLong'], r);
       d.lashes = true;
-      if (!flight && r() < 0.5) { d.dress = pick(DRESS, r); d.shirt = d.dress; d.shorts = false; if (r() < 0.5) { d.print = [0xffffff]; d.printStyle = 'dots'; } }
+      if (!flight && r() < 0.5) { d.dress = pick(DRESS, r); d.shirt = d.dress; if (r() < 0.5) { d.print = [0xffffff]; d.printStyle = 'dots'; } }
       if (flight && r() < 0.4) d.dress = pick(TRAVEL, r);
       d.shoes = pick([0xf4f0e6, 0x8a5a3a, 0xd8321e], r);
     } else {
@@ -1126,6 +1135,8 @@ export function randomPed(r = Math.random, opts = {}) {
       if (r() < 0.15) d.sideburns = true;
       d.shoes = pick([0x2a2a2a, 0x8a5a3a, 0xf4f0e6], r);
     }
+    // §6.7 shorts 55 %: of the island tourists not in a dress (a sundress already shows the legs).
+    if (!flight && !d.dress && r() < 0.55) d.shorts = true;
     if (!d.shades && r() < 0.2) d.glasses = pick([0x2a2a2a, 0x8a5a2a, 0xc8a040], r);
   }
   return d;
@@ -1134,8 +1145,6 @@ export function randomPed(r = Math.random, opts = {}) {
 // A seated bust (torso + arms + head) as one merged, vertex-coloured geometry: origin at the torso
 // bottom, +z forward. The cabin merges ~80 of these into one static mesh.
 export function buildBustGeo(d) {
-  // Seated in the plane, the passengers have taken their sun hats off (a random ped only).
-  if (d.name === 'ped' && (d.hat === 'sunhat' || d.hat === 'bucket')) d = { ...d, hat: null };
   const g = bustBuilder(d);
   const s = d.scale || 1, R = 0.25 * s, torsoH = 0.66 * s;
   // A closed, smiling mouth.
@@ -1144,6 +1153,9 @@ export function buildBustGeo(d) {
 }
 
 function bustBuilder(d) {
+  // Seated in the plane or a car, a random ped has taken the sun hat off (its brim would stick
+  // through a car roof).
+  if (d.name === 'ped' && (d.hat === 'sunhat' || d.hat === 'bucket')) d = { ...d, hat: null };
   const s = d.scale || 1, wide = d.wide || 1;
   const R = 0.25 * s, torsoH = 0.66 * s, torsoW = 0.5 * s * wide, torsoD = 0.3 * s * (wide > 1 ? 1 + (wide - 1) * 0.8 : wide);
   const T = { H: torsoH, W: torsoW, D: torsoD, s };

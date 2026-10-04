@@ -4,6 +4,7 @@
 //              seated busts, and a sheet of the dialogue portraits.
 //   cars:      every CAR_TYPES type from two sides (with driver busts), close-ups of the special
 //              liveries, every COLLECT_KINDS mesh (all 7 pryl variants) and every Rabbit mesh.
+//   heads:     a light check of the faces: one head per hair style and hat, plus the portraits.
 // Everything is posed on a "photo studio" (floor + backdrop) built 60 m above the plaza, with a
 // fixed cutaway camera; the HUD is hidden for the shots. Models are animated by a frame hook.
 import { check } from '../lib.mjs';
@@ -90,23 +91,50 @@ async function installStudio() {
   return true;
 }
 
-// A row of characters, then a shot. list: [{ def | key, outfit?, flags?, label? }].
+// A row of characters, then a shot. list: [{ def | key, outfit?, flags?, label?, yaw? }].
 async function row(T, name, list, { gap = 1.7, dist = 0, h = 1.6, look = 1.05, yaw = 0 } = {}) {
-  // Frame the whole row (the cutaway camera settles at fov 50).
-  dist = Math.max(dist, ((list.length - 1) * gap / 2 + 1.0) / (Math.tan(25 * Math.PI / 180) * 16 / 9));
+  // Frame the whole row (the cutaway camera settles at fov 50); a short row is framed like one of
+  // five, so a lone character is still seen head to toe.
+  const span = Math.max(list.length - 1, dist ? 0 : 4);
+  dist = Math.max(dist, (span * gap / 2 + 1.0) / (Math.tan(25 * Math.PI / 180) * 16 / 9));
   await T.ev((list, gap, dist, h, look, yaw) => {
     const cs = window.__cs;
     cs.clear();
     const n = list.length;
     list.forEach((e, i) => {
       const def = e.def || cs.M.outfitDef(e.key, e.outfit || null);
-      cs.char(def, (i - (n - 1) / 2) * gap, 0, yaw, e.flags || {}, e.label ?? (e.key ? e.key + (e.outfit ? ' · ' + e.outfit : '') : ''));
+      cs.char(def, (i - (n - 1) / 2) * gap, 0, e.yaw ?? yaw, e.flags || {}, e.label ?? (e.key ? e.key + (e.outfit ? ' · ' + e.outfit : '') : ''));
     });
     cs.cam(0, h, dist, 0, look, 0);
   }, list, gap, dist, h, look, yaw);
   await T.frames(36);
   await T.ev(() => window.__cs.labels());
   await T.shot(name);
+}
+
+// The dialogue portraits (hud.portraits) on one sheet.
+async function portraits(T) {
+  await T.ev(async () => {
+    const { hud } = await import('/src/game/hud.js');
+    window.__cs.clear();
+    const sheet = document.createElement('div');
+    sheet.id = 'portraitSheet';
+    sheet.className = 'cs-keep';
+    sheet.style.cssText = 'position:fixed;inset:0;z-index:60;background:#2a86e0;display:flex;flex-wrap:wrap;align-content:flex-start;gap:4px;padding:6px;visibility:visible';
+    for (const k of window.__cs.M.CAST) {
+      const c = hud.portraits[k];
+      if (!c) continue;
+      const w = document.createElement('div');
+      w.style.cssText = 'width:140px;text-align:center;font:bold 11px Nunito, sans-serif;color:#fff8e6';
+      const img = new Image(); img.src = c; img.style.cssText = 'width:110px;height:110px;border-radius:50%;background:#fff8e6';
+      w.appendChild(img); w.appendChild(document.createTextNode(k));
+      sheet.appendChild(w);
+    }
+    document.body.appendChild(sheet);
+  });
+  await T.frames(4);
+  await T.shot('cast_portraits');
+  await T.ev(() => document.getElementById('portraitSheet')?.remove());
 }
 
 const FLAGS = ['wings', 'cupUp', 'push', 'hold', 'flail', 'oath', 'dance', 'laugh', 'slump', 'shoeOff', 'mirror', 'film', 'giraffe', 'butterKnife', 'carryOver'];
@@ -202,33 +230,33 @@ export const SCENARIOS = {
     await T.frames(10);
     await T.ev(() => window.__cs.labels(0.3));
     await T.shot('cast_busts');
-    // The dialogue portraits (hud.portraits) on one sheet.
-    await T.ev(async () => {
-      const { hud } = await import('/src/game/hud.js');
-      window.__cs.clear();
-      const sheet = document.createElement('div');
-      sheet.id = 'portraitSheet';
-      sheet.className = 'cs-keep';
-      sheet.style.cssText = 'position:fixed;inset:0;z-index:60;background:#2a86e0;display:flex;flex-wrap:wrap;align-content:flex-start;gap:4px;padding:6px;visibility:visible';
-      for (const k of window.__cs.M.CAST) {
-        const c = hud.portraits[k];
-        if (!c) continue;
-        const w = document.createElement('div');
-        w.style.cssText = 'width:140px;text-align:center;font:bold 11px Nunito, sans-serif;color:#fff8e6';
-        const img = new Image(); img.src = c; img.style.cssText = 'width:110px;height:110px;border-radius:50%;background:#fff8e6';
-        w.appendChild(img); w.appendChild(document.createTextNode(k));
-        sheet.appendChild(w);
-      }
-      document.body.appendChild(sheet);
-    });
-    await T.frames(4);
-    await T.shot('cast_portraits');
-    await T.ev(() => document.getElementById('portraitSheet')?.remove());
+    await portraits(T);
     // In place: the cabin with the seated cast and the bust passengers (mission 2, cruise).
     await T.fresh('&mission=2');
     await T.ev(() => { const g = __game, l = window.__lm('cabinRow16'); g.cabin.setPhase('cruise', { instant: true }); g.debugWarp(l.x, l.z + 1.5, Math.PI); });
     await T.frames(40);
     await T.shot('cast_cabin');
+  },
+
+  async heads(T) {
+    await T.fresh(ISLAND);
+    await T.ev(installStudio);
+    // One face per hair style (page, bun, swoop, long, slick, short, balding, curly, afro) and the hats.
+    const close = { gap: 1.25, dist: 3.6, h: 1.75, look: 1.5 };
+    await row(T, 'heads_0', ['majsan', 'siv', 'vardinna', 'vardinna2', 'pa', 'mamma'].map((key) => ({ key })), close);
+    await row(T, 'heads_1', ['stig', 'berra', 'levander', 'robban', 'sulan', 'carmencita'].map((key) => ({ key })), close);
+    await row(T, 'heads_2', ['pax', 'kapten', 'guardia', 'jose', 'ole', 'stadare'].map((key) => ({ key })), close);
+    await row(T, 'heads_3', [{ key: 'hittegods' }, { key: 'kontrollant' }, { key: 'eslov' }, { key: 'berra', outfit: 'sol' }, { key: 'stig', outfit: 'arlanda' }, { key: 'ole', outfit: 'arlanda' }], close);
+    const peds = await T.ev(() => {
+      const { M } = window.__cs, out = [], seen = new Set();
+      let a = 5; const r = () => { a = (a * 16807) % 2147483647; return a / 2147483647; };
+      for (let i = 0; i < 400 && out.length < 6; i++) { const p = M.randomPed(r); const k = p.hair + (p.local ? 'L' : 'T'); if (p.lashes && !p.hat && !seen.has(k)) { seen.add(k); out.push(p); } }
+      return out;
+    });
+    await row(T, 'heads_peds', peds.map((def) => ({ def, label: def.hair })), close);
+    // The tricorn from the front and three-quarter.
+    await row(T, 'heads_guardia', [0, 0.7, 1.5].map((yaw, i) => ({ key: 'guardia', yaw, label: ['front', '3/4', 'side'][i] })), close);
+    await portraits(T);
   },
 
   async cars(T) {
@@ -275,20 +303,40 @@ export const SCENARIOS = {
     await lineup('cars_guardia', ['guardia'], 1, 1, 6.5, 2.8);
     await lineup('cars_grisbil', ['grisbil'], 1, -1, 7, 3.6);
     await lineup('cars_icecream', ['icecream', 'taxi'], 2, 1, 9, 3.0);
-    // Collectibles (every kind; all seven pryl variants) and rabbits.
-    await T.ev(() => {
-      const cs = window.__cs, { P } = cs;
-      cs.clear();
-      const prylar = ['klocka', 'poolpen', 'kalkylator', 'kniv', 'kamera', 'glasogon', 'pung'];
-      prylar.forEach((id, i) => { const c = new P.Collectible(cs.root, 'pryl', id, cs.O.x + (i - 3) * 1.6, cs.O.y + 1.1, cs.O.z + 1.5, { motion: 'none' }); cs.items.push({ obj: c.mesh, label: id, x: (i - 3) * 1.6, z: 1.5, y: 0.2 }); });
-      const kinds = ['fena', 'flaska', 'juice', 'knacke', 'asna', 'vaska', 'giraff'];
-      kinds.forEach((k, i) => { const c = new P.Collectible(cs.root, k, 'x', cs.O.x + (i - 3) * 1.6, cs.O.y + (k === 'fena' ? 0.35 : k === 'flaska' ? 0.15 : 0.6), cs.O.z - 1.0, { motion: 'none', scale: k === 'juice' || k === 'flaska' ? 1.8 : 1 }); c.mesh.rotation.y = k === 'flaska' ? Math.PI / 2 : 0.5; cs.items.push({ obj: c.mesh, label: k, x: (i - 3) * 1.6, z: -1.0, y: -0.1 }); });
-      ['badboll', 'faar', 'blomma', 'gris'].forEach((k, i) => { const r = new P.Rabbit(cs.root, cs.O.x + (i - 1.5) * 2.2, cs.O.z - 3.6, { mesh: k, flee: false }); r.y = cs.O.y; r.mesh.position.set(r.x, cs.O.y, r.z); r.mesh.rotation.y = 0.6; r.update = () => {}; cs.items.push({ obj: r.mesh, label: k, x: (i - 1.5) * 2.2, z: -3.6, y: -0.1 }); });
-      cs.cam(0, 4.2, 8.5, 0, 0.5, -1);
-    });
-    await T.frames(36);
-    await T.ev(() => window.__cs.labels());
-    await T.shot('items');
+    // Collectibles (every kind; all seven pryl variants) and rabbits: one row per group, each
+    // label on the floor under its object, then a close-up of the two printed ones.
+    const items = async (name, list, { gap = 1.7, h = 1.6, look = 0.6, dist = 0 } = {}) => {
+      await T.ev((list, gap, h, look, dist) => {
+        const cs = window.__cs, { P } = cs;
+        cs.clear();
+        const n = list.length;
+        list.forEach((e, i) => {
+          const x = (i - (n - 1) / 2) * gap;
+          let mesh;
+          if (e.rabbit) {
+            const r = new P.Rabbit(cs.root, cs.O.x + x, cs.O.z, { mesh: e.rabbit, flee: false });
+            r.y = cs.O.y; r.mesh.position.set(r.x, cs.O.y, r.z); r.update = () => {};
+            mesh = r.mesh;
+          } else {
+            const c = new P.Collectible(cs.root, e.kind, e.id || 'x', cs.O.x + x, cs.O.y + (e.y ?? 0.6), cs.O.z, { motion: 'none', scale: e.scale || 1 });
+            mesh = c.mesh;
+          }
+          mesh.rotation.y = e.yaw ?? 0.5;
+          cs.items.push({ obj: mesh, label: e.label || e.id || e.kind || e.rabbit, x, z: 0.9, y: 0 });
+        });
+        const d = dist || ((n - 1) * gap / 2 + 1.2) / (Math.tan(25 * Math.PI / 180) * 16 / 9) + 1;
+        cs.cam(0, h, d, 0, look, 0);
+      }, list, gap, h, look, dist);
+      await T.frames(36);
+      await T.ev(() => window.__cs.labels(0));
+      await T.shot(name);
+    };
+    await items('items_prylar', ['klocka', 'poolpen', 'kalkylator', 'kniv', 'kamera', 'glasogon', 'pung'].map((id) => ({ kind: 'pryl', id, y: 0.7 })), { gap: 1.5, h: 1.8, look: 0.8 });
+    await items('items_kinds', ['fena', 'flaska', 'juice', 'knacke', 'asna', 'vaska', 'giraff'].map((kind) => ({
+      kind, y: kind === 'fena' ? 0.35 : kind === 'flaska' ? 0.15 : 0.6, scale: kind === 'juice' || kind === 'flaska' ? 1.8 : 1, yaw: kind === 'flaska' ? Math.PI / 2 : 0.5,
+    })), { gap: 1.7, h: 1.6, look: 0.6 });
+    await items('items_rabbits', ['badboll', 'faar', 'blomma', 'gris'].map((rabbit) => ({ rabbit })), { gap: 2.2, h: 1.8, look: 0.7 });
+    await items('items_close', [{ kind: 'knacke', y: 0.5, yaw: 0.25 }, { kind: 'asna', y: 0.6, yaw: 0.6 }], { gap: 1.3, h: 1.1, look: 0.7, dist: 2.6 });
     const st = await T.ev(() => window.__stats());
     T.log('stats', JSON.stringify(st));
   },

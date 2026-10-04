@@ -688,8 +688,10 @@ export class Car {
     const b = this.driverBust;
     if (b && !b.userData.fit) this.fitBust(b, seat, roof);
     for (const r of this.riders) if (!r.userData.fit && r.position.y > seat + 0.3) this.fitBust(r, seat, roof);
-    for (const ch of this.passengers.concat(this.driver || [])) if (ch.root.parent === this.tilt) ch.root.position.y = seat + 0.12 - ch.model.legLen;
+    for (const ch of this.passengers) this.fitChar(ch, seat);
+    if (this.driver) this.fitChar(this.driver, seat);
   }
+  fitChar(ch, seat) { if (ch.root.parent === this.tilt) ch.root.position.y = seat + 0.12 - ch.model.legLen; }
   fitBust(o, seat, roof) {
     o.userData.fit = true;
     o.position.y = seat;
