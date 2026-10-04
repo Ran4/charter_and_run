@@ -1,24 +1,26 @@
 // Cars: cartoon models with open cabins (so you can see who's driving) and an arcade physics
 // model — bicycle steering, lateral grip, handbrake drifts, ramps, rigid-body bumps.
 
-import { THREE, GeoBuilder, toonMesh, MAT, mat, PRIM } from '../gfx.js';
+import { THREE, GeoBuilder, toonMesh, MAT, mat, PRIM, textCanvas, toonGradient } from '../gfx.js';
 import { queryBlocks, obbVsBlock, obbVsObb, groundAt, topAt, RAMP } from '../world/collision.js';
 import { clamp, damp, pick } from '../util.js';
 import { fx as FX } from '../game/fx.js';
 
 // DESIGN §6.6. Spec flags: tall, bus, bed, icecream, livery ('suntrip' | 'guagua'), guardia, taxi,
-// pigs, build (custom geometry: (spec, color) -> { geo, glass }), noWheels, noSpeedo. (The
-// Bigmouth hearse/muscle geometry branches below are dead code until WP-E removes them.)
-// Car fields set by game code: noEnter (never offered to the player), noExplode (damage -> dead +
-// steam, no fire), isPursuer, riders[] (decorative busts), locked.
+// pigs, build (custom geometry: (spec, color) -> { geo, glass, extras? }), noWheels, noSpeedo,
+// colors (palette for random colours). Car fields set by game code: noEnter (never offered to the
+// player), noExplode (damage -> dead + steam, no fire), isPursuer, riders[] (decorative busts),
+// locked. Physics numbers are Bigmouth's except the ones §6.6 lists.
 const SEDAN = { len: 4.5, wid: 1.9, bodyH: 0.62, cabinH: 0.68, wheelR: 0.36, maxSpeed: 31, accel: 12, grip: 9.5, steer: 0.6, mass: 1400, hp: 100, cabin: [-0.3, 0.12] };
 const PICKUP = { len: 5.1, wid: 2.0, bodyH: 0.75, cabinH: 0.75, wheelR: 0.42, maxSpeed: 29, accel: 11, grip: 8.6, steer: 0.58, mass: 1900, hp: 130, cabin: [-0.05, 0.2], bed: true };
 const BUS = { len: 10.5, wid: 2.5, bodyH: 2.2, cabinH: 0, wheelR: 0.5, maxSpeed: 21, accel: 6.5, grip: 7.5, steer: 0.52, mass: 7000, hp: 300, tall: true, bus: true };
+// The 1979 street: orange, mustard, avocado, brown, beige, white, sky blue, red, bottle green.
+const COLORS = [0xd8321e, 0xe07a2a, 0xd8a62a, 0x7a8a3a, 0x7a4a2a, 0xe0d0a8, 0xf4f1e8, 0x8fb3c9, 0x2f5a3a, 0xf0e2b8, 0xa0703a, 0x3a5a8a, 0xf4f1e8, 0xc8b88a];
 export const CAR_TYPES = {
   sedan: { name: 'Sedan', ...SEDAN },
-  hatch: { name: 'Småbil', len: 3.9, wid: 1.8, bodyH: 0.62, cabinH: 0.7, wheelR: 0.34, maxSpeed: 30, accel: 13, grip: 10.5, steer: 0.64, mass: 1100, hp: 85, cabin: [-0.44, 0.1] },
-  wagon: { name: 'Kombi', len: 4.9, wid: 1.95, bodyH: 0.62, cabinH: 0.72, wheelR: 0.37, maxSpeed: 30, accel: 11.5, grip: 9.2, steer: 0.6, mass: 1500, hp: 115, cabin: [-0.46, 0.12] },
-  van: { name: 'Skåpbil', len: 5.0, wid: 2.05, bodyH: 1.5, cabinH: 0, wheelR: 0.38, maxSpeed: 26, accel: 9.5, grip: 8.2, steer: 0.58, mass: 2100, hp: 140, tall: true },
+  hatch: { name: 'Småbil', len: 3.9, wid: 1.8, bodyH: 0.62, cabinH: 0.7, wheelR: 0.34, maxSpeed: 30, accel: 13, grip: 10.5, steer: 0.64, mass: 1100, hp: 85, cabin: [-0.44, 0.1], hatch: true },
+  wagon: { name: 'Kombi', len: 4.9, wid: 1.95, bodyH: 0.62, cabinH: 0.72, wheelR: 0.37, maxSpeed: 30, accel: 11.5, grip: 9.2, steer: 0.6, mass: 1500, hp: 115, cabin: [-0.46, 0.12], wagon: true },
+  van: { name: 'Skåpbil', len: 5.0, wid: 2.05, bodyH: 1.5, cabinH: 0, wheelR: 0.38, maxSpeed: 26, accel: 9.5, grip: 8.2, steer: 0.58, mass: 2100, hp: 140, tall: true, colors: [0xf4f1e8, 0xe8dcb8, 0xf0ead8, 0xd8cca0] },
   pickup: { name: 'Flakbil', ...PICKUP },
   bus: { name: 'SunTrip-buss', ...BUS, color: 0xf4f4f0, livery: 'suntrip' },
   guagua: { name: 'Guagua', ...BUS, color: 0x2f8a4a, livery: 'guagua' },
@@ -33,98 +35,343 @@ export function registerCarType(key, spec) { CAR_TYPES[key] = spec; }
 // reverse and brake impulses x1.2, drag /1.2. Every drive timer is calibrated against it (§8).
 export const PLAYER_BOOST = 1.2;
 
-const COLORS = [0xd8321e, 0x2f6ad8, 0x3fa04a, 0xf2c12e, 0x8a3ab8, 0xff7ab0, 0xf4f1e8, 0x3a3a44, 0x2fb8a8, 0xff8a3a, 0x8fb3c9, 0xb88a5a];
-
+const INK = 0x1d1426, TRIM = 0x2a2a30, CHROME = 0xd8dce0, TYRE = 0x1d1d22;
 function shade(c, k) { const col = new THREE.Color(c); col.multiplyScalar(k); return col.getHex(); }
+
+// Painted text (liveries, signs): one shared texture + geometry per text, lit like the cars.
+const _txt = {};
+function textPlane(text, w, h, opts = {}) {
+  const key = `${text}|${w}|${h}|${opts.bg}|${opts.fg}|${opts.border}`;
+  let c = _txt[key];
+  if (!c) {
+    const tex = new THREE.CanvasTexture(textCanvas(text, w, h, { border: null, bg: null, scale: 0.78, ...opts }));
+    tex.colorSpace = THREE.SRGBColorSpace;
+    tex.anisotropy = 4;
+    c = _txt[key] = { geo: new THREE.PlaneGeometry(w, h), mat: new THREE.MeshToonMaterial({ map: tex, gradientMap: toonGradient(), transparent: !opts.bg, alphaTest: opts.bg ? 0 : 0.05 }) };
+  }
+  return new THREE.Mesh(c.geo, c.mat);
+}
+// Put a text plane on the car: side = +1 (left, +x), -1 (right, -x), 'front', 'rear'.
+function decal(ctx, text, w, h, side, y, z, opts, x = null) {
+  const p = textPlane(text, w, h, opts);
+  if (side === 'front') { p.position.set(x ?? 0, y, z); }
+  else if (side === 'rear') { p.position.set(x ?? 0, y, z); p.rotation.y = Math.PI; }
+  else { p.position.set(side * (ctx.W / 2 + 0.025), y, z); p.rotation.y = side * Math.PI / 2; }
+  ctx.extras.push(p);
+  return p;
+}
+
+// Round headlight facing +z (or -z), with a chrome rim.
+function lamp(g, x, y, z, r, col, dir = 1) {
+  g.cyl(CHROME, x, y, z, r * 1.2, 0.06, 12, Math.PI / 2);
+  g.cyl(col, x, y, z + dir * 0.03, r, 0.04, 12, Math.PI / 2);
+}
+// Bumpers, lights, grille and plates for a body of length L, width W, bumper height yb.
+function ends(ctx, { yb, lampY, round = true, grille = true, lampR = 0.15, front = ctx.L / 2, rear = -ctx.L / 2 }) {
+  const { g, W } = ctx;
+  g.box(CHROME, 0, yb, front + 0.06, W + 0.06, 0.16, 0.14);
+  g.box(CHROME, 0, yb, rear - 0.06, W + 0.06, 0.16, 0.14);
+  for (const sx of [-1, 1]) {
+    if (round) lamp(g, sx * (W / 2 - 0.3), lampY, front + 0.01, lampR, 0xfff6c0);
+    else { g.box(CHROME, sx * (W / 2 - 0.32), lampY, front + 0.01, 0.42, 0.26, 0.04); g.box(0xfff6c0, sx * (W / 2 - 0.32), lampY, front + 0.03, 0.34, 0.18, 0.04); }
+    g.box(0xf0901e, sx * (W / 2 - 0.12), yb + 0.14, front + 0.02, 0.12, 0.08, 0.04);
+    g.box(0xe8322a, sx * (W / 2 - 0.22), lampY, rear - 0.02, 0.3, 0.18, 0.04);
+    g.box(0xf0901e, sx * (W / 2 - 0.22), lampY - 0.13, rear - 0.02, 0.3, 0.07, 0.04);
+  }
+  if (grille) {
+    g.box(TRIM, 0, lampY, front + 0.02, W * 0.42, 0.24, 0.04);
+    for (let k = 0; k < 3; k++) g.box(CHROME, 0, lampY - 0.08 + k * 0.08, front + 0.04, W * 0.4, 0.02, 0.02);
+  }
+  // Number plates (white, a dark band where the letters go).
+  g.box(0xf4f4f0, 0, yb + 0.14, front + 0.13, 0.5, 0.12, 0.02);
+  g.box(INK, 0, yb + 0.14, front + 0.145, 0.38, 0.05, 0.01);
+  g.box(0xf4f4f0, 0, yb + 0.16, rear - 0.13, 0.5, 0.12, 0.02);
+  g.box(INK, 0, yb + 0.16, rear - 0.145, 0.38, 0.05, 0.01);
+}
+// Dark wheel-arch shadows on the body sides.
+function arches(ctx, inset = 0.38) {
+  const { g, s, W, L } = ctx;
+  const wz = L / 2 - s.wheelR - (s.bus ? 1.2 : inset);
+  for (const sx of [-1, 1]) for (const sz of [-1, 1]) g.cyl(TRIM, sx * (W / 2 + 0.006), s.wheelR, sz * wz, s.wheelR * 1.18, 0.03, 16, 0, 0, Math.PI / 2);
+}
+
+// ---------------------------------------------------------------------------------------------
+// Bodies
+
+// Saloon, hatchback, estate, taxi, pickup: a low body with an open cabin of pillars under a roof.
+function carBody(ctx) {
+  const { g, glass, s, color, L, W, y0, top } = ctx;
+  const dark = shade(color, 0.7);
+  g.boxB(color, 0, y0, 0, W, s.bodyH, L);
+  // Bonnet and boot lids, a chrome waist line, door seams.
+  g.boxB(shade(color, 1.08), 0, top - 0.02, L * 0.3, W - 0.12, 0.05, L * 0.36);
+  for (const sx of [-1, 1]) {
+    g.box(CHROME, sx * (W / 2 + 0.01), y0 + s.bodyH * 0.62, 0, 0.02, 0.04, L * 0.86);
+    g.box(dark, sx * (W / 2 + 0.008), y0 + s.bodyH * 0.45, s.bed ? L * 0.12 : -L * 0.04, 0.012, s.bodyH * 0.7, 0.03);
+    g.box(dark, sx * (W / 2 + 0.008), y0 + s.bodyH * 0.72, (s.bed ? L * 0.06 : -L * 0.12), 0.015, 0.03, 0.18);
+  }
+  arches(ctx);
+  const [c0, c1] = s.cabin;
+  const z0 = c0 * L, z1 = c1 * L, ch = s.cabinH, ct = top + ch;
+  const pil = 0.12;
+  for (const sx of [-1, 1]) {
+    g.box(dark, sx * (W / 2 - pil / 2 - 0.02), top + ch / 2, z1 - 0.12, pil, ch * 1.05, pil, 0, -0.35);
+    // Rear pillar: the hatch slopes, the estate's stands upright, the saloon's leans.
+    g.box(dark, sx * (W / 2 - pil / 2 - 0.02), top + ch / 2, z0 + 0.1, pil * (s.wagon ? 1.2 : 1.6), ch, pil * 1.6, 0, s.hatch ? 0.35 : s.wagon ? 0 : 0.2);
+    if (s.wagon) g.box(dark, sx * (W / 2 - pil / 2 - 0.02), top + ch / 2, (z0 + z1) / 2 - 0.25, pil, ch, pil);
+  }
+  g.boxB(shade(color, 0.92), 0, ct, (z0 + z1) / 2 - 0.05, W - 0.06, 0.13, z1 - z0 + 0.15);
+  if (s.wagon) g.boxB(CHROME, 0, ct + 0.13, (z0 + z1) / 2 - 0.1, W * 0.8, 0.04, (z1 - z0) * 0.8);
+  glass.box(0xffffff, 0, top + ch / 2, z1 - 0.15, W - 0.3, ch * 1.02, 0.05, 0, -0.35);
+  glass.box(0xffffff, 0, top + ch / 2, z0 + 0.12, W - 0.3, ch * 0.95, 0.05, 0, s.hatch ? 0.4 : 0.2);
+  if (s.bed) {
+    for (const sx of [-1, 1]) g.boxB(color, sx * (W / 2 - 0.06), top, -L * 0.28, 0.12, 0.4, L * 0.42);
+    g.boxB(color, 0, top, -L / 2 + 0.06, W, 0.4, 0.12);
+    g.boxB(0x5a4a3a, 0, top - 0.02, -L * 0.28, W - 0.2, 0.03, L * 0.42);
+    for (let k = 0; k < 5; k++) g.box(0x4a3a2a, 0, top + 0.02, -L * 0.48 + k * L * 0.1, W - 0.22, 0.02, 0.05);
+  }
+  // Seats and a steering wheel (driver sits on the car's left, +x).
+  for (const sx of [-1, 1]) {
+    g.boxB(0x5a3a2a, sx * W * 0.22, top - 0.25, -0.1, 0.55, 0.25, 0.6);
+    g.box(0x5a3a2a, sx * W * 0.22, top + 0.15, -0.42, 0.55, 0.7, 0.14, 0, -0.15);
+  }
+  g.add(PRIM.torus(), TYRE, mat(W * 0.22, top + 0.25, z1 - 0.55, -0.9, 0, 0, 0.42, 0.42, 0.42));
+  g.box(TRIM, 0, top + 0.05, z1 - 0.3, W - 0.2, 0.2, 0.3);
+  ends(ctx, { yb: y0 + 0.02, lampY: y0 + s.bodyH * 0.6, round: !s.bed, lampR: s.hatch ? 0.14 : 0.13 });
+}
+
+// Vans and the ice-cream van: an open cab up front (pillars + roof), a box behind it.
+function vanBody(ctx, { cabLen = 2.2 } = {}) {
+  const { g, glass, s, color, L, W, y0, top } = ctx;
+  const dark = shade(color, 0.7), belt = y0 + 0.78;
+  const cz = L / 2 - cabLen;                       // where the cab meets the box
+  g.boxB(color, 0, y0, (cz - L / 2) / 2, W, s.bodyH, cz + L / 2);
+  // Cab: lower body, a short sloping bonnet, pillars, roof.
+  g.boxB(color, 0, y0, (cz + L / 2) / 2, W, belt - y0, L / 2 - cz);
+  g.box(shade(color, 1.06), 0, belt + 0.06, L / 2 - 0.3, W - 0.08, 0.16, 0.6, 0, 0.35);
+  for (const sx of [-1, 1]) {
+    g.box(dark, sx * (W / 2 - 0.07), (belt + top) / 2, L / 2 - 0.62, 0.12, top - belt, 0.12, 0, -0.3);
+    g.box(dark, sx * (W / 2 - 0.07), (belt + top) / 2, cz + 0.06, 0.12, top - belt, 0.12);
+    g.box(CHROME, sx * (W / 2 + 0.06), belt + 0.18, L / 2 - 0.85, 0.08, 0.16, 0.06);   // wing mirrors
+  }
+  g.boxB(color, 0, top - 0.12, (cz + L / 2 - 0.5) / 2, W, 0.12, L / 2 - 0.5 - cz);
+  glass.box(0xffffff, 0, (belt + top) / 2, L / 2 - 0.6, W - 0.2, top - belt, 0.05, 0, -0.3);
+  // Seats, wheel, dashboard.
+  for (const sx of [-1, 1]) g.boxB(0x5a3a2a, sx * W * 0.22, y0 + 0.1, cz + 0.55, 0.6, 0.28, 0.55);
+  g.box(TRIM, 0, belt - 0.05, L / 2 - 0.7, W - 0.2, 0.18, 0.3);
+  g.add(PRIM.torus(), TYRE, mat(W * 0.22, belt + 0.1, L / 2 - 1.0, -0.6, 0, 0, 0.42, 0.42, 0.42));
+  // Side windows on the box (painted) and a seam.
+  if (!s.icecream) for (const sx of [-1, 1]) g.box(0x2a3a4a, sx * (W / 2 + 0.01), top - 0.5, cz - 0.9, 0.03, 0.5, 1.1);
+  g.box(dark, 0, y0 + s.bodyH * 0.5, -L / 2 - 0.01, 0.03, s.bodyH * 0.9, 0.02);
+  arches(ctx);
+  ends(ctx, { yb: y0 + 0.02, lampY: y0 + 0.42, round: true, lampR: 0.14 });
+}
+
+// Guardia Civil Land Rover: flat bonnet with the spare wheel, an upright windscreen, open sides,
+// white hard top with a blue lamp, a white door band with the lettering.
+function guardiaBody(ctx) {
+  const { g, glass, s, color, L, W, y0, top } = ctx;
+  const belt = y0 + 0.78, bonnet = y0 + 0.86, wsz = L / 2 - 1.15;
+  g.boxB(color, 0, y0, 0, W, belt - y0, L);
+  g.boxB(color, 0, belt, (wsz + L / 2) / 2, W - 0.1, bonnet - belt, L / 2 - wsz);
+  g.box(shade(color, 0.85), 0, bonnet + 0.01, (wsz + L / 2) / 2 + 0.05, W - 0.5, 0.02, L / 2 - wsz - 0.3);
+  // Spare wheel on the bonnet.
+  g.cyl(TYRE, 0, bonnet + 0.1, L / 2 - 0.62, 0.34, 0.2, 16);
+  g.cyl(0xc8ccd2, 0, bonnet + 0.2, L / 2 - 0.62, 0.17, 0.02, 12);
+  // Upright windscreen frame, pillars, white roof.
+  for (const sx of [-1, 1]) {
+    g.box(color, sx * (W / 2 - 0.06), (bonnet + top) / 2, wsz, 0.1, top - bonnet, 0.1);
+    g.box(color, sx * (W / 2 - 0.06), (belt + top) / 2, -0.55, 0.1, top - belt, 0.12);
+    g.box(color, sx * (W / 2 - 0.06), (belt + top) / 2, -L / 2 + 0.08, 0.1, top - belt, 0.14);
+    g.box(CHROME, sx * (W / 2 + 0.07), bonnet + 0.12, wsz + 0.05, 0.07, 0.14, 0.05);
+  }
+  g.box(color, 0, top - 0.03, wsz, W - 0.1, 0.06, 0.1);
+  g.box(color, 0, bonnet + 0.02, wsz, W - 0.1, 0.06, 0.1);
+  g.boxB(0xf4f4f0, 0, top - 0.04, (wsz - L / 2) / 2 - 0.02, W + 0.02, 0.1, wsz + L / 2 + 0.1);
+  g.boxB(0xf4f4f0, 0, top + 0.06, (wsz - L / 2) / 2 - 0.02, W - 0.3, 0.05, wsz + L / 2 - 0.3);
+  // Blue lamp on a bar.
+  g.box(TRIM, 0, top + 0.13, wsz - 0.35, 0.7, 0.06, 0.18);
+  g.cyl(0x2f6ad8, 0, top + 0.25, wsz - 0.35, 0.12, 0.2, 12);
+  g.sphere(0x8ab8ff, 0, top + 0.36, wsz - 0.35, 0.16, 0.08, 0.16);
+  glass.box(0xffffff, 0, (bonnet + top) / 2, wsz, W - 0.24, top - bonnet - 0.08, 0.04);
+  // Rear tub: a rear window and a back door with a step.
+  g.box(TRIM, 0, (belt + top) / 2 + 0.05, -L / 2 - 0.01, W * 0.5, (top - belt) * 0.6, 0.02);
+  g.box(TRIM, 0, y0 + 0.08, -L / 2 - 0.12, 0.6, 0.06, 0.24);
+  // White door band (painted lettering on it).
+  for (const sx of [-1, 1]) g.box(0xf4f4f0, sx * (W / 2 + 0.008), y0 + 0.5, -0.1, 0.012, 0.3, L * 0.62);
+  for (const sx of [-1, 1]) decal(ctx, 'GUARDIA CIVIL', L * 0.6, 0.26, sx, y0 + 0.5, -0.1, { fg: '#1f4a2c' });
+  // Seats and wheel.
+  for (const sx of [-1, 1]) g.boxB(0x3a2a22, sx * W * 0.22, y0 + 0.12, 0.3, 0.55, 0.3, 0.55);
+  g.boxB(0x3a2a22, 0, y0 + 0.12, -1.3, W - 0.3, 0.3, 0.8);
+  g.add(PRIM.torus(), TYRE, mat(W * 0.22, belt + 0.15, wsz - 0.35, -0.5, 0, 0, 0.4, 0.4, 0.4));
+  g.box(TRIM, 0, bonnet - 0.06, wsz - 0.15, W - 0.2, 0.14, 0.24);
+  // Square grille between round lamps; a black bumper with a winch.
+  arches(ctx);
+  g.box(0x1d1d22, 0, y0 + 0.02, L / 2 + 0.06, W + 0.08, 0.18, 0.16);
+  g.box(0xd8dce0, 0, y0 + 0.5, L / 2 + 0.01, W * 0.4, 0.42, 0.04);
+  for (let k = 0; k < 4; k++) g.box(TRIM, 0, y0 + 0.36 + k * 0.09, L / 2 + 0.03, W * 0.36, 0.035, 0.03);
+  for (const sx of [-1, 1]) {
+    lamp(g, sx * (W / 2 - 0.3), y0 + 0.55, L / 2 + 0.01, 0.13, 0xfff6c0);
+    g.box(0xe8322a, sx * (W / 2 - 0.15), y0 + 0.62, -L / 2 - 0.02, 0.12, 0.2, 0.04);
+  }
+  g.box(0x1d1d22, 0, y0 + 0.02, -L / 2 - 0.06, W + 0.08, 0.18, 0.12);
+  g.box(0xf4f4f0, 0, y0 + 0.18, L / 2 + 0.09, 0.5, 0.12, 0.02);
+}
+
+// Buses: a lower body, an open window band with glass and seat backs, a roof; the driver sits in
+// an open cab behind the windscreen. Liveries: SunTrip (white, orange/yellow bands, the sun, "17"),
+// guagua (green and cream).
+function busBody(ctx) {
+  const { g, glass, s, color, L, W, y0, top } = ctx;
+  const sill = y0 + 1.12, roofY = top - 0.22, fz = L / 2;
+  const accent = s.livery === 'guagua' ? 0xf0e2b8 : 0xf4f4f0;
+  g.boxB(color, 0, y0, 0, W, sill - y0, L);
+  g.boxB(color, 0, roofY, 0, W, top - roofY, L);
+  g.boxB(shade(color, 0.94), 0, top, -0.4, W - 0.3, 0.1, L - 1.6);
+  for (const z of [-2.6, 1.2]) g.boxB(shade(color, 0.85), 0, top + 0.06, z, 0.8, 0.08, 0.8);
+  // Window pillars (between the panes) along both sides; the rear is solid.
+  const nWin = 7, z0 = -L / 2 + 0.25, z1 = fz - 2.2, pitch = (z1 - z0) / nWin;
+  for (const sx of [-1, 1]) {
+    for (let k = 0; k <= nWin; k++) g.box(accent === 0xf4f4f0 ? color : accent, sx * (W / 2 - 0.05), (sill + roofY) / 2, z0 + k * pitch, 0.1, roofY - sill, 0.16);
+    glass.box(0xffffff, sx * (W / 2 - 0.04), (sill + roofY) / 2, (z0 + z1) / 2, 0.03, roofY - sill - 0.04, z1 - z0);
+  }
+  g.boxB(color, 0, sill, -L / 2 + 0.1, W, roofY - sill, 0.2);
+  g.box(TRIM, 0, (sill + roofY) / 2, -L / 2 - 0.01, W * 0.7, (roofY - sill) * 0.7, 0.02);
+  // Inside: a floor at the sill and rows of orange seat backs.
+  g.boxB(0x5a4a3a, 0, sill - 0.3, -0.6, W - 0.2, 0.05, L - 2.4);
+  for (let k = 0; k < nWin; k++) for (const sx of [-1, 1]) g.boxB(0xd2601f, sx * (W / 2 - 0.55), sill - 0.25, z0 + (k + 0.6) * pitch, 0.8, 0.85, 0.14);
+  // Cab: pillars, dashboard, steering wheel, the big windscreen; the door on the right (-x).
+  for (const sx of [-1, 1]) g.box(color, sx * (W / 2 - 0.08), (sill + roofY) / 2, fz - 0.1, 0.16, roofY - sill, 0.2);
+  g.box(TRIM, 0, sill + 0.05, fz - 0.4, W - 0.2, 0.25, 0.5);
+  g.add(PRIM.torus(), TYRE, mat(W * 0.22, sill + 0.15, fz - 1.0, -0.9, 0, 0, 0.55, 0.55, 0.55));
+  glass.box(0xffffff, 0, (sill + roofY) / 2 + 0.02, fz - 0.08, W - 0.3, roofY - sill + 0.05, 0.04, 0, -0.06);
+  glass.box(0xffffff, -(W / 2 + 0.005), (y0 + roofY) / 2 + 0.2, fz - 1.3, 0.03, roofY - y0 - 0.3, 0.9);
+  g.box(TRIM, -(W / 2 + 0.01), (y0 + sill) / 2 + 0.05, fz - 1.3, 0.02, sill - y0 - 0.2, 0.9);
+  for (const sx of [-1, 1]) g.box(CHROME, sx * (W / 2 + 0.25), roofY - 0.25, fz - 0.15, 0.06, 0.4, 0.12);
+  for (const sx of [-1, 1]) g.box(TRIM, sx * (W / 2 + 0.15), roofY - 0.05, fz - 0.15, 0.3, 0.04, 0.04);
+  // Destination box above the windscreen.
+  g.box(INK, 0, roofY + 0.1, fz + 0.01, W * 0.7, 0.26, 0.04);
+  arches(ctx);
+  // Bumpers and lights.
+  g.box(CHROME, 0, y0 + 0.02, fz + 0.06, W + 0.04, 0.22, 0.14);
+  g.box(CHROME, 0, y0 + 0.02, -fz - 0.06, W + 0.04, 0.22, 0.14);
+  for (const sx of [-1, 1]) {
+    lamp(g, sx * (W / 2 - 0.35), y0 + 0.4, fz + 0.01, 0.15, 0xfff6c0);
+    g.box(0xe8322a, sx * (W / 2 - 0.25), y0 + 0.55, -fz - 0.02, 0.24, 0.32, 0.04);
+  }
+  g.box(TRIM, 0, y0 + 0.5, -fz - 0.02, W * 0.5, 0.36, 0.03);
+  g.box(0xf4f4f0, 0, y0 + 0.2, fz + 0.14, 0.5, 0.12, 0.02);
+  if (s.livery === 'suntrip') {
+    // Yellow and orange bands round the bus; on both sides the sun and the name; "17" up front.
+    for (const [c, y, h] of [[0xf7c31b, y0 + 0.3, 0.14], [0xf07a1e, y0 + 0.48, 0.2]]) {
+      for (const sx of [-1, 1]) g.box(c, sx * (W / 2 + 0.006), y, 0, 0.012, h, L - 0.1);
+      g.box(c, 0, y, fz + 0.006, W - 0.1, h, 0.012);
+      g.box(c, 0, y, -fz - 0.006, W - 0.1, h, 0.012);
+    }
+    for (const sx of [-1, 1]) {
+      // Read in order (sun, then name) from either side: the +x side reads front to rear.
+      const sy = y0 + 0.86, sz = -1.0 + sx * 1.6;
+      g.cyl(0xf7c31b, sx * (W / 2 + 0.02), sy, sz, 0.22, 0.03, 16, 0, 0, Math.PI / 2);
+      for (let k = 0; k < 10; k++) { const a = (k / 10) * Math.PI * 2; g.box(0xf07a1e, sx * (W / 2 + 0.014), sy + Math.sin(a) * 0.32, sz + Math.cos(a) * 0.32, 0.012, 0.07, 0.12, 0, a + Math.PI / 2); }
+      decal(ctx, 'SunTrip', 3.0, 0.52, sx, sy, sz - sx * 2.02, { fg: '#d8321e' });
+    }
+    decal(ctx, '17', 0.6, 0.24, 'front', roofY + 0.1, fz + 0.04, { fg: '#f7c31b' });
+    decal(ctx, 'SunTrip', 1.2, 0.3, 'rear', y0 + 0.95, -fz - 0.03, { fg: '#d8321e' });
+  } else if (s.livery === 'guagua') {
+    for (const sx of [-1, 1]) g.box(0xf0e2b8, sx * (W / 2 + 0.006), y0 + 0.7, 0, 0.012, 0.3, L - 0.1);
+    g.box(0xf0e2b8, 0, y0 + 0.7, fz + 0.006, W - 0.1, 0.3, 0.012);
+    decal(ctx, 'GUAGUA', 1.4, 0.24, 'front', roofY + 0.1, fz + 0.04, { fg: '#f0e2b8' });
+    for (const sx of [-1, 1]) decal(ctx, 'GUAGUA', 1.6, 0.26, sx, y0 + 0.7, 0, { fg: '#2f8a4a' });
+  }
+}
+
+// ---------------------------------------------------------------------------------------------
+// Dressing
+
+// The grisbil's slatted rack and three pink pigs in the bed.
+function pigBody(g, x, y, z, ry, s = 1, head = true) {
+  const P = 0xf4a8b8, D = 0xe0889a;
+  const c = Math.cos(ry), sn = Math.sin(ry);
+  const at = (lx, lz) => [x + lx * c + lz * sn, z - lx * sn + lz * c];
+  g.sphere(P, x, y + 0.36 * s, z, 0.62 * s, 0.5 * s, 0.9 * s, 0, ry);
+  for (const [lx, lz] of [[-0.15, 0.25], [0.15, 0.25], [-0.15, -0.25], [0.15, -0.25]]) { const [px, pz] = at(lx * s, lz * s); g.cyl(D, px, y + 0.1 * s, pz, 0.06 * s, 0.22 * s, 6); }
+  if (head) {
+    const [hx, hz] = at(0, 0.44 * s);
+    g.sphere(P, hx, y + 0.46 * s, hz, 0.42 * s, 0.38 * s, 0.38 * s);
+    const [nx, nz] = at(0, 0.64 * s);
+    g.cyl(D, nx, y + 0.42 * s, nz, 0.1 * s, 0.08 * s, 10, Math.PI / 2, ry);
+    for (const sx of [-1, 1]) {
+      const [ex, ez] = at(sx * 0.13 * s, 0.4 * s);
+      g.cone(D, ex, y + 0.66 * s, ez, 0.07 * s, 0.16 * s, 4, 0.3, ry, sx * -0.4);
+      const [ix, iz] = at(sx * 0.09 * s, 0.6 * s);
+      g.sphere(INK, ix, y + 0.52 * s, iz, 0.05 * s);
+    }
+  }
+  const [tx, tz] = at(0, -0.46 * s);
+  g.add(PRIM.torus(), D, mat(tx, y + 0.42 * s, tz, 0, ry + Math.PI / 2, 0, 0.12 * s, 0.12 * s, 0.12 * s));
+}
+function pigsIn(ctx) {
+  const { g, L, W, top } = ctx;
+  const bz0 = -L / 2 + 0.1, bz1 = -L * 0.07, wood = 0x8a5a32;
+  // Slatted rack round the bed.
+  for (let k = 0; k <= 5; k++) for (const sx of [-1, 1]) g.box(wood, sx * (W / 2 - 0.06), top + 0.55, bz0 + (k / 5) * (bz1 - bz0), 0.07, 1.1, 0.07);
+  for (const y of [0.55, 0.85, 1.08]) {
+    for (const sx of [-1, 1]) g.box(wood, sx * (W / 2 - 0.04), top + y, (bz0 + bz1) / 2, 0.05, 0.07, bz1 - bz0);
+    g.box(wood, 0, top + y, bz0, W - 0.08, 0.07, 0.05);
+  }
+  // Pigs at the front and the back of the bed, leaving the middle (z = -0.3 L, the 'bed' rider
+  // slots of main.addRider) free for hitch-hikers.
+  pigBody(g, 0.05, top, -L * 0.15, Math.PI / 2 + 0.15, 0.85);
+  pigBody(g, -0.42, top, -L * 0.42, Math.PI - 0.25, 0.8);
+  pigBody(g, 0.42, top, -L * 0.43, Math.PI + 0.35, 0.78);
+}
+
+function taxiSign(ctx) {
+  const { g, s, L, W, top } = ctx;
+  const [c0, c1] = s.cabin, rz = ((c0 + c1) / 2) * L - 0.05, ry = top + s.cabinH + 0.13;
+  g.boxB(0xf4f4f0, 0, ry, rz, 0.7, 0.24, 0.32);
+  g.boxB(INK, 0, ry - 0.01, rz, 0.74, 0.04, 0.36);
+  g.sphere(0x3fd04a, 0.42, ry + 0.08, rz + 0.05, 0.16);
+  decal(ctx, 'TAXI', 0.6, 0.18, 'front', ry + 0.13, rz + 0.17, { fg: '#1d1426' });
+  decal(ctx, 'TAXI', 0.6, 0.18, 'rear', ry + 0.13, rz - 0.17, { fg: '#1d1426' });
+  decal(ctx, 'LIBRE', 0.28, 0.1, 'front', ry + 0.08, rz + 0.18, { fg: '#2a8a2a', bg: '#d8ffd0' }, 0.42);
+  // A thin red line along the doors.
+  for (const sx of [-1, 1]) g.box(0xc8202a, sx * (W / 2 + 0.012), ctx.y0 + s.bodyH * 0.35, 0, 0.012, 0.06, L * 0.8);
+}
+
+function icecreamDress(ctx) {
+  const { g, L, W, y0, top } = ctx;
+  const cz = L / 2 - 2.2;
+  // Pink waves round the box, a serving hatch with an awning on the kerb side (right, -x).
+  for (const sx of [-1, 1]) g.box(0xff8ab8, sx * (W / 2 + 0.008), y0 + 0.55, 0, 0.012, 0.28, L - 0.1);
+  for (let k = 0; k < 7; k++) for (const sx of [-1, 1]) g.sphere(0xff8ab8, sx * (W / 2 + 0.006), y0 + 0.72, -L / 2 + 0.4 + k * 0.48, 0.02, 0.24, 0.42);
+  g.box(0x2a3a4a, -(W / 2 + 0.01), top - 0.7, cz - 1.3, 0.03, 0.62, 1.5);
+  g.box(0xd8dce0, -(W / 2 + 0.15), top - 1.03, cz - 1.3, 0.3, 0.05, 1.5);
+  for (let k = 0; k < 6; k++) g.box(k % 2 ? 0xffffff : 0xff6aa0, -(W / 2 + 0.28), top - 0.27, cz - 1.3 - 0.625 + k * 0.25, 0.56, 0.05, 0.25, 0, 0, -0.35);
+  // The giant cone on the roof.
+  const rz = cz - 1.0;
+  g.cone(0xe8b878, 0, top + 0.55, rz, 0.38, 1.0, 10, Math.PI);
+  for (let k = 0; k < 3; k++) g.add(PRIM.torus(), 0xc8904a, mat(0, top + 0.35 + k * 0.25, rz, Math.PI / 2, 0, 0, 0.55 - k * 0.15, 0.55 - k * 0.15, 0.3));
+  g.sphere(0xffb8d0, 0, top + 1.15, rz, 0.85);
+  g.sphere(0xfff0c8, 0, top + 1.5, rz, 0.6);
+  g.sphere(0xd8321e, 0, top + 1.85, rz, 0.18);
+  g.boxB(0xd8dce0, 0, top, rz, 0.5, 0.08, 0.5);
+  for (const sx of [-1, 1]) decal(ctx, 'HELADOS', 2.4, 0.46, sx, top - 0.32, cz - 1.0, { fg: '#d8321e', bg: '#fff6c0', border: '#d8321e' });
+  decal(ctx, 'HELADOS', 1.3, 0.24, 'front', top + 0.06, L / 2 - 0.45, { fg: '#d8321e', bg: '#fff6c0', border: '#d8321e' });
+}
 
 function buildCarModel(s, color) {
   if (s.build) return s.build(s, color);
-  const g = new GeoBuilder();
-  const L = s.len, W = s.wid, y0 = s.wheelR * 0.95, top = y0 + s.bodyH;
-  const dark = shade(color, 0.7), trim = 0x2a2a30, chrome = 0xd8dce0;
-  const glass = new GeoBuilder();
-  if (s.tall) {
-    // Vans and buses: one tall box, a glass windscreen up front, windows down the sides.
-    const cabZ = L / 2 - 1.3;
-    g.boxB(color, 0, y0, -0.25, W, s.bodyH, L - 0.5);
-    g.boxB(color, 0, y0, cabZ + 0.2, W, s.bodyH * 0.45, 1.6);
-    g.boxB(color, 0, top - 0.12, 0, W + 0.04, 0.16, L);
-    for (const sx of [-1, 1]) {
-      g.box(trim, sx * (W / 2 - 0.08), top - s.bodyH * 0.27, cabZ + 0.1, 0.18, s.bodyH * 0.52, 0.12);
-    }
-    glass.box(0xffffff, 0, top - s.bodyH * 0.27, L / 2 - 0.55, W - 0.16, s.bodyH * 0.5, 0.06, 0, -0.25);
-    if (s.bus) {
-      for (let k = 0; k < 8; k++) for (const sx of [-1, 1]) g.box(0x2a3a4a, sx * (W / 2 + 0.01), top - 0.65, -L / 2 + 1.2 + k * 1.05, 0.04, 0.7, 0.85);
-      g.box(0x1d1d22, 0, y0 + 0.9, 0, W + 0.04, 0.12, L - 0.4);
-      if (!s.livery) g.box(0xd8321e, W / 2 + 0.25, y0 + 1.2, L / 2 - 2.4, 0.04, 0.5, 0.5);
-      if (s.livery === 'suntrip') for (const sx of [-1, 1]) { g.box(0xf07a1e, sx * (W / 2 + 0.02), y0 + 0.55, 0, 0.04, 0.22, L - 0.6); g.box(0xf7c31b, sx * (W / 2 + 0.02), y0 + 0.3, 0, 0.04, 0.16, L - 0.6); }
-    } else {
-      for (const sx of [-1, 1]) g.box(0x2a3a4a, sx * (W / 2 + 0.01), top - 0.55, -0.6, 0.04, 0.6, L * 0.45);
-    }
-    if (s.guardia) {
-      g.boxB(0xf4f4f0, 0, top - 0.02, -0.25, W - 0.1, 0.06, L - 0.9);
-      g.boxB(0x2f6ad8, 0, top + 0.04, 0.2, 0.5, 0.18, 0.3);
-      for (const sx of [-1, 1]) g.box(0xf4f4f0, sx * (W / 2 + 0.02), y0 + 0.55, -0.2, 0.04, 0.16, L * 0.6);
-    }
-    if (s.icecream) {
-      g.cone(0xe8b878, 0, top + 0.55, -0.6, 0.38, 1.0, 10, Math.PI);
-      g.sphere(0xffb8d0, 0, top + 1.15, -0.6, 0.85);
-      g.sphere(0x8a4a2a, 0, top + 1.5, -0.6, 0.15);
-      for (const sx of [-1, 1]) g.box(0xff8ab8, sx * (W / 2 + 0.02), y0 + 0.6, -0.6, 0.04, 0.3, L * 0.7);
-    }
-  } else {
-    // Cars: lower body, hood and boot, open cabin of pillars under a roof.
-    g.boxB(color, 0, y0, 0, W, s.bodyH, L);
-    g.boxB(shade(color, 1.08), 0, top - 0.02, L * 0.28, W - 0.1, 0.05, L * 0.4);
-    const [c0, c1] = s.cabin;
-    const z0 = c0 * L, z1 = c1 * L, ch = s.cabinH, ct = top + ch;
-    const pil = 0.12;
-    for (const sx of [-1, 1]) {
-      g.box(dark, sx * (W / 2 - pil / 2 - 0.02), top + ch / 2, z1 - 0.12, pil, ch * 1.05, pil, 0, -0.35);
-      g.box(dark, sx * (W / 2 - pil / 2 - 0.02), top + ch / 2, z0 + 0.1, pil, ch, pil * 1.6);
-      if (s.wood) g.box(0x9a6a3a, sx * (W / 2 + 0.01), y0 + s.bodyH * 0.55, -L * 0.1, 0.04, s.bodyH * 0.5, L * 0.72);
-      if (s.hearse) {
-        g.boxB(color, sx * (W / 2 - 0.06), top, (z0 + (z1 - L * 0.12)) / 2 - 0.2, 0.12, ch, (z1 - L * 0.12) - z0 - 0.4);
-        g.box(0x8a3ab8, sx * (W / 2 + 0.01), top + ch * 0.5, z0 + L * 0.18, 0.03, ch * 0.6, L * 0.3);
-        g.box(chrome, sx * (W / 2 + 0.01), top - 0.06, 0, 0.03, 0.06, L * 0.9);
-      }
-    }
-    g.boxB(s.hearse ? color : shade(color, 0.92), 0, ct, (z0 + z1) / 2 - 0.05, W - 0.06, 0.13, z1 - z0 + 0.15);
-    glass.box(0xffffff, 0, top + ch / 2, z1 - 0.15, W - 0.3, ch * 1.02, 0.05, 0, -0.35);
-    glass.box(0xffffff, 0, top + ch / 2, z0 + 0.12, W - 0.3, ch * 0.95, 0.05, 0, 0.2);
-    if (s.taxi) { g.boxB(0xf4f4f0, 0, top + ch + 0.12, (z0 + z1) / 2, 0.6, 0.22, 0.3); g.boxB(0x3fa04a, 0.22, top + ch + 0.34, (z0 + z1) / 2, 0.1, 0.08, 0.1); }
-    if (s.bed) {
-      for (const sx of [-1, 1]) g.boxB(color, sx * (W / 2 - 0.06), top, -L * 0.3, 0.12, 0.4, L * 0.38);
-      g.boxB(color, 0, top, -L / 2 + 0.06, W, 0.4, 0.12);
-      g.boxB(0x3a3a40, 0, top - 0.02, -L * 0.3, W - 0.2, 0.03, L * 0.38);
-      if (s.pigs) for (let k = 0; k < 3; k++) g.sphere(0xf4a8b8, (k - 1) * 0.55, top + 0.35, -L * 0.3, 0.6, 0.45, 0.85);
-    }
-    if (s.muscle) {
-      g.boxB(0xffffff, 0.25, top, 0, 0.18, 0.02, L * 0.99);
-      g.boxB(0xffffff, -0.25, top, 0, 0.18, 0.02, L * 0.99);
-      g.boxB(0x2a2a2a, 0, top, L * 0.22, 0.6, 0.2, 0.7);
-      g.boxB(0x2a2a2a, 0, top + 0.3, -L / 2 + 0.2, W - 0.2, 0.06, 0.3);
-      for (const sx of [-0.7, 0.7]) g.boxB(0x2a2a2a, sx, top, -L / 2 + 0.2, 0.08, 0.3, 0.08);
-    }
-    // Seats and a steering wheel (driver sits on the car's left, +x).
-    for (const sx of [-1, 1]) {
-      g.boxB(0x3a2a2a, sx * W * 0.22, top - 0.25, -0.1, 0.55, 0.25, 0.6);
-      g.box(0x3a2a2a, sx * W * 0.22, top + 0.15, -0.42, 0.55, 0.7, 0.14, 0, -0.15);
-    }
-    g.add(PRIM.torus(), 0x1d1d22, mat(W * 0.22, top + 0.25, z1 - 0.55, -0.9, 0, 0, 0.42, 0.42, 0.42));
-  }
-  // Bumpers and lights.
-  g.boxB(trim, 0, y0 - 0.06, L / 2 - 0.05, W + 0.06, 0.26, 0.2);
-  g.boxB(trim, 0, y0 - 0.06, -L / 2 + 0.05, W + 0.06, 0.26, 0.2);
-  for (const sx of [-1, 1]) {
-    g.box(0xfff6c0, sx * (W / 2 - 0.3), y0 + 0.36, L / 2 + 0.01, 0.38, 0.22, 0.06);
-    g.box(0xe8322a, sx * (W / 2 - 0.25), y0 + 0.36, -L / 2 - 0.01, 0.32, 0.16, 0.06);
-  }
-  g.box(shade(color, 0.8), 0, y0 + 0.2, L / 2 + 0.01, W * 0.4, 0.18, 0.04);
-  if (s.hearse) {
-    g.boxB(0x8a3ab8, 0, top + s.cabinH + 0.12, -L * 0.18, 0.6, 0.08, 1.2);
-  }
-  return { geo: g.build(), glass: glass.empty ? null : glass.build() };
+  const g = new GeoBuilder(), glass = new GeoBuilder(), extras = [];
+  const ctx = { g, glass, extras, s, color, L: s.len, W: s.wid, y0: s.wheelR * 0.95, top: s.wheelR * 0.95 + s.bodyH };
+  if (s.bus) busBody(ctx);
+  else if (s.guardia) guardiaBody(ctx);
+  else if (s.tall) vanBody(ctx, { cabLen: s.icecream ? 2.2 : 2.1 });
+  else carBody(ctx);
+  if (s.pigs) pigsIn(ctx);
+  if (s.taxi) taxiSign(ctx);
+  if (s.icecream) icecreamDress(ctx);
+  return { geo: g.build(), glass: glass.empty ? null : glass.build(), extras };
 }
 
 let wheelGeo;
@@ -146,13 +393,14 @@ export class Car {
     this.type = type;
     this.id = nextId++;
     this.name = opts.name || null;
-    this.color = opts.color ?? spec.color ?? pick(COLORS);
+    this.color = opts.color ?? spec.color ?? pick(spec.colors || COLORS);
     this.root = new THREE.Group();
     this.tilt = new THREE.Group();
     this.root.add(this.tilt);
-    const { geo, glass } = buildCarModel(spec, this.color);
+    const { geo, glass, extras } = buildCarModel(spec, this.color);
     this.body = toonMesh(geo, { outline: 0.035 });
     this.tilt.add(this.body);
+    for (const e of extras || []) this.tilt.add(e);
     if (glass) {
       const gm = new THREE.Mesh(glass, MAT.glass);
       gm.renderOrder = 2;
@@ -423,6 +671,27 @@ export class Car {
       w.mesh.rotation.x = this.wheelSpin;
       w.piv.rotation.y = w.front ? -this.steerAngle : 0;
     }
+    if (s.tall && !s.bus) this.fitSeats();
+  }
+
+  // Vans, the ice-cream van and the Guardia jeep have a low cab under a roof: main.js seats busts
+  // and characters at the bus height (wheelR * 0.95 + 0.9), so lower them onto the cab seats here
+  // (busts once; a seated character every frame, since main.js may re-seat it) and shrink a bust
+  // that would still poke through the roof. CONTRACT CHANGE proposed: main.addBust/addRider/seat
+  // should ask car.seatY() instead.
+  seatY() { const s = this.spec; return s.wheelR * 0.95 + (s.tall && !s.bus ? 0.36 : s.tall ? 0.9 : s.bodyH); }
+  fitSeats() {
+    const s = this.spec, seat = this.seatY(), roof = s.wheelR * 0.95 + s.bodyH - 0.08;
+    const b = this.driverBust;
+    if (b && !b.userData.fit) this.fitBust(b, seat, roof);
+    for (const r of this.riders) if (!r.userData.fit && r.position.y > seat + 0.3) this.fitBust(r, seat, roof);
+    for (const ch of this.passengers.concat(this.driver || [])) if (ch.root.parent === this.tilt) ch.root.position.y = seat + 0.12 - ch.model.legLen;
+  }
+  fitBust(o, seat, roof) {
+    o.userData.fit = true;
+    o.position.y = seat;
+    const h = o.userData.h || 1.25;
+    if (seat + h > roof) o.scale.setScalar(Math.max(0.72, (roof - seat) / h));
   }
 }
 
