@@ -61,14 +61,15 @@ export async function followCar(T, back = 12, timeout = 120000) {
   while (Date.now() - t0 < timeout) {
     const s = await T.ev((back) => {
       const g = __game, m = g.missions, c = m.stage?.car;
-      if (m.state !== 'running' || !c) return 'over';
+      if (m.state !== 'running' || !c) return `over(${m.state} stage ${m.stageI} car ${!!c} kind ${m.stage?.o ? Object.keys(m.stage.o).join(',') : '-'})`;
       g.debugWarp(c.x - Math.sin(c.yaw) * back, c.z - Math.cos(c.yaw) * back, c.yaw);
       return m.stageI;
     }, back);
-    if (s === 'over' || s !== i0) break;
+    if (s !== i0) { if (Date.now() - t0 < 2000) T.log('follow: ended at once', i0, '->', s); break; }
     if (process.env.DEBUG_FOLLOW) T.log('follow', await T.ev(() => { const st = __game.missions.stage, c = st.car, ai = c.ai, p = ai?.path; return JSON.stringify({ x: c.x.toFixed(1), z: c.z.toFixed(1), v: c.speed.toFixed(1), arrived: st.arrived, started: st.started, idx: p?.idx, n: p?.pts.length, built: p?.built, nodes: p?.nodes, last: p?.pts[p.pts.length - 1], ob: __game.obstacleAhead(c, 12), ai: { bl: ai?.blockedT?.toFixed(1), ig: ai?.ignoreT?.toFixed(1), th: c.ctrl.throttle.toFixed(2), br: c.ctrl.brake.toFixed(2) }, near: __game.cars.filter((o) => o !== c && Math.hypot(o.x - c.x, o.z - c.z) < 14).map((o) => `${o.type}/${o.name || ''}/${o.traffic ? 'T' : ''}${o.dead ? 'D' : ''}${o.locked ? 'L' : ''}${o === __game.playerCar ? 'P' : ''}@${o.x.toFixed(0)},${o.z.toFixed(0)}`), peds: __game.peds.filter((q) => Math.hypot(q.char.x - c.x, q.char.z - c.z) < 10).map((q) => `${q.char.state}@${q.char.x.toFixed(0)},${q.char.z.toFixed(0)}`) }); }));
     await T.sleep(1500);
   }
+  if (Date.now() - t0 >= timeout) T.log('follow: timed out after', timeout, 'ms');
   T.log('follow done', await T.state());
 }
 

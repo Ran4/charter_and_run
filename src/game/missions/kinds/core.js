@@ -213,13 +213,18 @@ function clearSpot(g, car, r = 7) {
 
 // Abandoned cars (unlocked, unnamed, no driver, no AI, not the player's) standing in the lanes of
 // a mission route are removed at init: a route car would otherwise wait behind them for ever (e.g.
-// the car the player left on the road when he took over the pig truck).
+// the car the player left on the road when he took over the pig truck). A named parked car the
+// player abandoned there (bus 17 left in a lane two missions ago) is put back on its parking spot
+// instead; named cars without a home (this mission's own cars) are left alone.
 function clearRoute(g, nodes, end, except = []) {
   const path = new LanePath(nodes, { endPoint: end });
   path.ensure(100000);
   for (const c of g.cars.slice()) {
-    if (except.includes(c) || c === g.playerCar || c.locked || c.name || c.ai || c.driver || c.traffic) continue;
-    if (path.pts.some((q) => Math.hypot(q.x - c.x, q.z - c.z) < 3.5)) g.removeCar(c);
+    if (except.includes(c) || c === g.playerCar || c.locked || c.ai || c.driver || c.traffic) continue;
+    if (c.name && !c.home) continue;
+    if (!path.pts.some((q) => Math.hypot(q.x - c.x, q.z - c.z) < 3.5)) continue;
+    if (!c.name) g.removeCar(c);
+    else if (Math.hypot(c.x - c.home.x, c.z - c.home.z) > 3) c.place(c.home.x, c.home.z, c.home.yaw);
   }
 }
 

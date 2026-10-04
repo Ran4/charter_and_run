@@ -287,6 +287,19 @@ export const SCENARIOS = {
     check(await T.ev(() => __game.missions.state === 'failed' && document.querySelector('.banner-sub').textContent === 'TOO-CLOSE'), 'follow: too close for too long fails with minText');
     await T.tap('KeyQ');
 
+    // --- follow clears its route: a named parked car the player left in a lane goes home (bus 17
+    //     abandoned on the Fataga road blocked the excursion bus for good in the full chain).
+    await T.fresh('&mission=10');
+    await useSynthetic(T, `{ stages: [() => K.follow({ type: 'bus', carName: 'utflyktsbuss', driver: 'affe', start: { lane: [[3, 2], [3, 1]], t: 14 }, via: [[3, 1], [2, 1], [1, 1]], to: 'fatagaBus', maxDist: 70, cruise: 12, text: 'f' })] }`);
+    const away = await T.ev(async () => {
+      const L = await import('/src/world/layout.js'), g = __game, b = g.ensureNamedCar('buss17'), s = L.laneSpot([2, 1], [1, 1], 12);
+      b.place(s.x, s.z, s.yaw);
+      return Math.hypot(b.x - b.home.x, b.z - b.home.z);
+    });
+    await T.startMission();
+    const home = await T.ev(() => { const b = __game.named.buss17; return Math.hypot(b.x - b.home.x, b.z - b.home.z); });
+    check(away > 10 && home < 1, `follow: buss17 abandoned on the route goes back to its parking spot (${away.toFixed(0)} m -> ${home.toFixed(1)} m)`);
+
     // --- goto smooth / fragile meters: hard impacts move the bars, teleports don't.
     await T.fresh('&mission=7');
     await useSynthetic(T, `{ stages: [() => K.goto({ to: 'vikingbar', radius: 7, inCar: true, timer: 80, smooth: { label: 'ÅKSJUKA', failText: 'SICK' }, text: 'g' }), () => K.goto({ to: 'marknad', radius: 7, inCar: true, fragile: { label: 'SKICK', failText: 'PAINT' }, text: 'g2' })] }`);
