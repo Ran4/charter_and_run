@@ -1869,18 +1869,18 @@ the `missions` data checks); `kinds/core.js` exports `COMMON` and `common(o, sta
 |---|---|---|---|
 | `getInCar` | `car?` (named car, recreated if wrecked) · `missionCar?` (name of a car in `m.cars`) · `passenger?` (NPC seated in that car at init) · `rider?` / `riders?` (decorative busts) · `hideRiders?` (hide those NPCs for the mission) · `any = true` (set `any: false` whenever `car`/`missionCar` is given and only that car will do) · `say?` | player in a car (the named one if `any:false`) | `stage.car` |
 | `goto` | `to` · `radius = 7` · `timer?` · `failText = 'Tiden är ute!'` · `inCar?` · `onFoot?` (must arrive on foot; sub "Kliv ur bilen!") · `passenger?` · `stop?` (speed < 2 to finish) · `smooth?: {label, failText}` · `fragile?: {label, failText}` · `fearRate?` (+n/s FLYGRÄDSLA) · `radio?: [[who, text, {gap?, ...cue}?]]` (gap = s after the previous line, default 9–13 random) · `overhear?: [{at, r, lines, radio?}]` · `awaitOverhear = false` (the stage cannot finish while a started overhear is still playing) | within radius (and stopped) / timer, bar | `stage.dest` |
-| `pickup` | `who` · `name` · `at` · `hello?` · `rider?` (bust added beside the passenger) · `hideRiders?` · `text?` | NPC seated as passenger | `stage.npc` |
+| `pickup` | `who` · `name` · `at` · `hello?` · `rider?` (bust added beside the passenger; the rider NPC is hidden while it rides) · `hideRiders?` (hide the rider NPC already at init) · `text?` | NPC seated as passenger | `stage.npc` |
 | `dropoff` | `who` · `at` · `riderOff?` (remove the rider bust, show the rider NPC beside) · `text` | NPC out at `at` | `stage.dest` |
-| `follow` | `type` · `color?` · `carName?` · `driver` (key; `who` accepted as alias) · `passenger?` (NPC in the **followed** car) · `riders?` (busts) · `hideRiders?` (hide those NPCs for the stage) · `start` (landmark / `{x,z,yaw}` / lane spot) · `via` · `to` (**kerbside**, see below) · `maxDist` · `minDist?` · `minGrace = 2` · `minText?` · `cruise = 12` · `wobble?` · `arriveDist = 35` · `radio?: [[who, text] \| text]` (string = driver speaks) | arrived and within `arriveDist` / lost > 3 s beyond `maxDist`, closer than `minDist` for > `minGrace` s, car wrecked | `stage.car`, `stage.minDist` |
+| `follow` | `type` · `color?` · `carName?` · `driver` (key; `who` accepted as alias) · `passenger?` (NPC in the **followed** car) · `riders?` (busts, removed when the stage ends) · `hideRiders?` (hide those NPCs; they stay hidden until a later stage seats/places them or the mission ends) · `start` (landmark / `{x,z,yaw}` / lane spot) · `via` · `to` (**kerbside**, see below) · `maxDist` · `minDist?` · `minGrace = 2` · `minText?` · `cruise = 12` · `wobble?` · `arriveDist = 35` · `radio?: [[who, text] \| text]` (string = driver speaks) | arrived and within `arriveDist` / lost > 3 s beyond `maxDist`, closer than `minDist` for > `minGrace` s, car wrecked | `stage.car`, `stage.minDist` |
 | `rabbits` | `mesh = 'badboll'` (`badboll faar blomma gris`) · `count` (**≤ 6** for the test) · `near` · `rMin = 18` · `rMax = 55` · `flee = true` (false = static bobbing) · `timer` · `barLabel` · `gotText` · `failText` · `radio?` · `onFoot?` | all caught / timer | `stage.list[] {x, z, alive}` |
 | `race` | `who` (opponent driver) · `type` · `color?` · `carName?` · `cruise` · `start` (a lane spot, or `{x, z, yaw}`; the player goes on that spot, the opponent on the lane to its left, `spot − r·2·LANE` with `r = (−cos yaw, sin yaw)`: offsets are **lateral to `yaw`, never along world z**) · `checkpoints: [[i, j]]` · `finish: {x, z}` · `playerPassenger?` (NPC seated in the **player's** car at init) · `oppPassenger?` (old `passenger`: NPC in the opponent car) · `radio?` | all checkpoints first / opponent first ("`${name} vann!`") | `stage.cps, stage.pi, stage.opp, stage.oi` |
 | `destroy` | `type` · `carName?` · `driver = 'guardia'` (bust def key; replaces `CHARS.shame`) · `spawn?` (landmark / `{x,z,yaw}` / lane spot; default: random node 70–130 m away) · `timer` · `cruise = 20` · `damageScale = 1.5` · `noExplode = false` (wreck stops in steam, occupants step out, no fire) · `barLabel = 'MÅL'` · `failText = 'Den kom undan!'` | wrecked (`m.data.wreck`) / timer | `stage.car` |
 | `grab` | `at?` (or `m.data.wreck`) · `mesh = 'pryl'` (any `COLLECT_KINDS` key) · `scale = 1.8` · `say?` · `gotText?` | touched | `stage.item` |
-| `collect` | `items?: [{x, z, y?} \| landmark]` + `kind` + `motion = 'spin'` (`spin bob roll`) · **or** `who?: [keys]` with `standAt?` (flight: `{key: [x, z]}` world, NPC unseated and stood there) / `findAt?` (island: `{key: [lm, dx, dz]}`) and `seatOnTouch?` (flight: back to its HOMES seat) / `sendTo?` (island: `{key: [lm, dx, dz]}`) · `lines?: {key: [[who, text]]}` (played as bubbles on touch) · `radius = 1.0` · `carRadius?` · `inCar = false` · `timer?` · `barLabel` · `failText` | all touched / timer | `stage.list[] {x, z, alive, key?}` |
+| `collect` | `items?: [{x, z, y?} \| landmark]` + `kind` + `motion = 'spin'` (`spin bob roll`) · **or** `who?: [keys]` with `standAt?` (flight: `{key: [x, z]}` world, NPC unseated and stood there) / `findAt?` (island: `{key: [lm, dx, dz]}`) and `seatOnTouch?` (flight: back to its HOMES seat) / `sendTo?` (island: `{key: [lm, dx, dz]}`) · `lines?: {key: [[who, text]]}` (played as bubbles on touch) · `radius = 1.0` · `carRadius = 4` · `inCar = false` (true: touching from a car counts, within `carRadius`) · `timer?` · `barLabel` · `failText` | all touched / timer | `stage.list[] {x, z, alive, key?}` |
 | `sit` | `seat` · `timer?` · `failText?` | `g.player.seatId === seat` / timer | `stage.seat` (seat object) |
 | `interact` | `at` (landmark, `{x, z, y?}` or `(g) => {x, z}`) · `radius = 1.4` · `prompt` · `whileSeated = false` · `seat?` (only from this seat) · `enabled?(g)` · `lines?` (dialogue played on use) · `use?: async (g, m)` · `useCue?` (applied on use, before `lines`) | after use/lines finish | `stage.at` (live `{x, z}`), `stage.ready` |
 | `carry` | `item?: 'juice'` (mesh above the head) **or** `who?: key` (NPC over the shoulders; walk only) · `to` · `radius = 1.2` · `walkSpeed?` · `failOn: { bumped = true, fall = true, sprintSecs? }` · `failText` | arrived / failOn | `stage.to` |
-| `mantra` | `secs` (scaled) · `at?` + `radius?` · `seated?: seatId` · `duet?: key` (NPC copies the pose) · `waitPhase?` (also wait for `cabin.phase`) · `fillCue?` (applied when the bar fills; its `phase` only if `cabin.phase` is still the phase the stage started) | bar full (+ phase) / panic if `panicFails` | `stage.t`, `stage.secs` |
+| `mantra` | `secs` (scaled) · `at?` + `radius = 2.2` · `seated?: seatId` · `duet?: key` (NPC copies the pose) · `waitPhase?` (also wait for `cabin.phase`) · `fillCue?` (applied when the bar fills; its `phase` only if `cabin.phase` is still the phase the stage started) | bar full (+ phase) / panic if `panicFails` | `stage.t`, `stage.secs` |
 | `timeline` | `secs` · `seat?` (time pauses unless seated there; sub "Sätt dig på 14B!") · `lockSeat?` (with `seat`: "Res dig" hidden and R ignored for the stage, so time never pauses) · `events: [[t, cue]]` (the timeline's own list; not the runner's `timedCues`) · `barLabel?` | t ≥ secs / panic if `panicFails` | `stage.t` |
 | `scene` | `lines: [[who, text, cue?]]` · `frame?: [a, b]` · `cam?: {at, dist, height}` · `place?` · `anim?: {key: flag}` · `exitCar?` (with `place` the player always exits the car first, `exitCar(true)`; with `frame` only, car-seated characters stay seated: their `x/y/z` are live, §14.3) | dialogue finished (`doneCue` applies) | — |
 | `haggle` | `at` · `who` · `partner` · `onFoot = true` (the bar runs only on foot within 3 m of `at`; sub "Kliv ur bilen!") · `start` · `steps` · `zones` · `speeds` · `maxMiss = 3` · `pay` · `lines: {start, hit: [lines…], miss, win}` · `barLabel` · `failText` | price reaches the last step / misses | `stage.inZone`, `stage.round` |
@@ -1920,6 +1920,26 @@ Behaviour notes (normative):
   are 0.6 and speeds × 0.5. The bid is an interactable registered at init with `priority: 100`
   (`prompt '<b>E</b> Bjud!'`) that consumes E while the player is on foot within 3 m of `at`, so E
   never enters/exits a car or talks to someone instead; in a car the stage shows "Kliv ur bilen!".
+- **`haggle` staging** (Phase 0b): the seller is placed at `at` (offset 0, 1.2) unless already within
+  4 m; when the player arrives on foot the `partner` steps out of the car (if he rode along) and
+  stands beside the stall; `start`, `hit[round]` and `win` play as framed dialogues (the marker and
+  `stage.inZone` pause meanwhile), `miss` plays as bubbles so the rhythm keeps going.
+- **`smash.onFoot`**: a prop broken from a car does not count and is revived at once.
+- **`follow` / `race` routes** are cleared at init of abandoned cars (unlocked, unnamed, no driver,
+  no AI, not the player's) standing within 3.5 m of a lane point: a route car would otherwise wait
+  behind a car the player left on the road in an earlier stage or mission.
+- **`destroy.noExplode`**: the wreck stops in steam and two occupants (`driver` def) step out and
+  shake their fists; they stay until the mission ends.
+- **`carry.who`**: while the player is still in the car the NPC keeps his seat (sub "Kliv ur
+  bilen!"); he is lifted onto the shoulders once the player is on foot. Walk only: `game.speedCap`
+  = `walkSpeed` (default the level walk speed); the player cannot enter cars meanwhile.
+- **`getInCar`**: a locked named car is unlocked for the mission; a `missionCar` is handed over (AI
+  off, unlocked, its driver steps out to the roadside, any driver bust removed); with `any: true`
+  the `passenger` moves into whatever car the player took.
+- **`dropoff`**: a passenger left behind must be fetched first ("Åk tillbaka efter {name}!"; he
+  re-boards when the car stops within 10 m), never an instant 'done'.
+- **Rider busts never double a character**: `game.placeNpc`/`showNpc(key)` remove that key's rider
+  bust from every car (`game.removeRiderOf(key)`), e.g. fataga's scene placing Siv.
 - **`smash`** calls `reviveProps(type, area)` at init (judge trap: retries must find intact
   plates), counts props of `type` within `area` whose `alive` went false after the stage began.
 - **`scene`** runs (with `place`/`exitCar`: `exitCar(true)` first) → `place` → `game.cinematic(frame)`
@@ -1936,13 +1956,13 @@ kind cues `useCue` (interact) and `fillCue` (mantra).
 | `say: [who, text, secs = 2.6]` | world bubble on that character (`'stig'` = player) |
 | `radio: [who, text]` | radio toast with portrait |
 | `pa: true` | `audio.dingdong()` before the line/radio |
-| `sfx: name` | `audio[name]()` (§12.3) |
+| `sfx: name` | `audio[name]()` (§12.3); a jingle name (`start complete fail pryl`) plays `audio.jingle(name)`, a trad name (`smaGrodorna hejTomtegubbar helanGar`) `audio.trad(name)` |
 | `fear: n` / `relieve: n` | `shame.add(n, { force: true })` / `shame.relieve(n)` (flight meter; bypass `locked`; `fear` interrupts a held mantra) |
 | `shake: n` | `cam.shake = max(cam.shake, n)` |
 | `applause: secs` | `audio.applause(secs)` |
 | `phase: name \| [name, { instant, hold }]` · `seatbelt: bool` · `turbulence: [s, secs, {delay}?]` · `trolley: bool` · `blockers: bool` | cabin calls (`phase` animates unless `instant`; `trolley` = `startTrolley`/`stopTrolley`; `blockers` = `setAisleBlockers`) |
 | `outfit: {who, name}` | `setPlayerOutfit` / `setNpcOutfit` (re-renders the portrait) |
-| `music: name \| {tune, secs}` | `audio.setTune(name)`; with `secs`, revert to the previous tune after |
+| `music: name \| {tune, secs}` | `audio.setTune(name)`; with `secs`, revert to the previous tune after; a trad name plays `audio.trad(name)` over the current tune |
 | `sky: 'day' \| 'night' \| 'sunset'` | island palette |
 | `place: {key: [lm, dx, dz]}` · `hide: [keys]` · `show: [keys]` | `game.placeNpc` / `hideNpc` / `showNpc` |
 | `anim: {who: key \| [keys], flag, secs}` | set `ch.anim[flag] = true` for `secs` |
@@ -2372,6 +2392,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/actors/drivers.js` | unchanged | none | (accepts duck-typed paths) |
 | `index.html`, `style.css` | edit | **H** | §11, §13.4 |
 | `tools/shot.mjs`, `tools/lib.mjs`, `tools/scenarios/core.mjs`, `tools/story/common.mjs` | edit/new | none (Phase 2) | harness, `T` API, core scenarios `start walk aerial drive traffic title talk missions views transition` + `levels` (boots into both levels) + `api` (Game API smoke test) |
+| `tools/fixtures/full-missions.js`, `tools/scenarios/kinds.mjs` | new (Phase 0b) | none (Phase 2) | the literal §8 missions as a test fixture; scenarios `fullstory` (plays them per §16.3) and `kinds` (option checks) |
 | `src/world/blocks/stub.js` | new (Phase 0a) | none | `stubBlock()`: the shared placeholder look of the stub block builders; delete when unused |
 | `tools/scenarios/flight.mjs` | new | **A1** | gate, cabin, trolley, turbulence, panic |
 | `tools/scenarios/scenery.mjs` | new | **A2** | phases (one shot per flight phase from inside and outside) |
@@ -2464,6 +2485,8 @@ game.seat(ch, car, side);  game.unseat(ch, x?, z?)          // existing
 car.seatWorld(side) -> { x, y, z }                           // Phase 0 (car.js): world seat position
 game.addRider(defKey, car, slot = 'rear') -> Object3D        // decorative bust; slots 'rear' | 'bed' | 'window1..4'
 game.removeRiders(car)
+game.removeRiderOf(key)                  // Phase 0b: drop that character's rider busts (placeNpc/showNpc call it)
+game.speedCap                            // Phase 0b: null | m/s cap on walk/sprint (carry); sprint off while set
 
 // ---- cinematics / dialogue / cues ----
 game.cinematic(a, b);  game.cinematicOne(a);  game.endCinematic()
@@ -3060,6 +3083,8 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `ui` [H] | long Swedish strings in toasts/banners/objective; glyph check shot; dialogue with Norwegian line |
 | `skandal` [H] | `addCoins(2000)`, `shame.add(100)`: 2 `guardia` cars spawn; exit car → officer walks (not through walls); block him behind a building → teleported within 6 s; get busted → coins −400 (20 %), ¡MULTA!, player frozen ~3 s; an offence within 20 m of Herr Storch adds 0 |
 | `talk` [Phase 0] | `autoDialog = false`, walk to Ole at `gateQueue`, E, Space twice |
+| `fullstory` [Phase 0b] | swaps the literal §8 missions (`tools/fixtures/full-missions.js`) into `MISSIONS` and plays all 13 per §16.3 (`FROM`/`TO` as `story`); must end `#13 idle`, `RESULT: PASS` |
+| `kinds` [Phase 0b] | fixture data checks; haggle misses fail; follow `minDist` fails; smooth/fragile bars (teleports never count); carry spill; checkpoint retry re-applies night + `vals` and revives plates at `dansgolv`; destroy default spawn; grab at the wreck; scene `exitCar` |
 
 ---
 
@@ -3223,3 +3248,21 @@ Three reviewers (engine, film, fun). 69 findings; 69 applied, 4 of them with a c
   (§9.1); cabin extras (§14.7); `tools/story/common.mjs`, `blocks/stub.js`, core scenarios `levels`
   and `api` (§14.1); `T.startMission` retries (§16.2).
 - `PLAYER_BOOST = 1.2` applied in car.js (user decision above).
+
+## Changelog (Phase 0b, contract additions)
+
+- All 18 kinds implemented (§9.2) with the behaviour clarifications listed under §9.2 "Behaviour
+  notes" (haggle staging, smash.onFoot, destroy.noExplode crew, carry.who lift, getInCar handover,
+  dropoff fetch-back, rider busts never doubling a character); `pickup.rider` hides the rider NPC
+  while it rides; `follow.hideRiders` keeps them hidden until re-seated/placed or the mission ends;
+  `collect.inCar`/`carRadius = 4`; `mantra.radius = 2.2`.
+- Game API: `removeRiderOf(key)`, `speedCap` (§14.3). Cue `sfx`/`music` accept jingle and trad names
+  (§9.3). `S.promptBid = '<b>E</b> Bjud!'` (§11).
+- Runner: `cleanupMission()` ends with `placeNpcs(true)` (fail/abort/complete all return everyone
+  to the home set; stages re-place what they need on retry).
+- Harness: `missionDataProblems` in `tools/lib.mjs` (used by `missions`; checks every character key
+  and landmark in def fields, stage options, lines and cues, seat ids, the `retryAt` rule);
+  `tools/story/common.mjs` story helpers; new `fullstory` and `kinds` scenarios (§16.4).
+- Rabbits (pickups.js): a rabbit at distance 0 no longer turns NaN; the `rabbits` kind catches
+  before it lets the rabbit hop.
+

@@ -116,3 +116,80 @@ export async function launch({ port, out, w = 1280, h = 720 }) {
 
 // A throwing assertion for scenarios.
 export function check(cond, msg) { if (!cond) throw new Error('check failed: ' + msg); }
+
+// Mission data checks (DESIGN §16.4 `missions`), run IN THE PAGE: T.ev(missionDataProblems) or
+// T.ev(missionDataProblems, null, '/tools/fixtures/full-missions.js'). Every character key and
+// landmark that any mission def references (def fields, stage options, lines, every cue field)
+// must resolve; plane seats must exist; every checkpoint stage acting > 60 m from `at` needs retryAt.
+// Returns a list of problems (empty = OK).
+export async function missionDataProblems(_unused, fixtureUrl) {
+  const g = __game, out = [];
+  const defs = fixtureUrl ? (await import(fixtureUrl)).FULL_MISSIONS : window.__missions();
+  const lmOk = (n) => { try { window.__lm(n); return true; } catch (e) { return false; } };
+  const PHASES = ['gate', 'takeoff', 'climb', 'cruise', 'approach', 'landing', 'landed'], SKIES = ['day', 'night', 'sunset'];
+  for (const d of defs) {
+    const P = (what) => out.push(`${d.id}: ${what}`);
+    const lm = (n, w) => { if (typeof n === 'string' && !lmOk(n)) P(`unknown landmark '${n}' (${w})`); else if (n && typeof n === 'object' && typeof n.at === 'string') lm(n.at, w); };
+    const npc = (k, w) => { if (k && k !== 'stig' && !g.npc(k)) P(`unknown character '${k}' (${w})`); };
+    const spk = (k, w) => { if (k && !g.charDef(k)) P(`unknown speaker '${k}' (${w})`); };
+    const places = (m, w) => { for (const [k, v] of Object.entries(m || {})) { npc(k, w); if (Array.isArray(v)) lm(v[0], w); } };
+    const cue = (c, w) => {
+      if (!c || typeof c !== 'object') return;
+      if (c.say) npc(c.say[0], `${w} say`);
+      if (c.radio) spk(c.radio[0], `${w} radio`);
+      if (c.place) places(c.place, `${w} place`);
+      for (const k of [...(c.hide || []), ...(c.show || [])]) npc(k, `${w} hide/show`);
+      if (c.anim) for (const k of [].concat(c.anim.who)) npc(k, `${w} anim`);
+      if (c.outfit) npc(c.outfit.who, `${w} outfit`);
+      if (c.cut) lm(c.cut, `${w} cut`);
+      if (c.phase !== undefined) { const p = Array.isArray(c.phase) ? c.phase[0] : c.phase; if (!PHASES.includes(p)) P(`unknown phase '${p}' (${w})`); }
+      if (c.sky !== undefined && !SKIES.includes(c.sky)) P(`unknown sky '${c.sky}' (${w})`);
+    };
+    const lines = (ls, w) => {
+      if (!ls) return;
+      if (!Array.isArray(ls)) { for (const [k, v] of Object.entries(ls)) lines(v, `${w}.${k}`); return; }
+      for (const l of ls) {
+        if (Array.isArray(l) && Array.isArray(l[0])) { lines(l, w); continue; }
+        if (Array.isArray(l)) { spk(l[0], w); cue(l[2], w); }
+      }
+    };
+    if (!['flight', 'island'].includes(d.level)) P(`bad level '${d.level}'`);
+    npc(d.giver, 'giver');
+    lm(d.at, 'at');
+    for (const e of d.extra || []) npc(Array.isArray(e) ? e[0] : e, 'extra');
+    places(d.outroPlace, 'outroPlace');
+    if (Array.isArray(d.outroCam)) d.outroCam.forEach((k) => npc(k, 'outroCam')); else if (d.outroCam && d.outroCam !== 'player') lm(d.outroCam, 'outroCam');
+    lines(d.intro, 'intro');
+    lines(d.outro, 'outro');
+    d.stages.forEach((f, i) => {
+      const w = `stage ${i}`;
+      let st;
+      try { st = f(); } catch (e) { P(`${w}: factory threw ${e.message}`); return; }
+      if (typeof st?.update !== 'function' || typeof st?.init !== 'function') { P(`${w}: not a stage`); return; }
+      const o = st.o || {};
+      for (const k of ['to', 'near', 'retryAt', 'start', 'spawn', 'finish']) lm(o[k], `${w} ${k}`);
+      if (typeof o.at === 'string') lm(o.at, `${w} at`);
+      if (o.area) lm(o.area.lm, `${w} area`);
+      if (o.cam) lm(o.cam, `${w} cam`);
+      for (const it of o.items || []) lm(it, `${w} items`);
+      places(o.place, `${w} place`); places(o.findAt, `${w} findAt`); places(o.sendTo, `${w} sendTo`);
+      for (const k of Object.keys(o.standAt || {})) npc(k, `${w} standAt`);
+      for (const k of Object.keys(o.anim || {})) npc(k, `${w} anim`);
+      for (const k of [...(o.frame || []), ...[].concat(o.who || []), o.duet, o.passenger, o.rider, ...(o.riders || []), o.partner, o.playerPassenger, o.oppPassenger]) npc(k, w);
+      spk(o.driver, `${w} driver`);
+      if (o.say) npc(o.say[0], `${w} say`);
+      for (const s of [o.seat, o.seated]) if (s && !g.cabin.seats[s]) P(`${w}: unknown seat '${s}'`);
+      lines(o.lines, `${w} lines`);
+      for (const r of o.radio || []) if (Array.isArray(r)) { spk(r[0], `${w} radio`); cue(r[2], `${w} radio`); }
+      for (const v of o.overhear || []) { lm(v.at, `${w} overhear`); lines(v.lines, `${w} overhear`); }
+      for (const [, c] of [...(o.events || []), ...(o.timedCues || [])]) cue(c, `${w} timed`);
+      for (const k of ['startCue', 'doneCue', 'useCue', 'fillCue']) cue(o[k], `${w} ${k}`);
+      if (o.checkpoint && !o.retryAt && !o.checkpoints) {
+        const at = window.__lm(d.at), to = o.to || o.at || o.near || o.area?.lm;
+        const l = typeof to === 'string' && lmOk(to) ? window.__lm(to) : null;
+        if (l && Math.hypot(l.x - at.x, l.z - at.z) > 60) P(`${w}: checkpoint > 60 m from at without retryAt`);
+      }
+    });
+  }
+  return out;
+}

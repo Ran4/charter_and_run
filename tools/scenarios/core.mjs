@@ -1,6 +1,6 @@
 // Core scenarios (Phase 0; Phase 2 owns them): start walk aerial drive traffic title talk missions
 // views transition story, plus `levels` (the game boots into both levels).
-import { check } from '../lib.mjs';
+import { check, missionDataProblems } from '../lib.mjs';
 import { M_FLIGHT } from '../story/flight.mjs';
 import { M_ISLAND } from '../story/island.mjs';
 
@@ -139,28 +139,9 @@ export const SCENARIOS = {
         check(s.ole === '14A' && s.majsan === '16E', 'ombord: Ole in 14A and Majsan in 16E from the start');
       }
     }
-    // Data checks: every key resolves, every far checkpoint has retryAt.
-    const bad = await T.ev(() => {
-      const g = __game, out = [];
-      const keyOk = (k) => k === 'stig' || !!g.npc(k);
-      for (const d of window.__missions()) {
-        const keys = [d.giver, ...(d.extra || []).map((e) => (Array.isArray(e) ? e[0] : e)), ...Object.keys(d.outroPlace || {}),
-          ...[...(d.intro || []), ...(d.outro || [])].map((l) => l[0])];
-        d.stages.forEach((f, i) => {
-          const o = f().o || {};
-          keys.push(...Object.keys(o.place || {}), ...(o.frame || []), ...Object.keys(o.findAt || {}), ...Object.keys(o.standAt || {}), ...Object.keys(o.sendTo || {}));
-          if (o.who) keys.push(...(Array.isArray(o.who) ? o.who : [o.who]));
-          if (o.duet) keys.push(o.duet);
-          if (o.checkpoint && !o.retryAt) {
-            const at = window.__lm(d.at), to = o.to || o.at || o.near;
-            const l = typeof to === 'string' ? window.__lm(to) : null;
-            if (l && Math.hypot(l.x - at.x, l.z - at.z) > 60) out.push(`${d.id} stage ${i}: checkpoint > 60 m from at without retryAt`);
-          }
-        });
-        for (const k of keys) if (k && !keyOk(k)) out.push(`${d.id}: unknown character '${k}'`);
-      }
-      return out;
-    });
+    // Data checks (tools/lib.mjs missionDataProblems): every character key and landmark resolves,
+    // seats exist, every far checkpoint has retryAt.
+    const bad = await T.ev(missionDataProblems);
     for (const b of bad) T.log('data:', b);
     check(!bad.length, 'mission data checks');
   },

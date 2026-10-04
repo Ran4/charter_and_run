@@ -38,6 +38,8 @@ const CABIN_OWNED = ['vardinna2'];
 // Public-domain traditional one-shot cues (§12.1): `music`/`sfx` cues with these names play
 // audio.trad(name) over the current tune instead of switching it.
 const TRAD = ['smaGrodorna', 'hejTomtegubbar', 'helanGar'];
+// `sfx` cues with a jingle name play audio.jingle(name) (§12.3; e.g. julafton's `sfx: 'pryl'`).
+const JINGLES = ['start', 'complete', 'fail', 'pryl'];
 const params = new URLSearchParams(location.search);
 const TEST = params.has('test');
 const TRAFFIC_MIX = ['hatch', 'hatch', 'hatch', 'hatch', 'sedan', 'sedan', 'wagon', 'van', 'taxi', 'pickup', 'guagua', 'icecream'];
@@ -311,6 +313,7 @@ class Game {
       const k = +slot.slice(6) || 1;
       obj.position.set((k % 2 ? 1 : -1) * (s.wid / 2 - 0.55), s.tall ? s.wheelR * 0.95 + 0.9 : top, s.len / 2 - 2.6 - Math.ceil(k / 2) * 1.7);
     } else obj.position.set(((car.riders.length % 2) ? 1 : -1) * s.wid * 0.22, s.tall ? s.wheelR * 0.95 + 0.9 : top - 0.05, s.tall ? s.len / 2 - 3.2 : -0.95);
+    if (typeof defKey === 'string') obj.userData.riderKey = defKey;
     car.tilt.add(obj);
     car.riders.push(obj);
     return obj;
@@ -318,6 +321,16 @@ class Game {
   removeRiders(car) {
     for (const o of car.riders || []) car.tilt.remove(o);
     car.riders = [];
+  }
+  // A character who is placed or shown in person leaves its rider bust behind (never twice).
+  removeRiderOf(key) {
+    for (const c of this.cars) {
+      if (!c.riders?.length) continue;
+      const mine = c.riders.filter((o) => o.userData.riderKey === key);
+      if (!mine.length) continue;
+      for (const o of mine) c.tilt.remove(o);
+      c.riders = c.riders.filter((o) => !mine.includes(o));
+    }
   }
 
   spawnTraffic(n) {
@@ -643,6 +656,7 @@ class Game {
     const n = this.npcs[key];
     if (!n) { console.warn('placeNpc: unknown key', key); return; }
     this.unseatAny(n);
+    this.removeRiderOf(key);
     n.state = 'normal';
     n.root.visible = true;
     n.teleport(q.x, q.z, yaw ?? q.yaw);
@@ -660,6 +674,7 @@ class Game {
   showNpc(key) {
     const n = this.npcs[key];
     if (!n) return;
+    this.removeRiderOf(key);
     if (n.state === 'hidden') n.state = 'normal';
     n.root.visible = true;
     n.busy = true;
@@ -876,7 +891,12 @@ class Game {
     if (c.pa) audio.dingdong();
     if (c.say) this.say(this.npc(c.say[0]), c.say[1], c.say[2] ?? 2.6);
     if (c.radio) this.radio(c.radio[0], c.radio[1]);
-    if (c.sfx) { if (audio[c.sfx]) audio[c.sfx](); else if (TRAD.includes(c.sfx)) audio.trad(c.sfx); else console.warn('cue: unknown sfx', c.sfx); }
+    if (c.sfx) {
+      if (JINGLES.includes(c.sfx)) audio.jingle(c.sfx);
+      else if (typeof audio[c.sfx] === 'function') audio[c.sfx]();
+      else if (TRAD.includes(c.sfx)) audio.trad(c.sfx);
+      else console.warn('cue: unknown sfx', c.sfx);
+    }
     if (c.fear) { this.shame.add(c.fear, { force: true }); this.interruptMantra(); }
     if (c.relieve) this.shame.relieve(c.relieve);
     if (c.shake) this.cam.shake = Math.max(this.cam.shake, c.shake);

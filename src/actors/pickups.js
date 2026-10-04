@@ -202,10 +202,11 @@ export class Rabbit {
     if (onGround) {
       this.y = g; this.vy = 0;
       this.hopT -= dt;
-      const dx = this.x - px, dz = this.z - pz, d = Math.hypot(dx, dz);
+      // Guard d = 0 (someone standing exactly on it): flee along +x instead of NaN.
+      const dx = this.x - px, dz = this.z - pz, d0 = Math.hypot(dx, dz), d = Math.max(d0, 1e-3);
       if (this.hopT <= 0) {
         let ax, az, sp;
-        if (d < 7) { ax = dx / d; az = dz / d; sp = 5.2; this.hopT = 0.05; }
+        if (d < 7) { ax = d0 > 1e-3 ? dx / d : 1; az = d0 > 1e-3 ? dz / d : 0; sp = 5.2; this.hopT = 0.05; }
         else {
           const hx = this.home[0] - this.x, hz = this.home[1] - this.z, hd = Math.hypot(hx, hz);
           const a = Math.random() * Math.PI * 2;

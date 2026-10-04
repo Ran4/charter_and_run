@@ -130,6 +130,7 @@ export const collect = (o) => common(o, {
     }
     if (this.got >= this.total) return 'done';
   },
+  cleanup() { this.offJolt?.(); this.offJolt = null; },
   // A rounded-up character: bubbles, then back to the plane seat or off to where they belong.
   touched(g, m, e) {
     e.alive = false;
@@ -234,15 +235,10 @@ export const carry = (o) => common(o, {
     this.failOn = { bumped: true, fall: true, ...(o.failOn || {}) };
     const p = g.player;
     if (o.who) {
-      const n = (this.npc = g.npc(o.who));
-      g.unseatAny(n);
-      n.state = 'seated';
-      n.root.visible = true;
-      n.anim.slump = true;
-      n.busy = true;
+      // He is lifted onto the shoulders once the player is on foot (until then he keeps his seat).
+      this.npc = g.npc(o.who);
+      this.lifted = false;
       g.carrying = { who: o.who };
-      p.anim.carryOver = true;
-      g.speedCap = o.walkSpeed ?? g.levelDef.speeds.walk;
     } else {
       this.mesh = new Collectible(g.scene, o.item || 'juice', 'carry', p.x, p.y + p.height + 0.2, p.z, { motion: 'none' });
       const c = this.mesh;
@@ -254,8 +250,24 @@ export const carry = (o) => common(o, {
     g.bumpedT = 0;
   },
   target() { return { x: this.to.x, z: this.to.z, r: o.radius ?? 1.2 }; },
+  lift(g) {
+    const n = this.npc, p = g.player;
+    g.unseatAny(n);
+    n.state = 'seated';
+    n.root.visible = true;
+    n.anim.slump = true;
+    n.busy = true;
+    p.anim.carryOver = true;
+    g.speedCap = o.walkSpeed ?? g.levelDef.speeds.walk;
+    g.bumpedT = 0;
+    this.lifted = true;
+  },
   update(g, m, dt) {
     const p = g.player, F = this.failOn;
+    if (this.npc && !this.lifted) {
+      if (g.playerCar || p.state !== 'normal') { this.sub = S.exitCar; return; }
+      this.lift(g);
+    }
     if (F.bumped && g.bumpedT > 0) return { fail: o.failText || S.outOfTime };
     if (F.fall && (p.state === 'flung' || p.state === 'down')) return { fail: o.failText || S.outOfTime };
     if (F.sprintSecs != null) {
@@ -281,7 +293,7 @@ export const carry = (o) => common(o, {
     p.anim.carryOver = false;
     p.anim.cupUp = false;
     if (this.mesh) { this.mesh.remove(); g.scene.remove(this.mesh.mesh); }
-    if (this.npc) {
+    if (this.npc && this.lifted) {
       const n = this.npc;
       n.anim.slump = false;
       n.root.rotation.set(0, 0, 0);

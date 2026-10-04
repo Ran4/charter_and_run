@@ -211,6 +211,18 @@ function clearSpot(g, car, r = 7) {
   }
 }
 
+// Abandoned cars (unlocked, unnamed, no driver, no AI, not the player's) standing in the lanes of
+// a mission route are removed at init: a route car would otherwise wait behind them for ever (e.g.
+// the car the player left on the road when he took over the pig truck).
+function clearRoute(g, nodes, end, except = []) {
+  const path = new LanePath(nodes, { endPoint: end });
+  path.ensure(100000);
+  for (const c of g.cars.slice()) {
+    if (except.includes(c) || c === g.playerCar || c.locked || c.name || c.ai || c.driver || c.traffic) continue;
+    if (path.pts.some((q) => Math.hypot(q.x - c.x, q.z - c.z) < 3.5)) g.removeCar(c);
+  }
+}
+
 // ---------------------------------------------------------------------------------------------
 // getInCar: car? (named, recreated if wrecked) · missionCar? (a car in m.cars) · passenger? ·
 // rider? / riders? · hideRiders? · any = true · say?
@@ -426,6 +438,7 @@ export const follow = (o) => common(o, {
     const end = at(o.to);
     const nodes = startNodes(car);
     for (const v of (o.via || []).map(nodeRef)) nodes.push(...findPath(nodes[nodes.length - 1], v).slice(1));
+    clearRoute(g, nodes, [end.x, end.z], [car]);
     this.ai = car.ai = new AIDriver(car, { mode: 'route', path: new LanePath(nodes, { endPoint: [end.x, end.z] }), cruise: 0, wobble: o.wobble || 0, onArrive: () => { this.arrived = true; } });
     this.arrived = false;
     this.lose = 0;
@@ -510,14 +523,14 @@ export const rabbits = (o) => common(o, {
     const canCatch = !(o.onFoot && g.playerCar);
     for (const r of this.list) {
       if (!r.alive) continue;
-      r.update(dt, f.x, f.z);
-      if (canCatch && dist(f.x, f.z, r.x, r.z) < (g.playerCar ? 2.8 : 1.4) && Math.abs(f.y - r.y) < 2) {
-        r.remove(g.scene);
-        this.got++;
-        audio.pickup();
-        fx.sparkle(r.x, r.y + 0.5, r.z, 0xffffff, 16);
-        hud.toast(`${o.gotText || ''} ${this.got}/${o.count}`.trim());
-      }
+      // Catch first, then let it hop (a rabbit you stand on is caught, not flung away).
+      const caught = canCatch && dist(f.x, f.z, r.x, r.z) < (g.playerCar ? 2.8 : 1.4) && Math.abs(f.y - r.y) < 2;
+      if (!caught) { r.update(dt, f.x, f.z); continue; }
+      r.remove(g.scene);
+      this.got++;
+      audio.pickup();
+      fx.sparkle(r.x, r.y + 0.5, r.z, 0xffffff, 16);
+      hud.toast(`${o.gotText || ''} ${this.got}/${o.count}`.trim());
     }
     if (this.got >= o.count) return 'done';
   },
@@ -556,6 +569,7 @@ export const race = (o) => common(o, {
     const nodes = startNodes(opp);
     for (const n of o.checkpoints) nodes.push(...findPath(nodes[nodes.length - 1], nodeRef(n)).slice(1));
     nodes.push(...findPath(nodes[nodes.length - 1], nearestNode(fin.x, fin.z)).slice(1));
+    clearRoute(g, nodes, [fin.x, fin.z], [opp, pc]);
     this.ai = opp.ai = new AIDriver(opp, {
       mode: 'route', path: new LanePath(nodes, { endPoint: [fin.x, fin.z] }), cruise: 0, avoid: false,
       rubber: () => this.rubber,
