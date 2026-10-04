@@ -180,12 +180,12 @@ export const hud = {
       this.objBarFill.style.background = o.barColor || '';
       this.objBarLabel.textContent = o.barLabel || '';
       if (o.zone) {
-        this.objZone.style.display = '';
+        this.objZone.style.display = 'block';
         this.objZone.style.left = `${o.zone[0] * 100}%`;
         this.objZone.style.width = `${Math.max(0, o.zone[1] - o.zone[0]) * 100}%`;
       } else this.objZone.style.display = 'none';
       if (o.marker != null) {
-        this.objMarker.style.display = '';
+        this.objMarker.style.display = 'block';
         this.objMarker.style.left = `${Math.max(0, Math.min(1, o.marker)) * 100}%`;
       } else this.objMarker.style.display = 'none';
     } else this.objBar.style.display = 'none';

@@ -256,6 +256,7 @@ export const SCENARIOS = {
     await T.startMission();
     await footAt(T, 'asnestand', { approach: true });
     await T.until(() => __game.missions.stage?.phase === 'bid', 15000);
+    await T.shot('kinds_haggle');
     await T.ev(() => { const g = __game, c = g.cars.find((c) => !c.locked && !c.noEnter && !c.dead); const p = g.player; c.place(p.x + 2.2, p.z, 0); });
     await T.frames(3);
     check(await T.ev(() => __game.nearestInteractable()?.it?.id === 'haggle'), 'haggle bid outranks the car next to the player');
@@ -273,6 +274,9 @@ export const SCENARIOS = {
     await useSynthetic(T, `{ stages: [() => K.follow({ type: 'hatch', carName: 'joseBil', driver: 'jose', passenger: 'siv', riders: ['mamma'], start: { lane: [[5, 3], [4, 3]], t: 12 }, via: [[4, 4], [3, 4]], to: 'grillpacoCurb', maxDist: 75, minDist: 14, minGrace: 2, minText: 'TOO-CLOSE', cruise: 10, text: 'f' })] }`);
     await T.startMission();
     await T.anyCar();
+    await T.ev(() => { const g = __game, c = g.missions.stage.car; g.debugWarp(c.x - Math.sin(c.yaw) * 25, c.z - Math.cos(c.yaw) * 25, c.yaw); });
+    await T.sleep(1500);
+    await T.shot('kinds_follow');
     const o = await T.ev(() => __game.missions.objective());
     check(o.zone && o.zone[1] > 0.7 && o.zone[1] < 0.9, 'follow minDist: green zone on the bar');
     const t0 = Date.now();
@@ -297,6 +301,7 @@ export const SCENARIOS = {
     let v1 = await T.ev(() => __game.missions.stage.ride.v);
     T.log('smooth bar', v0.toFixed(1), '->', v1.toFixed(1));
     check(v0 < 1 && v1 > 12, 'smooth: an impact raises ÅKSJUKA, the teleport did not');
+    await T.shot('kinds_smooth');
     await T.frames(40);
     const v2 = await T.ev(() => __game.missions.stage.ride.v);
     check(v2 < v1, 'smooth: the bar decays');
