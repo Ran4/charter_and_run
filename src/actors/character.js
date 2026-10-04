@@ -25,7 +25,7 @@ export class Character {
     this.timer = 0;
     this.wishX = 0; this.wishZ = 0;
     this.faceWish = true;
-    this.anim = { speed: 0, air: false, vy: 0, kick: 0, talk: false, seated: false, flung: false, down: false, t: Math.random() * 10, spin: 0, look: 0, wave: false, cheer: false, sprint: false };
+    this.anim = { speed: 0, air: false, vy: 0, kick: 0, talk: false, seated: false, flung: false, down: false, t: Math.random() * 10, spin: 0, look: 0, wave: false, cheer: false, sprint: false, yell: false };
     for (const f of ANIM_FLAGS) this.anim[f] = false;
     this.car = null;
     this.spin = 0; this.spinRate = 0;

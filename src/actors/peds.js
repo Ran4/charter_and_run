@@ -8,8 +8,10 @@ import { N } from '../world/layout.js';
 import { mulberry32, pick, yawTo } from '../util.js';
 
 const r = mulberry32(99);
-// Dodge shouts (DESIGN §6.7). 'Herre jävlar!' [F*] (film line, relocated); the rest [N].
-const DODGE = ['Akta!', 'Hallå där!', 'Herre jävlar!', '¡Cuidado!', 'Turister!'];
+// Dodge shouts (DESIGN §6.7): Swedish tourists shout in Swedish, the locals in Spanish (or about
+// the tourists). 'Herre jävlar!' is [F*] (film line, relocated); the rest are [N].
+const DODGE_SV = ['Akta!', 'Hallå där!', 'Herre jävlar!'];
+const DODGE_ES = ['¡Cuidado!', 'Turister!'];
 
 export class Ped {
   constructor(scene, loop) {
@@ -67,7 +69,7 @@ export class Ped {
         c.jump(6.5);
         c.wishX = threat.dx * 6; c.wishZ = threat.dz * 6;
         c.vx = c.wishX; c.vz = c.wishZ;
-        if (r() < 0.5) game.say(c, pick(DODGE), 1.2);
+        if (r() < 0.5) game.say(c, pick(c.def.local ? DODGE_ES : DODGE_SV), 1.2);
         return;
       }
     } else {
