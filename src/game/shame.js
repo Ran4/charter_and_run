@@ -153,7 +153,7 @@ export class Shame {
     this.pursuers = [];
     this.hideOfficer();
     audio.siren(false);
-    audio.setTune(g.levelDef?.tune || 'sol');
+    audio.setTune(g.levelTune?.() || g.levelDef?.tune || 'sol');
     if (!caught) {
       const [main, sub] = this.cfg.bannerEscape || ['', ''];
       hud.showBanner(main, sub, 'good', 2200);
@@ -175,17 +175,20 @@ export class Shame {
     hud.flashColor('rgba(60,110,70,0.7)');
     const [main, sub, none] = c.bannerCaught || ['', '', ''];
     hud.showBanner(main, fine ? String(sub || fmt('busted', { n: fine })).replace('{n}', fine) : none, 'skandal', 3000);
-    // Frozen beside the officer for bustFreeze seconds.
+    // Frozen beside the officer for bustFreeze seconds. endPursuit first (it hides the officer),
+    // then the officer is (re)placed 1.1 m in front of the player, whether the bust came on foot or
+    // from a ram while the player was in a car (the officer is hidden then, possibly far away).
     g.frozenT = c.bustFreeze ?? 3;
-    const o = this.officer;
-    if (o && o.state !== 'hidden') {
-      const p = g.player;
-      o.x = p.x + Math.sin(p.yaw) * 1.1; o.z = p.z + Math.cos(p.yaw) * 1.1;
-      o.yaw = yawTo(p.x - o.x, p.z - o.z);
-      g.say(o, c.bustLine || '¡Documentación!', 2.2);
-    }
     this.endPursuit(true);
-    if (o) { o.state = 'normal'; o.root.visible = true; this.officerLinger = c.bustFreeze ?? 3; }
+    const p = g.player;
+    let ox = p.x + Math.sin(p.yaw) * 1.1, oz = p.z + Math.cos(p.yaw) * 1.1;
+    if (!g.spotFree(ox, oz) || !g.levelDef.inBounds(ox, oz, g)) { const s = g.freeSpot(p.x, p.z, 1, 2); ox = s.x; oz = s.z; }
+    const o = this.ensureOfficer(ox, oz);
+    o.wishX = o.wishZ = 0;
+    o.yaw = yawTo(p.x - o.x, p.z - o.z);
+    o.sync(0);
+    g.say(o, c.bustLine || '¡Documentación!', 2.2);
+    this.officerLinger = c.bustFreeze ?? 3;
     g.missions.onBusted?.();
   }
 

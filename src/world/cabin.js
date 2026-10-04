@@ -317,6 +317,12 @@ export function buildCabin(scene, game) {
     },
 
     // ---- turbulence (§5.7) ----
+    // True from the warning (chime, belt sign, banner) until the shaking ends: the window in which
+    // main.js shows the `Håll i dig!` prompt. Part of the §14.7 contract.
+    get turbulent() {
+      const T = this._turb;
+      return !!T && T.warned && T.t - T.delay - T.warn <= T.secs;
+    },
     turbulence(strength, secs, { warn = 1.5, delay = 0 } = {}) {
       this._turb = { strength, secs, warn, delay, t: 0, started: false, warned: false, joltT: 0.8, shakeT: 0, rattleT: 0, unheld: 0, beltBefore: this.seatbelt, endT: null };
     },

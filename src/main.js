@@ -89,6 +89,12 @@ class Game {
     this.bumpedT = 0;
     this.frozenT = 0;
     this.islandOutfit = 'kostym';
+    this.islandTune = 'sol';     // 'sol' | 'samba' (§10.3 samba unlock, §10.5 save `tune`)
+    // Player anim flags the engine itself drives; it clears only what it set, so a cue's timed
+    // pose on the player (e.g. `wings` in the grisfest/julafton outros) survives (§9.3 anim).
+    this.mantraPose = false;
+    this.holdPose = false;
+    this.flailPose = false;
     this.sky = 'day';
     this.pendingEndCard = false;
     this.collectibles = {};
@@ -165,7 +171,7 @@ class Game {
     document.getElementById('title').classList.add('gone');
     document.body.classList.add('playing');
     audio.init();
-    audio.setTune(this.levelDef.tune);
+    audio.setTune(this.levelTune());
     if (!TEST) { input.wantLock = true; input.lock(); }
     if (this.missions.index === 0 && !TEST) setTimeout(() => hud.toast(S.firstStart), 1200);
   }
@@ -178,6 +184,7 @@ class Game {
     audio.skid(0);
     audio.horn(false);
     if (on) audio.pauseLoops(); else audio.resumeLoops();
+    if (on) { const b = document.getElementById('music'); if (b) b.textContent = this.musicLabel(); }
     if (!on) { input.wantLock = true; input.lock(); this.last = performance.now(); }
   }
 
@@ -197,7 +204,7 @@ class Game {
     setShadows(def.shadows);
     for (const c of this.cars) if (c.traffic && !def.sim.traffic) c.root.visible = false;
     for (const p of this.peds) if (!def.sim.peds) p.char.root.visible = false;
-    audio.setTune(def.tune);
+    audio.setTune(this.levelTune());
     this.mantraMode = false;
     this.holding = false;
     if (name === 'flight') {
@@ -237,8 +244,28 @@ class Game {
   restoreAmbience() {
     if (this.level === 'flight') this.cabin.applyPalette();
     else this.setSky(this.levelDef.palette || 'day');
-    audio.setTune(this.levelDef.tune);
+    audio.setTune(this.levelTune());
     this.mantraMode = false;
+  }
+
+  // The current level's ambient tune: the flight's `muzak`, the island's `sol` or (after the samba
+  // unlock, chosen in the pause menu) `samba`. Everything that reverts the music uses this.
+  levelTune() { return this.level === 'island' ? this.islandTune : this.levelDef?.tune || 'sol'; }
+  // Choose the island tune ('sol' | 'samba'); switches now if the island's ambient tune is playing
+  // (never over a pursuit's `skandal` or a mission's music cue). Persisted in the save.
+  setIslandTune(name) {
+    const prev = this.levelTune();
+    this.islandTune = name === 'samba' ? 'samba' : 'sol';
+    if (this.level === 'island' && audio.tune === prev) audio.setTune(this.islandTune);
+    this.save();
+  }
+  musicLabel() { return !audio.musicOn ? S.musicOff : this.islandTune === 'samba' ? S.musicSamba : S.musicOn; }
+  // Pause-menu Musik button: på → samba (once unlocked) → av → på (§11.3).
+  cycleMusic() {
+    if (!audio.musicOn) { if (this.islandTune !== 'sol') this.setIslandTune('sol'); audio.setMusic(true); }
+    else if (this.islandTune !== 'samba' && this.unlocked.has('samba')) this.setIslandTune('samba');
+    else audio.setMusic(false);
+    return this.musicLabel();
   }
 
   setSky(name) {
@@ -682,9 +709,12 @@ class Game {
 
   // Everyone to their place in the current home set; the idle mission's giver to `at` (a giver
   // whose home is a plane seat stays seated), its `extra` around `at`. Busy NPCs are skipped
-  // unless forced.
+  // unless forced. A forced placement also re-applies the home set's outfits (§10.4), so the
+  // outfit set follows missions.index (gate -> flight without a level change) and cue outfits
+  // revert when a mission ends; not during the outro, which still shows the mission's costumes.
   placeNpcs(force = false) {
     if (!this.levelDef) return;
+    if (force && this.missions.state !== 'outro') this.applyOutfits();
     const set = this.levelDef.homes(this);
     const ms = this.missions;
     const cur = ms.state === 'idle' && ms.current && ms.current.level === this.level ? ms.current : null;
@@ -1023,6 +1053,7 @@ class Game {
     }
     if (u.hook) worldHooks[u.hook]?.(true);
     if (u.home) Object.assign(this.homeOverrides, u.home);
+    // u.tune: offered by the pause-menu Musik button once unlocked (cycleMusic); never auto-played.
   }
   // Phase 0 stub: the two banners only (the Rio cinematic is wired in Phase 2).
   async playEndCard() {
@@ -1109,7 +1140,7 @@ class Game {
       localStorage.setItem(SAVE_KEY, JSON.stringify({
         v: 1, mission: this.missions.index, coins: this.coins,
         collected: { prylar: [...this.collected.prylar], fenor: [...this.collected.fenor] },
-        unlocked: [...this.unlocked], outfit: this.islandOutfit, tune: 'sol',
+        unlocked: [...this.unlocked], outfit: this.islandOutfit, tune: this.islandTune,
       }));
     } catch (e) { /* private mode: progress just won't persist */ }
   }
@@ -1124,6 +1155,7 @@ class Game {
           this.collected.fenor = new Set(s.collected?.fenor || []);
           this.unlocked = new Set(s.unlocked || []);
           this.islandOutfit = s.outfit || 'kostym';
+          this.islandTune = s.tune === 'samba' && this.unlocked.has('samba') ? 'samba' : 'sol';
         }
       } catch (e) { /* corrupt save: start fresh */ }
     }
@@ -1218,7 +1250,11 @@ class Game {
     if (this.inDialog || this.missions.state === 'failed') return;
     const p = this.player;
     if (input.pressed('reset')) {
+      // Never while busted-frozen or flailing (§14.3 frozenT, §5.9).
+      if (this.frozenT > 0 || this.shame.panicT > 0) return;
       if (p.seatId) { if (this.stageLocksSeat()) return; this.standPlayer(); }
+      // R is never a free teleport to a carry goal (cabinRow14 is both): it spills the carry.
+      if (this.carrying) this.bumpedT = 0.4;
       this.resetPlayer();
       return;
     }
@@ -1279,6 +1315,7 @@ class Game {
     if (canMantra && input.down('attack')) {
       this.mantraHeldT += h * this.timeScale;
       p.anim.wings = true;
+      this.mantraPose = true;
       if (this.mantraHeldT >= this.mantraWindUp) {
         this.mantraOn = true;
         if (this.shame.mode === 'panic') this.shame.relieve(25 * h * this.timeScale);
@@ -1290,12 +1327,13 @@ class Game {
       this.mantraHeldT = 0;
       this.mantraOn = false;
       this.mantraSayT = 0;
-      p.anim.wings = false;
+      if (this.mantraPose) { p.anim.wings = false; this.mantraPose = false; }
     }
     // HÅLL I DIG (Space held, flight): grab a seat back, stop moving.
     this.holding = verbs.hold && !this.playerCar && p.state === 'normal' && !frozen && input.down('jump');
-    p.anim.hold = this.holding;
-    p.anim.flail = this.shame.panicT > 0;
+    if (this.holding !== this.holdPose) p.anim.hold = this.holdPose = this.holding;
+    const flail = this.shame.panicT > 0;
+    if (flail !== this.flailPose) p.anim.flail = this.flailPose = flail;
     // Player intent.
     if (this.playerCar) {
       const c = this.playerCar.ctrl;
@@ -1590,7 +1628,7 @@ class Game {
         else if (it?.type === 'car') prompt = it.car.locked ? '' : it.car.driverBust ? S.promptSteal : S.promptGetIn;
         else if (it?.type === 'it') prompt = it.it.prompt || '';
         else if (it?.type === 'stand') prompt = S.promptStand;
-        if (!prompt && this.level === 'flight' && this.cabin._turb && p.state === 'normal' && !this.holding) prompt = S.promptHold;
+        if (!prompt && this.level === 'flight' && this.cabin.turbulent && p.state === 'normal' && !this.holding) prompt = S.promptHold;
       }
       hud.setPrompt(prompt);
     }
@@ -1680,5 +1718,5 @@ game.init().catch((e) => {
 document.getElementById('play').addEventListener('click', () => game.start());
 document.getElementById('resume').addEventListener('click', () => game.pause(false));
 document.getElementById('reset').addEventListener('click', () => { if (confirm(S.eraseConfirm)) game.resetSave(); });
-document.getElementById('music').addEventListener('click', (e) => { audio.setMusic(!audio.musicOn); e.target.textContent = audio.musicOn ? S.musicOn : S.musicOff; });
+document.getElementById('music').addEventListener('click', (e) => { e.target.textContent = game.cycleMusic(); });
 document.getElementById('sound').addEventListener('click', (e) => { audio.setMuted(!audio.muted); e.target.textContent = audio.muted ? S.soundBtnOff : S.soundBtnOn; });

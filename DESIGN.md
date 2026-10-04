@@ -274,7 +274,7 @@ Physical keys are unchanged from Bigmouth. The level config turns verbs on and o
 | `attack` | J / left click / X | kick, stomp in the air | **hold = mantra** "Jag kan flyga, jag är inte rädd": `wings` pose, cannot move, fear −25/s after 0.3 s wind-up, bubble every 2.5 s |
 | `interact` | E / F / Enter / Y | talk, enter/exit car, steal car, interactables | talk, **sit/stand** ("E Sätt dig" / "E Res dig"), toilets ("E Lås in dig"), call button, trolley |
 | `map` | M / Tab | big map | cabin/gate plan |
-| `reset` | R | unstick (back to the road) | back to the level's reset spot (`cabinRow14` if inside the cabin, else `gateLounge`); seated: `standPlayer()` first; ignored while a `timeline` locks the seat |
+| `reset` | R | unstick (back to the road) | back to the level's reset spot (`cabinRow14` if inside the cabin, else `gateLounge`); seated: `standPlayer()` first; ignored while a `timeline` locks the seat; both levels: ignored while `frozenT > 0` or during PANIK; while `carrying`, R sets `bumpedT = 0.4` first (spills/fails the carry: R is never a free teleport to a carry goal) |
 | horn / mute / pause | H / N / Esc, P | as Bigmouth | same (no horn) |
 
 - **Mantra on the island**: J is kick. A `mantra` stage sets `game.mantraMode = true` so J holds
@@ -1965,7 +1965,7 @@ kind cues `useCue` (interact) and `fillCue` (mantra).
 | `music: name \| {tune, secs}` | `audio.setTune(name)`; with `secs`, revert to the previous tune after; a trad name plays `audio.trad(name)` over the current tune |
 | `sky: 'day' \| 'night' \| 'sunset'` | island palette |
 | `place: {key: [lm, dx, dz]}` · `hide: [keys]` · `show: [keys]` | `game.placeNpc` / `hideNpc` / `showNpc` |
-| `anim: {who: key \| [keys], flag, secs}` | set `ch.anim[flag] = true` for `secs` |
+| `anim: {who: key \| [keys], flag, secs}` | set `ch.anim[flag] = true` for `secs` (on the player too: fixedStep clears `wings`/`hold`/`flail` only when it set them itself, so a cue pose survives a dialogue) |
 | `coins: n` | add (negative = remove, floored at 0) |
 | `pay: n` | `game.pay(n)` (Ole pays if short) |
 | `flash: css \| 'white'` · `banner: [main, sub, cls]` · `toast: html` | HUD |
@@ -2100,6 +2100,12 @@ Player: `arlanda` (mission 1) → `kostym` (from mission 1's outro, flight, isla
 `hawaii` (buss17 outro cue; persisted) → `rio` (end card only). NPC outfits by home set from
 `LEVEL_OUTFITS` via `levelDef.outfits(g)` (gate set only while `missions.index === 0`, §4.2) and by cue (`ole` `gris` in grisfest stage 5 via cue, `lasse` `jul` in
 julafton). Cut fallback: no swaps.
+**Re-application (review fix 1):** `placeNpcs(true)` re-applies the home set's outfits
+(`applyOutfits`) whenever the runner is not in `outro`, so the gate → flight set follows
+`missions.index` without a level change, a cue outfit lasts through its mission's outro and reverts
+when the runner goes idle (or on fail; a checkpoint retry re-applies `startCue`/`doneCue` outfits,
+so put a mid-mission NPC outfit on a stage `startCue`, not on a dialogue line). The player on the
+island keeps `islandOutfit` (persisted by cue); in the flight level the set's `stig` wins.
 
 ### 10.5 Save
 
@@ -2452,6 +2458,14 @@ game.levelFor(index) -> 'flight' | 'island'
 game.setLevel(name, { index, instant = true } = {})
 async game.transitionTo(name)
 game.restoreAmbience()                    // palette for level/phase, level tune, mantraMode=false
+game.levelTune() -> name                  // review fix 1: the level's ambient tune (flight `muzak`;
+                                          // island game.islandTune). Everything that reverts the
+                                          // music uses it (setLevel, restoreAmbience, shame.endPursuit)
+game.islandTune                           // 'sol' | 'samba' (saved as `tune`, §10.5)
+game.setIslandTune(name)                  // switches now only if the island's ambient tune is
+                                          // playing (never over `skandal` or a music cue); saves
+game.cycleMusic() -> label;  game.musicLabel()   // pause-menu Musik: på → samba (after the
+                                          // unlock) → av → på (§11.3)
 game.setSky(name)                         // island palettes: 'day' | 'night' | 'sunset'
 
 // ---- NPCs ----
@@ -2461,7 +2475,8 @@ game.placeNpc(key, lm, dx = 0, dz = 0, yaw?)   // unseat first (car: g.unseat(ch
                                           // cabin.unseatCharacter(ch)), then teleport, show,
                                           // busy = true until placeNpcs(true); key 'stig' = player
 game.hideNpc(key);  game.showNpc(key)     // hideNpc unseats first too
-game.placeNpcs(force = false)             // §4.5
+game.placeNpcs(force = false)             // §4.5; force also re-applies levelDef.outfits(g)
+                                          // (applyOutfits) except during an outro (§10.4)
 game.setNpcOutfit(key, name);  game.setPlayerOutfit(name)   // re-render portraits
 game.say(target, text, secs = 2);  game.radio(who, text)
 
@@ -2505,7 +2520,7 @@ async game.playEndCard()                  // §11.7: Phase 0 ships a stub (the t
 // ---- meter hooks ----
 game.onPanicIdle()                        // §5.9
 game.interruptMantra()                    // jolts and fear cues: a held mantra restarts its wind-up (0.6 s)
-game.frozenT                              // > 0 while frozen (bust freeze); input ignored
+game.frozenT                              // > 0 while frozen (bust freeze); input ignored (R too)
 
 // ---- map ----
 game.mapMarkers(all);  game.mapLabels();  game.mapLegend() -> html
@@ -2644,6 +2659,8 @@ cabin = {
   onJolt(fn) -> remove,          // fn({ strength }) per turbulence jolt
   setSeatbelt(on, { chime = true } = {}),
   turbulence(strength, secs, { warn = 1.5, delay = 0 } = {}),
+  turbulent -> bool,             // getter (review fix 1): true from the warning until the shaking
+                                 // ends; main.js shows the `Håll i dig!` prompt on it (§5.7 step 1)
   seatCharacter(ch, seatId),  unseatCharacter(ch, spot?),  unseatAll(),  seatOf(ch) -> id | null,
   startTrolley(),  stopTrolley(),  trolleyEnd(g) -> { x, z },
   setAisleBlockers(on),
