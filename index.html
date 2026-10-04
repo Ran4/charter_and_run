@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Bigmouth & Run</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script type="importmap">
+    { "imports": { "three": "./node_modules/three/build/three.module.js", "three/addons/": "./node_modules/three/examples/jsm/" } }
+  </script>
+</head>
+<body>
+  <div id="app"></div>
+  <div id="hud"></div>
+
+  <div id="title">
+    <div class="title-card">
+      <h1><span class="t1">BIGMOUTH</span><span class="amp">&amp;</span><span class="t2">RUN</span></h1>
+      <p class="tag">Puberty is a hit and run. Bridgeton is about to find out.</p>
+      <button id="play" class="btn big" disabled>Play</button>
+      <div id="loading">Loading…</div>
+      <div class="controls">
+        <div><b>WASD</b> move / drive</div>
+        <div><b>Mouse</b> look</div>
+        <div><b>Shift</b> sprint</div>
+        <div><b>Space</b> jump (twice!) · handbrake</div>
+        <div><b>Click / J</b> kick · in the air: stomp</div>
+        <div><b>E</b> talk · get in / out · steal cars</div>
+        <div><b>M</b> map · <b>H</b> horn · <b>N</b> mute</div>
+        <div><b>R</b> unstick · <b>Esc</b> pause</div>
+      </div>
+      <p class="fine">A fan-made tribute. Not affiliated with anyone with a real lawyer.</p>
+    </div>
+  </div>
+
+  <div id="pause">
+    <div class="pause-card">
+      <h2>Paused</h2>
+      <button id="resume" class="btn big">Resume</button>
+      <div class="row">
+        <button id="music" class="btn">Music: on</button>
+        <button id="sound" class="btn">Sound: on</button>
+      </div>
+      <button id="reset" class="btn danger">Erase progress</button>
+      <div class="controls">
+        <div><b>WASD</b> move / drive</div>
+        <div><b>Shift</b> sprint</div>
+        <div><b>Space</b> jump · handbrake</div>
+        <div><b>Click / J</b> kick</div>
+        <div><b>E</b> talk · car in / out</div>
+        <div><b>M</b> map</div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>
