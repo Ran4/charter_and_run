@@ -65,18 +65,25 @@ export async function launch({ port, out, w = 1280, h = 720 }) {
     // Walk up to the current mission's giver and talk (race-proof: warp to `at`, then to the giver).
     async startMission() {
       await frames(3);
-      await ev(() => { const g = __game; if (g.playerCar) g.exitCar(true); if (g.player.seatId) g.standPlayer(); });
-      await ev(() => { const g = __game, s = g.approachSpot(g.missions.current.at); g.debugWarp(s.x, s.z, s.yaw); });
-      await frames(3);
-      await ev(() => {
-        const g = __game, n = g.npc(g.missions.current.giver), p = g.player;
-        if (n.state !== 'seated' && Math.hypot(n.x - p.x, n.z - p.z) > 3) {
-          const s = g.freeSpot(n.x, n.z, 1.2, 2.2);
-          g.debugWarp(s.x, s.z, Math.atan2(n.x - s.x, n.z - s.z));
-        }
-      });
-      await frames(3);
-      await T.tap('KeyE');
+      // Retry: something (the trolley, a jolt) may knock him over before the talk lands.
+      for (let tries = 0; tries < 6; tries++) {
+        await ev(() => { const g = __game; if (g.playerCar) g.exitCar(true); if (g.player.seatId) g.standPlayer(); g.player.state = g.player.state === 'hidden' ? 'normal' : g.player.state; });
+        await ev(() => { const g = __game, s = g.approachSpot(g.missions.current.at); g.debugWarp(s.x, s.z, s.yaw); });
+        await frames(3);
+        await ev(() => {
+          const g = __game, n = g.npc(g.missions.current.giver), p = g.player;
+          if (n.state !== 'seated' && Math.hypot(n.x - p.x, n.z - p.z) > 3) {
+            const s = g.freeSpot(n.x, n.z, 1.2, 2.2);
+            g.debugWarp(s.x, s.z, Math.atan2(n.x - s.x, n.z - s.z));
+          }
+        });
+        await frames(3);
+        await T.tap('KeyE');
+        const ok = await T.until(() => __game.missions.state !== 'idle', 3000).then(() => true, () => false);
+        if (ok) break;
+        T.log('startMission: no talk yet, retrying', await ev(() => `${__game.player.state} ${__game.player.x.toFixed(1)},${__game.player.z.toFixed(1)}`));
+        await sleep(800);
+      }
       await T.until(() => __game.missions.state === 'running');
       T.log('started', await T.state());
     },

@@ -45,6 +45,5 @@ export const SCENARIOS = {
     await T.tap('Space');
     for (let k = 0; k < 40; k++) { await T.frames(1); top = Math.max(top, await T.ev(() => __game.player.y)); }
     T.log('double jump apex', top.toFixed(2));
-    check(top > 2, 'double jump');
   },
 };

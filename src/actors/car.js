@@ -7,7 +7,8 @@ import { clamp, damp, pick } from '../util.js';
 import { fx as FX } from '../game/fx.js';
 
 // DESIGN §6.6. Spec flags: tall, bus, bed, icecream, livery ('suntrip' | 'guagua'), guardia, taxi,
-// pigs, build (custom geometry: (spec, color) -> { geo, glass }), noWheels, noSpeedo.
+// pigs, build (custom geometry: (spec, color) -> { geo, glass }), noWheels, noSpeedo. (The
+// Bigmouth hearse/muscle geometry branches below are dead code until WP-E removes them.)
 // Car fields set by game code: noEnter (never offered to the player), noExplode (damage -> dead +
 // steam, no fire), isPursuer, riders[] (decorative busts), locked.
 const SEDAN = { len: 4.5, wid: 1.9, bodyH: 0.62, cabinH: 0.68, wheelR: 0.36, maxSpeed: 31, accel: 12, grip: 9.5, steer: 0.6, mass: 1400, hp: 100, cabin: [-0.3, 0.12] };
@@ -25,10 +26,12 @@ export const CAR_TYPES = {
   taxi: { name: 'Taxi', ...SEDAN, color: 0xe8dcb8, taxi: true },
   guardia: { name: 'Guardia Civil', len: 4.2, wid: 1.9, bodyH: 1.45, cabinH: 0, wheelR: 0.4, maxSpeed: 30, accel: 12, grip: 9, steer: 0.58, mass: 2000, hp: 160, color: 0x2e5e3e, tall: true, guardia: true },
   grisbil: { name: 'Grisbilen', ...PICKUP, maxSpeed: 34, accel: 14, color: 0xa8442a, pigs: true },
-  // Bigmouth leftovers (no longer spawned; their geometry branches stay until WP-E removes them).
-  hearse: { name: 'Hearse', len: 5.8, wid: 2.0, bodyH: 0.62, cabinH: 0.82, wheelR: 0.38, maxSpeed: 33, accel: 12.5, grip: 9.2, steer: 0.56, mass: 2000, hp: 150, cabin: [-0.47, 0.08], color: 0x1d1426, hearse: true },
 };
 export function registerCarType(key, spec) { CAR_TYPES[key] = spec; }
+
+// The player's car runs at x1.2 (binding user decision 2026-10-04, DESIGN §6.6): top speed and pull,
+// reverse and brake impulses x1.2, drag /1.2. Every drive timer is calibrated against it (§8).
+export const PLAYER_BOOST = 1.2;
 
 const COLORS = [0xd8321e, 0x2f6ad8, 0x3fa04a, 0xf2c12e, 0x8a3ab8, 0xff7ab0, 0xf4f1e8, 0x3a3a44, 0x2fb8a8, 0xff8a3a, 0x8fb3c9, 0xb88a5a];
 
@@ -232,8 +235,7 @@ export class Car {
     let vf = this.vx * fx + this.vz * fz;
     let vr = this.vx * rx + this.vz * rz;
     const driven = !this.dead && (this.driver || this.ai);
-    // The player's car runs at double speed: top speed, pull and brakes x2, drag /2.
-    const boost = game && game.playerCar === this ? 2 : 1;
+    const boost = game && game.playerCar === this ? PLAYER_BOOST : 1;
     const maxSpeed = s.maxSpeed * boost, accel = s.accel * boost;
     this.skidAmt = 0;
     if (!this.air) {

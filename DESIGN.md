@@ -407,6 +407,11 @@ async game.transitionTo(name)
 
 **On load** (`init`): after `load()`, `game.setLevel(game.levelFor(missions.index))`, then spawn the
 player at `levelDef.spawn(game, index)` (landmark + 1.5 m along its yaw, facing back along it).
+That spot is computed by `game.approachSpot(lm)` (Phase 0a): if the +1.5 m spot is not free ground
+at the landmark's own height or lies outside `levelDef.inBounds` (the cabin aisle landmarks
+`cabinRow14`/`cabinRow16` face into a seat row, so +1.5 m lands on the cushions), the landmark
+itself is used, facing its yaw. The same rule is used by the R reset, PANIK's `gateOle`, the
+checkpoint `retry()` teleport and `T.startMission()`.
 `?mission=N` sets the index before this, so `?mission=3` boots straight into the cabin in cruise.
 `index === MISSIONS.length` (game complete) → island, spawn `flamenco`.
 
@@ -442,7 +447,9 @@ LEVEL_OUTFITS = { gate: { stig:'arlanda', ole:'arlanda', berra:'arlanda' },
 
 `placeNpcs(force)` (Phase 0 rewrite): iterate the **current** home set; for each NPC: hidden →
 hide; `{seat}` → `cabin.seatCharacter` if not already seated there; array → Bigmouth logic
-(giver to `cur.at` offset 0; `extra` to `cur.at` with home offsets). Every NPC not in the set is
+(giver to `cur.at` offset 0; `extra` to `cur.at` with home offsets). A giver whose home in the
+current set is a plane seat (`ole` 14A for `juice`, `majsan` 16E for `landning`) **stays seated**:
+`at` is where the player stands to talk to them (Phase 0a). Every NPC not in the set is
 hidden. NPCs that are `busy` (mission-owned or seated) are skipped unless `force`. Any NPC that is
 moved, hidden or re-seated is **first unseated** from whatever it sits in (car: `g.unseat(ch)`;
 plane seat: `cabin.unseatCharacter(ch)`).
@@ -1047,6 +1054,7 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
     line: ['portier', '…för 500 pesetas kanske vi kommer överens.'],                       // [F*]
     banner: ['PORTIERN TITTADE BORT', 'Skandalen är som bortblåst'] } ],                  // [N]
   witnessToast: { who: 'herrStorch', r: 20, text: 'Ingen fara: linsskyddet sitter på.', cooldown: 60 }, // [N] P1; offence adds 0
+  bustLine: '¡Documentación!',                     // [N] the officer's bubble at a bust (Phase 0a)
 };
 ```
 
@@ -1845,6 +1853,8 @@ stage = {
 **Normative:** every kind factory copies exactly these keys from its options onto the returned
 stage object: `checkpoint panicFails lockMeter shame oleBarks timedCues startCue doneCue retryAt`
 (Bigmouth's `({...pickup(), shame: true})` pattern). No other option name is read by the runner.
+Phase 0a: the factories also keep their whole option object as `stage.o` (read-only, for tests and
+the `missions` data checks); `kinds/core.js` exports `COMMON` and `common(o, stage)` for this.
 `timeline` reads only its own `events`; `interact` fires its own `useCue` on use; `mantra` its own
 `fillCue` when the bar fills.
 
@@ -2361,7 +2371,8 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/actors/peds.js` | edit | **E** | Swedish/Spanish shouts |
 | `src/actors/drivers.js` | unchanged | none | (accepts duck-typed paths) |
 | `index.html`, `style.css` | edit | **H** | §11, §13.4 |
-| `tools/shot.mjs`, `tools/lib.mjs`, `tools/scenarios/core.mjs` | edit/new | none (Phase 2) | harness, `T` API, core scenarios `start walk aerial drive traffic title talk missions views transition` |
+| `tools/shot.mjs`, `tools/lib.mjs`, `tools/scenarios/core.mjs`, `tools/story/common.mjs` | edit/new | none (Phase 2) | harness, `T` API, core scenarios `start walk aerial drive traffic title talk missions views transition` + `levels` (boots into both levels) + `api` (Game API smoke test) |
+| `src/world/blocks/stub.js` | new (Phase 0a) | none | `stubBlock()`: the shared placeholder look of the stub block builders; delete when unused |
 | `tools/scenarios/flight.mjs` | new | **A1** | gate, cabin, trolley, turbulence, panic |
 | `tools/scenarios/scenery.mjs` | new | **A2** | phases (one shot per flight phase from inside and outside) |
 | `tools/scenarios/island.mjs` | new | **B** | smash, foot |
@@ -2470,12 +2481,18 @@ async game.playEndCard()                  // §11.7: Phase 0 ships a stub (the t
 
 // ---- meter hooks ----
 game.onPanicIdle()                        // §5.9
+game.interruptMantra()                    // jolts and fear cues: a held mantra restarts its wind-up (0.6 s)
+game.frozenT                              // > 0 while frozen (bust freeze); input ignored
 
 // ---- map ----
 game.mapMarkers(all);  game.mapLabels();  game.mapLegend() -> html
 
 // ---- tests ----
 game.debugWarp(x, z, yaw)                 // stands up first if seated; snapNext
+game.approachSpot(lm) -> { x, z, yaw }    // §4.4 spawn rule (landmark + 1.5 m facing back, else the landmark)
+game.lmOffset(lm, dx, dz) -> { x, z, yaw }   // a HOMES-style offset from a landmark
+game.unseatAny(ch)                        // off a car seat or a plane seat
+game.testMode                             // ?test=1
 window.__game, __lm(name), __props, __stats(), __ready, __frame
 ```
 
@@ -2520,7 +2537,7 @@ export function outfitDef(key, outfit) -> def         // { ...CHARS[key], ...CHA
 ```
 New def fields (WP-E implements; unknown fields are ignored until then): `hat`
 (`'trilby' | 'pilot' | 'tricorn' | 'bucket' | 'sunhat' | 'tomte' | 'scarf' | 'cap'`; `'cap'` as a
-hat on top of hair), `dress` (colour; cone skirt), `shades` (colour; filled lenses), `beard`,
+hat on top of hair; its colour is `hatC`, Phase 0a), `dress` (colour; cone skirt), `shades` (colour; filled lenses), `beard`,
 `print: [c1, c2, c3]` (confetti blobs on the torso), `tuft`, `tie`, `bowtie`, `vest`, `held`
 (`'camera' | 'boombox' | 'accordion' | 'congas' | 'cup' | 'mirror' | 'broom' | 'giraffe' |
 'butterKnife' | 'knacke'`), hair `'page'`, `hairFlower`, `ring` (css), `outfits`, `portrait`.
@@ -2612,6 +2629,12 @@ cabin = {
   tick(dt, t, game),            // dt already scaled by timeScale
   mapSource(phase) -> src,
 };
+// Phase 0a extras (additive): FLIGHT_PALETTES is keyed by PHASE (gate takeoff climb cruise approach
+// landing landed -> the §13.3 palettes, which are exported by name as PALETTES); also exported:
+// ROWS, rowZ(row), SEAT_X, CAST_SEATS, DODGE_ROWS. cabin.bestSeat(g) (the §5.10 seat choice),
+// cabin.applyPalette(), cabin.pusher (the vardinna2 Character; game.npc('vardinna2') returns it),
+// cabin.blockers (the stower Characters). Plane seats live on the Character as ch.seatId (player
+// and NPCs alike); seatOf(ch) reads it.
 
 // world/flightScenery.js (WP-A2; Phase 0 stub with this exact shape)
 export function buildFlightScenery(scene) -> { airframe, scenery, gateVisual,
@@ -2987,8 +3010,9 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 ```
 
 - `startMission()` (race fix): `frames(3)`; exit any car; read `missions.current.at` → warp to
-  `lm(at)` + 1.5 m along its yaw (facing back); `frames(3)`; if the giver is > 3 m away (and not
-  seated) warp beside the giver; tap `KeyE`; `until(state === 'running')`.
+  `game.approachSpot(at)` (§4.4); `frames(3)`; if the giver is > 3 m away (and not
+  seated) warp beside the giver; tap `KeyE`; `until(state === 'running')`. Phase 0a: the warp + tap
+  is retried up to 6 times (3 s each), because the running trolley can bowl him over first.
 - `story`: `M = [...M_FLIGHT, ...M_ISLAND]`; `FROM` reloads with `&mission=FROM`; `TO` stops
   before index `TO`; each `M[k](T)` ends with `T.waitIdle(k + 1)`.
 - Test mode (`?test=1`): no title, no pointer lock, `autoDialog`, **dialogue 220 chars/s with a
@@ -3188,3 +3212,14 @@ Three reviewers (engine, film, fun). 69 findings; 69 applied, 4 of them with a c
   HOTEL MAR AZUL) are approved. G is not split.
 - **Player-car boost ×2 → ×1.2** (`PLAYER_BOOST`, §6.6), and **tight, measured timers** in the
   Simpsons: Hit & Run spirit (§8 "Timers and difficulty", §15.3 step 5).
+
+## Changelog (Phase 0a, contract additions)
+
+- `game.approachSpot(lm)` and the §4.4 spawn-rule clarification (the landmark itself when +1.5 m is
+  not free ground, e.g. `cabinRow14`/`cabinRow16`); used by spawn, R, PANIK, retry, `T.startMission`.
+- A giver whose home is a plane seat stays seated while idle (§4.5).
+- New Game API members: `interruptMantra()`, `frozenT`, `lmOffset()`, `unseatAny()`, `testMode` (§14.3).
+- `METERS.skandal.bustLine` (§7.1); `hatC` hat-colour def field (§14.6); stage `o` + `COMMON`/`common`
+  (§9.1); cabin extras (§14.7); `tools/story/common.mjs`, `blocks/stub.js`, core scenarios `levels`
+  and `api` (§14.1); `T.startMission` retries (§16.2).
+- `PLAYER_BOOST = 1.2` applied in car.js (user decision above).

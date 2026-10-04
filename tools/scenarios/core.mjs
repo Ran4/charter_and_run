@@ -246,6 +246,110 @@ export const SCENARIOS = {
     check(c.level === 'island' && c.d < 10, 'mission 6: island, near flamenco');
   },
 
+  // Contract smoke test of the Game API (DESIGN §14.3): seats, panic, turbulence, trolley, outfits,
+  // cues, pay, unlocks, collectibles, the SKANDAL pursuit and the bust.
+  async api(T) {
+    // --- cabin: seats, seated E / J, panic idle, turbulence, trolley, outfits ---
+    await T.fresh('&mission=3');
+    let r = await T.ev(() => {
+      const g = __game, out = {};
+      out.sat = g.sitPlayer('14B') && g.player.seatId === '14B' && g.player.state === 'seated';
+      out.taken = g.sitPlayer('14A') === false;           // Ole's seat
+      g.standPlayer();
+      out.stood = g.player.seatId === null && g.player.state === 'normal';
+      g.setNpcOutfit('ole', 'sol');
+      const s = g.cabin.seats['14A'], v = new (g.npc('ole').root.position.constructor)();
+      g.npc('ole').root.getWorldPosition(v);
+      out.oleInSeat = g.cabin.seatOf(g.npc('ole')) === '14A' && Math.hypot(v.x - s.x, v.z - s.z) < 0.5;
+      g.setNpcOutfit('ole', 'flyg');
+      return out;
+    });
+    T.log('seats', JSON.stringify(r));
+    check(r.sat && r.taken && r.stood && r.oleInSeat, 'sit / stand / taken seat / Ole stays in 14A through setDef');
+    await T.sit('14B');
+    await T.frames(3);
+    await T.tap('KeyE');
+    check(await T.ev(() => __game.player.seatId === null), 'E while seated stands up');
+    await T.sit('14B');
+    await T.holdUntil('KeyJ', () => __game.mantraOn, 5000);
+    T.log('seated mantra ok');
+    // Panic in the cabin: back to 14B, -50 pta, v = 40.
+    r = await T.ev(() => { const g = __game; g.standPlayer(); g.addCoins(100 - g.coins); g.shame.add(100, { force: true }); return g.shame.panicT > 0; });
+    check(r, 'PANIK starts at 100');
+    await T.until(() => __game.shame.panicT <= 0 && __game.player.seatId === '14B', 8000);
+    r = await T.ev(() => ({ coins: __game.coins, v: Math.round(__game.shame.v), pursuit: __game.shame.pursuit }));
+    T.log('panic idle', JSON.stringify(r));
+    check((r.coins === 50 || r.coins === 75) && r.v <= 40 && r.v >= 25 && !r.pursuit, 'panic idle: seat 14B, -50 pta, v 40, no pursuit');
+    // Turbulence: standing, not holding -> falls; jolt listeners fire.
+    r = await T.ev(() => {
+      const g = __game; g.standPlayer();
+      const s = window.__lm('cabinRow10'); g.debugWarp(s.x, s.z, 0);
+      g.cabin.stopTrolley();
+      window.__jolts = 0; window.__offJ = g.cabin.onJolt(() => window.__jolts++);
+      g.cabin.turbulence(0.8, 6, { warn: 0.2 });
+      return true;
+    });
+    await T.until(() => __game.cabin.stats.falls >= 1, 15000);
+    r = await T.ev(() => { window.__offJ(); return { falls: __game.cabin.stats.falls, jolts: window.__jolts }; });
+    T.log('turbulence', JSON.stringify(r));
+    check(r.falls >= 1 && r.jolts >= 2, 'unheld turbulence knocks him down; onJolt fires');
+    // Trolley: bowls a player standing in the aisle ahead of it.
+    await T.until(() => __game.player.state === 'normal', 8000);
+    await T.ev(() => { const g = __game, c = g.cabin; c._turb = null; const t = c.trolley; g.debugWarp(3000, t.z - 1.5, Math.PI); c.startTrolley(); });
+    await T.until(() => __game.cabin.stats.bowled >= 1, 15000);
+    T.log('trolley bowled', await T.ev(() => __game.cabin.stats.bowled));
+    await T.ev(() => __game.cabin.stopTrolley());
+    await T.shot('api_cabin');
+    await T.until(() => __game.player.state === 'normal', 8000);
+    // Cues, cutaways, interactables.
+    r = await T.ev(() => {
+      const g = __game, out = {};
+      g.cue({ phase: ['approach', { instant: true, hold: true }], seatbelt: true, toast: 'test', banner: ['A', 'B', ''], shake: 0.2 });
+      out.phase = g.cabin.phase; out.belt = g.cabin.seatbelt;
+      g.cutTo('galleyFront'); out.cut = !!g.cam.cine; g.endCut(); out.uncut = !g.cam.cine;
+      let used = 0;
+      const p = g.player;
+      const rm = g.addInteractable({ id: 'test', x: p.x, z: p.z, r: 2, prompt: 'x', priority: 5, use: () => used++ });
+      out.near = g.nearestInteractable()?.it?.id === 'test';
+      g.interact(); rm();
+      out.used = used === 1 && g.nearestInteractable()?.it?.id !== 'test';
+      return out;
+    });
+    T.log('cues', JSON.stringify(r));
+    check(r.phase === 'approach' && r.belt && r.cut && r.uncut && r.near && r.used, 'cues, cutTo/endCut, addInteractable');
+    // --- island: pay, unlock, collectibles, SKANDAL pursuit and the bust ---
+    await T.fresh('&mission=6');
+    r = await T.ev(async () => {
+      const g = __game, out = {};
+      g.addCoins(300 - g.coins);
+      await g.pay(800); out.olePays = g.coins === 300;
+      await g.pay(100); out.paid = g.coins === 200;
+      g.unlock('grisbil'); out.grisbil = !!g.named.grisbil && g.cars.includes(g.named.grisbil);
+      const c = g.collectibles.prylar[0];
+      g.debugWarp(c.x, c.z, 0); g.player.y = c.y - 1;
+      return out;
+    });
+    await T.frames(5);
+    r.pryl = await T.ev(() => __game.collected.prylar.size === 1);
+    T.log('island', JSON.stringify(r));
+    check(r.olePays && r.paid && r.grisbil && r.pryl, 'pay (Ole pays if short), unlock grisbil, pryl pickup');
+    await T.ev(() => { const g = __game, f = window.__lm('flamenco'); g.debugWarp(f.x, f.z, 0); g.addCoins(2000 - g.coins); g.shame.add(100); });
+    await T.frames(30);
+    r = await T.ev(() => { const g = __game; return { pursuit: g.shame.pursuit, cars: g.shame.pursuers.filter((c) => c.type === 'guardia').length, officer: !!g.shame.officer && g.shame.officer.state !== 'hidden' }; });
+    T.log('pursuit', JSON.stringify(r));
+    check(r.pursuit && r.cars === 2 && r.officer, 'SKANDAL 100: two guardia cars and an officer on foot');
+    await T.shot('api_pursuit');
+    await T.ev(() => { const g = __game, o = g.shame.officer, p = g.player; o.teleport(p.x + 1, p.z); });
+    await T.until(() => !__game.shame.pursuit, 5000);
+    r = await T.ev(() => ({ coins: __game.coins, frozen: __game.frozenT > 0 }));
+    T.log('bust', JSON.stringify(r));
+    check(r.coins >= 1600 && r.coins < 1700 && r.frozen, 'busted: 20 % fine (400), frozen');
+    // Save round trip.
+    r = await T.ev(() => { __game.save(); return JSON.parse(localStorage.getItem('charter-and-run-v1')); });
+    T.log('save', JSON.stringify(r));
+    check(r.v === 1 && r.mission === 6 && r.collected.prylar.length === 1 && r.unlocked.includes('grisbil'), 'save format v1');
+  },
+
   // The whole story via debug warps (FROM / TO env: start at / stop before a mission index).
   async story(T) {
     const M = [...M_FLIGHT, ...M_ISLAND];
