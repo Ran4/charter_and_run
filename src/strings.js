@@ -74,6 +74,10 @@ export const S = {
   speedUnit: 'KM/H',
   legendClose: 'M stänger',
   legendMission: '! uppdrag',
+  mapTitleIsland: 'NUEVA ESTOCOLMO · GRAN CANARIA',
+  mapTitleFlight: 'SOL-VIKING SE-SOL',
+  mapTitleGate: 'ARLANDA · GATE 8',
+  noMap: 'Ingen karta ombord – följ pilen.',   // §5.11 fallback toast
   // §11.2 loading lines
   loading: ['Avisar vingarna…', 'Bygger Nueva Estocolmo…', 'Överbokar Hotell Flamenco…', 'Häller 80-procentig rom på vinflaskor…', 'Målar åsnan röd…', 'Ritar mustascher…'],
   // §11.3 pause

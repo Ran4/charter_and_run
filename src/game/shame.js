@@ -1,22 +1,28 @@
 // The level's meter, configured from METERS (DESIGN §5.9, §7). Owner: WP-H.
 //   mode 'panic' (FLYGRÄDSLA, flight): at 100 Stig-Helmer gets PANIK (flail, then the mission's
-//     onPanic or game.onPanicIdle). Never a pursuit. Deferred (clamped at 95) during dialogue.
+//     onPanic or game.onPanicIdle). Never a pursuit. Deferred (clamped at 95) while a dialogue, a
+//     cinematic or a cutaway camera is up; it fires when the scene ends if v is still >= 95.
 //   mode 'pursuit' (SKANDAL, island): at 100 the Guardia Civil come: two Land Rovers and, on foot,
-//     an officer who walks at you with collision. Busted = ¡MULTA! (20 % of the purse, 250–1500)
-//     and a 3 s freeze. Escape by getting far away until the meter drains.
-// Phase 0: the officer walks straight at the player (+ the stuck teleport); WP-H adds routeAim
-// steering, the porter hideout and siren polish.
+//     an officer who walks at you with collision, steering along the streets (routeAim's road graph)
+//     when a building is in the way. Busted = ¡MULTA! (20 % of the purse, 250–1500) and a 3 s
+//     freeze. Escape by getting far away until the meter drains, or bribe the porter at Hotel
+//     Flamenco's reception (hideout, 500 pta, 60 s cooldown). Offences near Herr Storch add nothing
+//     (the witness rule: his lens cap is on).
 
 import { Car } from '../actors/car.js';
 import { AIDriver } from '../actors/drivers.js';
 import { Character } from '../actors/character.js';
 import { CHARS } from '../actors/models.js';
-import { nodeX, nodeZ, NN, LANE, neighbors } from '../world/layout.js';
+import { nodeX, nodeZ, nodeI, nodeJ, nodeId, NN, N, P, HALF, LANE, neighbors, nearestNode, cellCorners, landmarks } from '../world/layout.js';
+import { segmentBlocked } from '../world/collision.js';
 import { audio } from '../audio.js';
 import { hud } from './hud.js';
 import { fx } from './fx.js';
 import { yawTo, pick, clamp, dist } from '../util.js';
 import { fmt } from '../strings.js';
+
+const STEER_REPLAN = 0.25;   // s between officer route plans
+const rc = (i) => i * P - HALF;
 
 export class Shame {
   constructor(game) {
@@ -33,11 +39,19 @@ export class Shame {
     this.caughtT = 0;
     this.leaving = [];
     this.panicT = 0;         // > 0 while Stig-Helmer flails
-    this.deferred = false;   // PANIK waiting for the dialogue/cinematic to end
+    this.deferred = false;   // PANIK waiting for the dialogue/cinematic/cutaway to end
     this.witnessT = 0;
+    this.hideoutT = 0;       // porter-bribe cooldown
+    this.filmT = 0;
+    this._hideoutRm = [];
+    // Officer steering state (reused; no per-frame allocation).
+    this.steer = { t: 0, x: 0, z: 0, mode: 'direct', path: [], chkT: 0, chkX: 0, chkZ: 0, sideT: 0, side: 1 };
   }
 
   get mode() { return this.cfg.mode; }
+
+  // A dialogue, a cinematic or a cutaway camera is up: no PANIK now (§5.9).
+  get inScene() { const g = this.game; return !!(g.inDialog || g.inCutaway); }
 
   // Switch meters (level change): v = 0, any pursuit ended, pursuers and the officer removed.
   configure(cfg) {
@@ -48,6 +62,8 @@ export class Shame {
     this.locked = false;
     hud.setMeterLabel(cfg.label, cfg.cls);
     hud.setFear(0);
+    hud.setMeter(0, false, false);
+    this.setupHideouts(cfg);
   }
 
   add(amount, { force = false } = {}) {
@@ -59,7 +75,7 @@ export class Shame {
       this.v = Math.min(100, this.v + amount);
       this.sinceOffense = 0;
       if (this.v >= 100) {
-        if (g.inDialog) { this.v = 95; this.deferred = true; }
+        if (this.inScene) { this.v = 95; this.deferred = true; }
         else this.panic();
       }
       return;
@@ -71,7 +87,12 @@ export class Shame {
       const n = g.npcs?.[w.who];
       const f = g.focus();
       if (n && n.state !== 'hidden' && dist(n.x, n.z, f.x, f.z) < w.r) {
-        if (this.witnessT <= 0) { this.witnessT = w.cooldown; hud.toast(w.text); }
+        if (this.witnessT <= 0) {
+          this.witnessT = w.cooldown ?? 60;
+          hud.toast(w.text, 'witness');
+          if (w.say) g.say(n, w.say, 2.4);
+          if (n.anim && !n.anim.film) { n.anim.film = true; this.filmT = 2.4; this.filmWho = n; }
+        }
         return;
       }
     }
@@ -92,10 +113,11 @@ export class Shame {
     this.deferred = false;
     this.panicT = c.flailSecs ?? 2.5;
     const [main, sub] = c.panicBanner || ['PANIK!', ''];
-    hud.showBanner(main, sub, 'fear', 2400);
+    hud.showBanner(main, sub, 'fear', Math.round(this.panicT * 1000));
     hud.flashColor('rgba(255,255,255,0.85)');
+    hud.panic(this.panicT);
     g.cam.shake = 1.2;
-    for (let k = 0; k < 3; k++) setTimeout(() => audio.heartbeat(), k * 300);
+    for (let k = 0; k < 4; k++) setTimeout(() => audio.heartbeat(), k * 280);
     g.player.anim.flail = true;
   }
 
@@ -174,7 +196,8 @@ export class Shame {
     fx.meterPuff(f.x, f.y + 1, f.z, 0x3d5a3a, 30);
     hud.flashColor('rgba(60,110,70,0.7)');
     const [main, sub, none] = c.bannerCaught || ['', '', ''];
-    hud.showBanner(main, fine ? String(sub || fmt('busted', { n: fine })).replace('{n}', fine) : none, 'skandal', 3000);
+    hud.showBanner(main, fine ? String(sub || fmt('busted', { n: fine })).replace('{n}', fine) : none, 'multa', 3000);
+    audio.slap();
     // Frozen beside the officer for bustFreeze seconds. endPursuit first (it hides the officer),
     // then the officer is (re)placed 1.1 m in front of the player, whether the bust came on foot or
     // from a ram while the player was in a car (the officer is hidden then, possibly far away).
@@ -189,11 +212,49 @@ export class Shame {
     o.sync(0);
     g.say(o, c.bustLine || '¡Documentación!', 2.2);
     this.officerLinger = c.bustFreeze ?? 3;
+    // P1 flavour: Lasse on the radio, once the freeze is over.
+    if (c.bustRadio && g.wait) g.wait((c.bustFreeze ?? 3) + 0.3).then(() => { if (g.level === 'island') g.radio(c.bustRadio[0], c.bustRadio[1]); });
     g.missions.onBusted?.();
   }
 
-  // The officer on foot: a solid Character that walks at the player with collision (pursuit mode,
-  // pursuerPhysics 'walk'). Created once and reused.
+  // ---- hideouts (P1, §7.2): bribe the porter during a pursuit ---------------------------------
+  setupHideouts(cfg) {
+    for (const rm of this._hideoutRm) rm();
+    this._hideoutRm = [];
+    if (cfg.mode !== 'pursuit' || !cfg.hideouts || !this.game.addInteractable) return;
+    for (const h of cfg.hideouts) {
+      const it = {
+        id: 'hideout:' + h.at, r: h.r ?? 2.6, prompt: h.prompt, priority: 100,
+        pos: () => landmarks[h.at] || null,
+        enabled: (g) => this.pursuit && !g.playerCar && this.hideoutT <= 0 && !(g.frozenT > 0),
+        use: () => this.bribe(h),
+      };
+      this._hideoutRm.push(this.game.addInteractable(it));
+    }
+  }
+
+  async bribe(h) {
+    const g = this.game;
+    if (!this.pursuit) return;
+    await g.pay(h.cost ?? 500);          // Ole pays if the purse is short (§10.2)
+    if (!this.pursuit) return;
+    this.hideoutT = h.cooldown ?? 60;
+    this.v = 0;
+    this.endPursuit(true);
+    const [who, text] = h.line || [];
+    const n = who && g.npcs?.[who];
+    if (n && n.state !== 'hidden') g.say(n, text, 3.2);
+    else if (who) g.radio(who, text);
+    const [main, sub] = h.banner || ['', ''];
+    hud.showBanner(main, sub, 'good', 2600);
+    hud.flashColor('rgba(247,195,27,0.4)');
+    audio.coin();
+    audio.jingle('complete');
+  }
+
+  // ---- the officer on foot ----------------------------------------------------------------------
+  // A solid Character that walks at the player with collision (pursuit mode, pursuerPhysics
+  // 'walk'). Created once and reused.
   ensureOfficer(x, z) {
     const g = this.game;
     if (!this.officer) {
@@ -207,6 +268,8 @@ export class Shame {
     o.root.visible = true;
     o.trail = [{ x, z, t: 0 }];
     o.age = 0;
+    const st = this.steer;
+    st.t = 0; st.sideT = 0; st.chkT = 0; st.chkX = x; st.chkZ = z;
     return o;
   }
   hideOfficer() {
@@ -217,8 +280,59 @@ export class Shame {
     o.wishX = o.wishZ = 0;
   }
 
+  // Where the officer walks this step (§7.2, risk 11): straight at the player when nothing solid
+  // stands in between, otherwise along the streets. The route is officer -> the corner of his block
+  // he can reach -> a staircase of intersections -> the kerb point nearest the player -> the
+  // player, string-pulled to the furthest waypoint he can see. Replanned four times a second.
+  planOfficer(o, p) {
+    const st = this.steer, y = o.y + 0.5;
+    st.mode = 'direct'; st.x = p.x; st.z = p.z;
+    if (!this.game.levelDef.routeAim) return;
+    if (segmentBlocked(o.x, o.z, p.x, p.z, y) < 0) return;
+    // The kerb point nearest the player: the closest point on the four streets around his block.
+    const ci = clamp(Math.floor((p.x + HALF) / P), 0, N - 1), cj = clamp(Math.floor((p.z + HALF) / P), 0, N - 1);
+    const x0 = rc(ci), x1 = rc(ci + 1), z0 = rc(cj), z1 = rc(cj + 1);
+    let kx = p.x, kz = z0, kd = Math.abs(p.z - z0);
+    if (Math.abs(p.z - z1) < kd) { kd = Math.abs(p.z - z1); kz = z1; }
+    if (Math.abs(p.x - x0) < kd) { kd = Math.abs(p.x - x0); kx = x0; kz = p.z; }
+    if (Math.abs(p.x - x1) < kd) { kd = Math.abs(p.x - x1); kx = x1; kz = p.z; }
+    kx = clamp(kx, rc(0), rc(N)); kz = clamp(kz, rc(0), rc(N));
+    const end = nearestNode(kx, kz);
+    // Start at the corner of his own cell that is visible and cheapest overall.
+    let start = end, bc = Infinity;
+    for (const c of cellCorners(o.x, o.z)) {
+      const cx = nodeX(c), cz = nodeZ(c);
+      const cost = Math.hypot(cx - o.x, cz - o.z) + (Math.abs(nodeI(c) - nodeI(end)) + Math.abs(nodeJ(c) - nodeJ(end))) * P
+        + (segmentBlocked(o.x, o.z, cx, cz, y) < 0 ? 0 : 300);
+      if (cost < bc) { bc = cost; start = c; }
+    }
+    // Staircase start -> end, along the longer axis first.
+    const path = st.path;
+    path.length = 0;
+    let i = nodeI(start), j = nodeJ(start);
+    const ei = nodeI(end), ej = nodeJ(end);
+    path.push(start);
+    const iFirst = Math.abs(ei - i) >= Math.abs(ej - j);
+    for (let pass = 0; pass < 2; pass++) {
+      if ((pass === 0) === iFirst) while (i !== ei) { i += Math.sign(ei - i); path.push(nodeId(i, j)); }
+      else while (j !== ej) { j += Math.sign(ej - j); path.push(nodeId(i, j)); }
+    }
+    // String-pull: the furthest visible of [kerb point, ...path reversed]; a few checks at most.
+    st.mode = 'route';
+    if (segmentBlocked(o.x, o.z, kx, kz, y) < 0) { st.x = kx; st.z = kz; return; }
+    for (let k = path.length - 1, checks = 0; k >= 1 && checks < 3; k--, checks++) {
+      const nx = nodeX(path[k]), nz = nodeZ(path[k]);
+      if (segmentBlocked(o.x, o.z, nx, nz, y) < 0) { st.x = nx; st.z = nz; return; }
+    }
+    st.x = nodeX(path[0]); st.z = nodeZ(path[0]);
+    // Already standing on the first waypoint: head on to the next one.
+    if (Math.hypot(st.x - o.x, st.z - o.z) < 2) {
+      if (path.length > 1) { st.x = nodeX(path[1]); st.z = nodeZ(path[1]); } else { st.x = kx; st.z = kz; }
+    }
+  }
+
   officerChase(dt) {
-    const g = this.game, c = this.cfg;
+    const g = this.game, c = this.cfg, st = this.steer;
     const p = g.player;
     if (g.playerCar) { this.hideOfficer(); this.officerGone = true; return; }
     let o = this.officer;
@@ -228,14 +342,34 @@ export class Shame {
       o = this.ensureOfficer(s.x, s.z);
       this.officerGone = false;
     }
-    const dx = p.x - o.x, dz = p.z - o.z, d = Math.hypot(dx, dz);
+    const d = Math.hypot(p.x - o.x, p.z - o.z);
+    st.t -= dt;
+    if (st.t <= 0 || (st.mode === 'route' && Math.hypot(st.x - o.x, st.z - o.z) < 1.5)) { st.t = STEER_REPLAN; this.planOfficer(o, p); }
+    if (st.mode === 'direct') { st.x = p.x; st.z = p.z; }
+    let ax = st.x - o.x, az = st.z - o.z;
+    const al = Math.hypot(ax, az) || 1;
+    ax /= al; az /= al;
+    // Unstick: less than 0.5 m of progress in a second while not at the player -> sidestep along
+    // the wall for 0.8 s (alternating sides), then plan again.
+    st.chkT += dt;
+    if (st.chkT >= 1) {
+      const moved = Math.hypot(o.x - st.chkX, o.z - st.chkZ);
+      if (moved < 0.5 && d > 2) { st.sideT = 0.8; st.side = -st.side; st.t = 0; }
+      st.chkT = 0; st.chkX = o.x; st.chkZ = o.z;
+    }
+    if (st.sideT > 0) {
+      st.sideT -= dt;
+      const sx = -az * st.side, sz = ax * st.side;
+      ax = ax * 0.25 + sx; az = az * 0.25 + sz;
+      const l2 = Math.hypot(ax, az) || 1; ax /= l2; az /= l2;
+    }
     const sp = c.onFootSpeed ?? 7;
-    o.wishX = d > 0.5 ? (dx / d) * sp : 0;
-    o.wishZ = d > 0.5 ? (dz / d) * sp : 0;
+    o.wishX = d > 0.5 ? ax * sp : 0;
+    o.wishZ = d > 0.5 ? az * sp : 0;
     o.step(dt, g);
     o.sync(dt);
-    // Stuck rule: moved < 0.6 m in 3 s, or > 60 m away, while out of the camera's view (or > 25 m
-    // from it): teleport him behind the player (opposite the camera yaw).
+    // Stuck rule (safety net): moved < 0.6 m in 3 s, or > 60 m away, while out of the camera's view
+    // (or > 25 m from it): teleport him behind the player (opposite the camera yaw).
     o.age += dt;
     o.trail.push({ x: o.x, z: o.z, t: o.age });
     while (o.trail.length > 2 && o.age - o.trail[0].t > 3) o.trail.shift();
@@ -245,7 +379,10 @@ export class Shame {
       const yaw = g.cam.yaw, bx = p.x - Math.sin(yaw) * 27, bz = p.z - Math.cos(yaw) * 27;
       const s = g.spotFree(bx, bz) && g.levelDef.inBounds(bx, bz, g) ? { x: bx, z: bz } : g.freeSpot(p.x, p.z, 22, 32);
       o.teleport(s.x, s.z);
-      o.trail = [{ x: o.x, z: o.z, t: o.age }];
+      o.trail.length = 0;
+      o.trail.push({ x: o.x, z: o.z, t: o.age });
+      st.t = 0; st.sideT = 0; st.chkT = 0; st.chkX = o.x; st.chkZ = o.z;
+      this.teleports = (this.teleports || 0) + 1;
     }
     if (d < 1.4 && this.caughtT <= 0) this.busted();
   }
@@ -264,6 +401,8 @@ export class Shame {
     this.sinceOffense += dt;
     this.caughtT = Math.max(0, this.caughtT - dt);
     this.witnessT -= dt;
+    this.hideoutT -= dt;
+    if (this.filmT > 0) { this.filmT -= dt; if (this.filmT <= 0 && this.filmWho) { this.filmWho.anim.film = false; this.filmWho = null; } }
     for (let k = this.leaving.length - 1; k >= 0; k--) {
       const l = this.leaving[k];
       l.t -= dt;
@@ -280,7 +419,7 @@ export class Shame {
         g.player.anim.flail = true;
         if (this.panicT <= 0) this.endPanic();
       } else {
-        if (this.deferred && !g.inDialog) { if (this.v >= 95) this.panic(); else this.deferred = false; }
+        if (this.deferred && !this.inScene) { if (this.v >= 95) this.panic(); else this.deferred = false; }
         if (this.sinceOffense > (c.idleDelay ?? 4)) this.v = Math.max(0, this.v - (c.decayIdle ?? 2) * dt);
       }
       hud.setMeter(this.v, this.v >= (c.hot ?? 70), false);
@@ -302,6 +441,7 @@ export class Shame {
         if (this.v <= 0) { this.v = 0; this.endPursuit(false); }
       }
       if (this.pursuit) {
+        audio.sirenNear(near);
         if (c.pursuerPhysics === 'walk') this.officerChase(dt);
         this.tauntT -= dt;
         if (this.tauntT <= 0 && near < 40 && c.taunts?.length) {
@@ -328,6 +468,7 @@ export class Shame {
     if (this.pursuit) audio.siren(false);
     this.pursuit = false; this.forced = false; this.v = 0;
     this.deferred = false;
-    if (this.panicT > 0) { this.panicT = 0; g.player && (g.player.anim.flail = false); }
+    if (this.panicT > 0) { this.panicT = 0; g.player && (g.player.anim.flail = false); hud.panic(0); }
+    if (this.filmWho) { this.filmWho.anim.film = false; this.filmWho = null; this.filmT = 0; }
   }
 }
