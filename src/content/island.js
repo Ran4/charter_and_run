@@ -1,5 +1,7 @@
-// Level 2 content: homes on the island, map labels, chatter and bark tables, collectibles, unlocks,
-// named-car names, outfits. Owner: WP-G. Source tags per DESIGN §1.4 (bark tables are [F*]).
+// Level 2 content (DESIGN §2.3, §10, §11.6, §14.9, §14.10): homes on the island, map labels, chatter
+// and bark tables, collectibles, unlocks, named-car names, outfits. Owner: WP-G. Source tags per
+// DESIGN §1.4 (bark tables are [F*]: every film line is relocated there). Invented (§1.6): Oles
+// prylar and hajfenor as collectibles, the grisbil unlock.
 
 export const HOMES_ISLAND = {
   ole: ['flamenco', 2.0, 1.0],
@@ -41,28 +43,38 @@ export const MAP_LABELS_ISLAND = [
   ['Pepes Bodega', 'bodega', { unlock: 'bodega' }],
 ];
 
+// Bubbles from idle NPCs near the player (no mission running). Every film line here is relocated
+// from its own scene, so it is [F*] (§1.4); [N] lines are ours. Ole speaks Norwegian.
 export const CHATTER = {
   ole: ['Samba er fine greier!' /* [F*] */, 'Blomsterspråket er internasjonalt.' /* [F*] */,
     'Farlige saker. Der dør det mellom to og tre mennesker hver dag. Understrømmer, solstikk og haier.' /* [F*] */,
-    'Vi fikser alt!' /* [F*] */],
-  lasse: ['Friskoteket börjar halv tio varje morgon.' /* [F*] */, 'Hä-pååre!' /* [F*] */],
-  berra: ['Det är ju fan vad solen tar här nere, Robban.' /* [F*] */, 'Ra-tara-tara!' /* [F*] */],
-  robban: ['Fan, vad jag är törstig.' /* [F*] */, 'Pepes Bodega. Glöm aldrig det, du.' /* [F*] */],
+    'Vi fikser alt!' /* [F*] */, 'Tenk ikke mer på det.' /* [F*] */, 'Heia Norge!' /* [F*] */],
+  lasse: ['Friskoteket börjar halv tio varje morgon.' /* [F*] */, 'Hä-pååre!' /* [F*] */,
+    'Ni bör inte dricka vattnet.' /* [F*] */, 'Klockan är tre spansk tid.' /* [F*] */],
+  berra: ['Det är ju fan vad solen tar här nere, Robban.' /* [F*] */, 'Ra-tara-tara!' /* [F*] */,
+    'Ska vi ta Pepes Bodega i dag eller ska vi sola?' /* [F*] */, 'Vi tar första bästa.' /* [F*] */],
+  robban: ['Fan, vad jag är törstig.' /* [F*] */, 'Pepes Bodega. Glöm aldrig det, du.' /* [F*] */,
+    'Fan Berra, ja ä tösstig.' /* [F*] */],
   angerud: ['Det är sista gången jag åker med SunTrip!' /* [F*] */,
-    'Jag har hört att kriminaliteten har gått upp här nere sedan Franco dog.' /* [F*] */],
-  siv: ['Gud, vad han är söt!' /* [F*] */],
-  majsan: ['Här nere parkerar de hursomhelst.' /* [F*] */],
-  fruStorch: ['Det var så kallt på rummet i natt, och ändå har vi betalat bränsletillägg!' /* [F*] */],
+    'Jag har hört att kriminaliteten har gått upp här nere sedan Franco dog.' /* [F*] */,
+    'Undrar hur länge man ska stå här.' /* [F*] */, 'Jag ska tala med platschefen.' /* [F*] */],
+  siv: ['Gud, vad han är söt!' /* [F*] */, 'Spänn av, Majsan. Du är ledig.' /* [F*](t) */],
+  majsan: ['Här nere parkerar de hursomhelst.' /* [F*] */, 'Jag gör bara mitt jobb.' /* [F*] */],
+  fruStorch: ['Det var så kallt på rummet i natt, och ändå har vi betalat bränsletillägg!' /* [F*] */,
+    'Finns det svenskt kaffe på hotellet?' /* [F*] */],
   herrStorch: ['Lite film.' /* [F*] */],
   jose: ['Jag ska inte bort, jag ska hem.' /* [F*] */],
-  mamma: ['Inga svenskor!' /* [F*] */],
+  mamma: ['Inga svenskor!' /* [F*] */, '¡Josito! ¡Josito!' /* [F*] */],
   portier: ['Momento.' /* [F*] */],
-  affe: ['Va fan, jag hade ju natturen i natt!' /* [F*] */],
-  gabbe: ['Natturen går klockan nio!' /* [N] */],
-  souvenir: ['Hallå där!' /* [F*] */],
-  saljare: ['Välkommen i det gröna!' /* [F*] */],
+  affe: ['Va fan, jag hade ju natturen i natt!' /* [F*] */, 'Jag måste få kvarta nån gång.' /* [F*] */],
+  gabbe: ['Natturen går klockan nio!' /* [N] */, 'Grisfestbussen går från SunTrip!' /* [N] */],
+  souvenir: ['Hallå där!' /* [F*] */, 'Titta, den är jättelustig.' /* [F*] */],
+  saljare: ['Välkommen i det gröna!' /* [F*] */, 'Bungalow – fyra rum och kök.' /* [F*] */,
+    'Tre meter djupt i ena änden, en meter i den andra – barnvänlig.' /* [F*] */],
   carmencita: ['Jag är 28 år, mamma.' /* [F*] */],
   hittegods: ['Hammarby…?' /* [F*] */],
+  varden: ['Sangrian, grabbar.' /* [F*](t) */],
+  grisbonde: ['Akta grisarna, señor!' /* [N] */],
 };
 
 export const OUCH = ['Jag ska tala med platschefen!' /* [F*] */, 'Det är sista gången jag åker med SunTrip!' /* [F*] */,
@@ -107,6 +119,10 @@ export const UNLOCKS = {
     toast: 'Pepes Bodega har öppnat – på baksidan av hotellet.' },                   // [N]
 };
 
-export const NAMED_CARS = { buss17: 'SunTrips buss 17', hyrbil: 'Hyrbilen', grisbil: 'Grisbilen', nattbuss: 'Nattbussen', joseBil: 'Josés bil', guardiaJeep: 'Guardia-jeepen' };
+// Speedo names for named and mission cars (§11.4); unnamed cars show their type's Swedish name.
+export const NAMED_CARS = {
+  buss17: 'SunTrips buss 17', hyrbil: 'Hyrbilen', grisbil: 'Grisbilen', nattbuss: 'Nattbussen', joseBil: 'Josés bil', guardiaJeep: 'Guardia-jeepen',
+  grisbilFollow: 'Grisbilen', utflyktsbuss: 'Utflyktsbussen',   // [N]
+};
 
 export const LEVEL_OUTFITS_ISLAND = { ole: 'sol', berra: 'sol', robban: 'sol', angerud: 'sol', majsan: 'sol', siv: 'sol', lasse: 'sol' };
