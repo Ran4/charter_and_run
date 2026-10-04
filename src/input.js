@@ -88,6 +88,8 @@ export const input = {
     if (KEYS[action]?.some((k) => pressed.has(k))) return true;
     return !!PAD[action]?.some((b) => padNow[b] > 0.5 && !(padPrev[b] > 0.5));
   },
+  // Gamepad only (keyboard Esc/P cannot re-take pointer lock, so only pad Start resumes a pause).
+  padPressed(action) { return !!PAD[action]?.some((b) => padNow[b] > 0.5 && !(padPrev[b] > 0.5)); },
   // Movement axes: x = right, y = forward.
   moveX() { return clamp1((down.has('KeyD') || down.has('ArrowRight') ? 1 : 0) - (down.has('KeyA') || down.has('ArrowLeft') ? 1 : 0) + padAxes[0]); },
   moveY() { return clamp1((down.has('KeyW') || down.has('ArrowUp') ? 1 : 0) - (down.has('KeyS') || down.has('ArrowDown') ? 1 : 0) - padAxes[1]); },

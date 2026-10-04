@@ -205,6 +205,7 @@ export const FULL_MISSIONS = [
   {
     id: 'buss17', title: 'SunTrips buss nummer 17', level: 'island', giver: 'lasse', at: 'airport', reward: 500,
     extra: [['ole', 2.5, 1.0], ['siv', -3.0, 2.0], ['majsan', -3.8, 2.4], ['jose', 4.5, 3.0], ['mamma', 5.3, 3.0], ['robban', -1.5, 4.0], ['berra', -2.2, 4.4], ['affe', 3.5, -1.0]],
+    idleAnim: { berra: 'slump' },   // asleep while the mission waits (§9.4); the intro cue keeps it
     intro: [
       ['robban', 'Invalido.', { anim: { who: 'berra', flag: 'slump', secs: 20 } }],   // [F]
       ['guardia', 'Gracias.'],                                                       // [F](t)
@@ -449,8 +450,8 @@ export const FULL_MISSIONS = [
       () => getInCar({ text: 'Hoppa in i en bil – det börjar skymma', startCue: { sky: 'night', music: 'vals' } }),
       () => race({ who: 'gabbe', type: 'bus', carName: 'nattbuss', cruise: 17, playerPassenger: 'ole', start: { lane: [[3, 3], [3, 2]], t: 14 }, checkpoints: [[3, 2], [4, 2], [4, 1], [3, 1]], finish: { x: -80, z: -200 }, text: 'Bussen till grisfesten går nu – kom först!', radio: [['gabbe', 'Grisfestbussen går nu – sista man bjuder på sangrian!']], checkpoint: true }),
       () => smash({ type: 'tallrikar', area: { lm: 'dansgolv', r: 22 }, count: 10, timer: 40, lockMeter: true, onFoot: true, text: 'Porslinskross! Krossa tallrikarna medan bandet spelar', barLabel: 'TALLRIKAR', failText: 'Bandet slutade spela.', radio: [['pax', 'Vad skickliga de är!']], checkpoint: true, retryAt: 'dansgolv' }),
-      () => scene({ place: { majsan: ['dansgolv', 1, 0], siv: ['dansgolv', 2.5, 0.5], ole: ['dansgolv', -1.5, 0.5] }, frame: ['majsan', 'stig'], checkpoint: true, retryAt: 'dansgolv', lines: [
-        ['ole', 'Neida, det er bare å spørre: Skal vi danse! Eller kjør litt større: Sånn! … Voulez-vous danse avec moi? Fransk.', { outfit: { who: 'ole', name: 'gris' } }],   // [F]
+      () => scene({ place: { majsan: ['dansgolv', 1, 0], siv: ['dansgolv', 2.5, 0.5], ole: ['dansgolv', -1.5, 0.5] }, frame: ['majsan', 'stig'], checkpoint: true, retryAt: 'dansgolv', startCue: { outfit: { who: 'ole', name: 'gris' } }, lines: [
+        ['ole', 'Neida, det er bare å spørre: Skal vi danse! Eller kjør litt større: Sånn! … Voulez-vous danse avec moi? Fransk.'],   // [F]
         ['stig', 'Jag är skraj att de ska nobba.'],                                                              // [F]
         ['majsan', 'Vill du dansa med mig?'],                                                                    // [F]
         ['stig', 'Får jag lov…', { anim: { who: ['stig', 'majsan'], flag: 'dance', secs: 6 } }],                  // [F](t)

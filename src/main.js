@@ -241,9 +241,16 @@ class Game {
     if (name === 'island') hud.toast(S.transitionToast);
   }
 
+  // After a mission fails or is aborted: the level's ambient state for the current mission index.
+  // Flight: the cabin goes back to phaseForIndex(index) instantly with no hold (which stops a
+  // mission's phase chain, held or not) and the seatbelt sign off; then palette and map follow.
   restoreAmbience() {
-    if (this.level === 'flight') this.cabin.applyPalette();
-    else this.setSky(this.levelDef.palette || 'day');
+    if (this.level === 'flight') {
+      const cab = this.cabin;
+      cab.setPhase(this.levelDef.phaseForIndex(this.missions.index), { instant: true });
+      cab.setSeatbelt(false, { chime: false });
+      hud.setMapSource(cab.mapSource(cab.phase));
+    } else this.setSky(this.levelDef.palette || 'day');
     audio.setTune(this.levelTune());
     this.mantraMode = false;
   }
@@ -961,6 +968,8 @@ class Game {
     if (c.endCard) this.pendingEndCard = true;
   }
 
+  // True while a cutaway camera (cutTo, a `cut` cue, a scene's `cam`, a cutTo outroCam) is active.
+  get inCutaway() { return !!this._cutPrev; }
   cinematic(a, b) { this.cam.frame(a, b); hud.letterbox(true); this.inDialog = true; }
   cinematicOne(a) { this.cam.frameOne(a); hud.letterbox(true); this.inDialog = true; }
   endCinematic() { this._cutPrev = null; this.cam.release(); hud.letterbox(false); this.inDialog = false; }
@@ -1183,6 +1192,7 @@ class Game {
     input.poll();
     if (this.started && !this.paused) this.update(dt);
     else if (!this.started) this.idleTitle(dt);
+    else if (input.padPressed('pause')) this.pause(false);   // pad Start toggles the pause card
     renderer.render(scene, camera);
     input.endFrame();
     this.frame++;
@@ -1216,6 +1226,7 @@ class Game {
     this.syncAll(dt, false);
     this.missions.update(dt);
     this.missions.updateFailed(dt);
+    this.missions.syncIdleAnim();
     this.shame.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
@@ -1228,7 +1239,8 @@ class Game {
     this.updateMarkers();
     this.cam.clampActive = this.level === 'flight' && this.cabin.inCabin(f.x, f.z);
     this.cam.update(dt, { ...f, autoTurn: false, lookBack: input.down('lookBack') }, this.inDialog ? null : input.look(), this.cars);
-    if (this.aerial) { camera.position.set(f.x, 420, f.z + 260); camera.lookAt(f.x, 0, f.z); camera.fov = 50; camera.updateProjectionMatrix(); }
+    // Debug overview. The flight level's fog ends at 300 m (gate), so the camera comes in to ~85 m.
+    if (this.aerial) { const k = this.level === 'flight' ? 0.17 : 1; camera.position.set(f.x, 420 * k, f.z + 260 * k); camera.lookAt(f.x, 0, f.z); camera.fov = 50; camera.updateProjectionMatrix(); }
     followSun(f.x, f.z);
     tickSky(this.time, camera.position);
     this.updateHud();
@@ -1487,9 +1499,10 @@ class Game {
       const near = dist(n.x, n.z, this.player.x, this.player.z);
       n.anim.talk = talker === k;
       const giver = ms.state === 'idle' && ms.current?.giver === k && ms.current.level === this.level;
-      n.anim.wave = giver && near < 9 && !this.inDialog && n.state === 'normal';
-      if (n.state === 'normal' && near < 10 && !this.inDialog) n.yaw += Math.atan2(Math.sin(yawTo(this.player.x - n.x, this.player.z - n.z) - n.yaw), Math.cos(yawTo(this.player.x - n.x, this.player.z - n.z) - n.yaw)) * Math.min(1, dt * 3);
-      if (near < 9 && n.state === 'normal' && !this.inDialog && ms.state !== 'running' && chatter[k]) {
+      const posed = !!ms.idlePose(k);   // §9.4 idleAnim (e.g. Berra asleep): no wave, turn or chatter
+      n.anim.wave = giver && !posed && near < 9 && !this.inDialog && n.state === 'normal';
+      if (n.state === 'normal' && !posed && near < 10 && !this.inDialog) n.yaw += Math.atan2(Math.sin(yawTo(this.player.x - n.x, this.player.z - n.z) - n.yaw), Math.cos(yawTo(this.player.x - n.x, this.player.z - n.z) - n.yaw)) * Math.min(1, dt * 3);
+      if (near < 9 && n.state === 'normal' && !posed && !this.inDialog && ms.state !== 'running' && chatter[k]) {
         n.chatT = (n.chatT ?? 2 + Math.random() * 3) - dt;
         if (n.chatT <= 0) { n.chatT = 7 + Math.random() * 6; this.say(n, pick(chatter[k]), 2.6); }
       }

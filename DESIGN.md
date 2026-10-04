@@ -284,7 +284,9 @@ Physical keys are unchanged from Bigmouth. The level config turns verbs on and o
   mantra still works; Space does nothing. Phase 0: `handleOneShots` handles E, J and R when
   `player.state === 'seated'` (Bigmouth returns early for any non-`normal` state) and `updateHud`
   computes prompts while seated.
-- Pad Start = pause (Phase 0 maps the unused `pause` action).
+- Pad Start = pause (Phase 0 maps the unused `pause` action). Pad Start also **resumes** from the
+  pause card (`input.padPressed('pause')`, polled while paused); keyboard Esc/P only pause, since
+  pointer lock cannot be re-taken from a key press, so the keyboard resumes with the `Fortsätt` button.
 
 ---
 
@@ -655,7 +657,11 @@ stub with this exact shape):
 Phases `takeoff → climb → cruise` and `approach → landing → landed` chain automatically unless the
 phase was set with `hold: true` (`cabin.setPhase(name, { instant, hold })`): a held phase stops at
 its end state until the next `setPhase` call (used by landning stage 3, §8.5).
-`instant: true` jumps straight to the end state of that phase (no events). `cabin.onPhase(fn)`
+`instant: true` jumps straight to the end state of that phase (no events). On a **chained** phase
+(`takeoff`, `climb`, `approach`, `landing`) that means `phaseT = PHASE_LEN[name]`, so unless `hold`
+is set the **next `tick` chains on** to the following phase (animated, from its start); to park at a
+chained phase's end state use `{ instant: true, hold: true }`. A checkpoint retry re-applies cue
+phases as `[name, { instant: true }]` and so **drops `hold`** (§9.4 item 3). `cabin.onPhase(fn)`
 listeners get `(name)` on every change. The **DUNS** (gear-up thump) and every line of dialogue are
 **not** cabin events: the mission timeline triggers them at matching times (§8, mission 2).
 
@@ -1416,7 +1422,9 @@ Fun: you are suddenly driving a 10 m coach full of people with "anlag för åksj
 gently while Lasse's welcome speech plays. Ends in the overbooked hotel and Ole's clothes.
 
 `extra: [['ole', 2.5, 1.0], ['siv', -3.0, 2.0], ['majsan', -3.8, 2.4], ['jose', 4.5, 3.0], ['mamma', 5.3, 3.0], ['robban', -1.5, 4.0], ['berra', -2.2, 4.4], ['affe', 3.5, -1.0]]`
-(`[key, dx, dz]` = placed at `at` with that offset while idle; §9.2). `berra` anim `slump` (asleep).
+(`[key, dx, dz]` = placed at `at` with that offset while idle; §9.2). `idleAnim: { berra: 'slump' }`
+(asleep while the mission waits, §9.4); the first intro line carries `{anim: {who: 'berra', flag:
+'slump', secs: 20}}` so he sleeps through the intro too.
 
 **Intro:**
 - robban: "Invalido."  [F]
@@ -1709,7 +1717,8 @@ re-applies stage 2's `startCue` night sky and `vals`, §9.4 item 3). `onEnd`: on
    never offset along world z (§9.2). Fail text = the kind's default `${name} vann!` → "Gabbe
    vann!".)
 4. `smash({ type: 'tallrikar', area: { lm: 'dansgolv', r: 22 }, count: 10, timer: 40, lockMeter: true, onFoot: true, text: 'Porslinskross! Krossa tallrikarna medan bandet spelar', barLabel: 'TALLRIKAR', failText: 'Bandet slutade spela.', radio: [['pax', 'Vad skickliga de är!']], checkpoint: true, retryAt: 'dansgolv' })`  [N] · radio [F](t)
-5. `scene({ place: { majsan: ['dansgolv', 1, 0], siv: ['dansgolv', 2.5, 0.5], ole: ['dansgolv', -1.5, 0.5] }, frame: ['majsan', 'stig'], checkpoint: true, retryAt: 'dansgolv', lines: [...] })`:
+5. `scene({ place: { majsan: ['dansgolv', 1, 0], siv: ['dansgolv', 2.5, 0.5], ole: ['dansgolv', -1.5, 0.5] }, frame: ['majsan', 'stig'], checkpoint: true, retryAt: 'dansgolv', startCue: { outfit: { who: 'ole', name: 'gris' } }, lines: [...] })`
+   (Ole's `gris` outfit goes on the stage's `startCue`, not on a line, so a retry re-applies it, §10.4):
    - ole: "Neida, det er bare å spørre: Skal vi danse! Eller kjør litt større: Sånn! … Voulez-vous danse avec moi? Fransk."  [F]
    - stig: "Jag är skraj att de ska nobba."  [F]
    - majsan: "Vill du dansa med mig?"  [F]
@@ -1964,7 +1973,7 @@ kind cues `useCue` (interact) and `fillCue` (mantra).
 | `outfit: {who, name}` | `setPlayerOutfit` / `setNpcOutfit` (re-renders the portrait) |
 | `music: name \| {tune, secs}` | `audio.setTune(name)`; with `secs`, revert to the previous tune after; a trad name plays `audio.trad(name)` over the current tune |
 | `sky: 'day' \| 'night' \| 'sunset'` | island palette |
-| `place: {key: [lm, dx, dz]}` · `hide: [keys]` · `show: [keys]` | `game.placeNpc` / `hideNpc` / `showNpc` |
+| `place: {key: [lm, dx, dz, yaw?]}` · `hide: [keys]` · `show: [keys]` | `game.placeNpc` / `hideNpc` / `showNpc`; the optional 4th element is an **absolute** world yaw (radians; forward = (sin yaw, cos yaw)) that replaces the landmark's yaw; `dx`/`dz` stay landmark-relative (`dx` = left, `dz` = forward) |
 | `anim: {who: key \| [keys], flag, secs}` | set `ch.anim[flag] = true` for `secs` (on the player too: fixedStep clears `wings`/`hold`/`flail` only when it set them itself, so a cue pose survives a dialogue) |
 | `coins: n` | add (negative = remove, floored at 0) |
 | `pay: n` | `game.pay(n)` (Ole pays if short) |
@@ -1980,7 +1989,9 @@ def = { id, title, level: 'flight' | 'island', giver, at, reward,
   extra?: [key | [key, dx, dz]],   // placed at `at` while idle (offset from the tuple, else HOMES offset)
   unlock?, bustFails?, panicFails?,
   intro: [lines], stages: [() => stage], outro: [lines],
-  outroPlace?: { key: [lm, dx, dz] },     // placed before the outro; key 'stig' = the player
+  outroPlace?: { key: [lm, dx, dz, yaw?] },  // placed before the outro; key 'stig' = the player;
+                               // yaw = optional absolute world yaw (else the landmark's yaw)
+  idleAnim?: { key: flag | [flags] },  // anim flags held on the giver/extras while idle (Polish)
   outroCam?: 'player' | [a, b] | { at, dist, height },
   onEnd?(g, reason),           // 'complete' | 'fail' | 'abort'
 };
@@ -1994,7 +2005,10 @@ Runner changes (Phase 0):
    from `cpI` with a fresh `m`: it first re-applies, in stage order, the **ambient fields** (`sky
    music phase seatbelt outfit trolley blockers`; `phase` always instant) of the `startCue` and
    `doneCue` of every stage before `cpI` (so a grisfest retry is still at night with `vals`), then
-   teleports to `stage.retryAt ?? def.at` and starts the stage. **Rule:** every `checkpoint: true`
+   teleports to `stage.retryAt ?? def.at` and starts the stage. The re-applied `phase` is always
+   `[name, { instant: true }]`, so a `hold` from the original cue is **dropped** on retry (a chained
+   phase then chains on at the next tick, §5.6); a stage that needs the hold after a retry sets it
+   again in its own `startCue`. **Rule:** every `checkpoint: true`
    stage whose action happens more than 60 m from `def.at` sets `retryAt` (the Phase-0 `missions`
    scenario asserts it from the data; a stage that repositions the player itself, like `race`, is
    exempt).
@@ -2006,12 +2020,17 @@ Runner changes (Phase 0):
    unseated first, §14.3). If `outroPlace.stig` is given, the player is teleported there facing the
    first placed NPC; else, if `outroPlace` is set and the player is more than 8 m from the first
    placed NPC, he is teleported to a level-aware `freeSpot` 2 m in front of that NPC, facing it.
-   Speaker = the **first NPC placed by `outroPlace`**; without `outroPlace`, the first outro `who`
+   An `outroPlace.stig` tuple with a 4th element (absolute yaw) keeps that yaw instead of facing
+   the first placed NPC. Speaker = the **first NPC placed by `outroPlace`**; without `outroPlace`, the first outro `who`
    that is an NPC and not `busy`/seated/hidden, moved next to the player with `freeSpot` (skip if
    none). Camera: `outroCam`, else `frame(speaker, player)`, else `frameOne(player)`. (When
    `outroCam` is given the player is not moved, e.g. ropavieja's spying shot.)
 6. **Ambience**: `fail()` and `abort()` call `def.onEnd?.(g, reason)` and `g.restoreAmbience()`
-   (level palette for the current phase, level tune, `mantraMode = false`); `abort()` also runs
+   (level tune, `mantraMode = false`; island: level palette; flight: the cabin goes back to the
+   level's ambient state for the current index, `cabin.setPhase(levelDef.phaseForIndex(index),
+   { instant: true })` with no `hold` (so an unheld or held mission phase chain stops), seatbelt sign
+   off (no chime), then palette and map source for that phase. A retry re-applies the mission's
+   ambient cues on top, item 3); `abort()` also runs
    `cleanupMission()` if needed. `complete()` calls `onEnd(g, 'complete')` after the outro.
 7. `cleanupMission()` NPC list = `Object.keys(g.npcs)`; seated home NPCs are re-seated by
    `placeNpcs(true)`; stage-registered interactables, `onJolt` listeners and rider busts are
@@ -2025,6 +2044,13 @@ Runner changes (Phase 0):
    `onPanic()`: returns true and fails with `panicFailText` when running and
    `stage.panicFails || def.panicFails`; else false.
 10. English strings → `strings.js` keys (§11).
+11. **`idleAnim`** (Phase 0 polish): `{ key: flag | [flags] }` on the def. While the runner is
+    `idle` with this mission current and the player is in its level, `runner.syncIdleAnim()`
+    (called by main.js every frame) holds `npc.anim[flag] = true` on those characters (meant for the
+    giver and `extra`; hidden ones are skipped) and clears exactly the flags it set when that stops
+    being true, i.e. **on `begin()`** (before the intro) or when the mission changes. Posed NPCs
+    (`runner.idlePose(key)` non-null) do not wave, turn to the player or chatter. Example: buss17
+    `idleAnim: { berra: 'slump' }` (§8.6). A pose wanted during the intro is an intro-line `anim` cue.
 
 ---
 
@@ -2098,7 +2124,7 @@ P2: `guardiaJeep` (buyable Land Rover that halves SKANDAL gain).
 
 Player: `arlanda` (mission 1) → `kostym` (from mission 1's outro, flight, island until buss17) →
 `hawaii` (buss17 outro cue; persisted) → `rio` (end card only). NPC outfits by home set from
-`LEVEL_OUTFITS` via `levelDef.outfits(g)` (gate set only while `missions.index === 0`, §4.2) and by cue (`ole` `gris` in grisfest stage 5 via cue, `lasse` `jul` in
+`LEVEL_OUTFITS` via `levelDef.outfits(g)` (gate set only while `missions.index === 0`, §4.2) and by cue (`ole` `gris` on grisfest stage 5's `startCue`, `lasse` `jul` in
 julafton). Cut fallback: no swaps.
 **Re-application (review fix 1):** `placeNpcs(true)` re-applies the home set's outfits
 (`applyOutfits`) whenever the runner is not in `outro`, so the gate → flight set follows
@@ -2457,7 +2483,9 @@ game.inDialog;  game.autoDialog;  game.dialogSpeed (55, TEST 220);
 game.levelFor(index) -> 'flight' | 'island'
 game.setLevel(name, { index, instant = true } = {})
 async game.transitionTo(name)
-game.restoreAmbience()                    // palette for level/phase, level tune, mantraMode=false
+game.restoreAmbience()                    // level tune, mantraMode=false; island palette; flight:
+                                          // setPhase(phaseForIndex(index), {instant}) no hold,
+                                          // seatbelt off, palette + map for it (§9.4 item 6)
 game.levelTune() -> name                  // review fix 1: the level's ambient tune (flight `muzak`;
                                           // island game.islandTune). Everything that reverts the
                                           // music uses it (setLevel, restoreAmbience, shame.endPursuit)
@@ -2506,6 +2534,10 @@ game.speedCap                            // Phase 0b: null | m/s cap on walk/spr
 // ---- cinematics / dialogue / cues ----
 game.cinematic(a, b);  game.cinematicOne(a);  game.endCinematic()
 game.cutTo(spec);  game.endCut()          // spec = lm name | { at, dist, height } ; camera only
+game.inCutaway -> bool                    // Polish: true while a cutaway camera is active (cutTo,
+                                          // a `cut` cue, a scene `cam`, a cutTo outroCam) until
+                                          // endCut/endCinematic. shame.js (WP-H) defers PANIK
+                                          // while it is true
 async game.dialog(lines)                  // lines: [who, text, cue?]
 game.cue(c)                               // §9.3
 game.wait(secs)
@@ -2546,6 +2578,9 @@ export function setSkyPalette({ top, horizon, fogNear, fogFar, sun, sunI, hemiSk
   // sun colour/intensity, hemi colours/intensity. Missing fields keep their value.
 export function setCloudsVisible(on)     // MAT._clouds.visible
 export function setShadows(on)           // sun.castShadow
+export function signMesh(text, w, h, opts) -> Mesh   // opts.double (Polish): adds a child plane
+  // turned π about Y with the same material, so the text reads unmirrored from both sides (each
+  // plane FrontSide). Callers position/rotate the returned mesh as before.
 // MAT.water retinted 0x1c7fb8 (sea and pools). tickSky unchanged (clouds hidden in flight).
 ```
 
@@ -2642,7 +2677,8 @@ propsNear(x, z, r);  props;
 export function reviveProps(type, { x, z, r })   // re-alive + revive blocks + show instances now
 export function propsOfType(type, { x, z, r }) -> props[]
 
-// world/collision.js: segmentBlocked returns the nearest hit (min t over all blocks)
+// world/collision.js: segmentBlocked returns the nearest hit (min t over all blocks); the hit is
+//   tracked as an integer sample index (0.8 m samples), so it is exact to the sample (Polish)
 
 // world/cabin.js (WP-A1; Phase 0 stub has the full API)
 export const CABIN_X = 3000;
@@ -3283,3 +3319,25 @@ Three reviewers (engine, film, fun). 69 findings; 69 applied, 4 of them with a c
 - Rabbits (pickups.js): a rabbit at distance 0 no longer turns NaN; the `rabbits` kind catches
   before it lets the rabbit hop.
 
+## Changelog (Phase 0 polish)
+
+Last change to the frozen files before tag `phase0` (owner-none audit findings).
+- `collision.segmentBlocked`: the early-out bound came from `floor(best * steps) - 1`, which
+  floating point could round one sample short, skipping sample s−1 of a nearer block (a hit up to
+  0.8 m too far). The hit is now kept as an integer sample index (§14.7).
+- `gfx.signMesh(…, { double: true })`: two back-to-back front-sided planes (child turned π), so
+  double-sided signs read correctly from behind (§14.4). Block owners need no change.
+- Runner/`restoreAmbience()`: fail/abort in the flight level restore the cabin's ambient state for
+  the current index (`phaseForIndex`, instant, no hold, seatbelt off; §9.4 item 6, §14.3).
+- Runner: mission def field `idleAnim: { key: flag | [flags] }` (§9.4 def + item 11); buss17 uses
+  `{ berra: 'slump' }` (§8.6). `outroPlace`/`place` tuples take an optional 4th element, an absolute
+  yaw (§9.3, §9.4); `outroPlace.stig` with a yaw keeps it.
+- Game API: `game.inCutaway` (§14.3). Pad Start resumes from pause (§3; `input.padPressed`). The
+  debug `aerial` camera comes in to ~85 m in the flight level (fog ends at 300 m there).
+- §5.6/§9.4: `setPhase(name, { instant: true })` on a chained phase jumps to its end state and the
+  next tick chains on; a checkpoint retry drops `hold`.
+- §8.12 grisfest stage 5: Ole's `gris` outfit is on the stage's `startCue` (§10.4); the fixture
+  (`tools/fixtures/full-missions.js`) matches, and its buss17 has the `idleAnim`.
+- Harness: `T.startMission()` waits until the player is back in state `normal` (after
+  `flung`/`down`) before pressing E; `story` without `TO` expects `MISSIONS.length` (§16.1) and fails
+  with a clear error when a mission has no story script.

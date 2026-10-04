@@ -298,6 +298,36 @@ export const SCENARIOS = {
     });
     T.log('cues', JSON.stringify(r));
     check(r.phase === 'approach' && r.belt && r.cut && r.uncut && r.near && r.used, 'cues, cutTo/endCut, addInteractable');
+    // Phase 0 polish: inCutaway, flight restoreAmbience, idleAnim, segmentBlocked, double signs.
+    r = await T.ev(async () => {
+      const g = __game, out = {};
+      g.cutTo('galleyFront'); out.inCut = g.inCutaway === true; g.endCut(); out.outCut = g.inCutaway === false;
+      g.cabin.setPhase('takeoff', { hold: true }); g.cabin.setSeatbelt(true, { chime: false });
+      g.restoreAmbience();
+      out.amb = g.cabin.phase === g.levelDef.phaseForIndex(g.missions.index) && !g.cabin.hold && !g.cabin.seatbelt;
+      const M = window.__missions(), i = g.missions.index, d = M[i];
+      M[i] = { ...d, idleAnim: { ole: 'slump' } };
+      g.missions.syncIdleAnim();
+      out.posed = g.npc('ole').anim.slump === true && g.missions.idlePose('ole')?.[0] === 'slump';
+      M[i] = d;
+      g.missions.syncIdleAnim();
+      out.unposed = !g.npc('ole').anim.slump && g.missions.idlePose('ole') === null;
+      const C = await import('/src/world/collision.js');
+      // 17.5 m segment = 22 samples; the far block (sample 15) is found first, then the near one
+      // (sample 14). (15 / 22) * 22 floors to 14 in floating point, which the old bound tripped on.
+      const L = 17.5, sx = (k) => 4992 + (L * k) / 22;
+      const far = C.box(sx(15) - 0.1, 0, sx(15) + 0.1, 1, 99), near = C.box(sx(14) - 0.1, 0, sx(14) + 0.1, 1, 99);
+      out.seg = C.segmentBlocked(4992, 0.5, 4992 + L, 0.5, 0);
+      far.dead = near.dead = true;
+      const { signMesh } = await import('/src/gfx.js');
+      const m = signMesh('TEST', 2, 1, { double: true, bg: '#fff' }), s1 = signMesh('TEST', 2, 1, { bg: '#fff' });
+      out.sign = m.children.length === 1 && Math.abs(m.children[0].rotation.y - Math.PI) < 1e-9 && m.material.side === 0 && s1.children.length === 0;
+      return out;
+    });
+    T.log('polish', JSON.stringify(r));
+    check(r.inCut && r.outCut && r.amb && r.posed && r.unposed && Math.abs(r.seg - 14 / 22) < 1e-9 && r.sign, 'inCutaway, restoreAmbience, idleAnim, segmentBlocked, double sign');
+    await T.frames(10);
+    check(await T.ev(() => __game.cabin.phase === 'cruise'), 'restoreAmbience: no phase chain afterwards');
     // --- island: pay, unlock, collectibles, SKANDAL pursuit and the bust ---
     await T.fresh('&mission=6');
     r = await T.ev(async () => {
@@ -335,10 +365,15 @@ export const SCENARIOS = {
   async story(T) {
     const M = [...M_FLIGHT, ...M_ISLAND];
     const from = +(process.env.FROM || 0);
-    const to = process.env.TO !== undefined ? +process.env.TO : M.length;
+    // §16.1: without TO the story must reach MISSIONS.length (the shipped missions, not the number
+    // of story scripts), so a mission without a script fails the run instead of passing short.
+    const to = process.env.TO !== undefined ? +process.env.TO : await T.ev(() => window.__missions().length);
     if (from) await T.fresh(`&mission=${from}`);
     try {
-      for (let k = from; k < to; k++) await M[k](T);
+      for (let k = from; k < to; k++) {
+        if (!M[k]) throw new Error(`story: no story script for mission index ${k} (of ${to})`);
+        await M[k](T);
+      }
     } finally {
       T.story = { expect: to, index: await T.ev(() => __game.missions.index) };
     }

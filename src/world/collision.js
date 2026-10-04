@@ -276,14 +276,16 @@ export function segmentBlocked(ax, az, bx, bz, y, ignoreKind = 'prop') {
   queryBlocks(Math.min(ax, bx), Math.min(az, bz), Math.max(ax, bx), Math.max(az, bz), _segOut);
   const len = Math.hypot(bx - ax, bz - az);
   const steps = Math.max(2, Math.ceil(len / 0.8));
-  let best = -1;
+  // Track the hit as an integer sample index, so the early-out bound for later blocks is exact
+  // (deriving it from the float fraction lost sample s-1 to rounding).
+  let bestS = -1;
   for (const b of _segOut) {
     if (b.kind === ignoreKind || b.top < y) continue;
-    const maxS = best < 0 ? steps : Math.floor(best * steps) - 1;
+    const maxS = bestS < 0 ? steps : bestS - 1;
     for (let s = 0; s <= maxS; s++) {
       const t = s / steps;
-      if (contains(b, ax + (bx - ax) * t, az + (bz - az) * t)) { best = t; break; }
+      if (contains(b, ax + (bx - ax) * t, az + (bz - az) * t)) { bestS = s; break; }
     }
   }
-  return best;
+  return bestS < 0 ? -1 : bestS / steps;
 }

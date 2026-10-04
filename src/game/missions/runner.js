@@ -1,7 +1,8 @@
 // The mission runner (DESIGN §9.4). A mission def:
 //   { id, title, level, giver, at, reward, cost?, extra?, unlock?, bustFails?, panicFails?,
 //     intro: [[who, text, cue?]], stages: [() => stage], outro: [[who, text, cue?]],
-//     outroPlace?: { key: [lm, dx, dz] }, outroCam?: 'player' | [a, b] | { at, dist, height },
+//     outroPlace?: { key: [lm, dx, dz, yaw?] }, outroCam?: 'player' | [a, b] | { at, dist, height },
+//     idleAnim?: { key: flag | [flags] },   // held on the giver/extras while idle at `at`
 //     onEnd?(g, reason) }   // reason: 'complete' | 'fail' | 'abort'
 // States: idle | intro | running | outro | failed. Frozen after Phase 0 (owner none).
 
@@ -26,6 +27,7 @@ export class MissionRunner {
     this.stageI = 0;
     this.cpI = 0;            // last checkpoint stage
     this.stageT = 0;         // scaled seconds in the current stage
+    this.posed = [];         // [key, flag] pairs set by syncIdleAnim
   }
 
   get current() { return MISSIONS[this.index] || null; }
@@ -36,6 +38,7 @@ export class MissionRunner {
     const g = this.g, def = this.current;
     if (!def || this.state !== 'idle') return;
     this.state = 'intro';
+    this.syncIdleAnim();     // the idle pose ends when the talk starts
     const giver = g.npc(def.giver);
     g.player.wishX = g.player.wishZ = 0;
     g.player.vx = g.player.vz = 0;
@@ -50,6 +53,30 @@ export class MissionRunner {
     audio.jingle('start');
     this.cpI = 0;
     this.startMission(0);
+  }
+
+  // §9.4 `idleAnim`: the flags the current mission holds on `key` while it waits (idle, in its own
+  // level), else null. main.js calls syncIdleAnim() every frame; posed NPCs neither wave, turn to
+  // the player nor chatter.
+  idlePose(key) {
+    const def = this.state === 'idle' ? this.current : null;
+    if (!def?.idleAnim || def.level !== this.g.level || def.idleAnim[key] == null) return null;
+    return [].concat(def.idleAnim[key]);
+  }
+  syncIdleAnim() {
+    const g = this.g, def = this.state === 'idle' ? this.current : null;
+    const want = [];
+    if (def?.idleAnim && def.level === g.level) {
+      for (const key of Object.keys(def.idleAnim)) {
+        const n = g.npcs[key];
+        if (n && n.state !== 'hidden') for (const f of [].concat(def.idleAnim[key])) want.push([key, f]);
+      }
+    }
+    for (const [key, f] of this.posed) {
+      if (!want.some(([k, w]) => k === key && w === f) && g.npcs[key]) g.npcs[key].anim[f] = false;
+    }
+    for (const [key, f] of want) g.npcs[key].anim[f] = true;
+    this.posed = want;
   }
 
   startMission(from = 0) {
@@ -156,7 +183,8 @@ export class MissionRunner {
       }
       if (def.outroPlace.stig) {
         g.placeNpc('stig', ...def.outroPlace.stig);
-        if (speaker) g.player.yaw = yawTo(speaker.x - g.player.x, speaker.z - g.player.z);
+        // A 4th tuple element is an absolute yaw and wins; otherwise face the speaker.
+        if (speaker && def.outroPlace.stig[3] === undefined) g.player.yaw = yawTo(speaker.x - g.player.x, speaker.z - g.player.z);
       } else if (speaker && !def.outroCam && dist(speaker.x, speaker.z, g.player.x, g.player.z) > 8) {
         const fx = Math.sin(speaker.yaw), fz = Math.cos(speaker.yaw);
         const s = g.spotFree(speaker.x + fx * 2, speaker.z + fz * 2) ? { x: speaker.x + fx * 2, z: speaker.z + fz * 2 } : g.freeSpot(speaker.x, speaker.z, 1.8, 3);

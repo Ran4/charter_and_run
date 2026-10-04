@@ -259,11 +259,22 @@ export function textCanvas(text, w, h, { bg = '#fff8e6', fg = '#1d1426', border 
   return cv;
 }
 
+// A text plane facing +Z. With { double: true } a second, front-sided plane turned half a turn
+// about Y is added as a child, so the text reads correctly (not mirrored) from both sides; each
+// plane is back-face culled, so the pair never z-fights. The child follows the parent's transform.
 export function signMesh(text, w, h, opts = {}) {
   const tex = new THREE.CanvasTexture(textCanvas(text, w, h, opts));
   tex.colorSpace = THREE.SRGBColorSpace;
   tex.anisotropy = 4;
-  const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ map: tex, transparent: !opts.bg, side: opts.double ? THREE.DoubleSide : THREE.FrontSide }));
+  const geo = new THREE.PlaneGeometry(w, h);
+  const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: !opts.bg, side: THREE.FrontSide });
+  const m = new THREE.Mesh(geo, mat);
+  if (opts.double) {
+    const back = new THREE.Mesh(geo, mat);
+    back.rotation.y = Math.PI;
+    back.name = 'signBack';
+    m.add(back);
+  }
   return m;
 }
 
