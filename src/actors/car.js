@@ -400,7 +400,8 @@ export class Car {
     const { geo, glass, extras } = buildCarModel(spec, this.color);
     this.body = toonMesh(geo, { outline: 0.035 });
     this.tilt.add(this.body);
-    for (const e of extras || []) this.tilt.add(e);
+    this.decals = extras || [];
+    for (const e of this.decals) this.tilt.add(e);
     if (glass) {
       const gm = new THREE.Mesh(glass, MAT.glass);
       gm.renderOrder = 2;
@@ -631,6 +632,7 @@ export class Car {
       } else {
         this.burn = 6;
         this.body.material = MAT.burnt;
+        for (const e of this.decals) e.visible = false;
         FX.explosion(this.x, this.y + 0.5, this.z);
         this.vy = 6; this.air = true;
         this.w += (Math.random() - 0.5) * 3;
@@ -644,6 +646,7 @@ export class Car {
     this.dead = false;
     this.burn = 0;
     this.body.material = MAT.toon;
+    for (const e of this.decals) e.visible = true;
   }
 
   // Sync the visual model with the physics state.

@@ -136,9 +136,15 @@ export const SCENARIOS = {
         if (!(m.height > 1.5 && m.height < 3.2)) out.push(`${k}.${o}: height ${m.height}`);
       }
       for (let i = 0; i < 300; i++) { const p = M.randomPed(Math.random); if (p.kind !== 'adult' || p.scale < 0.94 || p.scale > 1.08) out.push('ped ' + JSON.stringify(p)); }
+      // Triangle budget per model (body + outlines), logged.
+      const tris = (m) => { let n = 0; m.root.traverse((o) => { if (o.geometry) n += (o.geometry.index ? o.geometry.index.count : o.geometry.attributes.position.count) / 3; }); return n; };
+      const rr = (() => { let a = 9; return () => { a = (a * 16807) % 2147483647; return a / 2147483647; }; })();
+      let pedT = 0; for (let i = 0; i < 20; i++) pedT += tris(M.buildCharacter(M.randomPed(rr)));
+      window.__castTris = { stig: tris(M.buildCharacter(M.outfitDef('stig', 'hawaii'))), ole: tris(M.buildCharacter(M.outfitDef('ole', 'sol'))), gabbe: tris(M.buildCharacter(M.CHARS.gabbe)), pedAvg: Math.round(pedT / 20), bust: M.buildBustGeo(M.randomPed(rr)).index.count / 3 };
       return out;
     }, FLAGS);
     T.log('def checks', bad.length ? bad.slice(0, 8).join(' | ') : 'ok');
+    T.log('triangles', JSON.stringify(await T.ev(() => window.__castTris)));
     check(!bad.length, 'every def/outfit/flag builds and animates');
     // Base looks, 8 per shot.
     for (let i = 0; i < keys.length; i += 8) await row(T, `cast_base_${i / 8}`, keys.slice(i, i + 8).map((key) => ({ key })));
@@ -218,6 +224,11 @@ export const SCENARIOS = {
     await T.frames(4);
     await T.shot('cast_portraits');
     await T.ev(() => document.getElementById('portraitSheet')?.remove());
+    // In place: the cabin with the seated cast and the bust passengers (mission 2, cruise).
+    await T.fresh('&mission=2');
+    await T.ev(() => { const g = __game, l = window.__lm('cabinRow16'); g.cabin.setPhase('cruise', { instant: true }); g.debugWarp(l.x, l.z + 1.5, Math.PI); });
+    await T.frames(40);
+    await T.shot('cast_cabin');
   },
 
   async cars(T) {

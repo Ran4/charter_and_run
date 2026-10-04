@@ -44,7 +44,7 @@ export const CHARS = {
       gris: { shirt: 0xf4f4f0, stripe: 0xd8321e, stripes: true, collar: true },
       rio: { shirt: 0xf4f4f0, longSleeves: true, suit: 0xf4f4f0, bowtie: 0x1d1426, pants: 0x1d1426, shades: 0x2a2a2a, glasses: null },
     } }),
-  majsan: A({ name: 'Majsan', scale: 0.97, hair: 'page', hairC: 0x8a3b22, brows: 0x8a3b22, lashes: true, skin: 0xf6d3c0, dress: 0x4a7fd0, print: [0xffffff, 0xd8e8ff], printStyle: 'floral',
+  majsan: A({ name: 'Majsan', scale: 0.97, hair: 'page', hairC: 0x8a3b22, brows: 0x8a3b22, lashes: true, skin: 0xf6d3c0, dress: 0x4a7fd0, print: [0xffffff], printStyle: 'dots',
     shirt: 0x4a7fd0, pants: 0x4a7fd0, shoes: 0xf4f0e6, voice: 340, ring: '#fff8e6',
     outfits: { flyg: { shirt: 0xd8c8a8, longSleeves: true }, sol: { hairFlower: 0xffffff } } }),
   siv: A({ name: 'Sivan', hair: 'bun', hairC: 0x7a3018, brows: 0x7a3018, lashes: true, dress: 0xd8321e, print: [0xffb0c0, 0xffffff], printStyle: 'floral',
@@ -78,7 +78,7 @@ export const CHARS = {
     shirt: 0x1d1426, longSleeves: true, pants: 0x1d1426, legsC: 0x3a3030, held: 'handbag', voice: 380, ring: '#d8321e' }),
   pappa: A({ name: 'Josés pappa', skin: 0xb8865a, hair: 'short', hairC: 0x3a3a3a, shirt: 0x1d1426, longSleeves: true, suit: 0xf4f0e6, pants: 0x1d1426,
     hat: 'trilby', hatC: 0x1d1426, mustache: 0x5a5a5a, stache: 'thick', brows: 0x5a5a5a, voice: 180, ring: '#d8321e' }),
-  carmencita: A({ name: 'Carmencita', skin: ES, hair: 'page', hairC: 0x1d1426, brows: 0x1d1426, lashes: true, dress: 0x1d1426, shirt: 0x1d1426, scarf: 0xd8321e,
+  carmencita: A({ name: 'Carmencita', skin: ES, hair: 'short', hairC: 0x1d1426, brows: 0x1d1426, lashes: true, dress: 0x1d1426, shirt: 0x1d1426, scarf: 0xd8321e,
     pants: 0x1d1426, shoes: 0xd8321e, voice: 360, ring: '#d8321e' }),
   herrStorch: A({ name: 'Herr Storch', scale: 1.06, legK: 1.08, wide: 0.85, hair: 'curly', hairC: 0x9a7a52, brows: 0x7a5a3a, shirt: 0x3a2a4a, print: [0xc0623a, 0xd8b04a], printStyle: 'floral',
     collar: true, longSleeves: true, vest: 0xb07a5a, pants: 0x6a5a48, held: 'camera', voice: 300, ring: '#fff8e6' }),
@@ -127,6 +127,15 @@ const OUT = 0.022;
 const INK = 0x1d1426, WHITE = 0xf4f4f0;
 const THIN_TORUS = new THREE.TorusGeometry(0.5, 0.075, 6, 20);
 const HAT_C = { cap: 0xf4f4f0, trilby: 0xe8e2d0, pilot: 0x1b2f6b, tricorn: 0x121212, bucket: 0xf4f1e8, sunhat: 0xe8cf8a, tomte: 0xd8321e, scarf: 0xd8c8a0 };
+
+// A GeoBuilder that picks a sphere's segment count from its size (pupils and print dots don't need
+// 230 triangles each); everything in this file builds with it.
+class CharBuilder extends GeoBuilder {
+  sphere(color, x, y, z, sx, sy = sx, sz = sx, rx = 0, ry = 0, rz = 0, seg) {
+    if (seg === undefined) { const m = Math.max(sx, sy, sz); seg = m < 0.06 ? 6 : m < 0.13 ? 8 : m < 0.32 ? 10 : 14; }
+    return super.sphere(color, x, y, z, sx, sy, sz, rx, ry, rz, seg);
+  }
+}
 
 // Unit frustum (height 1, bottom radius 0.5, top radius 0.5 * k), cached by k.
 const _fr = {};
@@ -371,7 +380,7 @@ function hat(g, d, R) {
 
 // Mouth: an unlit dark oval with teeth, scaled open/closed. Origin at its centre.
 function mouthGeo(R, wide = 1) {
-  const g = new GeoBuilder();
+  const g = new CharBuilder();
   g.sphere(0x3a0f1a, 0, 0, 0, R * 0.8 * wide, R * 0.5, R * 0.3);
   g.sphere(0xd85a6a, 0, -R * 0.12, R * 0.04, R * 0.42 * wide, R * 0.2, R * 0.2);
   g.box(0xffffff, 0, R * 0.17, R * 0.07, R * 0.58 * wide, R * 0.1, R * 0.12);
@@ -470,18 +479,19 @@ function printParts(g, d, T) {
     }
     return;
   }
-  const n = style === 'dots' ? 22 : 30;
+  const n = (style === 'dots' ? 22 : 28) >> (d.name === 'ped' ? 1 : 0);
   for (let k = 0; k < n; k++) {
     const a = r() * Math.PI * 2, y = H * (0.3 + r() * 0.6);
     const [x, z, ry] = onTorso(T, a, y);
     const c = cols[k % cols.length];
     if (style === 'floral') {
-      const rr = W * (0.07 + r() * 0.05);
-      for (let p = 0; p < 4; p++) { const pa = (p / 4) * Math.PI * 2 + r(); g.sphere(c, x + Math.cos(ry) * Math.cos(pa) * rr * 0.8, y + Math.sin(pa) * rr * 0.8, z - Math.sin(ry) * Math.cos(pa) * rr * 0.8, rr, rr, 0.02 * s, 0, ry, 0, 6); }
-      g.sphere(cols[(k + 1) % cols.length], x, y, z, rr * 0.7, rr * 0.7, 0.03 * s, 0, ry, 0, 6);
+      // Four petals (flat squares turned on the surface) round a round centre.
+      const rr = W * (0.07 + r() * 0.05), a0 = r() * Math.PI;
+      for (let p = 0; p < 5; p++) { const pa = a0 + (p / 5) * Math.PI * 2; g.cyl(c, x + Math.cos(ry) * Math.cos(pa) * rr * 0.5, y + Math.sin(pa) * rr * 0.5, z - Math.sin(ry) * Math.cos(pa) * rr * 0.5, rr * 0.36, 0.016 * s, 6, Math.PI / 2, ry); }
+      g.cyl(cols[(k + 1) % cols.length], x, y, z, rr * 0.3, 0.026 * s, 6, Math.PI / 2, ry);
     } else {
       const rr = style === 'dots' ? W * 0.08 : W * (0.07 + r() * 0.09);
-      g.sphere(c, x, y, z, rr, rr * (style === 'dots' ? 1 : 0.7 + r() * 0.6), 0.025 * s, 0, ry, r() * 3, 6);
+      g.cyl(c, x, y, z, rr / 2, 0.022 * s, style === 'dots' ? 8 : 5, Math.PI / 2, ry);
     }
   }
 }
@@ -577,7 +587,7 @@ const _propCache = {};
 function propMesh(name) {
   let c = _propCache[name];
   if (!c) {
-    const g = new GeoBuilder();
+    const g = new CharBuilder();
     PROP_GEO[name](g);
     const geo = g.build();
     c = _propCache[name] = { geo, out: outlineGeometry(geo) };
@@ -631,7 +641,7 @@ export function buildCharacter(d) {
 
   // Torso (+ the skirt and coat tails, which hang from the hips and do not swing with the legs).
   {
-    const g = new GeoBuilder();
+    const g = new CharBuilder();
     torsoParts(g, d, T);
     if (d.dress) {
       const len = legLen * (d.pinafore ? 0.48 : 0.56);
@@ -661,15 +671,15 @@ export function buildCharacter(d) {
   m.neck = neck;
   let headTopLocal;
   {
-    const g = new GeoBuilder();
-    g.cyl(d.skin, 0, neckH * 0.25, 0, 0.07 * s * Math.min(1.3, wide), neckH, 8);
-    const hg = new GeoBuilder();
+    // Head and neck in one mesh (the neck drawn in the head's frame).
+    const headY = R * 0.95 + neckH * 0.33;
+    const hg = new CharBuilder();
+    hg.cyl(d.skin, 0, neckH * 0.25 - headY, 0, 0.07 * s * Math.min(1.3, wide), neckH, 8);
     headParts(hg, d, R);
     const hgeo = hg.build();
     const head = add(neck, hgeo);
-    head.position.y = R * 0.95 + neckH * 0.33;
+    head.position.y = headY;
     m.head = head;
-    add(neck, g.build());
     headTopLocal = head.position.y + hgeo.boundingBox.max.y;
     const mouth = new THREE.Mesh(mouthGeo(R, d.mouthW || 1), MAT.mouth);
     mouth.position.set(0, -R * 0.5, R * 0.8);
@@ -687,7 +697,7 @@ export function buildCharacter(d) {
     const piv = new THREE.Group();
     piv.position.set(side * (torsoW / 2 + 0.05 * s), torsoH * 0.88, 0);
     hips.add(piv);
-    const g = new GeoBuilder();
+    const g = new CharBuilder();
     const sleeve = d.longSleeves ? d.shirt : d.skin;
     g.add(PRIM.capsule(), d.shirt, mat(0, -armLen * 0.22, 0, 0, 0, 0, 0.16 * s, armLen * 0.22, 0.16 * s));
     g.add(PRIM.capsule(), sleeve, mat(0, -armLen * 0.62, 0, 0, 0, 0, 0.11 * s, armLen * 0.3, 0.11 * s));
@@ -703,7 +713,7 @@ export function buildCharacter(d) {
     const piv = new THREE.Group();
     piv.position.set(side * torsoW * 0.24, legLen, 0);
     body.add(piv);
-    const g = new GeoBuilder();
+    const g = new CharBuilder();
     const bare = d.legsC ?? d.skin;
     const legC = d.shorts || d.dress ? bare : d.pants;
     g.add(PRIM.capsule(), legC, mat(0, -legLen * 0.5, 0, 0, 0, 0, 0.15 * s, legLen * 0.38, 0.15 * s));
@@ -748,7 +758,9 @@ export function animateCharacter(m, st, dt) {
 
   if (st.seated) {
     m.body.position.y = 0;
-    for (const l of legs) l.rotation.set(-1.45, 0, 0);
+    // Plane seats: legs angled down to the floor (single-segment legs have no knees); car seats: out
+    // into the footwell.
+    for (const l of legs) l.rotation.set(st.planeSeat ? -1.18 : -1.45, 0, 0);
     arms[0].rotation.set(-1.15 + Math.sin(t * 3) * 0.04, 0, 0.18);
     arms[1].rotation.set(-1.15 - Math.sin(t * 3) * 0.04, 0, -0.18);
   } else if (st.flung) {
@@ -794,6 +806,7 @@ export function animateCharacter(m, st, dt) {
   if (!st.flung && !st.down) {
     heldPose(m, st, t);
     poseFlags(m, st, t);
+    heldPose(m, st, t, true);
   }
   for (const k in m.props) if (!m.props[k].userData.used) m.props[k].visible = false;
   m.neck.rotation.y += st.look || 0;
@@ -823,37 +836,46 @@ function between(m, p, dx = 0, dy = 0, dz = 0) {
   p.rotation.set(0, 0, 0);
 }
 
-// The def's held item: its arm pose (unless an anim flag takes the hands) and its placement.
-function heldPose(m, st, t) {
+// Which arms a held item takes (R = arms[0], L = arms[1]).
+const HELD_ARMS = { camera: 'R', boombox: 'R', cup: 'R', mirror: 'R', broom: 'R', giraffe: 'R', butterKnife: 'R', knacke: 'R', handbag: 'L', accordion: 'RL', congas: 'RL' };
+
+// The def's held item, in two passes: before the anim flags it poses the holding arm (unless a
+// flag takes the hands); after them (place = true) it puts the prop in the final hand position.
+function heldPose(m, st, t, place = false) {
   const h = m.def.held;
   if (!h || !PROP_GEO[h]) return;
   const [R, L] = m.arms;
   const busy = st.wings || st.cupUp || st.push || st.hold || st.flail || st.oath || st.dance || st.laugh || st.mirror || st.film || st.giraffe || st.butterKnife || st.carryOver || st.shoeOff || st.cheer || st.wave || st.kick > 0;
+  const pose = !place && !busy;
   const moving = st.speed > 0.3;
   switch (h) {
     case 'camera':
       if (st.film) return;   // the film flag lifts it to the eye
-      if (!busy) R.rotation.set(st.seated ? -1.0 : -0.8, 0, 0.32);
-      inHand(m, prop(m, 'camera'), 0, 0, -0.02, 0.02);
+      if (pose) R.rotation.set(st.seated ? -1.0 : -0.8, 0, 0.32);
+      if (place) inHand(m, prop(m, 'camera'), 0, 0, -0.02, 0.02);
       break;
     case 'boombox':
-      if (!busy) R.rotation.set(moving ? -0.12 * Math.sin(m.phase) : 0, 0, -0.22);
-      inHand(m, prop(m, 'boombox'), 0, 0, 0.0, 0);
+      if (pose) R.rotation.set(moving ? -0.12 * Math.sin(m.phase) : 0, 0, -0.22);
+      if (place) inHand(m, prop(m, 'boombox'), 0, 0, 0.0, 0);
       break;
     case 'accordion': {
       const pump = Math.sin(t * (moving ? 5 : 2.6));
-      const p = prop(m, 'accordion');
-      p.position.set(0, m.torsoH * 0.6, m.torsoD * 0.5 + 0.16 * m.s);
-      p.rotation.set(0, 0, 0);
-      p.scale.set(m.s * (1 + pump * 0.14), m.s, m.s);
-      if (!busy) { R.rotation.set(-0.62, 0, 0.42 - pump * 0.1); L.rotation.set(-0.62, 0, -0.42 + pump * 0.1); }
+      if (place) {
+        const p = prop(m, 'accordion');
+        p.position.set(0, m.torsoH * 0.6, m.torsoD * 0.5 + 0.16 * m.s);
+        p.rotation.set(0, 0, 0);
+        p.scale.set(m.s * (1 + pump * 0.14), m.s, m.s);
+      }
+      if (pose) { R.rotation.set(-0.62, 0, 0.42 - pump * 0.1); L.rotation.set(-0.62, 0, -0.42 + pump * 0.1); }
       break;
     }
     case 'congas': {
-      const p = prop(m, 'congas');
-      p.position.set(0, m.torsoH * 0.12, m.torsoD * 0.5 + 0.24 * m.s);
-      p.rotation.set(0.1, 0, 0);
-      if (!busy) {
+      if (place) {
+        const p = prop(m, 'congas');
+        p.position.set(0, m.torsoH * 0.12, m.torsoD * 0.5 + 0.24 * m.s);
+        p.rotation.set(0.1, 0, 0);
+      }
+      if (pose) {
         const drum = st.seated ? 0 : moving ? 0 : 1;
         R.rotation.set(-0.72 - drum * Math.max(0, Math.sin(t * 9)) * 0.25, 0, 0.18);
         L.rotation.set(-0.72 - drum * Math.max(0, Math.sin(t * 9 + Math.PI)) * 0.25, 0, -0.18);
@@ -861,34 +883,38 @@ function heldPose(m, st, t) {
       break;
     }
     case 'cup':
-      if (!busy) R.rotation.set(-0.95, 0, 0.25);
-      inHand(m, prop(m, 'cup'), 0, 0, -0.02, 0);
+      if (pose) R.rotation.set(-0.95, 0, 0.25);
+      if (place) inHand(m, prop(m, 'cup'), 0, 0, -0.02, 0);
       break;
     case 'mirror':
-      if (!busy) R.rotation.set(-0.9, 0, 0.2);
-      inHand(m, prop(m, 'mirror'), 0, 0, 0, 0, 0, Math.PI, 0);
+      if (st.mirror) return;   // the mirror flag holds it up
+      if (pose) R.rotation.set(-0.9, 0, 0.2);
+      if (place) inHand(m, prop(m, 'mirror'), 0, 0, 0, 0, 0, Math.PI, 0);
       break;
     case 'broom': {
       const sweep = moving ? 0 : Math.sin(t * 2.4);
-      if (!busy) R.rotation.set(-0.42, 0, 0.12 + sweep * 0.12);
-      inHand(m, prop(m, 'broom'), 0, 0, 0, 0, 0.28, 0, sweep * 0.25);
+      if (pose) R.rotation.set(-0.42, 0, 0.12 + sweep * 0.12);
+      if (place) inHand(m, prop(m, 'broom'), 0, 0, 0, 0, 0.28, 0, sweep * 0.25);
       break;
     }
     case 'giraffe':
-      if (!busy) R.rotation.set(-0.85, 0, 0.3);
-      inHand(m, prop(m, 'giraffe'), 0, 0, 0.12, 0.05);
+      if (st.giraffe) return;
+      if (pose) R.rotation.set(-0.85, 0, 0.3);
+      if (place) inHand(m, prop(m, 'giraffe'), 0, 0, 0.12, 0.05);
       break;
     case 'butterKnife':
-      if (!busy) R.rotation.set(-0.9, 0, 0.25);
-      inHand(m, prop(m, 'butterKnife'), 0);
+      if (st.butterKnife) return;
+      if (pose) R.rotation.set(-0.9, 0, 0.25);
+      if (place) inHand(m, prop(m, 'butterKnife'), 0);
       break;
     case 'knacke':
-      if (!busy) R.rotation.set(-0.9, 0, 0.25);
-      inHand(m, prop(m, 'knacke'), 0, 0, 0.02, 0.02);
+      if (st.butterKnife) return;
+      if (pose) R.rotation.set(-0.9, 0, 0.25);
+      if (place) inHand(m, prop(m, 'knacke'), 0, 0, 0.02, 0.02);
       break;
     case 'handbag':
-      if (!busy) L.rotation.set(-0.15 + (moving ? 0.1 * Math.sin(m.phase) : 0), 0, 0.3);
-      inHand(m, prop(m, 'handbag'), 1, 0, 0.02, 0);
+      if (pose) L.rotation.set(-0.15 + (moving ? 0.1 * Math.sin(m.phase) : 0), 0, 0.3);
+      if (place) inHand(m, prop(m, 'handbag'), 1, 0, 0.02, 0);
       break;
     default:
   }
@@ -899,9 +925,10 @@ function poseFlags(m, st, t) {
   const [R, L] = m.arms;
   const legs = m.legs, s = m.s;
   if (st.planeSeat && st.seated) {
-    // Seated in a plane seat: forearms on the armrests, a little breathing.
-    R.rotation.set(-0.45, 0, -0.34);
-    L.rotation.set(-0.45, 0, 0.34);
+    // Seated in a plane seat: forearms on the armrests (unless a hand holds something), breathing.
+    const held = HELD_ARMS[m.def.held] || '';
+    if (!held.includes('R')) R.rotation.set(-0.45, 0, -0.34);
+    if (!held.includes('L')) L.rotation.set(-0.45, 0, 0.34);
     m.hips.rotation.x = -0.06 + Math.sin(t * 1.3) * 0.015;
   }
   if (st.push) {
@@ -1107,6 +1134,8 @@ export function randomPed(r = Math.random, opts = {}) {
 // A seated bust (torso + arms + head) as one merged, vertex-coloured geometry: origin at the torso
 // bottom, +z forward. The cabin merges ~80 of these into one static mesh.
 export function buildBustGeo(d) {
+  // Seated in the plane, the passengers have taken their sun hats off (a random ped only).
+  if (d.name === 'ped' && (d.hat === 'sunhat' || d.hat === 'bucket')) d = { ...d, hat: null };
   const g = bustBuilder(d);
   const s = d.scale || 1, R = 0.25 * s, torsoH = 0.66 * s;
   // A closed, smiling mouth.
@@ -1118,7 +1147,7 @@ function bustBuilder(d) {
   const s = d.scale || 1, wide = d.wide || 1;
   const R = 0.25 * s, torsoH = 0.66 * s, torsoW = 0.5 * s * wide, torsoD = 0.3 * s * (wide > 1 ? 1 + (wide - 1) * 0.8 : wide);
   const T = { H: torsoH, W: torsoW, D: torsoD, s };
-  const g = new GeoBuilder();
+  const g = new CharBuilder();
   torsoParts(g, d, T, true);
   // Arms resting forward (sleeves, hands on the lap).
   const sleeve = d.longSleeves ? d.shirt : d.skin;
@@ -1128,7 +1157,7 @@ function bustBuilder(d) {
     g.sphere(d.hands ?? d.skin, sd * (torsoW / 2 - 0.08 * s), torsoH * 0.33, 0.42 * s, 0.14 * s);
   }
   g.cyl(d.skin, 0, torsoH + 0.05 * s, 0, 0.07 * s * Math.min(1.3, wide), 0.12 * s, 8);
-  const hg = new GeoBuilder();
+  const hg = new CharBuilder();
   headParts(hg, d, R, true);
   const hgeo = hg.build();
   hgeo.translate(0, torsoH + R * 0.95 + 0.06 * s, 0);
