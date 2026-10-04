@@ -116,16 +116,21 @@ export class MissionRunner {
     g.shame.locked = false;
     g.freezeCar = false;
     g.carrying = null;
+    g.speedCap = null;
     g.holding = false;
     g.mantraMode = false;
+    for (const f of ['carryOver', 'cupUp', 'wings', 'oath', 'dance', 'shoeOff']) g.player.anim[f] = false;
     if (g.playerCar) g.removeRiders?.(g.playerCar);
     for (const k of Object.keys(g.npcs)) {
       const n = g.npcs[k];
       if (n.car && n.car === g.playerCar) { const e = g.exitSpot(n.car, -1); g.unseat(n, e.x, e.z); }
-      if (n.state === 'hidden' && n.hiddenBy === 'mission') { n.state = 'normal'; n.hiddenBy = null; }
+      if (n.state === 'hidden' && n.hiddenBy === 'mission') { n.state = 'normal'; n.root.visible = true; }
+      n.hiddenBy = null;
       n.busy = false;
     }
     if (g.level === 'flight') g.cabin.setAisleBlockers(false);
+    // Everyone back to the home set (seated cast re-seated, mission-moved NPCs home).
+    g.placeNpcs(true);
   }
 
   async complete() {

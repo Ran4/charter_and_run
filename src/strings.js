@@ -67,6 +67,7 @@ export const S = {
   promptLock: '<b>E</b> Lås in dig',
   promptJuice: '<b>E</b> Ta en juice',
   promptExcuse: '<b>E</b> Ursäkta!',
+  promptBid: '<b>E</b> Bjud!',
   promptHold: '<b>Space</b> Håll i dig!',
   promptMantra: '<b>J</b> håll: Jag kan flyga!',
   mantraLine: 'Jag kan flyga, jag är inte rädd.',   // [F]

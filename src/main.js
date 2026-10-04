@@ -35,6 +35,9 @@ const SAVE_KEY = 'charter-and-run-v1';
 const PLAYER_KEY = 'stig';
 const RADIO_ONLY = ['levander', 'kapten', 'pa', 'guardia', 'pax'];
 const CABIN_OWNED = ['vardinna2'];
+// Public-domain traditional one-shot cues (§12.1): `music`/`sfx` cues with these names play
+// audio.trad(name) over the current tune instead of switching it.
+const TRAD = ['smaGrodorna', 'hejTomtegubbar', 'helanGar'];
 const params = new URLSearchParams(location.search);
 const TEST = params.has('test');
 const TRAFFIC_MIX = ['hatch', 'hatch', 'hatch', 'hatch', 'sedan', 'sedan', 'wagon', 'van', 'taxi', 'pickup', 'guagua', 'icecream'];
@@ -80,6 +83,7 @@ class Game {
     this.mantraWindUp = 0.3;
     this.mantraSayT = 0;
     this.carrying = null;
+    this.speedCap = null;   // m/s cap on the player's walk/sprint (carry stages)
     this.bumpedT = 0;
     this.frozenT = 0;
     this.islandOutfit = 'kostym';
@@ -872,7 +876,7 @@ class Game {
     if (c.pa) audio.dingdong();
     if (c.say) this.say(this.npc(c.say[0]), c.say[1], c.say[2] ?? 2.6);
     if (c.radio) this.radio(c.radio[0], c.radio[1]);
-    if (c.sfx) audio[c.sfx]?.();
+    if (c.sfx) { if (audio[c.sfx]) audio[c.sfx](); else if (TRAD.includes(c.sfx)) audio.trad(c.sfx); else console.warn('cue: unknown sfx', c.sfx); }
     if (c.fear) { this.shame.add(c.fear, { force: true }); this.interruptMantra(); }
     if (c.relieve) this.shame.relieve(c.relieve);
     if (c.shake) this.cam.shake = Math.max(this.cam.shake, c.shake);
@@ -884,7 +888,7 @@ class Game {
     if (c.blockers !== undefined) cab.setAisleBlockers(!!c.blockers);
     if (c.outfit) { if (c.outfit.who === PLAYER_KEY) this.setPlayerOutfit(c.outfit.name); else this.setNpcOutfit(c.outfit.who, c.outfit.name); }
     if (c.music) {
-      if (typeof c.music === 'string') audio.setTune(c.music);
+      if (typeof c.music === 'string') { if (TRAD.includes(c.music)) audio.trad(c.music); else audio.setTune(c.music); }
       else { const prev = audio.tune; audio.setTune(c.music.tune); if (c.music.secs) this.wait(c.music.secs).then(() => audio.setTune(prev)); }
     }
     if (c.sky) this.setSky(c.sky);
@@ -1054,7 +1058,7 @@ class Game {
     }
     const it = this.bestInteractable((i) => !i.whileSeated);
     if (it) return { type: 'it', it };
-    if (!this.levelDef.verbs.enterCars) return null;
+    if (!this.levelDef.verbs.enterCars || this.carrying?.who) return null;
     let best = null, bd = 2.2;
     for (const c of this.cars) {
       if (c.dead || c.noEnter || Math.abs(c.x - p.x) > 8 || Math.abs(c.z - p.z) > 8) continue;
@@ -1286,8 +1290,8 @@ class Game {
         let wx = fx * my + -fz * mx, wz = fz * my + fx * mx;
         const l = Math.hypot(wx, wz);
         if (l > 1) { wx /= l; wz /= l; }
-        const sprint = input.down('sprint');
-        const sp = sprint ? def.speeds.sprint : def.speeds.walk;
+        const sprint = input.down('sprint') && !this.speedCap;
+        const sp = Math.min(sprint ? def.speeds.sprint : def.speeds.walk, this.speedCap ?? Infinity);
         p.wishX = wx * sp; p.wishZ = wz * sp;
         p.anim.sprint = sprint && l > 0.1;
       }
