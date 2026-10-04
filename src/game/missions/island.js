@@ -8,38 +8,42 @@
 //
 // Timers (DESIGN §8 "Timers and difficulty"): measured, not guessed. `node tools/shot.mjs
 // calibrate` drives every timed stage with a headless autopilot (player car ×1.2, timeScale 1,
-// traffic on) and prints T_ref per stage; drives use ceil5(T_ref × 1.2), on-foot stages
-// ceil5(T_ref × 1.25). Phase 2 re-measures on the merged world (§15.3 step 5).
+// traffic on) and prints T_ref per stage; drives use ceil(T_ref × 1.2), on-foot stages
+// ceil(T_ref × 1.25). Re-measured on the merged world in the Phase 2 balance pass.
 
 import { getInCar, goto, pickup, dropoff, follow, rabbits, race, destroy, grab, scene, collect, carry, mantra, haggle, smash } from './kinds/index.js';
+import { lm } from '../../world/layout.js';
 
 const PI = Math.PI;
 // The julafton pool party's group shot (camera on the pool deck south of the guests, looking north).
 const PARTY_CAM = { at: 'flamencoPool', dist: 11, height: 4 };
 
-// Stage timers in seconds (stage timers run on unscaled time), from `calibrate` on the Phase-1 stub
-// world (WP-G report, table "Timers"): drives ceil5(1.2 × T_ref), on foot ceil5(1.25 × T_ref).
+// Stage timers in seconds (stage timers run on unscaled time). Phase 2 balance pass, measured on
+// the merged world with `calibrate` (DESIGN §8 "Timers and difficulty", table there): T_ref = the
+// median of clean autopilot runs (deterministic drives) or the 75th percentile (random spawns /
+// flee routes); on foot + 0.5 s per target. timer = ceil(1.2 × T_ref) driving, ceil(1.25 × T_ref)
+// on foot (whole seconds).
 export const TIMERS = {
-  buss17Drive: 60,        // §8.6 s2  busBay -> flamencoDrive, ÅKSJUKA limits, stop        T_ref 47.5
-  friskotekBalls: 20,     // §8.7 s1  6 fleeing beach balls (on foot; slowest of 8 chases) T_ref 14.9
-  asnanPaint: 20,         // §8.8 s9  supermercado -> vikingbar, SKICK                     T_ref 14.1
-  bodegaVischan: 35,      // §8.9 s4  playa -> vischan (worst run)                         T_ref 28.7
-  bodegaJeep: 45,         // §8.9 s9  wreck the fleeing Guardia jeep (p90 of 9 chases)     T_ref 34.7
-  bodegaHome: 35,         // §8.9 s10 wreck spot -> flamencoBack (worst spot, worst run)   T_ref 26.2
-  fatagaSheep: 25,        // §8.11 s5 6 fleeing sheep (on foot; slowest of 8 chases)       T_ref 16.3
-  grisfestFlowers: 30,    // §8.12 s1 5 static flowers round Flamenco (on foot)            T_ref 23.0
-  grisfestPlates: 35,     // §8.12 s4 10 plate stacks (on foot, formula)                   T_ref 25.3
-  grisfestTonga: 30,      // §8.12 s6 dance floor -> car at the gate -> tongatonga         T_ref 21.5
-  julaftonGuests: 80,     // §8.13 s1 patio -> hire car -> four guests (worst run)         T_ref 65.5
+  buss17Drive: 52,        // §8.6 s2  busBay -> flamencoDrive, ÅKSJUKA limits, stop     T_ref 42.7 (3 clean)
+  friskotekBalls: 31,     // §8.7 s1  6 fleeing beach balls (on foot)                  T_ref 24.8 (p75 21.8 of 5 + 3)
+  asnanPaint: 19,         // §8.8 s9  supermercado lot -> vikingbar, SKICK              T_ref 15.4 (3 clean)
+  bodegaVischan: 31,      // §8.9 s4  playa -> vischan                                  T_ref 25.5 (2 clean of 3)
+  bodegaJeep: 30,         // §8.9 s9  wreck the fleeing Guardia jeep                    T_ref 24.7 (p75 of 10 chases)
+  bodegaHome: 33,         // §8.9 s10 fallback only: the stage uses homeTimer(wreck)    T_ref 26.8 at d 587 (far corner)
+  fatagaSheep: 33,        // §8.11 s5 6 fleeing sheep (on foot)                         T_ref 26.1 (p75 23.1 of 5 + 3)
+  grisfestFlowers: 42,    // §8.12 s1 5 flowers round Flamenco (on foot, random spawns) T_ref 33.5 (p75 31.0 of 6 + 2.5)
+  grisfestPlates: 42,     // §8.12 s4 10 plate stacks (on foot, kick)                   T_ref 33.1 (median 28.1 of 2 + 5)
+  grisfestTonga: 22,      // §8.12 s6 dance floor -> car at the gate -> tongatonga      T_ref 18.0 (2 clean)
+  julaftonGuests: 87,     // §8.13 s1 patio -> hire car -> four guests                  T_ref 72.5 (clean run)
 };
 
 // Opponent / quarry tuning (race, destroy, follow; DESIGN §8 "Races and chases").
 export const TUNING = {
   // Gabbe's night bus. The stock bus (maxSpeed 21, accel 6.5, steer 0.52; AI cars never get
   // PLAYER_BOOST) can neither race a ×1.2 car nor take a junction at speed, so the race hands the
-  // opponent this spec (the race kind's `oppSpec`). Measured: a clean run wins by ≈ 3 s; one
-  // crash loses it.
-  nattbuss: { cruise: 26, spec: { maxSpeed: 31, accel: 11, steer: 0.9 } },
+  // opponent this spec (the race kind's `oppSpec`). Phase 2 (calibrate 'race', the bus in its own
+  // lane, the player beside it): 3 clean runs won by 2.0 s each, 3 runs with one crash all lost.
+  nattbuss: { cruise: 31, spec: { maxSpeed: 35, accel: 12, steer: 0.9 } },
   // The fleeing jeep: catchable at ×1.2 only by driving a direct line; damageScale so that about
   // four solid rams wreck it before the borrowed grisbil (hp 130) is wrecked itself. The grisbil is
   // a heavy farm truck: while it rams the jeep it takes half damage (destroy's playerDamageScale;
@@ -50,6 +54,24 @@ export const TUNING = {
   joseFollow: { cruise: 13, minDist: 14, maxDist: 55 },
   bussFollow: { cruise: 14, maxDist: 55 },
 };
+
+// §8.9 s10 "Kör hem grisarna" starts wherever the jeep died, anywhere on the map, so its timer
+// follows the distance: T_ref(d) = HOME.c + d / HOME.v with d the Manhattan distance (m) from the
+// wreck to flamencoBack (the road route is within 3 % of it). Fit over clean calibrate drives
+// (case 'home'), plus 3 s to turn round at the wreck (the measured drives start facing the hotel).
+// timer = ceil(1.2 × T_ref); TIMERS.bodegaHome is the fallback when no wreck is known.
+export const HOME = { c: 6.3, v: 28.6 };
+export function homeTimer(w) {
+  if (!w) return TIMERS.bodegaHome;
+  const b = lm('flamencoBack');
+  return Math.ceil(1.2 * (HOME.c + (Math.abs(w.x - b.x) + Math.abs(w.z - b.z)) / HOME.v));
+}
+
+// The haggle timing game (§8.8 stage 4; non-test zone widths and marker speeds in cycles/s per
+// round). Phase 2 balance (calibrate case 'haggle', a model player aiming at the zone middle with a
+// Gaussian timing error σ): σ 25 ms (practised) wins 97 %, σ 40 ms 80 %, σ 60 ms (first go) 53 %.
+// The Phase 1 values (0.30/0.22/0.15 at 0.8/1.1/1.4) left a 34 ms window in round 3: 66 % at 40 ms.
+export const HAGGLE = { zones: [0.30, 0.23, 0.17], speeds: [0.7, 0.95, 1.2] };
 
 export const ISLAND_MISSIONS = [
   // ===== §8.6 · 5 · buss17 · "SunTrips buss nummer 17" =========================================
@@ -171,7 +193,7 @@ export const ISLAND_MISSIONS = [
       () => goto({ to: 'marknad', radius: 9, inCar: true, passenger: 'ole', text: 'Till marknaden' }),     // [N]
       // Ole haggles like a smålänning (the timing game is invented, §1.6).
       () => haggle({
-        at: 'asnestand', who: 'souvenir', partner: 'ole', start: 500, steps: [400, 300, 200], zones: [0.30, 0.22, 0.15], speeds: [0.8, 1.1, 1.4], maxMiss: 3, pay: 200,
+        at: 'asnestand', who: 'souvenir', partner: 'ole', start: 500, steps: [400, 300, 200], zones: HAGGLE.zones, speeds: HAGGLE.speeds, maxMiss: 3, pay: 200,
         text: 'Pruta! Tryck E när markören är i det gröna', barLabel: 'PRIS', failText: 'Säljaren stängde ståndet.',   // [N]
         lines: {
           start: [['souvenir', 'Hallå där!'], ['ole', 'Hvor mye?'], ['souvenir', '500 pesetas.'], ['ole', 'To hundre?']],                    // [F] · [F*](t) · [F] · [F*](t)
@@ -251,7 +273,7 @@ export const ISLAND_MISSIONS = [
         text: 'Guardia Civil såg grisarna – stoppa jeepen innan den hämtar förstärkning!',   // [N]
         failText: 'Jeepen hann fram till kasernen.',                                         // [N]
       }),
-      () => goto({ to: 'flamencoBack', radius: 10, inCar: true, passenger: 'berra', timer: TIMERS.bodegaHome, text: 'Kör hem grisarna till hotellet!', failText: 'Ni kom aldrig fram.' }),   // [N]
+      () => goto({ to: 'flamencoBack', radius: 10, inCar: true, passenger: 'berra', timer: (g, m) => homeTimer(m.data.wreck), text: 'Kör hem grisarna till hotellet!', failText: 'Ni kom aldrig fram.' }),   // [N]
     ],
     // Both face away from the shop: PEPES BODEGA is right behind them and nobody notices.
     outroPlace: { berra: ['bodega', -1.6, -1.0, PI], robban: ['bodega', 1.6, -1.0, PI] },
@@ -380,7 +402,7 @@ export const ISLAND_MISSIONS = [
       // the WP-G report). Fail text: the kind's "Gabbe vann!".
       () => race({
         who: 'gabbe', type: 'bus', carName: 'nattbuss', cruise: TUNING.nattbuss.cruise, oppSpec: TUNING.nattbuss.spec, playerPassenger: 'ole',
-        start: { lane: [[3, 3], [4, 3]], t: 6 }, checkpoints: [[4, 3], [4, 2], [4, 1], [3, 1]], finish: { x: -80, z: -200 },
+        start: { lane: [[3, 3], [4, 3]], t: 14 }, checkpoints: [[4, 3], [4, 2], [4, 1], [3, 1]], finish: { x: -80, z: -200 },
         text: 'Bussen till grisfesten går nu – kom först!',                                   // [N]
         radio: [['gabbe', 'Grisfestbussen går nu – sista man bjuder på sangrian!']],            // [N] (§1.5: the song keeps its one line in mission 7)
         checkpoint: true,

@@ -12,6 +12,7 @@ import { lm, nodeX, nodeZ, LANE, findPath, nearestNode, laneSpot, nodeRef, N } f
 import { AIDriver, LanePath, startNodes } from '../../../actors/drivers.js';
 import { Rabbit, Collectible } from '../../../actors/pickups.js';
 import { Character } from '../../../actors/character.js';
+import { CAR_TYPES } from '../../../actors/car.js';
 import { METERS } from '../../../meters.js';
 import { audio } from '../../../audio.js';
 import { hud } from '../../hud.js';
@@ -287,13 +288,14 @@ export const getInCar = (o = {}) => common(o, {
 });
 
 // ---------------------------------------------------------------------------------------------
-// goto: to · radius = 7 · timer? · failText · inCar? · onFoot? · passenger? · stop? · smooth? ·
+// goto: to · radius = 7 · timer? (seconds, or (g, m) => seconds evaluated at init: a timer that
+// depends on where the stage starts) · failText · inCar? · onFoot? · passenger? · stop? · smooth? ·
 // fragile? · fearRate? · radio? · overhear? · awaitOverhear = false
 
 export const goto = (o) => common(o, {
   text: o.text,
-  init(g) {
-    this.t = o.timer ?? null;
+  init(g, m) {
+    this.t = typeof o.timer === 'function' ? o.timer(g, m) : o.timer ?? null;
     this.dest = at(o.to);
     this.radio = o.radio ? new RadioSeq(o.radio) : null;
     this.over = (o.overhear || []).map((s) => new Overhear(s));
@@ -546,8 +548,14 @@ export const rabbits = (o) => common(o, {
 // checkpoints [[i, j]] · finish {x, z} · playerPassenger? · oppPassenger? · radio? · oppSpec?
 // (fields merged over a copy of the opponent car's spec, e.g. a faster night bus; the shared
 // CAR_TYPES entry is never touched)
-// The player goes on the start spot, the opponent on the lane to its left: spot - r·2·LANE with
-// r = (-cos yaw, sin yaw), i.e. lateral to yaw, never along world z.
+// The opponent goes on the start spot (its own lane: its lane path never has to merge) and the
+// player on the lane to its left, noses level: spot - r·2·LANE with r = (-cos yaw, sin yaw), i.e.
+// lateral to yaw, never along world z. (Until Phase 2 it was the other way round, and the
+// opponent's lane path merged a 10.5 m bus straight into the player's car at "KÖR!".)
+// Rubber band (`rubber`), only at the extremes: the opponent pushes (× 1.1) while the player leads
+// by more than 120 m and eases off (× 0.85) when it leads by more than 150 m. In between it drives
+// its own race: a mid-range band let the opponent slow down for a crashed player, so a crash
+// cost ≈ 0.5 s instead of ≈ 2.5 s (Phase 2 balance pass).
 
 export const race = (o) => common(o, {
   text: o.text,
@@ -560,9 +568,10 @@ export const race = (o) => common(o, {
       g.enterCar(spare);
     }
     const pc = g.playerCar;
-    pc.place(s.x, s.z, s.yaw);
+    const ahead = (CAR_TYPES[o.type].len - pc.spec.len) / 2, hx = Math.sin(s.yaw), hz = Math.cos(s.yaw);
+    pc.place(s.x - rx * 2 * LANE + hx * ahead, s.z - rz * 2 * LANE + hz * ahead, s.yaw);
     clearSpot(g, pc, 8);
-    const opp = (this.opp = g.spawnMissionCar(m, o.type, s.x - rx * 2 * LANE, s.z - rz * 2 * LANE, s.yaw, { color: o.color, name: o.carName }));
+    const opp = (this.opp = g.spawnMissionCar(m, o.type, s.x, s.z, s.yaw, { color: o.color, name: o.carName }));
     clearSpot(g, opp, 8);
     opp.locked = true;
     if (o.oppSpec) opp.spec = { ...opp.spec, ...o.oppSpec };
@@ -634,10 +643,10 @@ export const race = (o) => common(o, {
       this.oi++;
       if (this.oi >= this.cps.length) return { fail: fmt('won', { name: this.name }) };
     }
-    // Rubber band: the opponent eases off when far ahead and pushes when far behind.
+    // Rubber band (see the header): pushes when well behind, eases off only when far ahead.
     const cp = (i) => this.cps[Math.min(i, this.cps.length - 1)];
     const gap = (this.oi - this.pi) * 200 + (dist(f.x, f.z, cp(this.pi).x, cp(this.pi).z) - dist(this.opp.x, this.opp.z, cp(this.oi).x, cp(this.oi).z));
-    this.rubber = gap > 60 ? 0.82 : gap < -60 ? 1.12 : 1;
+    this.rubber = gap > 150 ? 0.85 : gap < -120 ? 1.1 : 1;
   },
   cleanup(g) { g.freezeCar = false; this.opp.ai = null; this.opp.ctrl.park = true; },
 });

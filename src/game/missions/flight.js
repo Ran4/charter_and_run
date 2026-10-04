@@ -3,19 +3,22 @@
 // scripted line: [F] film line, [F*] adapted / relocated / rendered in Norwegian by us, [N] new,
 // (t) = the speaker is our interpretation. Ole speaks Norwegian bokmål in every line.
 //
-// Timers are calibrated per §8 "Timers and difficulty" (on foot: nearest-neighbour path length /
-// speed + 1.5 s per target, x1.25, rounded up to 5 s; walking speed 3.6 where sprinting adds fear
-// the stage punishes, sprint 5.2 otherwise; required waits such as turbulence holds and trolley
-// dodges are part of T_ref). The table is in the WP-F hand-off report.
+// Timers (§8 "Timers and difficulty"; Phase 2 balance pass, scenario `calibflight`, timeScale 1,
+// the real collision geometry): T_ref = the clean autopilot time on the sensible route (sprinting
+// where sprint fear is small next to the stage's own) + 0.5 s per target (reaction and aim), the
+// 75th percentile for the random bottle sweep; timer = ceil(1.25 × T_ref). Gate dash 3.6 s -> 6,
+// seat 2.9 s past three stowers -> 7, bottles p75 17.0 s of 14 -> 25, round-up 7.6 s -> 12, back
+// to 14B from the far end 3.2 s -> 5.
 //
-// FLYGRÄDSLA balance (§5.9; target: a careful player never panics, a careless one does in missions
-// 1, 2 and 5), measured at timeScale 1 with an autopilot (numbers in the WP-F report):
-//   gate     the toilet dash starts at ~69 (the statistics); fearRate 3 (§8.1: 2) so a straight run
-//            (3.6-7 s) arrives at 83-95 while dawdling reaches 100 at ~9 s, inside the 10 s timer.
+// FLYGRÄDSLA balance (§5.9; binding: a careful player never panics, a careless one does in
+// missions 1, 2 and 5), measured by `calibflight` (careful vs careless autopilots):
+//   gate     the toilet dash starts at ~69 (the statistics); fearRate 5 (Phase 1: 3), so a sprint
+//            (3.6 s) arrives at ~94 and a walk (5.0 s) at ~98, while a dawdler panics at ~5.5 s,
+//            just inside the 6 s timer.
 //   ombord   DUNS fear 20 (§8.2: 15) and "Annars…?!" 8 (5): a never-J player panics in the takeoff
-//            even after a perfect seat run (measured: 98.6 -> PANIK); holding J at 70 peaks ~75.
+//            even after a perfect seat run (measured: PANIK at t 21.5); holding J at 70 peaks ~75.
 //   landning approach turbulence [0.75, 14] (§8.5: [0.7, 10]): no J while it shakes -> PANIK even
-//            after a perfect round-up; holding J peaks ~18.
+//            after a perfect round-up; holding J peaks ~18-20.
 // Retries stay short (§8 "Timers and difficulty"): checkpoints on the gate statistics, the takeoff
 // and the seat stage before the approach.
 
@@ -106,9 +109,9 @@ export const FLIGHT_MISSIONS = [
           ['stig', 'Det går väl inte? Kan du se till mitt handbagage ett tag, jag måste…'],          // [F]
         ],
       }),
-      // [3] the toilet dash: fear keeps rising as he runs (fearRate 3, see the balance note).
+      // [3] the toilet dash: fear keeps rising as he runs (fearRate 5, see the balance note).
       () => goto({
-        to: 'herrtoa', radius: 1.8, fearRate: 3, timer: 10, text: 'Till herrtoaletten – fort!', failText: 'Du hann inte fram…',   // [N] · [N]
+        to: 'herrtoa', radius: 1.8, fearRate: 5, timer: 6, text: 'Till herrtoaletten – fort!', failText: 'Du hann inte fram…',   // [N] · [N]
         radio: [['ole', 'To ganger, Stig-Helmer! Looping med en jumbo!', { gap: 3, fear: 4 }]],                                   // [F*]
       }),
       // [4] Levander's exercise
@@ -182,7 +185,7 @@ export const FLIGHT_MISSIONS = [
     stages: [
       // [0] find the seat (seatbelt sign lit: standing costs fear; three luggage stowers, E "Ursäkta!")
       () => sit({
-        seat: '14B', timer: 15, text: 'Hitta plats 14B och sätt dig', failText: 'Planet kunde inte taxa ut. Kaptenen väntar på dig!',   // [N] · [N]
+        seat: '14B', timer: 7, text: 'Hitta plats 14B och sätt dig', failText: 'Planet kunde inte taxa ut. Kaptenen väntar på dig!',   // [N] · [N]
         startCue: { phase: ['gate', { instant: true }], seatbelt: true, blockers: true }, doneCue: { blockers: false },
       }),
       // [1] the takeoff (scaled seconds, the cabin phases on the same clock; PANIK fails).
@@ -280,7 +283,7 @@ export const FLIGHT_MISSIONS = [
       () => collect({
         kind: 'flaska', motion: 'roll',
         items: [{ x: 3000.2, z: 9.0 }, { x: 2999.8, z: 2.5 }, { x: 3000.3, z: -6.0 }, { x: 2999.7, z: -10.5 }, { x: 3000.0, z: -13.5 }],
-        radius: 0.9, timer: 35, text: 'Fånga flaskorna som rullar i gången', barLabel: 'FLASKOR', failText: 'Flaskorna rullade in under sätena.',   // [N] · [N] · [N]
+        radius: 0.9, timer: 25, text: 'Fånga flaskorna som rullar i gången', barLabel: 'FLASKOR', failText: 'Flaskorna rullade in under sätena.',   // [N] · [N] · [N]
         startCue: { phase: ['cruise', { instant: true }], trolley: true },
         // The film's cabin PA [SUB-SV 00:25:43].
         timedCues: [[8, { radio: ['pa', 'Herr Storch ombedes kontakta kabinpersonalen.'], pa: true }], [20, { turbulence: [0.5, 6] }]],   // [F]
@@ -323,7 +326,7 @@ export const FLIGHT_MISSIONS = [
       // [0] the round-up (sign lit: standing costs fear; a short shake at 12 s: hold Space)
       () => collect({
         who: ['herrStorch', 'jose', 'berra'], standAt: { herrStorch: [3000.2, 3.4], jose: [2999.8, -9.2], berra: [3000.0, -14.4] }, seatOnTouch: true,
-        timer: 20, text: 'Få de stående passagerarna att sätta sig', barLabel: 'STÅENDE', failText: 'Värdinnan fick göra det själv.',   // [N] · [N] · [N]
+        timer: 12, text: 'Få de stående passagerarna att sätta sig', barLabel: 'STÅENDE', failText: 'Värdinnan fick göra det själv.',   // [N] · [N] · [N]
         lines: {
           herrStorch: [['herrStorch', 'Lite film.', { anim: { who: 'herrStorch', flag: 'film', secs: 2 } }]],   // [F*](t) (Arlanda line)
           // Mid-flight in the film (José chatting up Siv), relocated.
@@ -335,7 +338,7 @@ export const FLIGHT_MISSIONS = [
       // [1] back to the seat before the approach. Checkpoint: a panicked approach is retried from
       // here (row 16), not from the round-up.
       () => sit({
-        checkpoint: true, seat: '14B', timer: 10, text: 'Skylten lyser! Tillbaka till 14B', failText: 'Alla måste sitta vid landningen.',   // [N] · [N]
+        checkpoint: true, seat: '14B', timer: 5, text: 'Skylten lyser! Tillbaka till 14B', failText: 'Alla måste sitta vid landningen.',   // [N] · [N]
         startCue: { seatbelt: true },   // already lit by the intro; re-lit on a retry
       }),
       // [2] the approach: the bar fills only while J is held; the phase holds until it is full,

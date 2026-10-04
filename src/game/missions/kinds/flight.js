@@ -41,7 +41,9 @@ function frameFor(g, lines) {
 // (island: {key: [lm, dx, dz]}) · lines? {key: [[who, text]]} (bubbles on touch) · radius = 1.0 ·
 // carRadius? (= 4) · inCar = false (touching from a car counts) · timer? · barLabel · failText
 // Roll motion (flight): items slide along the aisle (|x - 3000| <= 0.45) at 0.6–1.4 m/s, reflect at
-// lz +12.5 / -16 and get kicked ±1.5 m/s by every turbulence jolt (cabin.onJolt).
+// lz +12.5 / -16, roll out from under the serving trolley towards the player's side (a bottle
+// beyond a trolley stopped at a row could not be reached for 20 s or more, which made the timer a
+// lottery; Phase 2) and get kicked ±1.5 m/s by every turbulence jolt (cabin.onJolt).
 
 export const collect = (o) => common(o, {
   text: o.text,
@@ -107,6 +109,13 @@ export const collect = (o) => common(o, {
         c.z += c.vz * dt;
         if (c.z > 12.5) { c.z = 12.5; c.vz = -Math.abs(c.vz); }
         if (c.z < -16) { c.z = -16; c.vz = Math.abs(c.vz); }
+        const tr = g.cabin?.trolley;
+        if (tr && Math.abs(tr.x - CABIN_X) < 0.6) {
+          // Never out of reach behind the trolley: a bottle at it or beyond it (seen from the
+          // player) rolls out from under it towards the player's side.
+          const half = (tr.spec.len || 0.85) / 2 + 0.12, side = Math.sign(g.player.z - tr.z) || -1;
+          if ((c.z - tr.z) * side < half) c.vz = side * Math.max(Math.abs(c.vz), 0.9);
+        }
         c.mesh.position.set(c.x, c.y, c.z);
         c.mesh.rotation.x += (c.vz * dt) / 0.12;
       } else c.tick(g.time, dt);

@@ -13,11 +13,14 @@ export const METERS = {
   },
   skandal: {
     mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
-    vehicle: 'guardia', vehicleCount: 2, vehicleMaxSpeed: 28, pursuerDef: 'guardia',
+    // Phase 2 balance (calibrate case 'pursuit'): at 28 km/h-ish Land Rovers spawned 70–150 m off
+    // and the old bands ([[42, 9], [22, 3]]: free after 11 s beyond 42 m) every escape took 11.1 s
+    // and the Guardia never came within 75 m, even for a driver at 80 % of top speed.
+    vehicle: 'guardia', vehicleCount: 2, vehicleMaxSpeed: 33, spawnDist: [40, 80], catchUp: [70, 1.3], pursuerDef: 'guardia',
     pursuerPhysics: 'walk', onFootSpeed: 7.0,          // sprint 8.8 outruns him, walking does not
     penalty: { share: 0.2, min: 250, max: 1500 },      // fine = clamp(round25(0.2·coins), 250, 1500), floored at coins
     bustFreeze: 3,                                      // s frozen beside the officer after a bust
-    decayIdle: 5, idleDelay: 4, bands: [[42, 9], [22, 3]], allDeadDecay: 12,
+    decayIdle: 5, idleDelay: 4, bands: [[70, 3], [35, 1]], allDeadDecay: 12,
     siren: true,
     taunts: ['¡Alto! ¡Guardia Civil!', '¡Documentación, por favor!', '¡Usted! ¡El de la camisa!',   // [N]
       '¡Turistas!',                                                                                // [N]

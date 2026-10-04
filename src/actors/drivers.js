@@ -198,7 +198,9 @@ export class AIDriver {
       // Slow for bends: compare heading with a point further along.
       const far = p.pts[Math.min(p.pts.length - 1, k + 3)];
       const bend = Math.abs(angleDiff(car.yaw, yawTo(far.x - car.x, far.z - car.z)));
-      targetSpeed = this.cruise * (1 - Math.min(0.62, bend * 0.75));
+      // A chaser (the Guardia) brakes less for bends: at 38 % of cruise round every corner two
+      // Land Rovers never got within 40 m of a fleeing ×1.2 car (Phase 2 balance).
+      targetSpeed = this.cruise * (1 - Math.min(this.mode === 'chase' ? 0.45 : 0.62, bend * 0.75));
       const last = p.pts[p.pts.length - 1];
       if (!this.path.wander && p.built >= p.nodes.length - 1) {
         const dl = Math.hypot(last.x - car.x, last.z - car.z);
