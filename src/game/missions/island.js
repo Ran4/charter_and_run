@@ -21,16 +21,16 @@ const PARTY_CAM = { at: 'flamencoPool', dist: 11, height: 4 };
 // world (WP-G report, table "Timers"): drives ceil5(1.2 × T_ref), on foot ceil5(1.25 × T_ref).
 export const TIMERS = {
   buss17Drive: 60,        // §8.6 s2  busBay -> flamencoDrive, ÅKSJUKA limits, stop        T_ref 47.5
-  friskotekBalls: 30,     // §8.7 s1  6 fleeing beach balls (on foot)                      T_ref 23.2
+  friskotekBalls: 20,     // §8.7 s1  6 fleeing beach balls (on foot; slowest of 8 chases) T_ref 14.9
   asnanPaint: 20,         // §8.8 s9  supermercado -> vikingbar, SKICK                     T_ref 14.1
-  bodegaVischan: 35,      // §8.9 s4  playa -> vischan                                     T_ref 27.5
+  bodegaVischan: 35,      // §8.9 s4  playa -> vischan (worst run)                         T_ref 28.7
   bodegaJeep: 45,         // §8.9 s9  wreck the fleeing Guardia jeep (p90 of 9 chases)     T_ref 34.7
-  bodegaHome: 30,         // §8.9 s10 wreck spot -> flamencoBack (worst of 4 wreck spots)  T_ref 24.3
-  fatagaSheep: 30,        // §8.11 s5 6 fleeing sheep (on foot)                            T_ref 22.0
+  bodegaHome: 35,         // §8.9 s10 wreck spot -> flamencoBack (worst spot, worst run)   T_ref 26.2
+  fatagaSheep: 25,        // §8.11 s5 6 fleeing sheep (on foot; slowest of 8 chases)       T_ref 16.3
   grisfestFlowers: 30,    // §8.12 s1 5 static flowers round Flamenco (on foot)            T_ref 23.0
   grisfestPlates: 35,     // §8.12 s4 10 plate stacks (on foot, formula)                   T_ref 25.3
   grisfestTonga: 30,      // §8.12 s6 dance floor -> car at the gate -> tongatonga         T_ref 21.5
-  julaftonGuests: 75,     // §8.13 s1 patio -> hire car -> four guests                     T_ref 62.1
+  julaftonGuests: 80,     // §8.13 s1 patio -> hire car -> four guests (worst run)         T_ref 65.5
 };
 
 // Opponent / quarry tuning (race, destroy, follow; DESIGN §8 "Races and chases").

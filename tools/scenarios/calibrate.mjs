@@ -295,9 +295,29 @@ async function installAutopilot() {
     ap.active = { ctl, car, t0: ap.t, tEnd: null, stage0: ms.stageI, until: spec.until || 'stage', fail: null, len: pts.reduce((s, q, i) => s + (i ? hyp(q, pts[i - 1]) : 0), 0) };
     return { nodes: ns.map((n) => [L.nodeI(n), L.nodeJ(n)]), pts: pts.length, len: Math.round(ap.active.len) };
   };
+  // Completion of the active drive/chase/tail. A stage change counts before anything else: the
+  // next stage's staging (a scene `place`, a mission end) may take the player out of the car in
+  // the same missions.update that completed the goto, and that must not read as "car lost".
+  // ap.t has already been advanced for the current frame by our onFrame hook (which runs before
+  // missions.update), so stamping tEnd = ap.t here is the completion time, whether this runs from
+  // the next frame's hook or from a poll between frames.
+  ap.check = () => {
+    const a = ap.active;
+    if (!a) return true;
+    if (a.tEnd == null) {
+      const ms = g.missions;
+      let done = false;
+      if (ms.state === 'failed') { a.fail = 'failed'; done = true; }
+      else if (a.until === 'stage') done = ms.stageI !== a.stage0 || ms.state !== 'running';
+      else if (a.until.npc) done = ms.stageI !== a.stage0 || ms.state !== 'running' || !ms.stage?.list?.find((e) => e.key === a.until.npc)?.alive;
+      if (done) a.tEnd = ap.t;
+    }
+    return a.tEnd != null;
+  };
   ap.result = () => {
     const a = ap.active;
     if (!a) return null;
+    ap.check();
     const st = a.ctl.st, f = (v) => +(v ?? 0).toFixed(1);
     const band = a.stats ? { dMin: f(a.stats.dMin), dMax: f(a.stats.dMax) } : undefined;
     return { t: a.tEnd != null ? a.tEnd - a.t0 : null, fail: a.fail, len: Math.round(a.len), driven: Math.round(st.dist), impacts: st.impacts, blocked: f(st.blockedT), maxLat: f(st.maxLat), maxBrake: f(st.maxBrake), x: f(a.car.x), z: f(a.car.z), yaw: +a.car.yaw.toFixed(2), band };
@@ -403,14 +423,7 @@ async function installAutopilot() {
   g.onFrame((dt) => {
     ap.t += dt;
     const ms = g.missions;
-    const a = ap.active;
-    if (a && a.tEnd == null) {
-      let done = false;
-      if (ms.state === 'failed') { a.fail = 'failed'; done = true; }
-      else if (a.until === 'stage') done = ms.stageI !== a.stage0 || ms.state !== 'running';
-      else if (a.until.npc) done = !ms.stage?.list?.find((e) => e.key === a.until.npc)?.alive;
-      if (done) a.tEnd = ap.t;
-    }
+    ap.check();
     const f = ap.foot;
     if (f) {
       const p = g.player;
@@ -481,11 +494,13 @@ async function waitDone(T, timeout = 240000) {
   // Short waits in a loop (long page waits hit the protocol timeout); give up if the car is lost.
   const t0 = Date.now();
   for (;;) {
-    const done = await T.until(() => { const a = window.__ap.active; return !a || a.tEnd != null || !__game.playerCar || __game.playerCar.dead; }, 20000).then(() => true, () => false);
+    const done = await T.until(() => window.__ap.check() || !__game.playerCar || __game.playerCar.dead, 20000).then(() => true, () => false);
     if (done || Date.now() - t0 > timeout) break;
   }
-  const lost = await T.ev(() => !__game.playerCar || __game.playerCar.dead);
+  // result() runs the completion check first, so a stage that completed counts as done even
+  // when the car is gone by now.
   const r = await T.ev(() => window.__ap.result());
+  const lost = await T.ev(() => !__game.playerCar || __game.playerCar.dead);
   if (r && lost && r.t == null) r.fail = 'car lost';
   await T.ev(() => window.__ap.stop());
   return r;
@@ -716,7 +731,7 @@ export const SCENARIOS = {
     // ---- fleeing rabbits on foot: the friskotek beach balls and the Fataga sheep ----------------
     for (const [id, mission, stage, key, what] of [['balls', 6, 0, 'friskotekBalls', 'friskotek s1 six fleeing beach balls'], ['sheep', 10, 4, 'fatagaSheep', 'fataga s5 six fleeing sheep']]) {
       if (!want(id)) continue;
-      const runs = +(process.env.FOOT_RUNS || 2), ts = [];
+      const runs = +(process.env.FOOT_RUNS || 3), ts = [];
       for (let k = 0; k < runs; k++) {
         await boot(T, mission);
         if (stage) await jumpTo(T, stage, { fn: () => { const g = __game; if (g.playerCar) g.exitCar(true); const s = window.__lm('fatagaBus'); g.player.teleport(s.x, s.z - 3, Math.PI); g.cam.snapNext = true; return true; } });
@@ -728,11 +743,12 @@ export const SCENARIOS = {
         T.log(id, 'run', k, JSON.stringify(w), 'left', left);
         ts.push(w.t);
       }
-      // The autopilot's chase is pure running time; add the formula's 1.5 s per target (aiming and
-      // stopping, which a human needs and the autopilot does not).
-      const tref = Math.max(...ts) + 1.5 * 6;
+      // §8: "+1.5 s per target, or measured when targets flee" – fleeing targets use the measured
+      // chase alone (the slowest run; the spawns and flight paths are random), no per-target
+      // allowance on top. The shipped timer takes the worst run over all calibration runs.
+      const tref = Math.max(...ts);
       out[key] = tref;
-      row(id, `${what} (on foot, measured)`, 'nearest-first sprint chase', tref.toFixed(1), ceil5(tref * 1.25), `runs ${ts.map((t) => t.toFixed(1)).join(' / ')} s (max) + 1.5 s × 6 targets`);
+      row(id, `${what} (on foot, measured)`, 'nearest-first sprint chase', tref.toFixed(1), ceil5(tref * 1.25), `runs ${ts.map((t) => t.toFixed(1)).join(' / ')} s (T_ref = slowest run)`);
     }
 
     // ---- follows: no timer; check the routes on the stub grid and the distance band ------------
