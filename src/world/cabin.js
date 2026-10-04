@@ -1133,7 +1133,7 @@ export function buildCabin(scene, game) {
         if (this._seatedCast(g, 'berra', '22C') || this._seatedCast(g, 'robban', '22D')) {
           this._ratataCd = 45;
           g.say('berra', 'Ra-tara-tara…', 2.2);   // [F]
-          g.wait?.(0.7).then(() => g.say('robban', 'Ra-tara-tara-ta!', 2.0));   // [F]
+          g.wait?.(0.7).then(() => g.say('robban', 'Ra-tara-tara…', 2.0));   // [F]
         }
       }
     },
