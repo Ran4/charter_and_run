@@ -317,7 +317,7 @@ export function buildCabin(scene, game) {
     GC.cyl(C.steelLt, W(s * 1.9), 2.1, -0.95, 0.022, 28.1, 6, Math.PI / 2);
     for (const row of ROWS) {
       const z = rowZ(row) - 0.3;
-      vb(GC, C.wallLt, s * 1.45, 2.075, z, 0.42, 0.03, 0.12);
+      vb(GC, C.rack, s * 1.45, 2.075, z, 0.36, 0.025, 0.1);
       vb(GS, C.orange, s * 1.45, 2.058, z + 0.03, 0.05, 0.012, 0.04);
       vb(GS, 0xfff3b0, s * 1.3, 2.058, z, 0.05, 0.012, 0.05);
       vb(GS, 0xfff3b0, s * 1.6, 2.058, z, 0.05, 0.012, 0.05);
@@ -416,7 +416,7 @@ export function buildCabin(scene, game) {
   const gb = (minX, minZ, maxX, maxZ, top, kind) => { const b = solid(minX, minZ, maxX, maxZ, top, kind); gateBlocks.push(b); return b; };
   const gateGroup = new THREE.Group();
   // A cut-away wall: body to 2.56 m, a darker cap on the section; `skin` paints one face cream.
-  const gwall = (x0, z0, x1, z1, body = C.cream, cap = C.woodDk) => {
+  const gwall = (x0, z0, x1, z1, body = C.cream, cap = 0xb8a888) => {
     vbox(GG, body, x0, z0, x1, z1, FLOOR, WALL_H - 0.04);
     vbox(GG, cap, x0, z0, x1, z1, WALL_H - 0.04, WALL_H);
   };
@@ -450,9 +450,9 @@ export function buildCabin(scene, game) {
   gb(38.0, 0, 39.0, 30.0, 99, 'gatewall');
   gb(13.0, -1.0, 39.0, 0, 99, 'gatewall');
   gb(13.0, 30.0, 39.0, 31.0, 99, 'gatewall');
-  gwall(38.0, -1.0, 39.0, 31.0, C.brick);
-  gwall(13.0, -1.0, 38.0, 0, C.brick);
-  gwall(13.0, 30.0, 38.0, 31.0, C.brick);
+  gwall(38.0, -1.0, 39.0, 31.0, C.brick, C.woodDk);
+  gwall(13.0, -1.0, 38.0, 0, C.brick, C.woodDk);
+  gwall(13.0, 30.0, 38.0, 31.0, C.brick, C.woodDk);
   skin(38.0, 0, 38.15, 30.0);
   skin(14.0, -0.15, 37.85, 0);
   skin(14.0, 30.0, 37.85, 30.15);
@@ -565,9 +565,27 @@ export function buildCabin(scene, game) {
   sign(gateGroup, 'SUNTRIP\nSOLEN VÄNTAR', 18.0, 1.55, 0.3, 2.2, 1.4, { yaw: 0, tilt: -0.25, bg: '#f7c31b', fg: '#d8321e', scale: 0.7 });
   GG.cyl(C.orange, W(18.0), 2.62, 0.12, 0.4, 0.05, 16, Math.PI / 2);
   for (const x of [23.0, 29.0]) vbox(GG, C.woodDk, x - 0.06, 30.4, x + 0.06, 30.6, WALL_H, 2.85);
-  // Carpets.
+  // Carpets: brown with an orange 70s border and a lighter rug under the chairs.
   vbox(GGF, C.lounge, 13.0, -1.0, 39.0, 31.0, FLOOR - 0.06, FLOOR - 0.014);
-  vbox(GGF, 0x7a5a3e, 14.0, 13.7, 30.0, 15.7, FLOOR - 0.014, FLOOR - 0.008);
+  vbox(GGF, 0x7a5a3e, 18.2, 5.6, 27.8, 20.4, FLOOR - 0.014, FLOOR - 0.008);
+  vbox(GGF, 0x7a5a3e, 14.0, 13.7, 18.2, 15.7, FLOOR - 0.014, FLOOR - 0.008);
+  for (const [x0, z0, x1, z1] of [[15.0, 1.0, 29.0, 1.3], [15.0, 28.7, 29.0, 29.0], [15.0, 1.0, 15.3, 13.2], [15.0, 16.2, 15.3, 29.0], [28.7, 1.0, 29.0, 13.0]]) vbox(GGF, C.counter, x0, z0, x1, z1, FLOOR - 0.008, FLOOR - 0.004);
+  // A newsstand on the north wall (solid; the cabin package owns the gate set).
+  gb(20.0, 26.8, 24.0, 27.6, 1.1, 'counter');
+  gb(20.0, 29.3, 24.0, 30.0, 2.0, 'counter');
+  vbox(GG, C.counter, 20.0, 26.8, 24.0, 27.6, FLOOR, 1.02);
+  vbox(GG, C.wood, 19.95, 26.75, 24.05, 27.65, 1.02, 1.1);
+  vbox(GG, C.wood, 20.0, 29.3, 24.0, 30.0, FLOOR, 2.0);
+  { const r = mulberry32(31); for (let x = 20.15; x < 23.9; x += 0.32) for (const y of [0.6, 1.05, 1.5]) vbox(GG, [0xd8321e, C.yellow, 0x2a4fa0, C.skin, 0x3a7a3a][(r() * 5) | 0], x, 29.2, x + 0.26, 29.3, y, y + 0.36); }
+  for (let x = 20.3; x < 23.8; x += 0.45) vbox(GGF, [C.red, C.yellow, C.skin][((x * 7) | 0) % 3], x, 26.9, x + 0.35, 27.45, 1.1, 1.13);
+  gb(19.9, 26.7, 20.05, 30.0, 2.4, 'counter');
+  gb(23.95, 26.7, 24.1, 30.0, 2.4, 'counter');
+  vbox(GG, C.wood, 19.9, 26.7, 20.05, 30.0, FLOOR, 2.4);
+  vbox(GG, C.wood, 23.95, 26.7, 24.1, 30.0, FLOOR, 2.4);
+  vbox(GG, C.counter, 19.9, 26.7, 24.1, 27.0, 2.4, 2.6);
+  sign(gateGroup, 'TIDNINGAR · GODIS', 22.0, 2.95, 26.7, 3.6, 0.5, { yaw: Math.PI, tilt: -0.35, bg: '#f7c31b', fg: '#1d1426', scale: 0.6 });
+  // Two wall telephones on the south wall.
+  for (const x of [15.6, 16.6]) { vbox(GG, 0x8a8f99, x - 0.3, 0.0, x + 0.3, 0.35, 0.9, 2.1); vbox(GGF, C.red, x - 0.12, 0.35, x + 0.12, 0.45, 1.3, 1.65); }
   // Signs.
   sign(gateGroup, 'ARLANDA UTRIKES', 26, 3.5, 30.5, 9, 1.4, { yaw: Math.PI, tilt: -0.35, bg: '#d8743a', fg: '#fff8e6', scale: 0.6, double: true });
   sign(gateGroup, 'SÄKERHETSKONTROLL', 33, 3.05, 5.0, 4.2, 0.7, { yaw: -Math.PI / 2, tilt: -0.3, double: true, ...SIGN_W });
@@ -578,6 +596,7 @@ export function buildCabin(scene, game) {
 
   gateGroup.add(toonMesh(GG.build(), { outline: 0.035 }));
   gateGroup.add(toonMesh(GGF.build(), { outline: 0, cast: false }));
+  { const geo = buildBustGeo(randomPed(mulberry32(88))); geo.rotateY(Math.PI); geo.translate(W(22.0), 0.75, 28.4); loungeBusts.parts.push(geo); }   // the newsstand vendor
   if (!loungeBusts.empty) gateGroup.add(toonMesh(loungeBusts.build(), { outline: 0.025 }));
   scene.add(gateGroup);
 
@@ -733,7 +752,7 @@ export function buildCabin(scene, game) {
       if (this.seatbelt && !was && chime) audio.chime();
     },
     _applyBelt() {
-      this.seatbelt = this._beltWant || !!this._turb?.warned;
+      this.seatbelt = this._beltWant || !!(this._turb && (this._turb.warned || this._turb.beltHold));
       setBeltSignLit(this.seatbelt);
     },
     // Cabin drone (§5.6): base level per phase/event, +30 % while the turbulence shakes (§5.7).
@@ -750,9 +769,10 @@ export function buildCabin(scene, game) {
       return !!T && T.warned && T.t - T.delay - T.warn <= T.secs;
     },
     turbulence(strength, secs, { warn = 1.5, delay = 0 } = {}) {
-      const keep = this._turb?.warned;   // a new turbulence during one keeps the sign lit
-      this._turb = { strength, secs, warn, delay, t: 0, warned: !!keep, joltT: 0.8, shakeT: 0, rattleT: 0, unheld: 0 };
-      if (keep) this._turb.t = delay;    // no second warning
+      // A new turbulence replaces a running one; its sign stays lit through the new delay.
+      const beltHold = !!(this._turb && (this._turb.warned || this._turb.beltHold));
+      this._turb = { strength, secs, warn, delay, t: 0, warned: false, beltHold, joltT: 0.8, shakeT: 0, rattleT: 0, unheld: 0 };
+      if (this._droneUp) { this._droneUp = false; this._setDrone(this._drone); }
     },
 
     // ---- seats ----
@@ -904,13 +924,15 @@ export function buildCabin(scene, game) {
       const c = src.canvas.getContext('2d');
       const X = (lx) => (W(lx) - src.x0) * src.scale, Z = (z) => (z - src.z0) * src.scale;
       c.fillStyle = '#4a3c30';     // aisle runner
+      c.globalCompositeOperation = 'lighten';
       c.fillRect(X(-0.5), Z(-14.9), X(0.5) - X(-0.5), Z(13.2) - Z(-14.9));
+      c.globalCompositeOperation = 'source-over';
       c.fillStyle = '#ffd23f';     // the player's seat 14B
       const s = seats['14B'];
       c.fillRect(X(1.2), Z(s.z - 0.2), X(1.7) - X(1.2), Z(s.z + 0.2) - Z(s.z - 0.2));
       if (gate) {
         c.fillStyle = '#5a4434';   // lounge carpet and bridge floor under the walls
-        c.globalCompositeOperation = 'destination-over';
+        c.globalCompositeOperation = 'lighten';
         c.fillRect(X(14), Z(0), X(38) - X(14), Z(30) - Z(0));
         c.fillRect(X(3.45), Z(13.7), X(14) - X(3.45), Z(15.7) - Z(13.7));
         c.globalCompositeOperation = 'source-over';
@@ -1043,6 +1065,11 @@ export function buildCabin(scene, game) {
       // Wait for anyone (not the player) standing in the aisle just ahead.
       const front = trolley.z - 0.425;
       if (this._someoneAhead(front, g)) return halt();
+      // A bowled-over player lying ahead is waited for (never shoved along the aisle), and once
+      // he is up he gets a moment to step aside before the next bowl.
+      const pl = g.player, pAhead = !g.playerCar && inAisle(pl.x) && trolley.z - pl.z > 0 && trolley.z - pl.z < 2.0;
+      if (pAhead && (pl.state === 'down' || pl.state === 'flung')) { T.graceT = 1.2; return halt(); }
+      if (T.graceT > 0) { T.graceT -= h; if (pAhead) return halt(); }
       // Serve every three rows.
       if (trolley.z <= T.stopAt) {
         T.pauseT = 3;
@@ -1085,10 +1112,9 @@ export function buildCabin(scene, game) {
       }
     },
     _someoneAhead(front, g) {
-      const near = (ch) => ch.state === 'normal' && inAisle(ch.x) && front - ch.z > 0 && front - ch.z < 1.2;
-      for (const k in g.npcs) if (near(g.npcs[k])) return true;
-      for (const ch of blockers) if (ch.active && near(ch)) return true;
-      for (const w of walkers) if (near(w.ch)) return true;
+      for (const k in g.npcs) if (aheadOf(g.npcs[k], front)) return true;
+      for (const ch of blockers) if (ch.active && aheadOf(ch, front)) return true;
+      for (const w of walkers) if (aheadOf(w.ch, front)) return true;
       return false;
     },
     _seatedCast(g, key, seatId) { const n = g.npcs?.[key]; return !!n && n.state === 'seated' && n.seatId === seatId; },
@@ -1140,22 +1166,15 @@ export function buildCabin(scene, game) {
     stepBlockers(dt, g) {
       const p = g.player;
       const free = p.state === 'normal' && !g.playerCar;
-      const solidVs = (ch, firm) => {
-        const dx = p.x - ch.x, dz = p.z - ch.z, d = Math.hypot(dx, dz), R = p.r + ch.r;
-        if (!(d < R && d > 0.001 && Math.abs(p.y - ch.y) < 1.2)) return false;
-        if (firm) { p.x += (dx / d) * (R - d); p.z += (dz / d) * (R - d); }
-        else { ch.z -= Math.sign(dz || 1) * (R - d); }
-        return true;
-      };
       for (const ch of blockers) {
         if (!ch.active) continue;
         ch.sync(dt);
         ch.bumpCd -= dt;
         if (!free || ch.state !== 'normal') continue;
-        if (solidVs(ch, true) && ch.bumpCd <= 0) { ch.bumpCd = 2; fear(FEAR.blockerBump); g.say(ch, 'Vänta lite, jag ska bara…', 1.8); }   // [N]
+        if (solidVs(p, ch, true) && ch.bumpCd <= 0) { ch.bumpCd = 2; fear(FEAR.blockerBump); g.say(ch, 'Vänta lite, jag ska bara…', 1.8); }   // [N]
       }
-      if (free && this.inCabin(pusher.x, pusher.z)) solidVs(pusher, true);
-      if (free) for (const w of walkers) if (w.ch.state === 'normal' && w.mode !== 'dodge') solidVs(w.ch, false);
+      if (free && this.inCabin(pusher.x, pusher.z)) solidVs(p, pusher, true);
+      if (free) for (const w of walkers) if (w.ch.state === 'normal' && w.mode !== 'dodge') solidVs(p, w.ch, false);
     },
 
     // ---- aisle walkers (§5.12, P1) ----
@@ -1209,7 +1228,7 @@ export function buildCabin(scene, game) {
     // Something in the aisle ahead of a walker: 'dodge' (player, trolley) | 'wait' (others) | null.
     _walkerBlocked(w, dir, g) {
       const ch = w.ch, p = g.player;
-      const ahead = (z, r) => { const d = (z - ch.z) * dir; return d > 0 && d < r; };
+      const ahead = (z, r) => inFront(z, ch.z, dir, r);
       if (p.state === 'normal' && !g.playerCar && inAisle(p.x) && ahead(p.z, 1.5)) return 'player';
       if (inAisle(trolley.x) && (ahead(trolley.z, 2.6) || ahead(pusher.z, 1.6))) return 'trolley';
       for (const v of walkers) {
@@ -1432,6 +1451,18 @@ export function buildCabin(scene, game) {
   // The walkers start in their seats.
   for (const w of walkers) cabin._walkerSit(w);
   return cabin;
+}
+
+// Someone standing in the aisle within 1.2 m ahead of the trolley's front face (it moves -z).
+function aheadOf(ch, front) { return ch.state === 'normal' && Math.abs(ch.x - CX) < 0.75 && front - ch.z > 0 && front - ch.z < 1.2; }
+// z lies between 0 and r ahead of z0 in direction dir.
+function inFront(z, z0, dir, r) { const d = (z - z0) * dir; return d > 0 && d < r; }
+// The player against a solid body: `firm` pushes the player out; otherwise the body makes way.
+function solidVs(p, ch, firm) {
+  const dx = p.x - ch.x, dz = p.z - ch.z, d = Math.hypot(dx, dz), R = p.r + ch.r;
+  if (!(d < R && d > 0.001 && Math.abs(p.y - ch.y) < 1.2)) return false;
+  if (firm) { p.x += (dx / d) * (R - d); p.z += (dz / d) * (R - d); } else ch.z -= Math.sign(dz || 1) * (R - d);
+  return true;
 }
 
 // A clock for the bust bob (the cabin has no own clock; the phase timer is fine).

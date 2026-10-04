@@ -198,7 +198,8 @@ export const SCENARIOS = {
   // ---------------------------------------------------------------------------------------------
   async trolley(T) {
     await T.fresh('&mission=2');
-    await T.ev(() => __game.cabin.setPhase('cruise', { instant: true }));
+    // No idle turbulence during this test (its jolts would shove him out of the dodge row).
+    await T.ev(() => { const c = __game.cabin; c.setPhase('cruise', { instant: true }); c._idleTurbT = 1e9; });
     // Stand in the aisle ahead of it until it bowls him over.
     const v0 = await T.ev(() => { const g = __game; g.cabin.trolley.place(3000, 16.2, Math.PI); g.cabin._t.wait = 0; g.cabin._t.stopAt = null; g.cabin.startTrolley(); return g.shame.v; });
     await stand(T, 0, 7.0, 0, Math.PI);
@@ -208,13 +209,16 @@ export const SCENARIOS = {
     const b = await T.ev(() => { const g = __game, t = g.cabin.trolley; return { bowled: g.cabin.stats.bowled, v: g.shame.v, tz: t.z, tx: t.x, nan: !Number.isFinite(t.x + t.z + g.player.x + g.player.z) }; });
     T.log('bowled', JSON.stringify(b), 'fear before', v0);
     check(b.bowled >= 1 && b.v > v0 && !b.nan, 'the trolley bowls a standing player over; fear rose; no NaN');
-    await T.until(() => __game.player.state === 'normal', 8000);
     // Dodge: step into the leg room of a free row ahead of it; it rolls past without a bowl.
+    await T.ev(() => { const g = __game; g.cabin.stopTrolley(); g.shame.v = 0; });
+    await T.until(() => __game.player.state === 'normal', 8000);
     const dodge = await T.ev(() => {
-      const g = __game, rz = (r) => 12.4 - 1.2 * (r <= 12 ? r - 1 : r - 2), t = g.cabin.trolley;
-      const row = [8, 12, 15, 18, 20, 23].find((r) => rz(r) < t.z - 3);
+      const g = __game, rz = (r) => 12.4 - 1.2 * (r <= 12 ? r - 1 : r - 2), c = g.cabin;
+      c.trolley.place(3000, 16.2, Math.PI); c._t.wait = 0; c._t.pauseT = 0; c._t.stopAt = null;
+      const row = 8;
       g.debugWarp(3001.0, rz(row) + 0.31, Math.PI / 2);
-      return { row, z: rz(row) + 0.31, bowled: g.cabin.stats.bowled };
+      c.startTrolley();
+      return { row, z: rz(row) + 0.31, bowled: c.stats.bowled };
     });
     await T.until((z) => __game.cabin.trolley.z < z + 1.6, 30000, dodge.z);
     await T.shot('trolley_dodge');
@@ -297,6 +301,58 @@ export const SCENARIOS = {
     const j0 = await T.ev(() => __game.cabin.stats.jolts);
     await T.until((n) => __game.cabin.stats.jolts >= n, 9000, j0 + 2);
     await T.shot('turbulence_seated');
+  },
+
+  // ---------------------------------------------------------------------------------------------
+  // Review shots (not part of the §16.4 table): door to the bridge, the lit seatbelt sign, the
+  // trolley serving, aisle walkers, the big map in both plans, render stats.
+  async flightshots(T) {
+    await T.fresh('&mission=1');
+    const stats = async (what) => T.log('stats', what, JSON.stringify(await T.ev(() => window.__stats())));
+    await stand(T, 0.8, 14.7, Math.PI / 2, Math.PI / 2);
+    await T.shot('fs_door_bridge');
+    await stats('gate phase, cabin door');
+    T.log('heaviest meshes', JSON.stringify(await T.ev(() => {
+      const out = [];
+      __game.scene.traverse((o) => { if (o.isMesh && o.geometry) { const g = o.geometry, n = (g.index ? g.index.count : g.attributes.position.count) / 3 * (o.isInstancedMesh ? o.count : 1); const p = new o.position.constructor(); o.getWorldPosition(p); out.push([o.name || o.parent?.name || o.type, Math.round(n), Math.round(p.x), Math.round(g.boundingSphere?.center.x ?? 0)]); } });
+      return out.sort((a, b) => b[1] - a[1]).slice(0, 14);
+    })));
+    await T.tap('KeyM');
+    await T.frames(4);
+    await T.shot('fs_map_gate');
+    await T.tap('KeyM');
+    await T.ev(() => __game.cabin.setAisleBlockers(true));
+    await stand(T, 0, 12.6, Math.PI, Math.PI);
+    await T.shot('fs_stowers');
+    await T.ev(() => __game.cabin.setAisleBlockers(false));
+    await T.ev(() => { const g = __game; g.cabin.setPhase('takeoff', { instant: true, hold: true }); g.cabin.setSeatbelt(true); });
+    await stand(T, 0, 9.0, 0, 0);
+    await T.shot('fs_belt_sign');
+    await T.ev(() => { const g = __game; g.cabin.setSeatbelt(false); g.cabin.setPhase('climb', { instant: true, hold: true }); });
+    await stand(T, 0.25, -2.1, Math.PI / 2, Math.PI / 2);
+    await T.shot('fs_climb');
+    await T.fresh('&mission=2');
+    await T.ev(() => { const g = __game; g.cabin.setPhase('cruise', { instant: true }); g.cabin.trolley.place(3000, 16.2, Math.PI); g.cabin._t.wait = 0; g.cabin._t.stopAt = null; g.cabin.startTrolley(); });
+    await stand(T, 1.0, 12.4 - 1.2 * 7 + 0.31, -Math.PI / 2, Math.PI);
+    await T.until(() => __game.cabin._t.serving, 30000);
+    await T.frames(10);
+    await T.shot('fs_trolley_serving');
+    { const tz = await T.ev(() => __game.cabin.trolley.z); await overview(T, 'fs_trolley_close', { x: X(-1.6), y: 3.2, z: tz - 2.6 }, { x: X(0), y: 0.9, z: tz + 0.3 }); }
+    await stats('cruise, trolley');
+    await T.tap('KeyM');
+    await T.frames(4);
+    await T.shot('fs_map_cabin');
+    await T.tap('KeyM');
+    // Walkers: wait until one is up and about.
+    await T.ev(() => { const g = __game; g.cabin.stopTrolley(); for (const w of g.cabin.walkers) w.t = Math.min(w.t, 1); });
+    await T.until(() => __game.cabin.walkers.some((w) => w.mode === 'walk' || w.mode === 'dodge'), 20000);
+    const wz = await T.ev(() => { const w = __game.cabin.walkers.find((v) => v.mode === 'walk' || v.mode === 'dodge'); return { z: w.ch.z, goal: w.goal?.z }; });
+    const up = wz.goal > wz.z;
+    await stand(T, 0, up ? wz.z + 3.5 : wz.z - 3.5, up ? Math.PI : 0, up ? Math.PI : 0);
+    await T.until(() => __game.cabin.walkers.some((w) => w.mode === 'dodge'), 15000).catch(() => {});
+    await T.frames(20);
+    await T.shot('fs_walker');
+    T.log('walkers', JSON.stringify(await T.ev(() => __game.cabin.walkers.map((w) => [w.mode, +(w.ch.x - 3000).toFixed(2), +w.ch.z.toFixed(2)]))));
   },
 
   // ---------------------------------------------------------------------------------------------
