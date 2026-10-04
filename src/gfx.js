@@ -65,7 +65,7 @@ function initMaterials() {
   MAT.ghost = new THREE.MeshToonMaterial({ vertexColors: true, gradientMap: g, transparent: true, opacity: 0.62, depthWrite: false });
   MAT.glass = new THREE.MeshToonMaterial({ color: 0xbfe6ff, gradientMap: g, transparent: true, opacity: 0.32, depthWrite: false, side: THREE.DoubleSide });
   MAT.cloud = new THREE.MeshToonMaterial({ color: 0xffffff, gradientMap: g, fog: false });
-  MAT.water = new THREE.MeshToonMaterial({ color: 0x46b4e6, gradientMap: g });
+  MAT.water = new THREE.MeshToonMaterial({ color: 0x1c7fb8, gradientMap: g });   // sea and pools
   MAT.white = new THREE.MeshToonMaterial({ color: 0xffffff, gradientMap: g });
   MAT.mouth = new THREE.MeshBasicMaterial({ vertexColors: true });
   MAT.beam = new THREE.MeshBasicMaterial({ color: 0xffd23f, transparent: true, opacity: 0.28, depthWrite: false, side: THREE.DoubleSide });
@@ -285,6 +285,7 @@ function addSky() {
   sky.renderOrder = -10;
   sky.onBeforeRender = (r, s, cam) => sky.position.copy(cam.position);
   scene.add(sky);
+  MAT.sky = mat;
 
   const clouds = new THREE.Group();
   const gb = new GeoBuilder();
@@ -308,6 +309,26 @@ function addSky() {
   scene.add(clouds);
   MAT._clouds = clouds;
 }
+
+// Sky gradient, fog, page background, sun and hemisphere light in one go (DESIGN §13.3: fog colour
+// = sky horizon = body background, always together). Missing fields keep their value.
+export function setSkyPalette({ top, horizon, fogNear, fogFar, sun: sunC, sunI, hemiSky, hemiGround, hemiI } = {}) {
+  if (top !== undefined) MAT.sky.uniforms.top.value.set(top);
+  if (horizon !== undefined) {
+    MAT.sky.uniforms.horizon.value.set(horizon);
+    scene.fog.color.set(horizon);
+    document.body.style.background = '#' + new THREE.Color(horizon).getHexString();
+  }
+  if (fogNear !== undefined) scene.fog.near = fogNear;
+  if (fogFar !== undefined) scene.fog.far = fogFar;
+  if (sunC !== undefined) sun.color.set(sunC);
+  if (sunI !== undefined) sun.intensity = sunI;
+  if (hemiSky !== undefined) hemi.color.set(hemiSky);
+  if (hemiGround !== undefined) hemi.groundColor.set(hemiGround);
+  if (hemiI !== undefined) hemi.intensity = hemiI;
+}
+export function setCloudsVisible(on) { if (MAT._clouds) MAT._clouds.visible = !!on; }
+export function setShadows(on) { sun.castShadow = !!on; }
 
 export function tickSky(t, camPos) {
   if (MAT._clouds) {

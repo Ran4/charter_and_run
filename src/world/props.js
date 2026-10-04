@@ -1,10 +1,17 @@
-// Breakable street furniture: mailboxes, bins, hydrants, flamingos, fences... Each type is one
-// instanced mesh. Smash one with a car or a kick and it bursts into debris and coins.
+// Breakable street furniture: Correos boxes, bins, beach showers, sunbeds, garden walls, butano
+// bottles... Each type is one instanced mesh. Smash one with a car or a kick and it bursts into
+// debris and coins (25 pta each).
+//   Type flags (DESIGN §6.8): debris: n (chunks), splash: true, explode: 'big' | 'small'.
+//   Every car-smashable prop has top > 0.75 (cars ride over anything with top <= y + 0.6).
 
 import { THREE, GeoBuilder, MAT, outlineGeometry, outlineMat, mat } from '../gfx.js';
 import { box, circle } from './collision.js';
 
-const TYPES = {
+const CURB = 0.15;
+
+// The old Bigmouth types. Their geometry is reused by the §6.8 types below; the old keys stay as
+// aliases until Phase 2 removes them.
+const OLD = {
   mailbox: {
     r: 0.32, top: 1.3, coins: 2, shame: 1, color: 0x2a5bd7,
     build(g) { g.boxB(0x6b4a2a, 0, 0, 0, 0.14, 1.0, 0.14); g.box(0x2a5bd7, 0, 1.12, 0, 0.42, 0.34, 0.62); g.sphere(0x2a5bd7, 0, 1.28, 0, 0.42, 0.22, 0.62); g.box(0xe23b2e, 0.24, 1.25, -0.1, 0.04, 0.26, 0.08); },
@@ -92,14 +99,62 @@ const TYPES = {
   },
 };
 
-const placements = []; // { type, x, z, yaw }
+// §6.8: the Charter & Run prop registry. `like` = the old type whose build() is borrowed until
+// WP-B restyles it; brand-new keys get a coloured box or cylinder of the right footprint.
+const SPEC = {
+  papelera: { like: 'trashcan', r: 0.38, top: 1.05, coins: 1, shame: 1, minSpeed: 3 },
+  correos: { like: 'mailbox', r: 0.32, top: 1.3, coins: 2, shame: 1, minSpeed: 3, color: 0xf2c12e },
+  vykort: { like: 'newsbox', r: 0.35, top: 1.6, coins: 2, shame: 1, minSpeed: 3 },
+  dusch: { like: 'hydrant', r: 0.25, top: 2.2, coins: 3, shame: 2, minSpeed: 6, splash: true },
+  parasoll: { like: 'flamingo', r: 0.25, top: 2.2, coins: 1, shame: 1, minSpeed: 3 },
+  solstol: { like: 'tombstone', w: 0.7, d: 1.9, top: 0.8, coins: 1, shame: 1, minSpeed: 3 },
+  palmkruka: { like: 'gnome', r: 0.4, top: 1.4, coins: 1, shame: 1, minSpeed: 4 },
+  mur: { like: 'woodfence', w: 2.5, d: 0.3, top: 1.1, coins: 0, shame: 1, minSpeed: 2, debris: 9, color: 0xf4efe6 },
+  tomatlada: { like: 'crate', w: 1.2, d: 1.2, top: 1.2, coins: 2, shame: 0, minSpeed: 5 },
+  tunna: { like: 'barrel', r: 0.42, top: 1.05, coins: 2, shame: 0, minSpeed: 4 },
+  bank: { like: 'bench', w: 1.9, d: 0.7, top: 0.55, coins: 1, shame: 1, minSpeed: 4 },
+  kon: { like: 'cone', r: 0.28, top: 0.75, coins: 1, shame: 0, minSpeed: 1 },
+  bagagevagn: { like: 'cart', r: 0.45, top: 1.0, coins: 1, shame: 0, minSpeed: 1 },
+  automat: { like: 'vending', w: 1.0, d: 0.8, top: 2.0, coins: 8, shame: 2, minSpeed: 6 },
+  gaspump: { like: 'pump', w: 0.9, d: 0.6, top: 1.9, coins: 12, shame: 6, minSpeed: 5, explode: 'big' },
+  butano: { r: 0.22, top: 0.85, coins: 3, shame: 3, minSpeed: 3, explode: 'small', color: 0xf07a1e },
+  julgran: { r: 0.5, top: 2.0, coins: 3, shame: 2, minSpeed: 3, color: 0x2f8a4a },
+  tallrikar: { r: 0.4, top: 0.9, coins: 2, shame: 0, minSpeed: 2, color: 0xf4f4f0 },
+  resvaska: { w: 0.8, d: 0.5, top: 0.9, coins: 2, shame: 0, minSpeed: 3, color: 0x8a5a3a },
+  glasskylt: { w: 0.8, d: 0.2, top: 1.3, coins: 1, shame: 1, minSpeed: 3, color: 0xfafafa },
+};
+const OLD_FLAGS = { hydrant: { splash: true }, pump: { explode: 'big' }, fence: { debris: 9 }, woodfence: { debris: 9 } };
+
+export const TYPES = {};
+for (const [k, d] of Object.entries(OLD)) TYPES[k] = { ...d, ...(OLD_FLAGS[k] || {}) };
+for (const [k, d] of Object.entries(SPEC)) {
+  const base = d.like ? OLD[d.like] : null;
+  const color = d.color ?? base?.color ?? 0xcccccc;
+  const top = d.top;
+  const build = base ? base.build : d.r
+    ? (g) => { g.cyl(color, 0, top / 2, 0, d.r, top, 12); }
+    : (g) => { g.boxB(color, 0, 0, 0, d.w, top, d.d); };
+  const def = { ...d, color, build };
+  delete def.like;
+  if (d.r) { delete def.w; delete def.d; }
+  TYPES[k] = def;
+}
+
+const placements = []; // { type, x, z, yaw, baseY }
 export const props = []; // runtime list
 let meshes = {};
 let debris, debrisState = [];
 const DEBRIS = 160;
 
-export function placeProp(type, x, z, yaw = 0) {
-  placements.push({ type, x, z, yaw });
+// baseY: the height the prop stands on (CURB on the ground; a table top for the grisfest plates).
+// Must be called before finalizeProps (props are instanced at finalize time).
+const warned = new Set();
+export function placeProp(type, x, z, yaw = 0, baseY = CURB) {
+  if (!TYPES[type]) {
+    if (!warned.has(type)) { warned.add(type); console.warn('placeProp: unknown prop type', type); }
+    return;
+  }
+  placements.push({ type, x, z, yaw, baseY });
 }
 
 const _m = new THREE.Matrix4(), _zero = new THREE.Matrix4().makeScale(0, 0, 0);
@@ -124,12 +179,13 @@ export function finalizeProps(scene) {
     const m = meshes[p.type];
     const idx = m.next++;
     const prop = { ...p, def, idx, alive: true, respawn: 0 };
+    const top = p.baseY - CURB + def.top;
     // Fences turn by multiples of 90 degrees, so their footprint stays an axis-aligned box.
-    if (def.r) prop.block = circle(p.x, p.z, def.r, def.top, 'prop', prop);
+    if (def.r) prop.block = circle(p.x, p.z, def.r, top, 'prop', prop);
     else {
       const turned = Math.abs(Math.sin(p.yaw)) > 0.7;
       const hw = (turned ? def.d : def.w) / 2, hd = (turned ? def.w : def.d) / 2;
-      prop.block = box(p.x - hw, p.z - hd, p.x + hw, p.z + hd, def.top, 'prop', prop);
+      prop.block = box(p.x - hw, p.z - hd, p.x + hw, p.z + hd, top, 'prop', prop);
     }
     props.push(prop);
     setMatrix(prop, true);
@@ -183,7 +239,7 @@ export function breakProp(p, vx = 0, vz = 0, game = null) {
   p.block.dead = true;
   p.respawn = 75 + Math.random() * 40;
   setMatrix(p, false);
-  spawnDebris(p.x, 0.4, p.z, p.def.color, p.type === 'fence' || p.type === 'woodfence' ? 9 : 7, vx, vz);
+  spawnDebris(p.x, (p.baseY ?? CURB) + 0.25, p.z, p.def.color, p.def.debris ?? 7, vx, vz);
   if (game) game.onPropBroken(p, vx, vz);
   return p;
 }
@@ -214,6 +270,22 @@ export function tickProps(dt, px, pz) {
   }
   if (any) debris.instanceMatrix.needsUpdate = true;
 }
+
+const inArea = (p, a) => !a || (p.x - a.x) ** 2 + (p.z - a.z) ** 2 <= a.r * a.r;
+
+// Bring every prop of `type` inside the area back now (alive, solid, visible): retried stages must
+// find intact plates.
+export function reviveProps(type, area) {
+  for (const p of props) {
+    if (p.type !== type || p.alive || !inArea(p, area)) continue;
+    p.alive = true;
+    p.respawn = 0;
+    p.block.dead = false;
+    setMatrix(p, true);
+  }
+}
+
+export function propsOfType(type, area) { return props.filter((p) => p.type === type && inArea(p, area)); }
 
 export function propsNear(x, z, r) {
   const out = [];

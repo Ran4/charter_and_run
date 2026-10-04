@@ -72,11 +72,21 @@ export const fx = {
       this.spawn(x, y, z, k % 2 ? 0xfff3b0 : 0xffb030, { vx: Math.cos(a) * 6, vz: Math.sin(a) * 6, vy: 2 + Math.random() * 5, s0: 0.18, s1: 0.0, life: 0.35, drag: 1, grav: 20 });
     }
   },
-  shame(x, y, z, n = 12) {
+  // A ring of coloured puffs (meter events: busts, panic).
+  meterPuff(x, y, z, color = 0x3d5a3a, n = 12) {
+    const c2 = new THREE.Color(color).lerp(new THREE.Color(0xffffff), 0.45).getHex();
     for (let k = 0; k < n; k++) {
       const a = Math.random() * Math.PI * 2;
-      this.spawn(x + Math.cos(a) * 0.8, y + Math.random() * 1.5, z + Math.sin(a) * 0.8, k % 2 ? 0x8a3ab8 : 0xc89aff, { vy: 1.5, vx: Math.cos(a) * 1.5, vz: Math.sin(a) * 1.5, s0: 0.6, s1: 1.4, life: 1.2 });
+      this.spawn(x + Math.cos(a) * 0.8, y + Math.random() * 1.5, z + Math.sin(a) * 0.8, k % 2 ? color : c2, { vy: 1.5, vx: Math.cos(a) * 1.5, vz: Math.sin(a) * 1.5, s0: 0.6, s1: 1.4, life: 1.2 });
     }
+  },
+  // One snowflake drifting down (call ~20/s around the camera in the gate phase).
+  snow(x, y, z) {
+    this.spawn(x, y, z, 0xffffff, { vx: (Math.random() - 0.5) * 0.6, vz: (Math.random() - 0.5) * 0.6, vy: -1.6 - Math.random(), s0: 0.12, s1: 0.1, life: 3.5, drag: 0 });
+  },
+  // A white steam puff (wrecked cars that do not explode).
+  steam(x, y, z) {
+    this.spawn(x + (Math.random() - 0.5) * 0.5, y, z + (Math.random() - 0.5) * 0.5, 0xf2f2f2, { vy: 2.2 + Math.random(), vx: (Math.random() - 0.5) * 0.6, vz: (Math.random() - 0.5) * 0.6, s0: 0.5, s1: 1.8, life: 1.3 });
   },
   splash(x, z) {
     for (let k = 0; k < 16; k++) {

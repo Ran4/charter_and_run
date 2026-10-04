@@ -20,7 +20,7 @@ const KEYS = {
   mute: ['KeyN'],
   reset: ['KeyR'],
 };
-// Standard gamepad layout.
+// Standard gamepad layout (Start = button 9 = pause).
 const PAD = { jump: [0], handbrake: [0], sprint: [1], attack: [2], interact: [3], horn: [10], pause: [9], map: [8], skip: [0, 3], lookBack: [11] };
 
 export const input = {

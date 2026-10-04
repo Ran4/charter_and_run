@@ -269,18 +269,21 @@ export function circleVsObb(x, z, r, o, out) {
   return true;
 }
 
-// Is the straight segment from a to b (at height y) blocked by anything taller than y?
+// Is the straight segment from a to b (at height y) blocked by anything taller than y? Returns the
+// fraction t (0..1) of the nearest hit along the segment, or -1 when clear.
 const _segOut = [];
 export function segmentBlocked(ax, az, bx, bz, y, ignoreKind = 'prop') {
   queryBlocks(Math.min(ax, bx), Math.min(az, bz), Math.max(ax, bx), Math.max(az, bz), _segOut);
   const len = Math.hypot(bx - ax, bz - az);
   const steps = Math.max(2, Math.ceil(len / 0.8));
+  let best = -1;
   for (const b of _segOut) {
     if (b.kind === ignoreKind || b.top < y) continue;
-    for (let s = 0; s <= steps; s++) {
+    const maxS = best < 0 ? steps : Math.floor(best * steps) - 1;
+    for (let s = 0; s <= maxS; s++) {
       const t = s / steps;
-      if (contains(b, ax + (bx - ax) * t, az + (bz - az) * t)) return t;
+      if (contains(b, ax + (bx - ax) * t, az + (bz - az) * t)) { best = t; break; }
     }
   }
-  return -1;
+  return best;
 }

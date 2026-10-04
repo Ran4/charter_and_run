@@ -154,3 +154,20 @@ h1 span { display: inline-block; -webkit-text-stroke: 0.06em var(--ink); paint-o
   #coins { font-size: 32px; }
   .banner-main { font-size: 44px; }
 }
+
+/* ---------------------------------------------------------------- Charter & Run, Phase 0 additions (WP-H restyles) */
+#shame.meter-fear .shame-fill { background: linear-gradient(90deg, #6ab0e8, #e0342a); }
+#shame.meter-skandal .shame-fill { background: linear-gradient(90deg, #f7c31b, #d8321e); }
+#shame.meter-skandal.pursuit .shame-label::after { content: " · ¡ALTO!"; color: #d8321e; }
+#shame.meter-fear.pursuit .shame-label::after, #shame.meter-skandal .shame-label::after { content: ""; }
+#shame.meter-skandal.pursuit .shame-label::after { content: " · ¡ALTO!"; }
+.obj-bar { position: relative; }
+.obj-zone { position: absolute; top: 0; bottom: 0; background: rgba(95, 211, 95, 0.55); display: none; }
+.obj-marker { position: absolute; top: -3px; bottom: -3px; width: 4px; margin-left: -2px; background: #1d1426; display: none; }
+body.fear-hot::after { content: ""; position: fixed; inset: 0; pointer-events: none; box-shadow: inset 0 0 160px rgba(224, 52, 42, 0.55); animation: throb 0.8s infinite; z-index: 5; }
+.pryl-icon { width: 20px; height: 20px; border-radius: 50%; background: radial-gradient(circle, #f4f4f0 0 30%, #f07a1e 31% 60%, #1d1426 61%); display: inline-block; }
+.fena-icon { width: 20px; height: 20px; background: #1c7fb8; clip-path: polygon(50% 0, 100% 100%, 0 100%); display: inline-block; }
+.lg-pryl { color: #f07a1e; }
+.lg-fena { color: #1c7fb8; }
+#banner.skandal .banner-main { color: #2e5e3e; }
+#banner.fear .banner-main { color: #e0342a; animation: wobble 0.5s infinite; }

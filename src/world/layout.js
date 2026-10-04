@@ -1,5 +1,6 @@
-// Bridgeton's street grid: N x N blocks between N+1 roads each way, plus the road graph that
-// traffic, chasers and the waypoint arrow all route over.
+// Nueva Estocolmo's street grid: N x N blocks between N+1 roads each way, plus the road graph
+// that traffic, chasers and the waypoint arrow all route over. North (-z) is inland, south (+z)
+// is the sea. Right-hand traffic.
 
 export const P = 80;          // road pitch (centre to centre)
 export const N = 7;           // blocks per side
@@ -36,16 +37,26 @@ export function baseGround(x, z) {
   return isRoad(x, z) ? 0 : CURB;
 }
 
-//                 i=0        1         2         3        4         5          6
+// MAP[j][i]: the block type at column i, row j (DESIGN §6.2). Unknown types build an empty slab.
+//                 i=0          1            2            3            4            5            6
 export const MAP = [
-  ['res',    'res',    'res',    'tower',  'school', 'field',  'res'],       // j=0 north
-  ['steve',  'res',    'cinema', 'glaser', 'res',    'res',    'res'],       // j=1
-  ['res',    'res',    'mall',   'shops',  'res',    'jay',    'res'],       // j=2
-  ['res',    'birch',  'res',    'park',   'gas',    'res',    'res'],       // j=3
-  ['res',    'res',    'gloub',  'res',    'res',    'res',    'construct'], // j=4
-  ['res',    'res',    'res',    'res',    'res',    'res',    'res'],       // j=5
-  ['res',    'res',    'res',    'res',    'res',    'cemetery', 'res'],     // j=6 south
+  ['fataga',    'tomat',     'grisfest',  'tomat',     'golf',      'bungalow',  'flygplats'], // j=0 inland
+  ['tomat',     'lagenhet',  'marknad',   'kyrka',     'lagenhet',  'bygge',     'dromplan'],  // j=1
+  ['bungalowR', 'kasbah',    'lagenhet',  'suntrip',   'cita',      'lagenhet',  'bungalowR'], // j=2
+  ['lagenhet',  'bungalowR', 'plaza',     'flamenco',  'bensin',    'guardia',   'lagenhet'],  // j=3
+  ['dyner',     'lagenhet',  'bungalowR', 'lagenhet',  'lagenhet',  'bungalowR', 'lagenhet'],  // j=4
+  ['dyner',     'bungalowR', 'lagenhet',  'bungalowR', 'lagenhet',  'lagenhet',  'bungalowR'], // j=5
+  ['fyren',     'playa',     'playa',     'playa',     'playa',     'hamn',      'playa'],     // j=6 sea
 ];
+
+// Minimap lot colours per MAP type (WP-B tunes them).
+export const BLOCK_MAP_COLORS = {
+  flamenco: '#f4efe6', suntrip: '#f2d98a', kasbah: '#d8b48a', cita: '#c8c0b0', plaza: '#e8d8b0',
+  marknad: '#e0b878', kyrka: '#f4f0e6', bensin: '#9a9a96', guardia: '#c9a26b', tomat: '#7aa04a',
+  grisfest: '#b89a6a', fataga: '#c9a26b', golf: '#7cc456', bungalow: '#e8dcc4', bygge: '#c09a64',
+  dromplan: '#b8a07a', flygplats: '#a8a8a0', dyner: '#e8cf98', fyren: '#e8cf98', playa: '#e8cf98',
+  hamn: '#5aa0c8', bungalowR: '#e6d6b8', lagenhet: '#dccbb0',
+};
 export const blockType = (i, j) => MAP[j][i];
 
 // --------------------------------------------------------------------------------------------
@@ -65,6 +76,18 @@ export function neighbors(id) {
   if (j > 0) out.push(nodeId(i, j - 1));
   if (j < N) out.push(nodeId(i, j + 1));
   return out;
+}
+
+// A node reference may be an id or an [i, j] pair.
+export const nodeRef = (n) => (Array.isArray(n) ? nodeId(n[0], n[1]) : n);
+
+// Right-hand lane spot on the edge node a -> node b, t metres from a, facing along the edge.
+export function laneSpot(a, b, t = 12) {
+  const A = nodeRef(a), B = nodeRef(b);
+  const ax = nodeX(A), az = nodeZ(A), bx = nodeX(B), bz = nodeZ(B);
+  const l = Math.hypot(bx - ax, bz - az) || 1;
+  const dx = (bx - ax) / l, dz = (bz - az) / l;
+  return { x: ax + dx * t - dz * LANE, z: az + dz * t + dx * LANE, yaw: Math.atan2(dx, dz) };
 }
 
 export function nearestNode(x, z) {
@@ -134,7 +157,8 @@ function manhattanPath(a, b, x, z) {
   return out;
 }
 
-// Landmarks are filled in by the town builder: name -> { x, z, yaw }.
+// Landmarks: name -> { x, z, yaw, y? }. Filled in by registerIslandLandmarks (landmarks-island.js),
+// block builders (their own block only) and buildCabin (flight set at x = 3000).
 export const landmarks = {};
 export function lm(name) {
   const l = landmarks[name];

@@ -1,8 +1,15 @@
-// Everything you hear is synthesised: an engine drone, tyre squeal, cartoon blips, and a little
-// walking-bass loop. No samples to load.
+// Everything you hear is synthesised: an engine drone, tyre squeal, cartoon blips, the cabin drone
+// and the music. No samples to load. (DESIGN §12; WP-H owns the tunes and the SFX recipes.)
+//   Music: a TUNES table of { bpm, beats, bar(api, t, n) }; setTune(name) switches at the next bar.
+//   Music bus -> low-pass (the fear effect, setMusicLowpass) -> master.
+//   Cabin drone: its own channel (drone(level, bright)), never touched by the car-engine code.
 
-let ctx, master, sfx, musicBus, noiseBuf;
-let eng, skid, hornNodes, music;
+let ctx, master, sfx, musicBus, musicFilter, noiseBuf;
+let eng, skid, hornNodes, music, drone, siren;
+let tuneName = 'muzak', pendingTune = null;
+
+export const TUNES = {};
+export function registerTune(name, def) { TUNES[name] = def; }
 
 function makeNoise() {
   const b = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
@@ -27,8 +34,21 @@ export const audio = {
     comp.threshold.value = -14;
     master.connect(comp).connect(ctx.destination);
     sfx = ctx.createGain(); sfx.gain.value = 1; sfx.connect(master);
-    musicBus = ctx.createGain(); musicBus.gain.value = 0.32; musicBus.connect(master);
+    musicFilter = ctx.createBiquadFilter(); musicFilter.type = 'lowpass'; musicFilter.frequency.value = 20000; musicFilter.connect(master);
+    musicBus = ctx.createGain(); musicBus.gain.value = 0.32; musicBus.connect(musicFilter);
     noiseBuf = makeNoise();
+
+    // Cabin drone: a looped noise buffer through a low-pass plus a low saw.
+    drone = { g: ctx.createGain(), f: ctx.createBiquadFilter(), s: ctx.createBufferSource(), o: ctx.createOscillator(), og: ctx.createGain() };
+    drone.s.buffer = noiseBuf; drone.s.loop = true;
+    drone.f.type = 'lowpass'; drone.f.frequency.value = 300;
+    drone.o.type = 'sawtooth'; drone.o.frequency.value = 45; drone.og.gain.value = 0.25;
+    drone.g.gain.value = 0;
+    drone.s.connect(drone.f).connect(drone.g);
+    drone.o.connect(drone.og).connect(drone.g);
+    drone.g.connect(sfx);
+    drone.s.start(); drone.o.start();
+    if (this._drone) this.drone(...this._drone);
 
     // Engine: two detuned saws through a low-pass, pitched by revs.
     eng = { g: ctx.createGain(), f: ctx.createBiquadFilter(), o1: ctx.createOscillator(), o2: ctx.createOscillator() };
@@ -58,6 +78,43 @@ export const audio = {
     if (on && !music) startMusic();
   },
   duckMusic(amount) { if (ctx && this.musicOn) musicBus.gain.setTargetAtTime(0.32 * amount, ctx.currentTime, 0.3); },
+
+  // Switch the music at the next bar (unknown names fall back to the placeholder tune).
+  setTune(name) { if (name && name !== tuneName) pendingTune = name; },
+  get tune() { return pendingTune || tuneName; },
+  // Fear low-pass on the music bus: hz, or null for wide open.
+  setMusicLowpass(hz) {
+    if (!ctx) return;
+    musicFilter.frequency.setTargetAtTime(hz == null ? 20000 : Math.max(200, hz), ctx.currentTime, 0.15);
+  },
+  // Cabin drone: level 0..1 (gain level * 0.08), bright 0..1 (low-pass 300 -> 900 Hz).
+  drone(level = 0, bright = 0) {
+    this._drone = [level, bright];
+    if (!ctx) return;
+    const t = ctx.currentTime;
+    drone.g.gain.setTargetAtTime(Math.max(0, level) * 0.08, t, 0.4);
+    drone.f.frequency.setTargetAtTime(300 + 600 * Math.max(0, Math.min(1, bright)), t, 0.4);
+  },
+  // Two-tone 650/500 Hz square while on (Guardia Civil pursuit).
+  siren(on) {
+    this.sirenOn = !!on;
+    if (!ctx) return;
+    if (on && !siren) {
+      const g = ctx.createGain(); g.gain.value = 0.05; g.connect(sfx);
+      const o = ctx.createOscillator(); o.type = 'square'; o.frequency.value = 650; o.connect(g); o.start();
+      let hi = true;
+      const iv = setInterval(() => { hi = !hi; o.frequency.setValueAtTime(hi ? 650 : 500, ctx.currentTime); }, 450);
+      siren = { g, o, iv };
+    } else if (!on && siren) {
+      clearInterval(siren.iv);
+      siren.g.gain.setTargetAtTime(0, ctx.currentTime, 0.05);
+      siren.o.stop(ctx.currentTime + 0.2);
+      siren = null;
+    }
+  },
+  // Silence the looping channels (pause).
+  pauseLoops() { if (!ctx) return; drone.g.gain.setTargetAtTime(0, ctx.currentTime, 0.05); if (siren) siren.g.gain.setTargetAtTime(0, ctx.currentTime, 0.05); },
+  resumeLoops() { if (this._drone) this.drone(...this._drone); if (siren) siren.g.gain.setTargetAtTime(0.05, ctx.currentTime, 0.05); },
 
   engine(on, revs, load) {
     if (!ctx) return;
@@ -132,11 +189,32 @@ export const audio = {
       start: [[523, 0], [659, 0.1], [784, 0.2], [1047, 0.32]],
       complete: [[523, 0], [659, 0.12], [784, 0.24], [1047, 0.36], [784, 0.5], [1047, 0.62]],
       fail: [[392, 0], [370, 0.18], [349, 0.36], [262, 0.56]],
-      record: [[440, 0], [554, 0.08], [659, 0.16], [880, 0.26]],
+      pryl: [[440, 0], [554, 0.08], [659, 0.16], [880, 0.26]],
     }[kind];
     if (!seq) return;
     seq.forEach(([f, d]) => this.tone(f, kind === 'fail' ? 0.3 : 0.18, kind === 'fail' ? 'sawtooth' : 'square', 0.08, null, d));
   },
+  // §12.3 sound effects. Phase 0: one shared placeholder tone per name (pitched by the name so they
+  // can be told apart); WP-H writes the real recipes.
+  chime() { placeholder(this, 'chime'); },
+  pling() { placeholder(this, 'pling'); },
+  dingdong() { placeholder(this, 'dingdong'); },
+  beep() { placeholder(this, 'beep'); },
+  applause(secs = 2) { for (let k = 0; k < Math.round(secs * 6); k++) this.noise(0.06, 0.06, 2500, 'bandpass', Math.random() * secs, 1.5); },
+  heartbeat() { this.tone(55, 0.14, 'sine', 0.35); this.tone(55, 0.14, 'sine', 0.28, null, 0.22); },
+  rattle() { this.noise(0.3, 0.15, 300); },
+  flush() { placeholder(this, 'flush'); },
+  squeak() { placeholder(this, 'squeak'); },
+  laugh() { placeholder(this, 'laugh'); },
+  knock() { placeholder(this, 'knock'); },
+  slap() { placeholder(this, 'slap'); },
+  doorSlam() { placeholder(this, 'doorSlam'); },
+  ambulance() { placeholder(this, 'ambulance'); },
+  baa() { placeholder(this, 'baa'); },
+  oink() { placeholder(this, 'oink'); },
+  helanGar() { this.trad('helanGar'); },
+  // Public-domain traditional cues (smaGrodorna, hejTomtegubbar, helanGar): WP-H. No-op for now.
+  trad(name) { /* WP-H */ },
   shameBell() {
     if (!ctx) return;
     [0, 0.9].forEach((d) => {
@@ -147,32 +225,67 @@ export const audio = {
   },
 };
 
-// A swung walking-bass loop with brushes and a vamping keys stab: the Duke would approve.
+// The music scheduler: one bar at a time from the current tune; a pending setTune() takes over at
+// the next bar. Catch-up guard: after a stall it skips ahead instead of playing every missed bar.
 function startMusic() {
   if (music) return;
-  const bpm = 132, beat = 60 / bpm;
-  const prog = [
-    [48, 52, 55, 57], [53, 57, 60, 62], [48, 52, 55, 58], [55, 59, 62, 53],
-  ];
-  const mtof = (m) => 440 * Math.pow(2, (m - 69) / 12);
   let bar = 0, next = ctx.currentTime + 0.2;
   music = setInterval(() => {
     if (!ctx || !audio.musicOn) return;
+    if (next < ctx.currentTime) next = ctx.currentTime + 0.05;
     while (next < ctx.currentTime + 0.6) {
-      const chord = prog[bar % prog.length];
-      for (let b = 0; b < 4; b++) {
-        const t = next + b * beat;
-        const n = chord[b] - 12;
-        bassNote(mtof(n), t, beat * 0.9);
-        brush(t + beat * 0.66, 0.04);
-        if (b % 2 === 1) brush(t, 0.07);
-      }
-      if (bar % 2 === 0) chord.slice(1).forEach((n) => keyStab(mtof(n + 12), next + beat * 1.66, 0.15));
-      next += beat * 4;
+      if (pendingTune) { tuneName = pendingTune; pendingTune = null; bar = 0; }
+      const tune = TUNES[tuneName] || TUNES.placeholder;
+      const beat = 60 / tune.bpm;
+      tune.bar(API, next, bar, beat);
+      next += beat * (tune.beats || 4);
       bar++;
     }
   }, 200);
 }
+
+const mtof = (m) => 440 * Math.pow(2, (m - 69) / 12);
+// What a tune's bar() gets: helpers that play on the music bus.
+const API = {
+  mtof,
+  bass: (f, t, d) => bassNote(f, t, d),
+  brush: (t, v) => brush(t, v),
+  stab: (f, t, v) => keyStab(f, t, v),
+  tone(f, t, d, type = 'square', v = 0.1) {
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = type; o.frequency.value = f;
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(v, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + d);
+    o.connect(g).connect(musicBus); o.start(t); o.stop(t + d + 0.05);
+  },
+  get ctx() { return ctx; },
+  get bus() { return musicBus; },
+  get noise() { return noiseBuf; },
+};
+
+// Placeholder: Bigmouth's swung walking-bass loop, registered under every tune name until WP-H
+// writes muzak, sol, skandal, vals, jul and samba.
+const PROG = [[48, 52, 55, 57], [53, 57, 60, 62], [48, 52, 55, 58], [55, 59, 62, 53]];
+const placeholderTune = {
+  bpm: 132, beats: 4,
+  bar(api, t0, bar, beat) {
+    const chord = PROG[bar % PROG.length];
+    for (let b = 0; b < 4; b++) {
+      const t = t0 + b * beat;
+      api.bass(mtof(chord[b] - 12), t, beat * 0.9);
+      api.brush(t + beat * 0.66, 0.04);
+      if (b % 2 === 1) api.brush(t, 0.07);
+    }
+    if (bar % 2 === 0) chord.slice(1).forEach((n) => api.stab(mtof(n + 12), t0 + beat * 1.66, 0.15));
+  },
+};
+for (const n of ['placeholder', 'muzak', 'sol', 'skandal', 'vals', 'jul', 'samba']) registerTune(n, placeholderTune);
+
+function placeholder(a, name) {
+  let h = 0;
+  for (const ch of name) h = (h * 31 + ch.charCodeAt(0)) % 997;
+  a.tone(300 + (h % 700), 0.14, 'triangle', 0.08);
+}
+
 function bassNote(f, t, d) {
   const o = ctx.createOscillator(), g = ctx.createGain(), fl = ctx.createBiquadFilter();
   o.type = 'triangle'; o.frequency.value = f;

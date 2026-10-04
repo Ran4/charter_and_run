@@ -1,21 +1,83 @@
-// Characters built from coloured primitives: oversized heads, big mouths that flap when they talk,
-// hormone monsters with horns and fur, a ghost and a wizard. Animated procedurally.
+// Characters built from coloured primitives: oversized heads, big mouths that flap when they talk.
+// Animated procedurally. The cast of Sällskapsresan (DESIGN §2); look fields marked † in DESIGN
+// (hat, dress, shades, beard, print, tuft, tie, bowtie, vest, held, hairFlower, hair 'page') are
+// data for WP-E and are ignored by the Phase-0 builder, which approximates them with old fields.
 
 import { THREE, GeoBuilder, toonMesh, MAT, mat, PRIM } from '../gfx.js';
-import { mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
+import { mergeVertices, mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { mulberry32, pick } from '../util.js';
 
+const SV = 0xf2c9a8, ES = 0xd9a07a;   // default skins: Swedish tourist, Spanish local
+const A = (o) => ({ kind: 'adult', scale: 1, skin: SV, shoes: 0x2a2a2a, brows: 0x3a2a1e, nose: 'small', ...o });
+
 export const CHARS = {
-  nick: { name: 'Nick', kind: 'kid', scale: 0.92, skin: 0xf7cfb0, hair: 'swoop', hairC: 0xc4733a, shirt: 0x4a9ad6, stripe: 0xf2f2f2, pants: 0x34445e, shoes: 0xd8321e, nose: 'button', brows: 0xa05a2a, freckles: true, voice: 430 },
-  andrew: { name: 'Andrew', kind: 'kid', scale: 1.07, skin: 0xf2c39e, hair: 'curly', hairC: 0x2a1a12, glasses: 0x2a2a2a, shirt: 0x6f8f4f, pants: 0x6a5a4a, shoes: 0x8a5a3a, nose: 'big', brows: 0x2a1a12, voice: 290 },
-  jessi: { name: 'Jessi', kind: 'kid', scale: 0.95, skin: 0xf3c6a4, hair: 'curlyLong', hairC: 0x6a3a1e, glasses: 0x8a3aa0, shirt: 0xffc83a, pants: 0x3a4a8a, shoes: 0xffffff, nose: 'small', brows: 0x5a2a12, voice: 480 },
-  jay: { name: 'Jay', kind: 'kid', scale: 0.97, skin: 0xe6b08a, hair: 'slick', hairC: 0x15100c, shirt: 0x2a2a2a, pants: 0x2a2a3a, shoes: 0x222222, nose: 'pointy', brows: 0x15100c, cape: 0x9a1a2e, voice: 330 },
-  steve: { name: 'Coach Steve', kind: 'adult', scale: 1.0, skin: 0xf6d2b4, hair: 'balding', hairC: 0xe8d27a, shirt: 0x2f5fb3, pants: 0xeeeeee, shorts: true, shoes: 0xffffff, nose: 'long', ears: 'big', whistle: true, brows: 0xd8c27a, voice: 540 },
-  maurice: { name: 'Maurice', kind: 'monster', scale: 1.0, fur: 0x6f6aa6, fur2: 0x8d89c4, horn: 0xe8dcc0, noseC: 0xb07ab0, eyeC: 0xfff2a0, beard: true, voice: 140 },
-  connie: { name: 'Connie', kind: 'monster', scale: 0.96, fur: 0xc883b6, fur2: 0xe8a8d0, horn: 0xf2e8d0, noseC: 0x9a4a7a, eyeC: 0xfff6c0, bigHair: 0x1d1426, earrings: 0xf2c12e, lashes: true, voice: 230 },
-  duke: { name: 'Duke Ellington', kind: 'ghost', scale: 1.0, skin: 0xb7e2fa, hair: 'slick', hairC: 0x5a8ab8, shirt: 0x4a7ab8, pants: 0x4a7ab8, nose: 'small', mustache: 0x5a8ab8, brows: 0x5a8ab8, voice: 210 },
-  shame: { name: 'Shame Wizard', kind: 'wizard', scale: 1.05, robe: 0x5a2a7a, robe2: 0x3a1a52, skin: 0xe8e4f0, voice: 110 },
+  stig: A({ name: 'Stig-Helmer', scale: 1.12, wide: 0.85, skin: 0xf1c9a5, hair: 'swoop', hairC: 0x2a1e18, tuft: true, brows: 0x2a1e18, mustache: 0x2a1e18, glasses: 0x6b4a2a, nose: 'long',
+    shirt: 0x4a3426, longSleeves: true, pants: 0x3a2a1e, voice: 250, ring: '#4a9ad6',
+    outfits: {
+      arlanda: { shirt: 0x3a2a1e, longSleeves: true, pants: 0x2e2620, hat: 'cap', hatC: 0x8a7a5a, hair: 'cap', hairC: 0x8a7a5a },
+      kostym: { shirt: 0x4a3426, longSleeves: true, pants: 0x3a2a1e, tie: 0x7a2a2a },
+      hawaii: { shirt: 0xd8321e, print: [0xffd23f, 0x3f7a3a, 0x2f6ad8], longSleeves: false, shorts: true, pants: 0xe8dcb8 },
+      rio: { shirt: 0xf4f0e6, longSleeves: true, bowtie: 0x1d1426, pants: 0x1d1426 },
+    } }),
+  ole: A({ name: 'Ole', wide: 1.35, skin: 0xf2b89a, hair: 'balding', hairC: 0xa0522d, mustache: 0xa0522d, brows: 0xa0522d, nose: 'big', shirt: 0xf4f4f0, pants: 0x8a7a5a, voice: 270, ring: '#f7c31b',
+    outfits: {
+      arlanda: { hat: 'trilby', hatC: 0xe8e2d0, shirt: 0xd8c8a0, longSleeves: true, held: 'boombox' },
+      flyg: { shirt: 0xf4f4f0 },
+      sol: { shirt: 0xf2c94c, print: 'check', pants: 0xe8dcb8, shades: 0x2a2a2a, glasses: 0x2a2a2a },
+      gris: { shirt: 0xf4f4f0, stripe: 0xd8321e },
+      rio: { shirt: 0xf4f4f0, longSleeves: true, bowtie: 0x1d1426, shades: 0x2a2a2a, glasses: 0x2a2a2a },
+    } }),
+  majsan: A({ name: 'Majsan', scale: 0.97, hair: 'long', hairC: 0x8a3b22, brows: 0x8a3b22, dress: 0x4a7fd0, print: [0xffffff], shirt: 0x4a7fd0, pants: 0x4a7fd0, skin: 0xf6d3c0, shoes: 0xf4f0e6, voice: 340, ring: '#fff8e6',
+    outfits: { flyg: { shirt: 0xd8c8a8, longSleeves: true }, sol: { hairFlower: 0xffffff } } }),
+  siv: A({ name: 'Sivan', hair: 'bun', hairC: 0x7a3018, brows: 0x7a3018, dress: 0xd8321e, print: [0xffb0c0], shirt: 0xd8321e, pants: 0xd8321e, voice: 360, ring: '#fff8e6',
+    outfits: { flyg: { shirt: 0xc8b8a0, longSleeves: true }, sol: {} } }),
+  berra: A({ name: 'Berra', wide: 0.9, hair: 'long', hairC: 0x5a3a22, mustache: 0x5a3a22, brows: 0x5a3a22, glasses: 0x3a3a3a, shirt: 0x2a4fa0, vest: 0x4a6a9a, pants: 0x3a4a6a, voice: 220, ring: '#fff8e6',
+    outfits: {
+      arlanda: { shirt: 0xf0ead8, stripe: 0x4a3a2a, longSleeves: true },
+      flyg: {},
+      sol: { hat: 'cap', hatC: 0xffffff },
+    } }),
+  robban: A({ name: 'Robban', wide: 1.25, hair: 'short', hairC: 0x6a5a48, glasses: 0x2a2a2a, shirt: 0xf07a1e, pants: 0x4a4a52, voice: 235, ring: '#fff8e6',
+    outfits: { flyg: { shirt: 0xf07a1e }, sol: { shirt: 0x1f2f6a, hat: 'cap', hatC: 0xf4f4f0, hair: 'cap', hairC: 0xf4f4f0 } } }),
+  angerud: A({ name: 'Gösta Angerud', wide: 1.35, skin: 0xf0b8a0, hair: 'balding', hairC: 0x5a4a3a, shirt: 0x3a3a44, longSleeves: true, pants: 0x3a3a44, tie: 0xc8202a, nose: 'big', voice: 200, ring: '#fff8e6',
+    outfits: { flyg: {}, sol: { shirt: 0x9cc4e4, pants: 0x9cc4e4, shades: 0x2a2a2a, glasses: 0x2a2a2a } } }),
+  levander: A({ name: 'Dr Levander', scale: 1.06, wide: 0.85, hair: 'slick', hairC: 0x2a2a2a, glasses: 0x2a2a2a, shirt: 0xf4f4f0, longSleeves: true, pants: 0x3a3a44, tie: 0x1b2f6b, voice: 290, ring: '#c8c8d8' }),
+  lasse: A({ name: 'Lasse', skin: 0xc98f62, hair: 'curly', hairC: 0x1d1426, brows: 0x1d1426, shirt: 0xffd23f, pants: 0xffd23f, longSleeves: true, print: [0xf07a1e], voice: 300, ring: '#f07a1e',
+    outfits: { sol: {}, jul: { shirt: 0xd8321e, pants: 0xd8321e, hat: 'tomte' } } }),
+  affe: A({ name: 'Affe', wide: 0.85, hair: 'short', hairC: 0xc9a66b, shirt: 0xf4f0e6, print: [0xf07a1e, 0xffd23f], pants: 0xffd23f, shades: 0x2a2a2a, glasses: 0x2a2a2a, held: 'accordion', voice: 280, ring: '#f07a1e' }),
+  gabbe: A({ name: 'Gabbe', wide: 1.4, hair: 'afro', hairC: 0xc0602a, beard: 0xc0602a, mustache: 0xc0602a, shades: 0x2a2a2a, glasses: 0x2a2a2a, shirt: 0xf07a1e, pants: 0xffd23f, held: 'congas', voice: 190, ring: '#f07a1e' }),
+  jose: A({ name: 'José', skin: ES, hair: 'slick', hairC: 0x1d1426, brows: 0x1d1426, mustache: 0x1d1426, shirt: 0x2048c8, longSleeves: true, pants: 0x1d1426, voice: 280, ring: '#d8321e' }),
+  mamma: A({ name: 'Josés mamma', scale: 0.92, skin: ES, hair: 'bun', hairC: 0x9a9a9a, glasses: 0x2a2a2a, dress: 0x1d1426, shirt: 0x1d1426, pants: 0x1d1426, voice: 380, ring: '#d8321e' }),
+  pappa: A({ name: 'Josés pappa', skin: ES, hair: 'short', hairC: 0x3a3a3a, shirt: 0x1d1426, longSleeves: true, pants: 0x1d1426, hat: 'trilby', hatC: 0x1d1426, mustache: 0x5a5a5a, voice: 180, ring: '#d8321e' }),
+  carmencita: A({ name: 'Carmencita', skin: ES, hair: 'short', hairC: 0x1d1426, dress: 0x1d1426, stripe: 0xd8321e, shirt: 0x1d1426, pants: 0x1d1426, voice: 360, ring: '#d8321e' }),
+  herrStorch: A({ name: 'Herr Storch', scale: 1.08, hair: 'curly', hairC: 0x9a7a52, shirt: 0x3a2a4a, print: [0xc0623a], vest: 0xb07a5a, pants: 0x6a5a48, held: 'camera', voice: 300, ring: '#fff8e6' }),
+  fruStorch: A({ name: 'Fru Storch', wide: 1.15, hair: 'curly', hairC: 0xf0dca0, glasses: 0x8a3a6a, shirt: 0xd0307a, pants: 0xf4f0e6, hairFlower: 0xffffff, voice: 410, ring: '#fff8e6' }),
+  portier: A({ name: 'Portiern', skin: ES, hair: 'slick', hairC: 0x1d1426, shirt: 0xf4f4f0, vest: 0x1d1426, bowtie: 0x1d1426, mustache: 0x1d1426, pants: 0x1d1426, voice: 255, ring: '#d8321e' }),
+  sulan: A({ name: 'Sulan', skin: 0xd9a07a, hair: 'short', hairC: 0x6a4a2a, shirt: 0x6a4a2a, pants: 0x4a4a52, voice: 245, ring: '#fff8e6' }),
+  vardinna: A({ name: 'Flygvärdinnan', hair: 'bun', hairC: 0xf0d890, brows: 0xc0a060, dress: 0x1e9aa0, shirt: 0x1e9aa0, pants: 0x1e9aa0, shoes: 0x1d1426, voice: 370, ring: '#1e9aa0' }),
+  vardinna2: A({ name: 'Flygvärdinnan', hair: 'bun', hairC: 0x8a5a2a, dress: 0x1e9aa0, shirt: 0x1e9aa0, pants: 0x1e9aa0, shoes: 0x1d1426, voice: 390, ring: '#1e9aa0' }),
+  kapten: A({ name: 'Kaptenen', hair: 'short', hairC: 0x5a5a5a, shirt: 0xf4f4f0, pants: 0x1b2f6b, hat: 'pilot', hatC: 0x1b2f6b, voice: 185, ring: '#1e9aa0' }),
+  pa: A({ name: 'Högtalaren', hair: 'bun', hairC: 0xc0a060, shirt: 0xffd23f, longSleeves: true, pants: 0x3a3a44, voice: 400, ring: '#1e9aa0' }),
+  kontrollant: A({ name: 'Kontrollanten', hair: 'cap', hairC: 0x1b2f6b, hat: 'cap', hatC: 0x1b2f6b, shirt: 0x3a4a6a, longSleeves: true, pants: 0x2a2a34, voice: 230, ring: '#fff8e6' }),
+  hittegods: A({ name: 'Killen från flygplatsen', skin: ES, hair: 'cap', hairC: 0x3a4a6a, hat: 'cap', hatC: 0x3a4a6a, shirt: 0xd8d0b0, pants: 0x3a4a6a, voice: 300, ring: '#d8321e' }),
+  saljare: A({ name: 'Bungalowförsäljaren', hair: 'swoop', hairC: 0xe0c890, shirt: 0xf4f0e6, longSleeves: true, pants: 0xf4f0e6, shades: 0x2a2a2a, glasses: 0x2a2a2a, voice: 310, ring: '#fff8e6' }),
+  souvenir: A({ name: 'Souvenirförsäljaren', skin: ES, wide: 1.2, hair: 'balding', hairC: 0x1d1426, shirt: 0xe8d8a8, mustache: 0x1d1426, pants: 0x6a5a48, hat: 'sunhat', voice: 225, ring: '#d8321e' }),
+  stadare: A({ name: 'Städerskan', scale: 1.1, hat: 'scarf', hair: 'bun', hairC: 0x2a2a2a, dress: 0x1d1426, stripe: 0xf0a0c0, shirt: 0x1d1426, pants: 0x1d1426, held: 'broom', voice: 260, ring: '#d8321e' }),
+  eslov: A({ name: 'Rullskidåkaren', hair: 'cap', hairC: 0xffd23f, hat: 'cap', hatC: 0xffd23f, shirt: 0x2a4fa0, stripe: 0xffd23f, pants: 0x2a4fa0, longSleeves: true, voice: 320, ring: '#fff8e6' }),
+  grisbonde: A({ name: 'Grisbonden', skin: ES, hair: 'short', hairC: 0x2a2a2a, shirt: 0x6a5a3a, pants: 0x4a3a2a, hat: 'sunhat', voice: 200, ring: '#d8321e' }),
+  varden: A({ name: 'Grisfestvärden', skin: ES, wide: 1.3, hair: 'slick', hairC: 0x1d1426, shirt: 0xf4f4f0, stripe: 0xd8321e, mustache: 0x1d1426, pants: 0x1d1426, voice: 210, ring: '#d8321e' }),
+  guardia: A({ name: 'Guardia Civil', skin: ES, hair: 'short', hairC: 0x1d1426, shirt: 0x3d5a3a, pants: 0x3d5a3a, longSleeves: true, hat: 'tricorn', mustache: 0x1d1426, voice: 210, ring: '#3d5a3a' }),
+  pax: A({ name: 'Medpassagerare', hair: 'short', hairC: 0x5a3a1e, shirt: 0xb07a3a, pants: 0x6a4a2a, voice: 280, ring: '#fff8e6' }),
 };
+
+// Every key with a dialogue portrait (all of them unless a def says portrait: false).
+export const CAST = Object.keys(CHARS).filter((k) => CHARS[k].portrait !== false);
+
+// A def with an outfit shallow-merged over the base look (outfit null/unknown = base look).
+export function outfitDef(key, outfit) {
+  const d = CHARS[key];
+  return { ...d, ...(outfit && d.outfits?.[outfit] ? d.outfits[outfit] : {}) };
+}
 
 const OUT = 0.022;
 
@@ -439,6 +501,7 @@ export function animateCharacter(m, st, dt) {
     }
     if (st.cheer) { arms[0].rotation.set(0, 0, -2.6 + Math.sin(t * 10) * 0.3); arms[1].rotation.set(0, 0, 2.6 - Math.sin(t * 10) * 0.3); m.body.position.y = Math.abs(Math.sin(t * 6)) * 0.25; }
   }
+  if (!m.floaty && !st.flung && !st.down) poseFlags(m, st, t);
   if (m.neck) m.neck.rotation.y = st.look || 0;
   // The big mouth.
   if (m.mouth) {
@@ -447,8 +510,29 @@ export function animateCharacter(m, st, dt) {
   }
 }
 
+// Anim flags layered over the base pose (Phase 0: minimal arm poses; WP-E polishes and adds laugh,
+// slump, shoeOff, mirror, film, giraffe, butterKnife, carryOver). arms[0] is the right arm (-x).
+function poseFlags(m, st, t) {
+  const [R, L] = m.arms;
+  if (!R || !L) return;
+  if (st.planeSeat && st.seated) { R.rotation.set(-0.45, 0, -0.32); L.rotation.set(-0.45, 0, 0.32); }
+  if (st.push) { R.rotation.set(-1.3, 0, 0.12); L.rotation.set(-1.3, 0, -0.12); }
+  if (st.hold) { R.rotation.set(-0.35, 0, -0.85); L.rotation.set(-0.35, 0, 0.85); }
+  if (st.cupUp) R.rotation.set(-2.7, 0, -0.1);
+  if (st.oath) { R.rotation.set(-0.15, 0, -2.85); L.rotation.set(-1.35, 0, -0.65); }
+  if (st.wings) { R.rotation.set(0, 0, -1.55 + Math.sin(t * 2) * 0.03); L.rotation.set(0, 0, 1.55 - Math.sin(t * 2) * 0.03); }
+  if (st.flail) {
+    R.rotation.set(Math.sin(t * 14) * 0.8, 0, -1.9 - Math.sin(t * 11) * 0.5);
+    L.rotation.set(-Math.sin(t * 13) * 0.8, 0, 1.9 + Math.sin(t * 12) * 0.5);
+  }
+  if (st.dance) {
+    R.rotation.set(0, 0, -2.4 + Math.sin(t * 8) * 0.4); L.rotation.set(0, 0, 2.4 - Math.sin(t * 8 + 1) * 0.4);
+    if (!st.seated) { m.body.position.y = Math.abs(Math.sin(t * 6)) * 0.18; m.body.rotation.y = Math.sin(t * 3) * 0.35; }
+  }
+}
+
 // ---------------------------------------------------------------------------------------------
-// Pedestrians: random Bridgetonians.
+// Pedestrians: random tourists and locals.
 
 const PED_SKIN = [0xf7d2b6, 0xf2c39e, 0xe0a882, 0xc68a62, 0x9a6a4a, 0x7a4e36, 0xf5cdb0];
 const PED_HAIR = [0x2a1a12, 0x5a3a1e, 0xc4733a, 0xe8d27a, 0x1a1a1a, 0x8a8a8a, 0xb84a2a];
@@ -465,6 +549,23 @@ export function randomPed(r = Math.random) {
     brows: pick(PED_HAIR, r), glasses: r() < 0.2 ? 0x2a2a2a : 0, wide: adult ? 0.9 + r() * 0.45 : 1, shorts: r() < 0.15, longSleeves: r() < 0.4,
     voice: adult ? 200 + r() * 150 : 380 + r() * 120,
   };
+}
+
+// A seated bust (torso + arms + head) as one merged, vertex-coloured geometry: origin at the torso
+// bottom, +z forward. The cabin merges ~80 of these into one static mesh.
+export function buildBustGeo(d) {
+  const s = d.scale || 1;
+  const R = 0.25 * s, torsoH = 0.66 * s, torsoW = 0.5 * s * (d.wide || 1);
+  const g = new GeoBuilder();
+  g.add(PRIM.capsule(), d.shirt, mat(0, torsoH / 2, 0, 0, 0, 0, torsoW, torsoH / 2, 0.28 * s));
+  for (const sd of [-1, 1]) g.add(PRIM.capsule(), d.shirt, mat(sd * torsoW * 0.45, torsoH * 0.6, 0.25 * s, -1.2, 0, 0, 0.13 * s, 0.22 * s, 0.13 * s));
+  const hg = new GeoBuilder();
+  headParts(hg, d, R);
+  const hgeo = hg.build();
+  hgeo.translate(0, torsoH + R * 0.95 + 0.06 * s, 0);
+  g.parts.push(hgeo);
+  g.box(0x3a0f1a, 0, torsoH + R * 0.45 + 0.06 * s, R * 0.85, R * 0.7, R * 0.18, R * 0.2);
+  return g.build();
 }
 
 // A cheap seated figure (torso + head in one mesh) for traffic drivers.

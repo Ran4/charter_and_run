@@ -6,22 +6,36 @@ import { queryBlocks, obbVsBlock, obbVsObb, groundAt, topAt, RAMP } from '../wor
 import { clamp, damp, pick } from '../util.js';
 import { fx as FX } from '../game/fx.js';
 
+// DESIGN §6.6. Spec flags: tall, bus, bed, icecream, livery ('suntrip' | 'guagua'), guardia, taxi,
+// pigs, build (custom geometry: (spec, color) -> { geo, glass }), noWheels, noSpeedo.
+// Car fields set by game code: noEnter (never offered to the player), noExplode (damage -> dead +
+// steam, no fire), isPursuer, riders[] (decorative busts), locked.
+const SEDAN = { len: 4.5, wid: 1.9, bodyH: 0.62, cabinH: 0.68, wheelR: 0.36, maxSpeed: 31, accel: 12, grip: 9.5, steer: 0.6, mass: 1400, hp: 100, cabin: [-0.3, 0.12] };
+const PICKUP = { len: 5.1, wid: 2.0, bodyH: 0.75, cabinH: 0.75, wheelR: 0.42, maxSpeed: 29, accel: 11, grip: 8.6, steer: 0.58, mass: 1900, hp: 130, cabin: [-0.05, 0.2], bed: true };
+const BUS = { len: 10.5, wid: 2.5, bodyH: 2.2, cabinH: 0, wheelR: 0.5, maxSpeed: 21, accel: 6.5, grip: 7.5, steer: 0.52, mass: 7000, hp: 300, tall: true, bus: true };
 export const CAR_TYPES = {
-  sedan: { name: 'Sedan', len: 4.5, wid: 1.9, bodyH: 0.62, cabinH: 0.68, wheelR: 0.36, maxSpeed: 31, accel: 12, grip: 9.5, steer: 0.6, mass: 1400, hp: 100, cabin: [-0.3, 0.12] },
-  hatch: { name: 'Hatchback', len: 3.9, wid: 1.8, bodyH: 0.62, cabinH: 0.7, wheelR: 0.34, maxSpeed: 30, accel: 13, grip: 10.5, steer: 0.64, mass: 1100, hp: 85, cabin: [-0.44, 0.1] },
-  wagon: { name: 'Family Wagon', len: 4.9, wid: 1.95, bodyH: 0.62, cabinH: 0.72, wheelR: 0.37, maxSpeed: 30, accel: 11.5, grip: 9.2, steer: 0.6, mass: 1500, hp: 115, cabin: [-0.46, 0.12], wood: true },
-  van: { name: 'Van', len: 5.0, wid: 2.05, bodyH: 1.5, cabinH: 0, wheelR: 0.38, maxSpeed: 26, accel: 9.5, grip: 8.2, steer: 0.58, mass: 2100, hp: 140, tall: true },
-  pickup: { name: 'Pickup', len: 5.1, wid: 2.0, bodyH: 0.75, cabinH: 0.75, wheelR: 0.42, maxSpeed: 29, accel: 11, grip: 8.6, steer: 0.58, mass: 1900, hp: 130, cabin: [-0.05, 0.2], bed: true },
+  sedan: { name: 'Sedan', ...SEDAN },
+  hatch: { name: 'Småbil', len: 3.9, wid: 1.8, bodyH: 0.62, cabinH: 0.7, wheelR: 0.34, maxSpeed: 30, accel: 13, grip: 10.5, steer: 0.64, mass: 1100, hp: 85, cabin: [-0.44, 0.1] },
+  wagon: { name: 'Kombi', len: 4.9, wid: 1.95, bodyH: 0.62, cabinH: 0.72, wheelR: 0.37, maxSpeed: 30, accel: 11.5, grip: 9.2, steer: 0.6, mass: 1500, hp: 115, cabin: [-0.46, 0.12] },
+  van: { name: 'Skåpbil', len: 5.0, wid: 2.05, bodyH: 1.5, cabinH: 0, wheelR: 0.38, maxSpeed: 26, accel: 9.5, grip: 8.2, steer: 0.58, mass: 2100, hp: 140, tall: true },
+  pickup: { name: 'Flakbil', ...PICKUP },
+  bus: { name: 'SunTrip-buss', ...BUS, color: 0xf4f4f0, livery: 'suntrip' },
+  guagua: { name: 'Guagua', ...BUS, color: 0x2f8a4a, livery: 'guagua' },
+  icecream: { name: 'Glassbil', len: 5.4, wid: 2.1, bodyH: 1.7, cabinH: 0, wheelR: 0.4, maxSpeed: 24, accel: 8.5, grip: 8, steer: 0.56, mass: 2300, hp: 140, color: 0xfafafa, tall: true, icecream: true },
+  taxi: { name: 'Taxi', ...SEDAN, color: 0xe8dcb8, taxi: true },
+  guardia: { name: 'Guardia Civil', len: 4.2, wid: 1.9, bodyH: 1.45, cabinH: 0, wheelR: 0.4, maxSpeed: 30, accel: 12, grip: 9, steer: 0.58, mass: 2000, hp: 160, color: 0x2e5e3e, tall: true, guardia: true },
+  grisbil: { name: 'Grisbilen', ...PICKUP, maxSpeed: 34, accel: 14, color: 0xa8442a, pigs: true },
+  // Bigmouth leftovers (no longer spawned; their geometry branches stay until WP-E removes them).
   hearse: { name: 'Hearse', len: 5.8, wid: 2.0, bodyH: 0.62, cabinH: 0.82, wheelR: 0.38, maxSpeed: 33, accel: 12.5, grip: 9.2, steer: 0.56, mass: 2000, hp: 150, cabin: [-0.47, 0.08], color: 0x1d1426, hearse: true },
-  muscle: { name: 'Hormone Rocket', len: 4.7, wid: 2.0, bodyH: 0.56, cabinH: 0.58, wheelR: 0.4, maxSpeed: 41, accel: 17, grip: 10.5, steer: 0.62, mass: 1500, hp: 120, cabin: [-0.25, 0.05], color: 0xd8321e, muscle: true },
-  bus: { name: 'School Bus', len: 10.5, wid: 2.5, bodyH: 2.2, cabinH: 0, wheelR: 0.5, maxSpeed: 21, accel: 6.5, grip: 7.5, steer: 0.52, mass: 7000, hp: 300, color: 0xf2c12e, tall: true, bus: true },
-  icecream: { name: 'Ice Cream Truck', len: 5.4, wid: 2.1, bodyH: 1.7, cabinH: 0, wheelR: 0.4, maxSpeed: 24, accel: 8.5, grip: 8, steer: 0.56, mass: 2300, hp: 140, color: 0xfafafa, tall: true, icecream: true },
 };
+export function registerCarType(key, spec) { CAR_TYPES[key] = spec; }
+
 const COLORS = [0xd8321e, 0x2f6ad8, 0x3fa04a, 0xf2c12e, 0x8a3ab8, 0xff7ab0, 0xf4f1e8, 0x3a3a44, 0x2fb8a8, 0xff8a3a, 0x8fb3c9, 0xb88a5a];
 
 function shade(c, k) { const col = new THREE.Color(c); col.multiplyScalar(k); return col.getHex(); }
 
 function buildCarModel(s, color) {
+  if (s.build) return s.build(s, color);
   const g = new GeoBuilder();
   const L = s.len, W = s.wid, y0 = s.wheelR * 0.95, top = y0 + s.bodyH;
   const dark = shade(color, 0.7), trim = 0x2a2a30, chrome = 0xd8dce0;
@@ -39,9 +53,15 @@ function buildCarModel(s, color) {
     if (s.bus) {
       for (let k = 0; k < 8; k++) for (const sx of [-1, 1]) g.box(0x2a3a4a, sx * (W / 2 + 0.01), top - 0.65, -L / 2 + 1.2 + k * 1.05, 0.04, 0.7, 0.85);
       g.box(0x1d1d22, 0, y0 + 0.9, 0, W + 0.04, 0.12, L - 0.4);
-      g.box(0xd8321e, W / 2 + 0.25, y0 + 1.2, L / 2 - 2.4, 0.04, 0.5, 0.5);
+      if (!s.livery) g.box(0xd8321e, W / 2 + 0.25, y0 + 1.2, L / 2 - 2.4, 0.04, 0.5, 0.5);
+      if (s.livery === 'suntrip') for (const sx of [-1, 1]) { g.box(0xf07a1e, sx * (W / 2 + 0.02), y0 + 0.55, 0, 0.04, 0.22, L - 0.6); g.box(0xf7c31b, sx * (W / 2 + 0.02), y0 + 0.3, 0, 0.04, 0.16, L - 0.6); }
     } else {
       for (const sx of [-1, 1]) g.box(0x2a3a4a, sx * (W / 2 + 0.01), top - 0.55, -0.6, 0.04, 0.6, L * 0.45);
+    }
+    if (s.guardia) {
+      g.boxB(0xf4f4f0, 0, top - 0.02, -0.25, W - 0.1, 0.06, L - 0.9);
+      g.boxB(0x2f6ad8, 0, top + 0.04, 0.2, 0.5, 0.18, 0.3);
+      for (const sx of [-1, 1]) g.box(0xf4f4f0, sx * (W / 2 + 0.02), y0 + 0.55, -0.2, 0.04, 0.16, L * 0.6);
     }
     if (s.icecream) {
       g.cone(0xe8b878, 0, top + 0.55, -0.6, 0.38, 1.0, 10, Math.PI);
@@ -69,10 +89,12 @@ function buildCarModel(s, color) {
     g.boxB(s.hearse ? color : shade(color, 0.92), 0, ct, (z0 + z1) / 2 - 0.05, W - 0.06, 0.13, z1 - z0 + 0.15);
     glass.box(0xffffff, 0, top + ch / 2, z1 - 0.15, W - 0.3, ch * 1.02, 0.05, 0, -0.35);
     glass.box(0xffffff, 0, top + ch / 2, z0 + 0.12, W - 0.3, ch * 0.95, 0.05, 0, 0.2);
+    if (s.taxi) { g.boxB(0xf4f4f0, 0, top + ch + 0.12, (z0 + z1) / 2, 0.6, 0.22, 0.3); g.boxB(0x3fa04a, 0.22, top + ch + 0.34, (z0 + z1) / 2, 0.1, 0.08, 0.1); }
     if (s.bed) {
       for (const sx of [-1, 1]) g.boxB(color, sx * (W / 2 - 0.06), top, -L * 0.3, 0.12, 0.4, L * 0.38);
       g.boxB(color, 0, top, -L / 2 + 0.06, W, 0.4, 0.12);
       g.boxB(0x3a3a40, 0, top - 0.02, -L * 0.3, W - 0.2, 0.03, L * 0.38);
+      if (s.pigs) for (let k = 0; k < 3; k++) g.sphere(0xf4a8b8, (k - 1) * 0.55, top + 0.35, -L * 0.3, 0.6, 0.45, 0.85);
     }
     if (s.muscle) {
       g.boxB(0xffffff, 0.25, top, 0, 0.18, 0.02, L * 0.99);
@@ -136,7 +158,7 @@ export class Car {
     this.wheels = [];
     const wg = getWheelGeo();
     const wr = spec.wheelR, wx = spec.wid / 2 - 0.02, wz = spec.len / 2 - wr - (spec.bus ? 1.2 : 0.38);
-    for (const [sx, sz] of [[1, 1], [-1, 1], [1, -1], [-1, -1]]) {
+    for (const [sx, sz] of spec.noWheels ? [] : [[1, 1], [-1, 1], [1, -1], [-1, -1]]) {
       const piv = new THREE.Group();
       piv.position.set(sx * wx, wr, sz * wz);
       const w = toonMesh(wg, { outline: 0.02 });
@@ -167,6 +189,10 @@ export class Car {
     this.skidAmt = 0;
     this.lastHit = 0;
     this.revs = 0;
+    this.riders = [];
+    this.noEnter = false;
+    this.noExplode = false;
+    this.isPursuer = false;
     this.updateObb();
     this.root.position.set(this.x, this.y, this.z);
     this.root.rotation.y = this.yaw;
@@ -180,11 +206,15 @@ export class Car {
     o.x = this.x; o.z = this.z; o.fx = Math.sin(this.yaw); o.fz = Math.cos(this.yaw);
   }
 
-  // Seat position in world space: driver on the left (+x local), passenger on the right.
-  seatWorld(side = 1, out = new THREE.Vector3()) {
+  // Seat position in world space: driver on the left (+x local), passenger on the right. Computed
+  // from the physics state (not the last rendered matrix), so it is current within the frame.
+  seatWorld(side = 1, out = { x: 0, y: 0, z: 0 }) {
     const s = this.spec;
     const lx = side * s.wid * 0.22, ly = s.tall ? s.wheelR * 0.95 + 0.45 : s.wheelR * 0.95 + s.bodyH - 0.25, lz = s.tall ? s.len / 2 - 1.6 : -0.1;
-    out.set(lx, ly, lz).applyMatrix4(this.tilt.matrixWorld);
+    const c = Math.cos(this.yaw), sn = Math.sin(this.yaw);
+    out.x = this.x + lx * c + lz * sn;
+    out.y = this.y + ly;
+    out.z = this.z - lx * sn + lz * c;
     return out;
   }
 
@@ -277,6 +307,11 @@ export class Car {
         fx_smoke(hx, this.y + this.height * 0.7, hz, this.hp < 15);
       }
     }
+    if (this.dead && this.steamT > 0) {
+      this.steamT -= dt;
+      this.smokeT -= dt;
+      if (this.smokeT <= 0) { this.smokeT = 0.15; FX.steam(this.x + fx * s.len * 0.38, this.y + this.height * 0.8, this.z + fz * s.len * 0.38); }
+    }
     if (this.dead) {
       this.smokeT -= dt;
       if (this.smokeT <= 0 && this.burn > 0) {
@@ -338,11 +373,18 @@ export class Car {
     if (this.hp <= 0) {
       this.hp = 0;
       this.dead = true;
-      this.burn = 6;
-      this.body.material = MAT.burnt;
-      FX.explosion(this.x, this.y + 0.5, this.z);
-      this.vy = 6; this.air = true;
-      this.w += (Math.random() - 0.5) * 3;
+      if (this.noExplode) {
+        // Wrecked in steam: no fireball, no fire, it just stops.
+        this.burn = 0;
+        this.steamT = 6;
+        FX.steam(this.x, this.y + this.height * 0.8, this.z);
+      } else {
+        this.burn = 6;
+        this.body.material = MAT.burnt;
+        FX.explosion(this.x, this.y + 0.5, this.z);
+        this.vy = 6; this.air = true;
+        this.w += (Math.random() - 0.5) * 3;
+      }
       game?.onCarDestroyed(this);
     }
   }

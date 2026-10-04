@@ -1,5 +1,5 @@
-// Coins (pooled, instanced), Duke's lost records, Tito the Anxiety Mosquitoes, and Jay's runaway
-// rabbits for the magic-show mission.
+// Coins (pooled, instanced; one coin = 25 pesetas), collectibles by kind (Ole's gadgets, shark
+// fins, mission items) and runaway "rabbits" (beach balls, sheep, flowers, piglets).
 
 import { THREE, GeoBuilder, toonMesh, MAT, outlineGeometry, outlineMat, mat, PRIM } from '../gfx.js';
 import { groundAt, queryBlocks, circleVsBlock, topAt, RAMP } from '../world/collision.js';
@@ -10,6 +10,7 @@ import { yawTo } from '../util.js';
 // Coins
 
 const MAXC = 500;
+export const COIN_VALUE = 25;
 let coinMesh, coinOutline;
 export const coins = [];
 const _m = new THREE.Matrix4(), _zero = new THREE.Matrix4().makeScale(0, 0, 0);
@@ -43,7 +44,7 @@ function freeCoin() {
 export function placeCoin(x, y, z) {
   const c = freeCoin();
   if (!c) return;
-  Object.assign(c, { active: true, fixed: true, x, y, z, vx: 0, vy: 0, vz: 0, life: Infinity, settle: 1, value: 1 });
+  Object.assign(c, { active: true, fixed: true, x, y, z, vx: 0, vy: 0, vz: 0, life: Infinity, settle: 1, value: COIN_VALUE });
 }
 
 export function burstCoins(x, y, z, n, vx = 0, vz = 0) {
@@ -51,7 +52,7 @@ export function burstCoins(x, y, z, n, vx = 0, vz = 0) {
     const c = freeCoin();
     if (!c) return;
     const a = Math.random() * Math.PI * 2, s = 1.5 + Math.random() * 3;
-    Object.assign(c, { active: true, fixed: false, x, y: y + 0.5, z, vx: vx * 0.3 + Math.cos(a) * s, vz: vz * 0.3 + Math.sin(a) * s, vy: 5 + Math.random() * 4, life: 25, settle: 0, value: 1 });
+    Object.assign(c, { active: true, fixed: false, x, y: y + 0.5, z, vx: vx * 0.3 + Math.cos(a) * s, vz: vz * 0.3 + Math.sin(a) * s, vy: 5 + Math.random() * 4, life: 25, settle: 0, value: COIN_VALUE });
   }
 }
 
@@ -102,94 +103,85 @@ export function tickCoins(dt, t, collector, game) {
 }
 
 // ---------------------------------------------------------------------------------------------
-// Duke's records
+// Collectibles by kind (DESIGN §14.6). Each kind: { build(id) -> Object3D, motion, beam?, scale? };
+// motion: 'spin' | 'circle' (r 1.2 around the spot) | 'bob' | 'roll' (moved by its owner) | 'none'.
+// Phase-0 placeholders; WP-E builds the real meshes.
 
-function recordGeo() {
-  const g = new GeoBuilder();
-  g.cyl(0x1d1426, 0, 0, 0, 0.62, 0.05, 28, Math.PI / 2);
-  g.cyl(0xd8321e, 0, 0, 0, 0.22, 0.07, 16, Math.PI / 2);
-  g.cyl(0xfff3b0, 0, 0, 0, 0.05, 0.08, 8, Math.PI / 2);
-  return g.build();
-}
+function geoMesh(fn, outline = 0.03) { const g = new GeoBuilder(); fn(g); return toonMesh(g.build(), { outline }); }
+
+export const COLLECT_KINDS = {
+  pryl: { motion: 'spin', beam: true, build: () => geoMesh((g) => { g.cyl(0x1d1426, 0, 0, 0, 0.5, 0.12, 20, Math.PI / 2); g.cyl(0xf07a1e, 0, 0, 0, 0.3, 0.14, 16, Math.PI / 2); g.box(0xf4f4f0, 0, 0.12, 0.08, 0.06, 0.26, 0.04); }) },
+  fena: { motion: 'circle', build: () => geoMesh((g) => { g.cone(0x5a7a9a, 0, 0.45, 0, 0.45, 0.9, 4); g.cyl(0x1c7fb8, 0, 0, 0, 0.6, 0.06, 12); }) },
+  flaska: { motion: 'roll', build: () => geoMesh((g) => { g.cyl(0x3a7a3a, 0, 0, 0, 0.12, 0.42, 10, Math.PI / 2); g.cyl(0x3a7a3a, 0, 0, 0.28, 0.05, 0.16, 8, Math.PI / 2); }, 0.02) },
+  juice: { motion: 'none', build: () => geoMesh((g) => { g.cyl(0xf4f4f0, 0, 0, 0, 0.09, 0.2, 10); g.cyl(0xf7a21b, 0, 0.06, 0, 0.08, 0.06, 10); }, 0.015) },
+  knacke: { motion: 'spin', beam: true, build: () => geoMesh((g) => { g.box(0xd8a050, 0, 0, 0, 0.6, 0.12, 0.35); g.box(0xd8321e, 0, 0.07, 0, 0.5, 0.02, 0.2); }) },
+  asna: { motion: 'spin', beam: true, build: () => geoMesh((g) => { g.box(0xd8321e, 0, 0.3, 0, 0.3, 0.3, 0.7); g.box(0xd8321e, 0, 0.6, 0.35, 0.2, 0.35, 0.25); for (const x of [-0.1, 0.1]) for (const z of [-0.25, 0.25]) g.box(0xd8321e, x, 0.08, z, 0.08, 0.2, 0.08); }) },
+  vaska: { motion: 'spin', beam: true, build: () => geoMesh((g) => { g.box(0x8a5a3a, 0, 0, 0, 0.8, 0.55, 0.25); g.box(0x3a2a1e, 0, 0.32, 0, 0.3, 0.08, 0.06); }) },
+  giraff: { motion: 'spin', beam: true, build: () => geoMesh((g) => { g.box(0xf2c12e, 0, 0.3, 0, 0.25, 0.25, 0.5); g.box(0xf2c12e, 0, 0.7, 0.2, 0.1, 0.6, 0.1); }) },
+};
+export function registerCollectKind(kind, def) { COLLECT_KINDS[kind] = def; }
 
 export class Collectible {
-  constructor(scene, kind, id, x, y, z) {
+  // opts: { motion, beam, scale }
+  constructor(scene, kind, id, x, y, z, opts = {}) {
     this.kind = kind; this.id = id; this.x = x; this.y = y; this.z = z;
     this.alive = true;
-    this.mesh = kind === 'record' ? toonMesh(recordGeo(), { outline: 0.03 }) : mosquitoMesh();
+    const def = COLLECT_KINDS[kind];
+    this.motion = opts.motion ?? def?.motion ?? 'spin';
+    this.mesh = def ? def.build(id) : geoMesh((g) => g.box(0xffd23f, 0, 0, 0, 0.6, 0.6, 0.6));
+    const sc = opts.scale ?? def?.scale;
+    if (sc) this.mesh.scale.setScalar(sc);
     this.mesh.position.set(x, y, z);
-    if (kind === 'record') {
-      const beam = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 6, 10, 1, true), new THREE.MeshBasicMaterial({ color: 0xb8e0ff, transparent: true, opacity: 0.18, depthWrite: false }));
+    if (opts.beam ?? def?.beam) {
+      const beam = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 6, 10, 1, true), new THREE.MeshBasicMaterial({ color: 0xffe7b8, transparent: true, opacity: 0.2, depthWrite: false }));
       beam.position.y = 3;
       this.mesh.add(beam);
     }
+    this.scene = scene;
     scene.add(this.mesh);
     this.ph = Math.random() * 6;
   }
   tick(t, dt) {
     if (!this.alive) return;
-    if (this.kind === 'record') {
-      this.mesh.rotation.y = t * 1.8;
-      this.mesh.position.y = this.y + Math.sin(t * 2 + this.ph) * 0.15;
-    } else {
-      const ph = t * 1.3 + this.ph;
-      this.mesh.position.set(this.x + Math.sin(ph) * 1.4, this.y + Math.sin(ph * 2.3) * 0.4, this.z + Math.cos(ph * 0.8) * 1.4);
-      this.mesh.rotation.y = ph + Math.PI / 2;
-      this.mesh.children[1]?.rotation.set(0, 0, Math.sin(t * 60) * 0.6);
-      this.mesh.children[2]?.rotation.set(0, 0, -Math.sin(t * 60) * 0.6);
+    const p = this.mesh.position;
+    if (this.motion === 'spin') { this.mesh.rotation.y = t * 1.8; p.y = this.y + Math.sin(t * 2 + this.ph) * 0.15; }
+    else if (this.motion === 'bob') p.y = this.y + Math.sin(t * 2.4 + this.ph) * 0.2;
+    else if (this.motion === 'circle') {
+      const a = t * 0.9 + this.ph;
+      p.set(this.x + Math.cos(a) * 1.2, this.y, this.z + Math.sin(a) * 1.2);
+      this.mesh.rotation.y = -a;
     }
+    // 'roll' and 'none': the owner moves the mesh (and this.x/z).
   }
+  // Current world position of the mesh (circling/bobbing items move around their spot).
+  get px() { return this.mesh.position.x; }
+  get pz() { return this.mesh.position.z; }
   remove() {
     this.alive = false;
     this.mesh.visible = false;
   }
 }
 
-function mosquitoMesh() {
-  const root = new THREE.Group();
-  const g = new GeoBuilder();
-  g.sphere(0x6a8a5a, 0, 0, -0.35, 0.55, 0.45, 0.85);
-  g.sphere(0x7aa06a, 0, 0.05, 0.15, 0.45);
-  g.sphere(0xffffff, -0.13, 0.15, 0.32, 0.2, 0.26, 0.15);
-  g.sphere(0xffffff, 0.13, 0.15, 0.32, 0.2, 0.26, 0.15);
-  g.sphere(0x1d1426, -0.13, 0.13, 0.4, 0.09);
-  g.sphere(0x1d1426, 0.13, 0.13, 0.4, 0.09);
-  g.cyl(0x3a2a2a, 0, 0, 0.6, 0.025, 0.55, 5, Math.PI / 2 + 0.35);
-  for (let k = 0; k < 3; k++) for (const s of [-1, 1]) g.cyl(0x3a2a2a, s * 0.25, -0.3, -0.1 - k * 0.18, 0.015, 0.6, 4, 0.3, 0, s * 0.6);
-  root.add(toonMesh(g.build(), { outline: 0.02 }));
-  for (const s of [-1, 1]) {
-    const piv = new THREE.Group();
-    piv.position.set(s * 0.1, 0.2, -0.15);
-    const w = new THREE.Mesh(new THREE.SphereGeometry(0.5, 10, 6), new THREE.MeshBasicMaterial({ color: 0xe8f6ff, transparent: true, opacity: 0.55, depthWrite: false }));
-    w.scale.set(0.7, 0.06, 0.35);
-    w.position.x = s * 0.35;
-    piv.add(w);
-    root.add(piv);
-  }
-  root.scale.setScalar(0.95);
-  return root;
-}
-
 // ---------------------------------------------------------------------------------------------
-// Rabbits: hop about, bolt from you, poof into Jay's hat when caught.
+// "Rabbits": hop about and bolt from you (flee), or sit and bob (flee: false). Meshes: badboll,
+// faar, blomma, gris (Phase-0 placeholders; WP-E builds the real ones).
 
-let rabbitGeo;
+const RABBIT_MESHES = {
+  badboll: (g) => { g.sphere(0xf4f4f0, 0, 0.45, 0, 0.9); g.sphere(0xd8321e, 0, 0.45, 0, 0.92, 0.3, 0.92); g.sphere(0x2f6ad8, 0, 0.45, 0, 0.3, 0.92, 0.92); },
+  faar: (g) => { g.sphere(0xf4f0e6, 0, 0.55, 0, 0.8, 0.6, 1.0); g.sphere(0x2a2a2a, 0, 0.75, 0.5, 0.35, 0.35, 0.4); for (const x of [-0.2, 0.2]) for (const z of [-0.3, 0.3]) g.box(0x2a2a2a, x, 0.15, z, 0.1, 0.3, 0.1); },
+  blomma: (g) => { g.cyl(0x3f7a3a, 0, 0.3, 0, 0.03, 0.6, 5); for (let k = 0; k < 5; k++) { const a = k * 1.26; g.sphere(0xc2307a, Math.cos(a) * 0.14, 0.65, Math.sin(a) * 0.14, 0.18); } g.sphere(0xffd23f, 0, 0.66, 0, 0.12); },
+  gris: (g) => { g.sphere(0xf4a8b8, 0, 0.35, 0, 0.55, 0.45, 0.8); g.sphere(0xe88a9a, 0, 0.38, 0.42, 0.22, 0.18, 0.12); },
+};
+const rabbitGeos = {};
 export class Rabbit {
-  constructor(scene, x, z) {
-    if (!rabbitGeo) {
+  constructor(scene, x, z, { mesh = 'badboll', flee = true } = {}) {
+    if (!rabbitGeos[mesh]) {
       const g = new GeoBuilder();
-      g.sphere(0xffffff, 0, 0.35, 0, 0.55, 0.5, 0.75);
-      g.sphere(0xffffff, 0, 0.62, 0.32, 0.4);
-      for (const s of [-1, 1]) {
-        g.sphere(0xffffff, s * 0.09, 0.98, 0.26, 0.12, 0.45, 0.1, -0.2, 0, s * 0.15);
-        g.sphere(0xffb8c8, s * 0.09, 0.98, 0.3, 0.06, 0.32, 0.04, -0.2, 0, s * 0.15);
-        g.sphere(0x1d1426, s * 0.12, 0.68, 0.48, 0.07);
-      }
-      g.sphere(0xffb8c8, 0, 0.6, 0.52, 0.07);
-      g.sphere(0xffffff, 0, 0.4, -0.42, 0.22);
-      rabbitGeo = g.build();
+      (RABBIT_MESHES[mesh] || RABBIT_MESHES.badboll)(g);
+      rabbitGeos[mesh] = g.build();
     }
-    this.mesh = toonMesh(rabbitGeo, { outline: 0.02 });
+    this.flee = flee;
+    this.mesh = toonMesh(rabbitGeos[mesh], { outline: 0.02 });
     this.x = x; this.z = z; this.y = groundAt(x, z, 0.2, 0.6); this.vy = 0; this.vx = 0; this.vz = 0;
     this.hopT = Math.random();
     this.alive = true;
@@ -199,6 +191,12 @@ export class Rabbit {
   }
   update(dt, px, pz) {
     if (!this.alive) return;
+    if (!this.flee) {
+      // Static and bobbing.
+      this.y = groundAt(this.x, this.z, this.y + 0.5, 0.5);
+      this.mesh.position.set(this.x, this.y + Math.abs(Math.sin(performance.now() / 300 + this.hopT * 6)) * 0.25, this.z);
+      return;
+    }
     const g = groundAt(this.x, this.z, this.y + 0.5, 0.5);
     const onGround = this.y <= g + 0.01;
     if (onGround) {

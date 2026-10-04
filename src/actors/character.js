@@ -1,11 +1,13 @@
 // A walking body: capsule-ish physics on the town's blocks, standing on low things, bouncing on
-// trampolines, getting flung by cars and lying there for a bit.
+// trampolines, getting flung by cars and lying there for a bit. States: normal | flung | down |
+// seated (in a car via game.seat, or in a plane seat via seatAt) | hidden (no step, invisible).
 
 import { buildCharacter, animateCharacter } from './models.js';
 import { queryBlocks, circleVsBlock, groundAt, groundInfo, topAt, RAMP } from '../world/collision.js';
 import { dampAngle, yawTo } from '../util.js';
 
 export const STEP = 0.45;
+export const ANIM_FLAGS = ['wings', 'cupUp', 'push', 'planeSeat', 'hold', 'flail', 'oath', 'dance', 'laugh', 'slump', 'shoeOff', 'mirror', 'film', 'giraffe', 'butterKnife', 'carryOver'];
 const GRAV = 24;
 const _blocks = [], _hit = {};
 
@@ -24,6 +26,7 @@ export class Character {
     this.wishX = 0; this.wishZ = 0;
     this.faceWish = true;
     this.anim = { speed: 0, air: false, vy: 0, kick: 0, talk: false, seated: false, flung: false, down: false, t: Math.random() * 10, spin: 0, look: 0, wave: false, cheer: false, sprint: false };
+    for (const f of ANIM_FLAGS) this.anim[f] = false;
     this.car = null;
     this.spin = 0; this.spinRate = 0;
     this.height = this.model.height;
@@ -33,6 +36,46 @@ export class Character {
   }
 
   get speed() { return Math.hypot(this.vx, this.vz); }
+
+  // Swap the look (outfits): rebuild the model under the same parent, keeping the transform, the
+  // position, the state and the anim flags.
+  setDef(def) {
+    const old = this.root, parent = old.parent;
+    this.def = def;
+    this.model = buildCharacter(def);
+    this.root = this.model.root;
+    this.root.position.copy(old.position);
+    this.root.rotation.copy(old.rotation);
+    this.root.scale.copy(old.scale);
+    this.root.visible = old.visible;
+    if (parent) { parent.add(this.root); parent.remove(old); }
+    this.height = this.model.height;
+    this.sync(0);
+    if (this.state === 'seated' && this.seatPose) this.placeSeated(this.seatPose);
+  }
+
+  // Plane seat: placed by hand (no car). x/y/z = the cushion (bubbles and markers read them).
+  seatAt({ x, y, z, yaw = 0 }) {
+    this.state = 'seated';
+    this.anim.planeSeat = true;
+    this.vx = this.vz = this.vy = 0;
+    this.x = x; this.y = y; this.z = z; this.yaw = yaw;
+    this.seatPose = { x, y, z, yaw };
+    this.sync(0);
+    this.placeSeated(this.seatPose);
+  }
+  placeSeated({ x, y, z, yaw }) {
+    const fx = Math.sin(yaw), fz = Math.cos(yaw);
+    this.root.position.set(x - fx * 0.12, y + 0.1 - this.model.legLen, z - fz * 0.12);
+    this.root.rotation.set(0, yaw, 0);
+    this.root.visible = true;
+  }
+  standAt(x, z, yaw = this.yaw) {
+    this.state = 'normal';
+    this.anim.planeSeat = false;
+    this.seatPose = null;
+    this.teleport(x, z, yaw);
+  }
 
   teleport(x, z, yaw = this.yaw) {
     this.x = x; this.z = z; this.yaw = yaw;
@@ -137,6 +180,7 @@ export class Character {
   }
 
   sync(dt) {
+    if (this.state === 'hidden') { this.root.visible = false; return; }
     const a = this.anim;
     a.t += dt;
     a.speed = this.state === 'normal' ? Math.hypot(this.vx, this.vz) : 0;
@@ -148,6 +192,7 @@ export class Character {
     if (a.kick > 0) a.kick = Math.max(0, a.kick - dt * 3.2);
     animateCharacter(this.model, a, dt);
     if (this.state === 'seated') return;
+    this.root.visible = true;
     this.root.position.set(this.x, this.y, this.z);
     this.root.rotation.set(0, this.yaw, 0);
     if (this.state === 'flung') {

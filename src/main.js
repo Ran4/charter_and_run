@@ -1,16 +1,20 @@
-// Bigmouth & Run — glue: builds the world, runs the fixed-step simulation, routes input to the
-// player or their car, and wires up missions, shame, pickups and the HUD.
+// Charter & Run — glue: builds the world (island + flight set), runs the fixed-step simulation,
+// routes input to the player or their car, applies the level system (DESIGN §4) and exposes the
+// Game API every module codes against (DESIGN §14.3). Frozen after Phase 0 (Phase 2 only).
 
-import { THREE, initGfx, renderer, scene, camera, followSun, tickSky } from './gfx.js';
+import { THREE, initGfx, renderer, scene, camera, followSun, tickSky, setSkyPalette, setCloudsVisible, setShadows } from './gfx.js';
 import { input } from './input.js';
 import { audio } from './audio.js';
 import { buildTown, parkedCars, tickTown } from './world/town.js';
 import { finalizeProps, tickProps, breakProp, propsNear, props as allProps } from './world/props.js';
-import { lm, landmarks, routeAim, rc, N, LANE, RHW, CURB, nodeX, nodeZ, neighbors, blockInterior, BOUND, isRoad } from './world/layout.js';
+import { lm, landmarks, routeAim, N, P, HALF, LANE, nodeX, nodeZ, neighbors, blockInterior } from './world/layout.js';
 import { groundAt, queryBlocks, contains, circleVsObb } from './world/collision.js';
+import { worldHooks } from './world/registry.js';
+import { buildCabin } from './world/cabin.js';
+import { buildRioCard } from './world/rio.js';
 import { Car, collideCars } from './actors/car.js';
 import { Character } from './actors/character.js';
-import { CHARS, buildBust, buildCharacter, randomPed } from './actors/models.js';
+import { CHARS, CAST, buildBust, buildCharacter, randomPed, outfitDef } from './actors/models.js';
 import { AIDriver } from './actors/drivers.js';
 import { spawnPeds } from './actors/peds.js';
 import { initCoins, placeCoin, burstCoins, tickCoins, Collectible } from './actors/pickups.js';
@@ -18,29 +22,22 @@ import { fx } from './game/fx.js';
 import { hud, renderPortrait } from './game/hud.js';
 import { CamRig } from './game/camera.js';
 import { Shame } from './game/shame.js';
-import { MissionRunner, MISSIONS } from './game/missions.js';
+import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
-import { clamp, dist, yawTo, pick, mulberry32 } from './util.js';
+import { LEVELS, ISLAND_PALETTES } from './level.js';
+import { METERS } from './meters.js';
+import { S, fmt } from './strings.js';
+import { CHATTER, CHATTER_FLIGHT, OUCH, GETUP, CARJACK, NPC_KICKED, COLLECTIBLES, UNLOCKS } from './content/index.js';
+import { clamp, dist, yawTo, pick, mulberry32, lerp } from './util.js';
 
 const STEP = 1 / 60;
-const SAVE_KEY = 'bigmouth-and-run-v1';
+const SAVE_KEY = 'charter-and-run-v1';
+const PLAYER_KEY = 'stig';
+const RADIO_ONLY = ['levander', 'kapten', 'pa', 'guardia', 'pax'];
+const CABIN_OWNED = ['vardinna2'];
 const params = new URLSearchParams(location.search);
 const TEST = params.has('test');
-
-const HOMES = { maurice: ['birch', 2.2, 0], andrew: ['gloub', 0, 0], steve: ['schoolLot', 0, 0], jay: ['jay', 0, 0], jessi: ['glaser', 0, 0], connie: ['glaser', 1.6, 0.8], duke: ['birch', -4.8, 1.8] };
-const MAP_LABELS = [['Birches', 'birch'], ['Gloubermans', 'gloub'], ['Middle School', 'school'], ['Galleria', 'mall'], ['Teenage Pizza', 'pizza'], ['Park', 'park'], ["Gas 'n' Gas", 'gas'], ['Cineplex', 'cinema'], ['Glaser Apts', 'glaser'], ["Jay's", 'jay'], ["Coach's", 'steve'], ['Cemetery', 'cemetery'], ['Construction', 'construct'], ['Water Tower', 'tower'], ['Football Field', 'field']];
-const OUCH = ['Ow!', 'Hey!', 'My spine!', 'Rude!', "I'm calling your mom!", 'Ugh, teens!', 'My hip!', 'Why?!'];
-const GETUP = ['I hate this town.', 'My back...', 'Kids these days!', 'Ow ow ow.', "I'm fine. I'm FINE."];
-const CARJACK = ['Hey! My car!', 'That kid stole my car!', 'Not again!', 'I just washed it!'];
-const CHATTER = {
-  maurice: ["Nicky! Let's go knock over a mailbox!", "You smell that? That's PUBERTY, baby!", 'Do it. Whatever it is. DO IT.', "I'm proud of you and I don't even know why."],
-  andrew: ['I think I have a fever. Or feelings. Same thing?', 'Why is my voice doing that?', "My dad's gonna kill me. Again."],
-  steve: ['Coach Steve! That\'s me!', 'I found a penny. Best day.', 'Dodgeball is a lifestyle, Nick.'],
-  jay: ['Pick a card. Any card. Not that one.', 'I can make your dignity disappear.', 'Abracadabra, baby.'],
-  jessi: ['Ugh. Everything is so much.', "Don't talk to me, I'm brooding.", 'Do you ever just want to scream into a lake?'],
-  connie: ['Feel the RAGE, honey!', "Mmm, I love a sulky teen.", "Somebody's getting moody!"],
-  duke: ['Mm, swing it, young man.', 'In my day, we just had jazz.', 'It don\'t mean a thing if it ain\'t got that swing.'],
-};
+const TRAFFIC_MIX = ['hatch', 'hatch', 'hatch', 'hatch', 'sedan', 'sedan', 'wagon', 'van', 'taxi', 'pickup', 'guagua', 'icecream'];
 
 function blockCenter(i, j) { const b = blockInterior(i, j); return { x: (b.x0 + b.x1) / 2, z: (b.z0 + b.z1) / 2 }; }
 
@@ -66,9 +63,29 @@ class Game {
     this.inDialog = false;
     this.talker = null;
     this.input = input;
-    this.got = { records: new Set(), mosquitoes: new Set() };
-    this.unlocked = new Set();
+    this.testMode = TEST;
     this.autoDialog = TEST;
+    this.dialogSpeed = TEST ? 220 : 55;
+    this.timeScale = TEST ? (params.has('ts') ? +params.get('ts') : 3) : 1;
+    this.level = null;
+    this.levelDef = null;
+    this.collected = { prylar: new Set(), fenor: new Set() };
+    this.unlocked = new Set();
+    this.homeOverrides = {};
+    this.interactables = [];
+    this.holding = false;
+    this.mantraOn = false;
+    this.mantraMode = false;
+    this.mantraHeldT = 0;
+    this.mantraWindUp = 0.3;
+    this.mantraSayT = 0;
+    this.carrying = null;
+    this.bumpedT = 0;
+    this.frozenT = 0;
+    this.islandOutfit = 'kostym';
+    this.sky = 'day';
+    this.pendingEndCard = false;
+    this.collectibles = {};
   }
 
   async init() {
@@ -79,37 +96,39 @@ class Game {
     hud.init();
     fx.init(scene);
     try { await Promise.race([document.fonts.load('40px "Luckiest Guy"'), new Promise((r) => setTimeout(r, 2500))]); } catch (e) { /* fall back to Impact */ }
-    setLoading('Building Bridgeton…');
+    setLoading(S.loading[1]);
     await frame();
     buildTown(scene);
+    this.cabin = buildCabin(scene, this);
+    buildRioCard(scene);
     finalizeProps(scene);
     initCoins(scene);
     hud.buildBaseMap();
     this.placeWorldCoins();
-    setLoading('Gassing up the cars…');
+    this.cabin.placeCoins();
+    setLoading(S.loading[2]);
     await frame();
-    for (const pc of parkedCars) {
-      const car = new Car(pc.type, { color: pc.color, name: pc.name });
-      car.place(pc.x, pc.z, pc.yaw);
-      car.home = pc;
-      this.addCar(car);
-      if (pc.name) this.named[pc.name] = car;
-    }
-    this.spawnTraffic(22);
-    setLoading('Waking up the neighbours…');
+    for (const pc of parkedCars) this.spawnParked(pc);
+    this.spawnTraffic(20);
+    setLoading(S.loading[3]);
     await frame();
     this.peds = spawnPeds(scene, 34);
-    for (const key of Object.keys(HOMES)) {
+    for (const key of Object.keys(CHARS)) {
+      if (key === PLAYER_KEY || RADIO_ONLY.includes(key) || CABIN_OWNED.includes(key)) continue;
       const c = new Character(CHARS[key]);
       c.key = key;
+      c.outfit = null;
+      c.state = 'hidden';
+      c.busy = true;
       scene.add(c.root);
+      c.root.visible = false;
       this.npcs[key] = c;
     }
-    this.player = new Character(CHARS.nick);
-    this.player.key = 'nick';
+    this.player = new Character(CHARS[PLAYER_KEY]);
+    this.player.key = PLAYER_KEY;
+    this.player.outfit = null;
     scene.add(this.player.root);
-    this.records = this.recordSpots().map(([x, y, z], i) => new Collectible(scene, 'record', i, x, y, z));
-    this.mosquitoes = this.mosquitoSpots().map(([x, y, z], i) => new Collectible(scene, 'mosquito', i, x, y, z));
+    this.buildCollectibles();
     this.bang = new Bang(scene);
     this.beacon = new Beacon(scene);
     this.arrow = new GuideArrow(scene);
@@ -117,19 +136,13 @@ class Game {
     this.missions = new MissionRunner(this);
     this.cam = new CamRig(camera);
     this.load();
+    this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
+    this.setLevel(this.levelFor(this.missions.index), { instant: true });
     this.placeNpcs(true);
-    // Start on the sidewalk in front of the Birches', looking at the house and Maurice.
-    const b = lm('birch');
-    const bfx = Math.sin(b.yaw), bfz = Math.cos(b.yaw);
-    this.player.teleport(b.x + bfx * 5 - 2, b.z + bfz * 5, b.yaw + Math.PI);
-    this.cam.yaw = b.yaw + Math.PI;
-    this.cam.pitch = 0.28;
-    setLoading('Drawing big mouths…');
+    this.spawnPlayer();
+    setLoading(S.loading[5]);
     await frame();
-    for (const key of Object.keys(HOMES)) hud.portraits[key] = renderPortrait(renderer, this.npcs[key].model);
-    hud.portraits.nick = renderPortrait(renderer, this.player.model);
-    const wiz = new Character(CHARS.shame);
-    hud.portraits.shame = renderPortrait(renderer, wiz.model);
+    this.renderPortraits();
     this.applySaveToWorld();
     hud.setCoins(this.coins);
     this.last = performance.now();
@@ -146,8 +159,9 @@ class Game {
     document.getElementById('title').classList.add('gone');
     document.body.classList.add('playing');
     audio.init();
+    audio.setTune(this.levelDef.tune);
     if (!TEST) { input.wantLock = true; input.lock(); }
-    if (this.missions.index === 0 && !TEST) setTimeout(() => hud.toast('Talk to <b>Maurice</b> on the lawn <span class="bang">!</span> — press <b>E</b>'), 1200);
+    if (this.missions.index === 0 && !TEST) setTimeout(() => hud.toast(S.firstStart), 1200);
   }
 
   pause(on) {
@@ -157,7 +171,95 @@ class Game {
     audio.engine(false, 0, 0);
     audio.skid(0);
     audio.horn(false);
+    if (on) audio.pauseLoops(); else audio.resumeLoops();
     if (!on) { input.wantLock = true; input.lock(); this.last = performance.now(); }
+  }
+
+  // ------------------------------------------------------------------------------------------
+  // Levels (DESIGN §4)
+
+  levelFor(index) { return MISSIONS[Math.min(index, MISSIONS.length - 1)].level; }
+
+  // Applies every row of the §4.3 table.
+  setLevel(name, { index = this.missions.index, instant = true } = {}) {
+    const def = LEVELS[name];
+    this.level = name;
+    this.levelDef = def;
+    this.shame.configure(METERS[def.meter]);
+    this.cam.setProfile(def.camProfile);
+    setCloudsVisible(def.clouds);
+    setShadows(def.shadows);
+    for (const c of this.cars) if (c.traffic && !def.sim.traffic) c.root.visible = false;
+    for (const p of this.peds) if (!def.sim.peds) p.char.root.visible = false;
+    audio.setTune(def.tune);
+    this.mantraMode = false;
+    this.holding = false;
+    if (name === 'flight') {
+      this.cabin.setPhase(def.phaseForIndex(index), { instant: true });
+      hud.setMapSource(this.cabin.mapSource(this.cabin.phase));
+    } else {
+      this.cabin.unseatAll();
+      audio.drone(0, 0);
+      this.setSky(def.palette || 'day');
+      hud.setMapSource(hud.townMap);
+    }
+    this.applyOutfits();
+    this.placeNpcs(true);
+  }
+
+  async transitionTo(name) {
+    hud.letterbox(true);
+    hud.flashColor('rgba(255,255,255,0.95)');
+    hud.showBanner(S.transitionMain, S.transitionSub, 'mission', 3200);
+    this.cabin.unseatAll();
+    this.cabin.stopTrolley();
+    this.cabin.trolley.place(lm('trolleyPark').x, lm('trolleyPark').z, Math.PI);
+    if (this.playerCar) this.exitCar(true);
+    this.player.state = 'normal';
+    this.setLevel(name, { index: this.missions.index });
+    const l = lm(name === 'island' ? 'airport' : this.levelDef.spawn(this, this.missions.index));
+    this.player.teleport(l.x + Math.sin(l.yaw) * 2, l.z + Math.cos(l.yaw) * 2, l.yaw + Math.PI);
+    this.cam.yaw = l.yaw + Math.PI;
+    this.cam.snapNext = true;
+    this.placeNpcs(true);
+    this.save();
+    await this.wait(1.2);
+    hud.letterbox(false);
+    if (name === 'island') hud.toast(S.transitionToast);
+  }
+
+  restoreAmbience() {
+    if (this.level === 'flight') this.cabin.applyPalette();
+    else this.setSky(this.levelDef.palette || 'day');
+    audio.setTune(this.levelDef.tune);
+    this.mantraMode = false;
+  }
+
+  setSky(name) {
+    if (!ISLAND_PALETTES[name]) return;
+    this.sky = name;
+    if (this.level === 'island') setSkyPalette(ISLAND_PALETTES[name]);
+  }
+
+  // Where to stand to face a landmark: 1.5 m along its yaw, facing back, if that is free ground at
+  // the landmark's level; otherwise the landmark itself, facing its yaw (cabin aisle spots that
+  // face into a seat row).
+  approachSpot(name) {
+    const l = typeof name === 'string' ? lm(name) : name;
+    const fx = Math.sin(l.yaw || 0), fz = Math.cos(l.yaw || 0);
+    const x = l.x + fx * 1.5, z = l.z + fz * 1.5;
+    if (this.spotFree(x, z) && this.levelDef.inBounds(x, z, this) && Math.abs(this.groundAt(x, z) - this.groundAt(l.x, l.z)) < 0.1) return { x, z, yaw: (l.yaw || 0) + Math.PI };
+    return { x: l.x, z: l.z, yaw: l.yaw || 0 };
+  }
+
+  spawnPlayer() {
+    const i = this.missions.index;
+    const name = i >= MISSIONS.length ? 'flamenco' : this.levelDef.spawn(this, i);
+    const s = this.approachSpot(name);
+    this.player.state = 'normal';
+    this.player.teleport(s.x, s.z, s.yaw);
+    this.cam.yaw = s.yaw;
+    this.cam.snapNext = true;
   }
 
   // ------------------------------------------------------------------------------------------
@@ -172,29 +274,50 @@ class Game {
     scene.remove(car.root);
   }
 
+  spawnParked(pc) {
+    const car = new Car(pc.type, { color: pc.color, name: pc.name });
+    car.place(pc.x, pc.z, pc.yaw);
+    car.home = pc;
+    if (pc.locked) car.locked = true;
+    this.addCar(car);
+    if (pc.name) this.named[pc.name] = car;
+    return car;
+  }
+
+  // A driver bust (traffic, mission cars): sits in the driver's seat.
   addBust(def, car) {
-    let obj;
     const s = car.spec;
     const seatY = s.tall ? s.wheelR * 0.95 + 0.9 : s.wheelR * 0.95 + s.bodyH;
     const z = s.tall ? s.len / 2 - 1.6 : -0.05;
-    if (def.kind === 'wizard' || def.kind === 'monster') {
-      const m = buildCharacter(def);
-      obj = m.root;
-      obj.scale.setScalar(0.72);
-      obj.position.set(s.wid * 0.22, seatY - (def.kind === 'wizard' ? 0.75 : 0.35), z);
-      obj.userData.model = m;
-    } else {
-      obj = buildBust(def);
-      obj.position.set(s.wid * 0.22, seatY, z);
-    }
+    const obj = buildBust(def);
+    obj.position.set(s.wid * 0.22, seatY, z);
     car.tilt.add(obj);
     car.driverBust = obj;
     return obj;
   }
 
+  // Decorative rider busts (riders cannot be real passengers: one passenger seat per car).
+  addRider(defKey, car, slot = 'rear') {
+    const s = car.spec;
+    const def = typeof defKey === 'string' ? (CHARS[defKey] || randomPed()) : defKey;
+    const obj = buildBust(def);
+    const top = s.wheelR * 0.95 + s.bodyH;
+    if (slot === 'bed') obj.position.set(((car.riders.length % 2) ? -1 : 1) * 0.4, top, -s.len * 0.3);
+    else if (slot.startsWith('window')) {
+      const k = +slot.slice(6) || 1;
+      obj.position.set((k % 2 ? 1 : -1) * (s.wid / 2 - 0.55), s.tall ? s.wheelR * 0.95 + 0.9 : top, s.len / 2 - 2.6 - Math.ceil(k / 2) * 1.7);
+    } else obj.position.set(((car.riders.length % 2) ? 1 : -1) * s.wid * 0.22, s.tall ? s.wheelR * 0.95 + 0.9 : top - 0.05, s.tall ? s.len / 2 - 3.2 : -0.95);
+    car.tilt.add(obj);
+    car.riders.push(obj);
+    return obj;
+  }
+  removeRiders(car) {
+    for (const o of car.riders || []) car.tilt.remove(o);
+    car.riders = [];
+  }
+
   spawnTraffic(n) {
-    const r = Math.random;
-    for (let k = 0; k < n; k++) this.spawnTrafficCar(r, null);
+    for (let k = 0; k < n; k++) this.spawnTrafficCar(Math.random, null);
   }
   spawnTrafficCar(r = Math.random, awayFrom = null) {
     for (let tries = 0; tries < 30; tries++) {
@@ -206,13 +329,14 @@ class Game {
       const x = nodeX(a) + (dx / l) * t + (-dz / l) * LANE, z = nodeZ(a) + (dz / l) * t + (dx / l) * LANE;
       if (awayFrom && dist(x, z, awayFrom.x, awayFrom.z) < 120) continue;
       if (this.cars.some((c) => dist(c.x, c.z, x, z) < 14)) continue;
-      const type = pick(['sedan', 'sedan', 'hatch', 'hatch', 'wagon', 'pickup', 'van', 'sedan', 'icecream', 'pickup', 'hatch', 'bus'], r);
-      if (type === 'bus' && this.cars.some((c) => c.type === 'bus' && c.traffic)) continue;
+      const type = pick(TRAFFIC_MIX, r);
       const car = new Car(type);
+      if (car.spec.bus && this.cars.some((c) => c.spec.bus && c.traffic)) continue;
       car.place(x, z, yawTo(dx, dz));
       car.traffic = true;
       this.addBust(randomPed(r), car);
-      car.ai = new AIDriver(car, { mode: 'traffic', cruise: type === 'bus' ? 9 : 10 + r() * 4 });
+      car.ai = new AIDriver(car, { mode: 'traffic', cruise: car.spec.bus ? 9 : 10 + r() * 4 });
+      if (this.levelDef && !this.levelDef.sim.traffic) car.root.visible = false;
       return this.addCar(car);
     }
     return null;
@@ -224,11 +348,7 @@ class Game {
     const pc = parkedCars.find((p) => p.name === name);
     if (!pc) return null;
     if (car) this.removeCar(car);
-    car = new Car(pc.type, { color: pc.color, name: pc.name });
-    car.place(pc.x, pc.z, pc.yaw);
-    this.addCar(car);
-    this.named[name] = car;
-    return car;
+    return this.spawnParked(pc);
   }
 
   spawnMissionCar(m, type, x, z, yaw, opts = {}) {
@@ -250,44 +370,32 @@ class Game {
       for (let c = 0; c < 7; c++) {
         const t = 10 + c * 3.2 + r() * 0.3;
         const [x, z] = side === 0 ? [b.x0 + t, b.z0 - off] : side === 1 ? [b.x1 - t, b.z1 + off] : side === 2 ? [b.x0 - off, b.z0 + t] : [b.x1 + off, b.z1 - t];
-        placeCoin(x, CURB + 0.75, z);
+        placeCoin(x, 0.15 + 0.75, z);
       }
     }
-    // Arcs over the construction ramps and the park jump.
-    const cs = blockCenter(6, 4);
-    for (let c = 0; c < 9; c++) placeCoin(cs.x - 12 + 6 + c * 2.2, CURB + 2.6 + Math.sin((c / 8) * Math.PI) * 3.5, cs.z);
-    const pk = blockCenter(3, 3);
-    for (let c = 0; c < 7; c++) placeCoin(pk.x + 22, CURB + 2.2 + Math.sin((c / 6) * Math.PI) * 2.5, pk.z - 20 - c * 2.2);
-    // A row up the bleachers.
-    const fc = blockCenter(5, 0);
-    for (let k = 0; k < 5; k++) placeCoin(fc.x + 22 + k * 1.1, CURB + 0.6 * (k + 1) + 0.8, fc.z - 6 + k * 3);
-    // On the construction deck and atop the gazebo deck.
-    for (let k = 0; k < 6; k++) placeCoin(cs.x + 3 + (k % 3) * 2.5, CURB + 3.2, cs.z - 2 + Math.floor(k / 3) * 4);
   }
 
-  recordSpots() {
-    const fc = blockCenter(5, 0), cs = blockCenter(6, 4), cn = blockCenter(2, 1), pk = blockCenter(3, 3), ce = blockCenter(5, 6);
-    const bg = lm('birchGarage'), jt = lm('jayTramp');
-    return [
-      [fc.x + 26.4, CURB + 3.0 + 1.1, fc.z + 2],
-      [cs.x + 6, CURB + 2.4 + 1.1, cs.z + 3],
-      [cn.x + 8, CURB + 1.2, cn.z - 30],
-      [pk.x - 15, CURB + 2.2 + 1.1, pk.z + 15],
-      [ce.x + 3, CURB + 1.2, ce.z + 29.5],
-      [bg.x, CURB + 3.2 + 1.0, bg.z],
-      [jt.x, CURB + 6.0, jt.z],
-    ];
-  }
-  mosquitoSpots() {
-    const c = (i, j, dx, dz, y = 2.2) => { const b = blockCenter(i, j); return [b.x + dx, CURB + y, b.z + dz]; };
-    return [c(3, 0, -4, -2), c(4, 3, 4, 0, 2.6), c(2, 2, 6, 14), c(5, 6, -10, 0), c(5, 0, 0, -4), c(3, 3, 2, 14), c(3, 2, 0, -28, 2.0)];
+  buildCollectibles() {
+    for (const [setName, set] of Object.entries(COLLECTIBLES)) {
+      this.collected[setName] ??= new Set();
+      this.collectibles[setName] = set.items.map((it) => {
+        const l = landmarks[it.lm];
+        if (!l) { console.warn('collectible: missing landmark', it.lm); return null; }
+        const y = l.y ?? groundAt(l.x, l.z, 0.2, 0.6) + 1.2;
+        const c = new Collectible(scene, set.kind, it.id, l.x, y, l.z, { motion: set.motion, beam: set.beam });
+        c.set = setName;
+        c.item = it;
+        return c;
+      }).filter(Boolean);
+    }
   }
 
   // ------------------------------------------------------------------------------------------
-  // Seats
+  // Car seats
 
   seat(ch, car, side) {
     if (ch.car) this.unseat(ch);
+    if (ch.seatId) this.cabin.unseatCharacter(ch);
     const s = car.spec;
     ch.state = 'seated';
     ch.car = car;
@@ -297,7 +405,7 @@ class Game {
     const z = s.tall ? s.len / 2 - 1.6 : -0.05;
     ch.root.position.set(side * s.wid * 0.22, seatY + 0.12 - ch.model.legLen, z + 0.12);
     ch.root.rotation.set(0, 0, 0);
-    if (ch.def.kind === 'monster') { ch.root.scale.setScalar(0.8); ch.root.position.y = seatY - 0.3; }
+    ch.root.visible = true;
     if (side > 0) {
       car.driver = ch;
       if (car.driverBust) { car.tilt.remove(car.driverBust); car.driverBust = null; }
@@ -319,6 +427,12 @@ class Game {
     if (x !== undefined) ch.teleport(x, z, car ? car.yaw : ch.yaw);
   }
 
+  // Off whatever they sit in: a car or a plane seat.
+  unseatAny(ch) {
+    if (ch.car) this.unseat(ch);
+    if (ch.seatId) this.cabin.unseatCharacter(ch);
+  }
+
   // A clear spot beside a car to step out onto.
   exitSpot(car, side = 1) {
     const fx = Math.sin(car.yaw), fz = Math.cos(car.yaw);
@@ -337,27 +451,32 @@ class Game {
     for (const c of this.cars) if (circleVsObb(x, z, 0.4, c.obb, {})) return false;
     return true;
   }
+  // A random free ground spot rMin..rMax from (cx, cz), inside the current level's bounds.
   freeSpot(cx, cz, rMin, rMax) {
+    const inB = this.levelDef ? this.levelDef.inBounds : () => true;
     for (let k = 0; k < 60; k++) {
       const a = Math.random() * Math.PI * 2, r = rMin + Math.random() * (rMax - rMin);
       const x = cx + Math.cos(a) * r, z = cz + Math.sin(a) * r;
-      if (Math.abs(x) > BOUND - 5 || Math.abs(z) > BOUND - 5) continue;
+      if (!inB(x, z, this)) continue;
       if (this.spotFree(x, z, 0.15) && groundAt(x, z, 1, 0.5) < 0.5) return { x, z };
     }
     return { x: cx, z: cz };
   }
   groundAt(x, z) { return groundAt(x, z, 0.2, 0.6); }
 
-  // Test/debug helper: move whatever the player is controlling.
+  // Test/debug helper: move whatever the player is controlling (stands up first if seated).
   debugWarp(x, z, yaw = 0) {
+    if (this.player.seatId) this.standPlayer();
     if (this.playerCar) this.playerCar.place(x, z, yaw);
     else this.player.teleport(x, z, yaw);
     this.cam.snapNext = true;
   }
 
   enterCar(car) {
-    if (car.locked) { hud.toast("That one's busy!"); return; }
-    if (car.dead) return;
+    if (!car || car.dead) return;
+    if (!this.levelDef.verbs.enterCars || car.noEnter) { if (this.level === 'flight') hud.toast(S.noCars); return; }
+    if (car.locked) { hud.toast(S.carBusy); return; }
+    if (this.player.seatId) this.standPlayer();
     if (car.driverBust) {
       // Carjacking: the driver tumbles out and is not happy about it.
       car.tilt.remove(car.driverBust);
@@ -398,6 +517,19 @@ class Game {
   }
 
   // ------------------------------------------------------------------------------------------
+  // Plane seats (§5.10)
+
+  sitPlayer(seatId) {
+    if (this.playerCar) return false;
+    const p = this.player;
+    if (p.state !== 'normal' && p.state !== 'seated') return false;
+    return this.cabin.seatCharacter(p, seatId);
+  }
+  standPlayer() {
+    if (this.player.seatId) this.cabin.unseatCharacter(this.player);
+  }
+
+  // ------------------------------------------------------------------------------------------
   // Queries used by AI and physics
 
   focus() {
@@ -426,10 +558,8 @@ class Game {
     const R = range + 8;
     for (const o of this.cars) {
       if (o === car || Math.abs(o.x - car.x) > R || Math.abs(o.z - car.z) > R) continue;
-      // Ignore cars pulling away from us faster than we're going.
       const ov = o.vx * fx + o.vz * fz;
       if (ov > car.forwardSpeed + 1.5) continue;
-      // Ignore oncoming traffic in its own lane (heading the other way).
       if (o.traffic && Math.cos(o.yaw - car.yaw) < -0.7) continue;
       test(o.x, o.z, Math.min(o.spec.wid, o.spec.len) / 2, o === this.playerCar);
     }
@@ -474,13 +604,151 @@ class Game {
   allChars() {
     const out = [];
     if (!this.playerCar) out.push(this.player);
-    for (const p of this.peds) out.push(p.char);
+    if (this.levelDef.sim.peds) for (const p of this.peds) out.push(p.char);
     for (const k in this.npcs) out.push(this.npcs[k]);
     return out;
   }
 
-  npc(key) { return key === 'nick' ? this.player : this.npcs[key]; }
+  npc(key) {
+    if (key === PLAYER_KEY) return this.player;
+    if (key === 'vardinna2') return this.cabin.pusher;
+    return this.npcs[key];
+  }
   charDef(key) { return CHARS[key]; }
+
+  // ------------------------------------------------------------------------------------------
+  // NPCs (§4.5)
+
+  // A landmark offset: dx = metres to its left (local +X), dz = metres forward.
+  lmOffset(name, dx = 0, dz = 0) {
+    const p = typeof name === 'string' ? lm(name) : name;
+    const fx = Math.sin(p.yaw || 0), fz = Math.cos(p.yaw || 0);
+    return { x: p.x + fz * dx + fx * dz, z: p.z - fx * dx + fz * dz, yaw: p.yaw || 0 };
+  }
+
+  placeNpc(key, lmName, dx = 0, dz = 0, yaw) {
+    const q = this.lmOffset(lmName, dx, dz);
+    if (key === PLAYER_KEY) {
+      if (this.playerCar) this.exitCar(true);
+      this.standPlayer();
+      this.player.state = 'normal';
+      this.player.teleport(q.x, q.z, yaw ?? q.yaw);
+      this.cam.snapNext = true;
+      return;
+    }
+    const n = this.npcs[key];
+    if (!n) { console.warn('placeNpc: unknown key', key); return; }
+    this.unseatAny(n);
+    n.state = 'normal';
+    n.root.visible = true;
+    n.teleport(q.x, q.z, yaw ?? q.yaw);
+    n.busy = true;
+    n.spot = null;
+  }
+  hideNpc(key) {
+    const n = this.npcs[key];
+    if (!n) return;
+    this.unseatAny(n);
+    n.state = 'hidden';
+    n.root.visible = false;
+    n.busy = true;
+  }
+  showNpc(key) {
+    const n = this.npcs[key];
+    if (!n) return;
+    if (n.state === 'hidden') n.state = 'normal';
+    n.root.visible = true;
+    n.busy = true;
+  }
+
+  // Everyone to their place in the current home set; the idle mission's giver to `at` (a giver
+  // whose home is a plane seat stays seated), its `extra` around `at`. Busy NPCs are skipped
+  // unless forced.
+  placeNpcs(force = false) {
+    if (!this.levelDef) return;
+    const set = this.levelDef.homes(this);
+    const ms = this.missions;
+    const cur = ms.state === 'idle' && ms.current && ms.current.level === this.level ? ms.current : null;
+    for (const key of Object.keys(this.npcs)) {
+      const n = this.npcs[key];
+      if (!force && (n.busy || n.car)) continue;
+      let home = set[key] ?? null;
+      if (this.level === 'island' && this.homeOverrides[key]) home = this.homeOverrides[key];
+      let needed = false;
+      if (cur) {
+        if (cur.giver === key) { needed = true; if (!(home && home.seat)) home = [cur.at, 0, 0]; }
+        const ex = cur.extra?.find((e) => e === key || (Array.isArray(e) && e[0] === key));
+        if (ex) {
+          needed = true;
+          home = Array.isArray(ex) ? [cur.at, ex[1], ex[2]] : [cur.at, Array.isArray(home) ? home[1] : 0, Array.isArray(home) ? home[2] : 0];
+        }
+      }
+      if (home === null) {
+        if (n.state !== 'hidden' || n.car || n.seatId) this.hideNpc(key);
+        n.busy = true;
+        continue;
+      }
+      if (home.seat) {
+        if (n.seatId !== home.seat) { this.unseatAny(n); n.state = 'normal'; this.cabin.seatCharacter(n, home.seat); }
+        n.busy = true;
+        continue;
+      }
+      const [where, dx, dz] = home;
+      const id = `${where}:${dx}:${dz}`;
+      if (!force) {
+        if (n.spot === id && n.state === 'normal' && dist(n.x, n.z, n.homeX, n.homeZ) < 6) continue;
+        if (n.state !== 'normal') continue;
+        // Don't pop people around in front of the player unless they're needed for a mission.
+        if (!needed && dist(n.x, n.z, this.player.x, this.player.z) < 50) continue;
+      }
+      if (!landmarks[where]) { console.warn('placeNpcs: missing landmark', where); continue; }
+      this.unseatAny(n);
+      const q = this.lmOffset(where, dx, dz);
+      n.state = 'normal';
+      n.root.visible = true;
+      n.homeX = q.x; n.homeZ = q.z;
+      n.teleport(q.x, q.z, q.yaw);
+      n.spot = id;
+      n.busy = false;
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------
+  // Outfits (§2.2, §10.4)
+
+  applyOutfits() {
+    const set = this.levelDef.outfits(this);
+    for (const key of Object.keys(this.npcs)) {
+      const want = set[key] ?? null;
+      if ((this.npcs[key].outfit ?? null) !== want) this.setNpcOutfit(key, want);
+    }
+    const p = this.level === 'flight' ? (set.stig ?? 'kostym') : this.islandOutfit;
+    if ((this.player.outfit ?? null) !== p) this.setPlayerOutfit(p, { persist: false });
+  }
+  setNpcOutfit(key, name) {
+    const n = key === 'vardinna2' ? this.cabin.pusher : this.npcs[key];
+    if (!n) return;
+    n.setDef(outfitDef(key, name));
+    n.outfit = name ?? null;
+    if (this.portraitsReady) hud.portraits[key] = renderPortrait(renderer, n.model);
+  }
+  setPlayerOutfit(name, { persist = true } = {}) {
+    const p = this.player;
+    p.setDef(outfitDef(PLAYER_KEY, name));
+    p.outfit = name ?? null;
+    if (persist && this.level === 'island') this.islandOutfit = name;
+    if (this.portraitsReady) hud.portraits[PLAYER_KEY] = renderPortrait(renderer, p.model);
+  }
+
+  renderPortraits() {
+    for (const key of CAST) {
+      let model = key === PLAYER_KEY ? this.player.model : this.npc(key)?.model;
+      let tmp = null;
+      if (!model) { tmp = buildCharacter(outfitDef(key, null)); model = tmp; }
+      hud.portraits[key] = renderPortrait(renderer, model);
+    }
+    this.portraitsReady = true;
+  }
 
   // ------------------------------------------------------------------------------------------
   // Events
@@ -490,8 +758,9 @@ class Game {
     audio.smash();
     if (p.def.coins) burstCoins(p.x, 0.4, p.z, p.def.coins, vx, vz);
     this.shame.add(p.def.shame * (this.playerCar ? 1.2 : 0.7));
-    if (p.type === 'hydrant') for (let k = 0; k < 6; k++) fx.splash(p.x, p.z);
-    if (p.type === 'pump') fx.explosion(p.x, 0.5, p.z);
+    if (p.def.splash) for (let k = 0; k < 6; k++) fx.splash(p.x, p.z);
+    if (p.def.explode === 'big') fx.explosion(p.x, 0.5, p.z);
+    else if (p.def.explode === 'small') { fx.sparks(p.x, 0.6, p.z, 10); fx.smoke(p.x, 0.6, p.z, true); }
   }
 
   onCarImpact(a, b, impact, cx, cz) {
@@ -505,7 +774,7 @@ class Game {
       this.cam.shake = Math.min(1.2, this.cam.shake + impact * 0.05);
       const other = a === pc ? b : a;
       if (other) {
-        if (other.isHearse) this.shame.onRam(other, impact);
+        if (other.isPursuer) this.shame.onRam(other, impact);
         else if (!other.isTarget && !other.locked) this.shame.add(Math.min(9, impact * 0.55));
       }
     }
@@ -523,12 +792,10 @@ class Game {
       for (const p of car.passengers.slice()) { this.unseat(p); p.fling((Math.random() - 0.5) * 6, 6, (Math.random() - 0.5) * 6); }
       this.exitCar(true);
       this.player.fling(-Math.sin(c.yaw) * 3 + (Math.random() - 0.5) * 4, 7, -Math.cos(c.yaw) * 3);
-      hud.showBanner('WRECKED!', '', 'bad', 1600);
+      hud.showBanner(S.wrecked, '', 'bad', 1600);
     } else {
       for (const p of [car.driver, ...car.passengers]) if (p) { this.unseat(p); p.fling((Math.random() - 0.5) * 6, 6, (Math.random() - 0.5) * 6); }
-      if (car.driverBust) {
-        car.tilt.remove(car.driverBust); car.driverBust = null;
-      }
+      if (car.driverBust) { car.tilt.remove(car.driverBust); car.driverBust = null; }
       if (car.traffic || (car.home && !car.name)) this.shame.add(12);
       car.ai = null;
     }
@@ -562,29 +829,105 @@ class Game {
     if (dist(car.x, car.z, f.x, f.z) < 40) { audio.tone(330, 0.25, 'square', 0.05); audio.tone(415, 0.25, 'square', 0.04); }
   }
 
+  // ------------------------------------------------------------------------------------------
+  // Money (§10.2)
+
   collectCoin(c) {
     this.coins += c.value;
     hud.setCoins(this.coins);
     hud.bumpCoins();
     audio.coin();
   }
-  addCoins(n) { this.coins += n; hud.setCoins(this.coins); hud.bumpCoins(); }
+  addCoins(n) { this.coins = Math.max(0, this.coins + n); hud.setCoins(this.coins); hud.bumpCoins(); }
+  // No soft locks: if the purse is short, Ole pays (nothing is deducted).
+  async pay(n) {
+    if (this.coins >= n) { this.addCoins(-n); return true; }
+    this.radio('ole', S.olePaysRadio);
+    hud.toast(fmt('olePays', { n }));
+    return true;
+  }
 
-  say(target, text, secs = 2) { hud.say(target, text, secs); }
+  // ------------------------------------------------------------------------------------------
+  // Talking, cues, cinematics (§9.3)
+
+  say(target, text, secs = 2) {
+    const t = typeof target === 'string' ? this.npc(target) : target;
+    if (t) hud.say(t, text, secs);
+  }
   radio(who, text) {
     hud.toast(`<img class="radio-face" src="${hud.portraits[who] || ''}"><b>${CHARS[who]?.name || who}:</b> ${text}`, 'radio');
     for (let k = 0; k < 8; k++) setTimeout(() => audio.talk(CHARS[who]?.voice || 300), k * 70);
   }
-
   setTalker(who) { this.talker = who; }
 
   async dialog(lines) {
     this.inDialog = true;
-    await hud.runDialog(lines.map(([who, text]) => ({ who, text })), this);
+    await hud.runDialog(lines.map(([who, text, cue]) => ({ who, text, cue })), this);
     this.inDialog = false;
   }
+
+  cue(c) {
+    if (!c) return;
+    const cab = this.cabin;
+    if (c.pa) audio.dingdong();
+    if (c.say) this.say(this.npc(c.say[0]), c.say[1], c.say[2] ?? 2.6);
+    if (c.radio) this.radio(c.radio[0], c.radio[1]);
+    if (c.sfx) audio[c.sfx]?.();
+    if (c.fear) { this.shame.add(c.fear, { force: true }); this.interruptMantra(); }
+    if (c.relieve) this.shame.relieve(c.relieve);
+    if (c.shake) this.cam.shake = Math.max(this.cam.shake, c.shake);
+    if (c.applause) audio.applause(c.applause);
+    if (c.phase !== undefined) { const [n, o] = Array.isArray(c.phase) ? c.phase : [c.phase, {}]; cab.setPhase(n, o || {}); }
+    if (c.seatbelt !== undefined) cab.setSeatbelt(c.seatbelt);
+    if (c.turbulence) cab.turbulence(...c.turbulence);
+    if (c.trolley !== undefined) { if (c.trolley) cab.startTrolley(); else cab.stopTrolley(); }
+    if (c.blockers !== undefined) cab.setAisleBlockers(!!c.blockers);
+    if (c.outfit) { if (c.outfit.who === PLAYER_KEY) this.setPlayerOutfit(c.outfit.name); else this.setNpcOutfit(c.outfit.who, c.outfit.name); }
+    if (c.music) {
+      if (typeof c.music === 'string') audio.setTune(c.music);
+      else { const prev = audio.tune; audio.setTune(c.music.tune); if (c.music.secs) this.wait(c.music.secs).then(() => audio.setTune(prev)); }
+    }
+    if (c.sky) this.setSky(c.sky);
+    if (c.place) for (const [k, v] of Object.entries(c.place)) this.placeNpc(k, ...v);
+    if (c.hide) for (const k of c.hide) this.hideNpc(k);
+    if (c.show) for (const k of c.show) this.showNpc(k);
+    if (c.anim) {
+      const who = Array.isArray(c.anim.who) ? c.anim.who : [c.anim.who];
+      for (const k of who) { const n = this.npc(k); if (n) n.anim[c.anim.flag] = true; }
+      this.wait(c.anim.secs ?? 2).then(() => { for (const k of who) { const n = this.npc(k); if (n) n.anim[c.anim.flag] = false; } });
+    }
+    if (c.coins) this.addCoins(c.coins);
+    if (c.pay) this.pay(c.pay);
+    if (c.flash) hud.flashColor(c.flash === 'white' ? 'rgba(255,255,255,0.85)' : c.flash);
+    if (c.banner) hud.showBanner(c.banner[0], c.banner[1] || '', c.banner[2] || '', 2600);
+    if (c.toast) hud.toast(c.toast);
+    if (c.cut !== undefined) { if (c.cut === null) this.endCut(); else this.cutTo(c.cut); }
+    if (c.unlock) this.unlock(c.unlock);
+    if (c.sparkle) { const p = this.player; fx.sparkle(p.x, p.y + 1.6, p.z, 0xffd23f, 30); }
+    if (c.endCard) this.pendingEndCard = true;
+  }
+
   cinematic(a, b) { this.cam.frame(a, b); hud.letterbox(true); this.inDialog = true; }
-  endCinematic() { this.cam.release(); hud.letterbox(false); this.inDialog = false; }
+  cinematicOne(a) { this.cam.frameOne(a); hud.letterbox(true); this.inDialog = true; }
+  endCinematic() { this._cutPrev = null; this.cam.release(); hud.letterbox(false); this.inDialog = false; }
+  // Cutaway camera without moving the player: spec = landmark name | { at, dist = 9, height = 4 }.
+  // The camera stands behind the landmark and looks the way it faces.
+  cutTo(spec) {
+    if (spec == null) { this.endCut(); return; }
+    const s = typeof spec === 'string' ? { at: spec } : spec;
+    const l = typeof s.at === 'string' ? lm(s.at) : s.at;
+    const d = s.dist ?? 9, h = s.height ?? 4;
+    const fx = Math.sin(l.yaw || 0), fz = Math.cos(l.yaw || 0);
+    const gy = this.groundAt(l.x, l.z);
+    if (this._cutPrev === undefined || this._cutPrev === null) this._cutPrev = this.cam.cine ? { pos: this.cam.cine.pos.clone(), look: this.cam.cine.look.clone() } : 'none';
+    this.cam.cutTo({ x: l.x - fx * d, y: gy + h, z: l.z - fz * d }, { x: l.x + fx * 4, y: gy + 1.4, z: l.z + fz * 4 });
+  }
+  endCut() {
+    if (!this._cutPrev) return;
+    if (this._cutPrev === 'none') this.cam.release();
+    else { this.cam.cine = this._cutPrev; this.cam.snapNext = true; }
+    this._cutPrev = null;
+  }
   onFrame(fn) { this.hooks.push(fn); }
   offFrame(fn) { this.hooks = this.hooks.filter((h) => h !== fn); }
   wait(secs) {
@@ -595,77 +938,183 @@ class Game {
     });
   }
 
-  unlock(what) {
-    this.unlocked.add(what);
-    if (what === 'muscle') {
-      this.spawnMuscle();
-      hud.toast("Unlocked: <b>Maurice's Hormone Rocket</b> — parked outside the Birches'");
+  // ------------------------------------------------------------------------------------------
+  // Meter hooks, mantra
+
+  // FLYGRÄDSLA hit 100 outside a panicFails stage: back to the seat (or the gate), -50 pta.
+  onPanicIdle() {
+    const def = this.levelDef, p = this.player;
+    const inCabin = this.cabin.inCabin(p.x, p.z);
+    const home = def.panicHome ? def.panicHome(this) : null;
+    hud.flashColor('rgba(255,255,255,0.9)');
+    if (this.playerCar) this.exitCar(true);
+    if (home?.seat) {
+      if (p.seatId !== home.seat) {
+        this.standPlayer();
+        p.state = 'normal';
+        if (!this.sitPlayer(home.seat)) { const s = this.approachSpot('cabinRow14'); p.teleport(s.x, s.z, s.yaw); }
+      }
+    } else if (home?.lm) {
+      this.standPlayer();
+      p.state = 'normal';
+      const s = this.approachSpot(home.lm);
+      p.teleport(s.x, s.z, s.yaw);
     }
+    const fee = Math.min(this.coins, this.shame.cfg.panicFee ?? 50);
+    this.coins -= fee;
+    hud.setCoins(this.coins);
+    hud.toast(inCabin ? S.panicIdle : S.panicIdleGate);
+    this.shame.v = this.shame.cfg.panicResetTo ?? 40;
+    this.bumpedT = 0.4;
+    this.cam.snapNext = true;
   }
-  spawnMuscle() {
-    if (this.named.muscle && this.cars.includes(this.named.muscle)) return;
-    const d = lm('birchDrive');
-    const car = new Car('muscle', { name: 'muscle' });
-    car.place(d.x + 7, rc(3) + LANE + 0.6, Math.PI / 2);
-    this.addCar(car);
-    this.named.muscle = car;
+
+  // A jolt or a fear cue breaks a held mantra: the wind-up restarts (0.6 s instead of 0.3 s).
+  interruptMantra() {
+    if (this.mantraHeldT > 0 || this.mantraOn) { this.mantraHeldT = 0; this.mantraOn = false; this.mantraWindUp = 0.6; }
   }
 
   // ------------------------------------------------------------------------------------------
-  // Save
+  // Unlocks, end card (§10.3, §11.7)
+
+  unlock(name) {
+    if (!UNLOCKS[name]) { this.unlocked.add(name); return; }
+    const first = !this.unlocked.has(name);
+    this.unlocked.add(name);
+    this.applyUnlock(name);
+    if (first && UNLOCKS[name].toast) hud.toast(UNLOCKS[name].toast);
+    this.save();
+  }
+  applyUnlock(name) {
+    const u = UNLOCKS[name];
+    if (!u) return;
+    if (u.car) {
+      const c = u.car;
+      if (!this.named[c.name] || !this.cars.includes(this.named[c.name])) {
+        const q = this.lmOffset(c.at, c.dx ?? 0, c.dz ?? 0);
+        const pc = { type: c.type, x: q.x, z: q.z, yaw: q.yaw, name: c.name };
+        if (!parkedCars.find((p) => p.name === c.name)) parkedCars.push(pc);
+        this.spawnParked(pc);
+      }
+    }
+    if (u.hook) worldHooks[u.hook]?.(true);
+    if (u.home) Object.assign(this.homeOverrides, u.home);
+  }
+  // Phase 0 stub: the two banners only (the Rio cinematic is wired in Phase 2).
+  async playEndCard() {
+    hud.showBanner(S.gameComplete, S.gameCompleteSub, 'good', 5000);
+    audio.jingle('complete');
+  }
+
+  // ------------------------------------------------------------------------------------------
+  // Interactables (§14.3)
+
+  // { id, x, z, y = 0.15, pos?(g) -> { x, z, y? }, r = 1.2, prompt, priority = 0, whileSeated = false,
+  //   enabled?(g), use(g) } -> remove(). The caller's object is kept (its methods may use `this`).
+  addInteractable(it) {
+    const defaults = { y: 0.15, r: 1.2, priority: 0, whileSeated: false };
+    for (const [k, v] of Object.entries(defaults)) if (it[k] === undefined) it[k] = v;
+    this.interactables.push(it);
+    return () => { const i = this.interactables.indexOf(it); if (i >= 0) this.interactables.splice(i, 1); };
+  }
+
+  bestInteractable(filter) {
+    const p = this.player;
+    let best = null, bp = -Infinity, bd = Infinity;
+    for (const it of this.interactables) {
+      if (!filter(it)) continue;
+      const q = it.pos ? it.pos(this) : it;
+      if (!q) continue;
+      if (it.enabled && !it.enabled(this)) continue;
+      const d = dist(q.x, q.z, p.x, p.z);
+      if (d > it.r || Math.abs((q.y ?? it.y ?? 0.15) - p.y) > 2.5) continue;
+      const pr = it.priority || 0;
+      if (pr > bp || (pr === bp && d < bd)) { best = it; bp = pr; bd = d; }
+    }
+    return best;
+  }
+
+  nearestInteractable() {
+    const p = this.player;
+    if (this.playerCar) return null;
+    const ms = this.missions;
+    if (p.state === 'seated' && p.seatId) {
+      const it = this.bestInteractable((i) => i.whileSeated);
+      if (it) return { type: 'it', it };
+      const st = ms.state === 'running' ? ms.stage : null;
+      if (st && (st.lockSeat || st.o?.lockSeat)) return null;
+      return { type: 'stand' };
+    }
+    if (p.state !== 'normal') return null;
+    const top = this.bestInteractable((i) => !i.whileSeated && (i.priority || 0) >= 100);
+    if (top) return { type: 'it', it: top };
+    if (ms.state === 'idle' && ms.current && ms.current.level === this.level) {
+      const g = this.npcs[ms.current.giver];
+      if (g && g.state !== 'hidden' && dist(g.x, g.z, p.x, p.z) < 3.4 && Math.abs(g.y - p.y) < 2) return { type: 'talk', who: g };
+    }
+    const it = this.bestInteractable((i) => !i.whileSeated);
+    if (it) return { type: 'it', it };
+    if (!this.levelDef.verbs.enterCars) return null;
+    let best = null, bd = 2.2;
+    for (const c of this.cars) {
+      if (c.dead || c.noEnter || Math.abs(c.x - p.x) > 8 || Math.abs(c.z - p.z) > 8) continue;
+      if (p.y > c.y + c.height - 0.3) continue;
+      const h = {};
+      if (circleVsObb(p.x, p.z, 1.9, c.obb, h)) {
+        const d = 1.9 - h.depth;
+        if (d < bd) { bd = d; best = { type: 'car', car: c }; }
+      }
+    }
+    return best;
+  }
+
+  interact() {
+    const it = this.nearestInteractable();
+    if (!it) return;
+    if (it.type === 'talk') this.missions.begin();
+    else if (it.type === 'car') this.enterCar(it.car);
+    else if (it.type === 'it') it.it.use?.(this);
+    else if (it.type === 'stand') this.standPlayer();
+  }
+
+  // ------------------------------------------------------------------------------------------
+  // Save (§10.5)
 
   save() {
     try {
-      localStorage.setItem(SAVE_KEY, JSON.stringify({ mission: this.missions.index, coins: this.coins, records: [...this.got.records], mosquitoes: [...this.got.mosquitoes], unlocked: [...this.unlocked] }));
+      localStorage.setItem(SAVE_KEY, JSON.stringify({
+        v: 1, mission: this.missions.index, coins: this.coins,
+        collected: { prylar: [...this.collected.prylar], fenor: [...this.collected.fenor] },
+        unlocked: [...this.unlocked], outfit: this.islandOutfit, tune: 'sol',
+      }));
     } catch (e) { /* private mode: progress just won't persist */ }
   }
   load() {
-    if (params.has('mission')) this.missions.index = +params.get('mission');
-    if (params.has('fresh')) return;
-    try {
-      const s = JSON.parse(localStorage.getItem(SAVE_KEY) || 'null');
-      if (!s) return;
-      this.missions.index = Math.min(MISSIONS.length, s.mission || 0);
-      this.coins = s.coins || 0;
-      this.got.records = new Set(s.records || []);
-      this.got.mosquitoes = new Set(s.mosquitoes || []);
-      this.unlocked = new Set(s.unlocked || []);
-    } catch (e) { /* corrupt save: start fresh */ }
-    if (params.has('mission')) this.missions.index = +params.get('mission');
+    if (!params.has('fresh')) {
+      try {
+        const s = JSON.parse(localStorage.getItem(SAVE_KEY) || 'null');
+        if (s && s.v === 1) {
+          this.missions.index = Math.min(MISSIONS.length, s.mission || 0);
+          this.coins = s.coins || 0;
+          this.collected.prylar = new Set(s.collected?.prylar || []);
+          this.collected.fenor = new Set(s.collected?.fenor || []);
+          this.unlocked = new Set(s.unlocked || []);
+          this.islandOutfit = s.outfit || 'kostym';
+        }
+      } catch (e) { /* corrupt save: start fresh */ }
+    }
+    if (params.has('mission')) this.missions.index = Math.max(0, Math.min(MISSIONS.length, +params.get('mission')));
+    // Booting straight into a mission past buss17 means the hawaii shirt is already on.
+    if (params.has('mission') && this.missions.index > 5) this.islandOutfit = 'hawaii';
   }
   applySaveToWorld() {
-    for (const r of this.records) if (this.got.records.has(r.id)) r.remove();
-    for (const m of this.mosquitoes) if (this.got.mosquitoes.has(m.id)) m.remove();
-    if (this.unlocked.has('muscle')) this.spawnMuscle();
+    for (const [setName, list] of Object.entries(this.collectibles)) for (const c of list) if (this.collected[setName]?.has(c.id)) c.remove();
+    for (const u of this.unlocked) this.applyUnlock(u);
+    if (this.homeOverrides && Object.keys(this.homeOverrides).length) this.placeNpcs(true);
   }
   resetSave() {
     try { localStorage.removeItem(SAVE_KEY); } catch (e) { /* ignore */ }
-    location.reload();
-  }
-
-  // ------------------------------------------------------------------------------------------
-  // NPCs stand at home, or wherever their mission is offered from.
-
-  placeNpcs(force = false) {
-    const cur = this.missions.state === 'idle' ? this.missions.current : null;
-    for (const [key, [where, ox, oz]] of Object.entries(HOMES)) {
-      const n = this.npcs[key];
-      if (n.busy || n.car) continue;
-      let spot = where, dx = ox, dz = oz;
-      if (cur && cur.giver === key) { spot = cur.at; dx = 0; dz = 0; }
-      if (cur && cur.extra?.includes(key)) { spot = cur.at; }
-      const id = `${spot}:${dx}:${dz}`;
-      if (n.spot === id && !force && n.state === 'normal' && dist(n.x, n.z, n.homeX, n.homeZ) < 6) continue;
-      if (n.state !== 'normal' && !force) continue;
-      // Don't pop people around in front of the player unless they're needed for a mission.
-      const needed = cur && (cur.giver === key || cur.extra?.includes(key));
-      if (!force && !needed && dist(n.x, n.z, this.player.x, this.player.z) < 50) continue;
-      const p = lm(spot);
-      const fx = Math.sin(p.yaw), fz = Math.cos(p.yaw);
-      n.homeX = p.x + fz * dx + fx * dz; n.homeZ = p.z - fx * dx + fz * dz;
-      n.teleport(n.homeX, n.homeZ, p.yaw);
-      n.spot = id;
-    }
+    location.href = location.pathname;
   }
 
   // ------------------------------------------------------------------------------------------
@@ -686,12 +1135,17 @@ class Game {
 
   idleTitle(dt) {
     this.time += dt;
-    const b = lm('birch');
+    const o = this.levelDef.titleOrbit;
+    const c = o.lm ? lm(o.lm) : o;
     const a = this.time * 0.08;
-    camera.position.set(b.x + Math.sin(a) * 40, 22, b.z + Math.cos(a) * 40);
-    camera.lookAt(b.x, 2, b.z);
-    followSun(b.x, b.z);
+    camera.position.set(c.x + Math.sin(a) * o.r, o.h, c.z + Math.cos(a) * o.r);
+    camera.lookAt(c.x, 2, c.z);
+    followSun(c.x, c.z);
     tickSky(this.time, camera.position);
+    if (this.level === 'flight' && this.cabin.phase === 'gate') {
+      for (let k = 0; k < 2; k++) fx.snow(c.x + (Math.random() - 0.5) * 60, 14, c.z + (Math.random() - 0.5) * 60);
+    }
+    fx.tick(dt);
     this.syncAll(dt, true);
   }
 
@@ -707,98 +1161,125 @@ class Game {
     this.missions.update(dt);
     this.missions.updateFailed(dt);
     this.shame.update(dt);
+    if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
+    this.bumpedT = Math.max(0, this.bumpedT - dt);
+    this.frozenT = Math.max(0, this.frozenT - dt);
     this.tickPickups(dt);
     const f = this.focus();
     tickProps(dt, f.x, f.z);
     fx.tick(dt);
     tickTown(this.time);
     this.updateMarkers();
+    this.cam.clampActive = this.level === 'flight' && this.cabin.inCabin(f.x, f.z);
     this.cam.update(dt, { ...f, autoTurn: false, lookBack: input.down('lookBack') }, this.inDialog ? null : input.look(), this.cars);
     if (this.aerial) { camera.position.set(f.x, 420, f.z + 260); camera.lookAt(f.x, 0, f.z); camera.fov = 50; camera.updateProjectionMatrix(); }
     followSun(f.x, f.z);
     tickSky(this.time, camera.position);
     this.updateHud();
-    this.updateAudio();
-    this.recycleTraffic(dt);
+    this.updateAudio(dt);
+    if (this.levelDef.sim.traffic) this.recycleTraffic(dt);
     this.saveT = (this.saveT || 0) + dt;
     if (this.saveT > 30) { this.saveT = 0; this.save(); }
   }
 
+  stageLocksSeat() {
+    const st = this.missions.state === 'running' ? this.missions.stage : null;
+    return !!(st && (st.lockSeat || st.o?.lockSeat));
+  }
+
   handleOneShots() {
-    if (input.pressed('mute')) { audio.setMuted(!audio.muted); hud.toast(audio.muted ? 'Sound off' : 'Sound on'); }
+    if (input.pressed('mute')) { audio.setMuted(!audio.muted); hud.toast(audio.muted ? S.soundOff : S.soundOn); }
     if (input.pressed('map')) { this.bigMap = !this.bigMap; hud.toggleBigMap(this.bigMap, this); }
-    if (input.keyPressed('KeyP') && !TEST) { this.pause(true); return; }
+    if (input.pressed('pause') && !TEST) { this.pause(true); return; }
     if (this.inDialog || this.missions.state === 'failed') return;
-    if (input.pressed('reset')) { this.resetToRoad(); return; }
     const p = this.player;
+    if (input.pressed('reset')) {
+      if (p.seatId) { if (this.stageLocksSeat()) return; this.standPlayer(); }
+      this.resetPlayer();
+      return;
+    }
     if (this.playerCar) {
       if (input.pressed('interact')) this.exitCar();
       return;
     }
-    if (p.state !== 'normal') return;
-    if (input.pressed('jump')) {
-      if (p.onGround) { p.jump(8.6); this.jumps = 1; audio.jump(); }
-      else if (this.jumps < 2) { p.vy = 8.0; this.jumps = 2; audio.jump(); this.spinT = 0.4; }
+    if (this.frozenT > 0 || this.shame.panicT > 0) return;
+    if (p.state === 'seated' && p.seatId) {
+      if (input.pressed('interact')) this.interact();
+      return;
     }
-    if (input.pressed('attack') && this.kickT <= 0) {
+    if (p.state !== 'normal') return;
+    const verbs = this.levelDef.verbs;
+    if (input.pressed('jump')) {
+      if (verbs.jump) {
+        if (p.onGround) { p.jump(8.6); this.jumps = 1; audio.jump(); }
+        else if (this.jumps < 2) { p.vy = 8.0; this.jumps = 2; audio.jump(); this.spinT = 0.4; }
+      } else if (verbs.hold && !this.spaceToastShown) { this.spaceToastShown = true; hud.toast(S.spaceFirst); }
+    }
+    if (input.pressed('attack') && verbs.kick && !this.mantraMode && this.kickT <= 0) {
       if (!p.onGround && p.y > groundAt(p.x, p.z, p.y, 0.45) + 0.8) { p.vy = -18; this.stomping = true; audio.kick(); }
       else { p.anim.kick = 1; this.kickT = 0.38; this.kickHitT = 0.11; audio.kick(); }
     }
     if (input.pressed('interact')) this.interact();
   }
 
-  // Stuck somewhere silly? R puts you (and your car) back on the nearest road.
-  resetToRoad() {
+  // R: flight -> the level's reset spot (by where the player is); island -> the nearest road.
+  resetPlayer() {
+    const def = this.levelDef;
+    if (def.resetSpot) {
+      const s = this.approachSpot(def.resetSpot(this));
+      if (this.playerCar) this.exitCar(true);
+      this.player.state = 'normal';
+      this.player.teleport(s.x, s.z, s.yaw);
+      this.cam.snapNext = true;
+      hud.toast(S.resetFlight);
+      return;
+    }
     const f = this.focus();
-    const i = Math.round((f.x + 280) / 80), j = Math.round((f.z + 280) / 80);
-    const rx = clamp(i, 0, N) * 80 - 280, rz = clamp(j, 0, N) * 80 - 280;
+    const i = Math.round((f.x + HALF) / P), j = Math.round((f.z + HALF) / P);
+    const rx = clamp(i, 0, N) * P - HALF, rz = clamp(j, 0, N) * P - HALF;
     let x, z, yaw;
     // Right-hand lanes: heading +z keeps to -x, heading +x keeps to +z.
-    if (Math.abs(f.x - rx) < Math.abs(f.z - rz)) { x = rx - LANE; z = clamp(f.z, -280, 280); yaw = 0; }
-    else { x = clamp(f.x, -280, 280); z = rz + LANE; yaw = Math.PI / 2; }
+    if (Math.abs(f.x - rx) < Math.abs(f.z - rz)) { x = rx - LANE; z = clamp(f.z, -HALF, HALF); yaw = 0; }
+    else { x = clamp(f.x, -HALF, HALF); z = rz + LANE; yaw = Math.PI / 2; }
     if (this.playerCar) { this.playerCar.place(x, z, yaw); }
     else this.player.teleport(x, z, yaw);
     this.cam.snapNext = true;
-    hud.toast('Back on the road!');
-  }
-
-  interact() {
-    const p = this.player;
-    const it = this.nearestInteractable();
-    if (!it) return;
-    if (it.type === 'talk') this.missions.begin();
-    else if (it.type === 'car') this.enterCar(it.car);
-  }
-
-  nearestInteractable() {
-    const p = this.player;
-    if (this.missions.state === 'idle' && this.missions.current) {
-      const g = this.npcs[this.missions.current.giver];
-      if (dist(g.x, g.z, p.x, p.z) < 3.4 && Math.abs(g.y - p.y) < 2) return { type: 'talk', who: g };
-    }
-    let best = null, bd = 2.2;
-    for (const c of this.cars) {
-      if (c.dead || Math.abs(c.x - p.x) > 8 || Math.abs(c.z - p.z) > 8) continue;
-      if (p.y > c.y + c.height - 0.3) continue;
-      const h = {};
-      if (circleVsObb(p.x, p.z, 1.9, c.obb, h)) {
-        const d = 1.9 - h.depth;
-        if (d < bd) { bd = d; best = { type: 'car', car: c }; }
-      }
-    }
-    return best;
+    hud.toast(S.reset);
   }
 
   fixedStep(h) {
-    const p = this.player;
+    const p = this.player, def = this.levelDef, verbs = def.verbs;
+    const frozen = this.inDialog || this.missions.state === 'failed' || this.frozenT > 0 || this.shame.panicT > 0;
+    // Mantra (J held): flight, or the island during a mantra stage. Works seated too.
+    const canMantra = (verbs.mantra || this.mantraMode) && !this.playerCar && !frozen && (p.state === 'normal' || (p.state === 'seated' && p.seatId));
+    if (canMantra && input.down('attack')) {
+      this.mantraHeldT += h * this.timeScale;
+      p.anim.wings = true;
+      if (this.mantraHeldT >= this.mantraWindUp) {
+        this.mantraOn = true;
+        if (this.shame.mode === 'panic') this.shame.relieve(25 * h * this.timeScale);
+        this.mantraSayT -= h;
+        if (this.mantraSayT <= 0) { this.mantraSayT = 2.5; this.say(p, S.mantraLine, 2.2); }
+      }
+    } else {
+      if (this.mantraHeldT > 0 || this.mantraOn) this.mantraWindUp = 0.3;
+      this.mantraHeldT = 0;
+      this.mantraOn = false;
+      this.mantraSayT = 0;
+      p.anim.wings = false;
+    }
+    // HÅLL I DIG (Space held, flight): grab a seat back, stop moving.
+    this.holding = verbs.hold && !this.playerCar && p.state === 'normal' && !frozen && input.down('jump');
+    p.anim.hold = this.holding;
+    p.anim.flail = this.shame.panicT > 0;
     // Player intent.
     if (this.playerCar) {
       const c = this.playerCar.ctrl;
-      if (this.inDialog || this.freezeCar || this.missions.state === 'failed') { c.throttle = 0; c.brake = 1; c.steer = 0; c.handbrake = true; }
+      if (frozen || this.freezeCar) { c.throttle = 0; c.brake = 1; c.steer = 0; c.handbrake = true; }
       else { c.throttle = input.throttle(); c.brake = input.brake(); c.steer = input.steer(); c.handbrake = input.down('handbrake'); }
       c.park = false;
     } else if (p.state === 'normal') {
-      if (this.inDialog || this.missions.state === 'failed') { p.wishX = p.wishZ = 0; }
+      if (frozen || this.holding || p.anim.wings) { p.wishX = p.wishZ = 0; p.anim.sprint = false; }
       else {
         const mx = input.moveX(), my = input.moveY();
         const fx = Math.sin(this.cam.yaw), fz = Math.cos(this.cam.yaw);
@@ -806,9 +1287,9 @@ class Game {
         const l = Math.hypot(wx, wz);
         if (l > 1) { wx /= l; wz /= l; }
         const sprint = input.down('sprint');
-        const sp = sprint ? 8.8 : 5.4;
+        const sp = sprint ? def.speeds.sprint : def.speeds.walk;
         p.wishX = wx * sp; p.wishZ = wz * sp;
-        p.anim.sprint = sprint;
+        p.anim.sprint = sprint && l > 0.1;
       }
       if (p.onGround && p.vy <= 0) this.jumps = 0;
     }
@@ -821,26 +1302,27 @@ class Game {
     }
     this.kickT -= h;
 
-    for (const c of this.cars) if (c.ai) c.ai.update(h, this);
-    for (const c of this.cars) c.step(h, this);
+    const simTraffic = def.sim.traffic;
+    for (const c of this.cars) if (c.ai && (simTraffic || !c.traffic)) c.ai.update(h, this);
+    for (const c of this.cars) if (simTraffic || !c.traffic) c.step(h, this);
     const cars = this.cars;
     for (let i = 0; i < cars.length; i++) for (let j = i + 1; j < cars.length; j++) collideCars(cars[i], cars[j], this);
     // People.
     if (!this.playerCar) p.step(h, this);
-    for (const ped of this.peds) { ped.update(h, this); ped.char.step(h, this); }
+    if (def.sim.peds) for (const ped of this.peds) { ped.update(h, this); ped.char.step(h, this); }
     for (const k in this.npcs) {
       const n = this.npcs[k];
-      if (n.state === 'seated') continue;
+      if (n.state === 'seated' || n.state === 'hidden') continue;
       n.wishX = n.wishZ = 0;
       n.step(h, this);
     }
     this.carsVsPeople();
   }
 
-  // Kicks and stomps: break props, bowl people over, squash mosquitoes, dent cars.
+  // Kicks and stomps: break props, bowl people over, squash shark fins, dent cars.
   areaHit(x, z, y, r, dx, dz, stomp) {
     for (const prop of propsNear(x, z, r)) breakProp(prop, dx * 8, dz * 8, this);
-    for (const ped of this.peds) {
+    if (this.levelDef.sim.peds) for (const ped of this.peds) {
       const c = ped.char;
       if (c.state !== 'normal' || Math.abs(c.y - y) > 1.6 || dist(c.x, c.z, x, z) > r + 0.4) continue;
       c.fling(dx * 7 + (c.x - x) * 2, 5, dz * 7 + (c.z - z) * 2);
@@ -851,12 +1333,15 @@ class Game {
     for (const k in this.npcs) {
       const n = this.npcs[k];
       if (n.state !== 'normal' || dist(n.x, n.z, x, z) > r + 0.6) continue;
-      this.say(n, pick(['Hey!', 'Rude!', 'Ow, Nick!', 'Why?!']), 1.4);
+      this.say(n, pick(NPC_KICKED), 1.4);
     }
-    for (const m of this.mosquitoes) {
-      if (!m.alive) continue;
-      const mp = m.mesh.position;
-      if (Math.hypot(mp.x - x, mp.z - z) < r + 1.4 && Math.abs(mp.y - (y + 1)) < 2.2) this.squash(m);
+    for (const [setName, list] of Object.entries(this.collectibles)) {
+      if (COLLECTIBLES[setName].pickup !== 'squash') continue;
+      for (const c of list) {
+        if (!c.alive) continue;
+        const mp = c.mesh.position;
+        if (Math.hypot(mp.x - x, mp.z - z) < r + 1.4 && Math.abs(mp.y - (y + 0.5)) < 2.2) this.collect(setName, c);
+      }
     }
     for (const c of this.cars) {
       if (Math.abs(c.x - x) > 6 || Math.abs(c.z - z) > 6) continue;
@@ -911,43 +1396,49 @@ class Game {
 
   syncAll(dt, title) {
     const cx = camera.position.x, cz = camera.position.z;
+    const def = this.levelDef;
     for (const c of this.cars) {
+      if (c.traffic && !def.sim.traffic) { c.root.visible = false; continue; }
       const d2 = (c.x - cx) ** 2 + (c.z - cz) ** 2;
       c.root.visible = d2 < 320 * 320;
       if (c.root.visible) c.sync(dt);
-      if (c.driverBust?.userData.model) {
-        const m = c.driverBust.userData.model;
-        m.arms[0]?.rotation.set(-1.1, 0, 0.2);
-        m.arms[1]?.rotation.set(-1.1, 0, -0.2);
+      // Car-seated characters report where they really are (framing, bubbles, distances).
+      for (const ch of [c.driver, ...c.passengers]) {
+        if (!ch || ch.car !== c) continue;
+        const w = c.seatWorld(ch.seatSide || 1);
+        ch.x = w.x; ch.y = w.y; ch.z = w.z; ch.yaw = c.yaw;
       }
     }
-    const talker = this.talker;
     for (const ped of this.peds) {
       const c = ped.char;
+      if (!def.sim.peds) { c.root.visible = false; continue; }
       const d2 = (c.x - cx) ** 2 + (c.z - cz) ** 2;
       c.root.visible = d2 < 190 * 190;
       if (c.root.visible) c.sync(dt);
     }
+    const talker = this.talker;
+    const chatter = this.level === 'flight' ? CHATTER_FLIGHT : CHATTER;
+    const ms = this.missions;
     for (const k in this.npcs) {
       const n = this.npcs[k];
+      if (n.state === 'hidden') { n.root.visible = false; continue; }
       const near = dist(n.x, n.z, this.player.x, this.player.z);
       n.anim.talk = talker === k;
-      const giver = this.missions.state === 'idle' && this.missions.current?.giver === k;
+      const giver = ms.state === 'idle' && ms.current?.giver === k && ms.current.level === this.level;
       n.anim.wave = giver && near < 9 && !this.inDialog && n.state === 'normal';
       if (n.state === 'normal' && near < 10 && !this.inDialog) n.yaw += Math.atan2(Math.sin(yawTo(this.player.x - n.x, this.player.z - n.z) - n.yaw), Math.cos(yawTo(this.player.x - n.x, this.player.z - n.z) - n.yaw)) * Math.min(1, dt * 3);
-      if (near < 9 && n.state === 'normal' && !this.inDialog && this.missions.state !== 'running') {
+      if (near < 9 && n.state === 'normal' && !this.inDialog && ms.state !== 'running' && chatter[k]) {
         n.chatT = (n.chatT ?? 2 + Math.random() * 3) - dt;
-        if (n.chatT <= 0) { n.chatT = 7 + Math.random() * 6; this.say(n, pick(CHATTER[k] || ['Hey Nick.']), 2.6); }
+        if (n.chatT <= 0) { n.chatT = 7 + Math.random() * 6; this.say(n, pick(chatter[k]), 2.6); }
       }
-      if (n.def.kind === 'ghost' && n.state === 'normal') { n.y = groundAt(n.x, n.z, n.y + 1, 2) + 0.35 + Math.sin(this.time * 2) * 0.12; n.vy = 0; }
       n.sync(dt);
     }
     if (!title) {
       const p = this.player;
-      p.anim.talk = talker === 'nick';
+      p.anim.talk = talker === PLAYER_KEY;
       if (this.spinT > 0) { this.spinT -= dt; p.anim.spin = (1 - this.spinT / 0.4) * Math.PI * 2; } else p.anim.spin = 0;
       p.sync(dt);
-      if (this.missions.state === 'idle') this.placeNpcs();
+      if (ms.state === 'idle') this.placeNpcs();
     }
   }
 
@@ -955,70 +1446,93 @@ class Game {
     const f = this.focus();
     const col = this.playerCar ? { x: f.x, y: f.y, z: f.z, r: 2.2 } : { x: f.x, y: f.y, z: f.z, r: 0.7 };
     tickCoins(dt, this.time, col, this);
-    for (const r of this.records) {
-      if (!r.alive) continue;
-      r.tick(this.time, dt);
-      const mp = r.mesh.position;
-      if (dist(mp.x, mp.z, f.x, f.z) < (this.playerCar ? 2.6 : 1.4) && Math.abs(mp.y - (f.y + 1)) < 1.8) {
-        r.remove();
-        this.got.records.add(r.id);
-        audio.jingle('record');
-        fx.sparkle(mp.x, mp.y, mp.z, 0xff5a6a, 20);
-        hud.showCollect(`<span class="rec-icon"></span> Duke's Lost Record <b>${this.got.records.size}/7</b>`);
-        if (this.got.records.size === 7) { this.radio('duke', 'All seven! You beautiful cat. That is the complete Ellington.'); this.addCoins(250); }
-        else if (this.got.records.size === 1) this.radio('duke', 'One of my records! Find the other six and I shall be ever so grateful.');
-        this.save();
+    for (const [setName, list] of Object.entries(this.collectibles)) {
+      const set = COLLECTIBLES[setName];
+      for (const c of list) {
+        if (!c.alive) continue;
+        if (Math.abs(c.x - f.x) > 200 || Math.abs(c.z - f.z) > 200) continue;
+        c.tick(this.time, dt);
+        const mp = c.mesh.position;
+        const d = dist(mp.x, mp.z, f.x, f.z);
+        if (set.pickup === 'touch') {
+          if (d < (this.playerCar ? 2.6 : 1.4) && Math.abs(mp.y - (f.y + 1)) < 1.8) this.collect(setName, c);
+        } else if (this.playerCar && d < 2.8 && mp.y < f.y + this.playerCar.height + 1.2) this.collect(setName, c);
       }
-    }
-    for (const m of this.mosquitoes) {
-      if (!m.alive) continue;
-      m.tick(this.time, dt);
-      const mp = m.mesh.position;
-      const d = dist(mp.x, mp.z, f.x, f.z);
-      if (d < 18 && Math.random() < dt * 8) audio.tone(620 + Math.random() * 60, 0.08, 'sawtooth', 0.012 * (1 - d / 18));
-      if (this.playerCar && d < 2.8 && mp.y < f.y + this.playerCar.height + 1.2) this.squash(m);
     }
   }
 
-  squash(m) {
-    if (!m.alive) return;
-    const mp = m.mesh.position;
-    m.remove();
-    this.got.mosquitoes.add(m.id);
-    audio.squash();
-    fx.sparkle(mp.x, mp.y, mp.z, 0x7aa06a, 18);
-    burstCoins(mp.x, mp.y - 0.5, mp.z, 6);
-    hud.showCollect(`<span class="mos-icon"></span> Anxiety Mosquito squashed <b>${this.got.mosquitoes.size}/7</b>`);
-    if (this.got.mosquitoes.size === 7) { hud.toast('All the Anxiety Mosquitoes are gone. You feel... calm? +250 coins'); this.addCoins(250); }
+  // A collectible picked up (or a fin squashed): +250 pta, HUD, radio, set bonus, save.
+  collect(setName, c) {
+    if (!c.alive) return;
+    const set = COLLECTIBLES[setName];
+    const mp = c.mesh.position;
+    c.remove();
+    this.collected[setName].add(c.id);
+    const n = this.collected[setName].size, total = set.items.length;
+    this.addCoins(250);
+    if (set.jingle === 'pryl') audio.jingle('pryl'); else audio[set.jingle]?.();
+    if (setName === 'fenor') fx.splash(mp.x, mp.z);
+    fx.sparkle(mp.x, mp.y, mp.z, setName === 'fenor' ? 0x9fdcff : 0xf07a1e, 20);
+    hud.showCollect(`<span class="${set.icon}"></span> ${set.label} <b>${n}/${total}</b>`);
+    if (c.item?.line) this.radio('ole', c.item.line);
+    if (n === 1 && set.first) setTimeout(() => this.radio(set.first[0], set.first[1]), 1800);
+    if (n === total) {
+      this.addCoins(set.bonus || 0);
+      if (set.complete) setTimeout(() => this.radio(set.complete[0], set.complete[1]), 2400);
+      if (set.completeUnlock) this.unlock(set.completeUnlock);
+    }
     this.save();
   }
+
+  // ------------------------------------------------------------------------------------------
+  // Map
 
   mapMarkers(all = false) {
     const out = [];
     const ms = this.missions;
-    if (ms.state === 'idle' && ms.current) {
+    if (ms.state === 'idle' && ms.current && ms.current.level === this.level) {
       const g = this.npcs[ms.current.giver];
-      out.push({ type: 'mission', x: g.x, z: g.z, edge: true });
+      if (g) out.push({ type: 'mission', x: g.x, z: g.z, edge: true });
     }
     const t = ms.target();
     if (t && !t.follow) out.push({ type: 'objective', x: t.x, z: t.z, edge: true });
     if (t && t.follow) out.push({ type: ms.stage?.car?.isTarget ? 'enemy' : 'friend', x: t.x, z: t.z, edge: true });
     out.push(...ms.markers());
-    for (const h of this.shame.hearses) if (!h.dead) out.push({ type: 'enemy', x: h.x, z: h.z, edge: true });
+    for (const h of this.shame.pursuers) if (!h.dead) out.push({ type: 'enemy', x: h.x, z: h.z, edge: true });
+    const o = this.shame.officer;
+    if (o && o.state !== 'hidden' && this.shame.pursuit) out.push({ type: 'enemy', x: o.x, z: o.z, edge: true });
     if (!all) {
       const f = this.focus();
-      for (const r of this.records) if (r.alive && dist(r.x, r.z, f.x, f.z) < 45) out.push({ type: 'record', x: r.x, z: r.z });
-      for (const m of this.mosquitoes) if (m.alive && dist(m.x, m.z, f.x, f.z) < 45) out.push({ type: 'mosquito', x: m.x, z: m.z });
+      for (const [setName, list] of Object.entries(this.collectibles)) {
+        const type = COLLECTIBLES[setName].marker;
+        for (const c of list) if (c.alive && dist(c.x, c.z, f.x, f.z) < 45) out.push({ type, x: c.x, z: c.z });
+      }
     }
     return out;
   }
-  mapLabels() { return MAP_LABELS.map(([name, key]) => [name, landmarks[key].x, landmarks[key].z]); }
+  mapLabels() {
+    const out = [];
+    for (const [name, key, opts] of this.levelDef.labels()) {
+      if (opts?.phase && this.cabin.phase !== opts.phase) continue;
+      if (opts?.unlock && !this.unlocked.has(opts.unlock)) continue;
+      const l = landmarks[key];
+      if (!l) { if (!this._labelWarned?.has(key)) { (this._labelWarned ||= new Set()).add(key); console.warn('map label: missing landmark', key); } continue; }
+      out.push([name, l.x, l.z]);
+    }
+    return out;
+  }
+  mapLegend() {
+    const base = `${S.legendClose} · <span class="lg-y">!</span> ${S.legendMission.replace(/^!\s*/, '')}`;
+    if (this.level === 'flight') return base;
+    const parts = Object.entries(COLLECTIBLES).map(([k, set]) => `<span class="lg-${set.marker}">●</span> ${set.label} <b>${this.collected[k].size}/${set.items.length}</b>`);
+    return [base, ...parts].join(' · ');
+  }
 
   updateMarkers() {
     const ms = this.missions;
     const f = this.focus();
     let target = null;
-    if (ms.state === 'idle' && ms.current) {
+    if (ms.state === 'idle' && ms.current && ms.current.level === this.level && this.npcs[ms.current.giver]) {
       const g = this.npcs[ms.current.giver];
       this.bang.show(true);
       this.bang.set(g.x, g.y + g.height + 0.9, g.z, this.time);
@@ -1033,7 +1547,7 @@ class Game {
     } else this.beacon.hide();
     this.route = null;
     if (target && !this.inDialog) {
-      const aim = routeAim(f.x, f.z, target.x, target.z);
+      const aim = this.levelDef.routeAim ? routeAim(f.x, f.z, target.x, target.z) : { x: target.x, z: target.z, nodes: [] };
       const top = this.playerCar ? f.y + this.playerCar.height + 1.8 : f.y + this.player.height + 1.5;
       this.arrow.set(f.x, top, f.z, yawTo(aim.x - f.x, aim.z - f.z), this.time);
       this.route = [...aim.nodes.map((n) => [nodeX(n), nodeZ(n)]), [target.x, target.z]];
@@ -1045,10 +1559,14 @@ class Game {
     hud.setSpeedo(this.playerCar);
     if (this.missions.state !== 'failed') {
       let prompt = '';
-      if (!this.inDialog && !this.playerCar && this.player.state === 'normal') {
+      const p = this.player;
+      if (!this.inDialog && !this.playerCar && (p.state === 'normal' || (p.state === 'seated' && p.seatId)) && !(this.shame.panicT > 0)) {
         const it = this.nearestInteractable();
-        if (it?.type === 'talk') prompt = `<b>E</b> Talk to ${it.who.def.name}`;
-        else if (it?.type === 'car') prompt = it.car.locked ? '' : it.car.driverBust ? '<b>E</b> Steal car' : '<b>E</b> Get in';
+        if (it?.type === 'talk') prompt = fmt('promptTalk', { name: it.who.def.name });
+        else if (it?.type === 'car') prompt = it.car.locked ? '' : it.car.driverBust ? S.promptSteal : S.promptGetIn;
+        else if (it?.type === 'it') prompt = it.it.prompt || '';
+        else if (it?.type === 'stand') prompt = S.promptStand;
+        if (!prompt && this.level === 'flight' && this.cabin._turb && p.state === 'normal' && !this.holding) prompt = S.promptHold;
       }
       hud.setPrompt(prompt);
     }
@@ -1060,7 +1578,7 @@ class Game {
     hud.tickBubbles();
   }
 
-  updateAudio() {
+  updateAudio(dt) {
     const c = this.playerCar;
     if (c && !c.dead) {
       audio.engine(true, c.revs, c.ctrl.throttle);
@@ -1081,7 +1599,15 @@ class Game {
       audio.skid(0);
       audio.horn(false);
     }
-    audio.duckMusic(this.shame.pursuit ? 0.5 : 1);
+    // FLYGRÄDSLA >= hot: music low-pass 4000 -> 600 Hz and a heartbeat every 0.8 s.
+    const sh = this.shame;
+    if (sh.mode === 'panic' && sh.v >= (sh.cfg.hot ?? 70)) {
+      audio.setMusicLowpass(lerp(4000, 600, clamp((sh.v - 70) / 30, 0, 1)));
+      this.heartT = (this.heartT || 0) - dt;
+      if (this.heartT <= 0) { this.heartT = 0.8; audio.heartbeat(); }
+    } else if (this.lowpassOn !== false) { audio.setMusicLowpass(null); this.heartT = 0; }
+    this.lowpassOn = sh.mode === 'panic' && sh.v >= (sh.cfg.hot ?? 70);
+    audio.duckMusic(sh.pursuit ? 0.5 : 1);
   }
 
   // Replace traffic that has been wrecked or wandered off far away.
@@ -1117,16 +1643,18 @@ const game = new Game();
 window.__game = game;
 window.__lm = lm;
 window.__props = allProps;
+window.__missions = () => MISSIONS;
 window.__stats = () => ({ calls: renderer.info.render.calls, tris: renderer.info.render.triangles, geos: renderer.info.memory.geometries, textures: renderer.info.memory.textures, cars: game.cars.length });
+setLoading(S.loading[0]);
 game.init().catch((e) => {
   console.error(e);
   const el = document.getElementById('loading');
-  if (el) el.textContent = 'Something broke: ' + e.message;
+  if (el) el.textContent = S.fatal + e.message;
 });
 
 // Title and pause screen buttons.
 document.getElementById('play').addEventListener('click', () => game.start());
 document.getElementById('resume').addEventListener('click', () => game.pause(false));
-document.getElementById('reset').addEventListener('click', () => { if (confirm('Erase your progress and start over?')) game.resetSave(); });
-document.getElementById('music').addEventListener('click', (e) => { audio.setMusic(!audio.musicOn); e.target.textContent = `Music: ${audio.musicOn ? 'on' : 'off'}`; });
-document.getElementById('sound').addEventListener('click', (e) => { audio.setMuted(!audio.muted); e.target.textContent = `Sound: ${audio.muted ? 'off' : 'on'}`; });
+document.getElementById('reset').addEventListener('click', () => { if (confirm(S.eraseConfirm)) game.resetSave(); });
+document.getElementById('music').addEventListener('click', (e) => { audio.setMusic(!audio.musicOn); e.target.textContent = audio.musicOn ? S.musicOn : S.musicOff; });
+document.getElementById('sound').addEventListener('click', (e) => { audio.setMuted(!audio.muted); e.target.textContent = audio.muted ? S.soundBtnOff : S.soundBtnOn; });

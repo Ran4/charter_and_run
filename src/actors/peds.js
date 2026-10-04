@@ -1,4 +1,4 @@
-// Pedestrians stroll the sidewalk loops around blocks, sometimes cross the street, dive out of
+// Pedestrians (charter tourists and locals) stroll the sidewalk loops around blocks, sometimes cross the street, dive out of
 // the way of speeding cars, and complain loudly when you knock them over.
 
 import { Character } from './character.js';
@@ -8,6 +8,8 @@ import { N } from '../world/layout.js';
 import { mulberry32, pick, yawTo } from '../util.js';
 
 const r = mulberry32(99);
+// Dodge shouts (DESIGN §6.7). 'Herre jävlar!' [F*] (film line, relocated); the rest [N].
+const DODGE = ['Akta!', 'Hallå där!', 'Herre jävlar!', '¡Cuidado!', 'Turister!'];
 
 export class Ped {
   constructor(scene, loop) {
@@ -65,7 +67,7 @@ export class Ped {
         c.jump(6.5);
         c.wishX = threat.dx * 6; c.wishZ = threat.dz * 6;
         c.vx = c.wishX; c.vz = c.wishZ;
-        if (r() < 0.5) game.say(c, pick(['Whoa!', 'Watch it!', 'AAAH!', 'Slow down!', 'Jeez!']), 1.2);
+        if (r() < 0.5) game.say(c, pick(DODGE), 1.2);
         return;
       }
     } else {
