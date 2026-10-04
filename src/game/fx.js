@@ -1,5 +1,6 @@
-// Cartoon particles: puffs of smoke, fire, dust, sparkles. One instanced mesh of chunky
-// icospheres with per-instance colour; each puff swells and then shrinks away.
+// Cartoon particles: puffs of smoke, fire, dust, sparkles, snow, steam, spills and cigarette
+// wisps. One instanced mesh of chunky icospheres with per-instance colour; each puff swells and
+// then shrinks away.
 
 import { THREE, MAT, toonGradient } from '../gfx.js';
 
@@ -80,9 +81,21 @@ export const fx = {
       this.spawn(x + Math.cos(a) * 0.8, y + Math.random() * 1.5, z + Math.sin(a) * 0.8, k % 2 ? color : c2, { vy: 1.5, vx: Math.cos(a) * 1.5, vz: Math.sin(a) * 1.5, s0: 0.6, s1: 1.4, life: 1.2 });
     }
   },
-  // One snowflake drifting down (call ~20/s around the camera in the gate phase).
+  // One snowflake drifting down (call ~20/s around the camera in the gate phase; the cabin spawns
+  // them outdoors only).
   snow(x, y, z) {
-    this.spawn(x, y, z, 0xffffff, { vx: (Math.random() - 0.5) * 0.6, vz: (Math.random() - 0.5) * 0.6, vy: -1.6 - Math.random(), s0: 0.12, s1: 0.1, life: 3.5, drag: 0 });
+    this.spawn(x, y, z, 0xffffff, { vx: 0.25 + (Math.random() - 0.5) * 0.6, vz: (Math.random() - 0.5) * 0.6, vy: -1.4 - Math.random() * 0.8, s0: 0.13, s1: 0.1, life: 4.5, drag: 0 });
+  },
+  // Droplets thrown off something that got knocked (the trolley's juice when it bowls you over).
+  spill(x, y, z, color = 0xf7a21b, n = 8) {
+    for (let k = 0; k < n; k++) {
+      const a = Math.random() * Math.PI * 2, sp = 0.8 + Math.random() * 1.6;
+      this.spawn(x, y, z, k % 3 ? color : 0xffffff, { vx: Math.cos(a) * sp, vz: Math.sin(a) * sp, vy: 1.5 + Math.random() * 2, s0: 0.14, s1: 0.06, life: 0.6, drag: 0.6, grav: 12 });
+    }
+  },
+  // A faint cigarette wisp rising slowly (the smokers' rows, 1980).
+  wisp(x, y, z) {
+    this.spawn(x + (Math.random() - 0.5) * 0.1, y, z + (Math.random() - 0.5) * 0.1, 0xd8d8dc, { vy: 0.35 + Math.random() * 0.2, vx: (Math.random() - 0.5) * 0.15, vz: (Math.random() - 0.5) * 0.15, s0: 0.06, s1: 0.32, life: 2.2, drag: 0.4 });
   },
   // A white steam puff (wrecked cars that do not explode).
   steam(x, y, z) {

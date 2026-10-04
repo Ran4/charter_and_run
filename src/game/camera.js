@@ -1,7 +1,8 @@
 // Third-person camera: free mouse-look on foot, a chase cam in cars that swings in behind the
 // direction of travel, pulled in when a wall gets between it and you. A level can set a profile
 // (the cabin's steep dollhouse view: no pull-in, clamped pitch, eye z clamped inside the cabin).
-//   profile = { pivotH, dist, pitchMin, pitchMax, pitch0, noPull, fov, cineSide, cineUp, clampZ? }
+//   profile = { pivotH, dist, pitchMin, pitchMax, pitch0, noPull, fov, cineSide, cineUp, clampZ?,
+//               clampPitch? (max pitch while z-clamped; beyond it the camera looks further ahead) }
 
 import { THREE } from '../gfx.js';
 import { segmentBlocked } from '../world/collision.js';
@@ -88,15 +89,22 @@ export class CamRig {
       if (hit >= 0) d = Math.max(1.6, hit * d - 0.6);
     }
     let h = Math.cos(pitch) * d;
-    // Cabin: keep the eye's z inside the cabin; steepen the pitch to keep the distance.
+    // Cabin: keep the eye's z inside the cabin; steepen the pitch to keep the distance. Past
+    // `clampPitch` the view would turn into a straight-down shot (and lookAt degenerates at 90°),
+    // so the eye stays at the clamp and the camera looks further ahead instead: the sight line
+    // keeps that angle and the player slides down the frame, with more of the cabin ahead in view.
+    let ahead = 0;
     if (pf && pf.clampZ && this.clampActive && !focus.car && Math.abs(fz) > 1e-3) {
       const ez = pz - fz * h;
       const cz = clamp(ez, pf.clampZ[0], pf.clampZ[1]);
       if (cz !== ez) {
         h = Math.max(0, (pz - cz) / fz);
         pitch = Math.acos(clamp(h / d, 0, 1));
+        const cap = pf.clampPitch ?? 1.5;
+        if (pitch > cap) { ahead = d * Math.cos(cap) - h; pitch = cap; }
       }
     }
+    lead += ahead;
     const want = new THREE.Vector3(px - fx * h, Math.max(focus.y + 0.6, py + Math.sin(pitch) * d), pz - fz * h);
     if (this.snapNext) { this.pos.copy(want); this.snapNext = false; }
     else {
@@ -141,6 +149,10 @@ export class CamRig {
     if ((this.pos.x - mx) * nx + (this.pos.z - mz) * nz < 0) { nx = -nx; nz = -nz; }
     const pf = this.profile;
     if (pf) {
+      // Dollhouse framing: from the side both are facing when they face the same way (seat-mates
+      // in a row), so the shot sees faces, not seat backs and the tops of heads.
+      const sx = Math.sin(a.yaw || 0) + Math.sin(b.yaw || 0), sz = Math.cos(a.yaw || 0) + Math.cos(b.yaw || 0);
+      if (Math.hypot(sx, sz) > 1.2 && sx * nx + sz * nz < 0) { nx = -nx; nz = -nz; }
       const d = Math.min(Math.max(4.5, l * 1.6 + 2.5), pf.cineSide);
       this.cine = { pos: new THREE.Vector3(mx + nx * d, headY + pf.cineUp, mz + nz * d), look: new THREE.Vector3(mx, headY, mz) };
       return;
