@@ -3341,3 +3341,14 @@ Last change to the frozen files before tag `phase0` (owner-none audit findings).
 - Harness: `T.startMission()` waits until the player is back in state `normal` (after
   `flung`/`down`) before pressing E; `story` without `TO` expects `MISSIONS.length` (§16.1) and fails
   with a clear error when a mission has no story script.
+
+## Changelog (Phase 2)
+
+Integration on `main` (§15.3). Entries name the step they belong to.
+- Step 1, merge: the eleven Phase 1 packages merged in the §15.3 order (E, B, C1, C2, D1, D2, A2,
+  A1, H, F, G) with `--no-ff`; no conflicts (owned files are disjoint) and no duplicate scenario
+  names. After every merge `node --check` and `start title` passed; after the last, `api levels`
+  and the full `story` (`#13 idle`) pass. Tag `phase2-merged`.
+- §6.4 parked DC-8 (coast.js): A2's real airframe no longer receives shadows when parked at Gando.
+  Under the low island sun its round fuselage self-shadowed in stripes along the belly; it still
+  casts onto the apron.

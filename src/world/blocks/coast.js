@@ -554,6 +554,10 @@ function parkedDC8(f, lx, lz, yaw) {
   const scene = f.scene;
   const g = new THREE.Group();
   buildPlaneExterior(g, { gear: true });
+  // The island sun is low and the 2048² map covers 150 m, so the round fuselage self-shadows in
+  // stripes (acne) along its belly. The airframe still casts onto the apron; it only stops
+  // receiving (toon shading by normal already darkens the underside).
+  g.traverse((o) => { if (o.isMesh) o.receiveShadow = false; });
   g.updateMatrixWorld(true);
   // Measure the airframe (any shape A2 delivers): lowest point, and a cross-section of the forward
   // cabin at z 12 by raycasting (belly bottom, half width, roof or cut-wall top).
