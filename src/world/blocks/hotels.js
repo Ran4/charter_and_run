@@ -295,9 +295,8 @@ function hotelFlamenco(f, W, ctx) {
   f.car('hatch', -20.4, 22, PI, { color: 0x2f5a8a });
   addGlow(f.scene, glow);
   nightMesh(f.scene);
-  // Landmark override (reported in the hand-off): `flamenco` faces the hotel (yaw π), so its
-  // cutaway/views camera stands on the pool deck instead of inside the slab.
-  f.mark('flamenco', -4, -8, PI);
+  // `flamenco` faces the hotel (yaw π, landmarks-island.js since Phase 2), so its cutaway/views
+  // camera stands on the pool deck instead of inside the slab.
 }
 
 function flamencoGround(f, W) {
@@ -799,9 +798,8 @@ function hotelSunTrip(f, W, ctx) {
   suntripLot(f, glow);
   addGlow(f.scene, glow);
   nightMesh(f.scene);
-  // Landmark override (reported): `suntrip` faces the office porch (yaw π), so its views/cutaway
-  // camera stands in the street instead of behind the office.
-  f.mark('suntrip', -14, 24, PI);
+  // `suntrip` faces the office porch (yaw π, landmarks-island.js since Phase 2), so its
+  // views/cutaway camera stands in the street instead of behind the office.
 }
 
 function suntripGround(f, W) {

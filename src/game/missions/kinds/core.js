@@ -543,7 +543,9 @@ export const rabbits = (o) => common(o, {
 
 // ---------------------------------------------------------------------------------------------
 // race: who · type · color? · carName? · cruise · start (lane spot / {x, z, yaw}) ·
-// checkpoints [[i, j]] · finish {x, z} · playerPassenger? · oppPassenger? · radio?
+// checkpoints [[i, j]] · finish {x, z} · playerPassenger? · oppPassenger? · radio? · oppSpec?
+// (fields merged over a copy of the opponent car's spec, e.g. a faster night bus; the shared
+// CAR_TYPES entry is never touched)
 // The player goes on the start spot, the opponent on the lane to its left: spot - r·2·LANE with
 // r = (-cos yaw, sin yaw), i.e. lateral to yaw, never along world z.
 
@@ -563,6 +565,7 @@ export const race = (o) => common(o, {
     const opp = (this.opp = g.spawnMissionCar(m, o.type, s.x - rx * 2 * LANE, s.z - rz * 2 * LANE, s.yaw, { color: o.color, name: o.carName }));
     clearSpot(g, opp, 8);
     opp.locked = true;
+    if (o.oppSpec) opp.spec = { ...opp.spec, ...o.oppSpec };
     this.npc = g.npcs[o.who] ? seatIn(g, o.who, opp, 1) : null;
     if (!this.npc) opp.bust = g.addBust(g.charDef(o.who) || g.charDef('pax'), opp);
     this.name = (this.npc?.def || g.charDef(o.who))?.name || o.who;
@@ -642,7 +645,9 @@ export const race = (o) => common(o, {
 // ---------------------------------------------------------------------------------------------
 // destroy: type · carName? · driver = 'guardia' (bust def key) · spawn? (default: a road node
 // 70–130 m away) · timer · cruise = 20 · damageScale = 1.5 · noExplode = false (wreck stops in
-// steam, two occupants step out shaking their fists) · barLabel = 'MÅL' · failText
+// steam, two occupants step out shaking their fists) · barLabel = 'MÅL' · failText ·
+// playerDamageScale? (the player's car at the stage start takes this damage scale while the stage
+// runs, restored on cleanup: a sturdy rammer)
 
 export const destroy = (o) => common(o, {
   text: o.text,
@@ -672,7 +677,10 @@ export const destroy = (o) => common(o, {
     this.t = o.timer ?? null;
     this.max = car.hp;
     this.m = m;
+    const pc = g.playerCar;
+    if (o.playerDamageScale != null && pc) { this.ramCar = pc; this.ramScale = pc.damageScale; pc.damageScale = o.playerDamageScale; }
   },
+  cleanup() { if (this.ramCar) { this.ramCar.damageScale = this.ramScale; this.ramCar = null; } },
   target() { return { x: this.car.x, z: this.car.z, r: 0, follow: true }; },
   markers() { return [{ type: 'enemy', x: this.car.x, z: this.car.z, edge: true }]; },
   obj() { return { timer: this.t, bar: this.car.hp / this.max, barLabel: o.barLabel || S.target, barColor: '#2e5e3e' }; },

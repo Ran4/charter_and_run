@@ -546,7 +546,7 @@ export function buildCabin(scene, game) {
       vb(GG, C.seat, x, 0.74, z0 + 0.1, 0.56, 0.44, 0.08, 0, -0.18);
       if (k % 4 !== 3) vb(GGF, C.chrome, x + 0.33, 0.62, z0 + 0.4, 0.04, 0.04, 0.42);
       if (rndL() < 0.3) {
-        const geo = buildBustGeo(randomPed(rndL));
+        const geo = buildBustGeo(randomPed(rndL, { flight: true }));
         geo.translate(W(x), 0.54, z0 + 0.38);
         loungeBusts.parts.push(geo);
       }
@@ -596,7 +596,7 @@ export function buildCabin(scene, game) {
 
   gateGroup.add(toonMesh(GG.build(), { outline: 0.035 }));
   gateGroup.add(toonMesh(GGF.build(), { outline: 0, cast: false }));
-  { const geo = buildBustGeo(randomPed(mulberry32(88))); geo.rotateY(Math.PI); geo.translate(W(22.0), 0.75, 28.4); loungeBusts.parts.push(geo); }   // the newsstand vendor
+  { const geo = buildBustGeo(randomPed(mulberry32(88), { flight: true })); geo.rotateY(Math.PI); geo.translate(W(22.0), 0.75, 28.4); loungeBusts.parts.push(geo); }   // the newsstand vendor
   if (!loungeBusts.empty) gateGroup.add(toonMesh(loungeBusts.build(), { outline: 0.025 }));
   scene.add(gateGroup);
 
@@ -626,7 +626,7 @@ export function buildCabin(scene, game) {
       seats[id] = seat;
       if (!reservedSeat(id, row, L) && rnd() < 0.7) {
         seat.taken = 'bust';
-        const geo = buildBustGeo(randomPed(rnd));
+        const geo = buildBustGeo(randomPed(rnd, { flight: true }));
         geo.translate(W(x), 0.55, z - 0.3);
         bustG.parts.push(geo);
       }
@@ -666,7 +666,7 @@ export function buildCabin(scene, game) {
         if (home) break;
       }
       if (!home) return;
-      const ch = new Character({ ...randomPed(r), kind: 'adult', scale: 0.96 + r() * 0.08 });
+      const ch = new Character({ ...randomPed(r, { flight: true }), kind: 'adult', scale: 0.96 + r() * 0.08 });
       ch.key = `walker${k}`;
       scene.add(ch.root);
       walkers.push({ ch, home, seat: null, mode: 'seated', t: 8 + k * 9 + r() * 10, goal: null, dodge: null, waitT: 0, sayCd: 0, rnd: r });
@@ -691,7 +691,7 @@ export function buildCabin(scene, game) {
     // parked) | 'run' | 'stop' (startTrolley/stopTrolley). A manual mode belongs to the mission run
     // that set it (`owner`) and falls back to 'auto' when that run ends (complete, fail, abort).
     _t: { mode: 'auto', owner: null, wait: 0, stopAt: null, stopRow: null, pauseT: 0, bowlCd: 0, running: false, v: 0, serveYaw: 0 },
-    _turb: null, _idleTurbT: 75, _oleBarkT: 10, _row13: false, _prevPz: null, _snowT: 0, _fired: {},
+    _turb: null, _idleTurbT: 75, _oleBarkT: 10, _row13: false, _prevPz: null, _fired: {},
     _beltWant: false,       // the sign as missions/phases set it; turbulence lights it on top (§5.7 step 4)
     _drone: DRONE.gate, _droneUp: false, _bounce: 0, _ratataCd: 0, _angerudDone: false, _juiceT: { front: 0, back: 0 },
     _toilet: { L: null, R: null, gate: null },   // who is locked in: 'stig' | walker key | null
@@ -729,7 +729,6 @@ export function buildCabin(scene, game) {
       if (name === 'gate') { this._beltWant = false; this._applyBelt(); }
       this.applyPalette();
       scenery.setPhaseVisual(name, this.phaseT);
-      scenery.scenery.rotation.x = name === 'takeoff' && instant ? -0.12 : name === 'approach' ? 0.04 : 0;
       this._setDrone(DRONE[name] || [0, 0]);
       if (name === 'takeoff' && !instant) { this._beltWant = true; this._applyBelt(); }
       if (name === 'cruise' && prev !== 'cruise') this._angerudDone = false;
@@ -773,6 +772,15 @@ export function buildCabin(scene, game) {
       const beltHold = !!(this._turb && (this._turb.warned || this._turb.beltHold));
       this._turb = { strength, secs, warn, delay, t: 0, warned: false, beltHold, joltT: 0.8, shakeT: 0, rattleT: 0, unheld: 0 };
       if (this._droneUp) { this._droneUp = false; this._setDrone(this._drone); }
+    },
+    // Ends any turbulence at once (restoreAmbience after a failed or aborted flight mission): no
+    // more shaking or jolts, the wobble and drone back to normal, the belt sign back to what the
+    // mission/phase wants (no turbulence hold).
+    stopTurbulence() {
+      this._turb = null;
+      if (this._droneUp) { this._droneUp = false; this._setDrone(this._drone); }
+      scenery.scenery.rotation.z = 0;
+      this._applyBelt();
     },
 
     // ---- seats ----
@@ -849,7 +857,7 @@ export function buildCabin(scene, game) {
         if (!blockers.length) {
           const r = mulberry32(813);
           for (let k = 0; k < BLOCKER_ROWS.length; k++) {
-            const ch = new Character({ ...randomPed(r), kind: 'adult', scale: 1 });
+            const ch = new Character({ ...randomPed(r, { flight: true }), kind: 'adult', scale: 1 });
             ch.key = `blocker${k}`;
             ch.anim.cupUp = true;
             blockers.push(ch);
@@ -961,7 +969,6 @@ export function buildCabin(scene, game) {
       const ph = this.phase;
       if (ph === 'takeoff') {
         if (at('drone', 0)) this._setDrone(DRONE.takeoff);
-        if (t1 > 8) scenery.scenery.rotation.x = -0.12 * Math.min(1, (t1 - 8) / 1.5);
       } else if (ph === 'climb') {
         for (const tt of [1.5, 4, 6.5]) if (at('bump' + tt, tt)) { g.cam.shake = Math.max(g.cam.shake, 0.3); fear(FEAR.climbBump); g.interruptMantra?.(); audio.rattle(); this._bounce = 0.05; }
       } else if (ph === 'landing') {
@@ -1019,6 +1026,7 @@ export function buildCabin(scene, game) {
       if (p.state === 'seated' && p.seatId) { fear(g.mantraOn ? FEAR.joltSeatedMantra : FEAR.joltSeated); g.interruptMantra?.(); return; }
       if (p.state !== 'normal' || g.playerCar) return;
       const side = Math.random() < 0.5 ? -1 : 1;
+      g.interruptMantra?.();    // §5.9: every jolt interrupts a held mantra, standing or seated
       if (g.holding) { fear(FEAR.joltHeld); p.vx += side * 0.4; T.unheld = 0; return; }
       T.unheld++;
       if (T.unheld >= 2) {
@@ -1082,7 +1090,7 @@ export function buildCabin(scene, game) {
         if (row === 6 && !this._angerudDone && this._seatedCast(g, 'angerud', '6C')) {
           this._angerudDone = true;
           g.say('angerud', 'Kallar ni det här \'varm middag\'?', 2.8);   // [F*](t)
-        } else if (Math.random() < 0.6) g.say(pusher, 'Juice, whisky?', 1.6);   // [F*]
+        } else g.say(pusher, 'Juice, whisky?', 1.6);   // [F*]
         return halt();
       }
       // Gentle P-control on the speed (target 1.1 m/s aft), then the kinematic step.
@@ -1361,18 +1369,6 @@ export function buildCabin(scene, game) {
         hud.toast(S.row13);
       }
       this._prevPz = p.z;
-      // Snow at the gate (outdoors only: not inside the terminal, the jet bridge or the cabin).
-      if (this.phase === 'gate' || (this.phase === 'takeoff' && this.phaseT < 6)) {
-        this._snowT -= dt;
-        let n = 0;
-        while (this._snowT <= 0 && n++ < 8) {
-          this._snowT += 0.05;
-          const c = g.cam.cam.position;
-          const x = c.x + (Math.random() - 0.5) * 34, z = c.z + (Math.random() - 0.5) * 34;
-          if (this.inside(x, z) || (x - CX > 12.5 && x - CX < 39.5 && z > -1.5 && z < 31.5)) continue;
-          fx.snow(x, c.y + 4 + Math.random() * 4, z);
-        }
-      }
       // Smokers at the back (1980): a faint wisp now and then over rows 20-24 in cruise.
       if (this.phase === 'cruise' && !this.seatbelt) {
         this._smokeT -= dt;

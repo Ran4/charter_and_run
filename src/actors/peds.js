@@ -8,10 +8,10 @@ import { N } from '../world/layout.js';
 import { mulberry32, pick, yawTo } from '../util.js';
 
 const r = mulberry32(99);
-// Dodge shouts (DESIGN §6.7): Swedish tourists shout in Swedish, the locals in Spanish (or about
+// Dodge shouts (DESIGN §6.7): Swedish tourists shout in Swedish, the locals in Spanish (one about
 // the tourists). 'Herre jävlar!' is [F*] (film line, relocated); the rest are [N].
 const DODGE_SV = ['Akta!', 'Hallå där!', 'Herre jävlar!'];
-const DODGE_ES = ['¡Cuidado!', 'Turister!'];
+const DODGE_ES = ['¡Cuidado!', '¡Turistas!'];
 
 export class Ped {
   constructor(scene, loop) {

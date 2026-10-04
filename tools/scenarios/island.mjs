@@ -195,6 +195,34 @@ export const SCENARIOS = {
     check(ok.py > 0.5 && ok.py < 0.7, 'the player stands on the yacht deck');
   },
 
+  // The wired end card (§11.7, game.playEndCard): the Rio scene, then back at the Flamenco pool.
+  async endcard(T) {
+    await T.fresh(ISLAND);
+    await T.ev(() => { window.__ec = 'run'; __game.playEndCard().then(() => { window.__ec = 'done'; }); });
+    await T.frames(40);
+    const rio = await T.ev(() => {
+      const g = __game, b = window.__lm('rioBoat');
+      return { dx: +(g.player.x - b.x).toFixed(2), py: +g.player.y.toFixed(2), stig: g.player.outfit, ole: g.npcs.ole.outfit, oleDx: +(g.npcs.ole.x - b.x).toFixed(2),
+        sky: g.sky, letterbox: document.getElementById('letterbox').classList.contains('on'), banner: document.querySelector('#banner .banner-main').textContent, inDialog: g.inDialog };
+    });
+    T.log('rio', JSON.stringify(rio));
+    await T.shot('endcard_rio');
+    check(Math.abs(rio.dx) < 2 && rio.py > 0.5 && rio.py < 0.7, 'Stig stands on the Rio yacht deck');
+    check(rio.stig === 'rio' && rio.ole === 'rio' && Math.abs(rio.oleDx) < 2, 'Stig and Ole in their rio outfits on board');
+    check(rio.sky === 'sunset' && rio.letterbox && rio.inDialog && rio.banner === 'RIO…?', 'sunset, letterbox, frozen input, the RIO…? banner');
+    await T.until(() => window.__ec === 'done', 30000);
+    await T.frames(20);
+    const back = await T.ev(() => {
+      const g = __game, l = window.__lm('flamencoPool');
+      return { d: +Math.hypot(g.player.x - l.x, g.player.z - l.z).toFixed(2), stig: g.player.outfit, ole: g.npcs.ole.outfit, sky: g.sky, inDialog: g.inDialog,
+        letterbox: document.getElementById('letterbox').classList.contains('on'), banner: document.querySelector('#banner .banner-main').textContent };
+    });
+    T.log('back', JSON.stringify(back));
+    await T.shot('endcard_back');
+    check(back.d < 2.5 && back.stig !== 'rio' && back.ole !== 'rio' && back.sky !== 'sunset', 'back at the Flamenco pool in island clothes');
+    check(!back.inDialog && !back.letterbox && back.banner === 'NUEVA ESTOCOLMO KLARAT!', 'free roam with the completion banner');
+  },
+
   // Geometry budget: triangles of the static town meshes (by kind) and of the whole scene.
   async islandstats(T) {
     await T.fresh(ISLAND);

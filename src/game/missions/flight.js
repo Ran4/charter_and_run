@@ -42,7 +42,7 @@ async function bubbles(g, m, lines) {
   for (const [who, text, secs = 2.8] of lines) {
     if (g.missions.m !== m) return;
     g.say(who, text, secs);
-    await g.wait(secs * 0.85 * (g.testMode ? 0.5 : 1));
+    await g.wait((secs + 0.1) * (g.testMode ? 0.5 : 1));   // the speaker's bubble has gone (one per speaker)
   }
 }
 
@@ -106,7 +106,7 @@ export const FLIGHT_MISSIONS = [
           ['stig', 'Det går väl inte? Kan du se till mitt handbagage ett tag, jag måste…'],          // [F]
         ],
       }),
-      // [3] the toilet dash: the heartbeat starts as he runs (startCue fear, see the balance note).
+      // [3] the toilet dash: fear keeps rising as he runs (fearRate 3, see the balance note).
       () => goto({
         to: 'herrtoa', radius: 1.8, fearRate: 3, timer: 10, text: 'Till herrtoaletten – fort!', failText: 'Du hann inte fram…',   // [N] · [N]
         radio: [['ole', 'To ganger, Stig-Helmer! Looping med en jumbo!', { gap: 3, fear: 4 }]],                                   // [F*]
@@ -193,9 +193,9 @@ export const FLIGHT_MISSIONS = [
         events: [
           [0, { phase: 'takeoff', toast: 'Håll <b>J</b>: Jag kan flyga, jag är inte rädd' }],                                                                      // [N]
           [10, { sfx: 'thud', fear: 20, shake: 0.4, say: ['stig', 'Vad är det för ljud?', 1.5] }],                                                                // [F]
-          [11.5, { say: ['ole', 'Landingshjulene som går opp. Hydraulikk, vet du.', 2.4] }],                                                                     // [F]
+          [11.5, { say: ['ole', 'Landingshjulene som går opp. Hydraulikk, vet du.', 2.4] }],                                                                     // [F](t)
           // "Ellers…" is ours: the Norwegian subtitle stops at "få fart", the Swedish one goes on to "annars…".
-          [14, { say: ['ole', 'De går opp sånn, og så lukker lemmene seg. Så flyet ikke skal stoppe, men få fart. Ellers…', 3.4] }],                            // [F*]
+          [14, { say: ['ole', 'De går opp sånn, og så lukker lemmene seg. Så flyet ikke skal stoppe, men få fart. Ellers…', 3.4] }],                            // [F*](t)
           [17.5, { say: ['stig', 'Annars…?!'], fear: 8 }],                                                                                                       // [N]
           [21, { say: ['majsan', 'Titta, solen!'], applause: 2.5, relieve: 30, seatbelt: false }],                                                                // [F](t)
         ],
@@ -207,10 +207,10 @@ export const FLIGHT_MISSIONS = [
       ['stig', 'Hammarby. Känner du till Hammarby?'],                                                      // [F]
       ['ole', 'Eneste svenske byene jeg kjenner til er Stockholm og Göteborg og Malmö.'],                  // [F]
       ['stig', 'Det här är ett fotbollslag.'],                                                             // [F]
-      ['ole', 'Min drøm er å fly med Concorde fra Paris til Rio. 2 300 km i timen. Det er flyging!'],       // [F]
-      ['ole', 'Tre ganger så fort som en geværkule.'],                                                     // [F]
-      ['stig', 'Usch…'],                                                                                   // [F]
-      ['ole', 'Og så Rio! Stranda, jentene og samba.'],                                                    // [F]
+      ['ole', 'Min drøm er å fly med Concorde fra Paris til Rio. 2 300 km i timen. Det er flyging!'],       // [F](t)
+      ['ole', 'Tre ganger så fort som en geværkule.'],                                                     // [F](t)
+      ['stig', 'Usch…'],                                                                                   // [F](t)
+      ['ole', 'Og så Rio! Stranda, jentene og samba.'],                                                    // [F](t)
       ['stig', 'Kanarieöarna är inte så dumt heller.'],                                                    // [F](t)
       ['ole', 'Det får duge.'],                                                                            // [F*](t)
     ],
@@ -282,8 +282,8 @@ export const FLIGHT_MISSIONS = [
         items: [{ x: 3000.2, z: 9.0 }, { x: 2999.8, z: 2.5 }, { x: 3000.3, z: -6.0 }, { x: 2999.7, z: -10.5 }, { x: 3000.0, z: -13.5 }],
         radius: 0.9, timer: 35, text: 'Fånga flaskorna som rullar i gången', barLabel: 'FLASKOR', failText: 'Flaskorna rullade in under sätena.',   // [N] · [N] · [N]
         startCue: { phase: ['cruise', { instant: true }], trolley: true },
-        // The film's Stork PA is at Arlanda (mission 1); this cabin call is ours.
-        timedCues: [[8, { radio: ['pa', 'Herr Storch ombedes kontakta kabinpersonalen.'], pa: true }], [20, { turbulence: [0.5, 6] }]],   // [N]
+        // The film's cabin PA [SUB-SV 00:25:43].
+        timedCues: [[8, { radio: ['pa', 'Herr Storch ombedes kontakta kabinpersonalen.'], pa: true }], [20, { turbulence: [0.5, 6] }]],   // [F]
       }),
       // [1] hand them in
       () => goto({ to: 'galleyFront', radius: 1.6, text: 'Lämna flaskorna i främre byssan' }),   // [N]

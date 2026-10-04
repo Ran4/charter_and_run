@@ -674,30 +674,16 @@ export class Car {
       w.mesh.rotation.x = this.wheelSpin;
       w.piv.rotation.y = w.front ? -this.steerAngle : 0;
     }
-    if (s.tall && !s.bus) this.fitSeats();
   }
 
-  // Vans, the ice-cream van and the Guardia jeep have a low cab under a roof: main.js seats busts
-  // and characters at the bus height (wheelR * 0.95 + 0.9), so lower them onto the cab seats here
-  // (busts once; a seated character every frame, since main.js may re-seat it) and shrink a bust
-  // that would still poke through the roof. CONTRACT CHANGE proposed: main.addBust/addRider/seat
-  // should ask car.seatY() instead.
-  seatY() { const s = this.spec; return s.wheelR * 0.95 + (s.tall && !s.bus ? 0.36 : s.tall ? 0.9 : s.bodyH); }
-  fitSeats() {
-    const s = this.spec, seat = this.seatY(), roof = s.wheelR * 0.95 + s.bodyH - 0.08;
-    const b = this.driverBust;
-    if (b && !b.userData.fit) this.fitBust(b, seat, roof);
-    for (const r of this.riders) if (!r.userData.fit && r.position.y > seat + 0.3) this.fitBust(r, seat, roof);
-    for (const ch of this.passengers) this.fitChar(ch, seat);
-    if (this.driver) this.fitChar(this.driver, seat);
-  }
-  fitChar(ch, seat) { if (ch.root.parent === this.tilt) ch.root.position.y = seat + 0.12 - ch.model.legLen; }
-  fitBust(o, seat, roof) {
-    o.userData.fit = true;
-    o.position.y = seat;
-    const h = o.userData.h || 1.25;
-    if (seat + h > roof) o.scale.setScalar(Math.max(0.72, (roof - seat) / h));
-  }
+  // Occupants (DESIGN §6.6; main.addBust/addRider/seat): seatY() is the car-local height a driver
+  // bust stands on and a seated character's hips rest 0.12 above; roofY() is the underside of the
+  // roof less a hair's margin (Infinity for buses). Ordinary cars sit people low in the body (its
+  // opaque sides hide the legs) and the vans/jeep on their cab seats, so heads clear the roof; who
+  // is still taller than the room is scaled down (fitScale, never below 0.72).
+  seatY() { const s = this.spec; return s.wheelR * 0.95 + (s.bus ? 0.9 : s.tall ? 0.36 : 0.2); }
+  roofY() { const s = this.spec; return s.bus ? Infinity : s.wheelR * 0.95 + s.bodyH + (s.tall ? 0 : s.cabinH) - 0.08; }
+  fitScale(h, base = this.seatY()) { return Math.min(1, Math.max(0.72, (this.roofY() - base) / h)); }
 }
 
 const _blocks = [];

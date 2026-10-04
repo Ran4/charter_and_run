@@ -488,6 +488,7 @@ function frameLot(f, LW, LD, r) {
     const x = -w / 2 + 0.25 + ix * (w - 0.5) / 3, z = front + 0.25 + iz * (d - 0.5) / 2;
     const tall = iz > 0 || ix % 3 === 0;
     f.box(C.concrete, x, CURB, z, 0.45, (tall ? t2 : t1) - CURB - 0.3, 0.45);
+    f.circ(x, z, 0.25, tall ? t2 : t1, 'pole');   // solid on the ground and on deck 1
     for (const o of [-0.12, 0.12]) f.box(0x7a4a32, x + o, tall ? t2 : t1, z + o, 0.05, 1.2, 0.05);
   }
   // Ramp 1 from the forecourt up to deck 1 (rising along local +z), ramp 2 along deck 1.
@@ -788,7 +789,7 @@ function outskirts(S, F) {
     const side = k % 3, t = R(-BOUND - 10, BOUND + 10, r), d = inner + r() * (BOUND - inner + 34);
     let x, z;
     if (side === 0) { x = t; z = -d; } else if (side === 1) { x = d; z = Math.min(t, 270); } else { x = -d; z = Math.min(t, 270); }
-    if (nearDc8(x, z, 60)) continue;
+    if (nearDc8(x, z, 60) || (x > 172 && x < 308 && z < -290 && z > -388)) continue;   // the DC-8 and its whole apron (D2)
     if (side === 2 && Math.abs(z + 40) < 24) continue;                 // the west road stub + sign
     if (side === 2) {
       if (r() < 0.55) palm(S, x, z, R(0.9, 1.2, r), { r });

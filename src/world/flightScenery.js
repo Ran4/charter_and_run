@@ -893,7 +893,7 @@ export function buildFlightScenery(scene) {
     } else if (ph === 'climb') {
       st.vPlane = 72;
       run = takeoffRun(12) + 72 * t;
-      alt = 31.5 + 16 * t + 2.5 * t * t;
+      alt = 32.4 + 16 * t + 2.5 * t * t;   // takeoff ends at alt(12) = 32.4: no jump
       gnd = t < 2.8;
       st.deckOn = t >= 4.3;
       st.inCloud = t > 2.2 && t < 5;
@@ -904,7 +904,9 @@ export function buildFlightScenery(scene) {
       st.gearDown = false;
       st.emitSmoke = 0.35 * (1 - smooth(1, 3, t));
     } else if (ph === 'cruise') {
-      gnd = false; st.deckOn = true; st.puffN = 8 / 44; st.puffV = 55; st.gearDown = false;
+      // Eased out of the climb (which ends at pitch 0.05 with no puffs): no horizon or puff pop.
+      gnd = false; st.deckOn = true; st.puffN = (8 / 44) * smooth(0, 2, t); st.puffV = 55; st.gearDown = false;
+      pitch = 0.05 * (1 - smooth(0, 2, t));
     } else if (ph === 'approach') {
       gnd = false;
       st.deckY = 44 * smooth(0, 3.1, t);

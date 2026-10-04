@@ -11,7 +11,7 @@ const PI = Math.PI;
 
 export const ISLAND_LANDMARKS = {
   // (3,3) Hotel Flamenco
-  flamenco: { b: [3, 3], at: [-4, -8], yaw: 0 },
+  flamenco: { b: [3, 3], at: [-4, -8], yaw: PI },     // faces the hotel: views camera on the pool deck (C1)
   flamencoRecepcion: { b: [3, 3], at: [2, -10], yaw: 0 },
   flamencoPatio: { b: [3, 3], at: [-18, -11], yaw: 0 },
   rum113: { b: [3, 3], at: [18, -11], yaw: 0 },
@@ -23,7 +23,7 @@ export const ISLAND_LANDMARKS = {
   bodega: { b: [3, 3], at: [8, -33.5], yaw: 0 },
   fena_flamenco: { b: [3, 3], at: [-3, 7], yaw: 0, y: 0.35 },
   // (3,2) Hotel SunTrip
-  suntrip: { b: [3, 2], at: [-14, 24], yaw: 0 },
+  suntrip: { b: [3, 2], at: [-14, 24], yaw: PI },     // faces the office porch (C1)
   scen: { b: [3, 2], at: [0, -14], yaw: 0 },
   friskotek: { b: [3, 2], at: [-10, 8], yaw: 0 },
   suntripPool: { b: [3, 2], at: [14, 4], yaw: PI },
@@ -41,7 +41,7 @@ export const ISLAND_LANDMARKS = {
   ferreteria: { b: [4, 2], at: [18, 18], yaw: PI },
   telefon: { b: [4, 2], at: [0, 8], yaw: PI },
   // (2,3) Plaza · Casa Lola
-  plaza: { b: [2, 3], at: [0, 0], yaw: 0 },
+  plaza: { b: [2, 3], at: [0, 6.8], yaw: PI },        // south of the fountain rim, facing it (C2)
   grillpaco: { b: [2, 3], at: [20, 22], yaw: PI },
   grillpacoMamma: { b: [2, 3], at: [25, 24], yaw: PI },
   grillpacoCurb: { world: [-60, 36], yaw: -PI / 2 },

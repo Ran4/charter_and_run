@@ -23,6 +23,8 @@ const SV = 0xf2c9a8, ES = 0xc99a6e;   // default skins: Swedish tourist, Spanish
 const A = (o) => ({ kind: 'adult', scale: 1, skin: SV, shoes: 0x2a2a2a, brows: 0x3a2a1e, nose: 'small', ...o });
 const NO_SUIT = { suit: null, tie: null, bowtie: null, coat: null, vest: null };
 
+// Invented look details beyond §2.1 (§1.6): Stig's arlanda scarf and mittens, Ole's arlanda coat,
+// Robban's sol dots, Lasse's jul shorts, Fru Storch's white dress.
 export const CHARS = {
   // "Giraffen": tall, thin, long neck, round brown glasses, a cowlick. Base look = kostym.
   stig: A({ name: 'Stig-Helmer', scale: 1.12, legK: 1.12, neckK: 1.9, armK: 1.06, wide: 0.85, skin: 0xf1c9a5, hair: 'swoop', hairC: 0x2a1e18, tuft: true, brows: 0x2a1e18,
@@ -46,10 +48,10 @@ export const CHARS = {
     } }),
   majsan: A({ name: 'Majsan', scale: 0.97, hair: 'page', hairC: 0x8a3b22, brows: 0x8a3b22, lashes: true, skin: 0xf6d3c0, dress: 0x4a7fd0, print: [0xffffff], printStyle: 'dots',
     shirt: 0x4a7fd0, pants: 0x4a7fd0, shoes: 0xf4f0e6, voice: 340, ring: '#fff8e6',
-    outfits: { flyg: { shirt: 0xd8c8a8, longSleeves: true }, sol: { hairFlower: 0xffffff } } }),
+    outfits: { flyg: { shirt: 0xd8c8a8, longSleeves: true, print: null }, sol: { hairFlower: 0xffffff } } }),   // flyg: plain cardigan (the dress dots would sit on it)
   siv: A({ name: 'Sivan', hair: 'bun', hairC: 0x7a3018, brows: 0x7a3018, lashes: true, dress: 0xd8321e, print: [0xffb0c0, 0xffffff], printStyle: 'floral',
     shirt: 0xffb0c0, pants: 0xd8321e, shoes: 0xd8321e, voice: 360, ring: '#fff8e6',
-    outfits: { flyg: { shirt: 0xc8b8a0, longSleeves: true }, sol: {} } }),
+    outfits: { flyg: { shirt: 0xc8b8a0, longSleeves: true, print: null }, sol: {} } }),
   // Gangly, half-long hair, walrus mustache, big tinted glasses, plain blue tee (no slogan), denim vest.
   berra: A({ name: 'Berra', wide: 0.9, legK: 1.06, hair: 'long', hairC: 0x5a3a22, mustache: 0x5a3a22, stache: 'walrus', brows: 0x5a3a22,
     glasses: 0x3a3a3a, glassesBig: true, lens: 0xa89a80, shirt: 0x2a4fa0, vest: 0x4a6a9a, pants: 0x3a4a6a, shoes: 0x6a4a2a, voice: 220, ring: '#fff8e6',
@@ -66,8 +68,8 @@ export const CHARS = {
   levander: A({ name: 'Dr Levander', scale: 1.06, legK: 1.08, wide: 0.85, hair: 'slick', hairC: 0x2a2a2a, glasses: 0x2a2a2a, glassesBig: true,
     shirt: 0xf4f4f0, longSleeves: true, coat: true, suit: 0x8a8a96, tie: 0x1b2f6b, pants: 0x5a5a64, voice: 290, ring: '#c8c8d8' }),
   lasse: A({ name: 'Lasse', wide: 1.08, skin: 0xc98f62, hair: 'curly', hairC: 0x1d1426, brows: 0x1d1426, sideburns: true,
-    shirt: 0xffd23f, pants: 0xffd23f, longSleeves: true, suit: 0xf07a1e, shoes: 0xf4f0e6, voice: 300, ring: '#f07a1e',
-    outfits: { sol: {}, jul: { ...NO_SUIT, shirt: 0xd8321e, longSleeves: false, pants: 0xd8321e, shorts: true, hat: 'tomte' } } }),
+    shirt: 0xffd23f, print: [0xf07a1e, 0xffffff], printStyle: 'floral', pants: 0xffd23f, longSleeves: true, suit: 0xf07a1e, shoes: 0xf4f0e6, voice: 300, ring: '#f07a1e',
+    outfits: { sol: {}, jul: { ...NO_SUIT, shirt: 0xd8321e, print: null, longSleeves: false, pants: 0xd8321e, shorts: true, hat: 'tomte' } } }),
   affe: A({ name: 'Affe', wide: 0.85, hair: 'short', hairC: 0xc9a66b, brows: 0x9a7a4a, shirt: 0xf4f0e6, print: [0xf07a1e, 0xffd23f, 0x2fb8a8], printStyle: 'floral', collar: true,
     pants: 0xffd23f, shades: 0x2a2a2a, aviator: true, held: 'accordion', voice: 280, ring: '#f07a1e' }),
   gabbe: A({ name: 'Gabbe', wide: 1.4, belly: true, hair: 'afro', hairC: 0xc0602a, beard: 0xc0602a, mustache: 0xc0602a, stache: 'big', brows: 0xc0602a,

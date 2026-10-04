@@ -796,7 +796,7 @@ function cita(f) {
   f.solid(-25.9, 13.0, 4.6, 0.7, CURB + 0.6, 'crate');
   const ce = face(f, 'E', -11, 2);
   shopGlass(ce, 0, 7, { doorAt: -2, glass: GLASS });
-  board(ce, 'CAMBIO · EXCHANGE · VÄXLING', 0, 3.95, 6.4, 0.7, { bg: '#1d1426', fg: '#f7c31b', scale: 0.62, back: false }); // [N]
+  board(ce, 'CAMBIO · VÄXLING', 0, 3.95, 6.4, 0.7, { bg: '#1d1426', fg: '#f7c31b', scale: 0.62, back: false }); // [N]
   standSign(f, 'CAMBIO\n1 KR = 17 PTA', -8.6, 12.9, 1.55, 1.9, 1.1, 0, { bg: '#1d1426', fg: '#f7c31b', scale: 0.7 }); // §10.2 flavour sign
   const sw = face(f, 'W', -29, 2);
   board(sw, 'SUNTRIP\nBUSSUTFLYKTER · FATAGA · MARKNADEN', 0, 2.3, 10, 2.8, { bg: '#f7c31b', fg: '#d8321e', scale: 0.58, back: false, z: 0.04 }); // [N]
@@ -892,9 +892,8 @@ function plaza(f) {
     f.boxC(0x9ad8f4, Math.cos(a) * 1.25, CURB + 1.25, Math.sin(a) * 1.25, 0.6, 0.06, 0.06, -a, 0, -1.0);
   }
   f.circ(0, 0, 0.45, 99, 'solid');
-  // The fountain's column stands on the table's plaza spot (0, 0): the landmark moves just outside
-  // the rim on the south side, facing the fountain (reported under CONTRACT CHANGES).
-  f.mark('plaza', 0, 6.8, PI);
+  // The fountain's column stands at (0, 0): the `plaza` landmark is just outside the rim on the
+  // south side, facing the fountain, (0, 6.8, π) in landmarks-island.js since Phase 2.
 
   // Palm ring (tinsel on every other trunk), benches, lanterns, the big Christmas tree.
   for (let k = 0; k < 8; k++) {
@@ -1163,7 +1162,7 @@ function kyrka(f) {
     palm(f, x, z, R(1.0, 1.15), { tinsel: t });
   }
   standSign(f, 'ES UNA IGLESIA\nDet är en kyrka.', -6.4, 9.6, 1.35, 3.0, 1.2, 0, { bg: '#fbf7ef', fg: '#2f5a9a', backC: 0xd8d0c0, scale: 0.6 }); // [F*] the sisters' language record, relocated
-  standSign(f, 'MISA · GUDSTJÄNST 10.00\nGOTTESDIENST · SERVICE', 6.4, 9.6, 1.35, 3.0, 1.0, 0, { bg: '#fbf7ef', fg: '#1d1426', backC: 0xd8d0c0, scale: 0.55 }); // [N]
+  standSign(f, 'MISA 10.00\nGUDSTJÄNST 11.30', 6.4, 9.6, 1.35, 3.0, 1.0, 0, { bg: '#fbf7ef', fg: '#1d1426', backC: 0xd8d0c0, scale: 0.55 }); // [N]
   f.prop('julgran', -4.4, 7.2);
   f.prop('julgran', 4.4, 7.2);
   for (const [x, z, y] of [[-14, 7.5, 0], [14, 7.5, 0], [-14, 20.5, 0], [-4.8, 27.5, 0]]) f.prop('bank', x, z, y);

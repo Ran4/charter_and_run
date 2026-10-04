@@ -37,44 +37,19 @@ export const TIMERS = {
 export const TUNING = {
   // Gabbe's night bus. The stock bus (maxSpeed 21, accel 6.5, steer 0.52; AI cars never get
   // PLAYER_BOOST) can neither race a ×1.2 car nor take a junction at speed, so the race hands the
-  // opponent this spec after the kind's init (withOppSpec; proposed as a `race` option under
-  // CONTRACT CHANGES). Measured: a clean run wins by ≈ 3 s; one crash loses it.
+  // opponent this spec (the race kind's `oppSpec`). Measured: a clean run wins by ≈ 3 s; one
+  // crash loses it.
   nattbuss: { cruise: 26, spec: { maxSpeed: 31, accel: 11, steer: 0.9 } },
   // The fleeing jeep: catchable at ×1.2 only by driving a direct line; damageScale so that about
-  // four solid rams wreck it before the borrowed grisbil (hp 130) is wrecked itself.
-  jeep: { cruise: 20, damageScale: 4 },
+  // four solid rams wreck it before the borrowed grisbil (hp 130) is wrecked itself. The grisbil is
+  // a heavy farm truck: while it rams the jeep it takes half damage (destroy's playerDamageScale;
+  // without it a clean chase ended with the truck on fire as often as not).
+  jeep: { cruise: 20, damageScale: 4, playerDamageScale: 0.5 },
   // Follows have no timer: the quarry drives briskly and the band is narrow.
   grisbilFollow: { cruise: 15, maxDist: 55 },
   joseFollow: { cruise: 13, minDist: 14, maxDist: 55 },
   bussFollow: { cruise: 14, maxDist: 55 },
 };
-
-// The borrowed grisbil is a heavy farm truck: while it rams the jeep it takes half damage (its
-// hp 130 against the jeep's 160 made a clean chase end with the truck on fire as often as not).
-function sturdyRam(stage, scale = 0.5) {
-  const init = stage.init, cleanup = stage.cleanup;
-  stage.init = function (g, m) {
-    init.call(this, g, m);
-    const pc = g.playerCar;
-    if (pc && pc.type === 'grisbil') { this.ramCar = pc; this.ramScale = pc.damageScale; pc.damageScale = scale; }
-  };
-  stage.cleanup = function (g, m) {
-    cleanup?.call(this, g, m);
-    if (this.ramCar) { this.ramCar.damageScale = this.ramScale; this.ramCar = null; }
-  };
-  return stage;
-}
-
-// Work-around for the frozen `race` kind: after its init, give the opponent car a tuned copy of its
-// spec (never mutate the shared CAR_TYPES entry). Proposed patch: a `race.oppSpec` option.
-function withOppSpec(stage, spec) {
-  const init = stage.init;
-  stage.init = function (g, m) {
-    init.call(this, g, m);
-    if (spec && this.opp) this.opp.spec = { ...this.opp.spec, ...spec };
-  };
-  return stage;
-}
 
 export const ISLAND_MISSIONS = [
   // ===== §8.6 · 5 · buss17 · "SunTrips buss nummer 17" =========================================
@@ -270,12 +245,12 @@ export const ISLAND_MISSIONS = [
       }),
       () => getInCar({ missionCar: 'grisbilFollow', any: false, passenger: 'berra', rider: 'robban', text: 'Grisbonden lånar ut grisbilen – hoppa in!', say: ['grisbonde', 'Ta bilen, señor. Ställ den vid hotellet – jag hämtar den på torsdag.'] }),   // [N] · [N]
       // Invented (§1.6): the jeep must not reach the barracks; a mission target, so no SKANDAL.
-      () => sturdyRam(destroy({
-        type: 'guardia', carName: 'guardiaJeep', driver: 'guardia', spawn: { lane: [[3, 1], [3, 2]], t: 25 }, cruise: TUNING.jeep.cruise, damageScale: TUNING.jeep.damageScale,
+      () => destroy({
+        type: 'guardia', carName: 'guardiaJeep', driver: 'guardia', spawn: { lane: [[3, 1], [3, 2]], t: 25 }, cruise: TUNING.jeep.cruise, damageScale: TUNING.jeep.damageScale, playerDamageScale: TUNING.jeep.playerDamageScale,
         noExplode: true, timer: TIMERS.bodegaJeep, lockMeter: true, barLabel: 'JEEPEN',
         text: 'Guardia Civil såg grisarna – stoppa jeepen innan den hämtar förstärkning!',   // [N]
         failText: 'Jeepen hann fram till kasernen.',                                         // [N]
-      })),
+      }),
       () => goto({ to: 'flamencoBack', radius: 10, inCar: true, passenger: 'berra', timer: TIMERS.bodegaHome, text: 'Kör hem grisarna till hotellet!', failText: 'Ni kom aldrig fram.' }),   // [N]
     ],
     // Both face away from the shop: PEPES BODEGA is right behind them and nobody notices.
@@ -403,13 +378,13 @@ export const ISLAND_MISSIONS = [
       // beside; left up x 40 past Centro Nórdico, left again along the farm road to the gate: ≈ 355 m,
       // two left turns (a 10.5 m bus cannot take the grid's tight right-turn lanes; route tuning, see
       // the WP-G report). Fail text: the kind's "Gabbe vann!".
-      () => withOppSpec(race({
-        who: 'gabbe', type: 'bus', carName: 'nattbuss', cruise: TUNING.nattbuss.cruise, playerPassenger: 'ole',
+      () => race({
+        who: 'gabbe', type: 'bus', carName: 'nattbuss', cruise: TUNING.nattbuss.cruise, oppSpec: TUNING.nattbuss.spec, playerPassenger: 'ole',
         start: { lane: [[3, 3], [4, 3]], t: 6 }, checkpoints: [[4, 3], [4, 2], [4, 1], [3, 1]], finish: { x: -80, z: -200 },
         text: 'Bussen till grisfesten går nu – kom först!',                                   // [N]
         radio: [['gabbe', 'Grisfestbussen går nu – sista man bjuder på sangrian!']],            // [N] (§1.5: the song keeps its one line in mission 7)
         checkpoint: true,
-      }), TUNING.nattbuss.spec),
+      }),
       () => smash({ type: 'tallrikar', area: { lm: 'dansgolv', r: 22 }, count: 10, timer: TIMERS.grisfestPlates, lockMeter: true, onFoot: true, text: 'Porslinskross! Krossa tallrikarna medan bandet spelar', barLabel: 'TALLRIKAR', failText: 'Bandet slutade spela.', radio: [['pax', 'Vad skickliga de är!']], checkpoint: true, retryAt: 'dansgolv' }),   // [N] · radio [F](t)
       // Ole's `gris` shirt goes on the stage's startCue, so a checkpoint retry re-applies it (§10.4).
       () => scene({

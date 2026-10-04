@@ -4,7 +4,7 @@
 // prylar and hajfenor as collectibles, the grisbil unlock.
 
 export const HOMES_ISLAND = {
-  ole: ['flamenco', 2.0, 1.0],
+  ole: ['flamenco', 2.0, 1.0, 0],     // yaw 0: under the pergola, facing the pool (flamenco faces π)
   majsan: ['flamencoPool', -2.0, 0],
   siv: ['flamencoPool', 2.0, 0],
   jose: ['cita', 0, 0],

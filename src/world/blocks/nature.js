@@ -214,7 +214,7 @@ function waterDisc(f, lx, lz, r, shore = 0xd8c08a) {
   const x = f.wx(lx, lz), z = f.wz(lx, lz);
   if (shore) f.F.cyl(shore, x, CURB + 0.012, z, r + 1.0, 0.02, 28);
   f.F.cyl(SEA, x, CURB + 0.03, z, r, 0.03, 28);
-  f.F.cyl(0x2f9ad0, x, CURB + 0.036, z, r * 0.72, 0.02, 24);
+  f.F.cyl(0x2f9ad0, x, CURB + 0.04, z, r * 0.72, 0.02, 24);   // top 5 mm over the SEA disc (no z-fight)
   circle(x, z, r, CURB, 'water');
 }
 
@@ -585,7 +585,7 @@ function grisgard(f, W, ctx) {
   for (let k = 0; k < 5; k++) f.cyl(0xa8202a, 26, CURB + 1.35, -2.6 + k * 1.8, 0.14, 0.4, 8);
   for (const z of [-4.5, -3.3, 5.6]) f.prop('tunna', 28.9, z);
   f.box(WOOD_D, 28.6, CURB, 1, 0.2, 3.2, 0.2);
-  f.sign('SANGRÍA · VINO', 28.0, CURB + 2.7, 1, 4.6, 0.8, -PI / 2, { bg: '#fff8e6', fg: '#a8202a', border: '#1d1426', scale: 0.62, double: true });
+  f.sign('SANGRÍA · VINO', 28.0, CURB + 2.7, 1, 4.6, 0.8, -PI / 2, { bg: '#fff8e6', fg: '#a8202a', border: '#1d1426', scale: 0.62, double: true });   // [N]
   lights(f, L, 26, CURB + 3.2, -4.5, 26, CURB + 3.2, 6.5, 8, 0.3);
   for (const z of [-4.5, 6.5]) f.box(WOOD_D, 26, CURB, z, 0.14, 3.1, 0.14);
   // Café tables round the courtyard (stools are low enough to walk through), a donkey cart, hay.
@@ -715,8 +715,8 @@ function fataga(f, W, ctx) {
   for (const [x, z] of [[-9.6, -13], [9.6, -23], [30, -30], [-30, -30.5], [-30, -13]]) tunera(f, x, z, 1, rnd);
   for (const [x, z] of [[-4.6, 17.5], [4.2, 27.4], [16.4, -2.6], [-8.9, -4.2], [17.4, -17.6]]) boug(f, x, z, 0.8);
   agave(f, 11, -9); agave(f, -10.4, 13);
-  // Ochre crags behind the village (north edge).
-  for (let k = 0; k < 6; k++) rock(f, -28 + k * 11 + rnd() * 3, -31 + rnd(), 5 + rnd() * 3, 3 + rnd() * 2.5, 3.5, k % 2 ? ROJO2 : OCHRE, rnd() * 3);
+  // Ochre crags behind the village (north edge), clear of the sidewalk ped loop at -32.6.
+  for (let k = 0; k < 6; k++) rock(f, -28 + k * 11 + rnd() * 3, -29.5 + rnd(), 5 + rnd() * 3, 3 + rnd() * 2.5, 2.4, k % 2 ? ROJO2 : OCHRE, rnd() * 3);
   // Village sign at the entry, a bench, wall lanterns.
   postSign(f, 'FATAGA', 5.2, 29.4, 3.2, 0.8, 1.4, 0, { bg: '#f4efe6', fg: '#1d1426' });
   f.prop('bank', -3.6, 3.4, PI / 2);
@@ -745,7 +745,7 @@ function golf(f, W, ctx) {
   const fy = Math.atan2(-30, -33);
   for (let k = 0; k < 9; k++) {
     const t = (k + 0.5) / 9;
-    f.flat(k % 2 ? 0x92d264 : 0x7cbf52, 16 - 30 * t, 14 - 33 * t, 9, 4.9, CURB + 0.024, fy);
+    f.flat(k % 2 ? 0x92d264 : 0x7cbf52, 16 - 30 * t, 14 - 33 * t, 9, 4.9, CURB + 0.035, fy);   // over the fairway discs (top CURB+0.03)
   }
   // Green with flag 18.
   f.F.cyl(0xa8e07a, f.wx(-17, -21), CURB + 0.03, f.wz(-17, -21), 5.5, 0.02, 24);
@@ -826,7 +826,7 @@ function bungalowTomt(f, W, ctx) {
   for (let k = 0; k < 8; k++) f.boxC(k % 2 ? 0xf4f4f0 : BUTANO, -2.6 + k * 0.85, CURB + 2.7, -8.3, 0.85, 0.08, 1.6, 0, -0.3);
   // The pool (fena_bungalow circles in it): x [1.5, 10.5], z [-6.5, -1.5]. Depth marks on the coping.
   waterBox(f, 6, -4, 9, 5, POOL_EDGE, 0.7);
-  for (const [t, x] of [['3 M', 1.15], ['1 M', 10.85]]) {
+  for (const [t, x] of [['3 M', 1.15], ['1 M', 10.85]]) {   // [N] (depth marks; a nod to the Flamenco pool sign [F*])
     const m = f.sign(t, x, CURB + 0.03, -4, 0.6, 0.35, 0, { bg: '#f2eee4', fg: '#2f6aa8', border: null, scale: 0.8 });
     m.rotation.set(-PI / 2, 0, x < 5 ? -PI / 2 : PI / 2);
   }
@@ -856,9 +856,10 @@ function bungalowTomt(f, W, ctx) {
     for (const [x, z] of [[x0, z0], [x1, z0], [x0, z1], [x1, z1]]) stake(x, z);
     tape(x0, z0, x1, z0); tape(x0, z1, x1, z1); tape(x0, z0, x0, z1); tape(x1, z0, x1, z1);
   }
-  postSign(f, 'SOLAR · SE VENDE', -24, 11, 3.6, 0.8, 1.2, 0, { bg: '#fff8e6', fg: '#d8321e' });
+  postSign(f, 'SOLAR · SE VENDE', -24, 11, 3.6, 0.8, 1.2, 0, { bg: '#fff8e6', fg: '#d8321e' });   // [N]
   // Red rocks (Rocas Rojas) and desert plants.
-  for (const [x, z, s] of [[-26, -30, 4], [-14, -29.5, 3], [6, -30, 5], [26, -29, 3.6], [-29.5, 22, 3], [29, 26, 3.2], [-20, 28, 2.4]]) rock(f, x, z, s, s * 0.7, s * 0.8, rnd() < 0.5 ? ROJO : 0x8f4a2a, rnd() * 3);
+  // (The north row stays clear of the sidewalk ped loop at -32.6.)
+  for (const [x, z, s] of [[-26, -29, 4], [-14, -29, 3], [6, -29, 5], [26, -29, 3.6], [-29.5, 22, 3], [29, 26, 3.2], [-20, 28, 2.4]]) rock(f, x, z, s, s * 0.7, Math.min(s * 0.8, z < 0 ? 2.6 : 9), rnd() < 0.5 ? ROJO : 0x8f4a2a, rnd() * 3);
   for (const [x, z] of [[-24, 20], [26, 14], [-10, 24], [12, 26]]) cardon(f, x, z, 0.9);
   for (const [x, z] of [[-17, 18], [24, -14], [-26, -18], [10, 16]]) agave(f, x, z);
 }
@@ -955,7 +956,7 @@ function bygge(f, W, ctx) {
   f.box(0xf4f4f0, -22, CURB, 21, 6, 2.6, 2.6); f.box(0x2f6aa8, -22, CURB + 2.6, 21, 6.2, 0.12, 2.8);
   f.box(0x2f6aa8, -20, CURB, 22.34, 0.9, 2.0, 0.06);
   f.solid(-22, 21, 6, 2.6, 99, 'building');
-  f.sign('OBRA', -23.6, CURB + 1.6, 22.36, 1.6, 0.6, 0, { ...SIGN, bg: '#f7c31b' });
+  f.sign('OBRA', -23.6, CURB + 1.6, 22.36, 1.6, 0.6, 0, { ...SIGN, bg: '#f7c31b' });   // [N]
   f.cyl(BUTANO, -4, CURB + 1.3, 9, 0.75, 1.4, 10, 0.5); f.box(STEEL, -4, CURB, 9, 1.2, 0.7, 1.6);
   f.circ(-4, 9, 1.0, CURB + 2.0, 'mixer');
   f.cone(0xd8b878, 12, CURB + 0.9, 11, 3.2, 1.8, 12); f.circ(12, 11, 2.4, CURB + 1.4, 'sand');
@@ -1074,8 +1075,8 @@ function dyner(f, W, ctx) {
     const LAG = [[-14, 13, 6.5], [-8.5, 17.5, 4.6], [-20, 18.5, 5.2], [-21, 10, 3.6], [-9, 8.5, 3.8], [-14.5, 22, 3.6], [-5.5, 21.5, 2.6]];
     for (const [x, z, r] of LAG) f.F.cyl(0xd8c08a, f.wx(x, z), CURB + 0.012, f.wz(x, z), r + 1.1, 0.02, 28);
     for (const [x, z, r] of LAG) f.F.cyl(SEA, f.wx(x, z), CURB + 0.03, f.wz(x, z), r, 0.03, 28);
-    f.F.cyl(0x2f9ad0, f.wx(-14, 14), CURB + 0.036, f.wz(-14, 14), 5.4, 0.02, 24);
-    f.F.cyl(0x2f9ad0, f.wx(-19, 17), CURB + 0.037, f.wz(-19, 17), 3.8, 0.02, 24);
+    f.F.cyl(0x2f9ad0, f.wx(-14, 14), CURB + 0.04, f.wz(-14, 14), 5.4, 0.02, 24);
+    f.F.cyl(0x2f9ad0, f.wx(-19, 17), CURB + 0.042, f.wz(-19, 17), 3.8, 0.02, 24);
     for (const [x, z, r] of LAG) circle(f.wx(x, z), f.wz(x, z), r, CURB, 'water');
     for (const [x, z] of [[-24.5, 7.5], [-19, 5], [-12, 5.2], [-26, 15], [-25, 21], [-3.8, 18], [-4, 13.5], [-11, 26]]) reeds(f, x, z, rnd, 8);
     for (const [x, z] of [[-29, 14], [-28, 25], [5, 23], [4, 12], [-17.5, 27]]) rock(f, x, z, 1.6, 1.0, 1.3, 0x8a7a6a, x, false);

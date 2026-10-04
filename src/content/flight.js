@@ -70,7 +70,6 @@ export const CHATTER_FLIGHT = {
   ],
   robban: [
     'Fan, vad jag är törstig.',                               // [F*]
-    'Pepes Bodega. Glöm aldrig det, du.',                    // [F*]
   ],
   siv: [
     'Bara de inte är ingenjörer.',                            // [F*](t)

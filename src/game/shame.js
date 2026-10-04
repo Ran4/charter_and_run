@@ -87,7 +87,8 @@ export class Shame {
       const n = g.npcs?.[w.who];
       const f = g.focus();
       if (n && n.state !== 'hidden' && dist(n.x, n.z, f.x, f.z) < w.r) {
-        if (this.witnessT <= 0) {
+        // The lens-cap toast and the filming are free-roam colour: never over a scene or cutaway.
+        if (this.witnessT <= 0 && !this.inScene) {
           this.witnessT = w.cooldown ?? 60;
           hud.toast(w.text, 'witness');
           if (w.say) g.say(n, w.say, 2.4);
@@ -212,8 +213,9 @@ export class Shame {
     o.sync(0);
     g.say(o, c.bustLine || '¡Documentación!', 2.2);
     this.officerLinger = c.bustFreeze ?? 3;
-    // P1 flavour: Lasse on the radio, once the freeze is over.
-    if (c.bustRadio && g.wait) g.wait((c.bustFreeze ?? 3) + 0.3).then(() => { if (g.level === 'island') g.radio(c.bustRadio[0], c.bustRadio[1]); });
+    // P1 flavour: Lasse on the radio, once the freeze is over; free roam only (never after a bust
+    // that fails or interrupts a mission).
+    if (c.bustRadio && g.wait && g.missions.state === 'idle') g.wait((c.bustFreeze ?? 3) + 0.3).then(() => { if (g.level === 'island' && g.missions.state === 'idle') g.radio(c.bustRadio[0], c.bustRadio[1]); });
     g.missions.onBusted?.();
   }
 

@@ -223,7 +223,7 @@ Removed Bigmouth keys: `nick maurice andrew steve jay jessi connie duke shame` (
 
 | key | `HOMES.gate` (mission 1 only, index 0) | `HOMES.flight` (missions 2–5, any phase) | `HOMES.island` |
 |---|---|---|---|
-| `ole` | `['gateOle', 0, 0]` | `{ seat: '14A' }` | `['flamenco', 2.0, 1.0]` |
+| `ole` | `['gateOle', 0, 0]` | `{ seat: '14A' }` | `['flamenco', 2.0, 1.0, 0]` (yaw 0: facing the pool) |
 | `majsan` | `null` (in the ladies' room) | `{ seat: '16E' }` | `['flamencoPool', -2.0, 0]` |
 | `siv` | `null` | `{ seat: '16F' }` | `['flamencoPool', 2.0, 0]` |
 | `jose` | `['gateLounge', 5.0, -1.0]` | `{ seat: '16D' }` | `['cita', 0, 0]` |
@@ -439,6 +439,9 @@ HOMES = {
   island: { ... },
 };
 // dx = metres to the landmark's left (local +X), dz = metres forward (Bigmouth convention).
+// Optional 4th element (Phase 2): an absolute world yaw for the idle pose, e.g.
+// ole: ['flamenco', 2.0, 1.0, 0] (under the pergola facing the pool; `flamenco` itself faces π).
+// A giver placed at its mission's `at` still faces the landmark's yaw.
 // Keys absent from a set are treated as null (hidden).
 LEVEL_OUTFITS = { gate: { stig:'arlanda', ole:'arlanda', berra:'arlanda' },
                   flight: { stig:'kostym', ole:'flyg', berra:'flyg', robban:'flyg', angerud:'flyg', majsan:'flyg', siv:'flyg' },
@@ -527,12 +530,17 @@ gate block's `dead`):
 | ladies' toilet (closed room, door drawn at z 17.6–19.2) | x [29.5, 30.5], z [14.0, 21.5]; z [13.5, 14.5], x [30.0, 38.0] | 99 | `gatewall` |
 | gate desk | x [16.0, 17.2], z [18.5, 22.5] | 1.1 | `counter` |
 | lounge chair rows (3) | x [19.0, 27.0], z [6.6, 7.4], [12.6, 13.4], [18.6, 19.4] | 0.95 | `bench` |
+| men's-room cubicle (A1) | x [35.8, 38.0], z [27.9, 30.0] | 2.2 | `gatewall` |
+| newsstand front / back (A1) | x [20, 24], z [26.8, 27.6] / z [29.3, 30.0] | 1.1 / 2.0 | `counter` |
+| newsstand sides (A1) | x [19.9, 20.05] and [23.95, 24.1], z [26.7, 30.0] | 2.4 | `counter` |
 
 Visuals (WP-A1): cut-away walls 2.6 m high, no roof; signs (`signMesh`): `ARLANDA UTRIKES` (facade),
 `SÄKERHETSKONTROLL`, `GATE 8 · LAS PALMAS 09.40`, departures board `LAS PALMAS 09.40 · GATE 8 ·
 I TID`, `HERRAR`, `DAMER`, poster `SUNTRIP – SOLEN VÄNTAR`, window wall at x 14 looking at the plane,
 orange-and-wood 1976 terminal palette, brown carpet. Men's room: mirror, 3 basins (visual), a
-cubicle (visual box top 2.2). The terminal facade box around the lounge is part of the gate group.
+cubicle (solid, top 2.2). Newsstand (A1) with a vendor bust. No landmark or HOMES spot is affected
+by the A1 solids. The terminal facade box around the lounge is part of the gate group; A2's
+`gateVisual` adds only the far apron and terminal backdrop.
 
 **Flight bounds** for `cabin.inside(x, z)`: the cabin interior rect; plus, in phase `gate`, the jet
 bridge interior (x 3.45–14, z 13.7–15.7) and the lounge interior (x 14–38, z 0–30). Level-wide
@@ -545,8 +553,11 @@ aims straight at the target with `nodes = []` (`levelDef.routeAim === false`, Ph
 
 ```js
 export const CAM_CABIN = { pivotH: 1.5, dist: 6.5, pitchMin: 0.72, pitchMax: 1.1, pitch0: 0.9,
-  noPull: true, fov: 58, cineSide: 2.0, cineUp: 3.6, clampZ: [-19.2, 17.2] };
+  noPull: true, fov: 58, cineSide: 2.0, cineUp: 3.6, clampZ: [-19.2, 17.2], clampPitch: 1.22 };
 ```
+
+- **`clampPitch`** (A1): the most the z-clamp may steepen the pitch (camera.js default 1.5); past
+  it the clamped camera looks further ahead instead of turning straight down.
 
 - At pitch ≥ 0.72 the camera is ≥ 4.3 m above the pivot (~6 m above the floor), above every 2.6 m
   wall top: no wall can occlude, so the wall pull-in is skipped (`noPull`). Free yaw.
@@ -639,18 +650,28 @@ stub with this exact shape):
   `sea` (disc r 1200 `#1c7fb8` at y −90), `island` (ochre/red domes + white specks, +z 900),
   `landingStrip` (Gando runway + palms + low terminal). **Only `scenery.rotation.x/z` tilts**
   (pitch, turbulence wobble); the airframe never moves.
-- The town clouds `MAT._clouds` are hidden for the whole flight level. Snow: `fx` white puffs
-  (~20/s around the camera) in phase `gate` and the first half of `takeoff`.
+- The town clouds `MAT._clouds` are hidden for the whole flight level. Snow: flightScenery's own
+  point snow (A2; it keeps out of the cabin, bridge and lounge) in phase `gate`, fading out over
+  `takeoff` t 4–7. (A1's earlier cabin `fx.snow` emitter was removed in Phase 2: one snow system.)
+- **Pitch** is owned by `flightScenery.tick` (`scenery.rotation.x`, **positive = nose up**, rewritten
+  every frame as a function of phase and t); `cabin.js` writes only `rotation.z` (turbulence wobble).
+- A2 additions: `PLANE_GROUND_Y = −4.65` (plane-local; the Arlanda apron/runway and the Gando strip
+  sit there, so the plane stands on its gear and wings and belly show; A1's lounge reads as an upper
+  floor over A2's pier storey; gate exterior outside the lounge walls stays ≤ y 2.6);
+  `buildPlaneExterior(group, { gear = true, cutaway = false })` (default a closed DC-8 spanning z
+  −36.6…28, x ±21; `grp.position.set(x, 0.15 − PLANE_GROUND_Y, z)` puts the wheels on island
+  ground); the returned scenery object has a read-only `phaseT`; flightScenery chains
+  `scene.onBeforeRender` (per-render camera checks), so anyone setting it later must chain it too.
 
 `cabin.setPhase(name, { instant = false })` state machine. Lengths are seconds at timeScale 1.
 
 | phase | length | palette (§13.3) | what moves | events (cabin-driven) |
 |---|---|---|---|---|
 | `gate` | until set | `gate` | static apron, snow | gate set active, door open, seatbelt off |
-| `takeoff` | 12 | `gate` | runway scrolls −z accelerating 0 → 70 m/s; t 8 pitch → −0.12 rad; t 9 ground starts dropping | t 0: gate set off, door closed, drone 0.9 bright 1; t 0–10 fear source `takeoffRoll` +4/s |
-| `climb` | 8 | `clouds` | puffs sweep past (dense whiteout), deck drops to y −25 | windows white; 3 bumps at t 1.5, 4, 6.5 (shake 0.3, fear +8 each) |
-| `cruise` | open | `above` | deck at y −30…−12 scrolls −z 55 m/s; pitch 0 | random idle turbulence every 60–90 s **only when no mission is running** |
-| `approach` | 14 | `descent` | deck rises past (2 s whiteout), then sea + island domes slide closer; pitch +0.04 | fear source +1/s; drone 0.7 |
+| `takeoff` | 12 | `gate` | runway scrolls −z accelerating 0 → 70 m/s; t 8–9.5 pitch → **+0.12 rad** (nose up); t 9 ground starts dropping | t 0: gate set off, door closed, drone 0.9 bright 1; t 0–10 fear source `takeoffRoll` +4/s |
+| `climb` | 8 | `clouds` | puffs sweep past (dense whiteout), deck drops to y −25; pitch eases 0.12 → 0.05 | windows white; 3 bumps at t 1.5, 4, 6.5 (shake 0.3, fear +8 each) |
+| `cruise` | open | `above` | deck at y −30…−12 scrolls −z 55 m/s; pitch eases 0.05 → 0 and the cruise puffs fade in over t 0–2 (no pop at the climb boundary) | random idle turbulence every 60–90 s **only when no mission is running** |
+| `approach` | 14 | `descent` | deck rises past (2 s whiteout), then sea + island domes slide closer; pitch −0.03 (nose slightly down) | fear source +1/s; drone 0.7 |
 | `landing` | 6 | `island` | `landingStrip` rises to y 0.13 under the plane | t 5: touchdown thud + shake 0.6 + fear +10; t 5.5: reverse thrust (drone bright 1 for 3 s) + fear +5 |
 | `landed` | — | `island` | static runway, sea on the left, terminal | — |
 
@@ -667,7 +688,10 @@ listeners get `(name)` on every change. The **DUNS** (gear-up thump) and every l
 
 ### 5.7 Turbulence and HÅLL I DIG (invented mechanic)
 
-`cabin.turbulence(strength 0..1, secs, { warn = 1.5 } = {})`:
+`cabin.turbulence(strength 0..1, secs, { warn = 1.5, delay = 0 } = {})`; a new turbulence replaces a
+running one and keeps the sign lit through its delay. `cabin.stopTurbulence()` (Phase 2) ends any
+turbulence at once (wobble, drone and belt hold reset); `restoreAmbience()` calls it after a failed
+or aborted flight mission:
 1. Warning: chime (`audio.chime()`), seatbelt sign on, banner `TURBULENS!` (cls `count`, 1.2 s),
    prompt `<b>Space</b> Håll i dig!` while standing.
 2. For `secs` (× timeScale): `cam.shake = max(shake, 0.5·strength)` refreshed every 0.3 s;
@@ -678,11 +702,13 @@ listeners get `(name)` on every change. The **DUNS** (gear-up thump) and every l
    - hidden: nothing;
    - seated: fear +4 (+1 instead while the mantra is held); the jolt **interrupts the mantra**
      (wind-up restarts, 0.6 s instead of 0.3 s), which gives seated turbulence a rhythm;
+   - standing (any case below): the jolt also interrupts a held mantra;
    - standing and holding (`game.holding`): fear +1, tiny shove (0.4 m/s);
    - standing and not holding: fear +6, lateral shove 2.5 m/s; the **second** unheld jolt in a row
      knocks him down (`player.fling(side·2, 3, 0)` → `down`), fear +12, `cabin.stats.falls++`,
      `game.bumpedT = 0.4` (a carried item spills).
-4. The sign switches off 3 s after the end (unless a mission set it).
+4. The sign switches off 3 s after the end (unless a mission set it). `setSeatbelt(on)` records what
+   missions and phases want; `cabin.seatbelt` = that OR a running turbulence (until 3 s after it).
 
 Scripted in missions 3, 4 and 5 (§8). Random idle turbulence (strength 0.3–0.6, 4–6 s) only in
 `cruise` with no mission running.
@@ -700,12 +726,14 @@ registerCarType('trolley', { name: 'Serveringsvagn', len: 0.85, wid: 0.45, bodyH
 - Spawn `new Car('trolley', {x:3000, z:16.2, yaw:Math.PI})`, `place()`, `locked = true`,
   `noEnter = true`, `game.addCar(car)`. Never `traffic`.
 - Mini-AI `car.ai = { update(dt, g) {...} }` (duck-typed; main calls it): target speed 1.1 m/s aft;
-  a 3 s stop every 3 rows with `vardinna2` bubble "Juice, whisky?" [F*]; throttle 0.6 below target,
+  a 3 s stop every 3 rows with `vardinna2` bubble "Juice, whisky?" [F*] (every stop; at row 6 Angerud's
+  complaint instead) and a juice spill (`fx.spill`); throttle 0.6 below target,
   brake 0.5 above, steer 0, x damped kinematically to the aisle centre; at z < −15.5 `place()` back
   to `trolleyPark` and wait 6 s. `cabin.trolleyStopped` is true during stops and waits. The
   trolley **waits** while any non-player character (round-up targets, aisle walkers, luggage
   stowers) stands within 1.2 m ahead of it in the aisle (`vardinna`'s home is beside the aisle): only the player gets bowled
-  over, NPCs are never shoved along by depenetration.
+  over, NPCs are never shoved along by depenetration. A **downed or flung player** lying up to 2 m
+  ahead is waited for too, plus 1.2 s of grace once he is up (no re-bowling a player who just got up).
 - `cabin.trolleyEnd(g)` → `{x, z}` = the trolley end (front or back face, 0.85 m from its centre)
   nearest the player; the juice interact anchors there, so a trolley that has already passed row 14
   is still reachable.
@@ -716,7 +744,9 @@ registerCarType('trolley', { name: 'Serveringsvagn', len: 0.85, wid: 0.45, bodyH
   cooldown. Dodge by stepping into a row with free seats (cushions are walkable).
 - `cabin.startTrolley()` / `cabin.stopTrolley()` (tests and missions); `stopTrolley()` halts it
   where it is and sets `trolleyStopped = true` until the next `startTrolley()`. Default: trolley runs in
-  `cruise` from mission 3 on; parked at `trolleyPark` otherwise.
+  `cruise` from mission 3 on; parked at `trolleyPark` otherwise. A manual mode set by
+  `startTrolley`/`stopTrolley` belongs to the current mission run (`game.missions.m`) and reverts to
+  auto when that run ends (complete, fail or abort). `cabin._t.serving` is true during a stop.
 - Fallback if the trolley misbehaves (P0 safety): `stopTrolley()` permanently and serve juice from
   the galley interactable; missions 3–4 still work.
 - P2 only: player-driven trolley (needs hard speed cap, `noBoost`, `pushed` seat, ~10 car.js edits).
@@ -755,7 +785,7 @@ METERS.flygradsla = { mode: 'panic', label: 'FLYGRÄDSLA', cls: 'fear', hot: 70,
 | seated, sign off / sign on | −5/s / −2/s, but **0** while the phase is `takeoff`, `climb` or `approach` | cabin.tick |
 | **mantra held** (after 0.3 s wind-up; also when seated) | −25/s | main.js |
 | toilet: "E Lås in dig" → hidden 4 s, flush | −50 once | cabin interactable |
-| galley juice "E Ta en juice" (P1; 30 s cooldown) | −30 | cabin interactable |
+| galley juice "E Ta en juice" (P1; `FEAR.juice` 30, `FEAR.juiceCooldown` 30 s) | −30 | cabin interactable |
 | cue "Titta, solen!" | −30 | mission cue |
 
 - **≥ 70 (hot)**: heartbeat (`audio.heartbeat()` every 0.8 s), music low-pass (cutoff
@@ -794,7 +824,7 @@ METERS.flygradsla = { mode: 'panic', label: 'FLYGRÄDSLA', cls: 'fear', hot: 70,
 | `blocker:<n>` | within 1.3 m of a luggage stower (ombord stage 1, §5.12) | `<b>E</b> Ursäkta!` | the stower steps into the dodge row beside him |
 | `toilet:L`, `toilet:R` | `toiletBackL/R`, r 1.0, not in phase gate | `<b>E</b> Lås in dig` | hidden 4 s, relieve 50, `audio.flush()`, UPPTAGET lamp |
 | `toilet:gate` | `herrtoa`, r 1.5, phase gate | `<b>E</b> Lås in dig` | same |
-| `juice:front`, `juice:back` (P1) | galley counters | `<b>E</b> Ta en juice` | relieve 30, `audio.pickup()`, 30 s cooldown |
+| `juice:front`, `juice:back` (P1) | galley counters: local (−0.45, 14.4) and (0, −17.4), r 1.1, priority −1 | `<b>E</b> Ta en juice` | relieve 30, `audio.pickup()`, 30 s cooldown |
 | `call:14` | **registered by mission 3 only** (`interact` stage, `whileSeated: true`) | `<b>E</b> Tryck där uppe` | the juice gag |
 
 ### 5.11 HUD in the flight level
@@ -817,8 +847,12 @@ METERS.flygradsla = { mode: 'panic', label: 'FLYGRÄDSLA', cls: 'fear', hot: 70,
   bubble it (45 s cooldown). (In the film they say it at the stewardess; never triggered by Stig.)
 - Angerud (6C) bubbles the "varm middag" complaint when the trolley stops at row 6 (once per
   cruise).
-- 2–3 standing passengers ("aisle walkers", P1): shuffle between the galleys and a toilet; when the
-  player comes within 1.5 m in the aisle they step into the nearest free row ("Ursäkta!" [N]).
+- 2–3 standing passengers ("aisle walkers", P1; `cabin.walkers`, keys `walker0..2`): shuffle between
+  the galleys and a toilet; when the player comes within 1.5 m in the aisle they step into the
+  nearest free row ("Ursäkta!" [N]). A seat's `taken` may be `'walkerN'` or `'blockerN'`;
+  `unseatAll()` leaves walkers seated; `seatCharacter` evicts a seated walker but never a stower.
+- Cabin, lounge, walker and stower passengers are `randomPed(r, { flight: true })` (no locals).
+- 1980 smokers: in `cruise` with the sign off, a faint `fx.wisp` rises now and then over rows 20–24.
 - **Luggage stowers** (P0, invented): `cabin.setAisleBlockers(on)` (cue `blockers: bool`) puts three
   static passengers (bust-style `Character`s from `randomPed`, anim `cupUp` = an arm up at the rack)
   in the aisle beside the dodge rows **3, 8 and 12**. They are solid; walking into one costs fear +3
@@ -884,11 +918,11 @@ standing there faces. `y` (optional) = absolute height for collectible spots on 
 
 | block (i,j) | type → builder (owner, file) | content | landmarks: `id` (lx, lz, yaw[, y]) | named / parked cars |
 |---|---|---|---|---|
-| (3,3) | `flamenco` → `hotelFlamenco` (C1, hotels.js) | 7-storey white slab x [−26, 26], z [−27, −14] with balcony rows, terracotta accents, `HOTEL FLAMENCO` roof sign; open reception porch (canopy, desk, plastic Christmas tree `julgran` prop, `RECEPCIÓN`) at the slab's south face; ground-floor room patios along the south face (Stig & Ole's room west, room 113 east) with a visible 1st-floor balcony above 113; pool deck south with a **walkable shallow pool** (flat blue slab at CURB+0.02 + `box(..., CURB, 'water')`, sign "TRE METER DJUPT I ENA ÄNDEN, EN METER I DEN ANDRA – BARNVÄNLIG" [F*] (the bungalow seller's line, relocated)); poolbar with straw parasols (`BAR PISCINA · SVENSKT KAFFE`); parking lot on the west; **PEPES BODEGA**: small whitewashed annex x [4, 12], z [−31, −27] on the north side with a green door, barrels, sign `PEPES BODEGA · VINOS · RON` facing north (`worldHooks.bodegaLit(on)` lights it after julafton) | `flamenco` (−4, −8, 0) · `flamencoRecepcion` (2, −10, 0) · `flamencoPatio` (−18, −11, 0) · `rum113` (18, −11, 0) · `flamencoBalcony` (18, −8, π) · `flamencoPool` (−3, 18, π) · `flamencoBar` (16, 12, −π/2) · `flamencoDrive` (−26, 22, π) · `flamencoBack` (−6, −33.5, 0) · `bodega` (8, −33.5, 0) · `fena_flamenco` (−3, 7, 0, 0.35) | `hyrbil` (sedan `0xf4f4f0`) at `flamencoDrive` — default `getInCar` car and test car |
-| (3,2) | `suntrip` → `hotelSunTrip` (C1, hotels.js) | lower U-shaped hotel on red rock; welcome **stage** with SunTrip sun backdrop (red text on yellow sun), accordion/conga props; pool; **friskotek lawn**; SunTrip office porch on the south side facing Flamenco's back; posters `GRISFEST TORSDAG · 800 PTA`, `FRISKOTEKET 9.30` | `suntrip` (−14, 24, 0) · `scen` (0, −14, 0) · `friskotek` (−10, 8, 0) · `suntripPool` (14, 4, π) · `suntripLot` (24, 22, π) · `fena_suntrip` (14, 8, 0, 0.35) | — |
+| (3,3) | `flamenco` → `hotelFlamenco` (C1, hotels.js) | 7-storey white slab x [−26, 26], z [−27, −14] with balcony rows, terracotta accents, `HOTEL FLAMENCO` roof sign; open reception porch (canopy, desk, plastic Christmas tree `julgran` prop, `RECEPCIÓN`) at the slab's south face; ground-floor room patios along the south face (Stig & Ole's room west, room 113 east) with a visible 1st-floor balcony above 113; pool deck south with a **walkable shallow pool** (flat blue slab at CURB+0.02 + `box(..., CURB, 'water')`, sign "TRE METER DJUPT I ENA ÄNDEN, / EN METER I DEN ANDRA. / BARNVÄNLIG!" (three lines) [F*] (the bungalow seller's line, relocated)); poolbar with straw parasols (`BAR PISCINA · SVENSKT KAFFE`); parking lot on the west; **PEPES BODEGA**: small whitewashed annex x [4, 12], z [−31, −27] on the north side with a green door, barrels, sign `PEPES BODEGA · VINOS · RON` facing north (`worldHooks.bodegaLit(on)` lights it after julafton) | `flamenco` (−4, −8, π) (faces the hotel, so the views/cutaway camera stands on the pool deck; Phase 2) · `flamencoRecepcion` (2, −10, 0) · `flamencoPatio` (−18, −11, 0) · `rum113` (18, −11, 0) · `flamencoBalcony` (18, −8, π) · `flamencoPool` (−3, 18, π) · `flamencoBar` (16, 12, −π/2) · `flamencoDrive` (−26, 22, π) · `flamencoBack` (−6, −33.5, 0) · `bodega` (8, −33.5, 0) · `fena_flamenco` (−3, 7, 0, 0.35) | `hyrbil` (sedan `0xf4f4f0`) at `flamencoDrive` — default `getInCar` car and test car |
+| (3,2) | `suntrip` → `hotelSunTrip` (C1, hotels.js) | lower U-shaped hotel on red rock; welcome **stage** with SunTrip sun backdrop (red text on yellow sun), accordion/conga props; pool; **friskotek lawn**; SunTrip office porch on the south side facing Flamenco's back; posters `GRISFEST TORSDAG · 800 PTA`, `FRISKOTEKET 9.30` | `suntrip` (−14, 24, π) (faces the office porch; Phase 2) · `scen` (0, −14, 0) · `friskotek` (−10, 8, 0) · `suntripPool` (14, 4, π) · `suntripLot` (24, 22, π) · `fena_suntrip` (14, 8, 0, 0.35) | — |
 | (1,2) | `kasbah` → `kasbah` (C2, centre.js) | **Centro La Medina** (fictional; internal id `kasbah`): two-level nightlife courtyard centre: arcade, stairs (ramp) to a roof terrace (top ≈ 6.0), neon signs `CENTRO LA MEDINA`, `VIKING BAR` (horned helmet), `TONGA TONGA` (mirror ball), `BAR SVENSKA · SMÖRGÅSAR` | `kasbah` (0, 22, π) · `vikingbar` (−16, 18, π) · `tongatonga` (14, 18, π) · `tongaLot` (20, 27, π) · `pryl_poolpen` (8, −6, 0, 7.2) | — |
 | (4,2) | `cita` → `cita` (C2, centre.js) | **Centro Nórdico** (fictional; internal id `cita`) strip mall, sign `CENTRO NÓRDICO`: `SUPERMERCADO`, `FERRETERÍA`, `FARMACIA`, `ESTANCO`, `TELÉFONOS · HYTT 1·2·3`, `SOUVENIRS`, `SVENSKT KAFFE`, `CAMBIO · 1 KR = 17 PTA` | `cita` (0, 22, π) · `supermercado` (−18, 18, π) · `ferreteria` (18, 18, π) · `telefon` (0, 8, π) | — |
-| (2,3) | `plaza` → `plaza` (C2, centre.js) | palms, fountain (shallow walkable pool), restaurant terraces; **CASA LOLA** (`CASA LOLA · COMIDA CANARIA`, fictional; internal id `grillpaco`) terrace on the SE corner | `plaza` (0, 0, 0) · `grillpaco` (20, 22, π) · `grillpacoMamma` (25, 24, π) · `grillpacoCurb` world (−60, 36, −π/2) (westbound kerb of the z = 40 road, the `follow` endpoint) · `fena_plaza` (0, 0, 0, 0.35) | — |
+| (2,3) | `plaza` → `plaza` (C2, centre.js) | palms, fountain (shallow walkable pool), restaurant terraces; **CASA LOLA** (`CASA LOLA · COMIDA CANARIA`, fictional; internal id `grillpaco`) terrace on the SE corner | `plaza` (0, 6.8, π) (south of the fountain rim, facing it: the fountain column stands at (0, 0); Phase 2) · `grillpaco` (20, 22, π) · `grillpacoMamma` (25, 24, π) · `grillpacoCurb` world (−60, 36, −π/2) (westbound kerb of the z = 40 road, the `follow` endpoint) · `fena_plaza` (0, 0, 0, 0.35) | — |
 | (2,1) | `marknad` → `marknad` (C2, centre.js) | rows of striped stall awnings (some `bounce` awnings as climb pads), souvenir stand with painted donkeys `BURROS 500 PTA`, postcard racks, plastic giraffes | `marknad` (0, 22, π) · `asnestand` (6, 2, π) · `pryl_kalkylator` (−12, −8, 0, 3.4) (on an awning roof) | — |
 | (3,1) | `kyrka` → `kyrka` (C2, centre.js) | **Templo Ecuménico**: white rationalist church (flat planes, bell slab), palm plaza, crèche, small fountain; sign `ES UNA IGLESIA` / `Det är en kyrka.` [F*] (the sisters' language record, relocated) | `kyrka` (0, 18, π) | — |
 | (4,3) | `bensin` → `bensin` (C2, centre.js) | gas station: canopy, `GASOLINA` (no brand), prices in pesetas, kiosk; `gaspump` props explode | `bensin` (0, 16, π) | — |
@@ -923,11 +957,15 @@ Copacabana beach with palms, a small orchestra of busts, sunset palette. Landmar
   - **South**: sand strip z 289 → 300, then the **sea plane** (`MAT.water` retinted `#1c7fb8`,
     y **0.17**, i.e. 2 cm above CURB, so walking/driving from z 300 to the bound wall at 314 reads
     as wading) out to z 1150, x ±1150 (§4.1: nothing island-side beyond 1150). The bound wall at
-    z 314 stays.
+    z 314 stays. WP-B detail: the `MAT.water` plane starts at z 330; z 300–330 is a vertex-coloured
+    foam line plus two-tone shallows at the same y 0.17 (no overlaps); beach z 289–300. Sea decor
+    beyond the wall belongs to D2 at x −40…40 and 120…200 (raft, buoy line z 318, pedal boats,
+    moored boats z 324–338); B's own sea decor keeps clear of those.
   - **NE sector** around (240, −335): the parked DC-8 sits there, inside today's hill ring (the
     hill at ≈ (265, −364) would bury it ~20 m deep). No hills or domes within **100 m** of
     (240, −335), and nothing taller than 1 m (trees, cacti, rocks) within **60 m**. Phase 0 cuts
-    this gap in the existing hills and trees; WP-B keeps it in the Monte Rojo rework.
+    this gap in the existing hills and trees; WP-B keeps it in the Monte Rojo rework. The tree band
+    also skips the whole Gando apron (x 172…308, z −388…−290; its corners are up to 82 m out).
   - Welcome sign at the west entrance: `BIENVENIDOS A NUEVA ESTOCOLMO · VÄLKOMMEN!`
   - Road banners `GOD JUL · FELIZ NAVIDAD` over 3 roads; tinsel spirals on some palm trunks.
 - Shallow pools everywhere are flat blue slabs + `box(..., CURB, 'water')` (a floor). Sunken pools
@@ -976,6 +1014,15 @@ Removed: `hearse`, `muscle` (their geometry branches may stay as dead code). Tra
 with ≤ 1 bus. Busts in traffic use `randomPed` (tourists and locals). Number plates (optional P2):
 `GC-1234-A` white with black letters.
 
+**Occupants** (Phase 2; replaces Bigmouth's heads through the roof): `car.seatY()` = wheelR·0.95 +
+0.2 for ordinary cars (sedan, hatch, wagon, taxi, pickup, grisbil: people sit low, the opaque body
+sides hide the legs), + 0.36 for the cab of `van`/`icecream`/`guardia`, + 0.9 for buses;
+`car.roofY()` = the roof underside − 0.08 (wheelR·0.95 + bodyH (+ cabinH for open-cabin cars)),
+Infinity for buses. A driver bust stands at seatY, rear/window rider busts too; each is scaled by
+`fitScale(userData.h)` (≥ 0.72; ≈ 0.82 in a sedan) so the head clears the roof. A seated character
+(player included) has its hips at seatY + 0.12 and is scaled about them by `fitScale(headTop −
+legLen, hips)`; `unseat` restores scale 1. Bed riders (`slot: 'bed'`) stand in the open load bed.
+
 ### 6.7 Pedestrians (models.js `randomPed`, peds.js; WP-E)
 
 - **0 % kids**; scale .94–1.08.
@@ -983,8 +1030,8 @@ with ≤ 1 bus. Busts in traffic use `randomPed` (tourists and locals). Number p
   (Hawaiian `print` 30 %), shorts 55 % (white socks), `hat: 'sunhat' | 'bucket'` 35 %, a camera
   `held` 10 %.
 - 30 % locals: skins `0xc99a6e`, `0xa8774f`; white shirt + black trousers (waiters) or black dress.
-- Dodge shouts (`peds.js`): `'Akta!' 'Hallå där!' 'Herre jävlar!' '¡Cuidado!' 'Turister!'`
-  (`Herre jävlar` [F], others [N]).
+- Dodge shouts (`peds.js`): tourists `'Akta!' 'Hallå där!' 'Herre jävlar!'`, locals `'¡Cuidado!'
+  '¡Turistas!'` (`Herre jävlar` [F*], relocated; others [N]).
 
 ### 6.8 Props (`props.js` `TYPES`; WP-B)
 
@@ -1058,8 +1105,10 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
   hideouts: [ { at: 'flamencoRecepcion', r: 2.6, cost: 500,                               // P1
     prompt: '<b>E</b> Muta portiern (500 pta)',
     line: ['portier', '…för 500 pesetas kanske vi kommer överens.'],                       // [F*]
-    banner: ['PORTIERN TITTADE BORT', 'Skandalen är som bortblåst'] } ],                  // [N]
-  witnessToast: { who: 'herrStorch', r: 20, text: 'Ingen fara: linsskyddet sitter på.', cooldown: 60 }, // [N] P1; offence adds 0
+    banner: ['PORTIERN TITTADE BORT', 'Skandalen är som bortblåst'], cooldown: 60 } ],    // [N]
+  witnessToast: { who: 'herrStorch', r: 20, text: 'Ingen fara: linsskyddet sitter på.', cooldown: 60, // [N] P1; offence adds 0
+    say: 'Lite film.' },                             // [F*] (WP-H); toast + filming never during a scene/cutaway (Phase 2)
+  bustRadio: ['lasse', 'Friskotek i morgon bitti, Olsson!'],   // [N] (WP-H) after a free-roam bust only (Phase 2)
   bustLine: '¡Documentación!',                     // [N] the officer's bubble at a bust (Phase 0a)
 };
 ```
@@ -1088,7 +1137,7 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
   (`Guardia Civil tog {n} pesetas i böter`), flash; the player is **pulled out of the car** (if in
   one) and frozen `bustFreeze` = 3 s beside the officer, who bubbles "¡Documentación!" (in timed
   stages the bust costs time); `endPursuit(true)`, then `missions.onBusted()` (fails only
-  `bustFails` missions). The 500-pta porter bribe beats the fine once the purse is ≈ 2 500 pta. P1 flavour: radio `lasse` "Friskotek i morgon bitti, Olsson!" [N].
+  `bustFails` missions). The 500-pta porter bribe beats the fine once the purse is ≈ 2 500 pta. P1 flavour: radio `lasse` "Friskotek i morgon bitti, Olsson!" [N] (`bustRadio`), only for a bust in free roam (no mission running, then or 3.3 s later).
 - **Escape**: banner SKANDALEN TYSTAD + `complete` jingle; music back to `sol`.
 - **Hideout** (P1): the porter at `flamencoRecepcion`: during a pursuit, on foot within 2.6 m,
   prompt `<b>E</b> Muta portiern (500 pta)`; pays via `game.pay(500)` (**Ole pays** if short), clears
@@ -1134,8 +1183,9 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
 - **The player's car runs at ×1.2, not Bigmouth's ×2** (§6.6). At ×1.2 a sedan tops out around
   36 m/s (≈ 130 km/h) instead of ≈ 60 m/s, so drives take roughly 1.6× as long as on the Bigmouth
   car, and the Guardia (`vehicleMaxSpeed` 28) can actually keep up.
-- **The `timer` values in the §8 literals are placeholders**: first guesses, never measured, partly
-  written against the ×2 car. They are recalibrated by measurement, not by guessing:
+- **The `timer` values in the §8 literals were placeholders** (first guesses, partly written
+  against the ×2 car); since Phase 2 the literals carry the Phase 1 measured values (below). They
+  are calibrated by measurement, not by guessing:
   - **Drives** (`goto … inCar`, `destroy`, `collect … inCar`, `follow` has no timer):
     `T_ref` = the time of a clean drive by a headless autopilot in the player's car (boost 1.2,
     `timeScale` 1, traffic on) along the shortest sensible road route from where the stage starts to
@@ -1151,6 +1201,15 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
   - **Races and chases**: tune opponent `cruise` and rubber-banding so that a clean race is won by
     a few seconds and one crash loses it; a `destroy` target must be catchable at ×1.2, but only by
     driving a direct line.
+- **Fleeing targets** (`rabbits` with `flee`, `destroy`): `T_ref` = the slowest measured chase,
+  with no per-target allowance; timer = T_ref × 1.25 (chases) or × 1.2 (drives), rounded up to 5 s.
+- **Shipped values (Phase 1 calibration, applied to the literals below in Phase 2)**: flight (WP-F,
+  measured at timeScale 1 by `scratchpad` autopilots) gate dash 10, ombord seat 15, sprit bottles 35,
+  landning round-up 20 and back-to-14B 10; island (`TIMERS` in missions/island.js, scenario
+  `calibrate`) buss17Drive 60, friskotekBalls 20, asnanPaint 20, bodegaVischan 35, bodegaJeep 45,
+  bodegaHome 35, fatagaSheep 25, grisfestFlowers 30, grisfestPlates 35, grisfestTonga 30,
+  julaftonGuests 80; follows `TUNING` grisbil cruise 15 / maxDist 55, José 13 / 14–55, excursion bus
+  14 / 55. All were measured on the stub world: the §15.3 step 5 balance pass re-measures.
 - **Who does it**: F (flight timers) and G (island timers) calibrate their own missions in Phase 1
   on the stub world and put a table `mission/stage → route, T_ref, timer` in their hand-off report;
   the Phase 2 balance pass (§15.3 step 5) re-measures on the merged real world (C/D geometry changes
@@ -1199,7 +1258,7 @@ No `extra` (the gate cast already stands at its `HOMES.gate` spots; an `extra` w
    - kontrollant: "Vill ni vara vänlig och ta av er skon."  [F]  {anim: {who:'stig', flag:'shoeOff', secs: 2}, sfx: 'laugh'}
    - berra: "Kolla terroristen!"  [F](t)
 2. [1] `goto({ to: 'gateOle', radius: 2.5, text: 'Sätt dig vid gate 8', startCue: { place: { ole: ['gateOle', 0, 0] } } })`
-3. [2] `scene({ frame: ['ole', 'stig'], lines: [...] })` — Ole's statistics. **Only Ole's six
+3. [2] `scene({ checkpoint: true, retryAt: 'gateOle', frame: ['ole', 'stig'], lines: [...] })` — Ole's statistics (a failed dash replays them, which rebuilds the fear the dash needs; WP-F). **Only Ole's six
    statistics lines carry `{fear: 8}`** (+48; with "Bomber" and the arch the meter sits ≈ 70 when
    the dash starts, so the heartbeat is on):
    - ole: "Du vet vel at det er 50 prosent sjanse å overleve en flyulykke."  [F]  {fear: 8}
@@ -1211,11 +1270,12 @@ No `extra` (the gate cast already stands at its `HOMES.gate` spots; an `extra` w
    - stig: "Looping med en jumbo?"  [F]
    - ole: "Ja. To ganger."  [F]  {fear: 8}
    - stig: "Det går väl inte? Kan du se till mitt handbagage ett tag, jag måste…"  [F]
-4. [3] `goto({ to: 'herrtoa', radius: 1.8, fearRate: 2, timer: 15, text: 'Till herrtoaletten – fort!', failText: 'Du hann inte fram…', radio: [['ole', 'To ganger, Stig-Helmer! Looping med en jumbo!', { gap: 3, fear: 4 }]] })`
+4. [3] `goto({ to: 'herrtoa', radius: 1.8, fearRate: 3, timer: 10, text: 'Till herrtoaletten – fort!', failText: 'Du hann inte fram…', radio: [['ole', 'To ganger, Stig-Helmer! Looping med en jumbo!', { gap: 3, fear: 4 }]] })`
    ([N] texts; radio [F*]). PANIK here does **not** fail: idle-panic returns him to `gateOle` and
-   the 15 s timer keeps running.
+   the 10 s timer keeps running. (Calibrated by WP-F: about 18 m, walk 5.0 s / sprint 3.6 s; fear at
+   the start ≈ 69, so a dawdler panics or runs out of time, a straight run arrives at ≈ 87–94.)
 5. [4] `mantra({ at: 'herrtoa', radius: 2.2, secs: 3, text: 'Håll J: sträck ut armarna – Jag kan flyga, jag är inte rädd', barLabel: 'JAG KAN FLYGA' })`
-6. [5] `scene({ place: { berra: ['herrtoaDoor', 0, -1.5] }, frame: ['berra', 'stig'], lines: [...] })`:
+6. [5] `scene({ place: { berra: ['herrtoaDoor', 0, 2.2, 1.25] }, frame: ['berra', 'stig'], lines: [...] })` (inside the men's room; the old offset was behind the wall):
    - berra: "Hur mår du?"  [F](t)
    - stig: "Bra."  [F]
    - stig: "Jag håller på med yoga, avslappningsövningar. Isometrisk träning…"  [F]
@@ -1268,19 +1328,19 @@ The cast is already seated (`HOMES.flight` from index 1 on, §4.2) although the 
 - vardinna: "Skynda dig – vi ska taxa ut."  [N]
 
 **Stages:**
-1. `sit({ seat: '14B', timer: 25, text: 'Hitta plats 14B och sätt dig', failText: 'Planet kunde inte taxa ut. Kaptenen väntar på dig!', startCue: { phase: ['gate', { instant: true }], seatbelt: true, blockers: true }, doneCue: { blockers: false } })`
+1. `sit({ seat: '14B', timer: 15, text: 'Hitta plats 14B och sätt dig', failText: 'Planet kunde inte taxa ut. Kaptenen väntar på dig!', startCue: { phase: ['gate', { instant: true }], seatbelt: true, blockers: true }, doneCue: { blockers: false } })`
    - Seatbelt sign lit (standing +1.5/s). **Luggage stowers** in the aisle at rows 3, 8 and 12
      (P0, §5.12: E "Ursäkta!" moves them; bumping costs fear). Aisle walkers (P1). Crossing
      **lz −1.4** going aft (the midpoint between row 12's seats at −1.02 and row 14's at −2.22) the
      first time shows the toast `Rad 13 finns inte!` [N] (cabin-owned, once per load).
-2. `timeline({ seat: '14B', lockSeat: true, panicFails: true, oleBarks: true, secs: 27, text: 'Starten! Håll J om det blir för mycket', barLabel: 'FLYGRÄDSLA', events: [...] })`
+2. `timeline({ checkpoint: true, retryAt: 'cabinRow14', seat: '14B', lockSeat: true, panicFails: true, oleBarks: true, secs: 27, text: 'Starten! Håll J om det blir för mycket', barLabel: 'FLYGRÄDSLA', events: [...] })`
    (times in scaled seconds; the cabin phases run on the same clock; `lockSeat` hides "Res dig"
    and ignores R for the stage, so time never pauses while the phases run on)
    - t 0: `{phase: 'takeoff', toast: 'Håll <b>J</b>: Jag kan flyga, jag är inte rädd'}`
-   - t 10: `{sfx: 'thud', fear: 15, shake: 0.4, say: ['stig', 'Vad är det för ljud?']}`  [F]
-   - t 11.5: `{say: ['ole', 'Landingshjulene som går opp. Hydraulikk, vet du.']}`  [F]
-   - t 14: `{say: ['ole', 'De går opp sånn, og så lukker lemmene seg. Så flyet ikke skal stoppe, men få fart. Ellers…']}`  [F] (Ole's Norwegian "Ellers…" = the Swedish subtitle's "annars…")
-   - t 17.5: `{say: ['stig', 'Annars…?!'], fear: 5}`  [N] (echoes the subtitle's "annars…")
+   - t 10: `{sfx: 'thud', fear: 20, shake: 0.4, say: ['stig', 'Vad är det för ljud?', 1.5]}`  [F]
+   - t 11.5: `{say: ['ole', 'Landingshjulene som går opp. Hydraulikk, vet du.', 2.4]}`  [F](t)
+   - t 14: `{say: ['ole', 'De går opp sånn, og så lukker lemmene seg. Så flyet ikke skal stoppe, men få fart. Ellers…', 3.4]}`  [F*](t) (Ole's Norwegian "Ellers…" = the Swedish subtitle's "annars…"; the speaker is uncertain in the sources)
+   - t 17.5: `{say: ['stig', 'Annars…?!'], fear: 8}`  [N] (echoes the subtitle's "annars…")
    - (t 12–20: phase `climb` runs by itself: whiteout puffs, 3 bumps)
    - t 20: phase `cruise` begins (automatic)
    - t 21: `{say: ['majsan', 'Titta, solen!'], applause: 2.5, relieve: 30, seatbelt: false}`  [F](t)
@@ -1292,10 +1352,11 @@ captain's PA and the juice gag of mission 3):
 - stig: "Hammarby. Känner du till Hammarby?"  [F]
 - ole: "Eneste svenske byene jeg kjenner til er Stockholm og Göteborg og Malmö."  [F]
 - stig: "Det här är ett fotbollslag."  [F]
-- ole: "Min drøm er å fly med Concorde fra Paris til Rio. 2 300 km i timen. Det er flyging!"  [F]
-- ole: "Tre ganger så fort som en geværkule."  [F]
-- stig: "Usch…"  [F]
-- ole: "Og så Rio! Stranda, jentene og samba."  [F]
+- ole: "Min drøm er å fly med Concorde fra Paris til Rio. 2 300 km i timen. Det er flyging!"  [F](t)
+- ole: "Tre ganger så fort som en geværkule."  [F](t)
+- stig: "Usch…"  [F](t)
+- ole: "Og så Rio! Stranda, jentene og samba."  [F](t)
+  (The sources do not say for sure who speaks the Concorde exchange, research-flight.md row 11.)
 - stig: "Kanarieöarna är inte så dumt heller."  [F](t)
 - ole: "Det får duge."  [F*](t)
 
@@ -1328,7 +1389,7 @@ for stage 1.
 2. `interact({ at: (g) => g.cabin.trolleyEnd(g), radius: 1.3, enabled: g => g.cabin.trolleyStopped, prompt: '<b>E</b> Ta en juice', text: 'Hämta juicen vid serveringsvagnen – men akta tårna!', checkpoint: true, startCue: { trolley: true } })`
    (`cabin.trolleyEnd(g)` = the trolley end nearest the player, §5.8; `interact` re-reads a
    function `at` every frame through `addInteractable({ pos })`, §14.3.)
-   Bubbles while the trolley serves near row 6: angerud "Kallar ni det här 'varm middag'? Så ser
+   Bubbles (shipped as a stage wrapper in missions/flight.js, not `timedCues`: they start when the trolley stands at row 6 and the player is within 7.5 m of Angerud in 6C; `pax` speaks from a passenger bust across the aisle) while the trolley serves near row 6: angerud "Kallar ni det här 'varm middag'? Så ser
    det inte ut när jag flyger reguljärt." [F](t) · angerud "Jag har inte fått resan gratis. Jag har
    betalat 3 000 för den." [F](t) · pax "Jag betalade bara 995. Sista minuten." [F](t) · angerud
    "Det fattades bara det…!" [F](t)
@@ -1359,13 +1420,13 @@ and the trolley keeps coming.
 - vardinna: "Då är du rätt man."  [N]
 
 **Stages:**
-1. `collect({ kind: 'flaska', motion: 'roll', items: [{x:3000.2,z:9.0},{x:2999.8,z:2.5},{x:3000.3,z:-6.0},{x:2999.7,z:-10.5},{x:3000.0,z:-13.5}], radius: 0.9, timer: 75, text: 'Fånga flaskorna som rullar i gången', barLabel: 'FLASKOR', failText: 'Flaskorna rullade in under sätena.', startCue: { phase: ['cruise', { instant: true }], trolley: true }, timedCues: [[8, {radio: ['pa', 'Herr Storch ombedes kontakta kabinpersonalen.'], pa: true}], [20, {turbulence: [0.5, 6]}]] })`
+1. `collect({ kind: 'flaska', motion: 'roll', items: [{x:3000.2,z:9.0},{x:2999.8,z:2.5},{x:3000.3,z:-6.0},{x:2999.7,z:-10.5},{x:3000.0,z:-13.5}], radius: 0.9, timer: 35, text: 'Fånga flaskorna som rullar i gången', barLabel: 'FLASKOR', failText: 'Flaskorna rullade in under sätena.', startCue: { phase: ['cruise', { instant: true }], trolley: true }, timedCues: [[8, {radio: ['pa', 'Herr Storch ombedes kontakta kabinpersonalen.'], pa: true}], [20, {turbulence: [0.5, 6]}]] })`
    - `roll`: bottles slide along the aisle (|x| ≤ 0.45) at 0.6–1.4 m/s, bounce at z +12.5 / −16,
      get kicked ±1.5 m/s by every turbulence jolt (`cabin.onJolt`); touching collects one.
-   - PA line [N] (the film's Stork PA is at Arlanda, mission 1; this cabin call is ours). Seatbelt on during the turbulence (standing costs fear; hold Space).
+   - PA line [F]: the film's cabin PA [SUB-SV 00:25:43]. Seatbelt on during the turbulence (standing costs fear; hold Space).
 2. `goto({ to: 'galleyFront', radius: 1.6, text: 'Lämna flaskorna i främre byssan' })`
 
-**Outro** (front galley, then back at row 14):
+**Outro** (`outroPlace: { stig: ['cabinRow14', 0, 0] }`, `outroCam: ['ole', 'stig']`; back at row 14):
 - berra: "Ja, vad fan, man var ju nykter i morse, men nu börjar det ordna upp sig!"  [F*] (Arlanda line, relocated)
 - stig: "Är den bra den där?"  [F]
 - ole: "Ja… Kvarts og digital. Level her, input, FM, tape, tape run."  [F]
@@ -1395,12 +1456,12 @@ just after takeoff, ~0:23, so every line is relocated `[F*]`, and the siv/majsan
 - vardinna: "Alla ska sitta! Hjälp mig få folk på plats, är du snäll."  [N]
 
 **Stages:**
-1. `collect({ who: ['herrStorch', 'jose', 'berra'], standAt: { herrStorch: [3000.2, 3.4], jose: [2999.8, -9.2], berra: [3000.0, -14.4] }, seatOnTouch: true, timer: 50, text: 'Få de stående passagerarna att sätta sig', barLabel: 'STÅENDE', failText: 'Värdinnan fick göra det själv.', lines: {...}, startCue: { phase: ['cruise', { instant: true }], trolley: false }, timedCues: [[12, {turbulence: [0.3, 4]}]] })`
-   - herrStorch: "Lite film."  [F*] (Arlanda line)  {anim: {who:'herrStorch', flag:'film', secs:2}}
+1. `collect({ who: ['herrStorch', 'jose', 'berra'], standAt: { herrStorch: [3000.2, 3.4], jose: [2999.8, -9.2], berra: [3000.0, -14.4] }, seatOnTouch: true, timer: 20, text: 'Få de stående passagerarna att sätta sig', barLabel: 'STÅENDE', failText: 'Värdinnan fick göra det själv.', lines: {...}, startCue: { phase: ['cruise', { instant: true }], trolley: false }, timedCues: [[12, {turbulence: [0.3, 4]}]] })`
+   - herrStorch: "Lite film."  [F*](t) (Arlanda line)  {anim: {who:'herrStorch', flag:'film', secs:2}}
    - jose: siv "Vad skönt att komma bort!" [F*] then jose "Jag ska inte bort, jag ska hem." [F*] (mid-flight in the film, relocated)
    - berra: "Ska vi inte landa snart?"  [N]
-2. `sit({ seat: '14B', timer: 20, text: 'Skylten lyser! Tillbaka till 14B', failText: 'Alla måste sitta vid landningen.' })`
-3. `mantra({ seated: '14B', secs: 8, panicFails: true, text: 'Inflygning! Håll J – Jag kan flyga, jag är inte rädd', barLabel: 'JAG KAN FLYGA', startCue: { phase: ['approach', { hold: true }], turbulence: [0.7, 10] }, fillCue: { phase: 'landing' }, waitPhase: 'landed' })`
+2. `sit({ checkpoint: true, seat: '14B', timer: 10, text: 'Skylten lyser! Tillbaka till 14B', failText: 'Alla måste sitta vid landningen.', startCue: { seatbelt: true } })` (the intro already lit the sign; a retry re-lights it)
+3. `mantra({ seated: '14B', secs: 8, panicFails: true, text: 'Inflygning! Håll J – Jag kan flyga, jag är inte rädd', barLabel: 'JAG KAN FLYGA', startCue: { phase: ['approach', { hold: true }], turbulence: [0.75, 14] }, fillCue: { phase: 'landing' }, waitPhase: 'landed' })`
    - The approach plays its 14 s and then **holds** at its end state (no auto-chain) until the bar
      is full. The bar fills only while J is held; `fillCue` is applied when it fills, and its
      `phase` only if `cabin.phase === 'approach'` (never replays a touchdown). The stage completes
@@ -1445,7 +1506,7 @@ gently while Lasse's welcome speech plays. Ends in the overbooked hotel and Ole'
 1. `getInCar({ car: 'buss17', any: false, passenger: 'ole', riders: ['majsan', 'siv', 'fruStorch', 'herrStorch'], hideRiders: true, lockMeter: true, text: 'Hoppa in i SunTrips buss nummer 17' })`
    (`passenger` is seated in the bus at init; `riders` are decorative window busts and
    `hideRiders` hides those NPCs for the mission so nobody appears twice.)
-2. `goto({ to: 'flamencoDrive', radius: 12, inCar: true, passenger: 'ole', stop: true, timer: 150, failText: 'Gästerna missade välkomstdrinken.', smooth: { label: 'ÅKSJUKA', failText: 'Någon blev åksjuk i bussen!' }, text: 'Kör gruppen till Hotell Flamenco – mjukt!', radio: [...] })`  ([N] for the texts)
+2. `goto({ to: 'flamencoDrive', radius: 12, inCar: true, passenger: 'ole', stop: true, timer: 60, failText: 'Gästerna missade välkomstdrinken.', smooth: { label: 'ÅKSJUKA', failText: 'Någon blev åksjuk i bussen!' }, text: 'Kör gruppen till Hotell Flamenco – mjukt!', radio: [...] })`  ([N] for the texts)
    radio (`[who, text, {gap}]`, gap = seconds after the previous line):
    - lasse: "Hjärtligt välkomna till Nueva Estocolmo och SunTrip!"  [F]  {gap: 4}
    - lasse: "Klockan är tre spansk tid – alltså en timme tidigare än svensk tid."  [F]  {gap: 9}
@@ -1493,7 +1554,7 @@ SunTrip lawn and pool while Berra and Robban heckle; ends with "Hä-pååre!".
 - lasse: "Och nu – friskotek! Men vinden har tagit badbollarna!"  [N]
 
 **Stages:**
-1. `rabbits({ mesh: 'badboll', count: 6, near: 'friskotek', rMin: 6, rMax: 30, timer: 75, text: 'Plocka kulor! Plocka med höger… plocka med vänster!', barLabel: 'KULOR', gotText: 'Plocka med höger!', failText: 'Bollarna rullade ner till stranden.', radio: [['berra', 'Kolla storken!'], ['robban', 'Att de bara orkar, våra storkar…']] })`
+1. `rabbits({ mesh: 'badboll', count: 6, near: 'friskotek', rMin: 6, rMax: 30, timer: 20, text: 'Plocka kulor! Plocka med höger… plocka med vänster!', barLabel: 'KULOR', gotText: 'Plocka med höger!', failText: 'Bollarna rullade ner till stranden.', radio: [['berra', 'Kolla storken!'], ['robban', 'Att de bara orkar, våra storkar…']] })`
    text [F]; gotText [F*]; failText [N]; radio [F](t) ×2 (the research does not say who).
 2. `goto({ to: 'friskotek', radius: 5, text: 'Lämna bollarna till Lasse' })`
 
@@ -1545,7 +1606,7 @@ then a nervous drive with a wet-painted donkey on board.
    (played in the car in the Centro Nórdico lot right after the knäcke grab: `frame` alone keeps
    both seated, their positions are live, §9.2; the cut shows the FERRETERÍA front, so there is no
    separate drive 36 m down the mall)
-9. `goto({ to: 'vikingbar', radius: 7, inCar: true, passenger: 'ole', timer: 80, fragile: { label: 'SKICK', failText: 'Färgen blev förstörd!' }, text: 'Kör försiktigt till Viking Bar – färgen är våt!' })`  [N]
+9. `goto({ to: 'vikingbar', radius: 7, inCar: true, passenger: 'ole', timer: 20, fragile: { label: 'SKICK', failText: 'Färgen blev förstörd!' }, text: 'Kör försiktigt till Viking Bar – färgen är våt!' })`  [N]
 10. `goto({ to: 'vikingbar', radius: 2.5, onFoot: true, text: 'Lämna paketet i baren' })`
 
 **Outro** (`outroPlace: { carmencita: ['vikingbar', 0, 1.5], angerud: ['vikingbar', 2.5, 1.2] }`):
@@ -1582,10 +1643,10 @@ Hitch-hike logic (judge fix): Stig refuses the dirt road (åksjuka), drops them,
 1. `getInCar({ text: 'Hoppa in i en bil' })`
 2. `pickup({ who: 'berra', name: 'Berra', at: 'flamencoBar', rider: 'robban', hello: 'Ditåt!' })`  [N]
 3. `goto({ to: 'playa', radius: 14, inCar: true, passenger: 'berra', text: 'Bodegan ligger ditåt – mot havet!', radio: [['robban', 'Fan Berra, ja ä tösstig.'], ['berra', 'Fan Robban, du har ingen karaktär!']], doneCue: { radio: ['berra', 'Ingen bodega här. Då ligger den åt andra hållet.'] } })`  [F] [F] · doneCue [N]
-4. `goto({ to: 'vischan', radius: 14, inCar: true, passenger: 'berra', timer: 110, text: 'Leta inåt land', radio: [['berra', 'Det här är ju rena vischan. Vi måste ha kört för långt.'], ['robban', 'Fan, vad jag är törstig.']], overhear: [{ at: 'eslovVag', r: 25, radio: true, lines: [['berra', 'Heja Eslöv!'], ['robban', 'Herre jävlar!']] }] })`  [F*] (the film's "gått", said on foot) · [F] · [F] ×2
+4. `goto({ to: 'vischan', radius: 14, inCar: true, passenger: 'berra', timer: 35, text: 'Leta inåt land', radio: [['berra', 'Det här är ju rena vischan. Vi måste ha kört för långt.'], ['robban', 'Fan, vad jag är törstig.']], overhear: [{ at: 'eslovVag', r: 25, radio: true, lines: [['berra', 'Heja Eslöv!'], ['robban', 'Herre jävlar!']] }] })`  [F*] (the film's "gått", said on foot) · [F] · [F] ×2
 5. `dropoff({ who: 'berra', at: 'vischan', riderOff: true, text: 'Stanna vid tomatfälten' })`  [N]
 6. `scene({ frame: ['berra', 'stig'], lines: [['stig', 'Jag kör inte längre på grusvägen. Jag har anlag för åksjuka.'], ['berra', 'Jag går inte en meter till. Vi liftar.']], doneCue: { toast: 'En grisbil stannar…' } })`  [N] · [F] · [N]
-7. `follow({ type: 'grisbil', carName: 'grisbilFollow', driver: 'grisbonde', riders: ['berra', 'robban'], hideRiders: true, start: { lane: [[0, 2], [1, 2]], t: 12 }, via: [[1, 2], [1, 1], [2, 1]], to: 'grisfestGate', maxDist: 70, cruise: 12, wobble: 0.12, text: 'Följ grisbilen – Berra och Robban har liftat!', radio: [['robban', 'Fan, de luktar.'], ['berra', 'Skit i det. Vi slipper gå.'], ['robban', 'Snacka om grisfest.']] })`  [N] · [F](t) ×3
+7. `follow({ type: 'grisbil', carName: 'grisbilFollow', driver: 'grisbonde', riders: ['berra', 'robban'], hideRiders: true, start: { lane: [[0, 2], [1, 2]], t: 12 }, via: [[1, 2], [1, 1], [2, 1]], to: 'grisfestGate', maxDist: 55, cruise: 15, wobble: 0.12, text: 'Följ grisbilen – Berra och Robban har liftat!', radio: [['robban', 'Fan, de luktar.'], ['berra', 'Skit i det. Vi slipper gå.'], ['robban', 'Snacka om grisfest.']] })`  [N] · [F](t) ×3
    (`via` given as `[i, j]` node pairs; `start.lane` = edge from node (0,2) to (1,2), 12 m in; the
    route runs east along z = −200 from node (2,1) and ends at the kerbside `grisfestGate` 40 m
    ahead, ≈ 270 m in all (§9.2 `follow`: `to` must be kerbside and ahead of the last via node).
@@ -1593,10 +1654,10 @@ Hitch-hike logic (judge fix): Stig refuses the dirt road (åksjuka), drops them,
    stage 8.)
 8. `getInCar({ missionCar: 'grisbilFollow', any: false, passenger: 'berra', rider: 'robban', text: 'Grisbonden lånar ut grisbilen – hoppa in!', say: ['grisbonde', 'Ta bilen, señor. Ställ den vid hotellet – jag hämtar den på torsdag.'] })`  [N]
    (stage init unseats the `grisbonde` driver to the roadside.)
-9. `destroy({ type: 'guardia', carName: 'guardiaJeep', driver: 'guardia', spawn: { lane: [[3, 1], [3, 2]], t: 25 }, noExplode: true, timer: 60, lockMeter: true, barLabel: 'JEEPEN', text: 'Guardia Civil såg grisarna – stoppa jeepen innan den hämtar förstärkning!', failText: 'Jeepen hann fram till kasernen.' })`  [N] (invented, §1.6)
+9. `destroy({ type: 'guardia', carName: 'guardiaJeep', driver: 'guardia', spawn: { lane: [[3, 1], [3, 2]], t: 25 }, cruise: 20, damageScale: 4, playerDamageScale: 0.5, noExplode: true, timer: 45, lockMeter: true, barLabel: 'JEEPEN', text: 'Guardia Civil såg grisarna – stoppa jeepen innan den hämtar förstärkning!', failText: 'Jeepen hann fram till kasernen.' })`  [N] (invented, §1.6)
    - The jeep drives away (flee AI); wrecked, it stops in steam and two officers climb out shaking
      their fists. It is a mission target (no SKANDAL for ramming it; `lockMeter`).
-10. `goto({ to: 'flamencoBack', radius: 10, inCar: true, passenger: 'berra', timer: 120, text: 'Kör hem grisarna till hotellet!', failText: 'Ni kom aldrig fram.' })`  [N]
+10. `goto({ to: 'flamencoBack', radius: 10, inCar: true, passenger: 'berra', timer: 35, text: 'Kör hem grisarna till hotellet!', failText: 'Ni kom aldrig fram.' })`  [N]
 
 **Outro** (`outroPlace: { berra: ['bodega', -1.6, -1.0], robban: ['bodega', 1.6, -1.0] }`, both facing **away** from the shop; first line cues the camera on the sign; the answering-machine call is Angerud's panic after opening the package, so it comes before Levander's reaction, in film order):
 - robban: "Ja, herre jävlar, minns du Benidorm? Snacka om grisfest!"  [F]  {cut: 'bodega'}
@@ -1634,7 +1695,7 @@ he doesn't see you. The reveal: his mother is sitting in the back seat the whole
 
 **Stages:**
 1. `getInCar({ text: 'Hoppa in i en bil' })`
-2. `follow({ type: 'hatch', color: 0x2a4fa8, carName: 'joseBil', driver: 'jose', passenger: 'siv', riders: ['mamma'], start: { lane: [[5, 3], [4, 3]], t: 12 }, via: [[4, 4], [3, 4]], to: 'grillpacoCurb', maxDist: 75, minDist: 14, minGrace: 2, minText: 'José såg dig! Håll avståndet.', cruise: 10, text: 'Följ José – men inte för nära!', radio: [['jose', 'Jag ska bjuda dig på ett ställe som inga turister kommer till.'], ['siv', 'Det låter ju trevligt.'], ['jose', 'Äkta spanska maten på en restaurang.']] })`
+2. `follow({ type: 'hatch', color: 0x2a4fa8, carName: 'joseBil', driver: 'jose', passenger: 'siv', riders: ['mamma'], start: { lane: [[5, 3], [4, 3]], t: 12 }, via: [[4, 4], [3, 4]], to: 'grillpacoCurb', maxDist: 55, minDist: 14, minGrace: 2, minText: 'José såg dig! Håll avståndet.', cruise: 13, text: 'Följ José – men inte för nära!', radio: [['jose', 'Jag ska bjuda dig på ett ställe som inga turister kommer till.'], ['siv', 'Det låter ju trevligt.'], ['jose', 'Äkta spanska maten på en restaurang.']] })`
    minText/text [N]; radio [F*] · [F] · [F*]. The rear rider bust is `mamma` (visible gag). Route
    ≈ 250 m: south on x = 40, then west on z = 40, ending kerbside at `grillpacoCurb` 20 m past
    node (3,4) (§9.2 `follow`); the outro still places the family at `grillpaco`.
@@ -1672,10 +1733,10 @@ the tourists' pity into a sheep stampede you have to round up.
 **Stages:**
 1. `getInCar({ text: 'Hoppa in i en bil' })`
 2. `pickup({ who: 'majsan', name: 'Majsan', at: 'flamencoDrive', rider: 'siv', hello: 'Kör!' })`  [N]
-3. `follow({ type: 'bus', carName: 'utflyktsbuss', driver: 'affe', start: { lane: [[3, 2], [3, 1]], t: 14 }, via: [[3, 1], [2, 1], [1, 1]], to: 'fatagaBus', maxDist: 70, cruise: 12, text: 'Följ utflyktsbussen till Fataga', radio: [['lasse', 'Fataga är en av de få ursprungliga byar som finns kvar på Gran Canaria.'], ['lasse', 'Om ni vill köpa deras broderade dukar, så pruta inte. Prutning och sånt kan ni hålla på med på marknaden.']] })`  [N] · [F] ×2 (radio voiced by Lasse, the bus driven by Affe). The bus stops kerbside at
+3. `follow({ type: 'bus', carName: 'utflyktsbuss', driver: 'affe', start: { lane: [[3, 2], [3, 1]], t: 14 }, via: [[3, 1], [2, 1], [1, 1]], to: 'fatagaBus', maxDist: 55, cruise: 14, text: 'Följ utflyktsbussen till Fataga', radio: [['lasse', 'Fataga är en av de få ursprungliga byar som finns kvar på Gran Canaria.'], ['lasse', 'Om ni vill köpa deras broderade dukar, så pruta inte. Prutning och sånt kan ni hålla på med på marknaden.']] })`  [N] · [F] ×2 (radio voiced by Lasse, the bus driven by Affe). The bus stops kerbside at
    `fatagaBus`, 40 m west of node (1,1); the scene and the outro use `fataga`/`fatagaFold`.
 4. `scene({ place: { fruStorch: ['fataga', -2, 2], mamma: ['fatagaDukar', 0, 0], siv: ['fataga', 2, 2], majsan: ['fataga', 1, 3] }, frame: ['mamma', 'fruStorch'], lines: [['fruStorch', 'Stackars människor som lever så här.'], ['mamma', 'Stackars människor. Släpas runt på dagarna som en skock får…!'], ['mamma', '¡Las ovejas!', { sfx: 'baa' }]] })`  [F](t) · [F] · [N]
-5. `rabbits({ mesh: 'faar', count: 6, near: 'fataga', rMin: 10, rMax: 35, timer: 80, text: 'Fånga fåren åt Josés pappa', barLabel: 'FÅR', gotText: 'Bäää!', failText: 'Fåren sprang hela vägen till Maspalomas.' })`  [N]
+5. `rabbits({ mesh: 'faar', count: 6, near: 'fataga', rMin: 10, rMax: 35, timer: 25, text: 'Fånga fåren åt Josés pappa', barLabel: 'FÅR', gotText: 'Bäää!', failText: 'Fåren sprang hela vägen till Maspalomas.' })`  [N]
 6. `goto({ to: 'fatagaFold', radius: 4, text: 'Tillbaka till fårfållan' })`  [N]
 
 **Outro** (`outroPlace: { pappa: ['fatagaFold', 1.5, 0], mamma: ['fatagaDukar', 0, 0], siv: ['fatagaDukar', 2, 1.5], majsan: ['fatagaDukar', 3, 1.5] }`):
@@ -1707,16 +1768,19 @@ re-applies stage 2's `startCue` night sky and `vals`, §9.4 item 3). `onEnd`: on
 - ole: "Fikser du ikke damer på grisefesten, da er det slutt. I kveld setter vi inn støtet!"  [F]
 
 **Stages:**
-1. `rabbits({ mesh: 'blomma', flee: false, count: 5, near: 'flamenco', rMin: 8, rMax: 40, timer: 70, text: 'Plocka blomster till Siv och Maj-Britt', barLabel: 'BLOMSTER', gotText: 'Blomster!', failText: 'Blommorna vissnade.', radio: [['ole', 'Man må skifte vannet hver fjerde time og gi dem en hodepinetablett.']] })`  [N] · radio [F*]
+1. `rabbits({ mesh: 'blomma', flee: false, count: 5, near: 'flamenco', rMin: 8, rMax: 40, timer: 30, text: 'Plocka blomster till Siv och Maj-Britt', barLabel: 'BLOMSTER', gotText: 'Blomster!', failText: 'Blommorna vissnade.', radio: [['ole', 'Man må skifte vannet hver fjerde time og gi dem en hodepinetablett.']] })`  [N] · radio [F*]
 2. `getInCar({ text: 'Hoppa in i en bil – det börjar skymma', startCue: { sky: 'night', music: 'vals' } })`  [N]
-3. `race({ who: 'gabbe', type: 'bus', carName: 'nattbuss', cruise: 17, playerPassenger: 'ole', start: { lane: [[3, 3], [3, 2]], t: 14 }, checkpoints: [[3, 2], [4, 2], [4, 1], [3, 1]], finish: { x: -80, z: -200 }, text: 'Bussen till grisfesten går nu – kom först!', radio: [['gabbe', 'Grisfestbussen går nu – sista man bjuder på sangrian!']], checkpoint: true })`  [N] · radio [N] (§1.5: the song already has its one spoken line in mission 7)
-   (start: the road on SunTrip's west side (x −40) heading north; route ≈ 350 m north → east →
-   north → west to the farm gate. `start.lane` makes the kind compute `{x, z, yaw}` with
+3. `race({ who: 'gabbe', type: 'bus', carName: 'nattbuss', cruise: 26, oppSpec: { maxSpeed: 31, accel: 11, steer: 0.9 }, playerPassenger: 'ole', start: { lane: [[3, 3], [4, 3]], t: 6 }, checkpoints: [[4, 3], [4, 2], [4, 1], [3, 1]], finish: { x: -80, z: -200 }, text: 'Bussen till grisfesten går nu – kom först!', radio: [['gabbe', 'Grisfestbussen går nu – sista man bjuder på sangrian!']], checkpoint: true })`  [N] · radio [N] (§1.5: the song already has its one spoken line in mission 7)
+   (start: behind Hotel Flamenco (z −40) heading east past Pepes Bodega, Gabbe's bus on the lane
+   beside; left up x 40 past Centro Nórdico, left again along the farm road to the gate: ≈ 350 m,
+   **two left turns** (WP-G: a 10.5 m bus cannot take the grid's right-turn lanes, radius 5.75 m
+   against its ≈ 11.4 m turning circle). `oppSpec` makes the night bus raceable at ×1.2: a clean
+   run wins by ≈ 3 s, one crash loses it. `start.lane` makes the kind compute `{x, z, yaw}` with
    `laneSpot`; the player's car goes on that right-hand lane spot and Gabbe's bus on the left lane
    beside it, `spot − r·2·LANE` with `r = (−cos yaw, sin yaw)`, i.e. side by side across the road,
    never offset along world z (§9.2). Fail text = the kind's default `${name} vann!` → "Gabbe
    vann!".)
-4. `smash({ type: 'tallrikar', area: { lm: 'dansgolv', r: 22 }, count: 10, timer: 40, lockMeter: true, onFoot: true, text: 'Porslinskross! Krossa tallrikarna medan bandet spelar', barLabel: 'TALLRIKAR', failText: 'Bandet slutade spela.', radio: [['pax', 'Vad skickliga de är!']], checkpoint: true, retryAt: 'dansgolv' })`  [N] · radio [F](t)
+4. `smash({ type: 'tallrikar', area: { lm: 'dansgolv', r: 22 }, count: 10, timer: 35, lockMeter: true, onFoot: true, text: 'Porslinskross! Krossa tallrikarna medan bandet spelar', barLabel: 'TALLRIKAR', failText: 'Bandet slutade spela.', radio: [['pax', 'Vad skickliga de är!']], checkpoint: true, retryAt: 'dansgolv' })`  [N] · radio [F](t)
 5. `scene({ place: { majsan: ['dansgolv', 1, 0], siv: ['dansgolv', 2.5, 0.5], ole: ['dansgolv', -1.5, 0.5] }, frame: ['majsan', 'stig'], checkpoint: true, retryAt: 'dansgolv', startCue: { outfit: { who: 'ole', name: 'gris' } }, lines: [...] })`
    (Ole's `gris` outfit goes on the stage's `startCue`, not on a line, so a retry re-applies it, §10.4):
    - ole: "Neida, det er bare å spørre: Skal vi danse! Eller kjør litt større: Sånn! … Voulez-vous danse avec moi? Fransk."  [F]
@@ -1726,7 +1790,7 @@ re-applies stage 2's `startCue` night sky and `vals`, §9.4 item 3). `onEnd`: on
    - siv: "Nu blev hon uppbjuden."  [F](t)
    - ole: "Heia Norge!"  [F]  {anim: {who: 'ole', flag: 'dance', secs: 4}, applause: 2}
    - siv: "Majsan, ta med dig giraffen så går vi på Tonga Tonga."  [F]
-6. `goto({ to: 'tongatonga', radius: 10, inCar: true, timer: 120, text: 'Till Tonga Tonga!' })`  [N]
+6. `goto({ to: 'tongatonga', radius: 10, inCar: true, timer: 30, text: 'Till Tonga Tonga!' })`  [N]
 7. `scene({ place: { ole: ['tongatonga', -2, 1], majsan: ['tongatonga', 1, 1], siv: ['tongatonga', 2, 1], robban: ['tongatonga', 0, 3], berra: ['tongaLot', 0, 0] }, anim: { berra: 'slump' }, lines: [['ole', 'Samba er fine greier!', { music: 'samba' }], ['robban', 'Kan du hjälpa mig bära hem Berra?'], ['stig', 'Vilket snack! "Bärra hem Berra!"']] })`  [F] ×3
 8. `pickup({ who: 'berra', name: 'Berra', at: 'tongaLot', rider: 'robban', hello: '…zzz' })`  [N]
 9. `goto({ to: 'flamencoDrive', radius: 10, inCar: true, passenger: 'berra', text: 'Kör hem till Hotell Flamenco' })`  [N]
@@ -1776,7 +1840,7 @@ then every running gag pays off by the pool before the fear-of-flying arc closes
 `cost: 100` charged after the intro (Ole pays if short).
 
 **Stages:**
-1. `collect({ who: ['herrStorch', 'fruStorch', 'berra', 'majsan'], findAt: { herrStorch: ['playa', 0, 0], fruStorch: ['kyrka', 0, 2], berra: ['bodega', -2.0, 0.5], majsan: ['marknad', 1, 1] }, sendTo: { herrStorch: ['flamencoPool', 4, 2], fruStorch: ['flamencoPool', 5, 2], berra: ['flamencoBar', 0, 0], majsan: ['flamencoPool', -2, 0] }, inCar: true, radius: 1.6, carRadius: 4.0, timer: 200, text: 'Samla ihop gästerna till julfesten', barLabel: 'GÄSTER', failText: 'Julfesten började utan dem.', lines: {...} })`  [N]
+1. `collect({ who: ['herrStorch', 'fruStorch', 'berra', 'majsan'], findAt: { herrStorch: ['playa', 0, 0], fruStorch: ['kyrka', 0, 2], berra: ['bodega', -2.0, 0.5], majsan: ['marknad', 1, 1] }, sendTo: { herrStorch: ['flamencoPool', 4, 2], fruStorch: ['flamencoPool', 5, 2], berra: ['flamencoBar', 0, 0], majsan: ['flamencoPool', -2, 0] }, inCar: true, radius: 1.6, carRadius: 4.0, timer: 80, text: 'Samla ihop gästerna till julfesten', barLabel: 'GÄSTER', failText: 'Julfesten började utan dem.', lines: {...} })`  [N]
    - herrStorch: stig "Herr Storch! Julfesten!" [N] · herrStorch "Jag ska bara filma lite till." [N]
    - fruStorch: stig "Fru Stork, julfesten börjar!" [N] · fruStorch "Vi heter faktiskt Storch, inte Stork." [F*]
    - berra (behind the hotel, staring at nothing in particular): stig "Berra! Julfesten!" [N] · berra "Jag kommer, jag ska bara kolla en grej." [N]
@@ -1826,6 +1890,27 @@ island: `unlock('bodega')` (lit sign, map label "Pepes Bodega", Berra and Robban
 the banners.
 
 ---
+
+### Shipped staging beyond the literals (WP-G data; Phase 2 note)
+
+The shipped missions (src/game/missions/island.js) add camera/placement polish that the §8 literals
+above (and the `fullstory` fixture) do not carry:
+- buss17 outro: on the "havsutsikt" line the porter stands under the balcony facing the cut camera
+  (`flamencoBalcony` 0.6, 1.2, yaw 0); on Ole's next line he goes back to the desk.
+- julafton party: the scene's `cam` is a group shot from the pool deck (`PARTY_CAM`); every guest
+  gets yaw 0, Stig is placed in the group, and the bodega cut returns to the group shot instead of
+  `null`. Room 113: the `place` tuples carry yaw π, so the cast faces the in-room camera.
+- grisfest Tonga scene: `frame: ['robban', 'stig']`, Stig placed at `tongatonga` (0.4, 5.2, yaw 0).
+- grisfest and bodega outros: at the pool cut Stig is placed at the pool facing his partner (in
+  grisfest Majsan is re-placed with yaw π/2); the last line's `cut: null` is dropped in the
+  grisfest, bodega and ropavieja outros, so the pool cut holds to the end.
+- julafton outro: `outroPlace` puts Majsan and Stig side by side, `outroCam: { at: 'flamencoPool',
+  dist: 7, height: 2.4 }`, and Majsan's own line carries a `wings` cue.
+- `grisfestGate` stays at world (−80, −204), on the farm side of the z −200 road: the truck pulls
+  across into the farm gate (G checked it; Phase 0a's z ≈ −195.5 idea is not needed).
+- Still open for the Phase 3 staging pass: hittegods hidden behind Stig in the julafton intro; the
+  camera behind the heads for "Hä-pååre", the haggle "Hvor mye?" and the grisfest porter outro;
+  "Momento." shows the porter without the balcony/mirror; the "Heia Norge!" dancers are small.
 
 ## 9. Stage kinds and the mission runner
 
@@ -1882,8 +1967,8 @@ the `missions` data checks); `kinds/core.js` exports `COMMON` and `common(o, sta
 | `dropoff` | `who` · `at` · `riderOff?` (remove the rider bust, show the rider NPC beside) · `text` | NPC out at `at` | `stage.dest` |
 | `follow` | `type` · `color?` · `carName?` · `driver` (key; `who` accepted as alias) · `passenger?` (NPC in the **followed** car) · `riders?` (busts, removed when the stage ends) · `hideRiders?` (hide those NPCs; they stay hidden until a later stage seats/places them or the mission ends) · `start` (landmark / `{x,z,yaw}` / lane spot) · `via` · `to` (**kerbside**, see below) · `maxDist` · `minDist?` · `minGrace = 2` · `minText?` · `cruise = 12` · `wobble?` · `arriveDist = 35` · `radio?: [[who, text] \| text]` (string = driver speaks) | arrived and within `arriveDist` / lost > 3 s beyond `maxDist`, closer than `minDist` for > `minGrace` s, car wrecked | `stage.car`, `stage.minDist` |
 | `rabbits` | `mesh = 'badboll'` (`badboll faar blomma gris`) · `count` (**≤ 6** for the test) · `near` · `rMin = 18` · `rMax = 55` · `flee = true` (false = static bobbing) · `timer` · `barLabel` · `gotText` · `failText` · `radio?` · `onFoot?` | all caught / timer | `stage.list[] {x, z, alive}` |
-| `race` | `who` (opponent driver) · `type` · `color?` · `carName?` · `cruise` · `start` (a lane spot, or `{x, z, yaw}`; the player goes on that spot, the opponent on the lane to its left, `spot − r·2·LANE` with `r = (−cos yaw, sin yaw)`: offsets are **lateral to `yaw`, never along world z**) · `checkpoints: [[i, j]]` · `finish: {x, z}` · `playerPassenger?` (NPC seated in the **player's** car at init) · `oppPassenger?` (old `passenger`: NPC in the opponent car) · `radio?` | all checkpoints first / opponent first ("`${name} vann!`") | `stage.cps, stage.pi, stage.opp, stage.oi` |
-| `destroy` | `type` · `carName?` · `driver = 'guardia'` (bust def key; replaces `CHARS.shame`) · `spawn?` (landmark / `{x,z,yaw}` / lane spot; default: random node 70–130 m away) · `timer` · `cruise = 20` · `damageScale = 1.5` · `noExplode = false` (wreck stops in steam, occupants step out, no fire) · `barLabel = 'MÅL'` · `failText = 'Den kom undan!'` | wrecked (`m.data.wreck`) / timer | `stage.car` |
+| `race` | `who` (opponent driver) · `type` · `color?` · `carName?` · `cruise` · `start` (a lane spot, or `{x, z, yaw}`; the player goes on that spot, the opponent on the lane to its left, `spot − r·2·LANE` with `r = (−cos yaw, sin yaw)`: offsets are **lateral to `yaw`, never along world z**) · `checkpoints: [[i, j]]` · `finish: {x, z}` · `playerPassenger?` (NPC seated in the **player's** car at init) · `oppPassenger?` (old `passenger`: NPC in the opponent car) · `radio?` · `oppSpec?` (Phase 2: fields merged over a copy of the opponent car's spec, e.g. the night bus's `{ maxSpeed, accel, steer }`) | all checkpoints first / opponent first ("`${name} vann!`") | `stage.cps, stage.pi, stage.opp, stage.oi` |
+| `destroy` | `type` · `carName?` · `driver = 'guardia'` (bust def key; replaces `CHARS.shame`) · `spawn?` (landmark / `{x,z,yaw}` / lane spot; default: random node 70–130 m away) · `timer` · `cruise = 20` · `damageScale = 1.5` · `noExplode = false` (wreck stops in steam, occupants step out, no fire) · `barLabel = 'MÅL'` · `failText = 'Den kom undan!'` · `playerDamageScale?` (Phase 2: the player's car at the stage start takes this damage scale while the stage runs, restored on cleanup) | wrecked (`m.data.wreck`) / timer | `stage.car` |
 | `grab` | `at?` (or `m.data.wreck`) · `mesh = 'pryl'` (any `COLLECT_KINDS` key) · `scale = 1.8` · `say?` · `gotText?` | touched | `stage.item` |
 | `collect` | `items?: [{x, z, y?} \| landmark]` + `kind` + `motion = 'spin'` (`spin bob roll`) · **or** `who?: [keys]` with `standAt?` (flight: `{key: [x, z]}` world, NPC unseated and stood there) / `findAt?` (island: `{key: [lm, dx, dz]}`) and `seatOnTouch?` (flight: back to its HOMES seat) / `sendTo?` (island: `{key: [lm, dx, dz]}`) · `lines?: {key: [[who, text]]}` (played as bubbles on touch) · `radius = 1.0` · `carRadius = 4` · `inCar = false` (true: touching from a car counts, within `carRadius`) · `timer?` · `barLabel` · `failText` | all touched / timer | `stage.list[] {x, z, alive, key?}` |
 | `sit` | `seat` · `timer?` · `failText?` | `g.player.seatId === seat` / timer | `stage.seat` (seat object) |
@@ -2260,7 +2345,15 @@ Tags: all UI strings are [N] unless noted.
   orchestra of busts; tune `samba`; banner `RIO…?` / *"Svenskarna reser inte till någonting… dom
   reser från någonting."* [F] (6 s); fade back; player at `flamencoPool`; banner
   `NUEVA ESTOCOLMO KLARAT!` / `God jul – och tack för resan!`; free roam continues.
-- Fallback (cut): only the last banner.
+  **Wired in Phase 2** (`main.js playEndCard`, called by the runner after the last mission when a
+  cue set `endCard`): `shame.clear()`, out of any car, `inDialog` (input frozen), letterbox, white
+  flash; sky `sunset`, tune `samba`, Stig `rio` (not persisted), Ole `rio`; Stig, Majsan, Ole and Siv
+  on the aft deck at `rioBoat` offsets (0.7, 2.0), (−0.7, 2.6), (1.1, 3.7), (−0.6, 4.4), each turned
+  to `rioCam`; camera cut from (rioCam, y 3.2) at (rioBoat, y 2.3, z + 1.5); the `S.endCardMain` /
+  `S.endCardSub` banner (cls `mission`, 6 s); after 6.6 s another white flash, camera released, sky
+  back, `placeNpcs(true)` + `applyOutfits()`, player at `approachSpot('flamencoPool')`, level tune,
+  letterbox off, then the completion banner and the `complete` jingle. Scenario `endcard` checks it.
+- Fallback (cut): only the last banner (used when no `endCard` cue fired).
 
 ---
 
@@ -2364,7 +2457,9 @@ Flight palettes keep `fogNear ≥ 40` so the interior is never fogged. Night: st
 Keep `--ink #1d1426`, `--cream #fff8e6`, `--yellow #ffd23f`. Replace purple/pink with `--sun
 #f7c31b`, `--orange #f07a1e`, `--sea #1c7fb8`, `--teal #1e9aa0`, `--terracotta #c0623a`,
 `--sand #e8cf98`. Meter fills: `.fear` `linear-gradient(90deg, #6ab0e8, #e0342a)`, `.skandal`
-`linear-gradient(90deg, #f7c31b, #d8321e)`. `body.fear-hot` adds a pulsing red vignette.
+`linear-gradient(90deg, #f7c31b, #d8321e)` (as shipped by WP-H, each with a middle stop for a
+richer ramp: `.fear` `#6ab0e8, #b070c0 60%, #e0342a`, `.skandal` `sun, orange 55%, red`; same end
+colours, gradient over the whole bar). `body.fear-hot` adds a pulsing red vignette.
 Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-icon` (a watch),
 `.fen-icon` (a fin). Banner cls `skandal` replaces `shame`; add cls `fear`.
 
@@ -2604,8 +2699,13 @@ cam.cutTo({ x, y, z }, { x, y, z })   // cine pos/look; release() returns
 ```js
 export const CHARS = { stig: {...}, ... };         // keys = Appendix A; Phase 0: approximate looks
 export const CAST = Object.keys(CHARS).filter((k) => CHARS[k].portrait !== false);
-export function buildCharacter(def), animateCharacter(m, st, dt), randomPed(r), buildBust(def)
+export function buildCharacter(def), animateCharacter(m, st, dt), randomPed(r, { flight } = {}), buildBust(def)
 export function buildBustGeo(def) -> BufferGeometry   // merged bust, origin at torso bottom, +z forward
+// randomPed(r, { flight: true }): Swedish charter passengers only (no locals) for the cabin, lounge,
+//   walkers and stowers; a ped def has `local: bool` (Spanish local, ~30 % on the island). Random
+//   sequences changed in WP-E (the shorts draw follows the dress draw), and buildBust/buildBustGeo
+//   drop a random ped's sunhat or bucket hat. buildBust(def).userData.h = the bust's height (seat fit).
+//   The model has m.legLen and m.headTop (= m.height).
 export function outfitDef(key, outfit) -> def         // { ...CHARS[key], ...CHARS[key].outfits?.[outfit] }
 ```
 New def fields (WP-E implements; unknown fields are ignored until then): `hat`
@@ -2613,7 +2713,15 @@ New def fields (WP-E implements; unknown fields are ignored until then): `hat`
 hat on top of hair; its colour is `hatC`, Phase 0a), `dress` (colour; cone skirt), `shades` (colour; filled lenses), `beard`,
 `print: [c1, c2, c3]` (confetti blobs on the torso), `tuft`, `tie`, `bowtie`, `vest`, `held`
 (`'camera' | 'boombox' | 'accordion' | 'congas' | 'cup' | 'mirror' | 'broom' | 'giraffe' |
-'butterKnife' | 'knacke'`), hair `'page'`, `hairFlower`, `ring` (css), `outfits`, `portrait`.
+'butterKnife' | 'knacke' | 'handbag'`), hair `'page'`, `hairFlower`, `ring` (css), `outfits`, `portrait`.
+WP-E added (full list in the models.js header): `capStyle`, `printStyle` (`confetti | dots | floral |
+check`), `stripe`/`stripes`, `sash`, `scarf` (neck), `apron`, `belly`, `collar`, `suit` (shirt colour
+in the jacket's V), `coat`, `epaulets`, `badge`, `chain`, `belt`, `pinafore`, `shorts`/`baggy`,
+`legsC`, `hands`, `glassesBig`, `lens`, `aviator`, `lashes`, `curlySides`, `thin`, `sideburns`, `nose`
+shapes. An outfit clears a base field with `null` (e.g. the flyg cardigans drop the dress print).
+Carmencita's scarf, Städerskan's apron, the Grisfestvärd's sash and a real `hat: 'cap'` replace the
+Phase 0 stand-ins. Content may give an outfit a `held` field or use the `giraffe`, `butterKnife`,
+`film`, `mirror` or `shoeOff` anim flags, which bring their own props.
 
 Anim flags on `Character.anim` (Phase 0 adds them all with a minimal arm pose where noted; WP-E
 polishes): `wings` (arms straight out — Phase 0), `cupUp` (right arm up+forward — Phase 0),
@@ -2631,16 +2739,21 @@ hand at hip height, `x/y/z` set for bubbles); `ch.standAt(x, z, yaw)` (state `no
 ```js
 export const CAR_TYPES = {...};                       // §6.6
 export function registerCarType(key, spec)            // used by cabin.js for 'trolley'
-// buildCarModel: `if (s.build) return s.build(s, color);` first; wheels skipped when s.noWheels;
-// glass null-guarded (existing). spec flags: livery ('suntrip'|'guagua'), guardia, taxi, pigs.
+// buildCarModel: `if (s.build) return s.build(s, color);` first (it may return { geo, glass, extras });
+// wheels skipped when s.noWheels; glass null-guarded (existing). spec flags: livery
+// ('suntrip'|'guagua'), guardia, taxi, pigs, hatch, wagon, colors (random colour palette).
 // car fields: noEnter (never offered to the player), noExplode (damage → dead + fx.steam, no fire,
-// no burn), isPursuer, riders[].
+// no burn), isPursuer, riders[], decals[].
+// Occupants (Phase 2, §6.6): car.seatY() (bust base / hips − 0.12, car-local), car.roofY() (roof
+// underside − 0.08; Infinity for buses), car.fitScale(h, base = seatY()) = clamp((roofY − base) / h,
+// 0.72, 1). main.addBust / addRider (not 'bed') / seat use them, so no head pokes through a roof.
 ```
 
 **pickups.js**
 ```js
 export const COLLECT_KINDS = { pryl, fena, flaska, juice, knacke, asna, vaska, giraff };
 //   each { build(id) -> Object3D, motion: 'spin' | 'circle' | 'bob' | 'roll' | 'none', beam?: bool, scale? }
+//   pryl.build(id) picks the gadget by prylar id (the watch as fallback)
 export function registerCollectKind(kind, def)
 export class Collectible { constructor(scene, kind, id, x, y, z, opts = {}) }   // unknown kind → yellow box
 export class Rabbit { constructor(scene, x, z, { mesh = 'badboll', flee = true } = {}) }
@@ -2653,6 +2766,14 @@ export class Rabbit { constructor(scene, x, z, { mesh = 'badboll', flee = true }
 ```js
 // world/frame.js
 export class Frame { constructor(S, F, ox, oz, yaw = 0, scene) ...  mark(name, lx, lz, ly = 0, y) ... }
+// Collision kinds: block builders must **not** use kind 'prop' (reserved: car.collideStatic treats it
+// as a smashable prop and reads b.ref.def, which a static solid lacks); use 'solid' etc. Block
+// interiors sit on a fill at CURB−0.04 inside a sidewalk ring at CURB (WP-B): keep block ground at
+// CURB+0.01 or higher.
+
+// world/town.js (WP-B): lamps, animated, pedLoops, DC8_SPOT, parkedCars, bouncers (the trampoline
+//   'bounce' blocks), frameRamps [{ x, z, yaw, top, top2 }] (foot of each half-built frame's ramp 1,
+//   both deck heights). world/rio.js: RIO_X (= −3000).
 //   all Bigmouth Frame methods; sign() adds to this.scene; car(type, lx, lz, ly = 0, extra)
 
 // world/layout.js
@@ -2699,6 +2820,8 @@ cabin = {
                                  // ends; main.js shows the `Håll i dig!` prompt on it (§5.7 step 1)
   seatCharacter(ch, seatId),  unseatCharacter(ch, spot?),  unseatAll(),  seatOf(ch) -> id | null,
   startTrolley(),  stopTrolley(),  trolleyEnd(g) -> { x, z },
+  stopTurbulence(),              // Phase 2: ends a running turbulence now (restoreAmbience)
+  walkers,                       // the aisle walkers (keys walker0..2; §5.12); _t.serving
   setAisleBlockers(on),
   setGateActive(on),
   placeCoins(),
@@ -2714,8 +2837,9 @@ cabin = {
 
 // world/flightScenery.js (WP-A2; Phase 0 stub with this exact shape)
 export function buildFlightScenery(scene) -> { airframe, scenery, gateVisual,
-  setPhaseVisual(name, t), setGateVisible(on), tick(dt) }
-export function buildPlaneExterior(group, { gear = true } = {})   // also used by the airport block
+  setPhaseVisual(name, t), setGateVisible(on), tick(dt), phaseT /* getter */ }
+export function buildPlaneExterior(group, { gear = true, cutaway = false } = {})   // also the airport block
+export const PLANE_GROUND_Y = -4.65
 
 // world/rio.js (WP-B, P1)
 export function buildRioCard(scene)   // landmarks rioBoat, rioCam at x = -3000
@@ -2745,6 +2869,21 @@ shame.onRam(car, impact);  shame.pursuers;  shame.officer;  shame.v / pursuit / 
 
 // fx.js
 fx.snow(x, y, z);  fx.steam(x, y, z);  fx.meterPuff(x, y, z, color, n)   // (fx.shame removed)
+fx.spill(x, y, z, color, n);  fx.wisp(x, y, z)   // A1: trolley juice spill, smokers' wisp
+
+// WP-H additions (all additive):
+// hud.panic(secs); hud.labelLayout (big-map label layout, cached on labels + crop); body classes
+//   pursuit / panik / in-dialog; banner classes multa (bust) and fear; toast class witness; HUD
+//   elements #vignette #sirenlights #panik. hud.say: one bubble per speaker (a new line replaces
+//   it) and overlapping bubbles stack upwards, the newer above (Phase 2).
+// shame.inScene (getter: inDialog || inCutaway); shame.hideoutT; steer state; a teleports debug
+//   counter; hideout interactable id 'hideout:<landmark>' (registered in configure()).
+// audio.sirenNear(d); audio.trad(name, { vol }) -> length in s (respects mute and the music toggle);
+//   audio.sweep(...); audio.level() test hook { rms, state, tune }; export TRAD_NAMES; tune bar()
+//   voices snare/accordion/chime/pad/conga/pluck/brass/surdo/agogo/sleigh/flute; setTune(current)
+//   cancels a pending switch.
+// strings.js: mapTitleIsland, mapTitleFlight, mapTitleGate, noMap, morningAfter, morningAfterSub,
+//   endCardMain 'RIO…?', endCardSub (the film's opening card, [F]).
 ```
 
 ### 14.9 Data formats in content files
@@ -2790,16 +2929,20 @@ OLE_STATS = [
   'Leste du om en sånn jumbopilot som gjorde en looping? To ganger.',         // [F*]
   'Det her er bare luftlommer, Stig-Helmer. Helt normalt!',                   // [N]
   'Tre ganger så fort som en geværkule, Concorde!',                           // [F*]
+  'Statistisk sett er det tryggest å sitte bakerst. Eller var det fremst?',   // [N] (WP-F)
+  'Hører du den lyden? Helt normalt. Tror jeg.',                              // [N] (WP-F)
 ];
 CHATTER_FLIGHT = {
-  ole: ['Hører du? Samba.' /*[F*]*/, 'Kvarts og digital.' /*[F*]*/],
-  angerud: ['Kallar ni det här \'varm middag\'?' /*[F*](t)*/, 'Det är sista gången jag åker med SunTrip!' /*[F*]*/],
+  ole: ['Hører du? Samba.' /*[F*]*/, 'Kvarts og digital.' /*[F*]*/, 'Ja, men dyr!' /*[F*]*/,
+        'Min drøm er å fly med Concorde fra Paris til Rio.' /*[F*]*/],
+  angerud: ['Kallar ni det här \'varm middag\'?' /*[F*](t)*/, 'Det är sista gången jag åker med SunTrip!' /*[F*]*/,
+            'Jag har inte fått resan gratis.' /*[F*](t)*/],
   berra: ['Ra-tara-tara…' /*[F*]*/, 'Ta det vackert, vi har varit ute och flugit förr.' /*[F*]*/],
-  robban: ['Fan, vad jag är törstig.' /*[F*]*/],
-  siv: ['Bara de inte är ingenjörer.' /*[F*]*/],
+  robban: ['Fan, vad jag är törstig.' /*[F*]*/],   // (not "Pepes Bodega…": it would come before the gate's bodega tip)
+  siv: ['Bara de inte är ingenjörer.' /*[F*](t)*/, 'Vilket gäng man har hamnat i!' /*[F*](t)*/],
   majsan: ['De är säkert trevliga.' /*[F*](t)*/],
   fruStorch: ['Vi heter faktiskt Storch, inte Stork.' /*[F*]*/],
-  herrStorch: ['Lite film.' /*[F*]*/],
+  herrStorch: ['Lite film.' /*[F*](t)*/],
   jose: ['Jag ska inte bort, jag ska hem.' /*[F*]*/],
   sulan: ['Plomberat och klart.' /*[F*]*/],
   kontrollant: ['Nästa!' /*[N]*/],
@@ -3138,6 +3281,12 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `talk` [Phase 0] | `autoDialog = false`, walk to Ole at `gateQueue`, E, Space twice |
 | `fullstory` [Phase 0b] | swaps the literal §8 missions (`tools/fixtures/full-missions.js`) into `MISSIONS` and plays all 13 per §16.3 (`FROM`/`TO` as `story`); must end `#13 idle`, `RESULT: PASS` |
 | `kinds` [Phase 0b] | fixture data checks; haggle misses fail; follow `minDist` fails; smooth/fragile bars (teleports never count); carry spill; checkpoint retry re-applies night + `vals` and revives plates at `dansgolv`; destroy default spawn; grab at the wreck; scene `exitCar` |
+| `heads` [E] | light face check: one head per hair style and hat, plus the portraits (run after any head/hat change) |
+| `flightshots` [A1] | review shots of the gate and cabin (lounge, toilet, trolley waiting for a downed player, …) |
+| `sceneryPeek`, `flightseq`, `dc8` [A2] | outside views of the flight scenery; the takeoff→cruise chain driven through `cabin.setPhase`; the parked airframe |
+| `propsheet`, `riocard`, `islandtour`, `islandstats` [B] | every §6.8 prop in a row; the Rio set from `rioCam`; streets/outskirts/sea tour; triangle budget |
+| `endcard` [Phase 2] | `game.playEndCard()`: Stig on the Rio deck in `rio`, Ole in `rio`, sunset, letterbox, frozen input, `RIO…?`; then back within 2.5 m of `flamencoPool` in island clothes, free roam, `NUEVA ESTOCOLMO KLARAT!` |
+| `calibrate` [G] | headless autopilot timer calibration (env `CAL=id,…`, `RACE_SWEEP`, `RACE_RUNS`, `JEEP`, `JEEP_RUNS`, `FOOT_RUNS` = 3, `RACE_CAR`); page-side `__ap.check()` is the completion test; prints the timer table. `story` supports `SHOTS=1` (key-scene screenshots) |
 
 ---
 
@@ -3352,3 +3501,31 @@ Integration on `main` (§15.3). Entries name the step they belong to.
 - §6.4 parked DC-8 (coast.js): A2's real airframe no longer receives shadows when parked at Gando.
   Under the low island sun its round fuselage self-shadowed in stripes along the belly; it still
   casts onto the apron.
+- Step 2, contract changes and integration gaps (tag `phase2-contracts`). Applied from the Phase 1
+  hand-offs: landmark table `flamenco (−4, −8, π)`, `suntrip (−14, 24, π)`, `plaza (0, 6.8, π)`
+  folded into landmarks-island.js (the builders' `f.mark` overrides removed; §6.3); HOMES tuples take
+  an optional 4th world yaw, Ole idles facing the pool (§2.3, §4.5); `race.oppSpec` and
+  `destroy.playerDamageScale` kind options replace G's wrappers (§9.2); F's and G's measured timers,
+  checkpoints, follow tuning, race route and turbulence numbers written into the §8 literals and the
+  `fullstory` fixture (§8, "Timers and difficulty"), G's extra staging noted after §8; chatter/bark
+  table changes (§14.10); E's API (§14.6) and seat fit for every car (`seatY/roofY/fitScale`, no head
+  through a roof; §6.6); cabin passengers are flight peds (§5.12); A1's gate solids, `clampPitch`,
+  walkers, belt semantics, trolley ownership/grace, juice spots, fx (§5.2–5.12, §14.7–14.8); A2's
+  ground level, exterior options and pitch ownership (§5.6); B's sea layout, block ground, exports
+  (§6.4, §14.7); C2's reserved collision kind 'prop' (§14.7); H's API additions (§7.1, §14.8);
+  `.gitignore` `node_modules` (matches the worktree symlinks).
+- Integration fixes: one pitch owner (flightScenery, positive = nose up; cabin.js no longer writes
+  `rotation.x`; §5.6 signs corrected: takeoff +0.12, approach −0.03); one snow system (A2's; A1's
+  cabin `fx.snow` emitter removed); `cabin.stopTurbulence()` called by `restoreAmbience()` (§5.7);
+  the climb→cruise pitch/puff pop and the takeoff→climb altitude step eased (§5.6); every standing
+  jolt interrupts a held mantra (§5.7); "Juice, whisky?" at every trolley stop (§5.8); hud.say keeps
+  one bubble per speaker and stacks overlapping bubbles, and the scripted row-6/takeoff bubble
+  sequences wait a line's full time; the witness toast never fires during a scene or cutaway, and
+  Lasse's bust radio line only after a free-roam bust (§7.1–7.2); Spanish dodge shout `¡Turistas!`
+  (`Herre jävlar` [F*]; §6.7); C2 signs without English/German (`CAMBIO · VÄXLING`, `MISA 10.00 /
+  GUDSTJÄNST 11.30`); flyg cardigans without the dress print, Lasse's floral shirt print, invented
+  look details commented; F's tag fixes (cabin Storch PA [F], (t) on the takeoff explanation and the
+  Concorde exchange) and Robban's bodega bark out of CHATTER_FLIGHT; B's half-built frame columns are
+  solid ('pole'); the outskirts tree band skips the whole Gando apron (D2); D1's mowing bands above
+  the fairway, water discs 4–5 mm apart, crags/rocks clear of the north ped loop, [N] tags.
+- §11.7 Rio end card wired into `game.playEndCard()`; new scenario `endcard`.

@@ -242,11 +242,13 @@ class Game {
   }
 
   // After a mission fails or is aborted: the level's ambient state for the current mission index.
-  // Flight: the cabin goes back to phaseForIndex(index) instantly with no hold (which stops a
-  // mission's phase chain, held or not) and the seatbelt sign off; then palette and map follow.
+  // Flight: a running turbulence stops, the cabin goes back to phaseForIndex(index) instantly with
+  // no hold (which stops a mission's phase chain, held or not) and the seatbelt sign off; then
+  // palette and map follow.
   restoreAmbience() {
     if (this.level === 'flight') {
       const cab = this.cabin;
+      cab.stopTurbulence();
       cab.setPhase(this.levelDef.phaseForIndex(this.missions.index), { instant: true });
       cab.setSeatbelt(false, { chime: false });
       hud.setMapSource(cab.mapSource(cab.phase));
@@ -327,10 +329,10 @@ class Game {
   // A driver bust (traffic, mission cars): sits in the driver's seat.
   addBust(def, car) {
     const s = car.spec;
-    const seatY = s.tall ? s.wheelR * 0.95 + 0.9 : s.wheelR * 0.95 + s.bodyH;
     const z = s.tall ? s.len / 2 - 1.6 : -0.05;
     const obj = buildBust(def);
-    obj.position.set(s.wid * 0.22, seatY, z);
+    obj.position.set(s.wid * 0.22, car.seatY(), z);
+    obj.scale.setScalar(car.fitScale(obj.userData.h || 1.25));
     car.tilt.add(obj);
     car.driverBust = obj;
     return obj;
@@ -341,12 +343,14 @@ class Game {
     const s = car.spec;
     const def = typeof defKey === 'string' ? (CHARS[defKey] || randomPed()) : defKey;
     const obj = buildBust(def);
-    const top = s.wheelR * 0.95 + s.bodyH;
+    const top = s.wheelR * 0.95 + s.bodyH, seatY = car.seatY();
+    // Bed riders stand in the open load bed (no roof); window and rear riders sit like the driver.
     if (slot === 'bed') obj.position.set(((car.riders.length % 2) ? -1 : 1) * 0.4, top, -s.len * 0.3);
     else if (slot.startsWith('window')) {
       const k = +slot.slice(6) || 1;
-      obj.position.set((k % 2 ? 1 : -1) * (s.wid / 2 - 0.55), s.tall ? s.wheelR * 0.95 + 0.9 : top, s.len / 2 - 2.6 - Math.ceil(k / 2) * 1.7);
-    } else obj.position.set(((car.riders.length % 2) ? 1 : -1) * s.wid * 0.22, s.tall ? s.wheelR * 0.95 + 0.9 : top - 0.05, s.tall ? s.len / 2 - 3.2 : -0.95);
+      obj.position.set((k % 2 ? 1 : -1) * (s.wid / 2 - 0.55), seatY, s.len / 2 - 2.6 - Math.ceil(k / 2) * 1.7);
+    } else obj.position.set(((car.riders.length % 2) ? 1 : -1) * s.wid * 0.22, seatY, s.tall ? s.len / 2 - 3.2 : -0.95);
+    if (slot !== 'bed') obj.scale.setScalar(car.fitScale(obj.userData.h || 1.25));
     if (typeof defKey === 'string') obj.userData.riderKey = defKey;
     car.tilt.add(obj);
     car.riders.push(obj);
@@ -452,9 +456,12 @@ class Game {
     ch.car = car;
     ch.vx = ch.vz = ch.vy = 0;
     car.tilt.add(ch.root);
-    const seatY = s.tall ? s.wheelR * 0.95 + 0.9 : s.wheelR * 0.95 + s.bodyH;
+    // Hips 0.12 above the seat; shrunk (about the hips) only as far as the roof needs.
+    const hips = car.seatY() + 0.12, m = ch.model;
+    const k = car.fitScale(m.headTop - m.legLen, hips);
     const z = s.tall ? s.len / 2 - 1.6 : -0.05;
-    ch.root.position.set(side * s.wid * 0.22, seatY + 0.12 - ch.model.legLen, z + 0.12);
+    ch.root.scale.setScalar(k);
+    ch.root.position.set(side * s.wid * 0.22, hips - m.legLen * k, z + 0.12);
     ch.root.rotation.set(0, 0, 0);
     ch.root.visible = true;
     if (side > 0) {
@@ -749,7 +756,7 @@ class Game {
         n.busy = true;
         continue;
       }
-      const [where, dx, dz] = home;
+      const [where, dx, dz, hy] = home;   // optional 4th element: an absolute world yaw (§4.5)
       const id = `${where}:${dx}:${dz}`;
       if (!force) {
         if (n.spot === id && n.state === 'normal' && dist(n.x, n.z, n.homeX, n.homeZ) < 6) continue;
@@ -763,7 +770,7 @@ class Game {
       n.state = 'normal';
       n.root.visible = true;
       n.homeX = q.x; n.homeZ = q.z;
-      n.teleport(q.x, q.z, q.yaw);
+      n.teleport(q.x, q.z, hy ?? q.yaw);
       n.spot = id;
       n.busy = false;
     }
@@ -1064,8 +1071,46 @@ class Game {
     if (u.home) Object.assign(this.homeOverrides, u.home);
     // u.tune: offered by the pause-menu Musik button once unlocked (cycleMusic); never auto-played.
   }
-  // Phase 0 stub: the two banners only (the Rio cinematic is wired in Phase 2).
+  // The Rio end card (§11.7; set built by rio.js at x = -3000, landmarks rioBoat/rioCam): a white
+  // flash, then Stig (outfit rio), Majsan, Ole (rio) and Siv on the yacht's aft deck at sunset to
+  // the samba, the film's opening card as the banner; another flash, back to the island at the
+  // Flamenco pool in ordinary clothes, the completion banner, and free roam continues.
   async playEndCard() {
+    const white = 'rgba(255,255,255,0.95)';
+    this.shame.clear();
+    if (this.playerCar) this.exitCar(true);
+    this.inDialog = true;
+    hud.letterbox(true);
+    hud.flashColor(white);
+    const b = lm('rioBoat'), c = lm('rioCam');
+    this.setSky('sunset');
+    audio.setTune('samba');
+    this.setPlayerOutfit('rio', { persist: false });
+    this.setNpcOutfit('ole', 'rio');
+    // Aft deck (|dx| <= 1.4, dz 1..5 from rioBoat; teleport snaps to the deck at 0.55), everyone
+    // turned towards rioCam.
+    for (const [k, dx, dz] of [[PLAYER_KEY, 0.7, 2.0], ['majsan', -0.7, 2.6], ['ole', 1.1, 3.7], ['siv', -0.6, 4.4]]) {
+      const q = this.lmOffset(b, dx, dz);
+      this.placeNpc(k, 'rioBoat', dx, dz, yawTo(c.x - q.x, c.z - q.z));
+    }
+    this.endCut();
+    this.cam.cutTo({ x: c.x, y: 3.2, z: c.z }, { x: b.x, y: 2.3, z: b.z + 1.5 });
+    this.cam.snapNext = true;
+    hud.showBanner(S.endCardMain, S.endCardSub, 'mission', 6000);
+    await this.wait(6.6);
+    hud.flashColor(white);
+    this.cam.release();
+    this.setSky(this.levelDef.palette || 'day');
+    this.placeNpcs(true);   // home set and home outfits (Ole back in 'sol')
+    this.applyOutfits();    // the player's island outfit
+    const s = this.approachSpot('flamencoPool');
+    this.player.state = 'normal';
+    this.player.teleport(s.x, s.z, s.yaw);
+    this.cam.yaw = s.yaw;
+    this.cam.snapNext = true;
+    audio.setTune(this.levelTune());
+    hud.letterbox(false);
+    this.inDialog = false;
     hud.showBanner(S.gameComplete, S.gameCompleteSub, 'good', 5000);
     audio.jingle('complete');
   }

@@ -316,28 +316,43 @@ export const hud = {
     this.dialogActive = false;
   },
 
-  // Speech bubbles over characters in the world.
+  // Speech bubbles over characters in the world. One bubble per speaker: a new line replaces the
+  // speaker's live bubble. Bubbles that would overlap on screen stack upwards, the newer one above
+  // (scripted lines, Ole's barks and the mantra over neighbouring seats).
   say(target, text, secs = 2) {
     if (!target) return;
+    const list = (this._bubbles ||= []);
+    for (let k = list.length - 1; k >= 0; k--) if (list[k].target === target) { list[k].b.remove(); list.splice(k, 1); }
     const b = el('div', 'bubble', this.bubbles, text);
-    const item = { b, target, until: performance.now() + secs * 1000 };
-    (this._bubbles ||= []).push(item);
+    list.push({ b, target, until: performance.now() + secs * 1000 });
   },
   tickBubbles() {
     const list = this._bubbles || [];
     const now = performance.now();
     const v = _bubbleV;
-    for (let k = list.length - 1; k >= 0; k--) {
+    const placed = [];
+    for (let k = 0; k < list.length; k++) {   // oldest first: newer bubbles move up out of the way
       const it = list[k];
-      if (now > it.until) { it.b.remove(); list.splice(k, 1); continue; }
+      if (now > it.until) { it.b.remove(); list.splice(k--, 1); continue; }
       const t = it.target;
       if (t.state === 'hidden') { it.b.style.display = 'none'; continue; }
       v.set(t.x, t.y + (t.height || 2) + 0.6, t.z);
       v.project(camera);
       if (v.z > 1 || Math.abs(v.x) > 1.1 || Math.abs(v.y) > 1.1) { it.b.style.display = 'none'; continue; }
       it.b.style.display = '';
-      it.b.style.left = `${(v.x * 0.5 + 0.5) * window.innerWidth}px`;
-      it.b.style.top = `${(-v.y * 0.5 + 0.5) * window.innerHeight}px`;
+      const x = (v.x * 0.5 + 0.5) * window.innerWidth;
+      let y = (-v.y * 0.5 + 0.5) * window.innerHeight;
+      const w = it.b.offsetWidth, h = it.b.offsetHeight;
+      // The bubble's anchor is its bottom centre (translate(-50%, -100%)).
+      for (let moved = true, n = 0; moved && n < 8; n++) {
+        moved = false;
+        for (const p of placed) {
+          if (Math.abs(p.x - x) < (p.w + w) / 2 + 4 && y > p.y - p.h - 4 && y - h < p.y + 4) { y = p.y - p.h - 6; moved = true; }
+        }
+      }
+      placed.push({ x, y, w, h });
+      it.b.style.left = `${x}px`;
+      it.b.style.top = `${y}px`;
     }
   },
 
