@@ -48,6 +48,7 @@ export const pedLoops = [];     // sidewalk loops for pedestrians
 export const animated = [];     // objects with tick(t)
 export const lamps = [];
 export const bouncers = [];     // trampoline ('bounce') blocks
+export const frameRamps = [];   // half-built frames: { x, z, yaw, top } = the foot of ramp 1, deck 1 height
 
 let scene;
 
@@ -212,6 +213,15 @@ function pool(f, lx, lz, w, d, rimC = 0xeae6dc) {
   f.box(0xd8dde2, lx + w / 2 - 1.1, CURB, lz - d / 2 - 0.15, 0.06, 0.9, 0.06);
 }
 
+// A paper advent star in a window (the Swedish guests brought one; §6.9 charter Sweden).
+function adventStar(f, lx, y, lz, r = rnd) {
+  const c = pick([C.red, 0xfafafa, C.orange, C.sun], r);
+  f.boxC(c, lx, y, lz, 0.5, 0.5, 0.1, 0, 0, Math.PI / 4);
+  f.boxC(c, lx, y, lz, 0.5, 0.5, 0.1);
+  f.boxC(0xfff1b8, lx, y, lz - 0.03, 0.18, 0.18, 0.1, 0, 0, Math.PI / 4);
+  f.boxC(0xfafafa, lx, y + 0.6, lz, 0.02, 0.7, 0.02);
+}
+
 // Hotel trampoline ("studsmatta"): a 'bounce' floor.
 function trampoline(f, lx, lz) {
   const x = f.wx(lx, lz), z = f.wz(lx, lz);
@@ -286,6 +296,7 @@ function bungalowLot(f, LW, LD, r, corner = false) {
     f.box(shut, wx - 0.85, CURB + 0.95, front - 0.07, 0.52, 1.36, 0.08);
     f.box(shut, wx + 0.85, CURB + 0.95, front - 0.07, 0.52, 1.36, 0.08);
     f.box(C.white2, wx, CURB + 0.9, front - 0.12, 1.5, 0.08, 0.24);
+    if (r() < 0.2) adventStar(f, wx, CURB + 1.55, front - 0.14, r);
   }
   for (const s of [-1, 1]) {   // back windows
     const wx = hx + s * hw * 0.28;
@@ -380,6 +391,7 @@ function slabLot(f, LW, LD, r) {
   const w = R(15.2, 17.4, r), d = R(10, 12, r), front = R(6.2, 7.6, r), cz = front + d / 2;
   const wall = pick([C.white, C.white2, C.white, C.cream, C.ochreWall], r);
   const accent = pick(AWNINGS, r);
+  const rail = pick([C.white2, C.white2, C.white2, 0x1e9aa0, C.terracotta, 0x2f6ad1, 0xd8a24a], r);   // balcony fronts
   f.box(wall, 0, CURB, cz, w, H, d);
   f.solid(0, cz, w, d, 99);
   // Ground floor: glass lobby band, entrance canopy on two poles, forecourt paving.
@@ -394,12 +406,14 @@ function slabLot(f, LW, LD, r) {
     const y = CURB + fl * fh;
     f.box(C.white2, 0, y - 0.18, front - 0.7, w + 0.3, 0.2, 1.4);
     f.box(C.glass, 0, y + 0.2, front - 0.03, w - 0.8, 2.0, 0.08);
-    f.box(fl % 2 ? C.white2 : wall, 0, y + 0.02, front - 1.36, w + 0.3, 0.92, 0.12);
+    f.box(rail, 0, y + 0.02, front - 1.36, w + 0.3, 0.92, 0.12);
+    if (rail !== C.white2) f.box(C.white2, 0, y + 0.94, front - 1.36, w + 0.34, 0.08, 0.16);
     for (let u = 0; u < units; u++) {
       const ux = -w / 2 + (u + 0.5) * uw;
       if (r() < 0.32) f.boxC(pick(AWNINGS, r), ux, y + fh - 0.45, front - 0.62, uw - 0.5, 0.07, 1.35, 0, -0.32);
       if (r() < 0.35) f.boxC(pick(TOWELS, r), ux + R(-0.6, 0.6, r), y + 0.62, front - 1.44, 0.62, 0.78, 0.04);
       if (r() < 0.12) f.boxC(0x2f8a4a, ux - uw / 3, y + 0.4, front - 1.0, 0.5, 0.5, 0.5);   // potted plant
+      if (r() < 0.07) adventStar(f, ux + uw / 4, y + 1.75, front - 0.12, r);                  // Swedes abroad
     }
   }
   for (let u = 0; u <= units; u++) f.box(wall === C.white ? C.white2 : C.white, -w / 2 + u * uw, CURB + fh - 0.2, front - 0.72, 0.22, H - fh + 0.2, 1.46);
@@ -480,6 +494,7 @@ function frameLot(f, LW, LD, r) {
   const r1x = -w / 2 + 2.4, r2x = w / 2 - 2.2, L1 = 7.6, L2 = d - d2;
   f.S.add(makeWedge(), C.concrete2, mat(f.wx(r1x, front - L1 / 2), CURB, f.wz(r1x, front - L1 / 2), 0, f.yaw, 0, 3.2, t1 - CURB, L1));
   ramp(f.wx(r1x, front - L1 / 2), f.wz(r1x, front - L1 / 2), f.yaw, 3.2, L1, CURB, t1);
+  frameRamps.push({ x: f.wx(r1x, front - L1 - 1), z: f.wz(r1x, front - L1 - 1), yaw: f.yaw, top: t1, top2: t2 });
   f.S.add(makeWedge(), C.concrete2, mat(f.wx(r2x, front + L2 / 2), t1, f.wz(r2x, front + L2 / 2), 0, f.yaw, 0, 2.8, t2 - t1, L2));
   ramp(f.wx(r2x, front + L2 / 2), f.wz(r2x, front + L2 / 2), f.yaw, 2.8, L2, t1, t2);
   // Site clutter: sand pile, cement bags, the mixer, cones, a barrier and the sign.
@@ -527,7 +542,6 @@ function residential(bi, bj, b, S, F, type) {
   const ew = (bi + bj) % 2 === 1;
   const r = mulberry32(5000 + bi * 13 + bj * 101);
   const W = b.x1 - b.x0;
-  F.box(type === 'bungalowR' ? 0xc49270 : 0xd8c8a8, (b.x0 + b.x1) / 2, CURB - 0.07, (b.z0 + b.z1) / 2, W, 0.1, W);   // top CURB - 0.02
   const LW = W / 3, LD = W / 2;
   for (let side = 0; side < 2; side++) {
     const special = Math.floor(r() * 3);
@@ -551,10 +565,16 @@ function residential(bi, bj, b, S, F, type) {
   };
   if (!ew) {
     run(b.x0 + 1, b.x1 - 1, b.z0 + mid, true);
-    if (type === 'bungalowR') for (const k of [1, 2]) run(b.z0 + 17, b.z1 - 17, b.x0 + k * LW, false);
+    if (type === 'bungalowR') {
+      for (const k of [1, 2]) run(b.z0 + 17, b.z1 - 17, b.x0 + k * LW, false);
+      for (const x of [b.x0 + 0.6, b.x1 - 0.6]) run(b.z0 + 2.2, b.z1 - 2.2, x, false);   // the side streets
+    }
   } else {
     run(b.z0 + 1, b.z1 - 1, b.x0 + mid, false);
-    if (type === 'bungalowR') for (const k of [1, 2]) run(b.x0 + 17, b.x1 - 17, b.z0 + k * LW, true);
+    if (type === 'bungalowR') {
+      for (const k of [1, 2]) run(b.x0 + 17, b.x1 - 17, b.z0 + k * LW, true);
+      for (const z of [b.z0 + 0.6, b.z1 - 0.6]) run(b.x0 + 2.2, b.x1 - 2.2, z, true);
+    }
   }
 }
 
@@ -572,7 +592,8 @@ function ground(F) {
     const x0 = rc(i) + RHW, x1 = rc(i + 1) - RHW, z0 = rc(j) + RHW, z1 = rc(j + 1) - RHW;
     top(C.sidewalk, x0, z0, x1, z0 + SW); top(C.sidewalk, x0, z1 - SW, x1, z1);
     top(C.sidewalk, x0, z0 + SW, x0 + SW, z1 - SW); top(C.sidewalk, x1 - SW, z0 + SW, x1, z1 - SW);
-    top(0xcfc2a6, x0 + SW, z0 + SW, x1 - SW, z1 - SW, CURB - 0.04);
+    const t = MAP[j][i];
+    top(t === 'bungalowR' ? 0xc49270 : t === 'lagenhet' ? 0xd8c8a8 : 0xcfc2a6, x0 + SW, z0 + SW, x1 - SW, z1 - SW, CURB - 0.04);
   }
   const o = HALF + RHW, e = EDGE;
   // The outer sidewalk ring.
@@ -739,14 +760,14 @@ function outskirts(S, F) {
   }
   for (let k = 0; k < 34; k++) {
     const a = -Math.PI * 1.02 + (k / 34) * Math.PI * 1.5 + R(-0.03, 0.03, r);
-    const d = R(400, 470, r), rad = R(40, 75, r);
+    const d = R(410, 490, r), rad = R(38, 70, r);
     const x = Math.cos(a) * d, z = Math.sin(a) * d;
     if (!okMountain(x, z, rad)) continue;
     // Terraced mesa: strata in alternating red and ochre, low-poly (n 7) for the cel look.
     let y = -2, rr = rad;
     const tiers = 2 + Math.floor(r() * 3), ry = r() * 6;
     for (let t = 0; t < tiers; t++) {
-      const h = R(10, 22, r);
+      const h = R(8, 17, r);
       taper(S, t % 2 ? C.rock2 : C.rock, x, y + h / 2, z, rr * 0.82, rr, h, 7, 0, ry + t * 0.4, 0);
       y += h; rr *= 0.8;
     }
@@ -756,8 +777,8 @@ function outskirts(S, F) {
   for (let k = 0; k < 70; k++) {
     const side = k % 2, t = R(-BOUND - 40, BOUND + 40, r), dd = R(BOUND + 24, BOUND + 80, r);
     const x = side ? dd : t, z = side ? Math.min(t, 180) : -dd;
-    if (nearDc8(x, z, 100)) continue;
     const s = R(5, 16, r);
+    if (nearDc8(x, z, 100 + s * 1.2)) continue;
     lump(S, pick(ROCKS, r), x, -s * 0.2, z, s * R(1.2, 2.2, r), s * R(0.5, 1, r), s * R(1.2, 2, r), r() * 6);
   }
   // The playable band between the outer sidewalk and the bound wall: cardón and agave in the north
@@ -808,6 +829,9 @@ function outskirts(S, F) {
   box(-b - 10, -b, -b, b, 99, 'bound');
   box(b, -b, b + 10, b, 99, 'bound');
   welcomeSign(S);
+  // The entrance road leaves the map: a red-and-white barrier just inside the bound wall.
+  for (const z of [-45, -35]) { S.boxB(0xfafafa, -311, CURB, z, 0.25, 1.2, 0.25); circle(-311, z, 0.2, 99, 'pole'); }
+  for (let k = 0; k < 8; k++) S.box(k % 2 ? C.red : 0xfafafa, -311, CURB + 1.0, -44.4 + k * 1.25 + 0.6, 0.12, 0.28, 1.25);
 }
 
 function boats(r) {

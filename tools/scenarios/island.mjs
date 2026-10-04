@@ -1,4 +1,4 @@
-// Island scenarios (WP-B, DESIGN §16.4): smash, foot, plus the WP-B look checks propsheet (every
+// Island scenarios (WP-B, DESIGN §16.4): smash, foot (+ the frame ramp), plus the WP-B look checks propsheet (every
 // §6.8 prop in a row), riocard (the Rio end card from rioCam) and islandtour (streets, residential
 // blocks, outskirts, sea).
 import { check } from '../lib.mjs';
@@ -113,6 +113,24 @@ export const SCENARIOS = {
       T.log('fin kicked', fin.id, fin.before, '->', after);
       check(after > fin.before, 'kicking a shark fin collects it');
     }
+    // Walk up the ramp of a half-built concrete frame onto its first deck.
+    const fr = await T.ev(async () => {
+      const m = await import('/src/world/town.js');
+      const g = __game, f = m.frameRamps[0];
+      if (!f) return null;
+      g.player.teleport(f.x, f.z, f.yaw);
+      g.cam.yaw = f.yaw;
+      g.cam.snapNext = true;
+      return { n: m.frameRamps.length, top: f.top };
+    });
+    check(fr, 'there is at least one half-built frame');
+    await T.frames(3);
+    await T.hold(['KeyW'], 2600);
+    await T.frames(10);
+    const fy = await T.ev(() => __game.player.y);
+    T.log('frame deck', JSON.stringify(fr), 'player y', fy.toFixed(2));
+    await T.shot('foot_frame');
+    check(Math.abs(fy - fr.top) < 0.3, 'the ramp leads up onto the first deck');
     // Car roof.
     const r = await T.ev(() => { const g = __game, c = g.named.hyrbil; g.player.teleport(c.x, c.z); g.player.y = c.y + c.height + 1.5; g.player.onGround = false; return c.y + c.height; });
     await T.frames(30);

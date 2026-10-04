@@ -14,6 +14,9 @@ import { buildBustGeo, randomPed } from '../actors/models.js';
 import { mulberry32, pick } from '../util.js';
 
 export const RIO_X = -3000;
+// The bay sits well below the deck (top 0.55) so the yacht shows a proper freeboard; nobody walks
+// off the deck (rails), so the invisible ground at CURB never shows.
+const WATER = -0.8;
 
 const taperGeo = {};
 function taper(G, color, x, y, z, rTop, rBot, h, n = 10, ry = 0) {
@@ -59,18 +62,21 @@ export function buildRioCard(scene) {
 
   // The bay.
   const sea = new THREE.Mesh(new THREE.CircleGeometry(400, 48).rotateX(-Math.PI / 2), MAT.water);
-  sea.position.set(X, 0.1, 0);
+  sea.position.set(X, WATER, 0);
   scene.add(sea);
 
   // ---- The yacht (bow towards -z, wheelhouse forward, open aft deck for the cast) ----
   const Y = new GeoBuilder();
   const deck = 0.55;
-  Y.boxB(0xfafafa, X, -1.0, 1.25, 4.4, 1.55, 11.5);                        // hull z -4.5 .. 7
-  Y.add(PRIM.cyl(3), 0xfafafa, mat(X, -0.225, -6, 0, Math.PI, 0, 5.08, 1.55, 6));   // bow
-  Y.boxB(0x1c3f7a, X, 0.05, 1.25, 4.46, 0.22, 11.56);                      // navy stripe
-  Y.add(PRIM.cyl(3), 0x1c3f7a, mat(X, 0.16, -6.01, 0, Math.PI, 0, 5.15, 0.22, 6.05));
+  Y.boxB(0xfafafa, X, -1.4, 1.25, 4.4, 1.95, 11.5);                        // hull z -4.5 .. 7
+  Y.add(PRIM.cyl(3), 0xfafafa, mat(X, -0.2, -6, 0, Math.PI, 0, 5.08, 2.4, 6));       // bow, raised
+  Y.boxB(0x1c3f7a, X, -0.95, 1.25, 4.46, 0.24, 11.56);                     // boot-top at the waterline
+  Y.add(PRIM.cyl(3), 0x1c3f7a, mat(X, -0.83, -6.01, 0, Math.PI, 0, 5.15, 0.24, 6.05));
+  Y.boxB(0x1c7fb8, X, 0.22, 1.25, 4.46, 0.18, 11.56);                      // sheer stripe
+  Y.add(PRIM.cyl(3), 0x1c7fb8, mat(X, 0.31, -6.01, 0, Math.PI, 0, 5.15, 0.18, 6.05));
+  for (const sx of [-2.21, 2.21]) for (let k = 0; k < 5; k++) Y.cyl(0x2c4a66, X + sx, -0.25, -2.5 + k * 2.2, 0.16, 0.06, 10, 0, 0, Math.PI / 2);
   Y.boxB(0xb07a44, X, deck - 0.04, 1.6, 4.0, 0.06, 10.6);                  // teak deck
-  Y.boxB(0xc8c0b0, X, -0.95, 7.05, 3.6, 0.5, 0.2);                         // swim platform
+  Y.boxB(0xb07a44, X, WATER + 0.25, 7.05, 3.6, 0.12, 0.5);                  // swim platform
   // Railings: posts and a top rail round the aft deck.
   for (const sx of [-1.9, 1.9]) {
     for (let z = -4; z <= 6.8; z += 1.2) Y.boxB(0xe8ecf0, X + sx, deck, z, 0.05, 0.9, 0.05);
@@ -112,8 +118,8 @@ export function buildRioCard(scene) {
   }
   scene.add(toonMesh(Y.build(), { outline: 0.035 }));
   // Name on the transom and both sides of the bow.
-  textPlane(scene, 'MAJSAN', 2.6, 0.55, { bg: null, fg: '#1c3f7a', border: null, scale: 0.9 }, X, -0.35, 7.01, 0);
-  textPlane(scene, 'MAJSAN', 2.4, 0.5, { bg: null, fg: '#1c3f7a', border: null, scale: 0.9 }, X + 2.21, -0.3, -3.2, Math.PI / 2);
+  textPlane(scene, 'MAJSAN', 2.6, 0.55, { bg: null, fg: '#1c3f7a', border: null, scale: 0.9 }, X, -0.3, 7.01, 0);
+  textPlane(scene, 'MAJSAN', 2.4, 0.5, { bg: null, fg: '#1c3f7a', border: null, scale: 0.9 }, X + 2.21, -0.3, -4.1, Math.PI / 2);
   // Solids: the deck (top 0.55), the wheelhouse, rails so nobody steps into the bay.
   box(X - 2, -6, X + 2, 6.8, deck, 'deck');
   box(X - 1.6, -4.2, X + 1.6, -0.6, 99, 'building');
@@ -141,11 +147,11 @@ export function buildRioCard(scene) {
   for (let k = 0; k < SL; k++) {
     const s0 = S0 + k * 40, sm = s0 + 20, u = uOf(sm), sl = slice(sm);
     const c = sl.p(17);
-    L.boxB(0xf0dcae, c.x, -0.8, c.z, 34, 1.15, 44, sl.yaw);                         // sand, top 0.35
+    L.boxB(0xf0dcae, c.x, -2, c.z, 34, 2.35, 44, sl.yaw);                           // sand, top 0.35
     const p = sl.p(46);
-    L.boxB(0x4c4c56, p.x, -0.6, p.z, 14, 1.0, 44, sl.yaw);                          // avenue, top 0.4
+    L.boxB(0x4c4c56, p.x, -2, p.z, 14, 2.4, 44, sl.yaw);                            // avenue, top 0.4
     const g = sl.p(53 + 150);
-    L.boxB(0x7a8a6a, g.x, -0.5, g.z, 300, 1.0, 44, sl.yaw);                         // city ground
+    L.boxB(0x7a8a6a, g.x, -2, g.z, 300, 2.5, 44, sl.yaw);                           // city ground
     // Parasols and palms on the beach and the promenade.
     for (let q = 0; q < 3; q++) {
       const b = at(s0 + R(4, 36), u + R(4, 26));
@@ -201,8 +207,8 @@ export function buildRioCard(scene) {
   // Sailboats in the bay.
   for (let k = 0; k < 5; k++) {
     const p = at(R(-200, 200), R(60, 130));
-    L.boxB(0xfafafa, p.x, -0.2, p.z, 1.4, 0.7, 5, r() * 6);
-    L.cone(pick([0xfafafa, 0xf07a1e, 0xf7c31b], r), p.x, 3.4, p.z, 1.3, 5.4, 4);
+    L.boxB(0xfafafa, p.x, WATER - 0.2, p.z, 1.4, 0.7, 5, r() * 6);
+    L.cone(pick([0xfafafa, 0xf07a1e, 0xf7c31b], r), p.x, WATER + 3.2, p.z, 1.3, 5.4, 4);
   }
   scene.add(toonMesh(L.build(), { outline: 0.08, cast: false }));
 }
