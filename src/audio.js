@@ -347,7 +347,7 @@ export const audio = {
   // Returns the length in seconds.
   trad(name, opts = {}) {
     const m = TRAD[name];
-    if (!m || !ctx || this.muted) return 0;
+    if (!m || !ctx || this.muted || !this.musicOn) return 0;
     const vol = opts.vol ?? (name === 'helanGar' ? 0.55 : 1);
     const beat = 60 / m.bpm, t0 = ctx.currentTime + 0.12;
     let end = 0;
@@ -641,14 +641,14 @@ registerTune('skandal', {
   bpm: 132, beats: 2,
   bar(api, t0, bar, beat) {
     const k = bar % 8, c = SKANDAL_CH[k];
-    bassNote(mtof(c.root), t0, beat * 0.6, 0.45);
-    bassNote(mtof(c.fifth - 12), t0 + beat, beat * 0.5, 0.3);
+    bassNote(mtof(c.root), t0, beat * 0.7, 0.55);
+    bassNote(mtof(c.fifth - 12), t0 + beat, beat * 0.55, 0.38);
     stab(c.v.map(mtof), t0 + beat, beat * 0.3, 0.065, musicBus, 'sawtooth', 1800);
     stab(c.v.map(mtof), t0 + beat * 1.5, beat * 0.2, 0.04, musicBus, 'sawtooth', 1500);
     // A snare roll into the turnaround (bars 7–8), otherwise the paso-doble back-beat.
     if (k >= 6) for (let s = 0; s < 8; s++) snare(t0 + s * beat * 0.25, 0.04 + 0.05 * ((k - 6) * 8 + s) / 16);
     else { snare(t0 + beat, 0.1); snare(t0 + beat * 1.5, 0.05); }
-    if (bar % 16 < 8 || k >= 4) line(SKANDAL_LEAD[k], t0, beat, (f, t, d) => brass(f, t, d * 0.9, 0.07));
+    if (bar % 16 < 8 || k >= 4) line(SKANDAL_LEAD[k], t0, beat, (f, t, d) => brass(f, t, d * 0.9, 0.09));
   },
 });
 

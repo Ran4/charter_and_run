@@ -54,7 +54,7 @@ body:not(.playing) #hud { opacity: 0; }
 
 /* FLYGRÄDSLA: cold blue -> red, a beating heart that races with the fear. */
 #shame.meter-fear .shame-label { color: #9fd0f4; }
-#shame.meter-fear .shame-fill { background: linear-gradient(90deg, #6ab0e8, #e0342a); background-size: 300px 100%; }
+#shame.meter-fear .shame-fill { background: linear-gradient(90deg, #6ab0e8, #b070c0 60%, #e0342a); background-size: var(--gw, 100%) 100%; }
 #shame.meter-fear .meter-icon i { position: absolute; left: 50%; top: 52%; width: 14px; height: 14px; margin: -7px 0 0 -7px; background: #e0342a; transform: rotate(45deg); animation: heart calc(1.3s - var(--fear) * 0.7s) infinite; }
 #shame.meter-fear .meter-icon i::before, #shame.meter-fear .meter-icon i::after { content: ""; position: absolute; width: 14px; height: 14px; border-radius: 50%; background: #e0342a; }
 #shame.meter-fear .meter-icon i::before { left: -7px; top: 0; }
@@ -64,16 +64,16 @@ body:not(.playing) #hud { opacity: 0; }
 
 /* SKANDAL: SunTrip yellow -> red; a Guardia Civil lamp that flashes in a pursuit. */
 #shame.meter-skandal .shame-label { color: var(--sun); }
-#shame.meter-skandal .shame-fill { background: linear-gradient(90deg, var(--sun), var(--red)); background-size: 300px 100%; }
+#shame.meter-skandal .shame-fill { background: linear-gradient(90deg, var(--sun), var(--orange) 55%, var(--red)); background-size: var(--gw, 100%) 100%; }
 #shame.meter-skandal .meter-icon { background: var(--guardia); }
 #shame.meter-skandal .meter-icon i { position: absolute; left: 50%; bottom: 7px; width: 18px; height: 14px; margin-left: -9px; border-radius: 9px 9px 2px 2px; background: #6a8ab8; border: 2px solid var(--ink); box-shadow: inset 0 3px 0 rgba(255, 255, 255, 0.45); }
 #shame.meter-skandal.pursuit .meter-icon i { animation: lamp 0.9s steps(1) infinite; }
 @keyframes lamp { 0% { background: #3a8aff; box-shadow: 0 0 14px 6px rgba(58, 138, 255, 0.85), inset 0 3px 0 rgba(255, 255, 255, 0.6); } 50% { background: #6a8ab8; box-shadow: inset 0 3px 0 rgba(255, 255, 255, 0.45); } }
-#shame.meter-skandal.pursuit .shame-fill { background: repeating-linear-gradient(-45deg, rgba(29, 20, 38, 0.22) 0 10px, transparent 10px 20px), linear-gradient(90deg, var(--sun), var(--red)); background-size: 28px 28px, 300px 100%; animation: march 0.4s linear infinite; }
+#shame.meter-skandal.pursuit .shame-fill { background: repeating-linear-gradient(-45deg, rgba(29, 20, 38, 0.22) 0 10px, transparent 10px 20px), linear-gradient(90deg, var(--sun), var(--red)); background-size: 28px 28px, var(--gw, 100%) 100%; animation: march 0.4s linear infinite; }
 #shame.meter-skandal.pursuit .shame-label::after { content: " · ¡ALTO!"; color: var(--red); }
 
 /* FLYGRÄDSLA vignette: grows from 50 % fear, pulses with the heartbeat at >= 70 (body.fear-hot). */
-#vignette { position: absolute; inset: 0; pointer-events: none; opacity: clamp(0, calc((var(--fear) - 0.45) * 1.8), 1); background: radial-gradient(ellipse 72% 66% at 50% 50%, transparent 46%, rgba(190, 25, 35, 0.42) 74%, rgba(130, 10, 20, 0.82) 100%); transition: opacity 0.3s; }
+#vignette { position: absolute; inset: 0; pointer-events: none; opacity: clamp(0, calc((var(--fear) - 0.45) * 1.8), 1); background: radial-gradient(ellipse 72% 66% at 50% 50%, transparent 42%, rgba(200, 20, 30, 0.45) 70%, rgba(120, 0, 15, 0.9) 100%); transition: opacity 0.3s; }
 #vignette::after { content: ""; position: absolute; inset: 0; opacity: 0; background: radial-gradient(ellipse 70% 65% at 50% 50%, transparent 45%, rgba(224, 52, 42, 0.55) 100%); }
 body.fear-hot #vignette::after { animation: pulse 0.8s infinite; }
 @keyframes pulse { 0%, 45%, 100% { opacity: 0; } 12% { opacity: 1; } 28% { opacity: 0.6; } }
@@ -210,7 +210,7 @@ body.in-dialog #minimap-wrap, body.in-dialog #speedo, body.in-dialog #prompt { o
 .brochure-stripes i:nth-child(2) { background: var(--orange); }
 .brochure-stripes i:nth-child(3) { background: var(--sun); }
 .brochure-tag { position: absolute; left: 50%; top: 22px; transform: translateX(-50%); padding: 3px 16px 4px; background: var(--cream); border: 3px solid var(--ink); border-radius: 999px; font: 900 13px var(--body); letter-spacing: 1.5px; text-transform: none; white-space: nowrap; color: var(--sea); }
-h1 { margin: 8px 0 0; font: 400 min(86px, 6.9vw)/1.05 var(--logo); white-space: nowrap; display: flex; flex-wrap: nowrap; justify-content: center; align-items: center; gap: 0 0.12em; }
+h1 { margin: 8px 0 0; font: 400 min(86px, 6.9vw)/1.05 var(--logo); white-space: nowrap; display: flex; flex-wrap: nowrap; justify-content: center; align-items: center; gap: 0 0.2em; }
 h1 span { display: inline-block; -webkit-text-stroke: 0.05em var(--ink); paint-order: stroke fill; text-shadow: 0.04em 0.06em 0 var(--ink); }
 .t1 { color: var(--sun); animation: jiggle 2.6s infinite; }
 .t2 { color: var(--orange); animation: jiggle 2.6s 0.3s infinite; }

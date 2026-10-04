@@ -27,10 +27,11 @@ export const hud = {
   init() {
     root = $('hud');
     root.innerHTML = `
-      <div id="coins"><span class="coin-icon"></span><span id="coin-n">0 pta</span></div>
-      <div id="collect"></div>
       <div id="vignette"></div>
       <div id="sirenlights"><div class="sl-l"></div><div class="sl-r"></div></div>
+      <div id="panik"></div>
+      <div id="coins"><span class="coin-icon"></span><span id="coin-n">0 pta</span></div>
+      <div id="collect"></div>
       <div id="shame"><div class="shame-label"></div><div class="shame-row"><div class="meter-icon"><i></i></div><div class="shame-bar"><div class="shame-fill"></div><div class="shame-ticks"></div></div></div></div>
       <div id="objective"><div class="obj-title"></div><div class="obj-text"></div><div class="obj-timer"></div><div class="obj-bar"><div class="obj-zone"></div><div class="obj-bar-fill"></div><div class="obj-marker"></div><span class="obj-bar-label"></span></div></div>
       <div id="minimap-wrap"><canvas id="minimap" width="220" height="220"></canvas><div class="mm-n">N</div></div>
@@ -42,7 +43,6 @@ export const hud = {
       <div id="letterbox"><div class="lb-top"></div><div class="lb-bot"></div></div>
       <div id="dialog"><div class="dlg-portrait"><img alt=""></div><div class="dlg-body"><div class="dlg-name"></div><div class="dlg-text"></div></div><div class="dlg-next">${S.dialogNext}</div></div>
       <div id="flash"></div>
-      <div id="panik"></div>
       <div id="bigmap"><canvas width="760" height="760"></canvas><div class="bm-legend"></div></div>
     `;
     mapCanvas = $('minimap');
@@ -153,7 +153,12 @@ export const hud = {
   // the DOM is only touched when something visible changes.
   setMeter(v, hot, pursuit) {
     const w = Math.round(v);
-    if (w !== this._meterW) { this._meterW = w; this.shameFill.style.width = `${w}%`; }
+    if (w !== this._meterW) {
+      this._meterW = w;
+      this.shameFill.style.width = `${w}%`;
+      // Stretch the fill's gradient over the whole bar, so its colour says how full it is.
+      this.shameFill.style.setProperty('--gw', w > 0 ? `${(10000 / w).toFixed(1)}%` : '100%');
+    }
     hot = !!hot; pursuit = !!pursuit;
     if (hot !== this._meterHot) { this._meterHot = hot; this.shameEl.classList.toggle('hot', hot); }
     if (pursuit !== this._meterPursuit) {

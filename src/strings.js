@@ -56,6 +56,11 @@ export const S = {
   transitionMain: 'LAS PALMAS',
   transitionSub: 'Soldis och 22 grader varmt.',   // [F*]
   transitionToast: 'Nytt uppdrag: hitta <b>Lasse</b> vid flygplatsen <span class="bang">!</span>',
+  // §11.7 banners for Phase 2 / mission content (the grisfest morning, the Rio end card)
+  morningAfter: 'MORGONEN EFTER',
+  morningAfterSub: 'Julafton på Gran Canaria',
+  endCardMain: 'RIO…?',
+  endCardSub: 'Svenskarna reser inte till någonting… dom reser från någonting.',   // [F] the film's opening card
   // §11.4 HUD
   coins: '{n} pta',
   dialogNext: 'E ▸',
