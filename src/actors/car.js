@@ -13,7 +13,9 @@ import { fx as FX } from '../game/fx.js';
 // locked. Physics numbers are Bigmouth's except the ones §6.6 lists.
 const SEDAN = { len: 4.5, wid: 1.9, bodyH: 0.62, cabinH: 0.68, wheelR: 0.36, maxSpeed: 31, accel: 12, grip: 9.5, steer: 0.6, mass: 1400, hp: 100, cabin: [-0.3, 0.12] };
 const PICKUP = { len: 5.1, wid: 2.0, bodyH: 0.75, cabinH: 0.75, wheelR: 0.42, maxSpeed: 29, accel: 11, grip: 8.6, steer: 0.58, mass: 1900, hp: 130, cabin: [-0.05, 0.2], bed: true };
-const BUS = { len: 10.5, wid: 2.5, bodyH: 2.2, cabinH: 0, wheelR: 0.5, maxSpeed: 21, accel: 6.5, grip: 7.5, steer: 0.52, mass: 7000, hp: 300, tall: true, bus: true };
+// aiSteer: an AI-driven bus steers like G's night bus (0.9): at 0.52 it cannot follow a lane path's
+// turns and swings into the far kerb; the player's bus keeps 0.52 (Phase 2).
+const BUS = { len: 10.5, wid: 2.5, bodyH: 2.2, cabinH: 0, wheelR: 0.5, maxSpeed: 21, accel: 6.5, grip: 7.5, steer: 0.52, aiSteer: 0.9, mass: 7000, hp: 300, tall: true, bus: true };
 // The 1979 street: orange, mustard, avocado, brown, beige, white, sky blue, red, bottle green.
 const COLORS = [0xd8321e, 0xe07a2a, 0xd8a62a, 0x7a8a3a, 0x7a4a2a, 0xe0d0a8, 0xf4f1e8, 0x8fb3c9, 0x2f5a3a, 0xf0e2b8, 0xa0703a, 0x3a5a8a, 0xf4f1e8, 0xc8b88a];
 export const CAR_TYPES = {
@@ -511,7 +513,7 @@ export class Car {
       const grip = c.handbrake && driven ? 1.7 : s.grip;
       if (Math.abs(vr) > 3) this.skidAmt = Math.max(this.skidAmt, Math.min(1, (Math.abs(vr) - 3) / 6));
       vr *= Math.exp(-grip * dt);
-      const maxSteer = s.steer / (1 + Math.abs(vf) / 15);
+      const maxSteer = (boost === 1 && s.aiSteer ? s.aiSteer : s.steer) / (1 + Math.abs(vf) / 15);
       this.steerAngle = damp(this.steerAngle, driven ? c.steer * maxSteer : 0, 12, dt);
       const wb = s.len * 0.62;
       const targetW = (-vf * Math.tan(this.steerAngle)) / wb * (c.handbrake && driven ? 1.5 : 1);

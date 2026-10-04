@@ -5,7 +5,13 @@
 import { LANE, P, nodeX, nodeZ, neighbors, nearestNode, findPath, nodeI, nodeJ, N } from '../world/layout.js';
 import { clamp, angleDiff, yawTo } from '../util.js';
 
-const M = 8.5; // how far from an intersection's centre a lane path starts its turn
+const TURN_M = 8.5; // how far from an intersection's centre a lane path starts its turn
+// Buses (len 10.5, steer 0.52) turn no tighter than a radius of about 12 m, but a lane path's left
+// turn has a radius of M + LANE (11.25 m at 8.5): they swung wide into the far kerb and the wall of
+// the grisfest farm at (3,1)->(2,1). Their paths start turning further out (left radius 13.75 m).
+// Right turns (radius M - LANE) stay too tight for a bus, so mission routes give buses left turns
+// only; a traffic guagua can still clip a corner turning right.
+const TURN_M_BUS = 11;
 
 function dirOf(a, b) {
   const dx = nodeX(b) - nodeX(a), dz = nodeZ(b) - nodeZ(a), l = Math.hypot(dx, dz) || 1;
@@ -47,6 +53,7 @@ export class LanePath {
     if (this.idx > 40) { this.pts.splice(0, 30); this.idx -= 30; }
   }
   buildEdge(k) {
+    const M = this.turnM ?? TURN_M;
     const A = this.nodes[k], B = this.nodes[k + 1], C = this.nodes[k + 2];
     const [dx, dz] = dirOf(A, B), rx = -dz, rz = dx;
     const ax = nodeX(A), az = nodeZ(A), bx = nodeX(B), bz = nodeZ(B);
@@ -125,6 +132,7 @@ export class AIDriver {
   // Take a new path and skip whatever part of it is already behind us.
   setPath(path) {
     const car = this.car, fx = Math.sin(car.yaw), fz = Math.cos(car.yaw);
+    if (car.spec.bus && path.built === 0) path.turnM ??= TURN_M_BUS;
     path.ensure();
     while (path.idx < path.pts.length - 1) {
       const q = path.pts[path.idx];

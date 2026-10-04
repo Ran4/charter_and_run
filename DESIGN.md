@@ -1014,6 +1014,9 @@ Removed: `hearse`, `muscle` (their geometry branches may stay as dead code). Tra
 with ≤ 1 bus. Busts in traffic use `randomPed` (tourists and locals). Number plates (optional P2):
 `GC-1234-A` white with black letters.
 
+**AI buses** (Phase 2): `BUS.aiSteer = 0.9` is the steering limit whenever the bus is not the
+player's car (the night bus's `oppSpec` steer matches it); the player's bus keeps steer 0.52.
+
 **Occupants** (Phase 2; replaces Bigmouth's heads through the roof): `car.seatY()` = wheelR·0.95 +
 0.2 for ordinary cars (sedan, hatch, wagon, taxi, pickup, grisbil: people sit low, the opaque body
 sides hide the legs), + 0.36 for the cab of `van`/`icecream`/`guardia`, + 0.9 for buses;
@@ -2112,7 +2115,8 @@ Runner changes (Phase 0):
    `outroCam` is given the player is not moved, e.g. ropavieja's spying shot.)
 6. **Ambience**: `fail()` and `abort()` call `def.onEnd?.(g, reason)` and `g.restoreAmbience()`
    (level tune, `mantraMode = false`; island: level palette; flight: the cabin goes back to the
-   level's ambient state for the current index, `cabin.setPhase(levelDef.phaseForIndex(index),
+   level's ambient state for the current index: `cabin.stopTurbulence()` (Phase 2), then
+   `cabin.setPhase(levelDef.phaseForIndex(index),
    { instant: true })` with no `hold` (so an unheld or held mission phase chain stops), seatbelt sign
    off (no chime), then palette and map source for that phase. A retry re-applies the mission's
    ambient cues on top, item 3); `abort()` also runs
@@ -2516,7 +2520,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/actors/car.js` | edit | **E** | §6.6 types/flags, `registerCarType`, `build`/`noWheels`/`noSpeedo`/`noExplode`/`livery` |
 | `src/actors/pickups.js` | edit | **E** | `COLLECT_KINDS`, `registerCollectKind`, `Collectible` table, `Rabbit` meshes, coin value 25 |
 | `src/actors/peds.js` | edit | **E** | Swedish/Spanish shouts |
-| `src/actors/drivers.js` | unchanged | none | (accepts duck-typed paths) |
+| `src/actors/drivers.js` | Phase 2 edit | none | (accepts duck-typed paths); an AI bus's lane path starts its turns 11 m from the junction centre instead of 8.5 (left-turn radius 13.75 m > the bus's ≈ 12 m minimum), so the excursion bus no longer swings into the grisfest farm wall; right turns stay too tight for buses (mission bus routes turn left only) |
 | `index.html`, `style.css` | edit | **H** | §11, §13.4 |
 | `tools/shot.mjs`, `tools/lib.mjs`, `tools/scenarios/core.mjs`, `tools/story/common.mjs` | edit/new | none (Phase 2) | harness, `T` API, core scenarios `start walk aerial drive traffic title talk missions views transition` + `levels` (boots into both levels) + `api` (Game API smoke test) |
 | `tools/fixtures/full-missions.js`, `tools/scenarios/kinds.mjs` | new (Phase 0b) | none (Phase 2) | the literal §8 missions as a test fixture; scenarios `fullstory` (plays them per §16.3) and `kinds` (option checks) |
@@ -2579,6 +2583,7 @@ game.levelFor(index) -> 'flight' | 'island'
 game.setLevel(name, { index, instant = true } = {})
 async game.transitionTo(name)
 game.restoreAmbience()                    // level tune, mantraMode=false; island palette; flight:
+                                          // cabin.stopTurbulence() (Phase 2), then
                                           // setPhase(phaseForIndex(index), {instant}) no hold,
                                           // seatbelt off, palette + map for it (§9.4 item 6)
 game.levelTune() -> name                  // review fix 1: the level's ambient tune (flight `muzak`;
@@ -2641,8 +2646,8 @@ game.wait(secs)
 async game.pay(n) -> true                 // Ole pays if short (§10.2)
 game.addCoins(n)                          // negative allowed, floors at 0
 game.unlock(name)                         // UNLOCKS[name]
-async game.playEndCard()                  // §11.7: Phase 0 ships a stub (the two banners only);
-                                          // the Rio cinematic is wired in Phase 2 (P1)
+async game.playEndCard()                  // §11.7: the Rio cinematic (wired in Phase 2), then
+                                          // back at flamencoPool with the completion banner
 
 // ---- meter hooks ----
 game.onPanicIdle()                        // §5.9
@@ -3529,3 +3534,8 @@ Integration on `main` (§15.3). Entries name the step they belong to.
   solid ('pole'); the outskirts tree band skips the whole Gando apron (D2); D1's mowing bands above
   the fairway, water discs 4–5 mm apart, crags/rocks clear of the north ped loop, [N] tags.
 - §11.7 Rio end card wired into `game.playEndCard()`; new scenario `endcard`.
+- Story flake found in the step-2 story run: the fataga excursion bus (`follow`) swung wide on its
+  left turn (3,1)→(2,1) and stuck on the grisfest farm wall (D1's wall 4 m behind the kerb). At
+  steer 0.52 (speed-scaled) a bus turns no tighter than ≈ 12–17 m, wider than any lane-path turn.
+  Fix: AI-driven buses steer with `spec.aiSteer` 0.9 (car.js; the player's bus keeps 0.52, §6.6),
+  and an AI bus's lane path starts its turns 11 m from the junction centre (drivers.js; §14.1).
