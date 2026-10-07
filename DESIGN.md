@@ -2612,7 +2612,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `index.html`, `style.css` | edit | **H** | §11, §13.4 |
 | `tools/shot.mjs`, `tools/lib.mjs`, `tools/scenarios/core.mjs`, `tools/story/common.mjs` | edit/new | none (Phase 2) | harness, `T` API, core scenarios `start walk aerial drive traffic title talk missions views transition` + `levels` (boots into both levels) + `api` (Game API smoke test) |
 | `tools/fixtures/full-missions.js`, `tools/scenarios/kinds.mjs` | new (Phase 0b) | none (Phase 2) | the literal §8 missions as a test fixture; scenarios `fullstory` (plays them per §16.3) and `kinds` (option checks) |
-| `src/world/blocks/stub.js` | new (Phase 0a) | none | `stubBlock()`: the shared placeholder look of the stub block builders; delete when unused |
+| `src/world/blocks/stub.js` | **deleted** (Phase 2 docs step) | — | was `stubBlock()`, the shared placeholder look of the Phase 0 stub block builders; unused once every block had its real builder |
 | `tools/scenarios/flight.mjs` | new | **A1** | gate, cabin, trolley, turbulence, panic |
 | `tools/scenarios/scenery.mjs` | new | **A2** | phases (one shot per flight phase from inside and outside) |
 | `tools/scenarios/island.mjs` | new | **B** | smash, foot |
@@ -2624,7 +2624,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 **Scenario names are unique across all scenario modules** (shot.mjs merges them into one table;
 a duplicate name is a load-time error). A package may run any scenario as a self-check, whoever
 owns it.
-| `README.md`, `CLAUDE.md`, `Makefile`, `package.json`, `../CLAUDE.md` | edit | none (Phase 2) | docs, `#13 idle`, port 8840, latest-game pointer |
+| `README.md`, `CLAUDE.md`, `Makefile`, `package.json`, `package-lock.json`, `../CLAUDE.md` | edit | none (Phase 2) | docs (README: Swedish player-facing overview + English code map and tests), `#13 idle`, port 8840, `name: charter-and-run`, `test` → story, latest-game pointer (§15.3 step 6) |
 
 ### 14.2 Init order and frame order (main.js, Phase 0)
 
@@ -3710,3 +3710,18 @@ Integration on `main` (§15.3). Entries name the step they belong to.
     render time varies ±2 ms between runs). That is ≥ 110 fps of headroom, so nothing was optimised.
   - The Rio end card's banner covered the orchestra busts on the wheelhouse roof: cls `endcard`
     puts it at 20 % (§11.7).
+- **Docs (§15.3 step 6)**:
+  - README.md rewritten for Charter & Run. The player-facing overview is in Swedish: premise, how
+    to run (`make run` → http://127.0.0.1:8840), controls for both levels, the cast, the 13
+    missions, collectibles/pesetas/SKANDAL/unlocks, the §1.6 invented list, the §1.4 source-tag
+    policy, credits (Grisfestvärden, Städerskan; no real people's names outside film quotes, §1.5)
+    and the disclaimer (fan game, SunTrip and the signs fictional, no affiliation). The code map
+    and the headless-test commands stay in English, as in Bigmouth's README.
+  - CLAUDE.md (project): title Charter & Run, port 8840 (harness 8841), story ends `#13 idle` with
+    `RESULT: PASS`, the scenario list by module, and new conventions: the level system and the
+    cabin at x = 3000, `PLAYER_BOOST` 1.2, the tight-timer rule, AI buses turn left only, source
+    tags, Ole pays, the Phase 1 frozen-file history and the `p1-<WP>` worktrees (leave them alone).
+  - Makefile (run message, `test` comment), package.json (`name: charter-and-run`, description,
+    `test` → `node tools/shot.mjs story`) and package-lock.json (`name`).
+  - `src/world/blocks/stub.js` deleted (unused since Phase 1; §14.1).
+  - `../CLAUDE.md`: the "latest created game" pointer now names `charter_and_run__sallskapsresan/`.

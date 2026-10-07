@@ -1,86 +1,247 @@
-# Bigmouth & Run
+# Charter & Run
 
-*Simpsons: Hit & Run*, but it's Bridgeton and everyone's going through puberty. A fan-made
-three.js open-world romp: walk, jump, kick, steal cars, smash mailboxes for coins, take missions
-from Maurice, Andrew, Coach Steve, Jay, Jessi and Duke Ellington's ghost — and when your
-**Shame meter** fills up, the Shame Wizard's hearses come for you.
+*Simpsons: Hit & Run* möter *Sällskapsresan* (1980). Ett fan-gjort open world-spel i three.js:
+julen 1979 tar den flygrädde brödrostkontrollanten **Stig-Helmer Olsson** SunTrips charter till
+Kanarieöarna, med norske prylmannen **Ole Bramserud** i stolen bredvid. Först ska han överleva
+själva flygresan – sedan gruppresan.
 
-## Run
+- **Nivå 1, "Flygresan"** (uppdrag 1–5): en liten Arlanda-gate (säkerhetsbåge, lounge,
+  herrtoalett, flygbrygga) och sedan flygningen i en uppskuren DC-8, "Sol-Viking" SE-SOL, från
+  snöiga Arlanda genom molnen till "soldis och 22 grader". Mätaren heter **FLYGRÄDSLA** – blir
+  den full får Stig-Helmer **PANIK**. Det enda som hjälper är Dr Levanders övning: armarna rakt
+  ut, *"Jag kan flyga, jag är inte rädd."*
+- **Nivå 2, "Nueva Estocolmo"** (uppdrag 6–13): en påhittad SunTrip-ort på södra Gran Canaria,
+  sju gånger sju kvarter med hotell, marknad, bodega, golfbana, dyner, fyr och hamn. Bussen,
+  friskoteket, den målade åsnan, Berras och Robbans jakt på Pepes Bodega, José och hans mamma,
+  Fataga, grisfesten och julafton vid poolen. Mätaren heter **SKANDAL** – blir den full kommer
+  **Guardia Civil** och delar ut en **¡MULTA!**.
+- Flygrädslan får sitt slut på julafton: Stig-Helmer och Majsan säger mantrat tillsammans i
+  solnedgången, och sedan … Rio?
+
+## Starta
 
 ```sh
-make run           # installs deps if needed, serves on http://127.0.0.1:8790 and opens it
+make run           # installerar beroenden vid behov, startar servern på http://127.0.0.1:8840 och öppnar sidan
 ```
 
-Click **Play**. `make serve` serves without opening a browser, `PORT=9000 make run` picks
-another port, `make test` plays the whole story headlessly. Modules need an HTTP server; `file://` won't work. The fonts
-come from Google Fonts (falls back to Impact offline).
+Klicka **SPELA**. `make serve` startar bara servern (ingen webbläsare), `PORT=9000 make run`
+väljer en annan port, `NOOPEN=1 make run` öppnar ingen flik och `make test` spelar hela storyn
+headless. Modulerna behöver en HTTP-server; `file://` fungerar inte. Typsnitten kommer från
+Google Fonts (utan nät faller de tillbaka på Impact).
 
-URL options: `?fresh` ignores the save, `?mission=N` starts at mission N (0-6).
+URL-flaggor: `?fresh` struntar i sparfilen, `?mission=N` börjar på uppdrag N (0–12, nollbaserat).
+Spelet sparas i localStorage (`charter-and-run-v1`); "Radera resan" i pausmenyn börjar om på
+Arlanda.
 
-## Controls
+## Kontroller
 
-| key | on foot | in a car |
-|---|---|---|
-| W A S D | move | drive / steer |
-| Mouse | look | look (swings back behind you) |
-| Shift | sprint | |
-| Space | jump, again in the air for a double jump | handbrake (drift!) |
-| Click / J | kick — in the air: ground stomp | |
-| E | talk, get in, steal a car | get out (at speed: tumble out) |
-| H | | horn |
-| B | | look back |
-| M | big map | big map |
-| N | mute | mute |
-| R | stuck? back to the road | stuck? back to the road |
-| Esc | pause | pause |
+Samma tangenter i båda nivåerna; nivån bestämmer vad de gör.
 
-A gamepad works too (A jump/handbrake, X kick, Y interact, triggers drive).
+| tangent | på ön, till fots | på ön, i bil | på Arlanda och i planet |
+|---|---|---|---|
+| W A S D / pilar | gå | gasa, bromsa, styr | gå (långsammare i den trånga gången) |
+| Mus | titta | titta (svänger tillbaka bakom bilen) | titta |
+| Shift | spring | | skynda – men det ökar rädslan |
+| Space | hoppa, i luften igen för dubbelhopp | handbroms (sladd!) | **håll i dig**: ta tag i närmaste stolsrygg vid turbulens |
+| J / klick | sparka, i luften: stampa | | **håll in**: "Jag kan flyga, jag är inte rädd" – sänker FLYGRÄDSLA |
+| E | prata, kliv in, sno en bil | kliv ur (i fart: rulla ur) | prata, **sätt dig / res dig**, lås in dig på toaletten, anropsknappen, serveringsvagnen |
+| H | | tuta | |
+| B | | titta bakåt | |
+| M / Tab | stor karta | stor karta | plan över gaten/kabinen |
+| N | ljud av | ljud av | ljud av |
+| R | fast? tillbaka till vägen | fast? tillbaka till vägen | tillbaka till rad 14 (eller loungen) |
+| Esc / P | paus | paus | paus |
 
-## The game
+Sitter Stig-Helmer ner i planet rör han sig inte; E reser honom upp (eller trycker på knappen
+ovanför stolen), J håller mantrat. På julafton blir J mantrat även på ön. Handkontroll fungerar
+också: A hopp/handbroms, B spring, X sparka/mantra, Y prata, Start paus, triggrarna kör.
 
-- **Seven missions**: drive Nick's parents' wagon, get Andrew to school before the bell, follow
-  a lost Coach Steve, catch Jay's escaped rabbits, race Jessi (and Connie), wreck the Shame
-  Wizard's hearse, and survive the school dance with the Wizard on your tail.
-- **Shame meter** (the Hit & Run meter): running people over, smashing cars, breaking stuff and
-  carjacking all add shame. Fill it and two hearses hunt you down; on foot the Wizard floats out
-  after you. Get caught and you're SHAMED — 50 coins gone. Stay away and it fades.
-- **Collectibles**: 7 of Duke's lost records hidden around town (one needs a trampoline), 7 Tito
-  Anxiety Mosquitoes to squash, and coins in every mailbox, bin, hydrant and gas pump.
-- Progress saves to localStorage. Erase it from the pause menu.
+## Rollista
+
+| figur | vem |
+|---|---|
+| **Stig-Helmer** | du. Lång, blyg, flygrädd, "Giraffen". Kontrollerad av G17. |
+| **Ole** | norsk, pratar bara norska, har en pryl för allt och flygolycksstatistik för resten. Ger flest uppdrag. |
+| **Majsan** och **Sivan** | systrarna i rad 16. Sivan delar ut poäng. |
+| **Berra** och **Robban** | på jakt efter Pepes Bodega och 80-procentig rom. |
+| **Gösta Angerud** | affärsmannen med svarta pengar i en knäckebrödsförpackning. |
+| **Dr Levander** | bara på radion och i minnet: övningen. |
+| **Lasse**, **Affe**, **Gabbe** | SunTrips platschef och guider (dragspel, congas, nattbussen). |
+| **José**, **Josés mamma**, **Josés pappa**, **Carmencita** | "pizza-racern" och hans familj. |
+| **Herr och Fru Storch** | nygifta från Mjölby. Storch, inte Stork. Linsskyddet sitter på. |
+| **Flygvärdinnan**, **Kaptenen**, **Högtalaren** | besättningen i Sol-Viking. |
+| **Portiern** | Hotell Flamencos reception. "Momento." |
+| **Städerskan** | ett kort besök på julafton. |
+| och fler | Kontrollanten, Sulan, Killen från flygplatsen, Bungalowförsäljaren, Souvenirförsäljaren, Rullskidåkaren, Grisbonden, Grisfestvärden, Guardia Civil |
+
+## Uppdragen (13)
+
+| # | uppdrag | ger uppdraget | vad du gör |
+|---|---|---|---|
+| 1 | Jag kan flyga, jag är inte rädd | Ole, vid gate 8 | Metallbågen piper, Ole läser statistik, du spurtar till herrtoaletten innan rädslan tar över, gör Levanders övning och hör tipset om Pepes Bodega i kön. |
+| 2 | Rad 13 finns inte | Flygvärdinnan | Hitta 14B förbi folk som stuvar bagage (det finns ingen rad 13) och klara starten med mantrat när landningsstället går DUNS. |
+| 3 | Mer juice | Ole | Anropsknappen, juicen vid serveringsvagnen – akta tårna – och tillbaka till 14B genom turbulensen utan att spilla. |
+| 4 | Medhavd sprit | Flygvärdinnan | Fånga fem flaskor som rullar i gången medan vagnen kommer och planet skakar. |
+| 5 | Inflygning Las Palmas | Majsan | Fyra poäng? Få de stående passagerarna att sätta sig, hinn tillbaka till 14B och håll mantrat genom inflygningen tills hjulen tar Gran Canaria. |
+| 6 | SunTrips buss nummer 17 | Lasse, på flygplatsen | Kör gruppen till Hotell Flamenco – mjukt, annars blir de åksjuka. |
+| 7 | Plocka kulor! | Lasse, vid friskoteket | Jaga sex vindblåsta badbollar. Plocka med höger, plocka med vänster. |
+| 8 | Caballo folklorístico | Ole | Ole till marknaden, pruta på åsnan, hitta samma knäckebröd som i julklappen och kör den nymålade åsnan varsamt till Viking Bar. |
+| 9 | Pepes Bodega | Berra | Leta bodegan med Berra och Robban, följ grisbilen, låna den, stoppa Guardia-jeepen och kör hem grisarna. |
+| 10 | Gamla kläder | Sivan | Skugga José – men inte för nära – och spana diskret från fontänen. |
+| 11 | En skock får | Majsan | Följ utflyktsbussen till Fataga och fånga Josés pappas får. |
+| 12 | Grisfesten | Ole (kostar 800 pta) | Blommor till Siv och Maj-Britt, kappkörning mot nattbussen, porslinskross, Tonga Tonga – och bärra hem Berra. |
+| 13 | Julafton bland palmerna | Ole (kostar 100 pta) | Samla gästerna till julfesten vid poolen och visa Majsan övningen. Sedan: Rio? |
+
+Tiderna är **tajta, som i Hit & Run**: en ren körning på en vettig väg har ungefär 15–20 %
+kvar, en krasch eller en felsväng kostar uppdraget. Misslyckas du börjar du om från senaste
+kontrollpunkten. Bilen du kör går ×1,2 mot trafikens bilar, inte mer.
+
+## Samla, betala, låsa upp
+
+- **Oles prylar** (7): Oles dingsar ligger utspridda över ön – på en byggställning, en
+  takterrass, ett marknadstak, Fatagas torg, drömplanets vinge, hamnpirens ände och
+  grisfestladans tak. Varje pryl får en replik av Ole. Alla sju: bonus och samba i pausmenyn.
+- **Hajfenor** (7): uppblåsbara hajfenor cirklar i poolerna, fontänen, golfdammen, hamnen och
+  havet. Spring i och sparka (eller kör igenom).
+- **Pesetas**: mynten i gatorna, i trasiga prylar och i vrak är värda 25 pta styck. De går åt
+  till grisfesten (800), julafton (100), åsnan, hittelön, böter (¡MULTA!: 20 % av kassan,
+  250–1500), PANIK (−50) och portiern (500). Har du inte råd betalar Ole – men inte böter eller PANIK-avgiften.
+- **SKANDAL**: kör på folk, kvadda bilar, sno bilar och slå sönder saker så stiger mätaren. Full
+  mätare = två Guardia Civil-jeepar och en polis till fots. Håll dig mer än 70 m bort så lägger
+  sig skandalen; blir du tagen åker du på böter. Under jakten kan du **muta portiern** på Hotell
+  Flamenco (500 pta). Och gör du något dumt nära Herr Storch: ingen fara, linsskyddet sitter på.
+- **Upplåsningar**: grisbilen (parkerad vid Hotell Flamenco efter uppdrag 9), samba-musik (alla
+  prylar) och Pepes Bodega på hotellets baksida (efter julafton).
+
+## Vad är påhittat?
+
+Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DESIGN §1.6):
+
+- turbulensen, och att hålla i sig när det skakar
+- FLYGRÄDSLA och PANIK som spelmekanik
+- serveringsvagnen (filmen har bara värdinnor med brickor), att den välter folk, och att man
+  hämtar juicen vid den (i filmen kommer värdinnan med den)
+- att samla rullande flaskor och att få stående passagerare att sätta sig
+- passagerarna som stuvar bagage och blockerar gången
+- att Stig-Helmer kör SunTrips buss 17 (i filmen tar Lasse transfern)
+- "Plocka kulor" som jakt efter vindblåsta badbollar
+- prutning som tajmingspel, SKICK-mätaren för den våta färgen och ÅKSJUKA-mätaren
+- Guardia Civil-jakten, ¡MULTA! och portiermutan som gömställe
+- att grisbilen lånas ut till Stig-Helmer, att man följer Josés bil och grisbilen, och
+  jeepjakten
+- fårrusningen i Fataga, kappkörningen mot nattbussen och porslinskrosset på tid
+- att samla ihop julfestgästerna
+- Oles prylar och hajfenorna som samlarföremål, utspridda över ön
+- att Majsan säger mantrat tillsammans med Stig-Helmer
+- Rio-slutbilden som spelbar epilog
+
+Filmens flygresa har **ingen turbulens** och **ingen toalettscen ombord**: båda toalettscenerna
+utspelar sig på Arlanda, och där ligger de i spelet också.
+
+## Filmcitat och källmärkning
+
+Varje manusrad i `src/content/*.js` och `src/game/missions/*.js` har en källkommentar
+(DESIGN §1.4):
+
+| märkning | betyder |
+|---|---|
+| `// [F]` | verifierad filmreplik (svenska undertexter, Wikiquote, norska undertexter för Ole), ordagrant som i `notes/research-*.md` |
+| `// [F*]` | filminnehåll som bearbetats: förkortats, översatts till norska av oss eller **flyttats** till en annan scen eller talare |
+| `// [N]` | ny replik skriven för spelet – presenteras aldrig som filmcitat |
+| `(t)` | läggs till när talaren är vår tolkning (källorna säger inte vem som säger det): `// [F](t)` |
+
+En filmreplik som används i en pratlista, en ropa-tabell eller på en skylt utanför sin egen scen
+är alltid `[F*]`, aldrig `[F]`. All text i spelet är på svenska; Ole pratar alltid norska
+(bokmål). José-familjen, portiern och Guardia Civil pratar svenska med spanska ord.
+
+## Medverkande
+
+Spelet bygger på filmen *Sällskapsresan eller Finns det svenskt kaffe på grisfesten?* (1980).
+Figurerna heter som i filmen, med några undantag: grisfestens värd heter bara
+**Grisfestvärden**, och cameon på julafton krediteras bara som **Städerskan**. Riktiga personers
+namn förekommer bara inne i citerade filmrepliker.
+
+Musiken är syntetiserad: egna låtar per stämning plus tre traditionella melodier som är fria
+att använda (*Små grodorna*, *Hej tomtegubbar*, *Helan går*). Inga låtar ur filmen.
+
+Spelmotorn kommer från syskonprojektet *Bigmouth & Run* i samma mapp.
+
+## Friskrivning
+
+Ett hyllningsspel gjort av fans, utan kommersiellt syfte. Inte knutet till filmens upphovsmän
+eller rättighetsinnehavare, eller till Radical Entertainment, Fox eller någon annan. **SunTrip
+finns inte** (det är filmens egen påhittade researrangör), och det gör inte heller Sol-Viking,
+SPORT-KNÄCKE, Hotell Flamenco, Casa Lola, La Medina, Centro Nórdico eller de andra hotellen och
+butikerna på skyltarna. Nueva Estocolmo är en påhittad ort. Bränsletillägg tillkommer.
 
 ## Code map
 
 ```
-index.html, style.css      page, HUD styling, title/pause screens
-src/main.js                Game: world setup, fixed-step loop, input → player/car, events, save
-src/gfx.js                 renderer, toon materials, inverted-hull outlines, GeoBuilder, sky
-src/input.js, audio.js     keyboard/mouse/gamepad; synthesized sfx, engine, walking-bass music
-src/world/layout.js        street grid, block map, road graph, routing, landmarks
-src/world/collision.js     static solids (box/circle/ramp), ground height, SAT for cars
-src/world/town.js          builds every block: houses, school, mall, park, construction...
-src/world/props.js         breakable instanced street furniture
-src/actors/models.js       procedural characters (kids, adults, hormone monsters, ghost, wizard)
-src/actors/character.js    on-foot physics, flinging, trampolines, car roofs
-src/actors/car.js          car models + arcade physics + car/car impulses
-src/actors/drivers.js      lane paths and AI drivers (traffic, route, chase, flee)
-src/actors/peds.js         pedestrians
-src/actors/pickups.js      coins, records, mosquitoes, rabbits
-src/game/missions.js       mission scripts and the mission runner
-src/game/shame.js          shame meter and the hearse pursuit
-src/game/hud.js            HUD, minimap, dialogue, portraits
+index.html, style.css           page, title/pause cards, HUD styling (SunTrip palette, §13.4)
+src/main.js                     Game: init order, level system, fixed-step loop, input → player/car,
+                                interactables, seats, NPC homes, collectibles, pay, save, test hooks
+src/level.js                    LEVELS (flight, island): spawn, camera profile, meter, sim flags, palettes
+src/meters.js                   METERS.flygradsla (panic mode) and METERS.skandal (pursuit mode)
+src/strings.js                  S / fmt(): every UI string, in Swedish
+src/gfx.js                      renderer, toon materials, inverted-hull outlines, GeoBuilder, sky palettes
+src/input.js, audio.js          keyboard/mouse/gamepad; synthesised sfx, siren, tunes (muzak, sol, jul, skandal, vals, samba)
+src/content/                    data with source tags: flight.js (gate/cabin homes, chatter, Ole's
+                                statistics), island.js (homes, barks, COLLECTIBLES, UNLOCKS, named cars),
+                                index.js (merges them)
+src/world/cabin.js              the gate set and the DC-8 cabin at x = 3000: collision, seat map, trolley,
+                                turbulence, fear, interactables, flight phases
+src/world/flightScenery.js      the airframe and the scenery animated past the stationary cabin
+src/world/layout.js             the 7×7 MAP, road graph, routing
+src/world/landmarks-island.js   the canonical island landmark table
+src/world/town.js               streets, outskirts, residential blocks, dispatch to the block builders
+src/world/blocks/               hotels.js (Flamenco, SunTrip), centre.js (Kasbah, Centro Nórdico, plaza,
+                                market, church, petrol, Guardia), nature.js (tomato fields, grisfest farm,
+                                Fataga, golf, bungalows, building site, dunes), coast.js (airport,
+                                dream plane, lighthouse, beach, harbour)
+src/world/collision.js, frame.js  static solids, ground height, camera ceilings; the per-block Frame
+src/world/props.js              breakable street furniture (§6.8 types)
+src/world/rio.js                the Rio end-card set
+src/actors/models.js            CHARS (the cast), outfits, procedural characters and car busts
+src/actors/character.js         on-foot physics, seating, flinging
+src/actors/car.js               car types (sedan, SunTrip bus, guagua, grisbil, guardia…), physics, PLAYER_BOOST 1.2
+src/actors/drivers.js           lane paths and AI drivers (traffic, route, chase, flee)
+src/actors/peds.js, pickups.js  pedestrians; coins (pesetas), collectibles, rabbits (balls, sheep, flowers)
+src/game/missions/              runner.js (MissionRunner), kinds/ (the stage kinds: core, flight, island),
+                                flight.js (missions 1–5), island.js (missions 6–13), index.js
+src/game/shame.js               the meter: FLYGRÄDSLA/PANIK and SKANDAL/Guardia pursuit, fines, hideouts
+src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
-tools/shot.mjs             headless test driver
+tools/shot.mjs, tools/lib.mjs   headless test driver and the T API
+tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, meter, kinds, perf,
+                                calibrate, calibflight)
+tools/story/                    the story scripts (common, flight, island)
+tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
+DESIGN.md                       design bible and module contracts (the source of truth)
+notes/                          film research (Swedish) and engine maps
 ```
 
 ## Headless tests
 
 `tools/shot.mjs` serves the game, runs it in headless Chrome on the real GPU (no window) and
-saves screenshots to `out/`:
+saves screenshots to `out/` (or `OUT=dir`). The last line is `RESULT: PASS` or
+`RESULT: FAIL (reasons)`, and the process exits non-zero on FAIL. The harness serves on port
+8841 by default (`PORT=n` for parallel runs).
 
 ```sh
-node tools/shot.mjs start views drive talk smash foot chaos traffic race flee wizard title
-node tools/shot.mjs story          # plays all seven missions start to finish
-FROM=4 node tools/shot.mjs story   # ...starting at mission 5
+node tools/shot.mjs                      # lists every scenario
+node tools/shot.mjs story                # plays all 13 missions: must end '#13 idle', 'no errors', 'RESULT: PASS'
+FROM=5 TO=8 node tools/shot.mjs story    # missions 6–8 only (indices 5–7)
+node tools/shot.mjs start walk aerial drive traffic title talk missions views transition levels api
+node tools/shot.mjs gate cabin trolley turbulence panic flightshots          # the flight level
+node tools/shot.mjs phases sceneryPeek flightseq dc8                         # flight scenery
+node tools/shot.mjs smash foot propsheet riocard endcard islandstats islandtour
+node tools/shot.mjs castsheet cars heads ui skandal perf
+node tools/shot.mjs fullstory kinds      # the literal §8 missions and the stage-kind checks
+node tools/shot.mjs calibrate calibflight  # timer and FLYGRÄDSLA calibration (slow; see DESIGN §8, §16.4)
 ```
 
-Not affiliated with Netflix, Fox, Radical Entertainment or anyone else with lawyers.
+`make test` runs `story`. Test mode is `?test=1` (no title, no pointer lock, dialogue
+auto-advances, `timeScale` 3).
+
+Not affiliated with the makers of *Sällskapsresan*, Fox, Radical Entertainment or anyone else
+with lawyers.

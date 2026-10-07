@@ -1,10 +1,10 @@
 {
-  "name": "bigmouth-and-run",
+  "name": "charter-and-run",
   "version": "1.0.0",
-  "description": "Big Mouth meets Simpsons Hit & Run — a three.js open-world romp through Bridgeton",
+  "description": "Sällskapsresan meets Simpsons Hit & Run — a three.js fan game: Stig-Helmer survives the charter flight and the group trip to Gran Canaria",
   "scripts": {
     "start": "python3 -m http.server 8840 --bind 127.0.0.1",
-    "test": "node tools/test.mjs"
+    "test": "node tools/shot.mjs story"
   },
   "license": "ISC",
   "type": "module",

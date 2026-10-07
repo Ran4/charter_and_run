@@ -16,7 +16,7 @@ run: | node_modules
 			curl -sf -o /dev/null $(URL) && exec setsid -f xdg-open $(URL) >/dev/null 2>&1; \
 			sleep 0.1; \
 		done ) & \
-		echo "Bigmouth & Run on $(URL)  (Ctrl-C to stop)"; \
+		echo "Charter & Run on $(URL)  (Ctrl-C to stop)"; \
 		exec python3 -m http.server $(PORT) --bind $(HOST); \
 	fi
 
@@ -24,7 +24,7 @@ run: | node_modules
 serve: | node_modules
 	python3 -m http.server $(PORT) --bind $(HOST)
 
-# Headless playthrough of all seven missions (screenshots land in out/).
+# Headless playthrough of all 13 missions; must end with RESULT: PASS (screenshots land in out/).
 test: | node_modules
 	node tools/shot.mjs story
 
