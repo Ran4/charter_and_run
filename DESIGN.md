@@ -353,7 +353,7 @@ export const LEVELS = {
     outfits: () => LEVEL_OUTFITS.island,
     routeAim: true,
     inBounds: (x, z) => Math.abs(x) < BOUND - 5 && Math.abs(z) < BOUND - 5,
-    spawn: (g, i) => (i === 5 ? 'airport' : 'flamenco'),
+    spawn: (g, i) => (i === 5 ? 'airport' : 'flamencoDeck'),   // pool deck, outside the pergola (Phase 2)
     resetSpot: null,                 // null = Bigmouth "nearest road" reset (use P/HALF constants)
     labels: () => MAP_LABELS.island,
     titleOrbit: { lm: 'flamencoPool', r: 45, h: 24 },
@@ -415,7 +415,7 @@ at the landmark's own height or lies outside `levelDef.inBounds` (the cabin aisl
 itself is used, facing its yaw. The same rule is used by the R reset, PANIK's `gateOle`, the
 checkpoint `retry()` teleport and `T.startMission()`.
 `?mission=N` sets the index before this, so `?mission=3` boots straight into the cabin in cruise.
-`index === MISSIONS.length` (game complete) → island, spawn `flamenco`.
+`index === MISSIONS.length` (game complete) → island, spawn `flamencoDeck`.
 
 **Mission → level → first phase** (each flight mission's first stage carries
 `startCue: { phase: [phase, { instant: true }] }` in its literal (§8), so retries and `?mission=N`
@@ -581,7 +581,10 @@ export const CAM_CABIN = { pivotH: 1.5, dist: 6.5, pitchMin: 0.72, pitchMax: 1.1
   ≤ 12 m from the camera). The climb whiteout is faked with cloud puffs streaming past the plane
   and the window-pane colour, not with short fog.
 - Markers: the Bang "!" over a seated giver sits at `ch.y + height + 0.9` (seated `ch.y` = cushion
-  0.55); GuideArrow and Beacon are above the invisible ceiling and stay visible.
+  0.55); GuideArrow and Beacon are above the invisible ceiling and stay visible. Any marker
+  shape (the giver's "!", the Beacon's arrow, the GuideArrow) hides while its centre is within 3 m
+  of the camera (`main.camNear`): the z-clamped aisle eye is only 2.5 m above the seats, and the
+  "!" over Ole in 14A filled a quarter of the frame. The beams stay. (Phase 2, both levels.)
 
 ### 5.4 Seat map
 
@@ -922,7 +925,7 @@ standing there faces. `y` (optional) = absolute height for collectible spots on 
 
 | block (i,j) | type → builder (owner, file) | content | landmarks: `id` (lx, lz, yaw[, y]) | named / parked cars |
 |---|---|---|---|---|
-| (3,3) | `flamenco` → `hotelFlamenco` (C1, hotels.js) | 7-storey white slab x [−26, 26], z [−27, −14] with balcony rows, terracotta accents, `HOTEL FLAMENCO` roof sign; open reception porch (canopy, desk, plastic Christmas tree `julgran` prop, `RECEPCIÓN`) at the slab's south face; ground-floor room patios along the south face (Stig & Ole's room west, room 113 east) with a visible 1st-floor balcony above 113; pool deck south with a **walkable shallow pool** (flat blue slab at CURB+0.02 + `box(..., CURB, 'water')`, sign "TRE METER DJUPT I ENA ÄNDEN, / EN METER I DEN ANDRA. / BARNVÄNLIG!" (three lines) [F*] (the bungalow seller's line, relocated)); poolbar with straw parasols (`BAR PISCINA · SVENSKT KAFFE`); parking lot on the west; **PEPES BODEGA**: small whitewashed annex x [4, 12], z [−31, −27] on the north side with a green door, barrels, sign `PEPES BODEGA · VINOS · RON` facing north (`worldHooks.bodegaLit(on)` lights it after julafton) | `flamenco` (−4, −8, π) (faces the hotel, so the views/cutaway camera stands on the pool deck; Phase 2) · `flamencoRecepcion` (2, −10, 0) · `flamencoPatio` (−18, −11, 0) · `rum113` (18, −11, 0) · `flamencoBalcony` (18, −8, π) · `flamencoPool` (−3, 18, π) · `flamencoBar` (16, 12, −π/2) · `flamencoDrive` (−26, 22, π) · `flamencoBack` (−6, −33.5, 0) · `bodega` (8, −33.5, 0) · `fena_flamenco` (−3, 7, 0, 0.35) | `hyrbil` (sedan `0xf4f4f0`) at `flamencoDrive` — default `getInCar` car and test car |
+| (3,3) | `flamenco` → `hotelFlamenco` (C1, hotels.js) | 7-storey white slab x [−26, 26], z [−27, −14] with balcony rows, terracotta accents, `HOTEL FLAMENCO` roof sign; open reception porch (canopy, desk, plastic Christmas tree `julgran` prop, `RECEPCIÓN`) at the slab's south face; ground-floor room patios along the south face (Stig & Ole's room west, room 113 east) with a visible 1st-floor balcony above 113; pool deck south with a **walkable shallow pool** (flat blue slab at CURB+0.02 + `box(..., CURB, 'water')`, sign "TRE METER DJUPT I ENA ÄNDEN, / EN METER I DEN ANDRA. / BARNVÄNLIG!" (three lines) [F*] (the bungalow seller's line, relocated)); poolbar with straw parasols (`BAR PISCINA · SVENSKT KAFFE`); parking lot on the west; **PEPES BODEGA**: small whitewashed annex x [4, 12], z [−31, −27] on the north side with a green door, barrels, sign `PEPES BODEGA · VINOS · RON` facing north (`worldHooks.bodegaLit(on)` lights it after julafton) | `flamenco` (−4, −8, π) (faces the hotel, so the views/cutaway camera stands on the pool deck; Phase 2) · `flamencoRecepcion` (2, −10, 0) · `flamencoPatio` (−18, −11, 0) · `rum113` (18, −11, 0) · `flamencoBalcony` (18, −8, π) · `flamencoPool` (−3, 18, π) · `flamencoDeck` (−4, −2.5, 0) (the island spawn: approachSpot puts the player on the pool deck at (−4, −1) facing the hotel, the chase camera over the pool rather than under the pergola slats; Phase 2) · `flamencoBar` (16, 12, −π/2) · `flamencoDrive` (−26, 22, π) · `flamencoBack` (−6, −33.5, 0) · `bodega` (8, −33.5, 0) · `fena_flamenco` (−3, 7, 0, 0.35) | `hyrbil` (sedan `0xf4f4f0`) at `flamencoDrive` — default `getInCar` car and test car |
 | (3,2) | `suntrip` → `hotelSunTrip` (C1, hotels.js) | lower U-shaped hotel on red rock; welcome **stage** with SunTrip sun backdrop (red text on yellow sun), accordion/conga props; pool; **friskotek lawn**; SunTrip office porch on the south side facing Flamenco's back; posters `GRISFEST TORSDAG · 800 PTA`, `FRISKOTEKET 9.30` | `suntrip` (−14, 24, π) (faces the office porch; Phase 2) · `scen` (0, −14, 0) · `friskotek` (−10, 8, 0) · `suntripPool` (14, 4, π) · `suntripLot` (24, 22, π) · `fena_suntrip` (14, 8, 0, 0.35) | — |
 | (1,2) | `kasbah` → `kasbah` (C2, centre.js) | **Centro La Medina** (fictional; internal id `kasbah`): two-level nightlife courtyard centre: arcade, stairs (ramp) to a roof terrace (top ≈ 6.0), neon signs `CENTRO LA MEDINA`, `VIKING BAR` (horned helmet), `TONGA TONGA` (mirror ball), `BAR SVENSKA · SMÖRGÅSAR` | `kasbah` (0, 22, π) · `vikingbar` (−16, 18, π) · `tongatonga` (14, 18, π) · `tongaLot` (20, 27, π) · `pryl_poolpen` (8, −6, 0, 7.2) | — |
 | (4,2) | `cita` → `cita` (C2, centre.js) | **Centro Nórdico** (fictional; internal id `cita`) strip mall, sign `CENTRO NÓRDICO`: `SUPERMERCADO`, `FERRETERÍA`, `FARMACIA`, `ESTANCO`, `TELÉFONOS · HYTT 1·2·3`, `SOUVENIRS`, `SVENSKT KAFFE`, `CAMBIO · 1 KR = 17 PTA` | `cita` (0, 22, π) · `supermercado` (−18, 18, π) · `ferreteria` (18, 18, π) · `telefon` (0, 8, π) | — |
@@ -2438,6 +2441,11 @@ Tags: all UI strings are [N] unless noted.
   back, `placeNpcs(true)` + `applyOutfits()`, player at `approachSpot('flamencoPool')`, level tune,
   letterbox off, then the completion banner and the `complete` jingle. Scenario `endcard` checks it.
 - Fallback (cut): only the last banner (used when no `endCard` cue fired).
+- Placement (Phase 2): the banner sits at 32 % of the height, or 40 % while the objective card
+  is shown (`#objective.show ~ #banner`), so the two never overlap; it is drawn above the speech
+  bubbles (`z-index` 2 inside `#hud`, which is `isolation: isolate`, so the pause and title cards
+  still cover it). The end card's banner adds cls `endcard` (top 20 %), clear of the cast and the
+  orchestra busts on the wheelhouse roof.
 
 ---
 
@@ -2887,6 +2895,12 @@ export function propsOfType(type, { x, z, r }) -> props[]
 
 // world/collision.js: segmentBlocked returns the nearest hit (min t over all blocks); the hit is
 //   tracked as an integer sample index (0.8 m samples), so it is exact to the sample (Polish)
+// world/collision.js (Phase 2): camera ceilings, not solids (nothing collides with them)
+ceiling(minX, minZ, maxX, maxZ, under, top);  ceilingOver(x, z, y, margin = 0) -> lowest ceiling over (x, z) with under > y, or null
+//   Frame.ceiling(lx, lz, w, d, under, top) registers one from a local rectangle. CamRig.update (on
+//   foot, no profile): when the eye (footprint grown 1.5 m) or the player is under one whose
+//   underside is above the player's feet + 0.5, and the eye is below top + 2, the eye stays at
+//   under − 0.3. Registered: Hotel Flamenco's reception pergola (under C + 3.1 = the fascia, top C + 4.5).
 
 // world/cabin.js (WP-A1; Phase 0 stub has the full API)
 export const CABIN_X = 3000;
@@ -3375,6 +3389,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `endcard` [Phase 2] | `game.playEndCard()`: Stig on the Rio deck in `rio`, Ole in `rio`, sunset, letterbox, frozen input, `RIO…?`; then back within 2.5 m of `flamencoPool` in island clothes, free roam, `NUEVA ESTOCOLMO KLARAT!` |
 | `calibrate` [G, Phase 2] | island timer calibration and difficulty checks (§8 "Timers and difficulty"): a headless autopilot in the player's car (env `CAL=id,…` from buss17 asnan vischan jeep home flowers plates tonga race guests balls sheep follow pursuit haggle; `RUNS` = 3, `JEEP_RUNS` = 6, `FOOT_RUNS` = 4, `RACE_RUNS` = 2 (+ 2 with one crash), `PURSUIT_RUNS` = 3, `RACE_SWEEP`, `JEEP`, `RACE_CAR`); medians of clean runs / 75th percentiles, on-foot A* walker, crash injection; checks: deterministic shipped timers ≥ T_ref, a clean race wins and a crashed one loses, a clean SKANDAL escape is possible, follows stay in band; prints the timer table. `story` supports `SHOTS=1` (key-scene screenshots) |
 | `calibflight` [Phase 2] | flight timer calibration and FLYGRÄDSLA balance (env `FLIGHT=gate/sprint,…`, `SPRIT_RUNS` = 5): careful vs careless autopilots at timeScale 1; checks that careful players never panic and careless ones do in missions 1, 2 and 5 |
+| `perf` [Phase 2] | frame rate (2 s of play) plus the mean `game.update` ms and the GPU-synced `renderer.render` ms in the cabin in every phase (seated in 14B and from the aisle), at the gate, and on the island (spawn, plaza, marknad, kasbah, a drive through the centre, the high view); fails below 45 fps or above 1000/45 ms per frame. Phase 2: worst cabin 7.2 ms, worst island 9.0 ms (marknad, ~810 calls, 3.3 M triangles), all at 60 fps |
 
 ---
 
@@ -3675,3 +3690,23 @@ Integration on `main` (§15.3). Entries name the step they belong to.
   - The race check flaked once: the injected crash ("3.5 m to the right") put a car that had moved
     into the right lane into the bus's lane, and the bus shunted it. The race crash now spins out
     into the left lane (`crashSide: 'left'`). 4 of 4 crash runs then lost, by 2.2–5.3 s.
+- **Stability pass (every scenario, three green stories, performance)**:
+  - The island spawn (`level.spawn` for missions 6–12 and after the game) put the player under
+    Hotel Flamenco's reception pergola with the chase camera among the slats, which filled the top
+    quarter of the first island frame. New landmark `flamencoDeck` (−4, −2.5, 0): the player now
+    starts on the pool deck facing the hotel, with the camera over the pool (§6.3).
+  - Walking under that pergola still put the eye among the slats, or above them on a jump. New
+    camera ceilings (`collision.ceiling`/`ceilingOver`, `Frame.ceiling`, §14.3): on foot, the eye
+    stays 0.3 m under a registered pergola's underside, also when looking in from 1.5 m outside.
+  - A mission/fail banner overlapped the objective card's timer bar (`ui_hud`), and a chatter
+    bubble covered the `LAS PALMAS` banner (`transition`). The banner moves to 40 % while the card
+    is shown and is drawn above the bubbles (§11.7).
+  - The giver's "!" over Ole in 14A filled a quarter of `trolley_waits` (the z-clamped aisle eye
+    passes 2.6 m from it). Marker shapes (the "!", the Beacon arrow, the GuideArrow) now hide
+    within 3 m of the camera; their beams stay (§5.3).
+  - New scenario `perf` (§16.4). Measured twice on the RTX 4070, headless at 1280×720: every view
+    holds 60 fps. The costliest cabin frame was 7.2 ms (aisle view, 1.3 update + 5.9 render), the
+    costliest island frame 9.0 ms (marknad, about 810 draw calls, 3.3 M triangles; the GPU-synced
+    render time varies ±2 ms between runs). That is ≥ 110 fps of headroom, so nothing was optimised.
+  - The Rio end card's banner covered the orchestra busts on the wheelhouse roof: cls `endcard`
+    puts it at 20 % (§11.7).

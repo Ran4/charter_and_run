@@ -5,7 +5,7 @@
 //               clampPitch? (max pitch while z-clamped; beyond it the camera looks further ahead) }
 
 import { THREE } from '../gfx.js';
-import { segmentBlocked } from '../world/collision.js';
+import { segmentBlocked, ceilingOver } from '../world/collision.js';
 import { clamp, damp, dampAngle } from '../util.js';
 
 export class CamRig {
@@ -106,6 +106,12 @@ export class CamRig {
     }
     lead += ahead;
     const want = new THREE.Vector3(px - fx * h, Math.max(focus.y + 0.6, py + Math.sin(pitch) * d), pz - fz * h);
+    // Under a pergola or canopy (or looking in from just outside one), stay below its underside:
+    // otherwise the eye sits among the slats, or above them looking down at the roof.
+    if (!focus.car && !pf) {
+      const c = ceilingOver(want.x, want.z, focus.y + 0.5, 1.5) || ceilingOver(px, pz, focus.y + 0.5);
+      if (c && want.y < c.top + 2) want.y = Math.max(focus.y + 0.6, Math.min(want.y, c.under - 0.3));
+    }
     if (this.snapNext) { this.pos.copy(want); this.snapNext = false; }
     else {
       const k = focus.car ? 10 : 14;

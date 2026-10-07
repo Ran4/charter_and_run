@@ -501,6 +501,7 @@ function flamencoPorch(f, glow, rnd) {
   for (let x = -9.25; x <= 9.3; x += 0.75) f.box(TRIM, x, C + 3.6, -10.1, 0.16, 0.3, 7.8);
   f.box(TRIM, 0, C + 3.4, -10.1, 19.2, 0.2, 0.22);
   f.box(TERRA, 0, C + 3.1, -6.15, 19.2, 0.75, 0.3);           // fascia
+  f.ceiling(0, -10.1, 19.2, 7.9, C + 3.1, C + 4.5);             // the camera stays under it
   for (let k = 0; k < 16; k++) {
     const x = -8.8 + rnd() * 17.6, z = -13.4 + rnd() * 6.6;
     f.ico(k % 3 ? BOUG : LEAF2, x, C + 3.95 + rnd() * 0.2, z, 0.7 + rnd() * 0.6);

@@ -44,6 +44,10 @@ const params = new URLSearchParams(location.search);
 const TEST = params.has('test');
 const TRAFFIC_MIX = ['hatch', 'hatch', 'hatch', 'hatch', 'sedan', 'sedan', 'wagon', 'van', 'taxi', 'pickup', 'guagua', 'icecream'];
 
+// Is a marker point (position p raised by dy) within 3 m of the camera? Markers that close fill
+// the lens (the cabin's z-clamped eye sits 2.5 m above the seats), so they hide.
+const _near = new THREE.Vector3();
+function camNear(p, dy) { return camera.position.distanceTo(_near.set(p.x, p.y + dy, p.z)) < 3; }
 function blockCenter(i, j) { const b = blockInterior(i, j); return { x: (b.x0 + b.x1) / 2, z: (b.z0 + b.z1) / 2 }; }
 
 class Game {
@@ -296,7 +300,7 @@ class Game {
 
   spawnPlayer() {
     const i = this.missions.index;
-    const name = i >= MISSIONS.length ? 'flamenco' : this.levelDef.spawn(this, i);
+    const name = i >= MISSIONS.length ? 'flamencoDeck' : this.levelDef.spawn(this, i);
     const s = this.approachSpot(name);
     this.player.state = 'normal';
     this.player.teleport(s.x, s.z, s.yaw);
@@ -1134,7 +1138,7 @@ class Game {
     this.endCut();
     this.cam.cutTo({ x: c.x, y: 3.2, z: c.z }, { x: b.x, y: 2.3, z: b.z + 1.5 });
     this.cam.snapNext = true;
-    hud.showBanner(S.endCardMain, S.endCardSub, 'mission', 6000);
+    hud.showBanner(S.endCardMain, S.endCardSub, 'mission endcard', 6000);
     await this.wait(6.6);
     hud.flashColor(white);
     this.cam.release();
@@ -1694,6 +1698,9 @@ class Game {
       const g = this.npcs[ms.current.giver];
       this.bang.show(true);
       this.bang.set(g.x, g.y + g.height + 0.9, g.z, this.time);
+      // A camera right on top of the giver (cabin aisle, z-clamped eye 2.5 m above the seats) would
+      // get the "!" across the lens: hide it within 3 m (its beam stays).
+      this.bang.root.children[0].visible = !camNear(this.bang.root.position, 0.88);
       if (dist(g.x, g.z, f.x, f.z) > 25) target = { x: g.x, z: g.z };
     } else this.bang.show(false);
     const t = ms.target();
@@ -1701,13 +1708,15 @@ class Game {
       target = t;
       const y = t.follow ? groundAt(t.x, t.z, 0.2, 0.6) + 2.5 : groundAt(t.x, t.z, 0.2, 0.6);
       if (t.follow) this.beacon.hide();
-      else this.beacon.set(t.x, y, t.z, this.time, t.r || 3.2);
+      else { this.beacon.set(t.x, y, t.z, this.time, t.r || 3.2); this.beacon.arrow.visible = !camNear(this.beacon.root.position, this.beacon.arrow.position.y + 0.5); }
     } else this.beacon.hide();
     this.route = null;
     if (target && !this.inDialog) {
       const aim = this.levelDef.routeAim ? routeAim(f.x, f.z, target.x, target.z) : { x: target.x, z: target.z, nodes: [] };
       const top = this.playerCar ? f.y + this.playerCar.height + 1.8 : f.y + this.player.height + 1.5;
       this.arrow.set(f.x, top, f.z, yawTo(aim.x - f.x, aim.z - f.z), this.time);
+      // A camera pulled in close (cabin aisle, a downed player) would get the arrow across the lens.
+      if (camNear(this.arrow.mesh.position, 0)) this.arrow.hide();
       this.route = [...aim.nodes.map((n) => [nodeX(n), nodeZ(n)]), [target.x, target.z]];
     } else this.arrow.hide();
   }

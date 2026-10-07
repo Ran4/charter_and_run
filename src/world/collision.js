@@ -40,6 +40,25 @@ export function addBlock(b) {
 export const box = (minX, minZ, maxX, maxZ, top, kind = 'solid', ref = null) =>
   addBlock({ shape: BOX, minX: Math.min(minX, maxX), maxX: Math.max(minX, maxX), minZ: Math.min(minZ, maxZ), maxZ: Math.max(minZ, maxZ), top, kind, ref });
 export const circle = (x, z, r, top, kind = 'solid', ref = null) => addBlock({ shape: CIRCLE, x, z, r, top, kind, ref });
+// Overhead ceilings the chase camera keeps under: pergolas and low canopies a person walks under.
+// Not solids (nothing collides with them): an axis-aligned footprint, the height of the lowest
+// underside and of the top. The camera reads them through ceilingOver(); see CamRig.update.
+export const ceilings = [];
+export function ceiling(minX, minZ, maxX, maxZ, under, top) {
+  const c = { minX: Math.min(minX, maxX), maxX: Math.max(minX, maxX), minZ: Math.min(minZ, maxZ), maxZ: Math.max(minZ, maxZ), under, top };
+  ceilings.push(c);
+  return c;
+}
+// The lowest ceiling over (x, z), grown by `margin`, whose underside is above y; null if none.
+export function ceilingOver(x, z, y, margin = 0) {
+  let best = null;
+  for (const c of ceilings) {
+    if (c.under <= y || x < c.minX - margin || x > c.maxX + margin || z < c.minZ - margin || z > c.maxZ + margin) continue;
+    if (!best || c.under < best.under) best = c;
+  }
+  return best;
+}
+
 // A ramp rising along yaw: height h0 at the back edge to h1 at the front edge.
 export const ramp = (x, z, yaw, width, length, h0, h1, kind = 'ramp') =>
   addBlock({ shape: RAMP, x, z, fx: Math.sin(yaw), fz: Math.cos(yaw), hx: width / 2, hz: length / 2, h0, h1, top: Math.max(h0, h1), kind });

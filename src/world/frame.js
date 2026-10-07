@@ -4,7 +4,7 @@
 
 import { PRIM, mat, signMesh } from '../gfx.js';
 import { CURB, landmarks } from './layout.js';
-import { box, circle } from './collision.js';
+import { box, circle, ceiling } from './collision.js';
 import { placeProp } from './props.js';
 import { mulberry32, pick } from '../util.js';
 
@@ -37,6 +37,13 @@ export class Frame {
     const hw = (turned ? d : w) / 2, hd = (turned ? w : d) / 2;
     const x = this.wx(lx, lz), z = this.wz(lx, lz);
     return box(x - hw, z - hd, x + hw, z + hd, top, kind);
+  }
+  // Overhead ceiling (pergola, canopy) from a local rectangle: the chase camera stays under it.
+  ceiling(lx, lz, w, d, under, top, ly = 0) {
+    const turned = Math.abs(Math.sin(this.yaw + ly)) > 0.7;
+    const hw = (turned ? d : w) / 2, hd = (turned ? w : d) / 2;
+    const x = this.wx(lx, lz), z = this.wz(lx, lz);
+    return ceiling(x - hw, z - hd, x + hw, z + hd, under, top);
   }
   circ(lx, lz, r, top = 99, kind = 'solid') { return circle(this.wx(lx, lz), this.wz(lx, lz), r, top, kind); }
   prop(type, lx, lz, ly = 0, baseY = CURB) { placeProp(type, this.wx(lx, lz), this.wz(lx, lz), this.yaw + ly, baseY); }

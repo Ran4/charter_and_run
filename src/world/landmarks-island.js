@@ -17,6 +17,10 @@ export const ISLAND_LANDMARKS = {
   rum113: { b: [3, 3], at: [18, -11], yaw: 0 },
   flamencoBalcony: { b: [3, 3], at: [18, -8], yaw: PI },
   flamencoPool: { b: [3, 3], at: [-3, 18], yaw: PI },
+  // The island spawn (level.spawn): approachSpot steps 1.5 m along yaw and turns round, so the
+  // player stands on the pool deck at (-4, -1) facing the hotel, Ole under the pergola ahead and
+  // the chase camera over the pool, not under the pergola slats.
+  flamencoDeck: { b: [3, 3], at: [-4, -2.5], yaw: 0 },
   flamencoBar: { b: [3, 3], at: [16, 12], yaw: -PI / 2 },
   flamencoDrive: { b: [3, 3], at: [-26, 22], yaw: PI },
   flamencoBack: { b: [3, 3], at: [-6, -33.5], yaw: 0 },

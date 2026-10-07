@@ -51,7 +51,7 @@ export const LEVELS = {
     outfits: () => LEVEL_OUTFITS.island,
     routeAim: true,
     inBounds: (x, z) => Math.abs(x) < BOUND - 5 && Math.abs(z) < BOUND - 5,
-    spawn: (g, i) => (i === 5 ? 'airport' : 'flamenco'),
+    spawn: (g, i) => (i === 5 ? 'airport' : 'flamencoDeck'),
     resetSpot: null,                 // null = Bigmouth "nearest road" reset (use P/HALF constants)
     labels: () => MAP_LABELS.island,
     titleOrbit: { lm: 'flamencoPool', r: 45, h: 24 },
