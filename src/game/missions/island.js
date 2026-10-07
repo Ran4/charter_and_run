@@ -24,17 +24,17 @@ const PARTY_CAM = { at: 'flamencoPool', dist: 11, height: 4 };
 // flee routes); on foot + 0.5 s per target. timer = ceil(1.2 × T_ref) driving, ceil(1.25 × T_ref)
 // on foot (whole seconds).
 export const TIMERS = {
-  buss17Drive: 52,        // §8.6 s2  busBay -> flamencoDrive, ÅKSJUKA limits, stop     T_ref 42.7 (3 clean)
-  friskotekBalls: 31,     // §8.7 s1  6 fleeing beach balls (on foot)                  T_ref 24.8 (p75 21.8 of 5 + 3)
-  asnanPaint: 19,         // §8.8 s9  supermercado lot -> vikingbar, SKICK              T_ref 15.4 (3 clean)
-  bodegaVischan: 31,      // §8.9 s4  playa -> vischan                                  T_ref 25.5 (2 clean of 3)
-  bodegaJeep: 30,         // §8.9 s9  wreck the fleeing Guardia jeep                    T_ref 24.7 (p75 of 10 chases)
+  buss17Drive: 54,        // §8.6 s2  busBay -> flamencoDrive, ÅKSJUKA limits, stop     T_ref 45.0 (median of 10 clean)
+  friskotekBalls: 32,     // §8.7 s1  6 fleeing beach balls (on foot)                  T_ref 24.9 (p75 21.9 of 12 + 3)
+  asnanPaint: 19,         // §8.8 s9  supermercado lot -> vikingbar, SKICK              T_ref 15.5 (9 clean)
+  bodegaVischan: 31,      // §8.9 s4  playa -> vischan                                  T_ref 25.4 (median of 8 clean)
+  bodegaJeep: 40,         // §8.9 s9  wreck the fleeing Guardia jeep                    T_ref 33.2 (p75 of 20 chases)
   bodegaHome: 33,         // §8.9 s10 fallback only: the stage uses homeTimer(wreck)    T_ref 26.8 at d 587 (far corner)
-  fatagaSheep: 33,        // §8.11 s5 6 fleeing sheep (on foot)                         T_ref 26.1 (p75 23.1 of 5 + 3)
-  grisfestFlowers: 42,    // §8.12 s1 5 flowers round Flamenco (on foot, random spawns) T_ref 33.5 (p75 31.0 of 6 + 2.5)
-  grisfestPlates: 42,     // §8.12 s4 10 plate stacks (on foot, kick)                   T_ref 33.1 (median 28.1 of 2 + 5)
-  grisfestTonga: 22,      // §8.12 s6 dance floor -> car at the gate -> tongatonga      T_ref 18.0 (2 clean)
-  julaftonGuests: 87,     // §8.13 s1 patio -> hire car -> four guests                  T_ref 72.5 (clean run)
+  fatagaSheep: 42,        // §8.11 s5 6 fleeing sheep (on foot)                         T_ref 33.3 (p75 30.3 of 12 + 3)
+  grisfestFlowers: 42,    // §8.12 s1 5 flowers round Flamenco (on foot, random spawns) T_ref 33.6 (p75 31.1 of 12 + 2.5)
+  grisfestPlates: 45,     // §8.12 s4 10 plate stacks (on foot, kick)                   T_ref 35.3 (p75 30.3 of 10 + 5)
+  grisfestTonga: 23,      // §8.12 s6 dance floor -> car at the gate -> tongatonga      T_ref 19.0 (2 clean)
+  julaftonGuests: 87,     // §8.13 s1 patio -> hire car -> four guests                  T_ref 72.5 (median of 3 clean: 72.1/72.5/73.3)
 };
 
 // Opponent / quarry tuning (race, destroy, follow; DESIGN §8 "Races and chases").

@@ -83,7 +83,9 @@ function row(T, id, what, measured, targets, note) {
   return { tRef, timer };
 }
 const median = (a) => { const s = a.slice().sort((x, y) => x - y); return s.length % 2 ? s[(s.length - 1) / 2] : (s[s.length / 2 - 1] + s[s.length / 2]) / 2; };
-const pct = (a, q) => { const s = a.slice().sort((x, y) => x - y); return s[Math.min(s.length - 1, Math.floor(q * s.length))]; };
+// Percentile with linear interpolation between order statistics (h = (n − 1)·q). The nearest-rank
+// form floor(q·n) returned the slowest run for n = 4 (the default FOOT_RUNS), i.e. a worst case.
+const pct = (a, q) => { const s = a.slice().sort((x, y) => x - y), h = (s.length - 1) * q, i = Math.floor(h); return i + 1 < s.length ? s[i] + (h - i) * (s[i + 1] - s[i]) : s[i]; };
 
 // ---- mission 1 gate: the toilet dash -----------------------------------------------------------
 // Careful: sprints the route round the ladies' room. Careless: dawdles 2 s, then walks.

@@ -8,7 +8,7 @@ import { audio } from './audio.js';
 import { buildTown, parkedCars, tickTown } from './world/town.js';
 import { finalizeProps, tickProps, breakProp, propsNear, props as allProps } from './world/props.js';
 import { lm, landmarks, routeAim, N, P, HALF, LANE, nodeX, nodeZ, neighbors, blockInterior } from './world/layout.js';
-import { groundAt, queryBlocks, contains, circleVsObb } from './world/collision.js';
+import { groundAt, queryBlocks, contains, circleVsObb, circleVsBlock, topAt } from './world/collision.js';
 import { worldHooks } from './world/registry.js';
 import { buildCabin } from './world/cabin.js';
 import { buildRioCard } from './world/rio.js';
@@ -509,18 +509,56 @@ class Game {
     for (const c of this.cars) if (circleVsObb(x, z, 0.4, c.obb, {})) return false;
     return true;
   }
-  // A random free ground spot rMin..rMax from (cx, cz), inside the current level's bounds.
-  freeSpot(cx, cz, rMin, rMax) {
+  // A random free ground spot rMin..rMax from (cx, cz), inside the current level's bounds;
+  // `ok(x, z)` (optional) filters further, e.g. footReach below.
+  freeSpot(cx, cz, rMin, rMax, ok = null) {
     const inB = this.levelDef ? this.levelDef.inBounds : () => true;
     for (let k = 0; k < 60; k++) {
       const a = Math.random() * Math.PI * 2, r = rMin + Math.random() * (rMax - rMin);
       const x = cx + Math.cos(a) * r, z = cz + Math.sin(a) * r;
       if (!inB(x, z, this)) continue;
+      if (ok && !ok(x, z)) continue;
       if (this.spotFree(x, z, 0.15) && groundAt(x, z, 1, 0.5) < 0.5) return { x, z };
     }
     return { x: cx, z: cz };
   }
   groundAt(x, z) { return groundAt(x, z, 0.2, 0.6); }
+  // Where can someone on foot get to from (cx, cz) without leaving the square of half-size R?
+  // A flood fill over a 0.5 m grid with a 0.4 m body (the player is 0.36: a gap he only just fits
+  // through does not count) and the 0.45 m step (no jumps), so thin walls block it. Returns
+  // (x, z) => bool. Used for spawning `rabbits` targets: until Phase 2 a Fataga sheep could spawn
+  // behind the 2.55 m tomato-field wall, 14 m from the player and 50 m round.
+  footReach(cx, cz, R) {
+    const S = 0.5, half = Math.ceil(R / S), n = 2 * half + 1;
+    const h = new Float32Array(n * n).fill(NaN), list = [], hit = {}, q = [];
+    const X = (i) => cx + (i - half) * S, Z = (j) => cz + (j - half) * S;
+    const enter = (i, j, from) => {
+      const x = X(i), z = Z(j);
+      queryBlocks(x - 0.45, z - 0.45, x + 0.45, z + 0.45, list);
+      for (const b of list) if (!b.dead && topAt(b, x, z) > from + 0.45 && circleVsBlock(x, z, 0.4, b, hit)) return NaN;
+      return groundAt(x, z, from, 0.45);
+    };
+    const s0 = half * n + half;
+    h[s0] = groundAt(cx, cz, 0.2, 0.6);
+    q.push(s0);
+    for (let k = 0; k < q.length; k++) {
+      const c = q[k], ci = c % n, cj = (c / n) | 0;
+      for (const [di, dj] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+        const ni = ci + di, nj = cj + dj;
+        if (ni < 0 || nj < 0 || ni >= n || nj >= n) continue;
+        const nI = nj * n + ni;
+        if (!Number.isNaN(h[nI])) continue;
+        const v = enter(ni, nj, h[c]);
+        if (Number.isNaN(v)) continue;
+        h[nI] = v;
+        q.push(nI);
+      }
+    }
+    return (x, z) => {
+      const i = Math.round((x - cx) / S) + half, j = Math.round((z - cz) / S) + half;
+      return i >= 0 && j >= 0 && i < n && j < n && !Number.isNaN(h[j * n + i]);
+    };
+  }
 
   // Test/debug helper: move whatever the player is controlling (stands up first if seated).
   debugWarp(x, z, yaw = 0) {

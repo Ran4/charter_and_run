@@ -141,28 +141,31 @@ export class Shame {
     if (c.siren) audio.siren(true);
     audio.setTune('skandal');
     const f = g.focus();
-    // Spawn the Land Rovers at intersections a little way off, out of the player's face
-    // (cfg.spawnDist [min, max] m).
-    // Never straight ahead of a moving player (a head-on bust in the first seconds), and each
-    // car starts facing the street that leads towards him.
+    // Spawn the Land Rovers on the streets a little way off, out of the player's face
+    // (cfg.spawnDist [min, max] m): on any block edge, 12 m past a junction or mid-block, in the
+    // right-hand lane, heading towards him. Never straight ahead of a moving player (a head-on bust
+    // in the first seconds), and never two on the same stretch. (Until the Phase 2 balance check
+    // they only spawned at junctions: on the 80 m grid a 40–80 m ring outside the forward cone
+    // often held one junction, sometimes none, so a "two-car" pursuit was one car or a free escape.)
     const [dMin, dMax] = c.spawnDist || [70, 150];
     const sp = Math.hypot(f.car?.vx || 0, f.car?.vz || 0), hx = sp > 2 ? f.car.vx / sp : 0, hz = sp > 2 ? f.car.vz / sp : 0;
     const cands = [];
     for (let id = 0; id < NN * NN; id++) {
-      const dx = nodeX(id) - f.x, dz = nodeZ(id) - f.z, d = Math.hypot(dx, dz);
-      if (d > dMin && d < dMax && (dx * hx + dz * hz) / d < 0.5) cands.push(id);
+      for (const m of neighbors(id)) {
+        const ex = nodeX(m) - nodeX(id), ez = nodeZ(m) - nodeZ(id), l = Math.hypot(ex, ez), ux = ex / l, uz = ez / l;
+        for (const s of [12, l / 2]) {
+          const x = nodeX(id) + ux * s - uz * LANE, z = nodeZ(id) + uz * s + ux * LANE;
+          const dx = x - f.x, dz = z - f.z, d = Math.hypot(dx, dz);
+          if (d <= dMin || d >= dMax || (dx * hx + dz * hz) / d >= 0.5 || -(dx * ux + dz * uz) / d <= 0) continue;
+          cands.push({ x, z, yaw: yawTo(ux, uz) });
+        }
+      }
     }
     for (let k = 0; k < (c.vehicleCount ?? 2) && cands.length; k++) {
-      const id = cands.splice((Math.random() * cands.length) | 0, 1)[0];
-      let nb = neighbors(id)[0], best = -Infinity;
-      for (const m of neighbors(id)) {
-        const ex = nodeX(m) - nodeX(id), ez = nodeZ(m) - nodeZ(id), s2 = (ex * (f.x - nodeX(id)) + ez * (f.z - nodeZ(id))) / (Math.hypot(ex, ez) || 1);
-        if (s2 > best) { best = s2; nb = m; }
-      }
-      const dx = nodeX(nb) - nodeX(id), dz = nodeZ(nb) - nodeZ(id), l = Math.hypot(dx, dz);
-      const x = nodeX(id) + (dx / l) * 12 + (-dz / l) * LANE, z = nodeZ(id) + (dz / l) * 12 + (dx / l) * LANE;
-      const car = new Car(c.vehicle || 'guardia', { x, z, yaw: yawTo(dx, dz) });
-      car.place(x, z, yawTo(dx, dz));
+      const { x, z, yaw } = cands.splice((Math.random() * cands.length) | 0, 1)[0];
+      for (let j = cands.length - 1; j >= 0; j--) if (Math.hypot(cands[j].x - x, cands[j].z - z) < 30) cands.splice(j, 1);
+      const car = new Car(c.vehicle || 'guardia', { x, z, yaw });
+      car.place(x, z, yaw);
       car.isPursuer = true;
       car.locked = true;
       car.spec.maxSpeed = c.vehicleMaxSpeed ?? 28;

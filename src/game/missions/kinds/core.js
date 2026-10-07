@@ -501,8 +501,10 @@ export const rabbits = (o) => common(o, {
   init(g, m) {
     const c = at(o.near);
     this.list = [];
+    // Only where the player can run to from the landmark (never behind a wall: g.footReach).
+    const reach = g.footReach(c.x, c.z, (o.rMax ?? 55) + 4);
     for (let k = 0; k < o.count; k++) {
-      const p = g.freeSpot(c.x, c.z, o.rMin ?? 18, o.rMax ?? 55);
+      const p = g.freeSpot(c.x, c.z, o.rMin ?? 18, o.rMax ?? 55, reach);
       const r = new Rabbit(g.scene, p.x, p.z, { mesh: o.mesh || 'badboll', flee: o.flee !== false });
       this.list.push(r);
       m.items.push(() => r.remove(g.scene));

@@ -26,7 +26,9 @@ export const roundTimer = (t) => Math.ceil(t);
 const CAL = process.env.CAL ? process.env.CAL.split(',') : null;
 const want = (id) => !CAL || CAL.includes(id);
 const median = (a) => { const s = a.slice().sort((x, y) => x - y); return s.length % 2 ? s[(s.length - 1) / 2] : (s[s.length / 2 - 1] + s[s.length / 2]) / 2; };
-const pct = (a, q) => { const s = a.slice().sort((x, y) => x - y); return s[Math.min(s.length - 1, Math.floor(q * s.length))]; };
+// Percentile with linear interpolation between order statistics (h = (n − 1)·q). The nearest-rank
+// form floor(q·n) returned the slowest run for n = 4 (the default FOOT_RUNS), i.e. a worst case.
+const pct = (a, q) => { const s = a.slice().sort((x, y) => x - y), h = (s.length - 1) * q, i = Math.floor(h); return i + 1 < s.length ? s[i] + (h - i) * (s[i + 1] - s[i]) : s[i]; };
 const f1 = (v) => (v == null ? '-' : (+v).toFixed(1));
 
 // ---------------------------------------------------------------------------------------------
@@ -277,8 +279,9 @@ export async function installAutopilot() {
 
   // --- the controller (car.ai): pure pursuit + speed profile --------------------------------------
   // path.crashAt (m driven): one big crash there, the way a human loses a race to a lamp post: the
-  // car stops dead 3.5 m to the right (on the kerb, out of the opponent's lane: the race bus does not
-  // brake and would otherwise shunt it back up to speed), turned 0.5 rad, and needs 1 s to recover.
+  // car stops dead 3.5 m to the right (on the kerb), or with crashSide 'left' in the left lane (the
+  // race: out of the bus's lane, since the race bus does not brake and would shunt it), turned
+  // 0.5 rad, and needs 1 s to recover.
   function makeController(car, path) {
     const lim = limits(car, path.mode);
     path.v = profile(path.pts, lim, path.vEnd ?? 10);
@@ -300,8 +303,21 @@ export async function installAutopilot() {
         if (path.crashAt != null && !st.crashed && st.dist >= path.crashAt) {
           // Into the kerb furniture on the right: stopped 3.5 m to the right, nose 0.5 rad off the road.
           st.crashed = true; st.crashHold = 1.0; st.crashV = +car.forwardSpeed.toFixed(1); st.justCrashed = true;
-          const rx = -Math.cos(car.yaw), rz = Math.sin(car.yaw);
-          car.place(car.x + rx * 3.5, car.z + rz * 3.5, car.yaw - 0.5);
+          if (path.crashSide === 'left') {
+            // Race: spun out into the left lane (lane offset −3.3 m from the road's centre line,
+            // nose 0.5 rad left), whichever lane it was in. Shifting it "3.5 m right" put a player
+            // who had moved over to the right lane into the bus's lane: the bus shunted it and lost
+            // time itself, and the "one crash loses" check flaked (Phase 2 exit run).
+            const [n1, n2] = edgeAt(car.x, car.z);
+            let dx = nx(n2) - nx(n1), dz = nz(n2) - nz(n1);
+            const dl = Math.hypot(dx, dz) || 1; dx /= dl; dz /= dl;
+            if (dx * Math.sin(car.yaw) + dz * Math.cos(car.yaw) < 0) { dx = -dx; dz = -dz; }
+            const rx = -dz, rz = dx, lat = (car.x - nx(n1)) * rx + (car.z - nz(n1)) * rz;
+            car.place(car.x + rx * (-3.3 - lat), car.z + rz * (-3.3 - lat), Math.atan2(dx, dz) + 0.5);
+          } else {
+            const rx = -Math.cos(car.yaw), rz = Math.sin(car.yaw);
+            car.place(car.x + rx * 3.5, car.z + rz * 3.5, car.yaw - 0.5);
+          }
           car.vx = 0; car.vz = 0; car.w = 0;
         }
         st.pvx = car.vx; st.pvz = car.vz;
@@ -354,7 +370,7 @@ export async function installAutopilot() {
     const end = spec.end ? lmOr(spec.end) : null;
     const ns = spec.nodes ? spec.nodes.map(NR) : plan(car, spec.endEdges || [edgeAt(end.x, end.z)], spec.via || [], end);
     const pts = buildPath(car, ns, end, spec.pre);
-    const path = { pts, mode: spec.mode || 'normal', vEnd: spec.vEnd ?? 10, ignore: spec.ignore || null, crashAt: spec.crashAt ?? null, free: !!spec.free };
+    const path = { pts, mode: spec.mode || 'normal', vEnd: spec.vEnd ?? 10, ignore: spec.ignore || null, crashAt: spec.crashAt ?? null, crashSide: spec.crashSide || 'right', free: !!spec.free };
     const ctl = makeController(car, path);
     // startOff: begin out in the left lane (the race grid), merging right once it is clear.
     if (spec.startOff) { path.off = path.offT = spec.startOff; }
@@ -519,8 +535,14 @@ export async function installAutopilot() {
       st: st0,
       update(dt, game) {
         if (a.result) { car.ctrl.throttle = 0; car.ctrl.brake = 1; return; }
-        if (!sh.pursuit && a.started) { a.result = { escaped: true, t: +(ap.t - a.t0).toFixed(1), minD: +minD.toFixed(1) }; return; }
-        if (sh.pursuit && !a.started) { a.started = true; a.t0 = ap.t; replan = 0; }
+        if (!sh.pursuit && a.started) { a.result = { escaped: true, t: +(ap.t - a.t0).toFixed(1), minD: +minD.toFixed(1), spawn: a.spawn }; return; }
+        if (sh.pursuit && !a.started) {
+          a.started = true; a.t0 = ap.t; replan = 0;
+          // Where the Land Rovers came in (distance from the car, m): an empty list is a pursuit
+          // without pursuers, which decays to an "escape" in 6.7 s.
+          a.spawn = sh.pursuers.map((h) => +Math.hypot(h.x - car.x, h.z - car.z).toFixed(0));
+          a.at = [+car.x.toFixed(0), +car.z.toFixed(0), +Math.hypot(car.vx, car.vz).toFixed(1)];
+        }
         const hs = sh.pursuers.filter((h) => !h.dead);
         for (const h of hs) minD = Math.min(minD, Math.hypot(h.x - car.x, h.z - car.z));
         replan -= dt;
@@ -566,8 +588,12 @@ export async function installAutopilot() {
   const qb = [], hit = {};
   // `jump` (m): ledges up to this high are taken with a jump (island: the player jumps ~1.6 m;
   // sheep hop onto walls the 0.45 m step does not reach); such cells carry `jump: true`.
-  function footPath(sx, sz, sy, tx, tz, rad = 0.4, step = 0.45, jump = 0) {
-    const S = 0.5, pad = 14;
+  // `pad` (m): how far beyond the start/target box the search may go; the result carries
+  // `reached` (false: the path ends at the cell nearest the target).
+  // `avoid`: points the walker stalled at (a gap the grid sees but the body does not pass): cells
+  // within 0.6 m are closed.
+  function footPath(sx, sz, sy, tx, tz, rad = 0.4, step = 0.45, jump = 0, pad = 14, avoid = null) {
+    const S = 0.5;
     const x0 = Math.min(sx, tx) - pad, z0 = Math.min(sz, tz) - pad;
     const W = Math.ceil((Math.max(sx, tx) + pad - x0) / S), H = Math.ceil((Math.max(sz, tz) + pad - z0) / S);
     if (W * H > 90000) return null;
@@ -576,6 +602,7 @@ export async function installAutopilot() {
     // Can a body standing at height h move into cell (i, j)? Returns the new height or NaN.
     const enter = (i, j, h, st = step) => {
       const x = cx(i), z = cz(j);
+      if (avoid) for (const a of avoid) if ((x - a.x) ** 2 + (z - a.z) ** 2 < 0.36) return NaN;
       queryBlocks(x - rad - 0.05, z - rad - 0.05, x + rad + 0.05, z + rad + 0.05, qb);
       for (const b of qb) { const top = b.shape === C.RAMP ? C.topAt(b, x, z) : b.top; if (top > h + st && C.circleVsBlock(x, z, rad, b, hit)) return NaN; }
       return C.groundAt(x, z, h, st);
@@ -590,13 +617,14 @@ export async function installAutopilot() {
     const pop = () => { const top = heap[0], last = heap.pop(); if (heap.length) { heap[0] = last; let k = 0; for (;;) { const l = 2 * k + 1, r = l + 1; let m = k; if (l < heap.length && heap[l][0] < heap[m][0]) m = l; if (r < heap.length && heap[r][0] < heap[m][0]) m = r; if (m === k) break; [heap[m], heap[k]] = [heap[k], heap[m]]; k = m; } } return top; };
     push(s0, 0);
     const D = [[1, 0, 1], [-1, 0, 1], [0, 1, 1], [0, -1, 1], [1, 1, 1.414], [1, -1, 1.414], [-1, 1, 1.414], [-1, -1, 1.414]];
-    let best = s0, bestH = Infinity, n = 0;
-    while (heap.length && n++ < 60000) {
+    let best = s0, bestH = Infinity, n = 0, reached = false;
+    const maxN = pad > 14 ? 160000 : 60000;
+    while (heap.length && n++ < maxN) {
       const [, c] = pop();
       const ci = c % W, cj = (c / W) | 0;
       const hh = Math.hypot(ci - ti, cj - tj);
       if (hh < bestH) { bestH = hh; best = c; }
-      if (c === t0 || hh < 1.5) { best = c; break; }
+      if (c === t0 || hh < 1.5) { best = c; reached = true; break; }
       for (const [di, dj, w] of D) {
         const ni = ci + di, nj = cj + dj;
         if (ni < 0 || nj < 0 || ni >= W || nj >= H) continue;
@@ -612,9 +640,10 @@ export async function installAutopilot() {
       }
     }
     const out = [];
-    for (let c = best; c >= 0 && c !== s0; c = from[c]) out.push({ x: cx(c % W), z: cz((c / W) | 0), jump: !!jmp[c] });
+    for (let c = best; c >= 0 && c !== s0; c = from[c]) out.push({ x: cx(c % W), z: cz((c / W) | 0), jump: !!jmp[c], h: hgt[c] });
     out.reverse();
     out.push({ x: tx, z: tz });
+    out.reached = reached;
     return out;
   }
   const queryBlocks = C.queryBlocks;
@@ -660,19 +689,39 @@ export async function installAutopilot() {
       f.replanT -= dt;
       const moved = !f.route || f.tgt !== t || Math.hypot(f.route.end.x - t.x, f.route.end.z - t.z) > 1.5;
       if (moved && f.replanT <= 0 || !f.route) {
+        if (f.tgt !== t) f.noJump = false;
         f.replanT = 0.6; f.tgt = t; f.plans++;
-        const pts = footPath(p.x, p.z, p.y, t.x, t.z, 0.4, 0.45, g.levelDef.verbs.jump ? 1.3 : 0) || [{ x: t.x, z: t.z }];
+        // After a stall, plan without jumps until the target changes (Hotel Flamenco's 1.23 m patio
+        // dividers are in jump range on paper, but the jump among the patio chairs can fail; a human
+        // then walks round). Toggling back and forth instead made the walker oscillate.
+        const J = g.levelDef.verbs.jump && !f.noJump ? 1.3 : 0;
+        let pts = footPath(p.x, p.z, p.y, t.x, t.z, 0.4, 0.45, J, 14, f.avoid);
+        // The way round may leave the 14 m margin (e.g. round Hotel Flamenco's 52 m slab): widen it.
+        if (pts && !pts.reached) pts = footPath(p.x, p.z, p.y, t.x, t.z, 0.4, 0.45, J, 45, f.avoid) || pts;
+        pts = pts || [{ x: t.x, z: t.z }];
         f.route = { pts, k: 0, end: { x: t.x, z: t.z } };
       }
       const R = f.route;
       // Follow the route: aim at the furthest of the next few cells that the body (±0.3 m) can
       // reach in a straight line, every solid counted (props too).
       const y = p.y + 0.46;
+      // Can the body walk straight to q? Sweep a 0.38 m circle (the player is 0.36) along the line
+      // every 0.1 m against every solid taller than a step. (collision.segmentBlocked samples a
+      // bare line every 0.8 m: it stepped through Hotel Flamenco's 0.22 m patio dividers, and three
+      // parallel lines 0.3 m apart missed a 0.12 m pole beside the pool bar, wedging the walker.)
       const clear = (q) => {
-        const dx = q.x - p.x, dz = q.z - p.z, l = Math.hypot(dx, dz) || 1, ox = (-dz / l) * 0.3, oz = (dx / l) * 0.3;
-        return C.segmentBlocked(p.x, p.z, q.x, q.z, y, '') < 0 && C.segmentBlocked(p.x + ox, p.z + oz, q.x + ox, q.z + oz, y, '') < 0 && C.segmentBlocked(p.x - ox, p.z - oz, q.x - ox, q.z - oz, y, '') < 0;
+        const ax = p.x, az = p.z, bx = q.x, bz = q.z;
+        queryBlocks(Math.min(ax, bx) - 0.4, Math.min(az, bz) - 0.4, Math.max(ax, bx) + 0.4, Math.max(az, bz) + 0.4, qb);
+        const n = Math.max(2, Math.ceil(Math.hypot(bx - ax, bz - az) / 0.1));
+        for (const b of qb) {
+          if (b.top < y) continue;
+          for (let k = 1; k <= n; k++) if (C.circleVsBlock(ax + ((bx - ax) * k) / n, az + ((bz - az) * k) / n, 0.38, b, hit)) return false;
+        }
+        return true;
       };
-      while (R.k < R.pts.length - 1 && Math.hypot(R.pts[R.k].x - p.x, R.pts[R.k].z - p.z) < 0.7) R.k++;
+      // Never skip a jump cell (a ledge or the top of a thin wall) before standing on it: from
+      // 0.5 m away the walker used to drop it and walk into the wall for good.
+      while (R.k < R.pts.length - 1 && Math.hypot(R.pts[R.k].x - p.x, R.pts[R.k].z - p.z) < 0.7 && !(R.pts[R.k].jump && p.y < R.pts[R.k].h - 0.3)) R.k++;
       let aim = R.pts[R.k];
       // A ledge ahead on the route: jump when it is 1.2 m away (aim straight at it, no shortcut).
       let ledge = null;
@@ -683,7 +732,11 @@ export async function installAutopilot() {
       if (t.y != null && t.y > p.y + 0.4 && dt0 < 2.5 && p.onGround) ap.jumpNow = true;
       if (dt0 < 3 && clear(t)) aim = t;
       // No progress for 2 s: plan again from here.
-      if (ap.t - (f.bestT ?? ap.t) > 2 && f.replanT <= -1.4) { f.route = null; f.replanT = 0; }
+      if (ap.t - (f.bestT ?? ap.t) > 2 && f.replanT <= -1.4) { f.noJump = true;
+        // Remember the route cell it could not get to, so the next plan goes another way.
+        const R0 = f.route, q = R0 && R0.k < R0.pts.length - 1 ? R0.pts[R0.k] : null;
+        if (q) (f.avoid ||= []).push({ x: q.x, z: q.z });
+        f.route = null; f.replanT = 0; }
       f.yaw = yawTo(aim.x - p.x, aim.z - p.z);
       g.cam.yaw = f.yaw;
     }
@@ -930,9 +983,10 @@ export const SCENARIOS = {
         check(st.si > 3 || st.state !== 'running', 'plates: the walker smashed ten stacks');
         ts.push(w.t);
       }
-      const tRef = median(ts) + 0.5 * 10;
+      // The stacks spawn at random in the dance-floor area: the 75th percentile like other random stages.
+      const tRef = pct(ts, 0.75) + 0.5 * 10;
       out.grisfestPlates = tRef; kind.grisfestPlates = 'foot';
-      row('plates', 'grisfest s4 smash 10 plate stacks (on foot, kick)', 'race finish (-80,-203) -> nearest stack first', tRef.toFixed(1), roundTimer(tRef * 1.25), `median of ${ts.length} runs + 0.5 s × 10: ${ts.map(f1).join(' / ')} s`);
+      row('plates', 'grisfest s4 smash 10 plate stacks (on foot, kick)', 'race finish (-80,-203) -> nearest stack first', tRef.toFixed(1), roundTimer(tRef * 1.25), `p75 of ${ts.length} runs + 0.5 s × 10: ${ts.map(f1).join(' / ')} s; median ${f1(median(ts))}`);
     }
     // Stage 6: from the dance floor on foot back to the car, then Tonga Tonga. The car stands where
     // the race left it: just past the finish line at the farm gate, heading west.
@@ -986,7 +1040,7 @@ export const SCENARIOS = {
           await T.ev(() => { const g = __game, ms = g.missions; ms.stageI = 2; ms.startStage(); const st = ms.stage, o = (window.__calOpp = { car: st.opp, path: st.opp.ai.path, d: 0, t: 0, x: st.opp.x, z: st.opp.z, fin: null }); g.onFrame((dt) => { if (ms.stage !== st || st.countdown > 0) return; o.t += dt; o.d += Math.hypot(o.car.x - o.x, o.car.z - o.z); o.x = o.car.x; o.z = o.car.z; }); });
           await T.frames(3);
           const rinfo = await T.ev(() => { const st = __game.missions.stage; return { type: __game.playerCar.type, opp: st.opp.spec.maxSpeed, cruise: st.o.cruise }; });
-          const rr = await drive(T, { nodes: [[3, 3], [4, 3], [4, 2], [4, 1], [3, 1], [2, 1]], end: { x: -80, z: -200 }, vEnd: 40, startOff: -5.5, crashAt: mode === 'crash' ? 165 : null });
+          const rr = await drive(T, { nodes: [[3, 3], [4, 3], [4, 2], [4, 1], [3, 1], [2, 1]], end: { x: -80, z: -200 }, vEnd: 40, startOff: -5.5, crashAt: mode === 'crash' ? 165 : null, crashSide: 'left' });
           // If the player won, keep the bus running to the finish to measure the margin.
           let margin;
           const failed = await T.ev(() => __game.missions.state === 'failed');
@@ -1143,6 +1197,7 @@ export const SCENARIOS = {
           const r = await waitDone(T, 150000);
           T.log('pursuit', who, k, JSON.stringify({ escape: r.escape, driven: r.driven, impacts: r.impacts, hits: r.hits?.slice(0, 4) }));
           res[who].push(r.escape || { timeout: true });
+          check(!r.escape || r.escape.busted || r.escape.spawn?.length, `pursuit: Land Rovers spawned (car at ${JSON.stringify(await T.ev(() => window.__ap.active?.at))})`);
         }
       }
       const fmtR = (a) => a.map((e) => (e.escaped ? `escaped ${e.t} s` : e.busted ? `busted ${e.t} s` : 'no result')).join(' / ');
