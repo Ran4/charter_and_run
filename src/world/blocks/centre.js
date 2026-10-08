@@ -190,7 +190,8 @@ function archGeo(s, r, al, H, depth) {
 }
 
 // Arcade along a face frame: columns at us (local u), arches between them, a roof slab on top.
-// depth = how far the column line stands out from the wall. Nothing overhead is solid.
+// depth = how far the column line stands out from the wall. Nothing overhead is solid; a camera
+// ceiling keeps the chase eye under the roof slab.
 function arcade(fr, us, depth, o = {}) {
   const top = o.top ?? 3.6, spring = o.spring ?? 1.85, al = o.al ?? 0.32, c = o.color ?? WHITE;
   const zc = depth - 0.25;
@@ -208,6 +209,7 @@ function arcade(fr, us, depth, o = {}) {
   const a = us[0] - 0.3, b = us[us.length - 1] + 0.3;
   fr.box(c, (a + b) / 2, top, depth / 2, b - a, 0.28, depth + 0.02);
   fr.box(o.band ?? TERRA, (a + b) / 2, top + 0.06, depth + 0.02, b - a, 0.16, 0.06);
+  fr.ceiling((a + b) / 2, depth / 2, b - a, depth + 0.02, top, top + 0.3);
 }
 
 // Canary palm: trunk, crown knob, ten fronds; o = { h, y, tinsel, solid }.
@@ -620,7 +622,7 @@ function kasbah(f) {
   bz.box(WOOD_D, 0, ART + 0.2, 0.06, 7, 0.18, 0.06);
   bz.boxC(WOOD_D, -2.64, 4.75, 0.06, 0.16, 2.4, 0.06, 0, 0, 0.5);
   bz.boxC(WOOD_D, 2.64, 4.75, 0.06, 0.16, 2.4, 0.06, 0, 0, -0.5);
-  board(bz, 'BIERSTUBE · ÖL · BIER', 0, 4.75, 3.2, 0.8, { bg: '#f4e4b0', fg: '#6a3a1a', scale: 0.6 }); // [N]
+  board(bz, 'CERVECERÍA · ÖL', 0, 4.75, 3.2, 0.8, { bg: '#f4e4b0', fg: '#6a3a1a', scale: 0.6 }); // [N]
   for (const [fr2, txt, c] of [[face(f, 'E', -7, -3.5), 'PUB LOS AMIGOS', '#ffd23f'], [face(f, 'W', 7, -4.5), 'CLUB 2000', '#ff5ab4']]) { // [N]
     win(fr2, 0, 4.7, 1.2, 1.6, { arch: true, shutters: GREEN });
     fr2.boxC(DARK, 0, 2.9, 0.08, 3.3, 0.65, 0.06);
@@ -641,7 +643,10 @@ function kasbah(f) {
   for (const x of [-20, 12]) f.prop('butano', x, -29.8);
   f.prop('papelera', -4, -30, 0);
 
-  // Stairs from the courtyard to the roof terrace: visible steps + one ramp collider.
+  // Stairs from the courtyard to the roof terrace: visible steps + one ramp collider. The flight's
+  // foot is 0.5 m from the east wing, so the way on is from the courtyard over the bottom three
+  // steps; the balustrade starts above them (newel post at xs), with a sloped wall collider along
+  // it (without one the player walked through it and fell up to 5.85 m).
   {
     const x0 = 6.5, x1 = -7, z0 = -9, z1 = -6.6, n = 27, len = x0 - x1;
     for (let k = 0; k < n; k++) {
@@ -649,10 +654,15 @@ function kasbah(f) {
       rbox(f, k % 2 ? WHITE : CREAM, xa, z0, xa + len / n, z1, CURB, h);
       rbox(f, TILE, xa, z0, xa + len / n, z1, CURB + h, 0.04);
     }
-    const ang = Math.atan2(TOP - CURB, len), L = Math.hypot(TOP - CURB, len);
-    f.boxC(WHITE2, (x0 + x1) / 2, (TOP + CURB) / 2 + 0.55, z1 - 0.1, L, 0.95, 0.18, 0, 0, -ang);
-    f.boxC(TERRA, (x0 + x1) / 2, (TOP + CURB) / 2 + 1.05, z1 - 0.1, L, 0.1, 0.24, 0, 0, -ang);
+    const xs = x0 - 3 * (len / n), hs = CURB + 3 / n * (TOP - CURB), zb = z1 - 0.1;
+    const ang = Math.atan2(TOP - hs, xs - x1), L = Math.hypot(TOP - hs, xs - x1);
+    f.boxC(WHITE2, (xs + x1) / 2, (TOP + hs) / 2 + 0.55, zb, L, 0.95, 0.18, 0, 0, -ang);
+    f.boxC(TERRA, (xs + x1) / 2, (TOP + hs) / 2 + 1.05, zb, L, 0.1, 0.24, 0, 0, -ang);
+    f.box(WHITE2, xs, CURB, zb, 0.26, hs + 1.15 - CURB, 0.26);
+    f.box(TERRA, xs, hs + 1.15, zb, 0.32, 0.08, 0.32);
+    f.circ(xs, zb, 0.15, 99, 'pole');
     ramp(f.wx((x0 + x1) / 2, (z0 + z1) / 2), f.wz((x0 + x1) / 2, (z0 + z1) / 2), f.yaw - HP, z1 - z0, len, CURB, TOP);
+    ramp(f.wx((xs + x1) / 2, zb), f.wz((xs + x1) / 2, zb), f.yaw - HP, 0.2, xs - x1, hs + 1.1, TOP + 1.1, 'wall');
   }
   // Courtyard: fountain, café tables, julgran, string lights.
   f.cyl(WHITE2, 0, CURB + 0.3, 3, 1.5, 0.6, 8);
@@ -725,15 +735,16 @@ function cita(f) {
   rbox(f, 0xd8d0c0, -29.05, -29.05, 29.05, -7.95, CURB, 0.5);
   rbox(f, BLUE, -29.12, -29.12, 29.12, -7.88, TOPN - 0.4, 0.45);
   rsolid(f, ...NB);
-  rbox(f, WHITE2, -29, -8, 29, -5.6, 3.7, 0.25);
-  rbox(f, BLUE, -29, -5.76, 29, -5.56, 3.5, 0.58);
-  for (const x of [-26, -20.2, -14.4, -8.6, -2.8, 2.8, 8.6, 14.4, 20.2, 26]) { f.cyl(STEEL, x, CURB + 1.68, -5.9, 0.11, 3.36, 8); f.circ(x, -5.9, 0.14, 99, 'pole'); }
+  // The courtyard between the wings (x ±11) shows x -11…11 of the north face: the shop row and its
+  // canopy stay inside that (until Phase 3 they ran into the wings and two shops were buried).
+  rbox(f, WHITE2, -11, -8, 11, -5.6, 3.7, 0.25);
+  rbox(f, BLUE, -11, -5.76, 11, -5.56, 3.5, 0.58);
+  for (const x of [-8.6, -2.8, 2.8, 8.6]) { f.cyl(STEEL, x, CURB + 1.68, -5.9, 0.11, 3.36, 8); f.circ(x, -5.9, 0.14, 99, 'pole'); }
+  f.ceiling(0, -6.8, 22, 2.4, 3.5, 4.1);   // the chase camera stays under the canopy (fascia bottom)
   const sf = face(f, 'S', 0, -8);
   const shops = [ // [N]
-    [-23, 10, 'SOUVENIRS · REGALOS', '#f7c31b', '#1d1426', 3.2],
-    [-11.5, 10, 'SVENSKT KAFFE · KONDITORI', '#2f5a9a', '#f7c31b', -3.2],
-    [11.5, 10, 'ESTANCO · TABACOS', '#7a1f2a', '#f7c31b', 3.2],
-    [23, 10, 'FARMACIA', '#2f8a4a', '#ffffff', -3.2],
+    [-7.5, 7, 'SVENSKT KAFFE · KONDITORI', '#2f5a9a', '#f7c31b', -1.6],
+    [7.5, 7, 'ESTANCO · TABACOS', '#7a1f2a', '#f7c31b', 1.6],
   ];
   for (const [u, w, name, bg, fg, d] of shops) {
     shopGlass(sf, u, w, { doorAt: d, glass: GLASS });
@@ -741,11 +752,19 @@ function cita(f) {
   }
   shopGlass(sf, 0, 8, { doorAt: 0, glass: 0x9ac8e0, doorC: 0x9ac8e0 });
   sf.sign('CENTRO NÓRDICO · ENTRADA', 0, 3.79, 2.47, 7, 0.5, 0, { bg: '#1f4f9a', fg: '#f7c31b', border: null, scale: 0.8 });
-  for (let k = 0; k < 4; k++) sf.box(k % 2 ? 0xf7c31b : 0xd8321e, -21.5 + k * 1.1, CURB + 1.4, 0.12, 0.8, 1.0, 0.02, 0, f.F);
-  // Pharmacy cross (green, lit) and the estanco's maroon-and-yellow T standing on the canopy.
-  f.box(STEEL, 26.5, 3.95, -6.0, 0.12, 0.6, 0.12);
-  f.box(0x3ad86a, 26.5, 4.55, -6.0, 0.34, 1.1, 0.34, 0, GL);
-  f.box(0x3ad86a, 26.5, 4.93, -6.0, 1.1, 0.34, 0.34, 0, GL);
+  // SOUVENIRS (posters in the window) and FARMACIA on the wings' courtyard faces.
+  const so = face(f, 'E', -11, -3.5);
+  shopGlass(so, 0, 3.8, { doorAt: 0.9, glass: GLASS });
+  board(so, 'SOUVENIRS · REGALOS', 0, 3.95, 3.6, 0.6, { bg: '#f7c31b', fg: '#1d1426', scale: 0.66, back: false }); // [N]
+  for (let k = 0; k < 3; k++) so.box(k % 2 ? 0xf7c31b : 0xd8321e, -1.3 + k * 0.55, CURB + 1.4, 0.12, 0.45, 0.7, 0.02, 0, f.F);
+  const fa = face(f, 'W', 11, 8.8);
+  shopGlass(fa, 0, 6, { doorAt: -1.6, glass: GLASS });
+  board(fa, 'FARMACIA', 0, 3.95, 4.4, 0.7, { bg: '#2f8a4a', fg: '#ffffff', scale: 0.7, back: false }); // [N]
+  // The green pharmacy cross (lit) on a bracket, square to the wall: it reads from the courtyard mouth.
+  fa.boxC(STEEL, 2.6, 3.9, 0.13, 0.08, 0.08, 0.26);
+  fa.boxC(0x3ad86a, 2.6, 3.9, 0.75, 0.14, 1.0, 0.34, 0, 0, 0, GL);
+  fa.boxC(0x3ad86a, 2.6, 3.9, 0.75, 0.14, 0.34, 1.0, 0, 0, 0, GL);
+  // The estanco's maroon-and-yellow T standing on the canopy.
   f.box(STEEL, 6.6, 3.95, -6.0, 0.12, 0.6, 0.12);
   f.box(0x7a1f2a, 6.6, 4.5, -6.0, 0.9, 0.9, 0.2);
   f.box(0xf7c31b, 6.6, 5.06, -5.88, 0.6, 0.14, 0.02, 0, f.F);
@@ -980,6 +999,7 @@ function plaza(f) {
       for (let k = 0; k < 7; k++) sph(f, k % 2 ? PALM : PALM2, x + R(-0.25, 0.25), 3.22, 15.8 + k * 2.2, 0.7, 0.32, 1.1);
       stringLights(f, [x, 3.0, 15.0], [x, 3.0, 29.4], 10, 0.35);
     }
+    f.ceiling(20.9, 22.2, 17.6, 15.2, 2.9, 3.6);   // the chase camera stays under the beams
     for (const [x, z] of [[15.0, 19.0], [22.8, 18.2], [27.4, 20.2], [15.0, 25.6], [22.4, 27.0], [27.6, 27.2]]) cafeTable(f, x, z, { check: true, chairs: 4, chairC: 0x8a5a2a });
     for (const x of [12.25, 14.75, 17.25, 23.25, 25.75, 28.25]) f.prop('mur', x, 30.3, 0);
     for (const z of [16.25, 18.75, 26.25, 28.75]) f.prop('mur', 11.3, z, HP);
@@ -1132,6 +1152,7 @@ function kyrka(f) {
   // Entrance: flat portico on two slim pillars, doors, relief cross, coloured slots.
   rbox(f, WHITE2, -6.6, 1, 6.6, 6.5, 4.0, 0.8);
   for (const s of [-1, 1]) { f.cyl(WHITE2, s * 6.0, CURB + 1.93, 5.9, 0.22, 3.85, 10); f.circ(s * 6.0, 5.9, 0.25, 99, 'pole'); }
+  f.ceiling(0, 3.75, 13.2, 5.5, 4.0, 4.8);   // the chase camera stays under the portico
   f.sign('TEMPLO ECUMÉNICO', 0, 4.4, 6.53, 11.6, 0.66, 0, { bg: '#fbf7ef', fg: '#2f5a9a', border: null, scale: 0.72 });
   const ef = face(f, 'S', 0, 1);
   door(ef, 0, 3.2, 3.4, WOOD, { split: true, trim: 0xd8d0c0 });
@@ -1232,6 +1253,8 @@ function bensin(f) {
   rbox(f, 0xf07a1e, -11.1, -1.1, 11.1, 11.1, 5.3, 0.55);
   rbox(f, WHITE2, -11.15, -1.15, 11.15, 11.15, 5.85, 0.12);
   for (const x of [-6, 0, 6]) for (const z of [1.5, 5, 8.5]) f.box(0xfff8dc, x, 4.96, z, 2.4, 0.04, 0.5, 0, GL);
+  // Camera ceilings: the chase eye stays under the pump canopy, the shop canopy and the workshop bays.
+  f.ceiling(0, 5, 22.3, 12.3, 5.0, 6.0);
   const gopt = { bg: '#f07a1e', fg: '#fff8e6', border: null, scale: 0.92 };
   f.sign('GASOLINA', 0, 5.575, 11.13, 9, 0.5, 0, gopt); // §1.5 no brand
   f.sign('GASOLINA', 0, 5.575, -1.13, 9, 0.5, PI, gopt);
@@ -1260,6 +1283,7 @@ function bensin(f) {
   rsolid(f, ...SH);
   rbox(f, WHITE2, -14.4, -13, 2.4, -10.9, 3.4, 0.25);
   for (const x of [-14, 2]) { f.cyl(STEEL, x, CURB + 1.63, -11.2, 0.08, 3.26, 6); f.circ(x, -11.2, 0.1, 99, 'pole'); }
+  f.ceiling(-6, -11.95, 16.8, 2.1, 3.4, 3.7);
   const sh = face(f, 'S', -6, -13);
   shopGlass(sh, 0, 15, { doorAt: -3, glass: GLASS, frame: 0x3a3a42 });
   board(sh, 'TIENDA · BAR · HIELO', 0, 4.05, 9, 0.6, { bg: '#fff8e6', fg: '#d8321e', scale: 0.72, back: false }); // [N]
@@ -1282,6 +1306,7 @@ function bensin(f) {
     for (let k = 0; k < 6; k++) f.box(k % 2 ? RED : WHITE2, (a + b) / 2, CURB + k * 0.3, -11.96, b - a - 0.1, 0.3, 0.04, 0, f.F);
   }
   rbox(f, WC, 8.5, -17, 21, -12, 4.0, TOPW - 4.0);
+  f.ceiling(14.75, -14.5, 12.5, 5, 4.0, TOPW);
   rbox(f, 0x3a3a42, 8.5, -17.05, 21, -16.95, CURB, 3.85);
   for (const [a, b] of [[8.5, 14], [15.5, 21]]) rbox(f, 0x9aa0a8, a + 0.1, -12.45, b - 0.1, -12.1, 3.5, 0.5);
   rbox(f, 0x2f5a9a, 5.9, -28.1, 28.1, -11.9, TOPW - 0.3, 0.3);
@@ -1322,8 +1347,9 @@ function bensin(f) {
 
 function guardia(f) {
   rflat(f, 0xd8c49a, -31, -31, 31, 31, CURB + 0.01);
+  const MX = 4.6;   // the flag mast stands beside the path, not on the axis to the CASA CUARTEL plaque
   rflat(f, 0xeadfc6, -2.4, -8, 2.4, 29, CURB + 0.02);
-  disc(f, 0xeadfc6, 0, 14, 3.2, CURB + 0.025, 24);
+  disc(f, 0xeadfc6, MX, 14, 2.2, CURB + 0.025, 24);
   for (const x of [-7.2, 7.2]) for (const s of [-1, 1]) rflat(f, LINE, x + s * 1.35 - 0.06, 5.6, x + s * 1.35 + 0.06, 10.6, CURB + 0.03);
 
   // Walls round the compound, gate in the south side.
@@ -1382,13 +1408,13 @@ function guardia(f) {
   for (let u = -19.5; u <= 19.51; u += 3.25) { win(bk, u, 1.95, 1.2, 1.7, sh); win(bk, u, 5.35, 1.2, 1.7, sh); }
 
   // Flag mast with the red-yellow-red flag (a slight wave in three slices).
-  rbox(f, 0xd8d0c0, -0.7, 13.3, 0.7, 14.7, CURB, 0.4);
-  f.solid(0, 14, 1.4, 1.4, CURB + 0.4, 'curb');
-  f.cyl(WHITE2, 0, CURB + 5.9, 14, 0.1, 11.0, 8);
-  sph(f, 0xd8a040, 0, CURB + 11.5, 14, 0.3);
-  f.circ(0, 14, 0.14, 99, 'pole');
+  rbox(f, 0xd8d0c0, MX - 0.7, 13.3, MX + 0.7, 14.7, CURB, 0.4);
+  f.solid(MX, 14, 1.4, 1.4, CURB + 0.4, 'curb');
+  f.cyl(WHITE2, MX, CURB + 5.9, 14, 0.1, 11.0, 8);
+  sph(f, 0xd8a040, MX, CURB + 11.5, 14, 0.3);
+  f.circ(MX, 14, 0.14, 99, 'pole');
   for (let k = 0; k < 3; k++) {
-    const x = 0.6 + k * 1.0, z = 14 + Math.sin(k * 1.4) * 0.18, ly = Math.cos(k * 1.4) * 0.22;
+    const x = MX + 0.6 + k * 1.0, z = 14 + Math.sin(k * 1.4) * 0.18, ly = Math.cos(k * 1.4) * 0.22;
     f.boxC(0xc8202a, x, 10.25, z, 1.02, 2.0, 0.05, ly);
     f.boxC(SUN, x, 10.25, z, 1.02, 1.0, 0.07, ly, 0, 0, f.F);
   }

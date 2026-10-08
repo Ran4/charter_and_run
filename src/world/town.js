@@ -49,6 +49,11 @@ export const animated = [];     // objects with tick(t)
 export const lamps = [];
 export const bouncers = [];     // trampoline ('bounce') blocks
 export const frameRamps = [];   // half-built frames: { x, z, yaw, top } = the foot of ramp 1, deck 1 height
+// Lit after dark (§13.3): the street lamps' lantern panes and star centres go into one unlit mesh
+// that draws only while the sky is dark, as the hotels' lit windows do. The block builders run
+// inside buildTown and may add their own night lights here (world coordinates); buildTown makes
+// the mesh at the end (nightLights).
+export const nightGlow = new GeoBuilder();
 
 let scene;
 
@@ -181,12 +186,14 @@ function lamp(G, x, z, yaw, star) {
     G.box(C.iron, ex, CURB + 4.62, ez, 0.04, 0.2, 0.04);
     G.cone(C.iron, ex, CURB + 4.48, ez, 0.25, 0.2, 4, 0, yaw + Math.PI / 4);
     G.box(0xfff1b8, ex, CURB + 4.2, ez, 0.28, 0.42, 0.28, yaw);
+    nightGlow.box(0xffd890, ex, CURB + 4.2, ez, 0.3, 0.4, 0.3, yaw);   // just outside the pane
     G.box(C.iron, ex, CURB + 3.97, ez, 0.2, 0.06, 0.2, yaw);
   }
   if (star) {
     G.box(C.gold, x + ax * 0.14, CURB + 3.7, z + az * 0.14, 0.62, 0.62, 0.05, yaw, 0, Math.PI / 4);
     G.box(C.gold, x + ax * 0.14, CURB + 3.7, z + az * 0.14, 0.62, 0.62, 0.05, yaw);
     G.box(0xfff1b8, x + ax * 0.18, CURB + 3.7, z + az * 0.18, 0.22, 0.22, 0.05, yaw, 0, Math.PI / 4);
+    nightGlow.box(0xfff1b8, x + ax * 0.18, CURB + 3.7, z + az * 0.18, 0.24, 0.24, 0.07, yaw, 0, Math.PI / 4);
   }
   circle(x, z, 0.2, 99, 'pole');
   lamps.push({ x, z });
@@ -376,7 +383,7 @@ const HOTELS = [
   ['APARTAMENTOS VIENTO SUR', { bg: '#1e9aa0', fg: '#fbf7ee', border: '#fbf7ee' }],
   ['HOTEL MAR AZUL', { bg: '#1c7fb8', fg: '#fbf7ee', border: '#fbf7ee' }],
   ['HOTEL ATLÁNTICO', { bg: '#fbf7ee', fg: '#c0623a', border: '#c0623a' }],
-  ['APARTAMENTOS TAMARINDO', { bg: '#f07a1e', fg: '#fbf7ee', border: '#fbf7ee' }],
+  ['APARTAMENTOS SOL DE INVIERNO', { bg: '#f07a1e', fg: '#fbf7ee', border: '#fbf7ee' }],
 ];
 let hotelNext = 0;
 // Ground-floor cafés under some slabs (charter Sweden, §6.9; invented names).
@@ -597,14 +604,15 @@ function ground(F) {
     top(t === 'bungalowR' ? 0xc49270 : t === 'lagenhet' ? 0xd8c8a8 : 0xcfc2a6, x0 + SW, z0 + SW, x1 - SW, z1 - SW, CURB - 0.04);
   }
   const o = HALF + RHW, e = EDGE;
-  // The outer sidewalk ring.
+  // The outer sidewalk ring; the west road stub (z -40) cuts the west piece in two.
   top(C.sidewalk, -e, -e, e, -o); top(C.sidewalk, -e, o, e, e);
-  top(C.sidewalk, -e, -o, -o, o); top(C.sidewalk, o, -o, e, o);
-  // Ochre volcanic sand round the town; the west road stub (z -40) cuts the west piece in two.
+  top(C.sidewalk, -e, -o, -o, -45.5); top(C.sidewalk, -e, -34.5, -o, o); top(C.sidewalk, o, -o, e, o);
+  // Ochre volcanic sand round the town, cut the same way. The stub's asphalt runs from the road's
+  // edge (a kerb-high step, as the collision ground) out of the map.
   top(C.sand, -FAR, -FAR, FAR, -e);
   top(C.sand, e, -e, FAR, e);
   top(C.sand, -FAR, -e, -e, -45.5); top(C.sand, -FAR, -34.5, -e, e);
-  top(C.asphalt, -FAR, -45.5, -e, -34.5);
+  top(C.asphalt, -FAR, -45.5, -o, -34.5);
   for (let x = -e - 4; x > -FAR; x -= 7) F.box(0xf4f4f0, x, CURB + 0.004, -40, 3, 0.01, 0.16);
   // Beach, foam line, shallows (the sea plane takes over at z 330; all at y 0.17 = 2 cm above CURB).
   top(C.beach, -FAR, e, FAR, 300);
@@ -944,7 +952,20 @@ export function buildTown(sc) {
     add(S, F);
   }
   flushSigns();
+  nightLights();
   addPedLoops();
+}
+
+// The night glow (nightGlow) as one unlit mesh, drawn only while the sky is dark (night, sunset).
+function nightLights() {
+  if (nightGlow.empty) return;
+  const m = new THREE.Mesh(nightGlow.build(), MAT.mouth);
+  m.name = 'nightGlow';
+  m.onBeforeRender = (r, sc, cam, geo) => {
+    const top = MAT.sky?.uniforms?.top?.value;
+    geo.setDrawRange(0, top && top.r + top.g + top.b < 0.8 ? Infinity : 0);
+  };
+  scene.add(m);
 }
 
 export function tickTown(t) {

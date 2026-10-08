@@ -928,15 +928,15 @@ standing there faces. `y` (optional) = absolute height for collectible spots on 
 
 | block (i,j) | type → builder (owner, file) | content | landmarks: `id` (lx, lz, yaw[, y]) | named / parked cars |
 |---|---|---|---|---|
-| (3,3) | `flamenco` → `hotelFlamenco` (C1, hotels.js) | 7-storey white slab x [−26, 26], z [−27, −14] with balcony rows, terracotta accents, `HOTEL FLAMENCO` roof sign; open reception porch (canopy, desk, plastic Christmas tree `julgran` prop, `RECEPCIÓN`) at the slab's south face; ground-floor room patios along the south face (Stig & Ole's room west, room 113 east) with a visible 1st-floor balcony above 113; pool deck south with a **walkable shallow pool** (flat blue slab at CURB+0.02 + `box(..., CURB, 'water')`, sign "TRE METER DJUPT I ENA ÄNDEN, / EN METER I DEN ANDRA. / BARNVÄNLIG!" (three lines) [F*] (the bungalow seller's line, relocated)); poolbar with straw parasols (`BAR PISCINA · SVENSKT KAFFE`); parking lot on the west; **PEPES BODEGA**: small whitewashed annex x [4, 12], z [−31, −27] on the north side with a green door, barrels, sign `PEPES BODEGA · VINOS · RON` facing north (`worldHooks.bodegaLit(on)` lights it after julafton) | `flamenco` (−4, −8, π) (faces the hotel, so the views/cutaway camera stands on the pool deck; Phase 2) · `flamencoRecepcion` (2, −10, 0) · `flamencoPatio` (−18, −11, 0) · `rum113` (18, −11, 0) · `flamencoBalcony` (18, −8, π) · `flamencoPool` (−3, 18, π) · `flamencoDeck` (−4, −2.5, 0) (the island spawn: approachSpot puts the player on the pool deck at (−4, −1) facing the hotel, the chase camera over the pool rather than under the pergola slats; Phase 2) · `flamencoBar` (16, 12, −π/2) · `flamencoDrive` (−26, 22, π) · `flamencoBack` (−6, −33.5, 0) · `bodega` (8, −33.5, 0) · `fena_flamenco` (−3, 7, 0, 0.35) | `hyrbil` (sedan `0xf4f4f0`) at `flamencoDrive` — default `getInCar` car and test car |
+| (3,3) | `flamenco` → `hotelFlamenco` (C1, hotels.js) | 7-storey white slab x [−26, 26], z [−27, −14] with balcony rows, terracotta accents, `HOTEL FLAMENCO` roof sign; open reception porch (canopy, desk, plastic Christmas tree `julgran` prop, `RECEPCIÓN`) at the slab's south face; ground-floor room patios along the south face (Stig & Ole's room west, room 113 east) with a visible 1st-floor balcony above 113; pool deck south with a **walkable shallow pool** (flat blue slab at CURB+0.02 + `box(..., CURB, 'water')`, sign "TRE METER DJUPT I ENA ÄNDEN, / EN METER I DEN ANDRA. / BARNVÄNLIG!" (three lines) [F*] (the bungalow seller's line, relocated)); poolbar with straw parasols (`BAR PISCINA · SVENSKT KAFFE`); the julafton party `julgran` on the pool deck at (2.2, 16), in the party and sunset-duet shots (Phase 3); room numbers: a closed room's centred above its own glass door, an open room's (107, 113) on its right-hand pier (Phase 3); parking lot on the west; **PEPES BODEGA**: small whitewashed annex x [4, 12], z [−31, −27] on the north side with a green door, barrels, sign `PEPES BODEGA · VINOS · RON` facing north (`worldHooks.bodegaLit(on)` lights it after julafton) | `flamenco` (−4, −8, π) (faces the hotel, so the views/cutaway camera stands on the pool deck; Phase 2) · `flamencoRecepcion` (2, −10, 0) · `flamencoPatio` (−18, −11, 0) · `rum113` (18, −11, 0) · `flamencoBalcony` (18, −8, π) · `flamencoPool` (−3, 18, π) · `flamencoDeck` (−4, −2.5, 0) (the island spawn: approachSpot puts the player on the pool deck at (−4, −1) facing the hotel, the chase camera over the pool rather than under the pergola slats; Phase 2) · `flamencoBar` (16, 12, −π/2) · `flamencoDrive` (−26, 22, π) · `flamencoBack` (−6, −33.5, 0) · `bodega` (8, −33.5, 0) · `fena_flamenco` (−3, 7, 0, 0.35) | `hyrbil` (sedan `0xf4f4f0`) at `flamencoDrive` — default `getInCar` car and test car |
 | (3,2) | `suntrip` → `hotelSunTrip` (C1, hotels.js) | lower U-shaped hotel on red rock; welcome **stage** with SunTrip sun backdrop (red text on yellow sun), accordion/conga props; pool; **friskotek lawn**; SunTrip office porch on the south side facing Flamenco's back; posters `GRISFEST TORSDAG · 800 PTA`, `FRISKOTEKET 9.30` | `suntrip` (−14, 24, π) (faces the office porch; Phase 2) · `scen` (0, −14, 0) · `friskotek` (−10, 8, 0) · `suntripPool` (14, 4, π) · `suntripLot` (24, 22, π) · `fena_suntrip` (14, 8, 0, 0.35) | — |
-| (1,2) | `kasbah` → `kasbah` (C2, centre.js) | **Centro La Medina** (fictional; internal id `kasbah`): two-level nightlife courtyard centre: arcade, stairs (ramp) to a roof terrace (top ≈ 6.0), neon signs `CENTRO LA MEDINA`, `VIKING BAR` (horned helmet), `TONGA TONGA` (mirror ball), `BAR SVENSKA · SMÖRGÅSAR` | `kasbah` (0, 22, π) · `vikingbar` (−16, 18, π) · `tongatonga` (14, 18, π) · `tongaLot` (20, 27, π) · `pryl_poolpen` (8, −6, 0, 7.2) | — |
-| (4,2) | `cita` → `cita` (C2, centre.js) | **Centro Nórdico** (fictional; internal id `cita`) strip mall, sign `CENTRO NÓRDICO`: `SUPERMERCADO`, `FERRETERÍA`, `FARMACIA`, `ESTANCO`, `TELÉFONOS · HYTT 1·2·3`, `SOUVENIRS`, `SVENSKT KAFFE`, `CAMBIO · 1 KR = 17 PTA` | `cita` (0, 22, π) · `supermercado` (−18, 18, π) · `ferreteria` (18, 18, π) · `telefon` (0, 8, π) | — |
+| (1,2) | `kasbah` → `kasbah` (C2, centre.js) | **Centro La Medina** (fictional; internal id `kasbah`): two-level nightlife courtyard centre: arcade, stairs (ramp) to a roof terrace (top ≈ 6.0) with a balustrade above the bottom three steps and a sloped wall collider along it (Phase 3: the way on is over those three steps), neon signs `CENTRO LA MEDINA`, `VIKING BAR` (horned helmet), `TONGA TONGA` (mirror ball), `BAR SVENSKA · SMÖRGÅSAR` | `kasbah` (0, 22, π) · `vikingbar` (−16, 18, π) · `tongatonga` (14, 18, π) · `tongaLot` (20, 27, π) · `pryl_poolpen` (8, −6, 0, 7.2) | — |
+| (4,2) | `cita` → `cita` (C2, centre.js) | **Centro Nórdico** (fictional; internal id `cita`) strip mall, sign `CENTRO NÓRDICO`: `SUPERMERCADO`, `FERRETERÍA`, `FARMACIA`, `ESTANCO`, `TELÉFONOS · HYTT 1·2·3`, `SOUVENIRS`, `SVENSKT KAFFE`, `CAMBIO · 1 KR = 17 PTA` (Phase 3: the north shop row and its canopy fit the courtyard between the wings, x ±11; `SOUVENIRS · REGALOS` and `FARMACIA` with its green cross sit on the wings' courtyard faces) | `cita` (0, 22, π) · `supermercado` (−18, 18, π) · `ferreteria` (18, 18, π) · `telefon` (0, 8, π) | — |
 | (2,3) | `plaza` → `plaza` (C2, centre.js) | palms, fountain (shallow walkable pool), restaurant terraces; **CASA LOLA** (`CASA LOLA · COMIDA CANARIA`, fictional; internal id `grillpaco`) terrace on the SE corner | `plaza` (0, 6.8, π) (south of the fountain rim, facing it: the fountain column stands at (0, 0); Phase 2) · `grillpaco` (20, 22, π) · `grillpacoMamma` (25, 24, π) · `grillpacoCurb` world (−60, 36, −π/2) (westbound kerb of the z = 40 road, the `follow` endpoint) · `fena_plaza` (0, 0, 0, 0.35) | — |
 | (2,1) | `marknad` → `marknad` (C2, centre.js) | rows of striped stall awnings (some `bounce` awnings as climb pads), souvenir stand with painted donkeys `BURROS 500 PTA`, postcard racks, plastic giraffes | `marknad` (0, 22, π) · `asnestand` (6, 2, π) · `pryl_kalkylator` (−12, −8, 0, 3.4) (on an awning roof) | — |
 | (3,1) | `kyrka` → `kyrka` (C2, centre.js) | **Templo Ecuménico**: white rationalist church (flat planes, bell slab), palm plaza, crèche, small fountain; sign `ES UNA IGLESIA` / `Det är en kyrka.` [F*] (the sisters' language record, relocated) | `kyrka` (0, 18, π) | — |
 | (4,3) | `bensin` → `bensin` (C2, centre.js) | gas station: canopy, `GASOLINA` (no brand), prices in pesetas, kiosk; `gaspump` props explode | `bensin` (0, 16, π) | — |
-| (5,3) | `guardia` → `cuartel` (C2, centre.js) | ochre barracks, red-yellow-red flag mast, `CASA CUARTEL`; two parked green Land Rovers | `guardia` (0, 20, π) | `guardia1`, `guardia2` (type `guardia`, locked) |
+| (5,3) | `guardia` → `cuartel` (C2, centre.js) | ochre barracks, red-yellow-red flag mast beside the path at x 4.6 (Phase 3: off the axis to the `CASA CUARTEL` plaque), `CASA CUARTEL`; two parked green Land Rovers | `guardia` (0, 20, π) | `guardia1`, `guardia2` (type `guardia`, locked) |
 | (1,0), (3,0), (0,1) | `tomat` → `tomatfalt` (D1, nature.js) | rows of low tomato bushes (one merged mesh, walls a car drives through: no solids, or tops ≤ 0.6), packing shed `TOMATES · EXPORTACIÓN` / `EMPAQUETADO`, `tomatlada` props, dirt tracks | on (0,1): `vischan` (6, 24, π) · `eslovVag` (28, 4, −π/2) (road side, rollerskier) — on (3,0): `packhus` (0, 10, π) | — |
 | (2,0) | `grisfest` → `grisgard` (D1, nature.js) | farm: white barn (roof top ≈ 5), pergola deck with long tables under string lights, spit-roast pig, bandstand, dance-floor platform (deck top 0.4), piglet pen, gate on the **south** road; **12 `tallrikar` prop stacks** on the tables (smash stage; `placeProp(..., baseY = table top)`, §14.7) | `grisfest` (0, 26, π) · `grisfestGate` world (−80, −204, π/2) (on the south road at the farm gate, the `follow` endpoint) · `dansgolv` (0, 0, 0) · `pryl_pung` (−18, −14, 0, 5.4) | — |
 | (0,0) | `fataga` → `fataga` (D1, nature.js) | white village houses, tile roofs, narrow lanes, date palms, small church, embroidered tablecloths on lines (`MANTELES · DUKAR`), sheepfold (fence solids, gap gate) | `fataga` (0, 18, π) · `fatagaBus` world (−240, −204, −π/2) (westbound kerb of the z = −200 road, the `follow` endpoint) · `fatagaFold` (−18, −12, 0) · `fatagaDukar` (8, 4, π) · `pryl_kniv` (0, 0, 0, 1.2) | — |
@@ -976,7 +976,9 @@ Copacabana beach with palms, a small orchestra of busts, sunset palette. Landmar
     (240, −335), and nothing taller than 1 m (trees, cacti, rocks) within **60 m**. Phase 0 cuts
     this gap in the existing hills and trees; WP-B keeps it in the Monte Rojo rework. The tree band
     also skips the whole Gando apron (x 172…308, z −388…−290; its corners are up to 82 m out).
-  - Welcome sign at the west entrance: `BIENVENIDOS A NUEVA ESTOCOLMO · VÄLKOMMEN!`
+  - Welcome sign at the west entrance: `BIENVENIDOS A NUEVA ESTOCOLMO · VÄLKOMMEN!` The entrance
+    road stub (z −40, asphalt at CURB like the collision ground there) runs from the perimeter
+    road's edge across the outer sidewalk ring, which is cut for it (Phase 3).
   - Road banners `GOD JUL · FELIZ NAVIDAD` over 3 roads; tinsel spirals on some palm trunks.
 - Shallow pools everywhere are flat blue slabs + `box(..., CURB, 'water')` (a floor). Sunken pools
   are impossible (no holes in collision). `hud.buildBaseMap` draws BOX `water` blue.
@@ -993,7 +995,8 @@ Copacabana beach with palms, a small orchestra of busts, sunset palette. Landmar
   frame** (ramps, girder deck) or a pool courtyard. One sign per hotel from a pool of invented
   names (never the real 1960s complexes of this coast: Las Olas, Los Caracoles, Las Arenas, Las
   Brisas): `HOTEL LAS GAVIOTAS`, `APARTAMENTOS SOL`, `BUNGALOWS LOS CACTUS`, `APARTAMENTOS VIENTO
-  SUR`, `HOTEL MAR AZUL`, `HOTEL ATLÁNTICO`, `APARTAMENTOS TAMARINDO`.
+  SUR`, `HOTEL MAR AZUL`, `HOTEL ATLÁNTICO`, `APARTAMENTOS SOL DE INVIERNO` (Phase 3: was
+  `APARTAMENTOS TAMARINDO`, too close to the real 1974 Hotel Tamarindos in San Agustín).
 - Ped loops: `addPedLoops()` unchanged (one loop per block).
 
 ### 6.6 Vehicles (`CAR_TYPES`, car.js; WP-E). Physics numbers unchanged unless listed.
@@ -1081,8 +1084,9 @@ instead of type names (Phase 0).
 
 **Phase 0 registers every key of this table in `TYPES`** with the footprint, top, coins, shame,
 minSpeed and flags above; geometry = the old Bigmouth type it replaces (brand-new keys get a
-coloured box or cylinder of the right footprint). The old keys stay as aliases until Phase 2
-removes them. `placeProp`/`finalizeProps` **skip unknown types with a `console.warn`** instead of
+coloured box or cylinder of the right footprint). The old keys stayed as aliases (nothing placed
+them) until Phase 3 removed them: `TYPES` holds the §6.8 keys only. `placeProp`/`finalizeProps`
+**skip unknown types with a `console.warn`** instead of
 throwing. WP-B's Phase-1 job is then only to restyle `build()` of the existing keys (no renames),
 so C and D can place every §6.8 name in their sandboxes from day one.
 
@@ -2612,7 +2616,11 @@ orange-violet grisfest night → sunset on Christmas Eve.
 | `sunset` (julafton mantra, Rio) | `0x3a4fa0` | `0xf7a26b` | 200 / 760 | `0xffb070` 2.2 | `0xffd8b0` / `0x8a5a40` 1.3 | — |
 
 Flight palettes keep `fogNear ≥ 40` so the interior is never fogged. Night: string lights are unlit
-`MeshBasicMaterial` bulbs (grisfest block, Kasbah neon).
+`MeshBasicMaterial` bulbs (grisfest block, Kasbah neon). Lit windows and lamps that glow only after
+dark draw while the sky `top` is dark (r + g + b < 0.8: `night` and `sunset`): the hotels' windows
+(hotels.js `nightMesh`) and, since Phase 3, the street lamps' lantern panes and star centres
+(town.js `nightGlow`, one unlit mesh for the whole island; block builders may add their own night
+lights to it in world coordinates while `buildTown` runs).
 
 **Sun direction** (Phase 3): the island palettes carry `sunDir`, the sun's offset from the point
 `followSun` tracks (+z = south): `day` and `night` `[70, 130, 45]` (high, from the ESE, as before),
@@ -2996,7 +3004,13 @@ ceiling(minX, minZ, maxX, maxZ, under, top);  ceilingOver(x, z, y, margin = 0) -
 //   Frame.ceiling(lx, lz, w, d, under, top) registers one from a local rectangle. CamRig.update (on
 //   foot, no profile): when the eye (footprint grown 1.5 m) or the player is under one whose
 //   underside is above the player's feet + 0.5, and the eye is below top + 2, the eye stays at
-//   under − 0.3. Registered: Hotel Flamenco's reception pergola (under C + 3.1 = the fascia, top C + 4.5).
+//   under − 0.3. Registered (C = CURB): Hotel Flamenco's reception pergola (under C + 3.1 = the
+//   fascia, top C + 4.5); Phase 3: Flamenco's pool-bar thatch over the counter and the bartender's
+//   aisle (x 16.7–20, under C + 2.15 = the sign board's bottom), the SunTrip office awning (under
+//   C + 2.45 = the valance); every centre.js `arcade()` (La Medina's two, the plaza's north row:
+//   under = the roof slab), Centro Nórdico's canopy (x ±11, under 3.5), the Casa Lola pergola
+//   (under 2.9), the church portico (4.0), Gasolina's pump canopy (5.0), shop canopy (3.4) and
+//   workshop bays (4.0).
 
 // world/cabin.js (WP-A1; Phase 0 stub has the full API)
 export const CABIN_X = 3000;
@@ -3869,3 +3883,30 @@ the fixer's group.
 - r1 spine: the giver's "!" also hides within 3 m of the player (§5.3).
 - r1 spine: the pause card refreshes the Ljud label (§11.3).
 - r1 spine: island palettes carry `sunDir`; the sunset sun is low in the WSW (§13.3, §14.4).
+- r1 world-town: camera ceilings (§14.3) under every centre `arcade()` (La Medina's two, the plaza's
+  north row), Centro Nórdico's canopy, the Casa Lola pergola, the church portico, Gasolina's pump
+  canopy, shop canopy and workshop bays, the SunTrip office awning and Flamenco's pool-bar thatch:
+  the chase eye no longer rises into or above them and hides the player.
+- r1 world-town: Centro Nórdico's north shop row and canopy fit the courtyard between the wings
+  (x ±11), so `SVENSKT KAFFE · KONDITORI` and `ESTANCO · TABACOS` read whole; `SOUVENIRS ·
+  REGALOS` and `FARMACIA` (its lit cross on a bracket) moved onto the wings' courtyard faces; the
+  canopy posts inside the wings are gone (§6.3).
+- r1 world-town: La Medina's stair balustrade starts above the bottom three steps (newel post) and
+  has a sloped wall collider along it: the player walked through it and fell up to 5.85 m. A
+  full-length collider would have closed the only way on, over those three steps (§6.3).
+- r1 world-town: street lamps glow after dark: lantern panes and star centres in one unlit mesh,
+  `town.js` `nightGlow`, which block builders may add to (§13.3).
+- r1 world-town: Casa Cuartel's flag mast stands beside the path (x 4.6), off the axis to the
+  `CASA CUARTEL` plaque (§6.3).
+- r1 world-town: Hotel Flamenco: a closed room's number is centred above its own glass door (it read
+  as the next room's opening's); the julafton party `julgran` moved to the pool deck at (2.2, 16),
+  into the party and sunset-duet shots (§6.3).
+- r1 world-town: the west entrance stub's asphalt crosses the outer sidewalk ring to the perimeter
+  road (§6.4).
+- r1 world-town: signs `CERVECERÍA · ÖL` (was the German `BIERSTUBE · ÖL · BIER`) and `APARTAMENTOS
+  SOL DE INVIERNO` (was `APARTAMENTOS TAMARINDO`, a real San Agustín hotel's name; §6.5).
+- r1 world-town: the old Bigmouth prop aliases are gone from `props.js` `TYPES` (§6.8).
+- r1 world-town: the SunTrip lawn's east bench stands off the stage at (8.4, −12) (it stood on the
+  stage, seat at plank level). `CAL=balls` with it moved (27 runs) and as a control at its old spot
+  (12 runs): p75 25.6 / 26.8 s, median 21.8 / 21.6 s, i.e. no effect, so §8's 32 s stays. Both sit
+  above the Phase 2 measurement (p75 21.9 of 12, median 18.6); left to the difficulty pass.

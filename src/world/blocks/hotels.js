@@ -430,9 +430,10 @@ function flamencoRooms(f, rnd, glow) {
       if (num === '107') stigOleRoom(f, bx);
       else room113(f, bx);
     }
-    // Room number beside the door.
-    const open = !!OPEN_ROOMS[i];   // open rooms: the number sits on the terracotta pier
-    f.sign(num, open ? x1 : x1 - 0.75, C + 2.1, SZ1 + (open ? 0.33 : 0.09), 0.5, 0.3, 0, { bg: '#fff8e6', fg: '#1d1426', border: '#c0623a', scale: 0.7 });
+    // Room number: an open room's on its right-hand terracotta pier; a closed room's centred on the
+    // wall above its own glass door (at the bay's edge it read as the next room's opening's number).
+    const open = !!OPEN_ROOMS[i];
+    f.sign(num, open ? x1 : bx, C + (open ? 2.1 : 2.95), SZ1 + (open ? 0.33 : 0.09), 0.5, 0.3, 0, { bg: '#fff8e6', fg: '#1d1426', border: '#c0623a', scale: 0.7 });
     // Patio set at the back corner.
     const tx = x0 + 1.25, tz = -12.7;
     f.cyl(TRIM, tx, C + 0.72, tz, 0.38, 0.05, 12);
@@ -582,8 +583,10 @@ function flamencoPool(f, rnd, glow) {
   strawParasol(f, 12.6, 18.0);
   strawParasol(f, 21.0, 21.5);
   strawParasol(f, 4.8, 25.8);
-  // The Christmas-party corner: a plastic tree among the palms (julafton).
-  f.prop('julgran', -12.8, 21.5);
+  // The Christmas-party tree (julafton) beside the guests' spot by the pool corner, in the party
+  // shot (PARTY_CAM, 22° right of its axis) and the sunset duet (30°); the GOD JUL banner is
+  // behind both cameras.
+  f.prop('julgran', 2.2, 16.0);
   // Party banner over the south gate, facing the pool, string lights to the palms.
   for (const x of [-6.6, 0.6]) { f.box(WOOD, x, C, 29.9, 0.16, 3.4, 0.16); f.circ(x, 29.9, 0.14, 99, 'pole'); }
   f.sign('GOD JUL · FELIZ NAVIDAD', -3, C + 2.95, 29.9, 7.0, 0.75, PI, { bg: '#d8321e', fg: '#fff8e6', border: '#f2c12e', scale: 0.66, double: true });   // §6.9 [N]
@@ -622,6 +625,9 @@ function flamencoBar(f, glow) {
   f.box(WOOD_D, 16.8, C + 2.15, 12, 0.08, 0.62, 5.2);
   f.sign('BAR PISCINA · SVENSKT KAFFE', 16.74, C + 2.46, 12, 5.0, 0.5, -PI / 2,
     { bg: '#f7c31b', fg: '#d8321e', border: '#1d1426', scale: 0.66 });   // §6.3 [N]
+  // The chase camera stays under the thatch over the counter and the bartender's aisle (front
+  // edge x 16.7 to the kiosk wall; underside = the sign board's bottom edge).
+  f.ceiling(18.35, 12, 3.3, 10.2, C + 2.15, C + 4.5);
   for (const z of [6.85, 17.15]) stringLights(f, glow, 16.8, C + 2.55, z, 25.2, C + 2.55, z, 7, 0.25);
   f.prop('automat', 24.9, 5.9, -PI / 2);
   f.prop('papelera', 16.4, 17.2);
@@ -954,7 +960,7 @@ function suntripLawn(f, rnd, glow) {
   for (const z of [3.1, 4.9]) { f.box(WOOD, -21.6, C, z, 0.12, 2.6, 0.12); f.circ(-21.6, z, 0.1, 99, 'pole'); }
   f.sign('FRISKOTEKET\nVARJE MORGON 9.30', -21.5, C + 1.95, 4, 2.2, 1.0, PI / 2, { bg: '#1e9aa0', fg: '#fff8e6', border: '#f7c31b', scale: 0.55, double: true });   // [F*]
   // Benches and planters along the lawn edge, palms on the lawn.
-  for (const [x, z, y] of [[-20.6, -12, PI / 2], [-20.6, -4, PI / 2], [6.6, -12, -PI / 2]]) f.prop('bank', x, z, y);
+  for (const [x, z, y] of [[-20.6, -12, PI / 2], [-20.6, -4, PI / 2], [8.4, -12, -PI / 2]]) f.prop('bank', x, z, y);   // the east one clear of the stage (x ≤ 7)
   for (const [x, z, s, t] of [[-19.5, -19.5, 1.3, false], [-19.8, 9.5, 1.2, true], [5.5, -20, 1.25, false], [3.8, 9.8, 1.15, false]]) palm(f, x, z, s, t);
   for (const [x, z] of [[-14, -20.5], [-21, -16], [6.8, -5]]) bougainvillea(f, x, z, 0.9, rnd);
   for (const [x, z] of [[-21.4, -8], [7.2, 0.5], [-10.5, -20.6]]) gardenLamp(f, glow, x, z);
@@ -1013,6 +1019,7 @@ function suntripOffice(f, glow) {
   for (let q = 0; q < 14; q++) f.boxC(q % 2 ? TRIM : SUN, -21.5 + q + 0.5, C + 2.85, z1 + 1.35, 1.0, 0.06, 2.8, 0, 0.2);
   f.box(TRIM, -15, C + 2.45, z1 + 2.72, 14, 0.25, 0.05);
   for (const x of [-21.8, -8.2]) { f.cyl(TRIM, x, C + 1.35, z1 + 2.55, 0.07, 2.7, 8); f.circ(x, z1 + 2.55, 0.12, 99, 'pole'); }
+  f.ceiling(-14.5, 22.0, 14.2, 3.2, C + 2.45, C + 3.4);   // the chase camera stays under the awning (valance bottom)
   f.prop('bank', -19.6, 22.0, PI);
   f.prop('vykort', -6.8, 22.6);
   // North wall, facing the friskotek lawn.
