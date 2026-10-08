@@ -61,6 +61,7 @@ class Game {
     this.frame = 0;
     this.acc = 0;
     this.hooks = [];
+    this.closure = null; // a race's closed course (missions/kinds/core.js closeCourse; drivers.js)
     this.paused = false;
     this.started = false;
     this.playerCar = null;
@@ -383,6 +384,8 @@ class Game {
       const a = (r() * (N + 1) * (N + 1)) | 0;
       const nb = neighbors(a);
       const b = nb[(r() * nb.length) | 0];
+      // Never next to a junction of a closed course (a race).
+      if (this.closure && (this.closure.nodes.has(a) || this.closure.nodes.has(b))) continue;
       const dx = nodeX(b) - nodeX(a), dz = nodeZ(b) - nodeZ(a), l = Math.hypot(dx, dz);
       const t = 12 + r() * (l - 24);
       const x = nodeX(a) + (dx / l) * t + (-dz / l) * LANE, z = nodeZ(a) + (dz / l) * t + (dx / l) * LANE;

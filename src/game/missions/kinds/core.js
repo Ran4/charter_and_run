@@ -229,6 +229,33 @@ function clearRoute(g, nodes, end, except = []) {
   }
 }
 
+// A closed course (race; DESIGN §9.2): moving traffic on the course or close to one of its
+// junctions is removed at the start, no traffic spawns next to a course junction, and traffic
+// waits short of a course junction (drivers.js, `game.closure`) until both racers are through it.
+// On open roads cross traffic met the racers at 35 m/s: a car T-boned at the first junction, a
+// player's car wrecked at the second, and a night bus (which never brakes) that ploughed through a
+// guagua lost 6 s and let a crashed player win (Phase 2 gate). `racers` returns the two positions.
+function closeCourse(g, nodes, end, racers) {
+  const path = new LanePath(nodes, { endPoint: end });
+  path.ensure(100000);
+  const ids = [...new Set(nodes)];
+  const near = (n, p, r) => Math.hypot(nodeX(n) - p.x, nodeZ(n) - p.z) < r;
+  for (const c of g.cars.slice()) {
+    if (!c.traffic) continue;
+    if (path.pts.some((q) => Math.hypot(q.x - c.x, q.z - c.z) < 7) || ids.some((n) => near(n, c, 28))) g.removeCar(c);
+  }
+  // passed[n][k]: racer k has been through junction n (the grid's own junction is behind both).
+  const passed = new Map(ids.map((n) => [n, [n === nodes[0], n === nodes[0]]]));
+  return {
+    nodes: new Set(ids),
+    update() { const rs = racers(); for (const n of ids) rs.forEach((r, k) => { if (near(n, r, 10)) passed.get(n)[k] = true; }); },
+    closed(n) {
+      const p = passed.get(n);
+      return !!p && !racers().every((r, k) => p[k] && !near(n, r, 15));
+    },
+  };
+}
+
 // ---------------------------------------------------------------------------------------------
 // getInCar: car? (named, recreated if wrecked) · missionCar? (a car in m.cars) · passenger? ·
 // rider? / riders? · hideRiders? · any = true · say?
@@ -558,6 +585,7 @@ export const rabbits = (o) => common(o, {
 // by more than 120 m and eases off (× 0.85) when it leads by more than 150 m. In between it drives
 // its own race: a mid-range band let the opponent slow down for a crashed player, so a crash
 // cost ≈ 0.5 s instead of ≈ 2.5 s (Phase 2 balance pass).
+// The course is closed to traffic while the race runs (closeCourse above, Phase 2 gate).
 
 export const race = (o) => common(o, {
   text: o.text,
@@ -589,6 +617,7 @@ export const race = (o) => common(o, {
     for (const n of o.checkpoints) nodes.push(...findPath(nodes[nodes.length - 1], nodeRef(n)).slice(1));
     nodes.push(...findPath(nodes[nodes.length - 1], nearestNode(fin.x, fin.z)).slice(1));
     clearRoute(g, nodes, [fin.x, fin.z], [opp, pc]);
+    g.closure = closeCourse(g, nodes, [fin.x, fin.z], () => [g.focus(), this.opp]);
     this.ai = opp.ai = new AIDriver(opp, {
       mode: 'route', path: new LanePath(nodes, { endPoint: [fin.x, fin.z] }), cruise: 0, avoid: false,
       rubber: () => this.rubber,
@@ -630,6 +659,7 @@ export const race = (o) => common(o, {
       if (this.countdown <= 0) { g.freezeCar = false; this.ai.cruise = o.cruise; }
       return;
     }
+    g.closure?.update();
     this.radio?.tick(g, dt);
     if (this.opp.dead) return 'done';
     const f = g.focus();
@@ -650,7 +680,7 @@ export const race = (o) => common(o, {
     const gap = (this.oi - this.pi) * 200 + (dist(f.x, f.z, cp(this.pi).x, cp(this.pi).z) - dist(this.opp.x, this.opp.z, cp(this.oi).x, cp(this.oi).z));
     this.rubber = gap > 150 ? 0.85 : gap < -120 ? 1.1 : 1;
   },
-  cleanup(g) { g.freezeCar = false; this.opp.ai = null; this.opp.ctrl.park = true; },
+  cleanup(g) { g.freezeCar = false; g.closure = null; this.opp.ai = null; this.opp.ctrl.park = true; },
 });
 
 // ---------------------------------------------------------------------------------------------

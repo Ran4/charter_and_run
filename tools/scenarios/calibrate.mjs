@@ -2,8 +2,8 @@
 // difficulty"). Written by WP-G, reworked by the Phase 2 balance pass (§15.3 step 5).
 //   PORT=… OUT=… node tools/shot.mjs calibrate          (all cases)
 //   CAL=buss17,race node tools/shot.mjs calibrate        (a subset; ids below)
-// Env: RUNS (drive runs per deterministic stage, default 3), JEEP_RUNS (6), FOOT_RUNS (4),
-// RACE_RUNS (2 clean + 2 with one crash), PURSUIT_RUNS (3 per driver), JEEP=cruise:damageScale,
+// Env: RUNS (drive runs per deterministic stage, default 3), JEEP_RUNS (12), FOOT_RUNS (4),
+// HOME_RUNS (2 per spot), RACE_RUNS (2 clean + 2 with one crash), PURSUIT_RUNS (3 per driver), JEEP=cruise:damageScale,
 // RACE_SWEEP='cruise:maxSpeed:accel:steer;…', RACE_CAR (sedan).
 // A headless autopilot drives the PLAYER's car (PLAYER_BOOST 1.2, timeScale 1 via &ts=1, traffic
 // on) by writing playerCar.ctrl every fixed step (it sits in car.ai, which main.js steps right after
@@ -226,14 +226,15 @@ export async function installAutopilot() {
     let capIn = Infinity, slowAhead = null, leftBusy = false, rightBusy = false;
     const halfW = car.spec.wid / 2;
     const off = path.off || 0;
-    const scan = (x, z, r, ov, isCar, oncoming, half = r) => {
+    let capBy = null;
+    const scan = (x, z, r, ov, isCar, oncoming, half = r, who = 'ped') => {
       const dx = x - car.x, dz = z - car.z, along = dx * fx + dz * fz - car.spec.len / 2 - r, lat = dx * rx + dz * rz;
       if (along < -16 || along > Math.max(range, 55)) return;
       // lat is measured from the car itself, which sits `off` from the path lane: its own lane is lat ≈ 0.
       if (Math.abs(lat) < halfW + r + 0.5 && along > -1 && along < range) {
         const c = Math.max(0, ov) + Math.sqrt(2 * lim.aBr * 0.6 * Math.max(0, along - (isCar ? 6 : 3)));
         // Slower than we want to go (not merely than we go now: following at its speed is still slow).
-        if (c < capIn) { capIn = c; if (isCar && (ov < Math.max(v, Math.min(vt, lim.top)) - 2 || ov < 1.5)) slowAhead = { along }; }
+        if (c < capIn) { capIn = c; capBy = who; if (isCar && (ov < Math.max(v, Math.min(vt, lim.top)) - 2 || ov < 1.5)) slowAhead = { along }; }
       }
       if (isCar && lat < -2.2 && lat > -9 && along > -6 && along < (oncoming ? 70 : 45)) leftBusy = true;
       // Out in the left lane: the right lane (lat ≈ -off) is busy while a car overlaps us there
@@ -243,7 +244,7 @@ export async function installAutopilot() {
     for (const o of g.cars) {
       if (o === car || (path.ignore && o.name === path.ignore) || o.isPursuer || Math.abs(o.x - car.x) > 80 || Math.abs(o.z - car.z) > 80) continue;
       const ov = o.vx * fx + o.vz * fz;
-      scan(o.x, o.z, Math.min(o.spec.wid, o.spec.len) / 2, ov, true, ov < -2, o.spec.len / 2);
+      scan(o.x, o.z, Math.min(o.spec.wid, o.spec.len) / 2, ov, true, ov < -2, o.spec.len / 2, o.traffic ? 'traffic' : o.ai ? (o.name || 'ai') : 'parked');
     }
     for (const p of g.peds) { const c = p.char; if (c.state === 'normal' && Math.abs(c.x - car.x) < 60 && Math.abs(c.z - car.z) < 60) scan(c.x, c.z, 0.4, 0, false, false); }
     // Overtake: a slower car ahead, the left lane clear, the next 50 m straight.
@@ -264,6 +265,7 @@ export async function installAutopilot() {
       if (!straight && canMerge) path.offT = 0;
       if (rightBusy && path.off < -1.5) path.offT = -2 * LANE;
     }
+    path.capBy = capBy;
     return capIn;
   }
 
@@ -347,7 +349,7 @@ export async function installAutopilot() {
         let vt = Math.min(path.v[path.idx], path.v[Math.min(pts.length - 1, path.idx + 1)]);
         if (Math.abs(e) > 0.12) vt = Math.min(vt, capSpeed((2 * Math.abs(Math.sin(e))) / Math.max(2, acc), lim));
         const cap = traffic(car, vt, lim, path, path.idx);
-        if (cap < vt - 1) st.blockedT += dt;
+        if (cap < vt - 1) { st.blockedT += dt; const by = path.capBy || '?'; (st.blockedBy ||= {})[by] = (st.blockedBy[by] || 0) + dt; }
         vt = Math.min(vt, cap);
         if (path.done?.()) vt = 0;
         if (v < vt - 0.4) { c.throttle = 1; c.brake = 0; }
@@ -441,7 +443,7 @@ export async function installAutopilot() {
     ap.check();
     const st = a.ctl.st, f = (v) => +(v ?? 0).toFixed(1);
     const band = a.stats ? { dMin: f(a.stats.dMin), dMax: f(a.stats.dMax) } : undefined;
-    return { t: a.tEnd != null ? a.tEnd - a.t0 : null, fail: a.fail, len: Math.round(a.len), driven: Math.round(st.dist), impacts: st.impacts, hits: st.hits, crashV: st.crashV, blocked: f(st.blockedT), maxLat: f(st.maxLat), maxBrake: f(st.maxBrake), x: f(a.car.x), z: f(a.car.z), yaw: +a.car.yaw.toFixed(2), band, escape: a.result || undefined };
+    return { t: a.tEnd != null ? a.tEnd - a.t0 : null, fail: a.fail, len: Math.round(a.len), driven: Math.round(st.dist), impacts: st.impacts, hits: st.hits, crashV: st.crashV, blocked: f(st.blockedT), blockedBy: st.blockedBy ? Object.fromEntries(Object.entries(st.blockedBy).map(([k, v]) => [k, f(v)])) : undefined, maxLat: f(st.maxLat), maxBrake: f(st.maxBrake), x: f(a.car.x), z: f(a.car.z), yaw: +a.car.yaw.toFixed(2), band, escape: a.result || undefined };
   };
   ap.stop = () => { const a = ap.active; if (a && a.car.ai === a.ctl) { a.car.ai = null; a.car.ctrl.throttle = 0; a.car.ctrl.brake = 1; } ap.active = null; };
 
@@ -876,7 +878,9 @@ export const SCENARIOS = {
 
     // ---- bodega: wreck the Guardia jeep (destroy), then drive the pigs home --------------------
     if (want('jeep')) {
-      const runs = +(process.env.JEEP_RUNS || 6);
+      // 12 by default: the p75 of the 4 usable chases out of 6 swung 33–50 s from run to run (one
+      // 124 s chase is enough), Phase 2 gate. DESIGN's timer comes from JEEP_RUNS=20.
+      const runs = +(process.env.JEEP_RUNS || 12);
       const jeep = [];
       for (let k = 0; k < runs; k++) {
         await boot(T, 8);
@@ -907,7 +911,10 @@ export const SCENARIOS = {
     if (want('home')) {
       const spots = [{ x: -187, z: 37 }, { x: 120, z: -150 }, { x: -200, z: 160 }, { x: 270, z: 277 }, { x: -270, z: -260 }, { x: 40, z: 120 }];
       const home = [];
-      for (const w of spots) {
+      // HOME_RUNS drives from each spot (traffic differs run to run; one drive per spot let a
+      // single held-up run move the fit by 15 %, Phase 2 gate).
+      const homeRuns = +(process.env.HOME_RUNS || 2);
+      for (const w of spots) for (let k = 0; k < homeRuns; k++) {
         await boot(T, 8);
         const pose = await T.ev((w) => {
           // Snap onto the right-hand lane of the nearest road, heading towards the hotel.
@@ -1037,14 +1044,29 @@ export const SCENARIOS = {
           await T.startMission();
           // Stage 3: the race, from its own start spot (the kind places the player's car).
           await T.ev(carSetup(), { type: process.env.RACE_CAR || 'sedan', x: 0, z: 0, yaw: 0 });
-          await T.ev(() => { const g = __game, ms = g.missions; ms.stageI = 2; ms.startStage(); const st = ms.stage, o = (window.__calOpp = { car: st.opp, path: st.opp.ai.path, d: 0, t: 0, x: st.opp.x, z: st.opp.z, fin: null }); g.onFrame((dt) => { if (ms.stage !== st || st.countdown > 0) return; o.t += dt; o.d += Math.hypot(o.car.x - o.x, o.car.z - o.z); o.x = o.car.x; o.z = o.car.z; }); });
+          // __calOpp also logs every car-car impact that involves the player's car or the bus (who
+          // hit what, where, when, how hard), so a run that does not follow its script says why.
+          await T.ev(() => {
+            const g = __game, ms = g.missions; ms.stageI = 2; ms.startStage();
+            const st = ms.stage, o = (window.__calOpp = { car: st.opp, path: st.opp.ai.path, d: 0, t: 0, x: st.opp.x, z: st.opp.z, fin: null, hits: [] });
+            g.onFrame((dt) => { if (ms.stage !== st || st.countdown > 0) return; o.t += dt; o.d += Math.hypot(o.car.x - o.x, o.car.z - o.z); o.x = o.car.x; o.z = o.car.z; });
+            const kind = (c) => (c === st.opp ? 'bus' : c === g.playerCar ? 'player' : c.traffic ? 'traffic' : c.ai ? 'ai' : 'parked');
+            const orig = g.onCarImpact;
+            g.onCarImpact = function (a, b, impact, cx, cz) {
+              if (ms.stage === st && (a === st.opp || b === st.opp || a === g.playerCar || b === g.playerCar) && impact > 3 && o.hits.length < 12) o.hits.push(`${kind(a)}>${kind(b)} ${impact.toFixed(1)} @(${cx.toFixed(0)},${cz.toFixed(0)}) t${o.t.toFixed(1)}`);
+              return orig.call(this, a, b, impact, cx, cz);
+            };
+          });
           await T.frames(3);
           const rinfo = await T.ev(() => { const st = __game.missions.stage; return { type: __game.playerCar.type, opp: st.opp.spec.maxSpeed, cruise: st.o.cruise }; });
           const rr = await drive(T, { nodes: [[3, 3], [4, 3], [4, 2], [4, 1], [3, 1], [2, 1]], end: { x: -80, z: -200 }, vEnd: 40, startOff: -5.5, crashAt: mode === 'crash' ? 165 : null, crashSide: 'left' });
+          // Won = the player crossed the line first: the stage completed (t set, no fail). Not
+          // "the mission has not failed": a run whose car was wrecked on the way ends the drive
+          // while the bus is still racing, and that counted as a win (Phase 2 gate).
           // If the player won, keep the bus running to the finish to measure the margin.
           let margin;
-          const failed = await T.ev(() => __game.missions.state === 'failed');
-          if (!failed) {
+          const won = rr.t != null && !rr.fail;
+          if (won) {
             const race = await T.ev(() => {
               const c = window.__calOpp.car, p = window.__calOpp.path;
               p.ensure(100000);
@@ -1054,16 +1076,18 @@ export const SCENARIOS = {
             });
             margin = race.left / race.avg;
           } else {
-            // Lost: how far the player still had to go when the bus crossed the line.
+            // Lost: how far the player still had to go when the bus crossed the line (or the car
+            // was lost).
             const left = Math.hypot(rr.x + 80, rr.z + 200);
             margin = -left / 30;
           }
-          T.log('race', mode, k, JSON.stringify({ rinfo, rr: { t: rr.t, fail: rr.fail, impacts: rr.impacts, hits: rr.hits, crashV: rr.crashV, blocked: rr.blocked }, margin: +margin.toFixed(1) }));
-          res[mode].push({ won: !failed, margin, t: rr.t != null ? rr.t - 3.5 : null, impacts: rr.impacts, rinfo });
+          const carHits = await T.ev(() => window.__calOpp.hits);
+          T.log('race', mode, k, JSON.stringify({ rinfo, rr: { t: rr.t, fail: rr.fail, impacts: rr.impacts, hits: rr.hits, crashV: rr.crashV, blocked: rr.blocked, blockedBy: rr.blockedBy }, carHits, margin: +margin.toFixed(1) }));
+          res[mode].push({ won, margin, fail: rr.fail, t: rr.t != null ? rr.t - 3.5 : null, impacts: rr.impacts, rinfo });
         }
         const r0 = res.clean[0]?.rinfo || res.crash[0]?.rinfo;
         row('race', `grisfest s3 night-bus race (bus cruise ${r0.cruise}, maxSpeed ${r0.opp}; player ${r0.type})`, 'start lane 3,3>4,3 t 14 (player beside on the left); cps 4,3>4,2>4,1>3,1; finish (-80,-200)', res.clean.map((r) => f1(r.t)).join(' / '), '—',
-          `clean: ${res.clean.map((r) => `${r.won ? 'WON' : 'LOST'} by ≈ ${f1(Math.abs(r.margin))} s${r.impacts ? ` (${r.impacts} impacts)` : ''}`).join(' / ')}; one crash: ${res.crash.map((r) => `${r.won ? 'WON' : 'LOST'} (${f1(r.margin)} s)`).join(' / ')}`);
+          `clean: ${res.clean.map((r) => `${r.won ? 'WON' : 'LOST'} by ≈ ${f1(Math.abs(r.margin))} s${r.impacts ? ` (${r.impacts} impacts)` : ''}`).join(' / ')}; one crash: ${res.crash.map((r) => `${r.won ? 'WON' : 'LOST'} (${r.fail === 'car lost' ? 'car lost' : `${f1(r.margin)} s`})`).join(' / ')}`);
         if (!set) {
           check(res.clean.filter((r) => r.won && r.impacts === 0).length >= Math.ceil(res.clean.length / 2), 'race: a clean run wins');
           check(res.clean.every((r) => !r.won || r.margin < 6), 'race: a clean win is by a few seconds, not a walkover');

@@ -1237,8 +1237,11 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
     wall north of Fataga, 14 m from the player and about 50 m round.
   - A stage that starts at a random place gets a timer that follows the distance: `goto`'s
     `timer` may be `(g, m) => seconds` (§9.2). Bodega s10 uses `homeTimer(wreck)` =
-    ceil(1.2 × (6.3 + d / 28.6)) with d the Manhattan distance from the jeep wreck to
-    `flamencoBack` (fit over 11 clean drives from 6 spots, + 3 s to turn round at the wreck).
+    ceil(1.2 × (7.9 + d / 34.4)) with d the Manhattan distance from the jeep wreck to
+    `flamencoBack` (least-squares fit 4.9 + d/34.4 over 12 clean drives from 6 spots, 3 each, + 3 s
+    to turn round at the wreck; Phase 2 gate. The Phase 2 balance fit 6.3 + d/28.6 came from older
+    code: five later fits all gave v 30–35 m/s). A line in d cannot follow every route: each spot's
+    own clean drives sit within ±2 s of it, so a given spot's timer is 1.12–1.37 × its drive + 3 s.
   - **Races and chases**: a clean race is won by a few seconds and one crash loses it; a `destroy`
     target is catchable at ×1.2, but only by driving a direct line; follows keep a fair band.
 - **The table** (Phase 2 measurements; `n` = runs, * = not clean, excluded):
@@ -1252,15 +1255,15 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
 | 8.5 landning [1] back to 14B | from the far end (Berra) | 3.7 (3.2 + 0.5; 2) | **5** (10) | 36 % |
 | 8.6 buss17 s2 | busBay → 7,1 > 3,1 > 3,4 → flamencoDrive, ÅKSJUKA, stop | 45.0 (median of 10 clean in 4 sets, 44.4–47.0) | **54** (60) | 17 % |
 | 8.7 friskotek s1 | six fleeing beach balls round the friskotek lawn | 24.9 (p75 21.9 of 12 + 3; median 18.6) | **32** (20) | 32 % at p75 |
-| 8.8 asnan s9 | Centro Nórdico lot → 5,3 > 1,3 → vikingbar, SKICK | 15.5 (3 clean) | **19** (20) | 18 % |
-| 8.9 bodega s4 | playa → 4,7 > 4,2 > 0,2 → vischan | 25.4 (median of 8 clean in 3 sets, 25.4–29.5) | **31** (35) | 18 % |
-| 8.9 bodega s9 jeep | farm gate, road-route chase, rams | 33.2 (p75 of 20 chases, 8 more wedged; median 27.3) | **40** (45) | 17 % at p75 |
-| 8.9 bodega s10 home | wreck → flamencoBack | 6.3 + d/28.6 (11 clean, 6 spots) | **homeTimer**: 16–33 | 17 % + 3 s |
+| 8.8 asnan s9 | Centro Nórdico lot → 5,3 > 1,3 → vikingbar, SKICK | 15.5 (median of 3 clean; 15.5–15.6) | **19** (20) | 18 % |
+| 8.9 bodega s4 | playa → 4,7 > 4,2 > 0,2 → vischan | 25.8 (median of 8 clean in 3 runs, 25.4–26.8: 25.4 unless traffic held it up 1–1.5 s; Phase 2 gate) | **31** (35) | 17 % |
+| 8.9 bodega s9 jeep | farm gate, road-route chase, rams | 34.4 (p75 of 35 chases in 4 runs, 15 more wedged; median 24.5; Phase 2 gate) | **42** (45) | 18 % at p75 |
+| 8.9 bodega s10 home | wreck → flamencoBack | 7.9 + d/34.4 (fit 4.9 + d/34.4 of 12 clean, 6 spots, + 3 s turn) | **homeTimer**: 17–30 (30 without a wreck) | 17 % of the fit (11–27 % of a spot's own drive) |
 | 8.11 fataga s5 | six fleeing sheep round Fataga | 33.3 (p75 30.3 of 12 + 3; median 25.1) | **42** (25) | 28 % at p75 |
 | 8.12 grisfest s1 | five flowers round Hotel Flamenco (random spawns) | 33.6 (p75 31.1 of 12 + 2.5; median 27.5) | **42** (30) | 26 % at p75 |
 | 8.12 grisfest s4 | ten plate stacks at the dance floor (kick, random spawns) | 35.3 (p75 30.3 of 10 + 5; median 30.3) | **45** (35) | 33 % at p75 |
 | 8.12 grisfest s6 | dance floor → car at the finish → 3,1 > 2,3 → tongatonga | 19.0 (walk 6.4 + 0.5 + drive 12.1; 2) | **23** (30) | 17 % |
-| 8.13 julafton s1 | patio → hire car → Majsan, Fru Storch, Berra, Herr Storch | 72.5 (median of 3 clean in 3 sets: 72.1 / 72.5 / 73.3) | **87** (80) | 17 % |
+| 8.13 julafton s1 | patio → hire car → Majsan, Fru Storch, Berra, Herr Storch | 72.4 (median of 8 clean in 6 runs, 72.1–74.5; Phase 2 gate) | **87** (80) | 17 % |
 
   On foot the slack is larger than 20 % by design: the 0.5 s per target is a human's reaction,
   not slack, and × 1.25 is the on-foot rule. The flight's short stages keep more for a sprinter
@@ -1276,10 +1279,23 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
     crash lost in 12 of 13. The exception was a crash that left the car in the bus's lane: the bus
     shunted it, lost time itself, and the crashed run won. Being rammed like that is a real-game
     outcome, but the measured crash now spins out into the left lane, clear of the bus.
-  - Guardia jeep (§8.9 s9): cruise 20, damageScale 4, the truck takes half damage; 28 chases on
-    the final code: 20 took 15–71 s (median 27 s, p75 33 s), 8 were autopilot wedges on a house
-    (excluded). The flee route is random, so the timer is at the 75th percentile: a chase that
-    follows the jeep round every block instead of cutting it off runs out of time.
+    Phase 2 gate: cross traffic still decided races. The gate's runs had a player's car wrecked
+    at the second junction before the crash point, which `calibrate` counted as a win
+    (`won = !failed`; now `won` = the stage completed), and a crashed run that won by 4.3 s after
+    a hit at the first junction held up the bus. With the impacts logged, 2 of 16 runs on open
+    roads had traffic hit the player's car and the bus (`avoid: false`) in the first junction. The race
+    now runs on a closed course (§9.2 race): on the final code 12 clean runs **all won by 1.7–2.0 s**
+    and 12 runs with one crash **all lost by 2.2–2.4 s**, with no car-car impact in any of them.
+  - Guardia jeep (§8.9 s9): cruise 20, damageScale 4, the truck takes half damage. Phase 2 gate
+    re-measure, four runs on the same chase code (`JEEP_RUNS=20`, twice the default 12, the gate's
+    6): 35 usable chases took 6–124 s (median 24.5 s, **p75 34.4 s** → timer 42); the single runs'
+    p75 were 37.9 (15 chases), 33.9 (6), 27.7 (10) and 49.7 (4). 15 more were autopilot wedges (excluded): most
+    on the Hotel Flamenco back-lot kerb between a street tree and the bins at (−13, −33), where its
+    1 s reverse cannot get the truck out. The balance pass had p75 33 s of 20 (15–71 s); the
+    median agrees, the tail is longer: four chases took 53–124 s following the jeep far round the
+    map. The flee route is random, so the timer is at the 75th
+    percentile: a chase that follows the jeep round every block instead of cutting it off runs out
+    of time. Default `JEEP_RUNS` is 12 (6 gave a p75 of 4 usable chases that swung 33–50 s).
   - Follows: tails at 24–26 m stayed inside the bands (grisbil 20.6–27.8 of 55, José 22.3–29.6 of
     14–55, excursion bus 21.7–25.0 of 55).
   - SKANDAL escape: §7.2 "Balance".
@@ -1736,10 +1752,10 @@ Hitch-hike logic (judge fix): Stig refuses the dirt road (åksjuka), drops them,
    stage 8.)
 8. `getInCar({ missionCar: 'grisbilFollow', any: false, passenger: 'berra', rider: 'robban', text: 'Grisbonden lånar ut grisbilen – hoppa in!', say: ['grisbonde', 'Ta bilen, señor. Ställ den vid hotellet – jag hämtar den på torsdag.'] })`  [N]
    (stage init unseats the `grisbonde` driver to the roadside.)
-9. `destroy({ type: 'guardia', carName: 'guardiaJeep', driver: 'guardia', spawn: { lane: [[3, 1], [3, 2]], t: 25 }, cruise: 20, damageScale: 4, playerDamageScale: 0.5, noExplode: true, timer: 40, lockMeter: true, barLabel: 'JEEPEN', text: 'Guardia Civil såg grisarna – stoppa jeepen innan den hämtar förstärkning!', failText: 'Jeepen hann fram till kasernen.' })`  [N] (invented, §1.6)
+9. `destroy({ type: 'guardia', carName: 'guardiaJeep', driver: 'guardia', spawn: { lane: [[3, 1], [3, 2]], t: 25 }, cruise: 20, damageScale: 4, playerDamageScale: 0.5, noExplode: true, timer: 42, lockMeter: true, barLabel: 'JEEPEN', text: 'Guardia Civil såg grisarna – stoppa jeepen innan den hämtar förstärkning!', failText: 'Jeepen hann fram till kasernen.' })`  [N] (invented, §1.6)
    - The jeep drives away (flee AI); wrecked, it stops in steam and two officers climb out shaking
      their fists. It is a mission target (no SKANDAL for ramming it; `lockMeter`).
-10. `goto({ to: 'flamencoBack', radius: 10, inCar: true, passenger: 'berra', timer: (g, m) => homeTimer(m.data.wreck), text: 'Kör hem grisarna till hotellet!', failText: 'Ni kom aldrig fram.' })`  [N] — the stage starts wherever the jeep died: `homeTimer` = ceil(1.2 × (6.3 + d / 28.6)), d = Manhattan distance wreck → `flamencoBack` (16–33 s; 33 without a wreck; §8 "Timers and difficulty").
+10. `goto({ to: 'flamencoBack', radius: 10, inCar: true, passenger: 'berra', timer: (g, m) => homeTimer(m.data.wreck), text: 'Kör hem grisarna till hotellet!', failText: 'Ni kom aldrig fram.' })`  [N] — the stage starts wherever the jeep died: `homeTimer` = ceil(1.2 × (7.9 + d / 34.4)), d = Manhattan distance wreck → `flamencoBack` (17–30 s; 30 without a wreck; §8 "Timers and difficulty").
 
 **Outro** (`outroPlace: { berra: ['bodega', -1.6, -1.0], robban: ['bodega', 1.6, -1.0] }`, both facing **away** from the shop; first line cues the camera on the sign; the answering-machine call is Angerud's panic after opening the package, so it comes before Levander's reaction, in film order):
 - robban: "Ja, herre jävlar, minns du Benidorm? Snacka om grisfest!"  [F]  {cut: 'bodega'}
@@ -2108,6 +2124,16 @@ Behaviour notes (normative):
 - **`follow` / `race` routes** are cleared at init of abandoned cars (unlocked, unnamed, no driver,
   no AI, not the player's) standing within 3.5 m of a lane point: a route car would otherwise wait
   behind a car the player left on the road in an earlier stage or mission.
+- **`race` runs on a closed course** (Phase 2 gate fix; `closeCourse` in kinds/core.js, `game.closure`):
+  at init moving traffic within 7 m of the course (both lanes) or 28 m of one of its junctions is
+  removed; while the race runs no traffic spawns on a road touching a course junction, and a
+  traffic car heading into a course junction stops ≈ 11 m short of its centre (nose clear of the
+  crossing road), parks, and does not push on into the car ahead, until **both** racers have been
+  through that junction (within 10 m of its centre, then 15 m beyond); the grid's own junction
+  counts as passed. The stage's `cleanup` reopens the roads (`game.closure = null`). On open roads
+  cross traffic met the racers at 35 m/s: a player's car T-boned at the first junction or wrecked at
+  the second, and the night bus (`avoid: false`) ploughed through a guagua, lost ≈ 6 s and let a
+  crashed player win.
 - **`destroy.noExplode`**: the wreck stops in steam and two occupants (`driver` def) step out and
   shake their fists; they stay until the mission ends.
 - **`carry.who`**: while the player is still in the car the NPC keeps his seat (sub "Kliv ur
@@ -2608,7 +2634,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/actors/car.js` | edit | **E** | §6.6 types/flags, `registerCarType`, `build`/`noWheels`/`noSpeedo`/`noExplode`/`livery` |
 | `src/actors/pickups.js` | edit | **E** | `COLLECT_KINDS`, `registerCollectKind`, `Collectible` table, `Rabbit` meshes, coin value 25 |
 | `src/actors/peds.js` | edit | **E** | Swedish/Spanish shouts |
-| `src/actors/drivers.js` | Phase 2 edit | none | (accepts duck-typed paths); an AI bus's lane path starts its turns 11 m from the junction centre instead of 8.5 (left-turn radius 13.75 m > the bus's ≈ 12 m minimum), so the excursion bus no longer swings into the grisfest farm wall; right turns stay too tight for buses (mission bus routes turn left only) |
+| `src/actors/drivers.js` | Phase 2 edit | none | (accepts duck-typed paths); an AI bus's lane path starts its turns 11 m from the junction centre instead of 8.5 (left-turn radius 13.75 m > the bus's ≈ 12 m minimum), so the excursion bus no longer swings into the grisfest farm wall; right turns stay too tight for buses (mission bus routes turn left only); traffic holds short of a closed race junction (`game.closure`, §9.2 race) |
 | `index.html`, `style.css` | edit | **H** | §11, §13.4 |
 | `tools/shot.mjs`, `tools/lib.mjs`, `tools/scenarios/core.mjs`, `tools/story/common.mjs` | edit/new | none (Phase 2) | harness, `T` API, core scenarios `start walk aerial drive traffic title talk missions views transition` + `levels` (boots into both levels) + `api` (Game API smoke test) |
 | `tools/fixtures/full-missions.js`, `tools/scenarios/kinds.mjs` | new (Phase 0b) | none (Phase 2) | the literal §8 missions as a test fixture; scenarios `fullstory` (plays them per §16.3) and `kinds` (option checks) |
@@ -2665,6 +2691,8 @@ game.mantraMode;   // bool: island J = mantra (mantra stage)
 game.carrying;     // null | { item } | { who }
 game.bumpedT;      // > 0 for 0.4 s after a trolley bowl / turbulence fall
 game.inDialog;  game.autoDialog;  game.dialogSpeed (55, TEST 220);
+game.closure;      // null | a race's closed course { nodes: Set<nodeId>, update(), closed(nodeId) }
+                   // (Phase 2 gate; set by race init, cleared by its cleanup; §9.2 race)
 
 // ---- levels ----
 game.levelFor(index) -> 'flight' | 'island'
@@ -3387,7 +3415,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `sceneryPeek`, `flightseq`, `dc8` [A2] | outside views of the flight scenery; the takeoff→cruise chain driven through `cabin.setPhase`; the parked airframe |
 | `propsheet`, `riocard`, `islandtour`, `islandstats` [B] | every §6.8 prop in a row; the Rio set from `rioCam`; streets/outskirts/sea tour; triangle budget |
 | `endcard` [Phase 2] | `game.playEndCard()`: Stig on the Rio deck in `rio`, Ole in `rio`, sunset, letterbox, frozen input, `RIO…?`; then back within 2.5 m of `flamencoPool` in island clothes, free roam, `NUEVA ESTOCOLMO KLARAT!` |
-| `calibrate` [G, Phase 2] | island timer calibration and difficulty checks (§8 "Timers and difficulty"): a headless autopilot in the player's car (env `CAL=id,…` from buss17 asnan vischan jeep home flowers plates tonga race guests balls sheep follow pursuit haggle; `RUNS` = 3, `JEEP_RUNS` = 6, `FOOT_RUNS` = 4, `RACE_RUNS` = 2 (+ 2 with one crash), `PURSUIT_RUNS` = 3, `RACE_SWEEP`, `JEEP`, `RACE_CAR`); medians of clean runs / 75th percentiles, on-foot A* walker, crash injection; checks: deterministic shipped timers ≥ T_ref, a clean race wins and a crashed one loses, a clean SKANDAL escape is possible, follows stay in band; prints the timer table. `story` supports `SHOTS=1` (key-scene screenshots) |
+| `calibrate` [G, Phase 2] | island timer calibration and difficulty checks (§8 "Timers and difficulty"): a headless autopilot in the player's car (env `CAL=id,…` from buss17 asnan vischan jeep home flowers plates tonga race guests balls sheep follow pursuit haggle; `RUNS` = 3, `JEEP_RUNS` = 12, `HOME_RUNS` = 2 (per spot), `FOOT_RUNS` = 4, `RACE_RUNS` = 2 (+ 2 with one crash; every car-car impact of the player's car or the bus is logged, and a run whose car was lost counts as lost), `PURSUIT_RUNS` = 3, `RACE_SWEEP`, `JEEP`, `RACE_CAR`); medians of clean runs / 75th percentiles, on-foot A* walker, crash injection; checks: deterministic shipped timers ≥ T_ref, a clean race wins and a crashed one loses, a clean SKANDAL escape is possible, follows stay in band; prints the timer table. `story` supports `SHOTS=1` (key-scene screenshots) |
 | `calibflight` [Phase 2] | flight timer calibration and FLYGRÄDSLA balance (env `FLIGHT=gate/sprint,…`, `SPRIT_RUNS` = 5): careful vs careless autopilots at timeScale 1; checks that careful players never panic and careless ones do in missions 1, 2 and 5 |
 | `perf` [Phase 2] | frame rate (2 s of play) plus the mean `game.update` ms and the GPU-synced `renderer.render` ms in the cabin in every phase (seated in 14B and from the aisle), at the gate, and on the island (spawn, plaza, marknad, kasbah, a drive through the centre, the high view); fails below 45 fps or above 1000/45 ms per frame. Phase 2: worst cabin 7.2 ms, worst island 9.0 ms (marknad, ~810 calls, 3.3 M triangles), all at 60 fps |
 
@@ -3725,3 +3753,23 @@ Integration on `main` (§15.3). Entries name the step they belong to.
     `test` → `node tools/shot.mjs story`) and package-lock.json (`name`).
   - `src/world/blocks/stub.js` deleted (unused since Phase 1; §14.1).
   - `../CLAUDE.md`: the "latest created game" pointer now names `charter_and_run__sallskapsresan/`.
+- **Gate fix 1** (the independent Phase 2 check failed `calibrate` and the difficulty rule):
+  - Night-bus race on a **closed course** (§9.2 race, `game.closure` §14.3, drivers.js): moving
+    traffic on the course or within 28 m of a course junction is removed at the start, nothing
+    spawns next to a course junction, and traffic stops ≈ 11 m short of a closed junction (parked,
+    no pushing on into the car ahead) until both racers are through it. Cross traffic had wrecked a
+    player's car at the second junction and held up the bus (`avoid: false`) at the first, so a
+    crashed run won. Final code: 12 clean runs won by 1.7–2.0 s, 12 one-crash runs lost by 2.2–2.4 s,
+    no car-car impact (§8 "Races and chases").
+  - `calibrate` race: `won` is "the stage completed" (a lost car no longer counts as a win); every
+    car-car impact of the player's car or the bus is logged with who hit what; the drive autopilot
+    logs what held it up (`blockedBy`: traffic, parked, ped, the bus).
+  - Jeep timer **42** (was 40): p75 34.4 s of 35 chases in four runs on the same code (§8 table).
+    `JEEP_RUNS` default 12 (6 gave a p75 of 4 usable chases).
+  - Home timer refit: `HOME` { c 7.9, v 34.4 } (was 6.3 / 28.6), the fit 4.9 + d/34.4 of 12 clean
+    drives (`HOME_RUNS` 3 per spot; default 2) + 3 s; fallback `TIMERS.bodegaHome` 30 (was 33).
+    homeTimer now 17–30 s.
+  - Comment/table consistency: asnan T_ref "median of 3 clean" in both island.js and §8.
+  - Re-measured, unchanged: vischan 25.8 s (median of 8 clean over the gate run and two fix runs;
+    a single run of 3 gives 25.4–26.2 depending on traffic) → 31; julafton guests 72.4 s (median of
+    8 clean in 6 runs, 72.1–74.5) → 87.

@@ -212,6 +212,18 @@ export class AIDriver {
       return;
     }
     if (this.rubber) targetSpeed *= this.rubber();
+    // A closed course (a race, game.closure): stop about 11 m short of a closed junction's centre
+    // (the nose clear of the crossing road), braking at ≈ 5 m/s², and park there: the coasting
+    // throttle below crept a held car on at 1.2 m/s into the junction.
+    let hold = false, held = false;
+    if (this.mode === 'traffic' && game.closure) {
+      const n = nearestNode(car.x, car.z), dx = nodeX(n) - car.x, dz = nodeZ(n) - car.z, d = Math.hypot(dx, dz);
+      if (d > 7 && d < 32 && dx * fx + dz * fz > 0.6 * d && game.closure.closed(n)) {
+        targetSpeed = Math.min(targetSpeed, Math.sqrt(10 * Math.max(0, d - 11)));
+        hold = targetSpeed < 0.5;
+        held = true;
+      }
+    }
     if (this.arrived && this.mode === 'route') targetSpeed = 0;
 
     // Look out for things in front.
@@ -221,7 +233,8 @@ export class AIDriver {
         targetSpeed = Math.min(targetSpeed, Math.max(0, (obstacle.dist - 5) * 0.7));
         this.blockedT += dt;
         if (obstacle.isPlayer && this.blockedT > 1.2 && this.honkT <= 0) { this.honkT = 3; game.onHonk(car); }
-        if (this.blockedT > 3.5) { this.ignoreT = 1.6; this.blockedT = 0; }
+        // (Not in a queue at a closed junction: pushing on would shove the car ahead into it.)
+        if (this.blockedT > 3.5 && !held) { this.ignoreT = 1.6; this.blockedT = 0; }
       } else this.blockedT = 0;
     } else this.ignoreT -= dt;
     this.honkT -= dt;
@@ -252,5 +265,6 @@ export class AIDriver {
     // Big error at speed: lift off.
     if (Math.abs(err) > 1.2 && fwd > 8) { c.throttle = 0; c.brake = 0.5; }
     if (direct && this.aggressive && Math.abs(err) < 0.3) { c.throttle = 1; c.brake = 0; }
+    if (hold) { c.throttle = 0; c.brake = fwd > 0.8 ? 1 : 0; c.park = fwd <= 0.8; }
   }
 }
