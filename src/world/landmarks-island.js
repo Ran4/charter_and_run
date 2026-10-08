@@ -91,9 +91,9 @@ export const ISLAND_LANDMARKS = {
   airport: { b: [6, 0], at: [0, 22], yaw: PI },
   hittegods: { b: [6, 0], at: [-14, 6], yaw: 0 },
   busBay: { b: [6, 0], at: [16, 24], yaw: -PI / 2 },
-  bagageband: { b: [6, 0], at: [6, 0], yaw: 0 },
+  bagageband: { b: [6, 0], at: [6, 11], yaw: PI },   // south of the carousel, facing it: views camera on the forecourt (Phase 3)
   // (0,4) dunes
-  dyner: { b: [0, 4], at: [0, 0], yaw: 0 },
+  dyner: { b: [0, 4], at: [0, 0], yaw: PI - 0.4 },    // faces the arch: views camera on the sand south of it, clear of the boardwalk palms (Phase 3)
   // (0,6) lighthouse
   fyren: { b: [0, 6], at: [0, 10], yaw: PI },
   // (3,6) beach, (5,6) harbour

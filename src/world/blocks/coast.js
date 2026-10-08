@@ -329,7 +329,7 @@ function gando(f, W) {
   f.sign('NADA QUE DECLARAR', -6, CURB + 3.0, wallZ + 0.02, 2.6, 0.32, 0, { bg: '#2f8a4a', fg: '#ffffff', border: null, scale: 0.7 });
   f.sign('ALGO QUE DECLARAR', 2, CURB + 3.0, wallZ + 0.02, 2.6, 0.32, 0, { bg: '#d8321e', fg: '#ffffff', border: null, scale: 0.7 });
   f.box(0x1d1f26, -21, CURB + 1.6, HALL_Z0 + 0.03, 9.4, 2.5, 0.08);
-  f.sign('LLEGADAS · ANKOMST\nESTOCOLMO     14.55     ATERRIZÓ\nOSLO     15.20     RETRASADO\nGÖTEBORG     16.10     EN HORA', -21, CURB + 2.85, wallZ + 0.03, 9.0, 2.2, 0, { bg: '#1d1f26', fg: '#f7c31b', border: null, scale: 0.78, font: '"Nunito", sans-serif' });
+  f.sign('LLEGADAS · ANKOMST\nESTOCOLMO     14.55     ATERRIZÓ\nOSLO     15.20     RETRASADO\nGOTEMBURGO     16.10     EN HORA', -21, CURB + 2.85, wallZ + 0.03, 9.0, 2.2, 0, { bg: '#1d1f26', fg: '#f7c31b', border: null, scale: 0.78, font: '"Nunito", sans-serif' });
   f.sign('BIENVENIDOS A GRAN CANARIA · VÄLKOMMEN', 17, CURB + 3.55, wallZ, 13, 0.9, 0, { bg: '#f7c31b', fg: '#d8321e', scale: 0.62 });
   // The wall clock says three o'clock ("Klockan är tre spansk tid", §8.6).
   f.cyl(TRIM, 27.5, CURB + 3.3, HALL_Z0 + 0.1, 0.65, 0.12, 20, PI / 2);
@@ -473,8 +473,9 @@ function gando(f, W) {
       rf.sphere([RED, SUNY, GREEN, 0xe8e8f0][k % 4], x, ROOF_Y - 0.6 - Math.abs(Math.sin(k * 0.6)) * 0.25, HALL_Z1 + 0.14, 0.2);
     }
     const roof = meshOf(G, scene);
+    // LLEGADAS stands 3 cm in front of the fascia's orange stripe, so its opaque board covers it.
     for (const s of [
-      rf.sign('LLEGADAS · ANKOMST', 0, ROOF_Y + 0.95, HALL_Z1 + 0.06, 16, 1.25, 0, { bg: '#fbf6ec', fg: '#1b2f6b', border: null, scale: 0.78 }),
+      rf.sign('LLEGADAS · ANKOMST', 0, ROOF_Y + 0.95, HALL_Z1 + 0.12, 16, 1.25, 0, { bg: '#fbf6ec', fg: '#1b2f6b', border: null, scale: 0.78 }),
       rf.sign('EQUIPAJES · BAGAGE', CX, ROOF_Y - 0.9, CZ - 4.5, 5, 0.6, 0, { bg: '#1b2f6b', fg: '#f7c31b', border: null, scale: 0.6, double: true }),
       rf.sign('SALIDA · UTGÅNG · TAXI · BUSS', -12, ROOF_Y - 0.9, 11.2, 7, 0.6, 0, { bg: '#1b2f6b', fg: '#fbf6ec', border: null, scale: 0.6, double: true }),
     ]) { scene.remove(s); roof.add(s); }
@@ -484,14 +485,17 @@ function gando(f, W) {
       const c = camera;
       if (!c) return;
       const p = c.position;
-      let inside = p.x > x0 && p.x < x1 && p.z > z0 && p.z < z1 && p.y < ROOF_Y + 6;
+      // Hysteresis: once hidden, the hall counts 1.5 m larger, so a camera or look ray hovering at
+      // the edge (the player shuffling outside the hall) does not pop the roof in and out.
+      const m = roof.visible ? 0 : 1.5;
+      let inside = p.x > x0 - m && p.x < x1 + m && p.z > z0 - m && p.z < z1 + m && p.y < ROOF_Y + 6 + m;
       if (!inside) {
         c.getWorldDirection(dir);
         if (dir.y < -0.02) {
           const t = (p.y - 1.2) / -dir.y;
           if (t < 70) {
             const px = p.x + dir.x * t, pz = p.z + dir.z * t;
-            inside = px > x0 && px < x1 && pz > z0 && pz < z1;
+            inside = px > x0 - m && px < x1 + m && pz > z0 - m && pz < z1 + m;
           }
         }
       }
@@ -543,6 +547,7 @@ function gando(f, W) {
     f.cyl(0x8a8e94, x, CURB + 8, z, 0.2, 16, 8);
     f.box(0x5a5e66, x, CURB + 15.6, z, 2.4, 0.9, 0.6);
     f.box(0xfff1b8, x, CURB + 15.55, z + 0.31, 2.1, 0.6, 0.02);
+    f.box(0xfff1b8, x, CURB + 15.54, z + 0.32, 2.12, 0.62, 0.04, 0, TOWN.nightGlow);   // lit after dark (§13.3)
   }
   parkedDC8(f, 0, AZ, -PI / 2 - 0.3);
 }
@@ -828,8 +833,16 @@ function fyren(f, W) {
     const ly = TOP + 2.95, wx = f.wx(TX, TZ), wz = f.wz(TX, TZ);
     const core = new THREE.Mesh(new THREE.CylinderGeometry(1.64, 1.64, 2.25, 16), new THREE.MeshBasicMaterial({ color: 0xfff0b0 }));
     core.position.set(wx, ly, wz);
-    const beamMat = new THREE.MeshBasicMaterial({ color: 0xfff4c8, transparent: true, opacity: 0.16, depthWrite: false, side: THREE.DoubleSide });
-    const beamGeo = new THREE.ConeGeometry(9, 140, 16, 1, true).rotateZ(PI / 2).translate(70, 0, 0);
+    // The beam is added light that fades to nothing along its 140 m: warm at the lantern, black (adds
+    // nothing) at the open end, unfogged. Outer faces only, so the near wall is one layer and the
+    // inside never shows through the open end. Plain alpha read as a grey tube with a disc on its end.
+    const beamMat = new THREE.MeshBasicMaterial({ vertexColors: true, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, fog: false });
+    const beamGeo = new THREE.ConeGeometry(9, 140, 16, 6, true).rotateZ(PI / 2).translate(70, 0, 0);
+    {
+      const p = beamGeo.attributes.position, c = [];
+      for (let k = 0; k < p.count; k++) { const t = (1 - p.getX(k) / 140) ** 2; c.push(0.36 * t, 0.32 * t, 0.2 * t); }
+      beamGeo.setAttribute('color', new THREE.Float32BufferAttribute(c, 3));
+    }
     const beam = new THREE.Group();
     for (const a of [0, PI]) { const b = new THREE.Mesh(beamGeo, beamMat); b.rotation.y = a; beam.add(b); }
     beam.position.set(wx, ly, wz);
@@ -902,7 +915,7 @@ function playa(f, W, ctx) {
       f.prop('parasoll', x, z, rnd() * 6);
       f.prop('solstol', x - 1.55, z + 0.3, 0);
       f.prop('solstol', x + 1.55, z + 0.3, 0);
-      if (rnd() < 0.5) f.flat(TOWELS[(rnd() * TOWELS.length) | 0], x + (rnd() < 0.5 ? -1.4 : 1.4), z + 2.7, 0.9, 1.8, CURB + 0.04, (rnd() - 0.5) * 0.4);
+      // (No towel on the sand here: the solstol prop carries its own SunTrip towel, §6.9.)
     }
   }
   // A row of fixed straw sombrillas with deckchairs near the promenade (not on the main block,
@@ -1092,6 +1105,7 @@ function hamn(f, W) {
   f.cyl(TRIM, PX + 2.4, DECK + 1.0, 29.0, 0.32, 2.0, 10);
   f.cyl(GREEN, PX + 2.4, DECK + 2.3, 29.0, 0.36, 0.6, 10);
   f.sphere(0x7fe08a, PX + 2.4, DECK + 2.85, 29.0, 0.35);
+  f.sphere(0x7fe08a, PX + 2.4, DECK + 2.85, 29.0, 0.37, 0.37, 0.37, 0, TOWN.nightGlow);   // lit after dark (§13.3)
   f.circ(PX + 2.4, 29.0, 0.4, 99, 'pole');
   for (let z = 6; z <= 24; z += 3) coinAt(f, PX, z, DECK + 0.75);
   // Bollards along the quay edge.
@@ -1188,10 +1202,11 @@ function hamn(f, W) {
     f.sign('PASEOS EN BARCO · BÅTTURER · 300 PTA', kx, CURB + 3.05, kz + 1.2, 5.6, 0.5, 0, { bg: '#1e9aa0', fg: '#fbf6ec', border: null, scale: 0.62, double: true });
     f.box(0x6a4528, kx, CURB + 2.5, kz + 1.0, 0.12, 0.6, 0.12);
   }
-  // Quay lamps.
+  // Quay lamps (their globes lit after dark, §13.3).
   for (const x of [-15, 0, 15, 27]) {
     f.cyl(0x2a3a4a, x, CURB + 1.8, -4.5, 0.08, 3.6, 6);
     f.sphere(0xfff1b8, x, CURB + 3.75, -4.5, 0.32);
+    f.sphere(0xffd890, x, CURB + 3.75, -4.5, 0.34, 0.34, 0.34, 0, TOWN.nightGlow);
     f.circ(x, -4.5, 0.12, 99, 'pole');
   }
   f.car('pickup', 24, -8.5, PI / 2, { color: 0x2f6aa8 });

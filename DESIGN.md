@@ -942,10 +942,10 @@ standing there faces. `y` (optional) = absolute height for collectible spots on 
 | (0,0) | `fataga` → `fataga` (D1, nature.js) | white village houses, tile roofs, narrow lanes, date palms, small church, embroidered tablecloths on lines (`MANTELES · DUKAR`), sheepfold (fence solids, gap gate) | `fataga` (0, 18, π) · `fatagaBus` world (−240, −204, −π/2) (westbound kerb of the z = −200 road, the `follow` endpoint) · `fatagaFold` (−18, −12, 0) · `fatagaDukar` (8, 4, π) · `pryl_kniv` (0, 0, 0, 1.2) | — |
 | (4,0) | `golf` → `golf` (D1, nature.js) | fairway, bunkers (sand slabs), **pond** (`water` circle + flat blue), flag 18, small clubhouse `CAMPO DE GOLF` | `golf` (0, 22, π) · `fena_golf` (−10, −6, 0, 0.35) | — |
 | (5,0) | `bungalow` → `bungalowTomt` (D1, nature.js) | Angerud's show bungalow: one-storey white cube, pool, plot fence, `SE VENDE · BUNGALOW · 4 RUM OCH KÖK` | `bungalow` (0, 22, π) · `fena_bungalow` (6, −4, 0, 0.35) | — |
-| (5,1) | `bygge` → `bygge` (D1, nature.js) | half-built hotel frame, crane, girder deck with ramp (Bigmouth construction reworked), `PRÓXIMAMENTE · HOTEL NUEVA ESTOCOLMO II`, cones/barrels | `bygge` (0, 22, π) · `pryl_klocka` (6, −6, 0, 7.6) | — |
+| (5,1) | `bygge` → `bygge` (D1, nature.js) | half-built hotel frame, crane, girder deck with ramp (Bigmouth construction reworked), `PRÓXIMAMENTE · HOTEL NUEVA ESTOCOLMO II`, cones/barrels; the storeys under the 2nd- and 3rd-floor slabs are closed (dark core, brick infill on the faces the floor below walks along), since their colliders are solid from the ground (Phase 3) | `bygge` (0, 22, π) · `pryl_klocka` (6, −6, 0, 7.6) | — |
 | (6,1) | `dromplan` → `dromplan` (D2, coast.js) | **the old propeller "drömplanet"**: faded red 4-engine prop plane (DC-7-like) on a dirt lot by the road, wing reachable via a crate ramp, windsock, sign `AERÓDROMO` | `dromplan` (0, 20, π) · `pryl_kamera` (−4, −2, 0, 3.6) (on the wing) | — |
-| (6,0) | `flygplats` → `gando` (D2, coast.js) | low terminal with open arrivals canopy `LLEGADAS · ANKOMST`, baggage carousel (animated ring of suitcases), `OBJETOS PERDIDOS · HITTEGODS` desk with a wall of suitcase silhouettes, bus bay `BUSS 17`; **the parked DC-8** (`buildPlaneExterior`) **outside the bound wall at (240, −335)** — WP-B clears the tree ring **and the hills** in that sector (§6.4) | `airport` (0, 22, π) · `hittegods` (−14, 6, 0) · `busBay` (16, 24, −π/2) · `bagageband` (6, 0, 0) | `buss17` (bus, livery `suntrip`) at `busBay`; `taxiAirport` (taxi, locked) |
-| (0,4), (0,5) | `dyner` → `dyner` (D1, nature.js) | large sand dunes (ramps), palm grove, lagoon pond | `dyner` (0, 0, 0) on (0,4) | — |
+| (6,0) | `flygplats` → `gando` (D2, coast.js) | low terminal with open arrivals canopy `LLEGADAS · ANKOMST`, baggage carousel (animated ring of suitcases), `OBJETOS PERDIDOS · HITTEGODS` desk with a wall of suitcase silhouettes, bus bay `BUSS 17`; **the parked DC-8** (`buildPlaneExterior`) **outside the bound wall at (240, −335)** — WP-B clears the tree ring **and the hills** in that sector (§6.4) | `airport` (0, 22, π) · `hittegods` (−14, 6, 0) · `busBay` (16, 24, −π/2) · `bagageband` (6, 11, π) (south of the carousel, facing it, so the views camera stands on the forecourt; Phase 3) | `buss17` (bus, livery `suntrip`) at `busBay`; `taxiAirport` (taxi, locked) |
+| (0,4), (0,5) | `dyner` → `dyner` (D1, nature.js) | large sand dunes (ramps), palm grove, lagoon pond | `dyner` (0, 0, π − 0.4) on (0,4) (faces the arch, so the views camera stands on the sand south of it, clear of the boardwalk palms; Phase 3) | — |
 | (0,6) | `fyren` → `fyren` (D2, coast.js) | **Faro de Maspalomas**: ~55 m grey-blue stone tower (tallest landmark, visible from everywhere), keeper's house (roof top ≈ 4.0, reachable by a dune ramp) | `fyren` (0, 10, π) (coin arc on the keeper's-house roof) | — |
 | (1..4,6) | `playa` → `playa` (D2, coast.js) | sand, sunbed rows (`solstol`), parasols, `HELADOS` kiosk, lifeguard tower, pedal boats on the sand, towels on sunbeds | `playa` on (3,6): (0, 10, 0) · `fena_hav` world (0, 304) (sea shallows, y 0.35) | — |
 | (5,6) | `hamn` → `hamn` (D2, coast.js) | small marina: walkable shallow basin (`water` box), pier (deck top 0.55), moored boats | `hamn` (0, 0, π) · `fena_hamn` (−8, 10, 0, 0.35) · `pryl_glasogon` (12, 28, 0, 1.2) (pier end) | — |
@@ -1098,6 +1098,13 @@ SunTrip posters, towels on sunbeds. Spain 1979: orange butano bottles, Correos b
 crosses, `ESTANCO`, Guardia barracks, green guaguas. Landscape: whitewash, terracotta,
 bougainvillea, Canary palms, cardón cactus, red barrancos, tomato rows, the lighthouse, dunes.
 Avoid anachronisms: no Yumbo Centrum, no Nissan Patrol, no turquoise "Global" buses, no euro.
+
+The nature blocks (D1, Phase 3) carry a few touches on open ground, none of them solid where a
+timed stage runs: Fataga, tinsel on the square's palm by the entry lane and a `julgran` on the
+azotea of the corner house (16.75, 21) (its collider inside the house's, so the measured sheep
+chase is unchanged); golf, a `julgran` by the clubhouse door under the veranda; the grisfest gate,
+a bauble garland along the arch and up its posts and a `FELIZ NAVIDAD · GOD JUL` board on top;
+the show bungalow, two `SUNTRIP · JUL I SOLEN` posters on the plot wall facing the road.
 
 ---
 
@@ -2620,7 +2627,11 @@ Flight palettes keep `fogNear ≥ 40` so the interior is never fogged. Night: st
 dark draw while the sky `top` is dark (r + g + b < 0.8: `night` and `sunset`): the hotels' windows
 (hotels.js `nightMesh`) and, since Phase 3, the street lamps' lantern panes and star centres
 (town.js `nightGlow`, one unlit mesh for the whole island; block builders may add their own night
-lights to it in world coordinates while `buildTown` runs).
+lights to it in world coordinates while `buildTown` runs). The coast adds the marina's quay-lamp
+globes and green harbour light and Gando's apron floodlight faces (each glow a centimetre larger
+than the lit face, so they never z-fight). The lighthouse beam (night only) is additive light
+fading from warm at the lantern to nothing at its 140 m end, unfogged and outer faces only (Phase 3:
+plain alpha read as a grey tube with a disc on its end).
 
 **Sun direction** (Phase 3): the island palettes carry `sunDir`, the sun's offset from the point
 `followSun` tracks (+z = south): `day` and `night` `[70, 130, 45]` (high, from the ESE, as before),
@@ -3910,3 +3921,20 @@ the fixer's group.
   stage, seat at plank level). `CAL=balls` with it moved (27 runs) and as a control at its old spot
   (12 runs): p75 25.6 / 26.8 s, median 21.8 / 21.6 s, i.e. no effect, so §8's 32 s stays. Both sit
   above the Phase 2 measurement (p75 21.9 of 12, median 18.6); left to the difficulty pass.
+- r1 world-outskirts: the bygge storey under the 2nd-floor slab is closed like the 3rd floor's
+  (dark core, brick infill along x 2 and z −3, corner columns): its collider is solid from the
+  ground, so the 1st floor ran into an invisible wall at x 2 and z −3 (§6.3).
+- r1 world-outskirts: landmarks `dyner` (0, 0, π − 0.4) and `bagageband` (6, 11, π): the views
+  camera stood north of the dunes arch (the board hid the player) and inside the terminal (§6.3).
+- r1 world-outskirts: the Gando arrivals board says `GOTEMBURGO`; `LLEGADAS · ANKOMST` stands in
+  front of the fascia's orange stripe, which sliced its letters; `ESLÖV 3 900 KM` (≈ 3 880 km).
+- r1 world-outskirts: sign source tags in nature.js (`SE VENDE · BUNGALOW / 4 RUM OCH KÖK` is the
+  bungalow seller's line, `[F*]`; the invented ones `[N]`; real place names untagged).
+- r1 world-outskirts: Christmas-week and charter-Sweden touches in the nature blocks (§6.9): Fataga,
+  golf, the grisfest gate, the show bungalow; nothing solid where a timed stage runs.
+- r1 world-outskirts: the lighthouse beam is additive light that fades along its length (was a
+  grey tube with a disc on its end); the marina's quay lamps and harbour light and Gando's apron
+  floodlights glow after dark in `nightGlow` (§13.3).
+- r1 world-outskirts: no towel on the sand in front of each sunbed pair (`solstol` carries its own,
+  §6.9); the Gando canopy roof hides with 1.5 m hysteresis (a player shuffling outside the hall
+  flipped it 8 times in 2.3 s, now 0).

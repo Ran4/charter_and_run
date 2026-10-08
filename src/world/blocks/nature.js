@@ -14,7 +14,8 @@
 //                               tower crane, hoarding PRÓXIMAMENTE · HOTEL NUEVA ESTOCOLMO II
 //   dyner    (0,4) (0,5)        Maspalomas dunes (hip-ended sand ridges you can drive over), palm
 //                               grove, the lagoon (La Charca: walkable shallow water)
-// Signs are world text (Spanish/Swedish); the invented ones are marked [N] in comments.
+// Signs are world text (Spanish/Swedish); the invented ones are marked [N] in comments, film text
+// moved onto a sign [F*]. Real place names (FATAGA, DUNAS DE MASPALOMAS, LA CHARCA) carry no tag.
 // Builder signature fn(f, W, ctx): f = Frame at the block centre (yaw 0, local = world offset).
 
 import { THREE, GeoBuilder, MAT, PRIM, mat, makeWedge, toonMesh } from '../../gfx.js';
@@ -127,6 +128,17 @@ function palm(f, lx, lz, s = 1, dates = false, h = 6.5) {
     G.sphere(0xd0702a, x + Math.cos(a) * 0.62 * s, CURB + H - 0.45 * s, z + Math.sin(a) * 0.62 * s, 0.26 * s, 0.42 * s, 0.26 * s, 0, 0, 0, 6);
   }
   circle(x, z, 0.4 * s, 99, 'tree');
+}
+
+// Christmas week (§6.9): a tinsel bauble (diameter d, low-poly) and a spiral of them up a palm's
+// trunk (visual only).
+const bauble = (f, color, lx, y, lz, d) => f.S.sphere(color, f.wx(lx, lz), y, f.wz(lx, lz), d, d, d, 0, 0, 0, 6);
+function tinsel(f, lx, lz, s = 1, h = 6.5) {
+  const n = Math.floor(h * s / 0.4);
+  for (let k = 0; k < n; k++) {
+    const a = k * 0.9, y = CURB + 0.6 + k * 0.38;
+    bauble(f, [RED, SUNY, 0xe8e8f0][k % 3], lx + Math.sin(a) * 0.42 * s, y, lz + Math.cos(a) * 0.42 * s, 0.18);
+  }
 }
 
 // Prickly pear (tunera): flat pads in a clump. No collider (it is low; kicking through is fine).
@@ -351,7 +363,7 @@ function tomatVischan(f, rnd) {
   f.flat(0x55555c, 27.5, 0, 6, 60, CURB + 0.025);
   for (let z = -27; z < 30; z += 6) f.flat(0xf4f4f0, 27.5, z, 0.14, 2.6, CURB + 0.032);
   for (const z of [-29, -10, 10, 29]) { f.box(0xf4efe6, 24.2, CURB, z, 0.3, 0.6, 0.3); f.box(RED, 24.2, CURB + 0.6, z, 0.32, 0.12, 0.32); }
-  postSign(f, 'ESLÖV 3 500 KM', 23.8, 16, 3.6, 0.9, 1.7, PI / 2, { bg: '#2f6a4a', fg: '#ffffff', border: '#ffffff' });   // [N] road-sign gag
+  postSign(f, 'ESLÖV 3 900 KM', 23.8, 16, 3.6, 0.9, 1.7, PI / 2, { bg: '#2f6a4a', fg: '#ffffff', border: '#ffffff' });   // [N] road-sign gag (≈ 3 880 km as the crow flies)
   canes(f, -30.5, -30.6, 22, -30.6);
   canes(f, -30.6, -30.5, -30.6, 30);
   for (const [x, z] of [[23.2, 23], [23.2, -22]]) palm(f, x, z, 0.8);
@@ -383,10 +395,10 @@ function tomatPackhus(f, rnd) {
   f.box(CONC, 0, CURB, 4.75, 24, 0.95, 3.5);
   f.solid(0, 4.75, 24, 3.5, CURB + 0.95, 'deck');
   rampL(f, -14.5, 4.75, PI / 2, 3.5, 5, CURB, CURB + 0.95, CONC_D);
-  f.sign('TOMATES · EXPORTACIÓN', 0, CURB + H + 1.6, 3.2, 16, 2.0, 0, { bg: '#d8321e', fg: '#fff8e6', border: '#1d1426', scale: 0.6, double: true });
+  f.sign('TOMATES · EXPORTACIÓN', 0, CURB + H + 1.6, 3.2, 16, 2.0, 0, { bg: '#d8321e', fg: '#fff8e6', border: '#1d1426', scale: 0.6, double: true });   // [N]
   f.box(WOOD_D, -7, CURB + H - 0.4, 3.0, 0.2, 1.4, 0.2);
   f.box(WOOD_D, 7, CURB + H - 0.4, 3.0, 0.2, 1.4, 0.2);
-  f.sign('EMPAQUETADO', 0, CURB + 4.95, 3.14, 4.6, 0.75, 0, { ...SIGN, scale: 0.62 });
+  f.sign('EMPAQUETADO', 0, CURB + 4.95, 3.14, 4.6, 0.75, 0, { ...SIGN, scale: 0.62 });   // [N]
   // Crates on the dock and in the yard (smashable), stacked pallets (static).
   for (let k = 0; k < 5; k++) f.prop('tomatlada', -9 + k * 1.5, 5.4, 0, CURB + 0.95);
   for (const [x, z] of [[-12, 12], [-10.6, 12], [-12, 13.4], [11, 10], [12.4, 10], [11.7, 11.4]]) f.prop('tomatlada', x, z);
@@ -396,7 +408,7 @@ function tomatPackhus(f, rnd) {
   }
   f.solid(16, 7, 1.4, 1.2, CURB + 1.5, 'crates');
   f.car('pickup', 6, 15, PI / 2, { color: 0x8a6a3a });
-  postSign(f, 'TOMATES · EXPORTACIÓN', -22, 28.6, 6, 1.1, 1.5, 0, { bg: '#d8321e', fg: '#fff8e6' });
+  postSign(f, 'TOMATES · EXPORTACIÓN', -22, 28.6, 6, 1.1, 1.5, 0, { bg: '#d8321e', fg: '#fff8e6' });   // [N]
   for (const [x, z] of [[-16.6, 10], [16.6, -2], [-16.6, -14]]) palm(f, x, z, 0.85, true);
   agave(f, 15, 27);
   tunera(f, -15.5, 27, 1, rnd);
@@ -451,6 +463,10 @@ function grisgard(f, W, ctx) {
   for (const s of [-1, 1]) f.box(0x2a2a2a, s * 4.4, CURB + 3.0, E, 0.1, 1.7, 0.1);
   f.box(0x2a2a2a, 0, CURB + 4.6, E, 9.0, 0.14, 0.14);
   f.sign('GRISFEST\nFIESTA CANARIA', 0, CURB + 3.85, E + 0.1, 6.4, 1.4, 0, { bg: '#c0623a', fg: '#fff8e6', border: '#1d1426', scale: 0.62, double: true });   // [N]
+  // Christmas week (§6.9): a garland of baubles along the arch and up its posts, a board on top.
+  for (let k = 0; k <= 19; k++) bauble(f, [RED, SUNY, 0x2f8a4a, 0xe8e8f0][k % 4], -4.28 + k * 0.45, CURB + 4.67, E + 0.16, 0.18);
+  for (const s of [-1, 1]) for (let k = 0; k < 4; k++) bauble(f, [SUNY, RED][k % 2], s * 4.4, CURB + 3.2 + k * 0.4, E + 0.12, 0.16);
+  f.sign('FELIZ NAVIDAD · GOD JUL', 0, CURB + 5.02, E, 4.6, 0.56, 0, { bg: '#d8321e', fg: '#f7c31b', border: '#1d1426', scale: 0.6, double: true });   // [N]
 
   // Dance floor: plank deck x [-6.5, 6.5], z [-14, 6], top 0.4 (§6.3); dansgolv (0, 0) is on it.
   const DT = 0.4;
@@ -697,7 +713,7 @@ function fataga(f, W, ctx) {
     f.box(EMB[(k + 2) % 6], x, CURB + 1.85, 7.2, 0.5, 0.5, 0.06, 0.785);
     f.box(EMB[k], x, CURB + 2.35, 7.2, 1.25, 0.06, 0.06);
   }
-  f.sign('MANTELES · DUKAR', 9, CURB + 3.0, 7.2, 4.8, 0.7, 0, { ...SIGN, bg: '#fff8e6', fg: '#a8202a', double: true });
+  f.sign('MANTELES · DUKAR', 9, CURB + 3.0, 7.2, 4.8, 0.7, 0, { ...SIGN, bg: '#fff8e6', fg: '#a8202a', double: true });   // [N]
   f.box(WOOD, 12.5, CURB, 9.4, 2.4, 0.8, 1.0); f.solid(12.5, 9.4, 2.4, 1.0, CURB + 0.8, 'table');
   for (let k = 0; k < 4; k++) f.box(EMB[k + 1], 11.8 + (k % 2) * 1.3, CURB + 0.8 + Math.floor(k / 2) * 0.1, 9.4, 1.0, 0.1, 0.7);
   // Sheepfold: dry-stone walls x [-28, -10], z [-30, -16]; gate gap x [-20, -16] on the south.
@@ -712,6 +728,11 @@ function fataga(f, W, ctx) {
   for (const [x, z, a] of [[-15, -20, 0.4], [-22, -21.5, 2.2], [-18.5, -24, 4.1]]) sheep(f, x, z, a);
   // Date palms, cacti, bougainvillea.
   for (const [x, z, s] of [[-8, -8, 1], [-8.4, 8.4, 0.9], [14.6, -7.8, 1.05], [-8, 28.6, 0.85], [12.6, 28.6, 0.8], [-30, 9, 1.1], [29.5, 9.5, 0.9]]) palm(f, x, z, s, true);
+  // Christmas week (§6.9): tinsel on the square's palm by the entry lane, and a plastic julgran on
+  // the azotea of the corner house (16.75, 21). Up there its collider stays inside the house's, so
+  // nothing solid is added where the sheep run (fatagaSheep is measured).
+  tinsel(f, -8.4, 8.4, 0.9);
+  f.prop('julgran', 12.4, 17.9, 0, CURB + 4.0);
   for (const [x, z] of [[-9.6, -13], [9.6, -23], [30, -30], [-30, -30.5], [-30, -13]]) tunera(f, x, z, 1, rnd);
   for (const [x, z] of [[-4.6, 17.5], [4.2, 27.4], [16.4, -2.6], [-8.9, -4.2], [17.4, -17.6]]) boug(f, x, z, 0.8);
   agave(f, 11, -9); agave(f, -10.4, 13);
@@ -752,7 +773,7 @@ function golf(f, W, ctx) {
   f.F.cyl(0x1d1426, f.wx(-16, -21), CURB + 0.04, f.wz(-16, -21), 0.18, 0.02, 10);
   f.cyl(0xf4f4f0, -16, CURB + 1.6, -21, 0.05, 3.2, 6);
   f.box(RED, -15.4, CURB + 2.7, -21, 1.2, 0.8, 0.04);
-  f.sign('18', -15.4, CURB + 2.75, -20.96, 0.9, 0.6, 0, { bg: '#d8321e', fg: '#fff8e6', border: null, scale: 0.8, double: true });
+  f.sign('18', -15.4, CURB + 2.75, -20.96, 0.9, 0.6, 0, { bg: '#d8321e', fg: '#fff8e6', border: null, scale: 0.8, double: true });   // [N]
   f.circ(-16, -21, 0.08, 99, 'pole');
   // Bunkers.
   for (const [x, z, r] of [[-22, -14, 3], [-11, -26, 2.6], [-12.5, -24.5, 2.2], [6, -4, 2.8], [8.5, -2, 2.2], [-2, 10, 2.6]]) {
@@ -773,7 +794,8 @@ function golf(f, W, ctx) {
   house(f, -18, 21, 18, 10, 3.6, { roof: 'tile', doors: [['e', 0], ['s', 3]] });
   for (const z of [16.6, 25.4]) { f.box(WHITE, -7.4, CURB, z, 0.3, 3.0, 0.3); f.circ(-7.4, z, 0.2, 99, 'pole'); }
   f.box(TERRA_D, -7.9, CURB + 3.0, 21, 1.4, 0.14, 9.6);
-  postSign(f, 'CAMPO DE GOLF', -18, 28.6, 6.4, 1.2, 1.6, 0, { bg: '#2f6a4a', fg: '#fff8e6', border: '#fff8e6' });
+  f.prop('julgran', -8.0, 23.6);   // Christmas week (§6.9): by the clubhouse door, under the veranda
+  postSign(f, 'CAMPO DE GOLF', -18, 28.6, 6.4, 1.2, 1.6, 0, { bg: '#2f6a4a', fg: '#fff8e6', border: '#fff8e6' });   // [N]
   for (const [z, c] of [[14.4, 0xf4f4f0], [11.6, 0xf2e6c0]]) golfCart(f, -14, z, c);
   // Palms along the edges, flowering bushes by the clubhouse.
   for (const [x, z] of [[28, -28], [28, -10], [28, 6], [-28, -28], [-28, -6], [-28, 8], [6, -28], [-11, 29.4], [12, 28.6]]) palm(f, x, z, 0.95);
@@ -802,6 +824,8 @@ function bungalowTomt(f, W, ctx) {
   wallSeg(f, -14, 10, -2.8, 10, 1.0); wallSeg(f, 4.8, 10, 20, 10, 1.0);
   wallSeg(f, -14, -22, 20, -22, 1.0); wallSeg(f, -14, -22, -14, 10, 1.0); wallSeg(f, 20, -22, 20, 10, 1.0);
   for (const x of [-2.4, 4.4]) { f.box(WHITE, x, CURB, 10, 0.8, 1.8, 0.8); f.box(TERRA, x, CURB + 1.8, 10, 1.0, 0.15, 1.0); f.solid(x, 10, 0.8, 0.8, 99, 'wall'); }
+  // Charter Sweden (§6.9): SunTrip posters on the plot wall, facing the road.
+  for (const x of [-8.5, 10.5]) f.sign('SUNTRIP\nJUL I SOLEN', x, CURB + 0.55, 10.2, 1.5, 0.75, 0, { bg: '#f7c31b', fg: '#d8321e', border: '#d8321e', scale: 0.62 });   // [N]
   // Garden: a lawn with a crazy-paving path from the gate, terracotta tiles round the pool, a
   // brick barbecue, a table with chairs, flower beds along the wall.
   f.flat(0x7cb84e, -7.5, 1, 11, 16, CURB + 0.02);
@@ -845,7 +869,7 @@ function bungalowTomt(f, W, ctx) {
   f.box(0xd8d0c0, -6.2, CURB + 0.78, 16, 0.5, 0.12, 0.35);
   f.cyl(0xf4f4f0, -6, CURB + 1.3, 16, 0.04, 2.6, 5);
   f.cone(BUTANO, -6, CURB + 2.6, 16, 1.4, 0.5, 10);
-  postSign(f, 'SE VENDE · BUNGALOW\n4 RUM OCH KÖK', 18, 19, 7, 2.2, 1.5, 0, { bg: '#f7c31b', fg: '#1d1426', scale: 0.62 });
+  postSign(f, 'SE VENDE · BUNGALOW\n4 RUM OCH KÖK', 18, 19, 7, 2.2, 1.5, 0, { bg: '#f7c31b', fg: '#1d1426', scale: 0.62 });   // [F*] the bungalow seller's line, relocated to the sign
   // Other plots for sale: survey stakes with red tape, a small sign.
   const stake = (x, z) => { f.box(0xf4f4f0, x, CURB, z, 0.1, 0.9, 0.1); f.box(RED, x, CURB + 0.7, z, 0.12, 0.2, 0.12); };
   const tape = (ax, az, bx, bz) => {
@@ -873,16 +897,20 @@ function bygge(f, W, ctx) {
   f.flat(0xb08a5a, 0, 0, W - 2, W - 2, CURB + 0.01);
   for (let k = 0; k < 10; k++) f.flat(k % 2 ? 0xa07a4c : 0xc09a64, -26 + rnd() * 52, -26 + rnd() * 52, 3 + rnd() * 5, 2 + rnd() * 4, CURB + 0.014, rnd() * 3);
   const S1 = CURB + 3.4, S2 = CURB + 6.8;
+  // Brick infill (3.05 m tall from y0) along storey faces [ax, az, bx, bz]; gaps show the dark core.
+  const infill = (y0, faces) => {
+    for (const [ax, az, bx, bz] of faces) {
+      const horiz = az === bz, len = horiz ? bx - ax : bz - az;
+      for (let t = 0, n = 0; t < len - 0.1; t += 3.5, n++) {
+        if ((n + (horiz ? 0 : 1)) % 3 === 1) continue;
+        const seg = Math.min(3.5, len - t), cx = horiz ? ax + t + seg / 2 : ax, cz = horiz ? az : az + t + seg / 2;
+        f.box(0xb85a3a, cx, y0, cz, horiz ? seg - 0.5 : 0.3, 3.05, horiz ? 0.3 : seg - 0.5);
+      }
+    }
+  };
   // Ground floor: brick infill around a dark core, solid up to the 1st-floor slab.
   f.box(0x3a342e, 8, CURB, -9, 27, 3.05, 17);
-  for (const [ax, az, bx, bz] of [[-6, 0, 22, 0], [-6, -18, 22, -18], [-6, -18, -6, 0], [22, -18, 22, 0]]) {
-    const horiz = az === bz, len = horiz ? bx - ax : bz - az;
-    for (let t = 0, n = 0; t < len - 0.1; t += 3.5, n++) {
-      if ((n + (horiz ? 0 : 1)) % 3 === 1) continue;                               // gaps show the core
-      const seg = Math.min(3.5, len - t), cx = horiz ? ax + t + seg / 2 : ax, cz = horiz ? az : az + t + seg / 2;
-      f.box(0xb85a3a, cx, CURB, cz, horiz ? seg - 0.5 : 0.3, 3.05, horiz ? 0.3 : seg - 0.5);
-    }
-  }
+  infill(CURB, [[-6, 0, 22, 0], [-6, -18, 22, -18], [-6, -18, -6, 0], [22, -18, 22, 0]]);
   f.solid(8, -9, 28, 18, S1, 'building');
   // Columns (every 7 m) and the slabs; rebar stubs where the 2nd floor is still missing.
   for (let x = -6; x <= 22; x += 7) for (let z = -18; z <= 0; z += 9) {
@@ -893,6 +921,12 @@ function bygge(f, W, ctx) {
   }
   f.box(CONC, 8, S1 - 0.35, -9, 28.4, 0.35, 18.4);
   f.box(CONC, 12, S2 - 0.35, -10.5, 20.4, 0.35, 15.4);
+  // The storey under the 2nd-floor slab is closed like the 3rd floor's (a dark core, brick infill on
+  // the faces the 1st floor walks along, corner columns), since its collider is solid from the ground
+  // (no overhangs): it read as an open storey with an invisible wall at x 2 and z -3.
+  f.box(0x3a342e, 12, S1, -10.5, 19.4, S2 - S1 - 0.35, 14.4);
+  infill(S1, [[2, -3, 22, -3], [2, -18, 2, -3]]);
+  for (const [x, z] of [[2, -3], [2, -18], [22, -3]]) f.box(CONC_D, x, S1, z, 0.55, 3.1, 0.55);
   f.solid(12, -10.5, 20, 15, S2, 'building');
   // Orange safety rail along the open south edge of the 1st floor.
   f.box(BUTANO, 8, S1 + 0.9, 0.1, 28, 0.12, 0.06);
@@ -951,7 +985,7 @@ function bygge(f, W, ctx) {
   }
   for (const s of [-1, 1]) { f.box(RED, s * 8.2, CURB, 30.4, 0.4, 2.8, 0.4); f.box(0xf4f4f0, s * 8.2, CURB + 1.0, 30.4, 0.42, 0.4, 0.42); f.solid(s * 8.2, 30.4, 0.4, 0.4, 99, 'post'); }
   for (const x of [17, 27]) f.box(WOOD_D, x, CURB + 2.4, 30.6, 0.3, 4.0, 0.3);
-  f.sign('PRÓXIMAMENTE\nHOTEL NUEVA ESTOCOLMO II', 22, CURB + 4.6, 30.75, 13, 3.4, 0, { bg: '#1c7fb8', fg: '#fff8e6', border: '#f7c31b', scale: 0.62, double: true });   // §6.3
+  f.sign('PRÓXIMAMENTE\nHOTEL NUEVA ESTOCOLMO II', 22, CURB + 4.6, 30.75, 13, 3.4, 0, { bg: '#1c7fb8', fg: '#fff8e6', border: '#f7c31b', scale: 0.62, double: true });   // [N] (§6.3)
   // Site hut, cement mixer, sand pile, bricks, a car jump ramp.
   f.box(0xf4f4f0, -22, CURB, 21, 6, 2.6, 2.6); f.box(0x2f6aa8, -22, CURB + 2.6, 21, 6.2, 0.12, 2.8);
   f.box(0x2f6aa8, -20, CURB, 22.34, 0.9, 2.0, 0.06);
