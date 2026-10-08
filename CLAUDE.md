@@ -6,6 +6,11 @@ module contracts: it wins over `notes/`, and every change to a contract, a liter
 goes into it (plus a line in its changelog). README.md has the player-facing overview (Swedish)
 and the code map.
 
+**Build status: Phases 0–2 are done (tag `phase2`), Phase 3 (the QA loop) is next.** `HANDOFF.md`
+is the orchestrator hand-off: the current state, the Phase 3 plan, the known-issue backlog, the
+binding user decisions (player car ×1.2, tight measured timers) and the gotchas. Read it before
+continuing the build. The agents' reports from Phases 0–2 are in `notes/build-reports/`.
+
 ## Running and checking changes
 
 - The game is on port **8840** (`make run` / `npm start`). The user starts it themselves: never
