@@ -15,15 +15,28 @@ import { dist, yawTo } from '../../../util.js';
 const sitDown = (seat) => fmt('sitDown', { seat });
 
 // Lines played as world bubbles one after another ('stig' = the player). Resolves when done;
-// stops early (without the rest) once the mission it belongs to is over.
+// stops early (without the rest) once the mission it belongs to is over, or as soon as a dialogue
+// or cutaway starts: then the live bubble comes down that frame and it resolves false.
 async function bubbles(g, m, lines) {
+  const scene = () => g.inDialog || g.inCutaway;
   for (const [who, text, cue] of lines || []) {
-    if (g.missions.m !== m) return;
+    if (g.missions.m !== m) return true;
+    if (scene()) return false;
     if (cue) g.cue(cue);
-    const secs = lineSecs(g, text);
-    g.say(g.npc(who), text, secs);
-    await g.wait(secs * 0.8);
+    const secs = lineSecs(g, text), n = g.npc(who);
+    g.say(n, text, secs);
+    await new Promise((resolve) => {
+      let t = 0;
+      const tick = (dt) => {
+        t += dt;
+        // An already expired empty line replaces the speaker's bubble (gone before the next draw).
+        if (scene()) g.say(n, '', -1);
+        if (scene() || t >= secs * 0.8) { g.offFrame(tick); resolve(); }
+      };
+      g.onFrame(tick);
+    });
   }
+  return !scene();
 }
 
 // The camera for a dialogue the player triggers: framed on the first speaker who is a visible NPC,
@@ -140,12 +153,14 @@ export const collect = (o) => common(o, {
     if (this.got >= this.total) return 'done';
   },
   cleanup() { this.offJolt?.(); this.offJolt = null; },
-  // A rounded-up character: bubbles, then back to the plane seat or off to where they belong.
+  // A rounded-up character: bubbles, then back to the plane seat or off to where they belong. A
+  // scene that starts meanwhile (julafton's party right after the last guest) cuts the bubbles and
+  // has placed the guest itself: a late sendTo would pull him out of the group shot.
   touched(g, m, e) {
     e.alive = false;
     audio.pickup();
     (async () => {
-      await bubbles(g, m, o.lines?.[e.key]);
+      if (!(await bubbles(g, m, o.lines?.[e.key]))) return;
       if (g.missions.m !== m) return;
       const n = e.npc;
       if (o.seatOnTouch) {

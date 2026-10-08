@@ -23,7 +23,7 @@ import { dist, yawTo } from '../../../util.js';
 // ---------------------------------------------------------------------------------------------
 // Shared helpers
 
-export const COMMON = ['checkpoint', 'panicFails', 'lockMeter', 'shame', 'oleBarks', 'timedCues', 'startCue', 'doneCue', 'retryAt'];
+export const COMMON = ['checkpoint', 'panicFails', 'lockMeter', 'shame', 'oleBarks', 'timedCues', 'startCue', 'doneCue', 'retryAt', 'retryCar'];
 export function common(o, stage) {
   for (const k of COMMON) if (o[k] !== undefined) stage[k] = o[k];
   stage.o = o;
@@ -212,6 +212,31 @@ function clearSpot(g, car, r = 7) {
   }
 }
 
+// The common option `retryCar: { at, type?, name?, passenger?, rider?, park? }` (DESIGN §9.4 item 3),
+// called by the runner on a retry from that checkpoint, on the fresh `m` before the stage starts.
+// Without `type` the car is the one the player last drove (`prev`, if it is still in one piece:
+// repaired), else a spare hatch he keeps; with `type` it is a new mission car (named `name`), like
+// the one it stands in for (bodega's pig truck went with the failed mission's cars). It waits at
+// `at` with `passenger` seated and `rider` as a bust, and the player at the wheel; with `park` the
+// player stays on foot at `retryAt` and the car is parked for a later stage.
+export function retryCar(g, m, rc, prev) {
+  const s = at(rc.at), yaw = s.yaw ?? 0;
+  let car = !rc.type && prev && !prev.dead && !prev.locked && g.cars.includes(prev) ? prev : null;
+  if (car) { if (car.hp < car.spec.hp) car.repair(); }
+  else {
+    car = g.spawnMissionCar(m, rc.type || 'hatch', s.x, s.z, yaw, { name: rc.name });
+    if (!rc.type) m.cars.pop();   // the player keeps a spare (as race's)
+  }
+  car.ai = null;
+  car.place(s.x, s.z, yaw);
+  clearSpot(g, car);
+  if (rc.passenger) seatIn(g, rc.passenger, car, -1);
+  if (rc.rider) addRiders(g, m, car, [rc.rider], { hide: true });
+  if (rc.park) car.ctrl.park = true;
+  else { g.enterCar(car); g.cam.yaw = yaw; g.cam.snapNext = true; }
+  return car;
+}
+
 // Abandoned cars (unlocked, unnamed, no driver, no AI, not the player's) standing in the lanes of
 // a mission route are removed at init: a route car would otherwise wait behind them for ever (e.g.
 // the car the player left on the road when he took over the pig truck). A named parked car the
@@ -257,15 +282,20 @@ function closeCourse(g, nodes, end, racers) {
 }
 
 // ---------------------------------------------------------------------------------------------
-// getInCar: car? (named, recreated if wrecked) · missionCar? (a car in m.cars) · passenger? ·
-// rider? / riders? · hideRiders? · any = true · say?
+// getInCar: car? (named, recreated if wrecked) · atHome? (with `car`: a car the player is not in
+// goes back to its parking spot first, e.g. bus 17 on a retry) · missionCar? (a car in m.cars;
+// wrecked before the player is in it = fail) · passenger? · rider? / riders? · hideRiders? ·
+// any = true · say?
 
 export const getInCar = (o = {}) => common(o, {
   text: o.text || S.getInCar,
   init(g, m) {
     this.car = null;
+    this.owner = null;
     if (o.car) {
       this.car = g.ensureNamedCar(o.car);
+      const h = this.car?.home;
+      if (o.atHome && h && this.car !== g.playerCar) this.car.place(h.x, h.z, h.yaw);
       if (this.car && this.car.locked) {
         const c = this.car;
         c.locked = false;
@@ -283,6 +313,7 @@ export const getInCar = (o = {}) => common(o, {
         if (c.driverBust) { c.tilt.remove(c.driverBust); c.driverBust = null; }
         const d = c.driver;
         if (d && d !== g.player) {
+          this.owner = d.def?.name || null;
           const e = g.exitSpot(c, 1);
           g.unseat(d, e.x, e.z);
           d.busy = true;
@@ -306,6 +337,8 @@ export const getInCar = (o = {}) => common(o, {
       this.car = g.ensureNamedCar(o.car);
       this.setup(g, m);
     }
+    // A wrecked mission car cannot come back: fail (a retry starts over), never a soft lock.
+    if (o.missionCar && this.car?.dead && g.playerCar !== this.car) return { fail: this.owner ? fmt('wreckedRide', { name: this.owner }) : S.wrecked };
     const pc = g.playerCar;
     if (!pc) return;
     if (o.any === false && this.car && pc !== this.car) return;
@@ -452,6 +485,9 @@ export const dropoff = (o) => common(o, {
 // follow: type · color? · carName? · driver (who) · passenger? · riders? · hideRiders? · start ·
 // via · to (kerbside) · maxDist · minDist? · minGrace = 2 · minText? · cruise = 12 · wobble? ·
 // arriveDist = 35 · radio?
+// The tail starts when the player is in a car within 40 m; until then there is no distance bar.
+// minDist counts only once the player has trailed the quarry (behind it, at least minDist back):
+// a quarry that starts towards the player and drives past him never fails the stage head-on.
 
 export const follow = (o) => common(o, {
   text: o.text,
@@ -479,13 +515,15 @@ export const follow = (o) => common(o, {
     this.close = 0;
     this.radio = o.radio ? new RadioSeq(o.radio, { first: 8, gap: [10, 10], who: dk }) : null;
     this.started = false;
+    this.trailed = false;
   },
   target() { return { x: this.car.x, z: this.car.z, r: 0, follow: true }; },
   obj(g) {
+    if (!this.started) return {};   // still driving to the waiting car: no red "losing" bar yet
     const f = g.focus();
     const d = dist(f.x, f.z, this.car.x, this.car.z), mx = o.maxDist;
     const bar = 1 - Math.min(1, d / mx);
-    const tooClose = o.minDist != null && d < o.minDist;
+    const tooClose = o.minDist != null && this.trailed && d < o.minDist;
     const losing = d > mx * 0.75;
     const out = { bar, barLabel: tooClose ? S.tooClose : losing ? S.losing : S.distance, barColor: tooClose || losing ? '#ff4a3a' : '#5fd35f' };
     if (o.minDist != null) { out.zone = [0, 1 - o.minDist / mx]; out.marker = bar; }
@@ -505,7 +543,11 @@ export const follow = (o) => common(o, {
     if (this.arrived && d < (o.arriveDist ?? 35)) return 'done';
     if (d > o.maxDist) { this.lose += dt; if (this.lose > 3) return { fail: fmt('lost', { name: this.name }) }; }
     else this.lose = Math.max(0, this.lose - dt);
-    if (o.minDist != null && d < o.minDist) {
+    if (o.minDist != null && !this.trailed) {
+      const c = this.car;   // behind the quarry, at least minDist back
+      this.trailed = d >= o.minDist && (f.x - c.x) * Math.sin(c.yaw) + (f.z - c.z) * Math.cos(c.yaw) < 0;
+    }
+    if (this.trailed && d < o.minDist) {
       this.close += dt;
       this.sub = o.minText || S.tooClose;
       if (this.close > (o.minGrace ?? 2)) return { fail: o.minText || S.tooClose };
@@ -793,7 +835,8 @@ export const grab = (o) => common(o, {
 // scene: lines [[who, text, cue?]] · frame? [a, b] · cam? {at, dist, height} · place? · anim?
 // {key: flag} · exitCar?. Runs: (with place/exitCar: exitCar(true) first) -> place -> camera
 // (frame, or cam, or the player alone) -> dialogue -> camera back; doneCue applies on 'done'.
-// With `frame` only, car-seated characters stay seated (their x/y/z are live).
+// With `frame` only, car-seated characters stay seated (their x/y/z are live) and the car stops
+// dead first: the camera is set once, and a car still rolling slid out of the shot.
 
 export const scene = (o) => common(o, {
   text: o.text || '',
@@ -801,6 +844,7 @@ export const scene = (o) => common(o, {
     this.done = false;
     (async () => {
       if (o.place || o.exitCar) g.exitCar(true);
+      else if (g.playerCar) { const c = g.playerCar; c.place(c.x, c.z, c.yaw); }
       for (const [k, v] of Object.entries(o.place || {})) g.placeNpc(k, ...v);
       for (const [k, flag] of Object.entries(o.anim || {})) { const n = g.npc(k); if (n) n.anim[flag] = true; }
       if (o.frame) g.cinematic(g.npc(o.frame[0]), g.npc(o.frame[1]));

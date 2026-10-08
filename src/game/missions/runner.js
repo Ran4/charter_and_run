@@ -5,8 +5,11 @@
 //     idleAnim?: { key: flag | [flags] },   // held on the giver/extras while idle at `at`
 //     onEnd?(g, reason) }   // reason: 'complete' | 'fail' | 'abort'
 // States: idle | intro | running | outro | failed. Frozen after Phase 0 (owner none).
+// A checkpoint stage may carry `retryAt` (where a retry starts) and `retryCar` (the car waiting
+// there; kinds/core.js retryCar).
 
 import { MISSIONS } from './index.js';
+import { retryCar } from './kinds/core.js';
 import { lm } from '../../world/layout.js';
 import { audio } from '../../audio.js';
 import { hud } from '../hud.js';
@@ -28,6 +31,7 @@ export class MissionRunner {
     this.cpI = 0;            // last checkpoint stage
     this.stageT = 0;         // scaled seconds in the current stage
     this.posed = [];         // [key, flag] pairs set by syncIdleAnim
+    this.lastCar = null;     // the player's car when the mission failed (retryCar)
   }
 
   get current() { return MISSIONS[this.index] || null; }
@@ -79,11 +83,13 @@ export class MissionRunner {
     this.posed = want;
   }
 
-  startMission(from = 0) {
+  // `before(m)` runs on the fresh `m` before the first stage starts (a retry's `retryCar`).
+  startMission(from = 0, before = null) {
     const def = this.current;
     this.m = { def, cars: [], items: [], data: {} };
     this.stageI = from;
     this.state = 'running';
+    before?.(this.m);
     this.startStage();
   }
 
@@ -239,6 +245,7 @@ export class MissionRunner {
     if (this.state !== 'running') return;
     const def = this.m.def;
     this.state = 'failed';
+    this.lastCar = g.playerCar;
     audio.jingle('fail');
     hud.showBanner(S.failed, reason, 'bad', 0);
     this.cleanupMission();
@@ -248,14 +255,15 @@ export class MissionRunner {
     this.failT = 0;
   }
 
-  // While failed: E retries from the last checkpoint, Q (or 15 s) gives up.
+  // While failed: E retries from the last checkpoint, Q gives up. No time-out: giving up loses the
+  // checkpoint and a restart pays `cost` again, so it is always the player's choice.
   updateFailed(dt) {
     if (this.state !== 'failed') return;
     this.failT += dt;
     const g = this.g;
     hud.setPrompt(this.failT > 0.8 ? S.retryPrompt : '');
     if (this.failT > 0.8 && g.input.pressed('interact')) this.retry();
-    else if (this.failT > 0.8 && (g.input.keyPressed('KeyQ') || this.failT > 15)) this.abort();
+    else if (this.failT > 0.8 && g.input.keyPressed('KeyQ')) this.abort();
   }
 
   retry() {
@@ -276,6 +284,8 @@ export class MissionRunner {
     }
     const cp = def.stages[this.cpI]();
     const spot = g.approachSpot(cp.retryAt ?? def.at);
+    const prev = g.playerCar || this.lastCar;
+    this.lastCar = null;
     if (g.playerCar) g.exitCar(true);
     if (g.player.seatId) g.standPlayer();
     g.player.state = 'normal';
@@ -283,7 +293,9 @@ export class MissionRunner {
     g.cam.snapNext = true;
     hud.showBanner(def.title, S.retrySub, 'mission', 2000);
     audio.jingle('start');
-    this.startMission(this.cpI);
+    // `retryCar`: the car waits at its spot (the player at the wheel unless `park`) before the
+    // checkpoint stage's init, which may read g.playerCar (destroy.playerDamageScale).
+    this.startMission(this.cpI, cp.retryCar ? (m) => retryCar(g, m, cp.retryCar, prev) : null);
   }
 
   abort() {
@@ -293,6 +305,7 @@ export class MissionRunner {
     const def = this.m?.def || this.current;
     if (this.state === 'running') this.cleanupMission();
     this.state = 'idle';
+    this.lastCar = null;
     this.m = null;
     this.stage = null;
     def?.onEnd?.(g, 'abort');

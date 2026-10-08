@@ -584,7 +584,10 @@ export const CAM_CABIN = { pivotH: 1.5, dist: 6.5, pitchMin: 0.72, pitchMax: 1.1
   0.55); GuideArrow and Beacon are above the invisible ceiling and stay visible. Any marker
   shape (the giver's "!", the Beacon's arrow, the GuideArrow) hides while its centre is within 3 m
   of the camera (`main.camNear`): the z-clamped aisle eye is only 2.5 m above the seats, and the
-  "!" over Ole in 14A filled a quarter of the frame. The beams stay. (Phase 2, both levels.)
+  "!" over Ole in 14A filled a quarter of the frame. The beams stay. (Phase 2, both levels.) The
+  giver's "!" also hides while the player is within 3 m of the giver (Phase 3, both levels): the
+  steep cabin eye 4–5 m from it put a quarter-screen "!" over Stig at the cabin door, in 14B and at
+  the gate, and within 3 m the talk prompt (3.4 m) names the giver anyway.
 
 ### 5.4 Seat map
 
@@ -1601,9 +1604,11 @@ gently while Lasse's welcome speech plays. Ends in the overbooked hotel and Ole'
 - lasse: "SunTrips buss nummer 17 står där borta!"  [F]
 
 **Stages:**
-1. `getInCar({ car: 'buss17', any: false, passenger: 'ole', riders: ['majsan', 'siv', 'fruStorch', 'herrStorch'], hideRiders: true, lockMeter: true, text: 'Hoppa in i SunTrips buss nummer 17' })`
+1. `getInCar({ car: 'buss17', atHome: true, any: false, passenger: 'ole', riders: ['majsan', 'siv', 'fruStorch', 'herrStorch'], hideRiders: true, lockMeter: true, text: 'Hoppa in i SunTrips buss nummer 17' })`
    (`passenger` is seated in the bus at init; `riders` are decorative window busts and
-   `hideRiders` hides those NPCs for the mission so nobody appears twice.)
+   `hideRiders` hides those NPCs for the mission so nobody appears twice. `atHome` (Phase 3)
+   puts the bus back on its bay at init: a retry starts at `airport` with the bus where the
+   timer's T_ref assumes it, not wherever the failed drive left it.)
 2. `goto({ to: 'flamencoDrive', radius: 12, inCar: true, passenger: 'ole', stop: true, timer: 54, failText: 'Gästerna missade välkomstdrinken.', smooth: { label: 'ÅKSJUKA', failText: 'Någon blev åksjuk i bussen!' }, text: 'Kör gruppen till Hotell Flamenco – mjukt!', radio: [...] })`  ([N] for the texts)
    radio (`[who, text, {gap}]`, gap = seconds after the previous line):
    - lasse: "Hjärtligt välkomna till Nueva Estocolmo och SunTrip!"  [F]  {gap: 4}
@@ -2041,12 +2046,15 @@ stage = {
   timedCues?: [[t, cue]],      // ticked by the runner on scaled stage time
   doneCue?: cue,               // applied when the stage returns 'done'
   retryAt?: landmark,          // checkpoint retry spot (§9.4 item 3)
+  retryCar?: { at, type?, name?, passenger?, rider?, park? },   // the car waiting on a retry
+                               // from this checkpoint (§9.4 item 3; Phase 3)
 }
 ```
 
 **Normative:** every kind factory copies exactly these keys from its options onto the returned
-stage object: `checkpoint panicFails lockMeter shame oleBarks timedCues startCue doneCue retryAt`
-(Bigmouth's `({...pickup(), shame: true})` pattern). No other option name is read by the runner.
+stage object: `checkpoint panicFails lockMeter shame oleBarks timedCues startCue doneCue retryAt
+retryCar` (Bigmouth's `({...pickup(), shame: true})` pattern). No other option name is read by the
+runner.
 Phase 0a: the factories also keep their whole option object as `stage.o` (read-only, for tests and
 the `missions` data checks); `kinds/core.js` exports `COMMON` and `common(o, stage)` for this.
 `timeline` reads only its own `events`; `interact` fires its own `useCue` on use; `mantra` its own
@@ -2061,7 +2069,7 @@ the `missions` data checks); `kinds/core.js` exports `COMMON` and `common(o, sta
 
 | kind | options | done / fail | test fields |
 |---|---|---|---|
-| `getInCar` | `car?` (named car, recreated if wrecked) · `missionCar?` (name of a car in `m.cars`) · `passenger?` (NPC seated in that car at init) · `rider?` / `riders?` (decorative busts) · `hideRiders?` (hide those NPCs for the mission) · `any = true` (set `any: false` whenever `car`/`missionCar` is given and only that car will do) · `say?` | player in a car (the named one if `any:false`) | `stage.car` |
+| `getInCar` | `car?` (named car, recreated if wrecked) · `atHome?` (Phase 3; with `car`: a named car the player is not in goes back to its parking spot at init, e.g. bus 17 on a retry) · `missionCar?` (name of a car in `m.cars`) · `passenger?` (NPC seated in that car at init) · `rider?` / `riders?` (decorative busts) · `hideRiders?` (hide those NPCs for the mission) · `any = true` (set `any: false` whenever `car`/`missionCar` is given and only that car will do) · `say?` | player in a car (the named one if `any:false`) / a `missionCar` wrecked before the player is in it ("Du kvaddade {driver}s bil!", the driver it was handed over from; else "KVADDAD!"; Phase 3, was a soft lock) | `stage.car` |
 | `goto` | `to` · `radius = 7` · `timer?` (seconds, or `(g, m) => seconds` evaluated at init: a timer that depends on where the stage starts; Phase 2) · `failText = 'Tiden är ute!'` · `inCar?` · `onFoot?` (must arrive on foot; sub "Kliv ur bilen!") · `passenger?` · `stop?` (speed < 2 to finish) · `smooth?: {label, failText}` · `fragile?: {label, failText}` · `fearRate?` (+n/s FLYGRÄDSLA) · `radio?: [[who, text, {gap?, ...cue}?]]` (gap = s after the previous line, default 9–13 random) · `overhear?: [{at, r, lines, radio?}]` · `awaitOverhear = false` (the stage cannot finish while a started overhear is still playing) | within radius (and stopped) / timer, bar | `stage.dest` |
 | `pickup` | `who` · `name` · `at` · `hello?` · `rider?` (bust added beside the passenger; the rider NPC is hidden while it rides) · `hideRiders?` (hide the rider NPC already at init) · `text?` | NPC seated as passenger | `stage.npc` |
 | `dropoff` | `who` · `at` · `riderOff?` (remove the rider bust, show the rider NPC beside) · `text` | NPC out at `at` | `stage.dest` |
@@ -2098,7 +2106,13 @@ Behaviour notes (normative):
   arrives within 7 m of `to`. Use kerbside landmarks (`grisfestGate`, `fatagaBus`,
   `grillpacoCurb`) for `to` and the block landmarks for the scenes.
 - **`follow.minDist`**: the bar shows a green band between `minDist` and `maxDist`; closer than
-  `minDist` for more than `minGrace` s fails with `minText`.
+  `minDist` for more than `minGrace` s fails with `minText`. Phase 3: the closeness counts only
+  once the player has **trailed** the quarry (behind it, i.e. `(player − car) · forward < 0`, and
+  at least `minDist` back); a quarry that starts towards the player (José in ropavieja) and
+  passes him never fails the stage head-on, while tailgating and overtaking still do.
+- **`follow` before the start** (Phase 3): until the tail starts (player in a car within 40 m)
+  `obj()` returns no bar, so no red "DU TAPPAR DEM!" while he is still driving to the waiting car;
+  the arrow and the minimap point at the car.
 - **`collect` roll motion** (flight): items stay in |x − 3000| ≤ 0.45, z velocity 0.6–1.4 m/s,
   reflect at lz +12.5 / −16; an item at the serving trolley (in the aisle) or beyond it as seen from
   the player rolls towards the player's side at ≥ 0.9 m/s (it rolls out from under the trolley;
@@ -2119,7 +2133,15 @@ Behaviour notes (normative):
 - **`haggle` staging** (Phase 0b): the seller is placed at `at` (offset 0, 1.2) unless already within
   4 m; when the player arrives on foot the `partner` steps out of the car (if he rode along) and
   stands beside the stall; `start`, `hit[round]` and `win` play as framed dialogues (the marker and
-  `stage.inZone` pause meanwhile), `miss` plays as bubbles so the rhythm keeps going.
+  `stage.inZone` pause meanwhile), `miss` plays as bubbles so the rhythm keeps going. The
+  dialogues frame **seller + partner** while the partner stands in the open (Phase 3: he does all
+  the haggling, and the seller + player two-shot showed him from behind or hidden by Stig), else
+  seller + player.
+- **`collect` with `who`**: on a touch the guest's `lines` play as bubbles, then `seatOnTouch` /
+  `sendTo` moves him. A dialogue or cutaway that starts meanwhile (julafton's party scene right
+  after the last guest) takes the live bubble down at once, plays no more lines and drops the
+  late move: the scene has placed everyone it needs (Phase 3; a late `sendTo` pulled Berra out of
+  the group shot to the pool bar).
 - **`smash.onFoot`**: a prop broken from a car does not count and is revived at once.
 - **`follow` / `race` routes** are cleared at init of abandoned cars (unlocked, unnamed, no driver,
   no AI, not the player's) standing within 3.5 m of a lane point: a route car would otherwise wait
@@ -2149,7 +2171,10 @@ Behaviour notes (normative):
 - **`smash`** calls `reviveProps(type, area)` at init (judge trap: retries must find intact
   plates), counts props of `type` within `area` whose `alive` went false after the stage began.
 - **`scene`** runs (with `place`/`exitCar`: `exitCar(true)` first) → `place` → `game.cinematic(frame)`
-  (or `cam`) → `game.dialog(lines)` → `endCinematic`.
+  (or `cam`) → `game.dialog(lines)` → `endCinematic`. Without `place`/`exitCar` a player in a car
+  stays seated and the car stops dead first (`car.place` at its own spot zeroes the velocity;
+  Phase 3): the framing is computed once, and a car still rolling under the dialogue brake slid
+  out of the shot (asnan's paint scene).
 
 ### 9.3 Dialogue lines and cues
 
@@ -2209,6 +2234,23 @@ Runner changes (Phase 0):
    stage whose action happens more than 60 m from `def.at` sets `retryAt` (the Phase-0 `missions`
    scenario asserts it from the data; a stage that repositions the player itself, like `race`, is
    exempt).
+   **The fail screen** (`updateFailed`): after 0.8 s, **E** retries and **Q** gives up; there is
+   no time-out (Phase 3: a silent 15 s give-up lost the checkpoint and a restart pays `cost`
+   again).
+   **`retryCar`** (Phase 3; common option on the checkpoint stage, `kinds/core.js retryCar`): a
+   retry otherwise leaves the player on foot at `retryAt` with his car wherever the mission failed
+   and the mission cars gone, so a checkpoint before a timed drive could not be won. With
+   `retryCar: { at, type?, name?, passenger?, rider?, park? }` a car waits at `at` (landmark,
+   `{x, z, yaw}` or lane spot) before the stage's `init` runs (`startMission(from, before)`; e.g.
+   `destroy.playerDamageScale` reads `g.playerCar` at init): without `type`, the car the player
+   was driving when the mission failed (`runner.lastCar`, if it is still alive and in the world;
+   repaired), else a spare `hatch` he keeps; with `type`, a new mission car named `name` (in
+   `m.cars`, removed at the mission's end like the car it stands in for, e.g. bodega's
+   `grisbilFollow`). Unnamed parked cars on the spot are cleared; pick a spot without a named
+   parked car. `passenger` is seated in it (busy), `rider` rides as a bust (NPC hidden), and the
+   player takes the wheel, facing `at`'s yaw; with `park: true` the player stays on foot at
+   `retryAt` and the car is parked for a later stage (grisfest's dance floor, then the Tonga
+   drive). The `missions` data checks resolve `retryCar.at`, `passenger` and `rider`.
 4. **Common stage options** applied in `startStage()`: `lockMeter` → `shame.locked = true`
    (else false; pursuit mode only, §7.2); `shame` → `shame.forced`; `startCue` → `game.cue()`
    right before the kind's `init`; `timedCues` ticked in `update()` on scaled stage time;
@@ -2380,6 +2422,8 @@ Tags: all UI strings are [N] unless noted.
 
 `Paus` · `Fortsätt` · `Musik: på` / `Musik: av` / `Musik: samba` (P1, after the unlock) ·
 `Ljud: på` / `Ljud: av` · `Radera resan` → confirm `Vill du radera resan och börja om på Arlanda?`
+Opening the card refreshes both the Musik and the Ljud label from the live state (Phase 3: **N**
+mutes without touching the button, which then said `Ljud: på` while muted).
 
 ### 11.4 HUD elements
 
@@ -2407,7 +2451,7 @@ Tags: all UI strings are [N] unless noted.
 | go go go | `Kör, kör, kör!` |
 | stop the car | `Stanna bilen!` |
 | losing / distance / too close | `DU TAPPAR DEM!` / `AVSTÅND` / `FÖR NÄRA!` |
-| wrecked X's ride | `Du kvaddade {name}s bil!` |
+| wrecked X's ride | `Du kvaddade {name}s bil!` (`follow`'s quarry; Phase 3 also `getInCar`'s wrecked `missionCar`, `{name}` = the driver it was handed over from: "Du kvaddade Grisbondens bil!") |
 | lost X | `Du tappade bort {name}!` |
 | race places | `1:A · KONTROLL {i}/{n}` / `2:A · KONTROLL {i}/{n}` |
 | go | `KÖR!` |
@@ -2555,7 +2599,7 @@ orange-violet grisfest night → sunset on Christmas Eve.
 
 ### 13.3 Sky / fog / light palettes (fog colour = sky horizon = `body` background, always together)
 
-`setSkyPalette({ top, horizon, fogNear, fogFar, sun, sunI, hemiSky, hemiGround, hemiI })`.
+`setSkyPalette({ top, horizon, fogNear, fogFar, sun, sunI, hemiSky, hemiGround, hemiI, sunDir })`.
 
 | palette | top | horizon | fog near/far | sun / I | hemi sky / ground / I | cabin window |
 |---|---|---|---|---|---|---|
@@ -2569,6 +2613,13 @@ orange-violet grisfest night → sunset on Christmas Eve.
 
 Flight palettes keep `fogNear ≥ 40` so the interior is never fogged. Night: string lights are unlit
 `MeshBasicMaterial` bulbs (grisfest block, Kasbah neon).
+
+**Sun direction** (Phase 3): the island palettes carry `sunDir`, the sun's offset from the point
+`followSun` tracks (+z = south): `day` and `night` `[70, 130, 45]` (high, from the ESE, as before),
+`sunset` `[-105, 60, 60]` (low, ≈ 26°, from the WSW: 28° N in December), so the julafton mantra and
+the Rio card get long shadows pointing away from the sunset instead of short noon shadows towards
+it. The flight palettes have none and keep the default `[70, 130, 45]`; every island palette sets
+it, so switching back restores it. The 150 m shadow frustum holds the long shadows.
 
 ### 13.4 CSS tokens (style.css; WP-H)
 
@@ -2791,9 +2842,10 @@ list, `got.records/mosquitoes`, `spawnMuscle`, `'hydrant'`/`'pump'` special case
 ### 14.4 gfx.js (Phase 0)
 
 ```js
-export function setSkyPalette({ top, horizon, fogNear, fogFar, sun, sunI, hemiSky, hemiGround, hemiI })
+export function setSkyPalette({ top, horizon, fogNear, fogFar, sun, sunI, hemiSky, hemiGround, hemiI, sunDir })
   // sky uniforms (sky material stashed as MAT.sky), scene.fog colour/near/far, document.body bg,
-  // sun colour/intensity, hemi colours/intensity. Missing fields keep their value.
+  // sun colour/intensity, hemi colours/intensity, sunDir [x, y, z] = the sun's offset from the
+  // followSun point (Phase 3, §13.3). Missing fields keep their value.
 export function setCloudsVisible(on)     // MAT._clouds.visible
 export function setShadows(on)           // sun.castShadow
 export function signMesh(text, w, h, opts) -> Mesh   // opts.double (Polish): adds a child plane
@@ -2815,6 +2867,20 @@ cam.cutTo({ x, y, z }, { x, y, z })   // cine pos/look; release() returns
 // on-foot branch: pivotH/dist/fov from profile; pitch clamped to [pitchMin, pitchMax] in both the
 // mouse branch and every frame; pull-in skipped when noPull.
 ```
+
+**Pull-in** (Phase 3; on foot and in cars, no `noPull` profile): the pivot→eye sight line is
+tested with `segmentBlocked(…, 'prop', 0.25)` (0.25 m samples; at 0.8 m palm trunks and poles were
+missed) and the eye stops 0.45 m (level) short of the first sample inside a solid, but never
+closer than `ARM` 1.6 m. With less level room than that arm allows at the current pitch (his back
+to a wall), the eye **climbs** on the 1.6 m arm (`pitch = acos(room / 1.6)`); past `CAP` 1.25 rad
+it stays at that angle, moves in over the head (level offset = the room, ≥ 0.05 m) and looks
+further ahead instead (as the cabin `clampPitch`). Until Phase 3 the 1.6 m floor put the eye
+inside the wall (a one-colour frame at 2.4–8.9 % of standable spots × 8 headings in the hotel and
+centre blocks); a sweep of the real rig over the same spots finds 0. Bushes and other `prop`
+solids stay see-through by design. Camera ceilings (§14.7) still cap the eye under registered
+roofs. **Dialogue framing** (`frame`, `frameOne` without a profile): the side whose sight line is
+clear; when both are blocked, the side with more room, the eye 0.45 m short of the solid (≥ 1.6 m
+out) instead of inside a house (fataga's 13 m two-shot).
 
 ### 14.6 Actors (Phase 0 minimal; WP-E owns afterwards)
 
@@ -2923,6 +2989,8 @@ export function propsOfType(type, { x, z, r }) -> props[]
 
 // world/collision.js: segmentBlocked returns the nearest hit (min t over all blocks); the hit is
 //   tracked as an integer sample index (0.8 m samples), so it is exact to the sample (Polish)
+//   segmentBlocked(ax, az, bx, bz, y, ignoreKind = 'prop', step = 0.8) (Phase 3: `step`; the
+//   chase camera samples every 0.25 m, §14.5)
 // world/collision.js (Phase 2): camera ceilings, not solids (nothing collides with them)
 ceiling(minX, minZ, maxX, maxZ, under, top);  ceilingOver(x, z, y, margin = 0) -> lowest ceiling over (x, z) with under > y, or null
 //   Frame.ceiling(lx, lz, w, d, under, top) registers one from a local rectangle. CamRig.update (on
@@ -3773,3 +3841,31 @@ Integration on `main` (§15.3). Entries name the step they belong to.
   - Re-measured, unchanged: vischan 25.8 s (median of 8 clean over the gate run and two fix runs;
     a single run of 3 gives 25.4–26.2 depending on traffic) → 31; julafton guests 72.4 s (median of
     8 clean in 6 runs, 72.1–74.5) → 87.
+
+## Changelog (Phase 3)
+
+The QA loop (§15.4): critics, triage, serial fixers on `main`. Lines are prefixed with the round and
+the fixer's group.
+- r1 spine: `retryCar` common option (§9.1, §9.4 item 3): a checkpoint retry puts a car at the spot
+  (the last car repaired, a spare hatch, or a typed named mission car; passenger, rider; `park`),
+  before the stage's init (`runner.startMission(from, before)`, `runner.lastCar`); data checks
+  resolve its landmark and characters; new `kinds` checks.
+- r1 spine: the fail screen waits for E or Q; the 15 s auto give-up is gone (§9.4 item 3).
+- r1 spine: `getInCar.atHome` (§9.2) and buss17 stage 0 `atHome: true` (§8.6, fixture): a retry
+  finds the bus on its bay.
+- r1 spine: `getInCar` fails when its `missionCar` is wrecked before the player is in it ("Du
+  kvaddade Grisbondens bil!", existing `wreckedRide`; §9.2, §11.5): was a soft lock in bodega.
+- r1 spine: `follow.minDist` counts only after the player has trailed the quarry, and `follow.obj`
+  shows no bar before the tail starts (§9.2): José driving at the player no longer fails ropavieja.
+  `CAL=follow calibrate`: all three tails in band, no timer involved.
+- r1 spine: `scene` without `place`/`exitCar` stops the player's car dead first (§9.2).
+- r1 spine: `collect` bubbles end and the late `sendTo`/`seatOnTouch` is dropped when a dialogue or
+  cutaway starts meanwhile (§9.2): Berra stays in the julafton group shot.
+- r1 spine: `haggle` dialogues frame seller + partner (§9.2): Ole, who does the haggling, faces the
+  camera.
+- r1 spine: chase camera pull-in samples every 0.25 m, stops 0.45 m short and climbs on a 1.6 m arm
+  (cap 1.25 rad, then looks ahead) instead of entering the wall; `frame`/`frameOne` check the second
+  side (§14.5); `segmentBlocked` takes a `step` (§14.7). Sweep: 0 eyes in a solid (was 2.4–8.9 %).
+- r1 spine: the giver's "!" also hides within 3 m of the player (§5.3).
+- r1 spine: the pause card refreshes the Ljud label (§11.3).
+- r1 spine: island palettes carry `sunDir`; the sunset sun is low in the WSW (§13.3, §14.4).

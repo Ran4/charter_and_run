@@ -61,11 +61,12 @@ export const haggle = (o) => common(o, {
     if (this.phase === 'approach') return {};
     return { bar: 0, zone: this.zone, marker: this.mk, barLabel: `${o.barLabel || ''} ${this.price} pta`.trim() };
   },
-  // Play a list of lines as a framed dialogue (seller + player).
+  // Play a list of lines as a framed dialogue: seller + partner (he does the haggling; framed with
+  // the player he stood behind him or was hidden by him), else seller + player.
   async talk(g, lines) {
     if (!lines?.length) return;
-    const seller = g.npc(o.who);
-    if (seller && seller.state !== 'hidden') g.cinematic(seller, g.player);
+    const seller = g.npc(o.who), partner = o.partner && g.npc(o.partner);
+    if (seller && seller.state !== 'hidden') g.cinematic(seller, partner && partner.state === 'normal' && !partner.car ? partner : g.player);
     else g.cinematicOne(g.player);
     await g.dialog(lines);
     g.endCut();

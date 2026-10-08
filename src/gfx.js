@@ -322,8 +322,10 @@ function addSky() {
 }
 
 // Sky gradient, fog, page background, sun and hemisphere light in one go (DESIGN §13.3: fog colour
-// = sky horizon = body background, always together). Missing fields keep their value.
-export function setSkyPalette({ top, horizon, fogNear, fogFar, sun: sunC, sunI, hemiSky, hemiGround, hemiI } = {}) {
+// = sky horizon = body background, always together). Missing fields keep their value. sunDir
+// [x, y, z] = the sun's offset from the point it follows (followSun).
+export function setSkyPalette({ top, horizon, fogNear, fogFar, sun: sunC, sunI, hemiSky, hemiGround, hemiI, sunDir } = {}) {
+  if (sunDir) SUN_OFFSET.set(...sunDir);
   if (top !== undefined) MAT.sky.uniforms.top.value.set(top);
   if (horizon !== undefined) {
     MAT.sky.uniforms.horizon.value.set(horizon);

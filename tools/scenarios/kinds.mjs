@@ -4,7 +4,10 @@
 //               the runner and game.cue accept the real mission data.
 //   kinds     — targeted checks of options the story never fails on: haggle misses, follow minDist,
 //               smooth/fragile meters, carry spills, timeline lockSeat, checkpoint retry with ambient
-//               cues and revived plates, grab at a wreck, scene exitCar, destroy without a spawn.
+//               cues and revived plates, grab at a wreck, scene exitCar, destroy without a spawn;
+//               Phase 3: follow before the start and head-on, retryCar (reused / typed / parked),
+//               getInCar atHome and a wrecked missionCar, a seated scene stops the car, collect
+//               bubbles cut by a scene.
 import { check, missionDataProblems } from '../lib.mjs';
 import { untilStage, warpLm, footAt, carBeside, touchAll, followCar, breakAll, raceCheckpoints, haggleWin } from '../story/common.mjs';
 
@@ -273,7 +276,19 @@ export const SCENARIOS = {
     await T.fresh('&mission=9');
     await useSynthetic(T, `{ stages: [() => K.follow({ type: 'hatch', carName: 'joseBil', driver: 'jose', passenger: 'siv', riders: ['mamma'], start: { lane: [[5, 3], [4, 3]], t: 12 }, via: [[4, 4], [3, 4]], to: 'grillpacoCurb', maxDist: 75, minDist: 14, minGrace: 2, minText: 'TOO-CLOSE', cruise: 10, text: 'f' })] }`);
     await T.startMission();
+    const o0 = await T.ev(() => __game.missions.objective());
+    check(o0.bar === undefined && !o0.barLabel, 'follow: no distance bar before the tail starts');
     await T.anyCar();
+    // Parked in the quarry's path inside minDist, facing it: it drives up to him, never "too close".
+    await T.ev(() => { const g = __game, c = g.missions.stage.car; g.debugWarp(c.x + Math.sin(c.yaw) * 9, c.z + Math.cos(c.yaw) * 9, c.yaw + Math.PI); });
+    let close = 0;
+    for (let k = 0; k < 10; k++) {
+      await T.sleep(300);
+      if (await T.ev(() => { const g = __game, c = g.missions.stage?.car, f = g.focus(); return !!c && Math.hypot(c.x - f.x, c.z - f.z) < 14; })) close++;
+    }
+    const ho = await T.ev(() => { const g = __game, st = g.missions.stage; return { state: g.missions.state, started: st?.started, trailed: st?.trailed }; });
+    T.log('follow head-on', JSON.stringify({ ...ho, closeSamples: close }));
+    check(ho.state === 'running' && ho.started && close >= 8, 'follow minDist: 3 s head-on inside minDist in front of the quarry never fails');
     await T.ev(() => { const g = __game, c = g.missions.stage.car; g.debugWarp(c.x - Math.sin(c.yaw) * 25, c.z - Math.cos(c.yaw) * 25, c.yaw); });
     await T.sleep(1500);
     await T.shot('kinds_follow');
@@ -369,6 +384,127 @@ export const SCENARIOS = {
     await T.tap('KeyQ');
     await T.frames(3);
     check(await T.ev(() => __game.sky === 'day'), 'abort: onEnd/restoreAmbience back to day');
+
+    // --- retryCar (§9.4 item 3): the last car back at the spot with the passenger; a typed mission
+    //     car (named, passenger + rider) in place before the stage's init reads g.playerCar; `park`.
+    await T.fresh('&mission=8');
+    await useSynthetic(T, `{ stages: [
+      () => K.getInCar({}),
+      () => K.goto({ to: 'vischan', inCar: true, timer: 90, text: 'g', checkpoint: true, retryAt: 'playa', retryCar: { at: 'tongaLot', passenger: 'berra' } }),
+      () => K.destroy({ type: 'guardia', timer: 90, text: 'd', playerDamageScale: 0.3, checkpoint: true, retryAt: 'grisfestGate', retryCar: { at: 'grisfestGate', type: 'grisbil', name: 'grisbilFollow', passenger: 'berra', rider: 'robban' } }),
+      () => K.goto({ to: 'playa', onFoot: true, timer: 90, text: 'p', checkpoint: true, retryAt: 'flamencoDeck', retryCar: { at: { x: -86, z: -202.75, yaw: -Math.PI / 2 }, park: true } }),
+    ] }`);
+    await T.startMission();
+    await T.anyCar();
+    await untilStage(T, 1);
+    const failRetry = async () => {
+      await T.ev(() => __game.missions.fail('RETRY'));
+      await T.sleep(1000);
+      await T.tap('KeyE');
+      await T.until(() => __game.missions.state === 'running', 5000);
+      await T.frames(3);
+    };
+    const c0 = await T.ev(() => { const g = __game; window.__c0 = g.playerCar; g.debugWarp(g.player.x + 60, g.player.z, 0); g.playerCar.damage(40, g); return g.playerCar.hp; });
+    await failRetry();
+    let rc = await T.ev(async () => {
+      const K = await import('/src/game/missions/kinds/core.js');
+      const g = __game, c = g.playerCar, s = K.at(g.missions.stage.retryCar.at);
+      return { i: g.missions.stageI, same: c === window.__c0, d: Math.hypot(c.x - s.x, c.z - s.z), berra: g.npc('berra').car === c, hp: c.hp, full: c.spec.hp };
+    });
+    T.log('retryCar reused', c0, JSON.stringify(rc));
+    check(rc.i === 1 && rc.same && rc.d < 1.5 && rc.berra && rc.hp === rc.full, 'retryCar: the last car (repaired) waits at the spot with the passenger, player at the wheel');
+    await warpLm(T, 'vischan');
+    await untilStage(T, 2);
+    await failRetry();
+    rc = await T.ev(() => {
+      const g = __game, m = g.missions, c = g.playerCar, l = window.__lm('grisfestGate');
+      return { i: m.stageI, type: c?.type, name: c?.name, d: Math.hypot(c.x - l.x, c.z - l.z), mission: m.m.cars.includes(c), berra: g.npc('berra').car === c, robban: g.npc('robban').state === 'hidden' && c.riders.length === 1, ram: m.stage.ramCar === c && c.damageScale === 0.3 };
+    });
+    T.log('retryCar typed', JSON.stringify(rc));
+    check(rc.i === 2 && rc.type === 'grisbil' && rc.name === 'grisbilFollow' && rc.d < 1.5 && rc.mission && rc.berra && rc.robban && rc.ram, 'retryCar type: a named mission car with passenger and rider, entered before init (playerDamageScale)');
+    await T.ev(() => __game.missions.stage.car.damage(999, __game));
+    await untilStage(T, 3);
+    await failRetry();
+    rc = await T.ev(async () => {
+      const K = await import('/src/game/missions/kinds/core.js');
+      const g = __game, m = g.missions, s = K.at(m.stage.retryCar.at), a = g.approachSpot('flamencoDeck');
+      const dS = (q) => Math.hypot(q.x - s.x, q.z - s.z), byD = g.cars.slice().sort((p, q) => dS(p) - dS(q));
+      const c = dS(byD[0]) < 1.5 ? byD[0] : null;   // 1.5 m: passing traffic may nudge a parked car
+      const near = byD.slice(0, 3).map((q) => `${q.type}/${q.name || ''}${q.traffic ? '/T' : ''}@${dS(q).toFixed(1)}`);
+      return { i: m.stageI, onFoot: !g.playerCar, p: Math.hypot(g.player.x - a.x, g.player.z - a.z), car: !!c, spare: !!c && !c.name && !m.m.cars.includes(c), parked: !!c?.ctrl.park, near, s };
+    });
+    T.log('retryCar park', JSON.stringify(rc));
+    check(rc.i === 3 && rc.onFoot && rc.p < 1 && rc.car && rc.spare && rc.parked, 'retryCar park: the player on foot at retryAt, a spare car parked at the spot');
+    await T.ev(() => { const m = __game.missions; if (m.state === 'running') m.fail('x'); });
+    await T.sleep(900);
+    await T.tap('KeyQ');
+
+    // --- getInCar atHome: bus 17 left anywhere goes back to its bay (a buss17 retry).
+    await T.fresh('&mission=5');
+    await useSynthetic(T, `{ stages: [() => K.getInCar({ car: 'buss17', atHome: true, any: false, text: 'b' })] }`);
+    const awayB = await T.ev(() => { const g = __game, b = g.ensureNamedCar('buss17'); b.place(b.home.x + 150, b.home.z, 0); return Math.hypot(b.x - b.home.x, b.z - b.home.z); });
+    await T.startMission();
+    const homeB = await T.ev(() => { const b = __game.named.buss17; return Math.hypot(b.x - b.home.x, b.z - b.home.z); });
+    check(awayB > 100 && homeB < 0.5, `getInCar atHome: buss17 back at its bay (${awayB.toFixed(0)} m -> ${homeB.toFixed(1)} m)`);
+    await T.ev(() => __game.missions.fail('x'));
+    await T.sleep(900);
+    await T.tap('KeyQ');
+
+    // --- getInCar missionCar: wrecked before the player is in it = fail (was a soft lock).
+    await T.fresh('&mission=8');
+    await useSynthetic(T, `{ stages: [
+      () => ({ text: 's', init(g, m) { const p = g.player, c = g.spawnMissionCar(m, 'grisbil', p.x + 9, p.z, 0, { name: 'truck' }); g.seat(g.npc('grisbonde'), c, 1); }, update() { return 'done'; } }),
+      () => K.getInCar({ missionCar: 'truck', any: false, text: 'g' }),
+    ] }`);
+    await T.startMission();
+    await untilStage(T, 1);
+    await T.ev(() => __game.missions.stage.car.damage(999, __game));
+    await T.until(() => __game.missions.state === 'failed', 3000);
+    const wt = await T.ev(() => document.querySelector('.banner-sub').textContent);
+    T.log('wrecked missionCar', wt);
+    check(wt === 'Du kvaddade Grisbondens bil!', 'getInCar missionCar: a wrecked mission car fails the stage');
+    await T.sleep(900);
+    await T.tap('KeyQ');
+
+    // --- scene with `frame` only: the player's car stops dead (the camera is set once).
+    await T.fresh('&mission=7');
+    await useSynthetic(T, `{ stages: [() => K.getInCar({}), () => K.scene({ frame: ['ole', 'stig'], lines: [['ole', 'Hei.'], ['stig', 'Hej.'], ['ole', 'Ha det bra.'], ['stig', 'Hej då.']] }), () => K.goto({ to: 'playa', text: 'p' })] }`);
+    await T.startMission();
+    // Enter a car already doing 12 m/s (one evaluate: getInCar finishes on the next update).
+    await T.ev(() => {
+      const g = __game, p = g.player, c = g.cars.filter((q) => !q.locked && !q.dead && !q.ai && !q.noEnter).sort((a, b) => Math.hypot(a.x - p.x, a.z - p.z) - Math.hypot(b.x - p.x, b.z - p.z))[0];
+      c.place(p.x + 3, p.z, c.yaw);
+      g.enterCar(c);
+      c.vx = Math.sin(c.yaw) * 12; c.vz = Math.cos(c.yaw) * 12;
+      window.__p0 = { x: c.x, z: c.z };
+    });
+    await T.until(() => __game.missions.stageI >= 1, 3000);
+    await T.frames(40);
+    const sp = await T.ev(() => { const g = __game, c = g.playerCar; return { i: g.missions.stageI, moved: c ? Math.hypot(c.x - window.__p0.x, c.z - window.__p0.z) : -1 }; });
+    T.log('seated scene', JSON.stringify(sp));
+    check(sp.i >= 1 && sp.moved >= 0 && sp.moved < 1.5, 'scene frame-only: the car stops dead at the scene start (was 12 m/s)');
+    await T.ev(() => __game.missions.fail('x'));
+    await T.sleep(900);
+    await T.tap('KeyQ');
+
+    // --- collect: a scene that starts during a guest's bubbles cuts them and keeps its placement.
+    await T.fresh('&mission=12');
+    await useSynthetic(T, `{ stages: [
+      () => K.collect({ who: ['berra'], findAt: { berra: ['flamencoDeck', 0, 4] }, sendTo: { berra: ['flamencoBar', 0, 0] }, lines: { berra: [['stig', 'Berra! Julfesten!'], ['berra', 'Jag kommer, jag ska bara kolla en grej.']] }, text: 'c', barLabel: 'G' }),
+      () => K.scene({ place: { berra: ['flamencoPool', 2, 0] }, frame: ['berra', 'stig'], lines: [['berra', 'Ett.'], ['stig', 'Två.']] }),
+      () => K.goto({ to: 'playa', text: 'p' }),
+    ] }`);
+    await T.startMission();
+    await T.ev(() => { if (__game.playerCar) __game.exitCar(true); });
+    await touchAll(T);
+    await untilStage(T, 2);
+    await T.sleep(3500);
+    const gb = await T.ev(() => { const g = __game, n = g.npc('berra'), l = window.__lm('flamencoBar'); return { i: g.missions.stageI, bar: Math.hypot(n.x - l.x, n.z - l.z), bubbles: document.querySelectorAll('.bubble').length }; });
+    T.log('collect + scene', JSON.stringify(gb));
+    check(gb.i === 2 && gb.bar > 5, 'collect: a scene during the bubbles keeps the guest where it placed him (no late sendTo)');
+    await T.ev(() => __game.missions.fail('x'));
+    await T.sleep(900);
+    await T.tap('KeyQ');
 
     // --- destroy (no spawn: a node 70–130 m away) -> grab at the wreck; scene exitCar.
     await T.fresh('&mission=8');

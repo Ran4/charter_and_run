@@ -99,7 +99,7 @@ export const ISLAND_MISSIONS = [
     ],
     stages: [
       // Ole rides up front; the sisters and the Storchs are window busts (hidden as NPCs meanwhile).
-      () => getInCar({ car: 'buss17', any: false, passenger: 'ole', riders: ['majsan', 'siv', 'fruStorch', 'herrStorch'], hideRiders: true, lockMeter: true, text: 'Hoppa in i SunTrips buss nummer 17' }),   // [N]
+      () => getInCar({ car: 'buss17', atHome: true, any: false, passenger: 'ole', riders: ['majsan', 'siv', 'fruStorch', 'herrStorch'], hideRiders: true, lockMeter: true, text: 'Hoppa in i SunTrips buss nummer 17' }),   // [N]
       () => goto({
         to: 'flamencoDrive', radius: 12, inCar: true, passenger: 'ole', stop: true, timer: TIMERS.buss17Drive,
         failText: 'Gästerna missade välkomstdrinken.',                                           // [N]

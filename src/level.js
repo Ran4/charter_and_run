@@ -6,11 +6,13 @@ import { BOUND } from './world/layout.js';
 import { HOMES, MAP_LABELS, LEVEL_OUTFITS } from './content/index.js';
 import { METERS } from './meters.js';                 // §5.9, §7.1 (meters.js: Phase 0, then WP-H)
 
-// §13.3 island palettes (fog colour = sky horizon = body background).
+// §13.3 island palettes (fog colour = sky horizon = body background). sunDir = the sun's offset
+// from the shadow target (+z = south): high from the ESE by day and night, low from the WSW at
+// sunset (28° N in December), so the sunset shadows are long and point away from it.
 export const ISLAND_PALETTES = {
-  day: { top: 0x2a86e0, horizon: 0xf2e4c4, fogNear: 220, fogFar: 760, sun: 0xffe7b8, sunI: 2.9, hemiSky: 0xd8ecff, hemiGround: 0xa08060, hemiI: 1.45 },
-  night: { top: 0x141a3c, horizon: 0x3a2f4e, fogNear: 120, fogFar: 600, sun: 0x9fb4ff, sunI: 0.9, hemiSky: 0x5a6aa0, hemiGround: 0x3a2a20, hemiI: 0.9 },
-  sunset: { top: 0x3a4fa0, horizon: 0xf7a26b, fogNear: 200, fogFar: 760, sun: 0xffb070, sunI: 2.2, hemiSky: 0xffd8b0, hemiGround: 0x8a5a40, hemiI: 1.3 },
+  day: { top: 0x2a86e0, horizon: 0xf2e4c4, fogNear: 220, fogFar: 760, sun: 0xffe7b8, sunI: 2.9, hemiSky: 0xd8ecff, hemiGround: 0xa08060, hemiI: 1.45, sunDir: [70, 130, 45] },
+  night: { top: 0x141a3c, horizon: 0x3a2f4e, fogNear: 120, fogFar: 600, sun: 0x9fb4ff, sunI: 0.9, hemiSky: 0x5a6aa0, hemiGround: 0x3a2a20, hemiI: 0.9, sunDir: [70, 130, 45] },
+  sunset: { top: 0x3a4fa0, horizon: 0xf7a26b, fogNear: 200, fogFar: 760, sun: 0xffb070, sunI: 2.2, hemiSky: 0xffd8b0, hemiGround: 0x8a5a40, hemiI: 1.3, sunDir: [-105, 60, 60] },
 };
 
 export const LEVELS = {

@@ -8,6 +8,23 @@ import { THREE } from '../gfx.js';
 import { segmentBlocked, ceilingOver } from '../world/collision.js';
 import { clamp, damp, dampAngle } from '../util.js';
 
+// The chase eye's nearest distance to the pivot when a solid pulls it in (Bigmouth's 1.6 m floor),
+// and the steepest it climbs. A longer arm lifts the eye above awnings without a camera ceiling.
+const ARM = 1.6, CAP = 1.25;
+
+// A dialogue eye d m from (x, z) along (nx, nz), at height y: that side if its sight line is clear,
+// else the other side; if both are blocked, the side with more room, 0.45 m short of the solid (not
+// less than 1.6 m out). Until Phase 3 the flip never checked the second side, and a two-shot of
+// speakers 13 m apart put the camera inside a house on both sides (fataga).
+function clearSide(x, z, nx, nz, d, y) {
+  const seg = (s, step) => segmentBlocked(x, z, x + s * nx * d, z + s * nz * d, y, 'prop', step);
+  if (seg(1) < 0) return { x: x + nx * d, z: z + nz * d };
+  if (seg(-1) < 0) return { x: x - nx * d, z: z - nz * d };
+  const h1 = seg(1, 0.25), h2 = seg(-1, 0.25);   // fine samples: the eye must end up outside
+  const s = h2 > h1 ? -1 : 1, k = Math.max(1.6, Math.max(h1, h2) * d - 0.45);
+  return { x: x + s * nx * k, z: z + s * nz * k };
+}
+
 export class CamRig {
   constructor(cam) {
     this.cam = cam;
@@ -81,19 +98,32 @@ export class CamRig {
     let pitch = this.pitch;
     let d = dist;
     let hit = -1;
-    // Pull in if a building is in the way (not with a noPull profile: its eye is above every wall).
+    let h = null, ahead = 0;
+    // Pull in if a solid is in the way (not with a noPull profile: its eye is above every wall).
+    // The sight line is sampled every 0.25 m (0.8 m missed palm trunks and poles) and the eye stops
+    // 0.45 m (level) short of the first sample inside a solid, but not closer than ARM: with less
+    // room (his back to a wall) the eye climbs on the ARM instead; past CAP it moves in over his
+    // head at that angle and looks further ahead (as the cabin clamp below). Never inside the wall:
+    // the old 1.6 m floor put it there (a one-colour frame at 2–9 % of the spots in a block).
     if (!(pf && pf.noPull && !focus.car)) {
       const cp = Math.cos(pitch), sp = Math.sin(pitch);
       const tx = px - fx * cp * d, tz = pz - fz * cp * d, ty = py + sp * d;
-      hit = segmentBlocked(px, pz, tx, tz, Math.min(py, ty) + 0.3);
-      if (hit >= 0) d = Math.max(1.6, hit * d - 0.6);
+      hit = segmentBlocked(px, pz, tx, tz, Math.min(py, ty) + 0.3, 'prop', 0.25);
+      if (hit >= 0) {
+        const room = hit * cp * d - 0.45;   // level room behind the pivot
+        if (room >= cp * ARM) d = room / cp;
+        else {
+          d = ARM;
+          pitch = Math.acos(clamp(room / d, 0, 1));
+          if (pitch > CAP) { pitch = CAP; h = Math.max(0.05, room); ahead = d * Math.cos(pitch) - h; }
+        }
+      }
     }
-    let h = Math.cos(pitch) * d;
+    h ??= Math.cos(pitch) * d;
     // Cabin: keep the eye's z inside the cabin; steepen the pitch to keep the distance. Past
     // `clampPitch` the view would turn into a straight-down shot (and lookAt degenerates at 90°),
     // so the eye stays at the clamp and the camera looks further ahead instead: the sight line
     // keeps that angle and the player slides down the frame, with more of the cabin ahead in view.
-    let ahead = 0;
     if (pf && pf.clampZ && this.clampActive && !focus.car && Math.abs(fz) > 1e-3) {
       const ez = pz - fz * h;
       const cz = clamp(ez, pf.clampZ[0], pf.clampZ[1]);
@@ -163,10 +193,8 @@ export class CamRig {
       this.cine = { pos: new THREE.Vector3(mx + nx * d, headY + pf.cineUp, mz + nz * d), look: new THREE.Vector3(mx, headY, mz) };
       return;
     }
-    const d = Math.max(4.5, l * 1.6 + 2.5);
-    let px = mx + nx * d, pz = mz + nz * d;
-    if (segmentBlocked(mx, mz, px, pz, 1.5) >= 0) { px = mx - nx * d; pz = mz - nz * d; }
-    this.cine = { pos: new THREE.Vector3(px, Math.max(a.y, b.y) + top * 0.75 + 0.6, pz), look: new THREE.Vector3(mx, headY, mz) };
+    const p = clearSide(mx, mz, nx, nz, Math.max(4.5, l * 1.6 + 2.5), 1.5);
+    this.cine = { pos: new THREE.Vector3(p.x, Math.max(a.y, b.y) + top * 0.75 + 0.6, p.z), look: new THREE.Vector3(mx, headY, mz) };
   }
 
   // Frame one character, from in front of them (both modes).
@@ -179,9 +207,8 @@ export class CamRig {
       this.cine = { pos: new THREE.Vector3(a.x + fx * pf.cineSide, headY + pf.cineUp, a.z + fz * pf.cineSide), look: new THREE.Vector3(a.x, headY, a.z) };
       return;
     }
-    let px = a.x + fx * 3.6, pz = a.z + fz * 3.6;
-    if (segmentBlocked(a.x, a.z, px, pz, a.y + 1.4) >= 0) { px = a.x - fx * 3.6; pz = a.z - fz * 3.6; }
-    this.cine = { pos: new THREE.Vector3(px, headY + 0.6, pz), look: new THREE.Vector3(a.x, headY - 0.1, a.z) };
+    const p = clearSide(a.x, a.z, fx, fz, 3.6, a.y + 1.4);
+    this.cine = { pos: new THREE.Vector3(p.x, headY + 0.6, p.z), look: new THREE.Vector3(a.x, headY - 0.1, a.z) };
   }
 
   // A fixed cutaway: camera at pos looking at look ({x, y, z} each). release() returns.

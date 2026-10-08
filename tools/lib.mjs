@@ -185,6 +185,7 @@ export async function missionDataProblems(_unused, fixtureUrl) {
       for (const k of [...(o.frame || []), ...[].concat(o.who || []), o.duet, o.passenger, o.rider, ...(o.riders || []), o.partner, o.playerPassenger, o.oppPassenger]) npc(k, w);
       spk(o.driver, `${w} driver`);
       if (o.say) npc(o.say[0], `${w} say`);
+      if (o.retryCar) { lm(o.retryCar.at, `${w} retryCar`); npc(o.retryCar.passenger, `${w} retryCar`); npc(o.retryCar.rider, `${w} retryCar`); }
       for (const s of [o.seat, o.seated]) if (s && !g.cabin.seats[s]) P(`${w}: unknown seat '${s}'`);
       lines(o.lines, `${w} lines`);
       for (const r of o.radio || []) if (Array.isArray(r)) { spk(r[0], `${w} radio`); cue(r[2], `${w} radio`); }

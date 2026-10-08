@@ -289,12 +289,13 @@ export function circleVsObb(x, z, r, o, out) {
 }
 
 // Is the straight segment from a to b (at height y) blocked by anything taller than y? Returns the
-// fraction t (0..1) of the nearest hit along the segment, or -1 when clear.
+// fraction t (0..1) of the nearest hit along the segment, or -1 when clear. Sampled every `step` m:
+// the default 0.8 misses thin solids (a 0.4 m palm trunk, a pole); the camera uses 0.25.
 const _segOut = [];
-export function segmentBlocked(ax, az, bx, bz, y, ignoreKind = 'prop') {
+export function segmentBlocked(ax, az, bx, bz, y, ignoreKind = 'prop', step = 0.8) {
   queryBlocks(Math.min(ax, bx), Math.min(az, bz), Math.max(ax, bx), Math.max(az, bz), _segOut);
   const len = Math.hypot(bx - ax, bz - az);
-  const steps = Math.max(2, Math.ceil(len / 0.8));
+  const steps = Math.max(2, Math.ceil(len / step));
   // Track the hit as an integer sample index, so the early-out bound for later blocks is exact
   // (deriving it from the float fraction lost sample s-1 to rounding).
   let bestS = -1;

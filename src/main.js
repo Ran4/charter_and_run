@@ -189,7 +189,11 @@ class Game {
     audio.skid(0);
     audio.horn(false);
     if (on) audio.pauseLoops(); else audio.resumeLoops();
-    if (on) { const b = document.getElementById('music'); if (b) b.textContent = this.musicLabel(); }
+    if (on) {
+      const b = document.getElementById('music'); if (b) b.textContent = this.musicLabel();
+      // N mutes without touching the button: show the real state.
+      const sb = document.getElementById('sound'); if (sb) sb.textContent = audio.muted ? S.soundBtnOff : S.soundBtnOn;
+    }
     if (!on) { input.wantLock = true; input.lock(); this.last = performance.now(); }
   }
 
@@ -1702,8 +1706,10 @@ class Game {
       this.bang.show(true);
       this.bang.set(g.x, g.y + g.height + 0.9, g.z, this.time);
       // A camera right on top of the giver (cabin aisle, z-clamped eye 2.5 m above the seats) would
-      // get the "!" across the lens: hide it within 3 m (its beam stays).
-      this.bang.root.children[0].visible = !camNear(this.bang.root.position, 0.88);
+      // get the "!" across the lens: hide it within 3 m of the camera, and once the player is within
+      // 3 m of the giver (the steep cabin eye put it over Stig; the talk prompt names the giver
+      // then). Its beam stays.
+      this.bang.root.children[0].visible = !camNear(this.bang.root.position, 0.88) && dist(g.x, g.z, f.x, f.z) > 3;
       if (dist(g.x, g.z, f.x, f.z) > 25) target = { x: g.x, z: g.z };
     } else this.bang.show(false);
     const t = ms.target();
