@@ -69,7 +69,9 @@ continuing the build. The agents' reports from Phases 0–2 are in `notes/build-
   clean run on a sensible route keeps about 15–20 % of the time. Drives: ceil(1.2 × T_ref), on
   foot: ceil(1.25 × T_ref) (+0.5 s per target), random stages at the 75th percentile, rounded up
   to a whole second. Re-measure with `calibrate`/`calibflight` after changing a route, a car or
-  the world; never pad a timer to make a test pass, and update the §8 table and the fixture.
+  the world; never pad a timer to make a test pass, and update the §8 table and the fixture. A
+  random stage's raw run times go into `notes/calibration-samples.md` (pool only runs on the same
+  stage and autopilot code); `node tools/pool.mjs` derives its timer. Logs in a scratchpad are lost.
 - AI buses (steer 0.9, lane-path turns from 11 m) turn left fine but are too wide for right
   turns: mission bus routes turn left only.
 - Every scripted line in `src/content/*.js` and `src/game/missions/*.js` carries a source tag

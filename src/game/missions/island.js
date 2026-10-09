@@ -32,19 +32,21 @@ const FATAGA_STOP = { x: -240, z: -208.5, yaw: 0 };
 // the merged world with `calibrate` (DESIGN §8 "Timers and difficulty", table there): T_ref = the
 // median of clean autopilot runs (deterministic drives) or the 75th percentile (random spawns /
 // flee routes); on foot + 0.5 s per target. timer = ceil(1.2 × T_ref) driving, ceil(1.25 × T_ref)
-// on foot (whole seconds).
+// on foot (whole seconds). A random stage's timer is the rule on its current pool of raw runs in
+// notes/calibration-samples.md (`node tools/pool.mjs`); the on-foot ones since Phase 3 r1 repair 2
+// come from the fixed walker (`walker-r1r2`: no pacing, A* that reaches round the hotel).
 export const TIMERS = {
   buss17Drive: 54,        // §8.6 s2  busBay -> flamencoDrive, ÅKSJUKA limits, stop     T_ref 45.0 (median of 10 clean)
-  friskotekBalls: 33,     // §8.7 s1  6 fleeing beach balls (on foot)                  T_ref 26.1 (p75 23.1 of 72 + 3; Phase 3 r1)
+  friskotekBalls: 24,     // §8.7 s1  6 fleeing beach balls (on foot)                  T_ref 18.59 (p75 15.59 of 44 + 3; Phase 3 r1 repair 2)
   asnanPaint: 19,         // §8.8 s9  supermercado lot -> vikingbar, SKICK              T_ref 15.5 (median of 3 clean)
   bodegaVischan: 31,      // §8.9 s4  playa -> vischan                                  T_ref 25.8 (median of 8 clean, gate fix)
-  bodegaJeep: 40,         // §8.9 s9  wreck the fleeing Guardia jeep                    T_ref 32.5 (p75 of 98 chases in 5 runs; median 27.8; Phase 3 r1)
+  bodegaJeep: 42,         // §8.9 s9  wreck the fleeing Guardia jeep                    T_ref 34.45 (p75 of 83 chases; median 28.38; Phase 3 r1 repair 2)
   bodegaHome: 30,         // §8.9 s10 fallback only: the stage uses homeTimer(wreck)    T_ref 25.0 at d 587 (far corner)
-  fatagaSheep: 42,        // §8.11 s5 6 fleeing sheep (on foot)                         T_ref 33.3 (p75 30.3 of 12 + 3)
-  grisfestFlowers: 42,    // §8.12 s1 5 flowers round Flamenco (on foot, random spawns) T_ref 33.6 (p75 31.1 of 12 + 2.5)
-  grisfestPlates: 45,     // §8.12 s4 10 plate stacks (on foot, kick)                   T_ref 35.3 (p75 30.3 of 10 + 5)
-  grisfestTonga: 23,      // §8.12 s6 dance floor -> car at the gate -> tongatonga      T_ref 19.0 (2 clean)
-  julaftonGuests: 87,     // §8.13 s1 patio -> hire car -> four guests                  T_ref 72.4 (median of 8 clean in 6 runs)
+  fatagaSheep: 27,        // §8.11 s5 6 fleeing sheep (on foot)                         T_ref 21.53 (p75 18.53 of 32 + 3; Phase 3 r1 repair 2)
+  grisfestFlowers: 26,    // §8.12 s1 5 flowers round Flamenco (on foot, random spawns) T_ref 20.29 (p75 17.79 of 32 + 2.5; Phase 3 r1 repair 2)
+  grisfestPlates: 33,     // §8.12 s4 10 of 12 plate stacks (on foot, kick; fixed)      T_ref 25.77 (median 20.77 of 20 + 5; Phase 3 r1 repair 2)
+  grisfestTonga: 19,      // §8.12 s6 dance floor -> car at the gate -> tongatonga      T_ref 15.78 (walk + drive: median 15.28 of 12 clean, + 0.5; Phase 3 r1 repair 2)
+  julaftonGuests: 81,     // §8.13 s1 patio -> hire car -> four guests                  T_ref 67.4 (median of 11 clean runs; Phase 3 r1 repair 2)
 };
 
 // Opponent / quarry tuning (race, destroy, follow; DESIGN §8 "Races and chases").
