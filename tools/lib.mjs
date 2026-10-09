@@ -124,6 +124,26 @@ export async function launch({ port, out, w = 1280, h = 720 }) {
 // A throwing assertion for scenarios.
 export function check(cond, msg) { if (!cond) throw new Error('check failed: ' + msg); }
 
+// Timer statistics for `calibrate` / `calibflight` (DESIGN §8 "Timers and difficulty").
+// Percentile with linear interpolation between order statistics (h = (n − 1)·q). The nearest-rank
+// form floor(q·n) returned the slowest run for n = 4, i.e. a worst case.
+export const pct = (a, q) => { const s = a.slice().sort((x, y) => x - y), h = (s.length - 1) * q, i = Math.floor(h); return i + 1 < s.length ? s[i] + (h - i) * (s[i + 1] - s[i]) : s[i]; };
+// The sampling range of a random stage's timer. The p75 of a dozen runs swings by several seconds
+// between samples of the same code (Phase 3 r1: friskotek balls 31–38 over 12 runs, the jeep 35–42
+// over 20), so one sample's timer is not the timer. A bootstrap (B resamples with replacement, a
+// fixed seed, so the same runs always print the same range) gives the central 90 % of the timers
+// the sample supports: a shipped timer inside it is consistent with the sample, one outside it
+// disagrees. `toTimer(p75)` applies the stage's rule (§8), e.g. p => Math.ceil(1.25 * (p + 3)).
+export function timerRange(ts, toTimer, { q = 0.75, B = 2000, seed = 1 } = {}) {
+  if (ts.length < 2) return null;
+  let s = seed;
+  const rnd = () => (s = (s * 16807) % 2147483647) / 2147483647;
+  const out = new Array(B);
+  for (let b = 0; b < B; b++) out[b] = toTimer(pct(ts.map(() => ts[Math.floor(rnd() * ts.length)]), q));
+  out.sort((x, y) => x - y);
+  return [out[Math.floor(0.05 * (B - 1))], out[Math.ceil(0.95 * (B - 1))]];
+}
+
 // Mission data checks (DESIGN §16.4 `missions`), run IN THE PAGE: T.ev(missionDataProblems) or
 // T.ev(missionDataProblems, null, '/tools/fixtures/full-missions.js'). Every character key and
 // landmark that any mission def references (def fields, stage options, lines, every cue field)

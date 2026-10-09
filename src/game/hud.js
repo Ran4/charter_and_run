@@ -344,6 +344,17 @@ export const hud = {
     const b = el('div', 'bubble', this.bubbles, text);
     list.push({ b, target, until: performance.now() + secs * 1000 });
   },
+  // Takes the speaker's live bubble down now (a line cut short by a scene). Returns when the last
+  // bubble still up ends (0 if none), so Game.unsay can pull its `sayEnd` back.
+  unsay(target) {
+    const list = this._bubbles || [];
+    let end = 0;
+    for (let k = list.length - 1; k >= 0; k--) {
+      if (list[k].target === target) { list[k].b.remove(); list.splice(k, 1); }
+      else end = Math.max(end, list[k].until);
+    }
+    return end;
+  },
   tickBubbles() {
     const list = this._bubbles || [];
     const now = performance.now();

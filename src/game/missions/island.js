@@ -35,10 +35,10 @@ const FATAGA_STOP = { x: -240, z: -208.5, yaw: 0 };
 // on foot (whole seconds).
 export const TIMERS = {
   buss17Drive: 54,        // §8.6 s2  busBay -> flamencoDrive, ÅKSJUKA limits, stop     T_ref 45.0 (median of 10 clean)
-  friskotekBalls: 32,     // §8.7 s1  6 fleeing beach balls (on foot)                  T_ref 24.9 (p75 21.9 of 12 + 3)
+  friskotekBalls: 33,     // §8.7 s1  6 fleeing beach balls (on foot)                  T_ref 26.1 (p75 23.1 of 72 + 3; Phase 3 r1)
   asnanPaint: 19,         // §8.8 s9  supermercado lot -> vikingbar, SKICK              T_ref 15.5 (median of 3 clean)
   bodegaVischan: 31,      // §8.9 s4  playa -> vischan                                  T_ref 25.8 (median of 8 clean, gate fix)
-  bodegaJeep: 37,         // §8.9 s9  wreck the fleeing Guardia jeep                    T_ref 30.6 (p75 of 40 chases; median 26.9; Phase 3)
+  bodegaJeep: 40,         // §8.9 s9  wreck the fleeing Guardia jeep                    T_ref 32.5 (p75 of 98 chases in 5 runs; median 27.8; Phase 3 r1)
   bodegaHome: 30,         // §8.9 s10 fallback only: the stage uses homeTimer(wreck)    T_ref 25.0 at d 587 (far corner)
   fatagaSheep: 42,        // §8.11 s5 6 fleeing sheep (on foot)                         T_ref 33.3 (p75 30.3 of 12 + 3)
   grisfestFlowers: 42,    // §8.12 s1 5 flowers round Flamenco (on foot, random spawns) T_ref 33.6 (p75 31.1 of 12 + 2.5)

@@ -19,16 +19,14 @@
 // route) use the 75th percentile. On foot, T_ref = measured + 0.5 s per target (a human's reaction
 // and aim). timer = T_ref × 1.2 (drives) / × 1.25 (on foot), rounded up to a whole second.
 // The printed table (`[t] CAL …` lines and the final summary) is DESIGN §8's timer table.
-import { check } from '../lib.mjs';
+import { check, pct, timerRange } from '../lib.mjs';
 
 // Whole seconds: a 5 s step alone added up to 5 s of slack (vischan 30.6 -> 35, 27 % left).
 export const roundTimer = (t) => Math.ceil(t);
 const CAL = process.env.CAL ? process.env.CAL.split(',') : null;
 const want = (id) => !CAL || CAL.includes(id);
 const median = (a) => { const s = a.slice().sort((x, y) => x - y); return s.length % 2 ? s[(s.length - 1) / 2] : (s[s.length / 2 - 1] + s[s.length / 2]) / 2; };
-// Percentile with linear interpolation between order statistics (h = (n − 1)·q). The nearest-rank
-// form floor(q·n) returned the slowest run for n = 4 (the default FOOT_RUNS), i.e. a worst case.
-const pct = (a, q) => { const s = a.slice().sort((x, y) => x - y), h = (s.length - 1) * q, i = Math.floor(h); return i + 1 < s.length ? s[i] + (h - i) * (s[i + 1] - s[i]) : s[i]; };
+// pct (interpolated percentile) and timerRange (a random stage's bootstrap timer range) are in lib.mjs.
 const f1 = (v) => (v == null ? '-' : (+v).toFixed(1));
 
 // ---------------------------------------------------------------------------------------------
@@ -608,8 +606,8 @@ export async function installAutopilot() {
   // `pad` (m): how far beyond the start/target box the search may go; the result carries
   // `reached` (false: the path ends at the cell nearest the target).
   // `avoid`: points the walker stalled at (a gap the grid sees but the body does not pass): cells
-  // within 0.6 m are closed.
-  function footPath(sx, sz, sy, tx, tz, rad = 0.4, step = 0.45, jump = 0, pad = 14, avoid = null) {
+  // within 0.6 m are closed. `cars`: car OBBs to walk round (the walker's stopped cars).
+  function footPath(sx, sz, sy, tx, tz, rad = 0.4, step = 0.45, jump = 0, pad = 14, avoid = null, cars = null) {
     const S = 0.5;
     const x0 = Math.min(sx, tx) - pad, z0 = Math.min(sz, tz) - pad;
     const W = Math.ceil((Math.max(sx, tx) + pad - x0) / S), H = Math.ceil((Math.max(sz, tz) + pad - z0) / S);
@@ -620,6 +618,7 @@ export async function installAutopilot() {
     const enter = (i, j, h, st = step) => {
       const x = cx(i), z = cz(j);
       if (avoid) for (const a of avoid) if ((x - a.x) ** 2 + (z - a.z) ** 2 < 0.36) return NaN;
+      if (cars) for (const o of cars) if (C.circleVsObb(x, z, rad, o, hit)) return NaN;
       queryBlocks(x - rad - 0.05, z - rad - 0.05, x + rad + 0.05, z + rad + 0.05, qb);
       for (const b of qb) { const top = b.shape === C.RAMP ? C.topAt(b, x, z) : b.top; if (top > h + st && C.circleVsBlock(x, z, rad, b, hit)) return NaN; }
       return C.groundAt(x, z, h, st);
@@ -665,13 +664,20 @@ export async function installAutopilot() {
   }
   const queryBlocks = C.queryBlocks;
   ap.footPath = footPath;
+  // The OBBs of the cars standing (under 1.5 m/s) within 30 m of the walker's start-target box: a
+  // moving car is not planned round (a human dodges it, or is run over, as in the game).
+  const stoppedCars = (p, t) => {
+    const x0 = Math.min(p.x, t.x) - 30, x1 = Math.max(p.x, t.x) + 30, z0 = Math.min(p.z, t.z) - 30, z1 = Math.max(p.z, t.z) + 30;
+    return g.cars.filter((c) => c.obb && c !== g.playerCar && c.root?.visible !== false && Math.hypot(c.vx, c.vz) < 1.5 && c.x > x0 && c.x < x1 && c.z > z0 && c.z < z1).map((c) => c.obb);
+  };
   ap.walk = (spec) => {
     // spec.kind: 'list' (nearest alive entry of stage.list) | 'point' {x, z, r}; spec.kick
-    ap.foot = { spec, t0: ap.t, tEnd: null, stage0: g.missions.stageI, path: 0, px: g.player.x, pz: g.player.z, kicks: 0, route: null, replanT: 0, plans: 0 };
+    ap.foot = { spec, t0: ap.t, tEnd: null, stage0: g.missions.stageI, path: 0, px: g.player.x, pz: g.player.z, kicks: 0, route: null, replanT: 0, plans: 0, falls: 0, wasUp: true };
     ap.active = null;
     return true;
   };
-  ap.walkResult = () => { const f = ap.foot || ap.lastFoot; return f ? { t: f.tEnd != null ? f.tEnd - f.t0 : null, walked: Math.round(f.path), kicks: f.kicks, plans: f.plans, stuck: f.stuck } : null; };
+  // `falls`: times the walker was knocked over (flung) on the way, by a car or anything else.
+  ap.walkResult = () => { const f = ap.foot || ap.lastFoot; return f ? { t: f.tEnd != null ? f.tEnd - f.t0 : null, walked: Math.round(f.path), kicks: f.kicks, plans: f.plans, falls: f.falls, stuck: f.stuck } : null; };
 
   // The clock and the completion checks run on the game's own frame dt (the stage timers' clock).
   g.onFrame((dt) => {
@@ -683,6 +689,9 @@ export async function installAutopilot() {
     if (f) {
       const p = g.player;
       f.path += Math.hypot(p.x - f.px, p.z - f.pz); f.px = p.x; f.pz = p.z;
+      const up = p.state !== 'flung' && p.state !== 'down';
+      if (!up && f.wasUp) f.falls++;
+      f.wasUp = up;
       let t = null;
       if (f.spec.kind === 'list') {
         // Nearest by the straight line, as a player picks the next one on screen.
@@ -712,9 +721,12 @@ export async function installAutopilot() {
         // dividers are in jump range on paper, but the jump among the patio chairs can fail; a human
         // then walks round). Toggling back and forth instead made the walker oscillate.
         const J = g.levelDef.verbs.jump && !f.noJump ? 1.3 : 0;
-        let pts = footPath(p.x, p.z, p.y, t.x, t.z, 0.4, 0.45, J, 14, f.avoid);
+        // Stopped cars are walked round, as a player does: the grid holds only static solids, so the
+        // walker ran into a parked car between it and a ball (the SunTrip car park) and stalled there.
+        f.cars = stoppedCars(p, t);
+        let pts = footPath(p.x, p.z, p.y, t.x, t.z, 0.4, 0.45, J, 14, f.avoid, f.cars);
         // The way round may leave the 14 m margin (e.g. round Hotel Flamenco's 52 m slab): widen it.
-        if (pts && !pts.reached) pts = footPath(p.x, p.z, p.y, t.x, t.z, 0.4, 0.45, J, 45, f.avoid) || pts;
+        if (pts && !pts.reached) pts = footPath(p.x, p.z, p.y, t.x, t.z, 0.4, 0.45, J, 45, f.avoid, f.cars) || pts;
         pts = pts || [{ x: t.x, z: t.z }];
         f.route = { pts, k: 0, end: { x: t.x, z: t.z } };
       }
@@ -734,6 +746,7 @@ export async function installAutopilot() {
           if (b.top < y) continue;
           for (let k = 1; k <= n; k++) if (C.circleVsBlock(ax + ((bx - ax) * k) / n, az + ((bz - az) * k) / n, 0.38, b, hit)) return false;
         }
+        for (const o of f.cars || []) for (let k = 1; k <= n; k++) if (C.circleVsObb(ax + ((bx - ax) * k) / n, az + ((bz - az) * k) / n, 0.38, o, hit)) return false;
         return true;
       };
       // Never skip a jump cell (a ledge or the top of a thin wall) before standing on it: from
@@ -867,6 +880,7 @@ export const SCENARIOS = {
   async calibrate(T) {
     const out = {};      // key -> T_ref (s)
     const kind = {};     // key -> 'drive' | 'foot' (the multiplier)
+    const sample = {};   // random stages: key -> { ts: the runs (s), extra: s added to the p75 for T_ref }
     const RUNS = +(process.env.RUNS || 3);
     // ---- plain drives (deterministic: median of the clean runs) ---------------------------------
     for (const c of DRIVES) {
@@ -918,7 +932,7 @@ export const SCENARIOS = {
       const ok = jeep.filter((j) => !j.wedged).map((j) => j.t);
       check(ok.length >= 2, 'jeep: at least two chases that did not wedge');
       const tRef = pct(ok, 0.75);
-      out.bodegaJeep = tRef; kind.bodegaJeep = 'drive';
+      out.bodegaJeep = tRef; kind.bodegaJeep = 'drive'; sample.bodegaJeep = { ts: ok, extra: 0 };
       out.__jeepWrecks = jeep.filter((j) => !j.wedged).map((j) => j.wreck);
       row('jeep', `bodega s9 wreck the Guardia jeep (cruise/damageScale ${jeep[0].cruise}, ${runs} runs)`, 'gate (-84,-199) in the grisbil, road-route chase', tRef.toFixed(1), roundTimer(tRef * 1.2), `p75 of ${ok.length} chases (the flee route is random): ${jeep.map((j) => `${f1(j.t)}${j.wedged ? ' (wedged, excluded)' : ''}`).join(' / ')} s; median ${f1(median(ok))}`);
     }
@@ -986,7 +1000,7 @@ export const SCENARIOS = {
       }
       check(!stuck.length, `flowers: every spawn reachable (stuck at ${JSON.stringify(stuck)})`);
       const tRef = pct(ts, 0.75) + 0.5 * 5;
-      out.grisfestFlowers = tRef; kind.grisfestFlowers = 'foot';
+      out.grisfestFlowers = tRef; kind.grisfestFlowers = 'foot'; sample.grisfestFlowers = { ts, extra: 0.5 * 5 };
       row('flowers', 'grisfest s1 five flowers round Flamenco (on foot, random spawns)', 'nearest-first sprint', tRef.toFixed(1), roundTimer(tRef * 1.25), `p75 of ${FOOT} runs + 0.5 s × 5: ${ts.map(f1).join(' / ')} s`);
     }
     if (want('plates')) {
@@ -1009,7 +1023,7 @@ export const SCENARIOS = {
       }
       // The stacks spawn at random in the dance-floor area: the 75th percentile like other random stages.
       const tRef = pct(ts, 0.75) + 0.5 * 10;
-      out.grisfestPlates = tRef; kind.grisfestPlates = 'foot';
+      out.grisfestPlates = tRef; kind.grisfestPlates = 'foot'; sample.grisfestPlates = { ts, extra: 0.5 * 10 };
       row('plates', 'grisfest s4 smash 10 plate stacks (on foot, kick)', 'race finish (-80,-203) -> nearest stack first', tRef.toFixed(1), roundTimer(tRef * 1.25), `p75 of ${ts.length} runs + 0.5 s × 10: ${ts.map(f1).join(' / ')} s; median ${f1(median(ts))}`);
     }
     // Stage 6: from the dance floor on foot back to the car, then Tonga Tonga. The car stands where
@@ -1195,7 +1209,7 @@ export const SCENARIOS = {
       }
       // Random spawns and flight paths: the 75th percentile of the measured chases, + 0.5 s per target.
       const tRef = pct(ts, 0.75) + 0.5 * 6;
-      out[key] = tRef; kind[key] = 'foot';
+      out[key] = tRef; kind[key] = 'foot'; sample[key] = { ts, extra: 0.5 * 6 };
       row(id, `${what} (on foot, measured)`, 'nearest-first sprint chase', tRef.toFixed(1), roundTimer(tRef * 1.25), `p75 of ${ts.length} runs + 0.5 s × 6: ${ts.map(f1).join(' / ')} s; median ${f1(median(ts))}`);
     }
 
@@ -1268,9 +1282,14 @@ export const SCENARIOS = {
     const shipped = await T.ev(async () => (await import('/src/game/missions/island.js')).TIMERS);
     for (const [k, t] of Object.entries(out)) {
       if (k.startsWith('__')) continue;
-      const want = roundTimer(t * (kind[k] === 'foot' ? 1.25 : 1.2));
+      const mult = kind[k] === 'foot' ? 1.25 : 1.2;
+      const want = roundTimer(t * mult);
       const cur = shipped[k];
-      T.log(`CAL CHECK ${k}: T_ref ${t.toFixed(1)} -> ${want} s; shipped ${cur} s (slack ${(((cur - t) / cur) * 100).toFixed(0)} %) ${cur === want ? 'OK' : cur > want ? 'LOOSER than measured' : cur >= t ? '(tighter than measured)' : 'TOO TIGHT'}`);
+      // A random stage's single sample does not pin its timer down to the second: say whether the
+      // shipped timer lies inside this sample's 90 % bootstrap range (§8; timerRange in lib.mjs).
+      const smp = sample[k], rg = smp && timerRange(smp.ts, (p) => roundTimer((p + smp.extra) * mult));
+      const range = rg ? `; this sample's 90 % range ${rg[0]}–${rg[1]} s (n ${smp.ts.length}): shipped ${cur >= rg[0] && cur <= rg[1] ? 'inside (consistent)' : 'OUTSIDE (disagrees)'}` : '';
+      T.log(`CAL CHECK ${k}: T_ref ${t.toFixed(1)} -> ${want} s; shipped ${cur} s (slack ${(((cur - t) / cur) * 100).toFixed(0)} %) ${cur === want ? 'OK' : cur > want ? 'LOOSER than measured' : cur >= t ? '(tighter than measured)' : 'TOO TIGHT'}${range}`);
       // Random stages (flee routes, spawns) vary run to run: they only warn here.
       if (!['bodegaJeep', 'friskotekBalls', 'fatagaSheep', 'grisfestFlowers'].includes(k)) check(cur >= t, `${k}: shipped timer ${cur} s is below T_ref ${t.toFixed(1)} s`);
     }

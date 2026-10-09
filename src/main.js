@@ -966,13 +966,26 @@ class Game {
   // `saying(t)`: t's bubble is still up; `sayEnd`: when the last bubble said ends (hud's clock).
   // A long line stays up long enough to read (1 s + 0.045 s a character; halved in test mode, like
   // the stage kinds' lineSecs): a 97-character chatter line no longer goes after 2.6 s.
+  // An empty line or secs <= 0 is not a line: it takes t's bubble down (unsay), never an empty pill
+  // held up by that minimum.
   say(target, text, secs = 2) {
     const t = typeof target === 'string' ? this.npc(target) : target;
     if (!t) return;
+    if (!text || secs <= 0) { this.unsay(t); return; }
     secs = Math.max(secs, (1 + String(text).length * 0.045) * (this.testMode ? 0.5 : 1));
     hud.say(t, text, secs);
     t.sayEnd = performance.now() + secs * 1000;
     this.sayEnd = Math.max(this.sayEnd || 0, t.sayEnd);
+  }
+  // Takes t's bubble down at once (a line cut by a dialogue or cutaway). The cut line no longer
+  // counts as said: `saying(t)` is false and `sayEnd` falls back to the bubbles still up, so it does
+  // not hold the mantra auto-bubble back either.
+  unsay(target) {
+    const t = typeof target === 'string' ? this.npc(target) : target;
+    if (!t) return;
+    const now = performance.now(), rest = hud.unsay(t);
+    if ((t.sayEnd ?? 0) > now) t.sayEnd = now;
+    if ((this.sayEnd || 0) > now) this.sayEnd = Math.max(now, rest);
   }
   saying(t) { return performance.now() < (t?.sayEnd ?? 0); }
   radio(who, text) {
@@ -1548,7 +1561,10 @@ class Game {
         if (Math.abs(car.x - ch.x) > car.radius + 1 || Math.abs(car.z - ch.z) > car.radius + 1) continue;
         if (ch.y > car.y + car.height - 0.3) continue;
         if (!circleVsObb(ch.x, ch.z, ch.r, car.obb, hit)) continue;
-        const closing = (car.vx - ch.vx) * hit.nx + (car.vz - ch.vz) * hit.nz;
+        // Only the car's own speed into the person knocks him over (n points from the car to him).
+        // Bigmouth's relative speed flung anyone who walked (5.4 m/s) or sprinted (8.8) into a parked
+        // car, or sprinted (5.2) into the stopped trolley, as if run over; he is pushed out instead.
+        const closing = car.vx * hit.nx + car.vz * hit.nz;
         if (closing > 4.5 && ch.state === 'normal' && !ch.invulnerable) {
           const sp = car.speed;
           ch.x += hit.nx * hit.depth; ch.z += hit.nz * hit.depth;

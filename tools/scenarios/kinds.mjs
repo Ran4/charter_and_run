@@ -7,7 +7,7 @@
 //               cues and revived plates, grab at a wreck, scene exitCar, destroy without a spawn;
 //               Phase 3: follow before the start and head-on, retryCar (reused / typed / parked),
 //               getInCar atHome and a wrecked missionCar, a seated scene stops the car, collect
-//               bubbles cut by a scene.
+//               bubbles cut by a scene (3 frames in: no bubble over the guest or Stig, no empty one).
 import { check, missionDataProblems } from '../lib.mjs';
 import { untilStage, warpLm, footAt, carBeside, touchAll, followCar, breakAll, raceCheckpoints, haggleWin } from '../story/common.mjs';
 
@@ -496,8 +496,32 @@ export const SCENARIOS = {
     ] }`);
     await T.startMission();
     await T.ev(() => { if (__game.playerCar) __game.exitCar(true); });
+    // The scene's dialogue takes the live bubble down at once: 3 frames into the scene there is no
+    // bubble over Berra or Stig and no empty pill (an empty `say` once replaced it, and Game.say's
+    // minimum reading time held that up for 1 s). Sampled page-side, frame-exact.
+    await T.ev(async () => {
+      const { hud } = await import('/src/game/hud.js');
+      const g = __game, who = [g.npc('berra'), g.player];
+      let n = -1;
+      window.__cut = null;
+      const tick = () => {
+        if (n < 0 && (g.inDialog || g.inCutaway)) n = 0;
+        if (n < 0 || ++n < 3) return;
+        g.offFrame(tick);
+        window.__cut = {
+          scene: g.inDialog || g.inCutaway,
+          live: (hud._bubbles || []).filter((b) => who.includes(b.target)).map((b) => b.b.textContent),
+          empty: [...document.querySelectorAll('.bubble')].filter((e) => !e.textContent.trim()).length,
+          saying: who.some((c) => g.saying(c)),
+        };
+      };
+      g.onFrame(tick);
+    });
     await touchAll(T);
     await untilStage(T, 2);
+    const cut = await T.ev(() => window.__cut);
+    T.log('collect cut at the scene start', JSON.stringify(cut));
+    check(cut && cut.scene && !cut.live.length && !cut.empty && !cut.saying, `collect: the scene takes the guest's bubble down at once, no empty bubble (${JSON.stringify(cut)})`);
     await T.sleep(3500);
     const gb = await T.ev(() => { const g = __game, n = g.npc('berra'), l = window.__lm('flamencoBar'); return { i: g.missions.stageI, bar: Math.hypot(n.x - l.x, n.z - l.z), bubbles: document.querySelectorAll('.bubble').length }; });
     T.log('collect + scene', JSON.stringify(gb));

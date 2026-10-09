@@ -297,7 +297,7 @@ export const FLIGHT_MISSIONS = [
       () => collect({
         kind: 'flaska', motion: 'roll',
         items: [{ x: 3000.2, z: 9.0 }, { x: 2999.8, z: 2.5 }, { x: 3000.3, z: -6.0 }, { x: 2999.7, z: -10.5 }, { x: 3000.0, z: -13.5 }],
-        radius: 0.9, timer: 22, text: 'Fånga flaskorna som rullar i gången', barLabel: 'FLASKOR', failText: 'Flaskorna rullade in under sätena.',   // [N] · [N] · [N]
+        radius: 0.9, timer: 11, text: 'Fånga flaskorna som rullar i gången', barLabel: 'FLASKOR', failText: 'Flaskorna rullade in under sätena.',   // [N] · [N] · [N]
         startCue: { phase: ['cruise', { instant: true }], trolley: true },
         // The film's cabin PA [SUB-SV 00:25:43].
         timedCues: [[8, { radio: ['pa', 'Herr Storch ombedes kontakta kabinpersonalen.'], pa: true }], [20, { turbulence: [0.5, 6] }]],   // [F]

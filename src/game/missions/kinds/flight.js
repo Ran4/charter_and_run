@@ -29,8 +29,9 @@ async function bubbles(g, m, lines) {
       let t = 0;
       const tick = (dt) => {
         t += dt;
-        // An already expired empty line replaces the speaker's bubble (gone before the next draw).
-        if (scene()) g.say(n, '', -1);
+        // The speaker's bubble comes down at the HUD this frame (an empty `say` used to replace it,
+        // which Game.say's minimum reading time then held up as an empty pill for 1 s).
+        if (scene()) g.unsay(n);
         if (scene() || t >= secs * 0.8) { g.offFrame(tick); resolve(); }
       };
       g.onFrame(tick);

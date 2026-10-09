@@ -145,7 +145,7 @@ export const SCENARIOS = {
     await T.ev(installStudio);
     const keys = await T.ev(() => window.__cs.M.CAST);
     const all = await T.ev(() => Object.keys(window.__cs.M.CHARS));
-    check(all.length === 33 && keys.length === 33, `33 CHARS keys with portraits (got ${all.length}/${keys.length})`);
+    check(all.length === 34 && keys.length === 34, `34 CHARS keys with portraits (got ${all.length}/${keys.length})`);
     // Every def builds and animates with every flag on, without throwing or NaN.
     const bad = await T.ev((flags) => {
       const { M } = window.__cs, out = [];
@@ -189,7 +189,7 @@ export const SCENARIOS = {
     flagRow.push({ key: 'stig', outfit: 'kostym', flags: { cheer: true }, label: 'cheer' });
     flagRow.push({ key: 'stig', outfit: 'kostym', flags: { kick: 0.5 }, label: 'kick' });
     // A little wider than the row: held props (the giraffe) reach out past the end figures.
-  for (let i = 0; i < flagRow.length; i += 6) await row(T, `cast_flags_${i / 6}`, flagRow.slice(i, i + 6), { gap: 2.0, dist: 8.6 });
+    for (let i = 0; i < flagRow.length; i += 6) await row(T, `cast_flags_${i / 6}`, flagRow.slice(i, i + 6), { gap: 2.0, dist: 8.6 });
     await row(T, 'cast_flags_story', [
       { key: 'stig', outfit: 'arlanda', flags: { shoeOff: true }, label: 'stig shoeOff' },
       { key: 'ole', outfit: 'flyg', flags: { laugh: true }, label: 'ole laugh' },

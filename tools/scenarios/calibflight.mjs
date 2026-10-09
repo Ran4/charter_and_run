@@ -2,7 +2,8 @@
 // difficulty", §5.9). Phase 2 balance pass; based on WP-F's scratch autopilot.
 //   PORT=… OUT=… node tools/shot.mjs calibflight                 (every case)
 //   FLIGHT=gate/sprint,ombord/careless node tools/shot.mjs calibflight   (a subset)
-//   SPRIT_RUNS=n (bottle sweeps, default 5)
+//   SPRIT_RUNS=n (bottle sweeps, default 5; the stage is random: DESIGN's timer pools 30+ runs),
+//   DEBUG_SPRIT=1 (the sweep traced twice a second into the run's log line)
 // The game runs at timeScale 1 (&ts=1) with dialogue at the real reading speed (55 chars/s). A
 // page-side autopilot walks the player through the real collision geometry (waypoints; the camera
 // yaw points W at the next one, optional Shift), presses the stage's interactions, holds Space in
@@ -12,7 +13,7 @@
 // reaction and aim, which the autopilot does not have), timer = T_ref × 1.25 rounded up to a whole
 // second (§8). The FLYGRÄDSLA cases check the binding rule: a careful player
 // never panics, a careless one does in missions 1, 2 and 5.
-import { check } from '../lib.mjs';
+import { check, pct, timerRange } from '../lib.mjs';
 
 const FLIGHT = process.env.FLIGHT ? process.env.FLIGHT.split(',') : null;
 const want = (id) => !FLIGHT || FLIGHT.includes(id) || FLIGHT.includes(id.split('/')[0]);
@@ -83,9 +84,7 @@ function row(T, id, what, measured, targets, note) {
   return { tRef, timer };
 }
 const median = (a) => { const s = a.slice().sort((x, y) => x - y); return s.length % 2 ? s[(s.length - 1) / 2] : (s[s.length / 2 - 1] + s[s.length / 2]) / 2; };
-// Percentile with linear interpolation between order statistics (h = (n − 1)·q). The nearest-rank
-// form floor(q·n) returned the slowest run for n = 4 (the default FOOT_RUNS), i.e. a worst case.
-const pct = (a, q) => { const s = a.slice().sort((x, y) => x - y), h = (s.length - 1) * q, i = Math.floor(h); return i + 1 < s.length ? s[i] + (h - i) * (s[i + 1] - s[i]) : s[i]; };
+// pct (interpolated percentile) and timerRange (a random stage's bootstrap timer range) are in lib.mjs.
 
 // ---- mission 1 gate: the toilet dash -----------------------------------------------------------
 // Careful: sprints the route round the ladies' room. Careless: dawdles 2 s, then walks.
@@ -163,42 +162,69 @@ async function sprit(T) {
   await install(T);
   await T.startMission();
   await resetMeters(T);
+  const shipped = await T.ev(() => __game.missions.stage.o.timer);
   await T.ev(() => { __game.missions.stage.t = 400; });
-  await T.ev(() => {
+  await T.ev((debug) => {
     const ap = window.__fap, g = __game, c = g.cabin, tr = c.trolley;
+    // DEBUG_SPRIT=1: the player, the trolley and every live bottle twice a second.
+    if (debug) {
+      let next = 0;
+      g.onFrame(() => {
+        if (g.missions.stageI !== 0 || ap.t < next) return;
+        next = ap.t + 0.5;
+        const st = g.missions.stage, p = g.player;
+        ap.log.push(`@${ap.t.toFixed(1)} p ${(p.x - 3000).toFixed(2)},${p.z.toFixed(1)} tr ${tr.z.toFixed(1)}${c.trolleyStopped ? 's' : ''}${ap.waiting ? ' wait' : ''} b ${st.list.filter((e) => e.alive).map((e) => `${e.pz.toFixed(1)}/${e.vz.toFixed(1)}`).join(' ')}`);
+      });
+    }
     ap.autoSpace = true;
     ap.sprint = true;
-    const DODGE = [3, 8, 12, 15, 18, 20, 23];
+    ap.waits = 0; ap.got = 0; ap.waiting = false;
+    // Free aisle seats (x +0.95) to step into while holding on in turbulence (Space held: he cannot
+    // back off, and holding does not stop the trolley bowling him).
+    const ROWS_FREE = [3, 8, 12, 15, 18, 20, 23];
     const rowZ = (row) => 12.4 - 1.2 * (row <= 12 ? row - 1 : row - 2);
-    ap.dodges = 0; ap.got = 0;
     g.onFrame(() => {
       if (g.missions.state !== 'running' || g.missions.stageI !== 0) return;
-      const p = g.player;
-      // Trolley threat: moving aft, ahead of the player (higher z), within 4.5 m.
-      const threat = !c.trolleyStopped && tr.z > p.z && tr.z - p.z < 4.5 && Math.abs(p.x - 3000) < 0.9;
-      if (ap.dodge) {
-        if (tr.z < ap.dodge.z - 1.6 || tr.z > 15.5) ap.dodge = null;
-        else { ap.pts = [[ap.dodge.x, ap.dodge.z]]; ap.i = 0; ap.r = 0.2; return; }
-      }
-      if (threat) {
-        let best = null, bd = 1e9;
-        for (const r of DODGE) { const z = rowZ(r) - 0.22; const d = Math.abs(z - p.z); if (z < tr.z - 1.0 && d < bd) { bd = d; best = z; } }
-        if (best != null) { ap.dodge = { x: 3000.95, z: best }; ap.dodges++; ap.log.push(`dodge t=${ap.t.toFixed(1)}`); ap.pts = [[ap.dodge.x, ap.dodge.z]]; ap.i = 0; return; }
-      }
-      // Chase the nearest live bottle along the aisle.
-      const st = g.missions.stage;
+      const p = g.player, st = g.missions.stage;
       if (st.got !== ap.got) { ap.got = st.got; ap.log.push(`bottle ${st.got} t=${ap.t.toFixed(1)} z=${p.z.toFixed(1)} trolley=${tr.z.toFixed(1)}`); }
-      let b = null, bd = 1e9;
-      for (const e of st.list) if (e.alive) { const d = Math.abs(e.pz - p.z); if (d < bd) { bd = d; b = e; } }
-      if (b) { ap.pts = [[3000, b.pz]]; ap.i = 0; ap.r = 0.3; }
+      if (ap.aside) {
+        if (!c.turbulent || tr.z < ap.aside.z - 1.6) ap.aside = null;
+        else { ap.pts = [[3000.95, ap.aside.z]]; ap.i = 0; ap.r = 0.2; return; }
+      }
+      if (c.turbulent && !c.trolleyStopped && tr.z > p.z && tr.z - p.z < 3.5) {
+        let z = null;
+        for (const r of ROWS_FREE) { const q = rowZ(r) - 0.22; if (q < tr.z - 1.2 && (z == null || Math.abs(q - p.z) < Math.abs(z - p.z))) z = q; }
+        if (z != null) { ap.aside = { z }; ap.log.push(`aside t=${ap.t.toFixed(1)}`); return; }
+      }
+      // Keep clear of the trolley's front: a moving trolley bowls a standing player within 0.95 m
+      // of its centre (cabin.js), and one stopped to serve sets off again after 3 s. A bottle at it
+      // or beyond it rolls out from under it towards the player (collect's roll rule), so the
+      // player waits for it in the aisle out of reach (2.4 m from a moving trolley, 1.7 m from a
+      // stopped one) and takes any bottle on his side first. (Phase 2–3 r1 dodged into the nearest
+      // free row instead and stood there until the trolley had passed: up to 18 s behind three
+      // serve stops while the bottle rolled past him, which made the stage bimodal.)
+      const ahead = tr.z > p.z - 0.5 && Math.abs(tr.x - 3000) < 0.6;
+      const limit = ahead ? tr.z - (c.trolleyStopped ? 1.7 : 2.4) : Infinity;
+      let b = null, bd = 1e9, near = null, nd = 1e9;
+      for (const e of st.list) {
+        if (!e.alive) continue;
+        const d = Math.abs(e.pz - p.z);
+        if (d < nd) { nd = d; near = e; }
+        if (e.pz <= limit && d < bd) { bd = d; b = e; }
+      }
+      if (!near) return;
+      const wait = !b;
+      if (wait && !ap.waiting) { ap.waits++; ap.log.push(`wait t=${ap.t.toFixed(1)}`); }
+      ap.waiting = wait;
+      ap.pts = [[3000, wait ? limit : b.pz]]; ap.i = 0; ap.r = wait ? 0.2 : 0.3;
     });
-  });
+  }, !!process.env.DEBUG_SPRIT);
   await T.until(() => __game.missions.stageI >= 1 || __game.missions.state !== 'running', 120000);
   const s0 = await apState(T);
   const stats = await T.ev(() => ({ bowled: __game.cabin.stats.bowled, falls: __game.cabin.stats.falls }));
   const full = await T.ev(() => window.__fap.log);
   T.log(`sprit: bottles done in ${s0.t} s; fear max ${s0.maxV}; panics ${s0.panics}; bowled ${stats.bowled}, falls ${stats.falls}`, JSON.stringify(full));
-  return { t: s0.t, panics: s0.panics, clean: !stats.bowled && !stats.falls };
+  return { t: s0.t, panics: s0.panics, clean: !stats.bowled && !stats.falls, shipped };
 }
 
 // ---- mission 5 landning: round-up, back to the seat, the approach ------------------------------
@@ -273,8 +299,14 @@ export const SCENARIOS = {
     if (res.sprit) {
       const ts = res.sprit.map((r) => r.t);
       const p75 = pct(ts, 0.75);
-      row(T, 'sprit[0]', `five rolling bottles, sprint, trolley dodges, Space in turbulence (${ts.length} runs, p75: random bottles)`, p75, 5, `runs ${ts.map((t) => t.toFixed(1)).join(' / ')} s; median ${median(ts).toFixed(1)}`);
+      const { timer } = row(T, 'sprit[0]', `five rolling bottles, sprint, waits clear of the trolley, Space in turbulence (${ts.length} runs, p75: random bottles)`, p75, 5, `runs ${ts.map((t) => t.toFixed(1)).join(' / ')} s; median ${median(ts).toFixed(1)}`);
+      // One sample's p75 does not pin a random stage's timer down: the shipped timer against this
+      // sample's 90 % bootstrap range (§8; timerRange in lib.mjs).
+      const cur = res.sprit[0].shipped, rg = timerRange(ts, (p) => timerFor(p + 0.5 * 5));
+      T.log(`CALF CHECK sprit[0]: timer ${timer} s; shipped ${cur} s ${cur === timer ? 'OK' : cur > timer ? 'LOOSER than measured' : 'tighter than measured'}${rg ? `; this sample's 90 % range ${rg[0]}–${rg[1]} s (n ${ts.length}): shipped ${cur >= rg[0] && cur <= rg[1] ? 'inside (consistent)' : 'OUTSIDE (disagrees)'}` : ''}`);
       check(res.sprit.every((r) => r.panics === 0), 'sprit: the careful player never panics');
+      // T_ref is a clean run's time: the careful player is never bowled over and never falls.
+      check(res.sprit.every((r) => r.clean), `sprit: every run clean (bowled or fell in ${res.sprit.filter((r) => !r.clean).length} of ${res.sprit.length})`);
     }
     if (res.landCareful) {
       const l = res.landCareful;
