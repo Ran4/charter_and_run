@@ -17,6 +17,12 @@ export const ISLAND_LANDMARKS = {
   rum113: { b: [3, 3], at: [18, -11], yaw: 0 },
   flamencoBalcony: { b: [3, 3], at: [18, -8], yaw: PI },
   flamencoPool: { b: [3, 3], at: [-3, 18], yaw: PI },
+  // Cut anchors (Phase 3; also dukarCam in Fataga): a cut stands `dist` m behind one, looking the way
+  // it faces. rum107Cam is flamencoPatio turned round (the camera on the patio front, looking into
+  // Stig and Ole's room 107); recepcionCam is flamencoRecepcion turned round (the desk seen from
+  // south of the porch).
+  rum107Cam: { b: [3, 3], at: [-18, -11], yaw: PI },
+  recepcionCam: { b: [3, 3], at: [2, -10], yaw: PI },
   // The island spawn (level.spawn): approachSpot steps 1.5 m along yaw and turns round, so the
   // player stands on the pool deck at (-4, -1) facing the hotel, Ole under the pergola ahead and
   // the chase camera over the pool, not under the pergola slats.
@@ -74,6 +80,7 @@ export const ISLAND_LANDMARKS = {
   fatagaBus: { world: [-240, -204], yaw: -PI / 2 },
   fatagaFold: { b: [0, 0], at: [-18, -12], yaw: 0 },
   fatagaDukar: { b: [0, 0], at: [8, 4], yaw: PI },
+  dukarCam: { b: [0, 0], at: [8, 4], yaw: 0 },        // cut anchor: fatagaDukar turned round (camera on the square)
   pryl_kniv: { b: [0, 0], at: [0, 0], yaw: 0, y: 1.2 },
   // (4,0) golf
   golf: { b: [4, 0], at: [0, 22], yaw: PI },

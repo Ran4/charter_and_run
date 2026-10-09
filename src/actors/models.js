@@ -123,6 +123,9 @@ export const CHARS = {
     mustache: 0x1d1426, stache: 'big', pants: 0x1d1426, voice: 210, ring: '#d8321e' }),
   guardia: A({ name: 'Guardia Civil', skin: ES, hair: 'short', hairC: 0x1d1426, shirt: 0x3d5a3a, pants: 0x3d5a3a, longSleeves: true, collar: true, belt: 0x141414, sash: 0x141414,
     hat: 'tricorn', hatC: 0x121212, mustache: 0x1d1426, stache: 'thick', shoes: 0x121212, voice: 210, ring: '#3d5a3a' }),
+  // Portrait only (main.js RADIO_ONLY): the clerk at the Las Palmas telephone station ("Hytt två!").
+  telefonist: A({ name: 'Telefonisten', skin: ES, hair: 'short', hairC: 0x1d1426, brows: 0x1d1426, glasses: 0x2a2a2a, shirt: 0xd8e4f0, longSleeves: true, collar: true,
+    pants: 0x3a3a44, voice: 330, ring: '#d8321e' }),
   pax: A({ name: 'Medpassagerare', hair: 'short', hairC: 0x5a3a1e, shirt: 0xb07a3a, longSleeves: true, collar: true, pants: 0x6a4a2a, voice: 280, ring: '#fff8e6' }),
 };
 

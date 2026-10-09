@@ -79,7 +79,9 @@ export const M_ISLAND = [
     check(await T.ev(() => !!__game.playerCar && __game.npc('ole').car === __game.playerCar), 'asnan paint scene: both stay seated (frame only)');
     await untilStage(T, 8);
     check(await T.ev(() => __game.missions.stage.ride?.kind === 'fragile'), 'asnan: the SKICK bar runs on the wet-paint drive');
-    await warpLm(T, 'vikingbar');
+    // Park as a player does, inside the 7 m radius on the courtyard side, not on the bar's door.
+    await T.ev(() => { const l = window.__lm('vikingbar'); __game.debugWarp(l.x, l.z + 6, l.yaw); });
+    await T.frames(3);
     await untilStage(T, 9);
     const s2 = shotWhen(T, 'asnan_vikingbar', 'lilla vikingen');
     await footAt(T, 'vikingbar');
@@ -169,7 +171,10 @@ export const M_ISLAND = [
     await untilStage(T, 5);
     await T.anyCar();
     const s2 = shotWhen(T, 'grisfest_tonga', 'Bärra hem Berra');
-    await warpLm(T, 'tongatonga');
+    // Arrive as a player does, from the street: inside the 10 m radius, short of the club front (a
+    // car warped onto the landmark stood in the middle of the scene's street shot).
+    await T.ev(() => { const l = window.__lm('tongatonga'); __game.debugWarp(l.x, l.z + 9.5, l.yaw); });
+    await T.frames(3);
     await untilStage(T, 7);
     await s2;
     await carBeside(T, 'berra');

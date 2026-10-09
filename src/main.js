@@ -33,7 +33,7 @@ import { clamp, dist, yawTo, pick, mulberry32, lerp } from './util.js';
 const STEP = 1 / 60;
 const SAVE_KEY = 'charter-and-run-v1';
 const PLAYER_KEY = 'stig';
-const RADIO_ONLY = ['levander', 'kapten', 'pa', 'guardia', 'pax'];
+const RADIO_ONLY = ['levander', 'kapten', 'pa', 'guardia', 'pax', 'telefonist'];
 const CABIN_OWNED = ['vardinna2'];
 // Public-domain traditional one-shot cues (§12.1): `music`/`sfx` cues with these names play
 // audio.trad(name) over the current tune instead of switching it.

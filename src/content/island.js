@@ -62,7 +62,7 @@ export const CHATTER = {
   majsan: ['Här nere parkerar de hursomhelst.' /* [F*] */, 'Jag gör bara mitt jobb.' /* [F*] */],
   fruStorch: ['Det var så kallt på rummet i natt, och ändå har vi betalat bränsletillägg!' /* [F*] */,
     'Finns det svenskt kaffe på hotellet?' /* [F*] */],
-  herrStorch: ['Lite film.' /* [F*] */],
+  herrStorch: ['Lite film.' /* [F*](t) */],
   jose: ['Jag ska inte bort, jag ska hem.' /* [F*] */],
   mamma: ['Inga svenskor!' /* [F*] */, '¡Josito! ¡Josito!' /* [F*] */],
   portier: ['Momento.' /* [F*] */],
@@ -90,21 +90,21 @@ export const COLLECTIBLES = {
     kind: 'pryl', motion: 'spin', beam: true, pickup: 'touch', jingle: 'pryl',
     label: 'Oles prylar', marker: 'pryl', icon: 'pryl-icon', bonus: 1000,
     first: ['ole', 'En av dingsene mine! Finn resten, Stig-Helmer.'],               // [N]
-    complete: ['ole', 'Det fikser vi. Vi fikser alt!'], completeUnlock: 'samba',     // [F]
+    complete: ['ole', 'Det fikser vi. Vi fikser alt!'], completeUnlock: 'samba',     // [F*]
     items: [
-      { id: 'klocka', lm: 'pryl_klocka', line: 'Digital, analog, spansk, norsk, svensk tid, kronometer, og så klokke.' }, // [F]
-      { id: 'poolpen', lm: 'pryl_poolpen', line: 'Penn som skriver under vannet.' },          // [F]
+      { id: 'klocka', lm: 'pryl_klocka', line: 'Digital, analog, spansk, norsk, svensk tid, kronometer, og så klokke.' }, // [F*]
+      { id: 'poolpen', lm: 'pryl_poolpen', line: 'Penn som skriver under vannet.' },          // [F*]
       { id: 'kalkylator', lm: 'pryl_kalkylator', line: 'Kalkulator – med vekkerklokke!' },    // [F*]
-      { id: 'kniv', lm: 'pryl_kniv', line: 'Swiss Army Knife… Saks – uten skrutrekker.' },    // [F]
-      { id: 'kamera', lm: 'pryl_kamera', line: 'Kamera. Skjerpe. Smil.' },                    // [F]
-      { id: 'glasogon', lm: 'pryl_glasogon', line: 'Mot klor.' },                             // [F]
+      { id: 'kniv', lm: 'pryl_kniv', line: 'Swiss Army Knife… Saks – uten skrutrekker.' },    // [F*]
+      { id: 'kamera', lm: 'pryl_kamera', line: 'Kamera. Skjerpe. Smil.' },                    // [F*]
+      { id: 'glasogon', lm: 'pryl_glasogon', line: 'Mot klor.' },                             // [F*]
       { id: 'pung', lm: 'pryl_pung', line: 'Å ha penger i når man svømmer.' },                // [F*]
     ],
   },
   fenor: {
     kind: 'fena', motion: 'circle', pickup: 'squash', jingle: 'squeak',
     label: 'Hajfenor', marker: 'fena', icon: 'fena-icon', bonus: 1000,
-    first: ['lasse', 'Hajar i poolen igen? Ring kliniken!'],                           // [N]
+    first: ['lasse', 'Hajar i poolen igen? Ring kliniken!'],                           // [F*] Lasse's film line, adapted
     complete: ['lasse', 'Inga fler hajar i poolerna. Berra lovar att sluta dricka. Till lunch.'], // [N]
     items: ['fena_flamenco', 'fena_suntrip', 'fena_plaza', 'fena_golf', 'fena_bungalow', 'fena_hamn', 'fena_hav']
       .map((lm) => ({ id: lm, lm })),

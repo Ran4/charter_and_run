@@ -83,7 +83,10 @@ export const ISLAND_MISSIONS = [
     extra: [['ole', 2.5, 1.0], ['siv', -3.0, 2.0], ['majsan', -3.8, 2.4], ['jose', 4.5, 3.0], ['mamma', 5.3, 3.0], ['robban', -1.5, 4.0], ['berra', -2.2, 4.4], ['affe', 3.5, -1.0]],
     idleAnim: { berra: 'slump' },   // Berra sleeps it off while the mission waits (§9.4 item 11)
     intro: [
-      ['robban', 'Invalido.', { anim: { who: 'berra', flag: 'slump', secs: 20 } }],   // [F]
+      // A group shot of the arrivals crowd from the terminal side, facing them (a negative dist stands
+      // the camera in front of the landmark); runner.begin() ends the cut after the intro. Lasse and
+      // Stig half turned to each other and the camera, Robban to the camera and the sleeping Berra.
+      ['robban', 'Invalido.', { anim: { who: 'berra', flag: 'slump', secs: 20 }, cut: { at: 'airport', dist: -10, height: 3.2 }, place: { lasse: ['airport', 0, 0, 5 * PI / 4], stig: ['airport', 1.2, 0.8, 3 * PI / 4], robban: ['airport', -1.5, 4.0, 2.75] } }],   // [F]
       ['guardia', 'Gracias.'],                                                       // [F](t) the officer at passport control
       ['mamma', '¡Josito! ¡Josito!'],                                                // [F]
       ['mamma', 'Inga svenskor!'],                                                   // [F]
@@ -95,7 +98,7 @@ export const ISLAND_MISSIONS = [
       ['lasse', 'Affe, du får ta transfern.'],                                       // [F*] a hotel cutaway in the film, relocated
       ['affe', 'Va fan, jag hade ju natturen i natt! Jag har haft två grisfester i veckan.'],   // [F*]
       ['lasse', 'Olsson! Du ser ut som en man med körkort.'],                        // [N]
-      ['lasse', 'SunTrips buss nummer 17 står där borta!'],                          // [F]
+      ['lasse', 'SunTrips buss nummer 17 står där borta!'],                          // [F](t)
     ],
     stages: [
       // Ole rides up front; the sisters and the Storchs are window busts (hidden as NPCs meanwhile).
@@ -121,15 +124,16 @@ export const ISLAND_MISSIONS = [
         ],
       }),
     ],
-    outroPlace: { lasse: ['flamencoRecepcion', 1.5, 1.5], portier: ['flamencoRecepcion', 0, 0], ole: ['flamencoRecepcion', -1.5, 2.0], stig: ['flamencoRecepcion', 0, 3.0] },
+    outroPlace: { lasse: ['flamencoRecepcion', 1.5, 1.5], portier: ['flamencoRecepcion', 0, 0], ole: ['flamencoRecepcion', -1.4, 4.4], stig: ['flamencoRecepcion', 0, 3.0] },
     outro: [
       ['lasse', 'Det har dessvärre uppstått ett litet problem på grund av överbokning.'],          // [F](t)
       ['lasse', 'Olsson, Stig-Helmer… och Bramserud, Ole… Kan ni dela rum?'],                       // [F](t)
       ['stig', 'Ja…'],                                                                              // [F]
-      // The sea view: the porter steps out under the balcony and holds up his mirror to the camera.
-      ['stig', 'Kallar ni det här för havsutsikt?', { cut: 'flamencoBalcony', place: { portier: ['flamencoBalcony', 0.6, 1.2, 0] } }],   // [F](t)
+      // Room 107 (the cut holds to the end): Stig in the doorway, the porter holds his mirror up to
+      // show the sea; Ole sets up his boombox inside, and the porter goes back to the desk.
+      ['stig', 'Kallar ni det här för havsutsikt?', { cut: { at: 'rum107Cam', dist: 5.5, height: 2.1 }, place: { stig: ['flamencoPatio', 0, -2.4, 0], portier: ['flamencoPatio', 1.3, -1.2, -0.25], ole: ['flamencoPatio', -1.6, -3.6, 0.3] } }],   // [F](t)
       ['portier', 'Momento.', { anim: { who: 'portier', flag: 'mirror', secs: 3 } }],                                                    // [F]
-      ['ole', 'Litt lenger inn mot veggen. Snu den litt mer mot meg. Sånn ja… Kom og hør nå! Fin lyd.', { cut: null, place: { portier: ['flamencoRecepcion', 0, 0] } }],   // [F]
+      ['ole', 'Litt lenger inn mot veggen. Snu den litt mer mot meg. Sånn ja… Kom og hør nå! Fin lyd.', { place: { portier: ['flamencoRecepcion', 0, 0] } }],   // [F]
       ['ole', 'Du kan ikke gå sånn her nede! Den buksa og det slipset! … Shorts.'],                                                     // [F]
       ['stig', 'Är den inte lite skrikig?'],                                                                                           // [F]
       ['ole', 'Du skal ha sterke farger, du som er mørk.', { outfit: { who: 'stig', name: 'hawaii' }, flash: 'white', sfx: 'helanGar' }],   // [F]
@@ -162,7 +166,9 @@ export const ISLAND_MISSIONS = [
       }),
       () => goto({ to: 'friskotek', radius: 5, text: 'Lämna bollarna till Lasse' }),   // [N]
     ],
-    outroPlace: { lasse: ['friskotek', 0, 1.5], angerud: ['friskotek', 2.5, 1.0] },
+    // Everyone who speaks stands in one group shot, facing the camera north of them.
+    outroPlace: { lasse: ['friskotek', 0, 1.5, PI], angerud: ['friskotek', 1.6, 2.4, -2.4], berra: ['friskotek', -2.4, 1.0, PI], robban: ['friskotek', -3.4, 1.4, PI], ole: ['friskotek', 2.8, 1.0, PI], stig: ['friskotek', -1.0, 2.6, 2.5] },
+    outroCam: { at: 'friskotek', dist: 6, height: 2.4 },
     outro: [
       ['lasse', 'Ni lufsar som troll!'],                                                          // [F*](t)
       ['berra', 'Fan… Herr Ober? De har inte öppnat än. Klockan är ju snart tio.'],                // [F]
@@ -201,17 +207,17 @@ export const ISLAND_MISSIONS = [
         lines: {
           start: [['souvenir', 'Hallå där!'], ['ole', 'Hvor mye?'], ['souvenir', '500 pesetas.'], ['ole', 'To hundre?']],                    // [F] · [F*](t) · [F] · [F*](t)
           hit: [
-            [['ole', 'Jeg gir deg to hundre. Det er… 18 norske kroner.'], ['souvenir', '400 pesetas. Titta, den är jättelustig.']],          // [F] · [F]
+            [['ole', 'Jeg gir deg to hundre. Det er… 18 norske kroner.'], ['souvenir', '400 pesetas. Titta, den är jättelustig.']],          // [F*] · [F]
             [['ole', 'Så morsom er den ikke. To hundre.'], ['souvenir', '300 pesetas! Sista pris!']],                                       // [F*] · [N]
             [['ole', 'To hundre er siste bud.']],                                                                                          // [F]
           ],
           miss: [['souvenir', '¡No, no, no!']],                                                                                            // [N]
-          win: [['ole', 'Første, andre, tredje – to hundre pesetas!'], ['souvenir', 'Kör till.'], ['souvenir', 'Por favor.'], ['souvenir', 'Jävla smålänningar!']],   // [F*](t) · [F](t) · [F] · [F]
+          win: [['ole', 'Første, andre, tredje – to hundre pesetas!'], ['souvenir', 'Kör till.'], ['souvenir', 'Por favor.'], ['souvenir', 'Jävla smålänningar!']],   // [F*](t) · [F](t) · [F](t) · [F]
         },
       }),
       () => grab({ at: 'asnestand', mesh: 'asna', text: 'Ta åsnan' }),                                                         // [N]
       () => goto({ to: 'supermercado', radius: 8, inCar: true, passenger: 'ole', text: 'Leta knäckebröd – samma sort som i julklappen' }),   // [N]
-      () => grab({ at: 'supermercado', mesh: 'knacke', text: 'Ta ett SPORT-KNÄCKE-paket', say: ['stig', 'Det är ungefär så här stort.'] }),   // [N] · say [F]
+      () => grab({ at: 'supermercado', mesh: 'knacke', text: 'Ta ett SPORT-KNÄCKE-paket', say: ['stig', 'Det är ungefär så här stort.'] }),   // [N] · say [F](t)
       // Painted in the car in the Centro Nórdico lot; the cut shows the FERRETERÍA front.
       () => scene({ frame: ['ole', 'stig'], lines: [
         ['ole', 'Og så maler vi den rød.', { cut: 'ferreteria' }],   // [F*](t)
@@ -220,11 +226,12 @@ export const ISLAND_MISSIONS = [
       () => goto({ to: 'vikingbar', radius: 7, inCar: true, passenger: 'ole', timer: TIMERS.asnanPaint, fragile: { label: 'SKICK', failText: 'Färgen blev förstörd!' }, text: 'Kör försiktigt till Viking Bar – färgen är våt!' }),   // [N]
       () => goto({ to: 'vikingbar', radius: 2.5, onFoot: true, text: 'Lämna paketet i baren' }),   // [N]
     ],
-    outroPlace: { carmencita: ['vikingbar', 0, 1.5], angerud: ['vikingbar', 2.5, 1.2] },
+    // Both face the street, where the cut camera stands; Stig has left by the time Angerud comes in.
+    outroPlace: { carmencita: ['vikingbar', -0.8, 1.6, 0], angerud: ['vikingbar', 0.9, 1.3, 0] },
     outro: [
       ['stig', 'Ett paket till Viking Bar. Det är till en moster.'],                     // [N]
       ['carmencita', 'Jag lägger det bakom disken.', { toast: 'Senare samma dag…' }],      // [N]
-      ['angerud', 'Buenas dias, lilla vikingen. Har paketet kommit?', { cut: 'vikingbar' }],   // [F]
+      ['angerud', 'Buenas dias, lilla vikingen. Har paketet kommit?', { cut: { at: 'vikingbar', dist: 6.5, height: 3.4 }, place: { stig: ['vikingbar', 4, -9, 0] } }],   // [F] high enough to see over a car parked at the door
       ['angerud', 'God jul, moster.'],                                                   // [F] he reads the card
       ['angerud', 'Hur såg han som lämnade in det ut?'],                                 // [F]
       ['carmencita', 'Han var lång, mörkhårig… hade glasögon och mustasch.'],            // [F]
@@ -253,13 +260,14 @@ export const ISLAND_MISSIONS = [
       () => goto({
         to: 'vischan', radius: 14, inCar: true, passenger: 'berra', timer: TIMERS.bodegaVischan, text: 'Leta inåt land',   // [N]
         radio: [['berra', 'Det här är ju rena vischan. Vi måste ha kört för långt.'], ['robban', 'Fan, vad jag är törstig.']],   // [F*] the film's "gått", said on foot · [F]
-        overhear: [{ at: 'eslovVag', r: 25, radio: true, lines: [['berra', 'Heja Eslöv!'], ['robban', 'Herre jävlar!']] }],     // [F] · [F]
+        overhear: [{ at: 'eslovVag', r: 25, radio: true, lines: [['berra', 'Heja Eslöv!'], ['robban', 'Herre jävlar!']] }],     // [F] · [F](t)
       }),
       () => dropoff({ who: 'berra', at: 'vischan', riderOff: true, text: 'Stanna vid tomatfälten' }),   // [N]
-      // Hitch-hike logic: Stig refuses the dirt road (åksjuka), then they hitch the pig truck.
-      () => scene({ frame: ['berra', 'stig'], lines: [
+      // Hitch-hike logic: Stig refuses the dirt road (åksjuka), then they hitch the pig truck. He
+      // steps out to say so (seated, the two-shot saw the car roof); the tail starts once he is back in.
+      () => scene({ frame: ['berra', 'stig'], exitCar: true, lines: [
         ['stig', 'Jag kör inte längre på grusvägen. Jag har anlag för åksjuka.'],   // [N]
-        ['berra', 'Jag går inte en meter till. Vi liftar.'],                        // [F]
+        ['berra', 'Jag går inte en meter till. Vi liftar.'],                        // [F](t)
       ], doneCue: { toast: 'En grisbil stannar…' } }),                              // [N]
       () => follow({
         type: 'grisbil', carName: 'grisbilFollow', driver: 'grisbonde', riders: ['berra', 'robban'], hideRiders: true,
@@ -285,18 +293,20 @@ export const ISLAND_MISSIONS = [
       ['berra', 'Var jag med där? Hade jag kul?'],                                                                                                       // [F]
       ['berra', 'Pepes Bodega… Den måste ligga nånstans, Robban.', { cut: null }],                                                                       // [N]
       // Angerud has opened the package: the answering machine, then Levander in Åre (film order).
-      ['pax', 'Hytt två!', { cut: 'telefon', toast: 'Samtidigt har direktör Angerud öppnat sitt paket…' }],                                              // [F](t) · toast [N]
+      // Angerud is in a booth at the telephone station (he faces the booths, like the camera).
+      ['telefonist', 'Hytt två!', { cut: 'telefon', place: { angerud: ['telefon', 0.6, 2.4] }, toast: 'Samtidigt har direktör Angerud öppnat sitt paket…' }],   // [F](t) the phone-station clerk (said in English in the film) · toast [N]
       ['levander', 'Detta är dr Levanders automatiska telefonsvarare. Solariet, flygrädslekliniken, bantningen och örtshopen är stängda över jul.'],      // [F]
       ['levander', 'Viktiga meddelanden kan lämnas till hotell Ambassadör i Åre.'],                                                                      // [F]
       ['levander', 'En målad åsna…? Idén med paketet var idiotisk redan från början.', { toast: 'Senare, i Åre…' }],                                     // [F] · toast [N]
       ['levander', 'Nu måste du få tillbaka pengarna. Snacka med honom. Han vill kanske ha hittelön. Gör nåt!'],                                         // [F]
-      // Angerud corners Stig by the pool (the two face each other; the sisters sunbathe beside them).
-      ['angerud', 'Man måste ha mycket svenska pengar med sig hit… om man säger.', { cut: 'flamencoPool', place: { angerud: ['flamencoPool', 1.2, 1.0, PI / 2], stig: ['flamencoPool', -0.3, 0.8, -PI / 2] } }],   // [F]
+      // Angerud corners Stig by the pool (the two face each other; the sisters sunbathe beside them,
+      // facing the cut camera so their two lines are not said by their backs).
+      ['angerud', 'Man måste ha mycket svenska pengar med sig hit… om man säger.', { cut: 'flamencoPool', place: { angerud: ['flamencoPool', 1.2, 1.0, PI / 2], stig: ['flamencoPool', -0.3, 0.8, -PI / 2], siv: ['flamencoPool', 3.0, 0.2, 0], majsan: ['flamencoPool', -2.6, 0.2, 0] } }],   // [F]
       ['angerud', 'Men det är ju inte samma sak att hitta något som att stjäla.'],                                                                       // [F]
       ['angerud', 'För om man hittar något, så kan man få hittelön. Tänk på det.', { sfx: 'slap' }],                                                     // [F]
       ['stig', 'Aj! Det ska jag göra.'],                                                                                                                 // [F]
-      ['siv', 'Vad konstig han var!'],                                                                                                                   // [F]
-      ['majsan', 'Det är kombinationen av sol och…'],                                                                                                    // [F] (the pool cut holds to the end)
+      ['siv', 'Vad konstig han var!'],                                                                                                                   // [F](t)
+      ['majsan', 'Det är kombinationen av sol och…'],                                                                                                    // [F](t) (the pool cut holds to the end)
     ],
   },
 
@@ -322,16 +332,16 @@ export const ISLAND_MISSIONS = [
       }),
       () => goto({ to: 'plaza', radius: 4, onFoot: true, text: 'Parkera och spana diskret från fontänen' }),   // [N]
     ],
-    outroPlace: { jose: ['grillpaco', 0, 0], siv: ['grillpaco', 1.2, 0], mamma: ['grillpacoMamma', 0, 0] },
-    outroCam: ['jose', 'siv'],   // the spying shot: the player stays at the fountain
+    outroPlace: { jose: ['grillpaco', 0, 0], siv: ['grillpaco', 1.2, 0], mamma: ['grillpacoMamma', 0, 0, 0] },   // Mamma faces her cut
+    outroCam: ['jose', 'siv'],   // the spying shot: the player stays at the fountain; Siv answers in it
     outro: [
       ['jose', 'Kanarisk specialitet! Ropa vieja – gamla kläder.'],                       // [F]
       ['siv', 'Vad sa du?'],                                                             // [F]
       ['jose', 'Gamla kläder. Det är ungefär som pyttipanna.'],                          // [F]
-      ['jose', 'Är det säkert att det inte gör nåt att mamma följde med?', { cut: 'grillpacoMamma' }],   // [F]
-      ['siv', 'Vill hon inte sitta här?'],                                               // [F]
-      ['jose', 'Nej, hon vill inte vara i vägen.', { cut: null }],                       // [F]
-      ['siv', 'Jag fick användning för din peppar.', { toast: 'Dagen efter, vid poolen…', place: { siv: ['flamencoPool', 2, 0], majsan: ['flamencoPool', -2, 0] }, cut: 'flamencoPool' }],   // [F] · toast [N]
+      ['jose', 'Är det säkert att det inte gör nåt att mamma följde med?', { cut: { at: 'grillpacoMamma', dist: 5, height: 1.9 } }],   // [F] (in front of the Casa Lola pergola)
+      ['siv', 'Vill hon inte sitta här?', { cut: null }],                                // [F]
+      ['jose', 'Nej, hon vill inte vara i vägen.'],                                      // [F]
+      ['siv', 'Jag fick användning för din peppar.', { toast: 'Dagen efter, vid poolen…', place: { siv: ['flamencoPool', 1.2, 0.6, PI / 2], majsan: ['flamencoPool', -1.2, 0.6, -PI / 2] }, cut: 'flamencoPool' }],   // [F] · toast [N]
       ['siv', 'Han kom och hämtade mig. Gissa vem han hade med sig… Morsan!'],           // [F]
       ['siv', 'Jag ska satsa på Ole nu. Jag har inga fördomar mot norrmän.'],            // [F]
       ['majsan', 'Nej, bara de inte går på tur…'],                                       // [F] (the pool cut holds to the end)
@@ -363,7 +373,10 @@ export const ISLAND_MISSIONS = [
         ],
       }),
       () => scene({
-        place: { fruStorch: ['fataga', -2, 2], mamma: ['fatagaDukar', 0, 0], siv: ['fataga', 2, 2], majsan: ['fataga', 1, 3] }, frame: ['mamma', 'fruStorch'],
+        // At Mamma's tablecloth stall, shot from the square: Mamma faces the camera, the tourists stand
+        // either side of her, half turned to her.
+        place: { mamma: ['fatagaDukar', 0, 0], fruStorch: ['fatagaDukar', -1.8, 2.2, PI + 0.5], siv: ['fatagaDukar', 1.5, 2.4, PI - 0.5], majsan: ['fatagaDukar', 2.9, 1.8, PI - 0.8] },
+        cam: { at: 'dukarCam', dist: 7.5, height: 2.1 },
         lines: [
           ['fruStorch', 'Stackars människor som lever så här.'],                         // [F](t)
           ['mamma', 'Stackars människor. Släpas runt på dagarna som en skock får…!'],    // [F]
@@ -373,7 +386,7 @@ export const ISLAND_MISSIONS = [
       () => rabbits({ mesh: 'faar', count: 6, near: 'fataga', rMin: 10, rMax: 35, timer: TIMERS.fatagaSheep, text: 'Fånga fåren åt Josés pappa', barLabel: 'FÅR', gotText: 'Bäää!', failText: 'Fåren sprang hela vägen till Maspalomas.' }),   // [N]
       () => goto({ to: 'fatagaFold', radius: 4, text: 'Tillbaka till fårfållan' }),   // [N]
     ],
-    outroPlace: { pappa: ['fatagaFold', 1.5, 0], mamma: ['fatagaDukar', 0, 0], siv: ['fatagaDukar', 2, 1.5], majsan: ['fatagaDukar', 3, 1.5] },
+    outroPlace: { pappa: ['fatagaFold', 1.5, 0], mamma: ['fatagaFold', -1.2, 0.6], siv: ['fatagaFold', -2.4, 1.6], majsan: ['fatagaFold', -1.4, 2.0] },
     outro: [
       ['pappa', '¡Gracias, señor!'],                                  // [N]
       ['mamma', 'Det är hon som vill ta min Josito ifrån mig.'],      // [F]
@@ -390,7 +403,7 @@ export const ISLAND_MISSIONS = [
       ['ole', 'Skal du ha B-vitaminer? Bra for leveren. Grisefest, vet du. Ta to.'],                    // [F]
       ['ole', 'Og jeg har C-vitaminer… jerntabletter, ginseng, tannkrem…?'],                            // [F*]
       ['ole', 'Du, de er fine de rødhårete. Vi skulle ha satt inn et støt der.'],                       // [F]
-      ['ole', 'Vi kan be resepsjonen sette en blomster på rommet deres.'],                              // [F*](t) rendered in Norwegian: "blomster" is Ole's word
+      ['ole', 'Vi kan be resepsjonen sette blomster på rommet deres.'],                                 // [F*](t) rendered in Norwegian: "blomster" is Ole's word
       ['ole', 'Blomster? … Meloner? Agurker? Bananer?'],                                                // [F]
       ['stig', 'Men blommor… Gör man så i Norge?'],                                                     // [F](t)
       ['ole', 'Blomsterspråket er internasjonalt.'],                                                    // [F]
@@ -413,7 +426,9 @@ export const ISLAND_MISSIONS = [
       () => smash({ type: 'tallrikar', area: { lm: 'dansgolv', r: 22 }, count: 10, timer: TIMERS.grisfestPlates, lockMeter: true, onFoot: true, text: 'Porslinskross! Krossa tallrikarna medan bandet spelar', barLabel: 'TALLRIKAR', failText: 'Bandet slutade spela.', radio: [['pax', 'Vad skickliga de är!']], checkpoint: true, retryAt: 'dansgolv' }),   // [N] · radio [F](t)
       // Ole's `gris` shirt goes on the stage's startCue, so a checkpoint retry re-applies it (§10.4).
       () => scene({
-        place: { majsan: ['dansgolv', 1, 0], siv: ['dansgolv', 2.5, 0.5], ole: ['dansgolv', -1.5, 0.5] }, frame: ['majsan', 'stig'],
+        // A row across the floor: Ole, Stig facing Majsan, Siv. The two-shot comes from either side and
+        // sees all four in profile. Stig's spot is the calibrate Tonga start (approachSpot('dansgolv')).
+        place: { majsan: ['dansgolv', 1.2, 1.6, -PI / 2], siv: ['dansgolv', 2.8, 1.9, -PI / 2], ole: ['dansgolv', -1.8, 1.9, PI / 2], stig: ['dansgolv', -0.2, 1.6, PI / 2] }, frame: ['majsan', 'stig'],
         checkpoint: true, retryAt: 'dansgolv', startCue: { outfit: { who: 'ole', name: 'gris' } },
         lines: [
           ['ole', 'Neida, det er bare å spørre: Skal vi danse! Eller kjør litt større: Sånn! … Voulez-vous danse avec moi? Fransk.'],   // [F]
@@ -427,8 +442,9 @@ export const ISLAND_MISSIONS = [
       }),
       () => goto({ to: 'tongatonga', radius: 10, inCar: true, timer: TIMERS.grisfestTonga, text: 'Till Tonga Tonga!' }),   // [N]
       () => scene({
-        place: { ole: ['tongatonga', -2, 1], majsan: ['tongatonga', 1, 1], siv: ['tongatonga', 2, 1], robban: ['tongatonga', 0, 3], berra: ['tongaLot', 0, 0], stig: ['tongatonga', 0.4, 5.2, 0] }, anim: { berra: 'slump' },
-        frame: ['robban', 'stig'],
+        // In front of the TONGA TONGA sign, shot from the street (a side two-shot stood in the arcade).
+        place: { ole: ['tongatonga', -2.2, 3.2, 0], majsan: ['tongatonga', 2.0, 3.0, 0], siv: ['tongatonga', 3.0, 3.4, 0], robban: ['tongatonga', -0.8, 1.2, -PI / 2], berra: ['tongaLot', 0, 0], stig: ['tongatonga', 0.8, 1.2, PI / 2] }, anim: { berra: 'slump' },
+        cam: { at: 'tongatonga', dist: 6, height: 2.6 },
         lines: [
           ['ole', 'Samba er fine greier!', { music: 'samba' }],   // [F]
           ['robban', 'Kan du hjälpa mig bära hem Berra?'],         // [F]
@@ -443,7 +459,10 @@ export const ISLAND_MISSIONS = [
       if (reason === 'complete') g.cue({ banner: ['MORGONEN EFTER', 'Julafton på Gran Canaria', 'mission'] });   // [N]
       g.cue({ sky: 'day', music: g.levelTune() });   // the island's tune: `sol`, or the player's `samba`
     },
-    outroPlace: { portier: ['flamencoRecepcion', 0, 0], angerud: ['flamencoRecepcion', -1.6, 1.2], carmencita: ['flamencoRecepcion', -2.4, 1.2], majsan: ['flamencoPool', 0, 0], stig: ['flamencoRecepcion', 1.5, 3.0] },
+    // The desk from the porch front: the porter faces the camera, Angerud and Carmencita on his left and
+    // Stig on his right face him side-on (a two-shot from under the porch put Angerud in front of him).
+    outroPlace: { portier: ['flamencoRecepcion', 0, 0, 0], angerud: ['flamencoRecepcion', -1.4, 1.4, PI / 2], carmencita: ['flamencoRecepcion', -2.2, 1.6, PI / 2], majsan: ['flamencoPool', 0, 0], stig: ['flamencoRecepcion', 1.6, 2.6, -PI / 2] },
+    outroCam: { at: 'recepcionCam', dist: 7.5, height: 2.0 },
     outro: [
       ['portier', 'Det är förbjudet att ta med damer på rummet. Men för 500 pesetas kanske vi kommer överens.'],                          // [F]
       ['angerud', '500 pesetas…? Det här är ju min fru.'],                                                                              // [F]
@@ -451,12 +470,13 @@ export const ISLAND_MISSIONS = [
       ['angerud', 'En cigarrett, älskling?'],                                                                                           // [F](t)
       ['carmencita', 'Nej tack. Jag röker inte.'],                                                                                      // [F](t)
       ['portier', 'Jaså, din fru…?'],                                                                                                   // [F](t)
-      ['angerud', 'Måtte djävulen ta alla fruntimmer!', { cut: 'flamencoBalcony' }],                                                    // [F]
+      ['angerud', 'Måtte djävulen ta alla fruntimmer!', { cut: 'flamencoBalcony', place: { angerud: ['flamencoBalcony', 0, 1.2, 0] } }],   // [F] on his room-113 patio
       // The orchestrator's order: the warm-nights talk and the mantra last, as the mission's button.
-      ['majsan', 'Vad härligt det är med de här varma nätterna. Snart ska man hem till slasket igen. Jag vill inte åka hem.', { cut: 'flamencoPool', place: { majsan: ['flamencoPool', 0, 0, PI / 2], stig: ['flamencoPool', -1.3, 0, -PI / 2] } }],   // [F*]
+      // Just the two of them at the pool (Siv's home is beside it).
+      ['majsan', 'Vad härligt det är med de här varma nätterna. Snart ska man hem till slasket igen. Jag vill inte åka hem.', { cut: 'flamencoPool', place: { majsan: ['flamencoPool', 0, 0, PI / 2], stig: ['flamencoPool', -1.3, 0, -PI / 2] }, hide: ['siv'] }],   // [F*](t)
       ['majsan', 'Jag gruvar mig lite för flygresan.'],                                                                                 // [F*]
       ['stig', 'Jag kan flyga, jag är inte rädd.', { anim: { who: 'stig', flag: 'wings', secs: 3 } }],                                   // [F*]
-      ['majsan', 'Nu skulle Levander se oss!'],                                                                                         // [F*]
+      ['majsan', 'Nu skulle Levander se oss!'],                                                                                         // [F*](t)
       ['majsan', 'Du… gillar du bruna bönor?'],                                                                                         // [F*](t)
       ['stig', 'Jag avskyr bruna bönor.'],                                                                                              // [F*](t) (the pool cut holds to the end)
     ],
@@ -472,7 +492,9 @@ export const ISLAND_MISSIONS = [
       ['ole', 'Feliz navidad.'],                                                                                          // [F](t)
       ['stig', 'Vad sa du?'],                                                                                             // [F](t)
       ['ole', 'Det betyr \'god jul\' på spansk.'],                                                                        // [F*](t)
-      ['stig', 'Javisst, det är julafton i dag.', { sfx: 'knock', place: { hittegods: ['flamencoPatio', 1.5, 2.0] } }],   // [F](t)
+      // The knock: a cut to the patio front of room 107 (held to the end of the intro), Stig on his
+      // approach spot between Ole and the man from the airport, who faces him.
+      ['stig', 'Javisst, det är julafton i dag.', { sfx: 'knock', cut: { at: 'rum107Cam', dist: 7.5, height: 2.1 }, place: { ole: ['flamencoPatio', -1.5, 0.9, 0.6], stig: ['flamencoPatio', 0, 1.5, 1.3], hittegods: ['flamencoPatio', 1.5, 2.7, -1.6] } }],   // [F](t)
       ['hittegods', 'Hammarby…?'],                                                                                        // [F]
       ['stig', 'Ja!', { toast: 'Väskan är tillbaka!' }],                                                                  // [F] · toast [N]
       ['hittegods', 'Hittelön.', { coins: -25 }],                                                                         // [F](t)
@@ -499,10 +521,10 @@ export const ISLAND_MISSIONS = [
       }),
       () => goto({ to: 'flamencoPool', radius: 8, text: 'Till julfesten vid poolen!', startCue: { music: 'jul', outfit: { who: 'lasse', name: 'jul' } } }),   // [N]
       // The party payoffs: one group shot from the pool deck (everyone faces it, yaw 0), Stig among
-      // the guests; the bodega cutaway returns to the group shot.
+      // the guests, the porter watching from the side; the bodega cutaway returns to the group shot.
       () => scene({
         cam: PARTY_CAM,
-        place: { lasse: ['flamencoPool', 0, 3, 0], ole: ['flamencoPool', -1.5, 1, 0], herrStorch: ['flamencoPool', 3, 2, 0], fruStorch: ['flamencoPool', 4, 2, 0], majsan: ['flamencoPool', -2.5, 0.5, 0], siv: ['flamencoPool', -3.5, 1, 0], berra: ['flamencoPool', 5, -1, 0], robban: ['flamencoPool', 6, -1, 0], stig: ['flamencoPool', 1.0, 1.0, 0] },
+        place: { lasse: ['flamencoPool', 0, 3, 0], ole: ['flamencoPool', -1.5, 1, 0], herrStorch: ['flamencoPool', 3, 2, 0], fruStorch: ['flamencoPool', 4, 2, 0], majsan: ['flamencoPool', -2.5, 0.5, 0], siv: ['flamencoPool', -3.5, 1, 0], berra: ['flamencoPool', 5, -1, 0], robban: ['flamencoPool', 6, -1, 0], stig: ['flamencoPool', 1.0, 1.0, 0], portier: ['flamencoPool', -7, 0.5, -PI / 4] },
         lines: [
           ['lasse', 'Hej tomtegubbar, slå i glasen… Skål och god jul!', { music: 'hejTomtegubbar', applause: 2 }],      // [F](t)
           ['ole', 'Ta av lokket! Objektivlokket. Må ta av det, vet du.'],                                              // [F]
@@ -516,7 +538,7 @@ export const ISLAND_MISSIONS = [
           ['robban', 'Det var som fan! Var låg det?'],                                                                // [F]
           ['berra', 'Det ligger på baksidan av hotellet.', { cut: 'bodega' }],                                        // [F]
           ['robban', 'Och vi som har letat igenom hela jävla Nueva Estocolmo!', { cut: PARTY_CAM }],                   // [F]
-          ['pax', 'De där svenskarna är heltokiga!', { music: 'smaGrodorna' }],                                       // [F](t)
+          ['portier', 'De där svenskarna är heltokiga!', { music: 'smaGrodorna' }],                                   // [F](t) the Spaniards' line; the porter watches from the side
           ['stig', 'Julmaten från väskan… och knäckebrödet.', { anim: { who: 'stig', flag: 'butterKnife', secs: 3 } }],   // [N]
           ['ole', 'Hva i all verden…', { sparkle: true, sfx: 'pryl' }],                                               // [N]
           ['stig', 'Femtio… tusen… kronor. I knäckebrödet.'],                                                         // [N]
@@ -537,13 +559,14 @@ export const ISLAND_MISSIONS = [
           ['stadare', 'God jul! Hoppsan. Stör jag?'],                                                                             // [F]
           ['siv', 'Gösta, ska du inte med på julfesten?'],                                                                        // [F]
           ['angerud', 'Ut! Ut!', { sfx: 'doorSlam', flash: 'white', hide: ['angerud'] }],                                          // [F]
-          ['pa', '…', { sfx: 'ambulance', toast: 'En ambulans hämtade direktör Angerud. Han kommer att bli bra igen.' }],          // [N] a silent PA line carrying the caption
+          ['siv', '…', { sfx: 'ambulance', toast: 'En ambulans hämtade direktör Angerud. Han kommer att bli bra igen.' }],         // [N] Siv's silent beat carries the caption
         ],
       }),
       () => mantra({ duet: 'majsan', at: 'flamencoPool', radius: 4, secs: 4, text: 'Visa Majsan övningen – håll J', barLabel: 'JAG KAN FLYGA', startCue: { sky: 'sunset', place: { majsan: ['flamencoPool', 1.2, 0] }, say: ['majsan', 'Visa mig igen. Inför hemresan.'] } }),   // [N] ×2
     ],
-    // Sunset, both in the wings pose, side by side facing the camera on the pool deck.
-    outroPlace: { majsan: ['flamencoPool', 0.9, 0.6, 0], stig: ['flamencoPool', -0.9, 0.6, 0] },
+    // Sunset, both in the wings pose, side by side facing the camera on the pool deck; Ole and Siv
+    // behind them, the four of the Rio card (Ole has the last line).
+    outroPlace: { majsan: ['flamencoPool', 0.9, 0.6, 0], stig: ['flamencoPool', -0.9, 0.6, 0], ole: ['flamencoPool', -2.6, 1.6, 0], siv: ['flamencoPool', 2.6, 1.6, 0] },
     outroCam: { at: 'flamencoPool', dist: 7, height: 2.4 },
     outro: [
       ['stig', 'Jag kan flyga, jag är inte rädd.', { anim: { who: ['stig', 'majsan'], flag: 'wings', secs: 6 } }],   // [F]

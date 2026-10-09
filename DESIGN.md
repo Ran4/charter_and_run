@@ -206,7 +206,8 @@ with existing fields so nothing blocks.
 | `grisbonde` | Grisbonden | pig-truck driver (bust/NPC) | 200 | `#d8321e` | shirt `0x6a5a3a`, `hat:'sunhat'`† |
 | `varden` | Grisfestvärden | grisfest host (unnamed) | 210 | `#d8321e` | `wide` 1.3, white shirt, red sash stripe, mustache |
 | `guardia` | Guardia Civil | pursuer officer + vehicle busts | 210 | `#3d5a3a` | green uniform `0x3d5a3a` shirt+pants longSleeves, `hat:'tricorn'`† black gloss, mustache |
-| `pax` | Medpassagerare | anonymous voice for (t) lines | 280 | `#fff8e6` | random 1979 tourist (brown/orange clothes) |
+| `pax` | Medpassagerare | anonymous voice for (t) lines (a fellow tourist; not for the Spaniards' lines) | 280 | `#fff8e6` | random 1979 tourist (brown/orange clothes) |
+| `telefonist` | Telefonisten | portrait only: the Las Palmas telephone-station clerk, "Hytt två!" (Phase 3) | 330 | `#d8321e` | skin ES, hair `short` `0x1d1426`, glasses, pale-blue shirt `0xd8e4f0` longSleeves + collar |
 
 Removed Bigmouth keys: `nick maurice andrew steve jay jessi connie duke shame` (delete from
 `CHARS`; the monster/ghost/wizard builders may stay as dead code).
@@ -264,7 +265,7 @@ and fur hat).
 - `null` = hidden in that home set (`busy = true`, `state = 'hidden'`, `root.visible = false`).
 - `{ seat }` = seated by `cabin.seatCharacter` and `busy = true` (so `placeNpcs` skips it).
 - `vardinna2` is **not** in HOMES: the cabin owns it (trolley pusher).
-- Radio/portrait-only keys (no NPC instance): `levander kapten pa guardia pax` (`guardia` officers
+- Radio/portrait-only keys (no NPC instance): `levander kapten pa guardia pax telefonist` (`guardia` officers
   are spawned by the meter). They still get portraits (§14.3).
 - **NPC instances** (Phase 0, §14.2): one `Character` for **every** `CHARS` key except `stig` (the
   player), the radio-only keys above and the cabin-owned `vardinna2`, whether or not any home set
@@ -981,7 +982,7 @@ standing there faces. `y` (optional) = absolute height for collectible spots on 
 
 | block (i,j) | type → builder (owner, file) | content | landmarks: `id` (lx, lz, yaw[, y]) | named / parked cars |
 |---|---|---|---|---|
-| (3,3) | `flamenco` → `hotelFlamenco` (C1, hotels.js) | 7-storey white slab x [−26, 26], z [−27, −14] with balcony rows, terracotta accents, `HOTEL FLAMENCO` roof sign; open reception porch (canopy, desk, plastic Christmas tree `julgran` prop, `RECEPCIÓN`) at the slab's south face; ground-floor room patios along the south face (Stig & Ole's room west, room 113 east) with a visible 1st-floor balcony above 113; pool deck south with a **walkable shallow pool** (flat blue slab at CURB+0.02 + `box(..., CURB, 'water')`, sign "TRE METER DJUPT I ENA ÄNDEN, / EN METER I DEN ANDRA. / BARNVÄNLIG!" (three lines) [F*] (the bungalow seller's line, relocated)); poolbar with straw parasols (`BAR PISCINA · SVENSKT KAFFE`); the julafton party `julgran` on the pool deck at (2.2, 16), in the party and sunset-duet shots (Phase 3); room numbers: a closed room's centred above its own glass door, an open room's (107, 113) on its right-hand pier (Phase 3); parking lot on the west; **PEPES BODEGA**: small whitewashed annex x [4, 12], z [−31, −27] on the north side with a green door, barrels, sign `PEPES BODEGA · VINOS · RON` facing north (`worldHooks.bodegaLit(on)` lights it after julafton) | `flamenco` (−4, −8, π) (faces the hotel, so the views/cutaway camera stands on the pool deck; Phase 2) · `flamencoRecepcion` (2, −10, 0) · `flamencoPatio` (−18, −11, 0) · `rum113` (18, −11, 0) · `flamencoBalcony` (18, −8, π) · `flamencoPool` (−3, 18, π) · `flamencoDeck` (−4, −2.5, 0) (the island spawn: approachSpot puts the player on the pool deck at (−4, −1) facing the hotel, the chase camera over the pool rather than under the pergola slats; Phase 2) · `flamencoBar` (16, 12, −π/2) · `flamencoDrive` (−26, 22, π) · `flamencoBack` (−6, −33.5, 0) · `bodega` (8, −33.5, 0) · `fena_flamenco` (−3, 7, 0, 0.35) | `hyrbil` (sedan `0xf4f4f0`) at `flamencoDrive` — default `getInCar` car and test car |
+| (3,3) | `flamenco` → `hotelFlamenco` (C1, hotels.js) | 7-storey white slab x [−26, 26], z [−27, −14] with balcony rows, terracotta accents, `HOTEL FLAMENCO` roof sign; open reception porch (canopy, desk, plastic Christmas tree `julgran` prop, `RECEPCIÓN`) at the slab's south face; ground-floor room patios along the south face (Stig & Ole's room west, room 113 east) with a visible 1st-floor balcony above 113; pool deck south with a **walkable shallow pool** (flat blue slab at CURB+0.02 + `box(..., CURB, 'water')`, sign "TRE METER DJUPT I ENA ÄNDEN, / EN METER I DEN ANDRA. / BARNVÄNLIG!" (three lines) [F*] (the bungalow seller's line, relocated)); poolbar with straw parasols (`BAR PISCINA · SVENSKT KAFFE`); the julafton party `julgran` on the pool deck at (2.2, 16), in the party and sunset-duet shots (Phase 3); room numbers: a closed room's centred above its own glass door, an open room's (107, 113) on its right-hand pier (Phase 3); parking lot on the west; **PEPES BODEGA**: small whitewashed annex x [4, 12], z [−31, −27] on the north side with a green door, barrels, sign `PEPES BODEGA · VINOS · RON` facing north (`worldHooks.bodegaLit(on)` lights it after julafton) | `flamenco` (−4, −8, π) (faces the hotel, so the views/cutaway camera stands on the pool deck; Phase 2) · `flamencoRecepcion` (2, −10, 0) · `flamencoPatio` (−18, −11, 0) · `rum113` (18, −11, 0) · `flamencoBalcony` (18, −8, π) · `flamencoPool` (−3, 18, π) · cut anchors (Phase 3; a cut stands `dist` m behind one, looking the way it faces): `rum107Cam` (−18, −11, π) = `flamencoPatio` turned round (looks into room 107), `recepcionCam` (2, −10, π) = `flamencoRecepcion` turned round (the desk from the porch front) · `flamencoDeck` (−4, −2.5, 0) (the island spawn: approachSpot puts the player on the pool deck at (−4, −1) facing the hotel, the chase camera over the pool rather than under the pergola slats; Phase 2) · `flamencoBar` (16, 12, −π/2) · `flamencoDrive` (−26, 22, π) · `flamencoBack` (−6, −33.5, 0) · `bodega` (8, −33.5, 0) · `fena_flamenco` (−3, 7, 0, 0.35) | `hyrbil` (sedan `0xf4f4f0`) at `flamencoDrive` — default `getInCar` car and test car |
 | (3,2) | `suntrip` → `hotelSunTrip` (C1, hotels.js) | lower U-shaped hotel on red rock; welcome **stage** with SunTrip sun backdrop (red text on yellow sun), accordion/conga props; pool; **friskotek lawn**; SunTrip office porch on the south side facing Flamenco's back; posters `GRISFEST TORSDAG · 800 PTA`, `FRISKOTEKET 9.30` | `suntrip` (−14, 24, π) (faces the office porch; Phase 2) · `scen` (0, −14, 0) · `friskotek` (−10, 8, 0) · `suntripPool` (14, 4, π) · `suntripLot` (24, 22, π) · `fena_suntrip` (14, 8, 0, 0.35) | — |
 | (1,2) | `kasbah` → `kasbah` (C2, centre.js) | **Centro La Medina** (fictional; internal id `kasbah`): two-level nightlife courtyard centre: arcade, stairs (ramp) to a roof terrace (top ≈ 6.0) with a balustrade above the bottom three steps and a sloped wall collider along it (Phase 3: the way on is over those three steps), neon signs `CENTRO LA MEDINA`, `VIKING BAR` (horned helmet), `TONGA TONGA` (mirror ball), `BAR SVENSKA · SMÖRGÅSAR` | `kasbah` (0, 22, π) · `vikingbar` (−16, 18, π) · `tongatonga` (14, 18, π) · `tongaLot` (20, 27, π) · `pryl_poolpen` (8, −6, 0, 7.2) | — |
 | (4,2) | `cita` → `cita` (C2, centre.js) | **Centro Nórdico** (fictional; internal id `cita`) strip mall, sign `CENTRO NÓRDICO`: `SUPERMERCADO`, `FERRETERÍA`, `FARMACIA`, `ESTANCO`, `TELÉFONOS · HYTT 1·2·3`, `SOUVENIRS`, `SVENSKT KAFFE`, `CAMBIO · 1 KR = 17 PTA` (Phase 3: the north shop row and its canopy fit the courtyard between the wings, x ±11; `SOUVENIRS · REGALOS` and `FARMACIA` with its green cross sit on the wings' courtyard faces) | `cita` (0, 22, π) · `supermercado` (−18, 18, π) · `ferreteria` (18, 18, π) · `telefon` (0, 8, π) | — |
@@ -992,7 +993,7 @@ standing there faces. `y` (optional) = absolute height for collectible spots on 
 | (5,3) | `guardia` → `cuartel` (C2, centre.js) | ochre barracks, red-yellow-red flag mast beside the path at x 4.6 (Phase 3: off the axis to the `CASA CUARTEL` plaque), `CASA CUARTEL`; two parked green Land Rovers | `guardia` (0, 20, π) | `guardia1`, `guardia2` (type `guardia`, locked) |
 | (1,0), (3,0), (0,1) | `tomat` → `tomatfalt` (D1, nature.js) | rows of low tomato bushes (one merged mesh, walls a car drives through: no solids, or tops ≤ 0.6), packing shed `TOMATES · EXPORTACIÓN` / `EMPAQUETADO`, `tomatlada` props, dirt tracks | on (0,1): `vischan` (6, 24, π) · `eslovVag` (28, 4, −π/2) (road side, rollerskier) — on (3,0): `packhus` (0, 10, π) | — |
 | (2,0) | `grisfest` → `grisgard` (D1, nature.js) | farm: white barn (roof top ≈ 5), pergola deck with long tables under string lights, spit-roast pig, bandstand, dance-floor platform (deck top 0.4), piglet pen, gate on the **south** road; **12 `tallrikar` prop stacks** on the tables (smash stage; `placeProp(..., baseY = table top)`, §14.7) | `grisfest` (0, 26, π) · `grisfestGate` world (−80, −204, π/2) (on the south road at the farm gate, the `follow` endpoint) · `dansgolv` (0, 0, 0) · `pryl_pung` (−18, −14, 0, 5.4) | — |
-| (0,0) | `fataga` → `fataga` (D1, nature.js) | white village houses, tile roofs, narrow lanes, date palms, small church, embroidered tablecloths on lines (`MANTELES · DUKAR`), sheepfold (fence solids, gap gate) | `fataga` (0, 18, π) · `fatagaBus` world (−240, −204, −π/2) (westbound kerb of the z = −200 road, the `follow` endpoint) · `fatagaFold` (−18, −12, 0) · `fatagaDukar` (8, 4, π) · `pryl_kniv` (0, 0, 0, 1.2) | — |
+| (0,0) | `fataga` → `fataga` (D1, nature.js) | white village houses, tile roofs, narrow lanes, date palms, small church, embroidered tablecloths on lines (`MANTELES · DUKAR`), sheepfold (fence solids, gap gate) | `fataga` (0, 18, π) · `fatagaBus` world (−240, −204, −π/2) (westbound kerb of the z = −200 road, the `follow` endpoint) · `fatagaFold` (−18, −12, 0) · `fatagaDukar` (8, 4, π) · cut anchor `dukarCam` (8, 4, 0) = `fatagaDukar` turned round (the stall from the square; Phase 3) · `pryl_kniv` (0, 0, 0, 1.2) | — |
 | (4,0) | `golf` → `golf` (D1, nature.js) | fairway, bunkers (sand slabs), **pond** (`water` circle + flat blue), flag 18, small clubhouse `CAMPO DE GOLF` | `golf` (0, 22, π) · `fena_golf` (−10, −6, 0, 0.35) | — |
 | (5,0) | `bungalow` → `bungalowTomt` (D1, nature.js) | Angerud's show bungalow: one-storey white cube, pool, plot fence, `SE VENDE · BUNGALOW · 4 RUM OCH KÖK` | `bungalow` (0, 22, π) · `fena_bungalow` (6, −4, 0, 0.35) | — |
 | (5,1) | `bygge` → `bygge` (D1, nature.js) | half-built hotel frame, crane, girder deck with ramp (Bigmouth construction reworked), `PRÓXIMAMENTE · HOTEL NUEVA ESTOCOLMO II`, cones/barrels; the storeys under the 2nd- and 3rd-floor slabs are closed (dark core, brick infill on the faces the floor below walks along), since their colliders are solid from the ground (Phase 3) | `bygge` (0, 22, π) · `pryl_klocka` (6, −6, 0, 7.6) | — |
@@ -1660,10 +1661,14 @@ gently while Lasse's welcome speech plays. Ends in the overbooked hotel and Ole'
 `extra: [['ole', 2.5, 1.0], ['siv', -3.0, 2.0], ['majsan', -3.8, 2.4], ['jose', 4.5, 3.0], ['mamma', 5.3, 3.0], ['robban', -1.5, 4.0], ['berra', -2.2, 4.4], ['affe', 3.5, -1.0]]`
 (`[key, dx, dz]` = placed at `at` with that offset while idle; §9.2). `idleAnim: { berra: 'slump' }`
 (asleep while the mission waits, §9.4); the first intro line carries `{anim: {who: 'berra', flag:
-'slump', secs: 20}}` so he sleeps through the intro too.
+'slump', secs: 20}}` so he sleeps through the intro too, and `cut: { at: 'airport', dist: -10,
+height: 3.2 }`: a group shot of the whole arrivals crowd from the terminal side, facing them (a
+negative `dist` stands the camera in front of the landmark, looking back), held to the end of the
+intro (`begin()` ends the cut). Phase 3: the giver two-shot left Robban, Majsan and the Guardia
+off screen and Siv's head in the lens.
 
 **Intro:**
-- robban: "Invalido."  [F]
+- robban: "Invalido."  [F]  {anim: …, cut: {at: 'airport', dist: -10, height: 3.2}, place: {lasse: ['airport', 0, 0, 5π/4], stig: ['airport', 1.2, 0.8, 3π/4], robban: ['airport', -1.5, 4.0, 2.75]}} (Lasse and Stig half turned to each other and the camera; Stig stood between the camera and Lasse)
 - guardia: "Gracias."  [F](t) (portrait-only speaker: the Spanish officer at passport control)
 - mamma: "¡Josito! ¡Josito!"  [F]
 - mamma: "Inga svenskor!"  [F]
@@ -1675,7 +1680,7 @@ gently while Lasse's welcome speech plays. Ends in the overbooked hotel and Ole'
 - lasse: "Affe, du får ta transfern."  [F*] (a hotel cutaway in the film, relocated)
 - affe: "Va fan, jag hade ju natturen i natt! Jag har haft två grisfester i veckan."  [F*]
 - lasse: "Olsson! Du ser ut som en man med körkort."  [N]
-- lasse: "SunTrips buss nummer 17 står där borta!"  [F]
+- lasse: "SunTrips buss nummer 17 står där borta!"  [F](t) (the research names no speaker)
 
 **Stages:**
 1. `getInCar({ car: 'buss17', atHome: true, any: false, passenger: 'ole', riders: ['majsan', 'siv', 'fruStorch', 'herrStorch'], hideRiders: true, lockMeter: true, text: 'Hoppa in i SunTrips buss nummer 17' })`
@@ -1698,16 +1703,22 @@ gently while Lasse's welcome speech plays. Ends in the overbooked hotel and Ole'
    - ole: "Jeg har reisesyketabletter."  [F](t)  {gap: 2.5}
    - stig: "Jättefint! Tack. Du kanske vill ha en Argotal av mig. Mot allergi…"  [F](t)  {gap: 3}
 
-**Outro** (`outroPlace: { lasse: ['flamencoRecepcion', 1.5, 1.5], portier: ['flamencoRecepcion', 0, 0], ole: ['flamencoRecepcion', -1.5, 2.0], stig: ['flamencoRecepcion', 0, 3.0] }`; the player ends the drive at `flamencoDrive`, 42 m away, so `stig` moves him to the desk):
+**Outro** (`outroPlace: { lasse: ['flamencoRecepcion', 1.5, 1.5], portier: ['flamencoRecepcion', 0, 0], ole: ['flamencoRecepcion', -1.4, 4.4], stig: ['flamencoRecepcion', 0, 3.0] }`; the player ends the drive at `flamencoDrive`, 42 m away, so `stig` moves him to the desk; Ole stands off the camera-to-Stig line, Phase 3):
 - lasse: "Det har dessvärre uppstått ett litet problem på grund av överbokning."  [F](t)
 - lasse: "Olsson, Stig-Helmer… och Bramserud, Ole… Kan ni dela rum?"  [F](t)
 - stig: "Ja…"  [F]
-- stig: "Kallar ni det här för havsutsikt?"  [F](t)  {cut: 'flamencoBalcony'}
+- stig: "Kallar ni det här för havsutsikt?"  [F](t)  {cut: {at: 'rum107Cam', dist: 5.5, height: 2.1}, place: {stig: ['flamencoPatio', 0, -2.4, 0], portier: ['flamencoPatio', 1.3, -1.2, -0.25], ole: ['flamencoPatio', -1.6, -3.6, 0.3]}}
 - portier: "Momento."  [F]  {anim: {who: 'portier', flag: 'mirror', secs: 3}}
-- ole: "Litt lenger inn mot veggen. Snu den litt mer mot meg. Sånn ja… Kom og hør nå! Fin lyd."  [F]  {cut: null}
+- ole: "Litt lenger inn mot veggen. Snu den litt mer mot meg. Sånn ja… Kom og hør nå! Fin lyd."  [F]  {place: {portier: ['flamencoRecepcion', 0, 0]}}
 - ole: "Du kan ikke gå sånn her nede! Den buksa og det slipset! … Shorts."  [F]
 - stig: "Är den inte lite skrikig?"  [F]
 - ole: "Du skal ha sterke farger, du som er mørk."  [F]  {outfit: {who: 'stig', name: 'hawaii'}, flash: 'white', sfx: 'helanGar'}
+
+(Phase 3: from "havsutsikt" on, the outro plays in Stig and Ole's room 107, as in the film: the
+`rum107Cam` cut stands on the patio front looking into the room, Stig in the doorway, the porter
+beside him holding up his mirror to show the sea, Ole inside with his boombox (research-plot §7.3:
+"Ole möblerar för bergsprängaren"); the porter goes back to the desk on Ole's line and the cut
+holds to the end. The film's room 113 balcony cut showed the porter alone at Angerud's room.)
 
 ---
 
@@ -1735,7 +1746,7 @@ SunTrip lawn and pool while Berra and Robban heckle; ends with "Hä-pååre!".
    text [F]; gotText [F*]; failText [N]; radio [F](t) ×2 (the research does not say who).
 2. `goto({ to: 'friskotek', radius: 5, text: 'Lämna bollarna till Lasse' })`
 
-**Outro** (`outroPlace: { lasse: ['friskotek', 0, 1.5], angerud: ['friskotek', 2.5, 1.0] }`):
+**Outro** (`outroPlace: { lasse: ['friskotek', 0, 1.5, π], angerud: ['friskotek', 1.6, 2.4, -2.4], berra: ['friskotek', -2.4, 1.0, π], robban: ['friskotek', -3.4, 1.4, π], ole: ['friskotek', 2.8, 1.0, π], stig: ['friskotek', -1.0, 2.6, 2.5] }`, `outroCam: { at: 'friskotek', dist: 6, height: 2.4 }`: everyone who speaks in one group shot from the north, facing it; Phase 3: Berra, Robban and Ole spoke from 60–86 m away and the two-shot side was arbitrary):
 - lasse: "Ni lufsar som troll!"  [F*](t)
 - berra: "Fan… Herr Ober? De har inte öppnat än. Klockan är ju snart tio."  [F]
 - robban: "Ska vi inte käka frukost först?"  [F]
@@ -1770,15 +1781,15 @@ then a nervous drive with a wet-painted donkey on board.
 3. `goto({ to: 'marknad', radius: 9, inCar: true, passenger: 'ole', text: 'Till marknaden' })`
 4. `haggle({ at: 'asnestand', who: 'souvenir', partner: 'ole', start: 500, steps: [400, 300, 200], zones: [0.30, 0.23, 0.17], speeds: [0.7, 0.95, 1.2], maxMiss: 3, pay: 200, text: 'Pruta! Tryck E när markören är i det gröna', barLabel: 'PRIS', failText: 'Säljaren stängde ståndet.', lines: {...} })`  (texts [N])
    - `start`: souvenir "Hallå där!" [F] · ole "Hvor mye?" [F*](t) · souvenir "500 pesetas." [F] · ole "To hundre?" [F*](t)
-   - `hit[0]`: ole "Jeg gir deg to hundre. Det er… 18 norske kroner." [F] · souvenir "400 pesetas. Titta, den är jättelustig." [F]
+   - `hit[0]`: ole "Jeg gir deg to hundre. Det er… 18 norske kroner." [F*] (SUB-NO has only the first sentence) · souvenir "400 pesetas. Titta, den är jättelustig." [F]
    - `hit[1]`: ole "Så morsom er den ikke. To hundre." [F*] · souvenir "300 pesetas! Sista pris!" [N]
    - `hit[2]`: ole "To hundre er siste bud." [F]
    - `miss`: souvenir "¡No, no, no!" [N] (price +50, shown on the bar)
-   - `win`: ole "Første, andre, tredje – to hundre pesetas!" [F*](t) · souvenir "Kör till." [F](t) · souvenir "Por favor." [F] · souvenir "Jävla smålänningar!" [F]
+   - `win`: ole "Første, andre, tredje – to hundre pesetas!" [F*](t) · souvenir "Kör till." [F](t) · souvenir "Por favor." [F](t) · souvenir "Jävla smålänningar!" [F]
    - On win: `game.pay(200)` (Ole pays if short: radio ole "Jeg spanderer!" [N]).
 5. `grab({ at: 'asnestand', mesh: 'asna', text: 'Ta åsnan' })`
 6. `goto({ to: 'supermercado', radius: 8, inCar: true, passenger: 'ole', text: 'Leta knäckebröd – samma sort som i julklappen' })`
-7. `grab({ at: 'supermercado', mesh: 'knacke', text: 'Ta ett SPORT-KNÄCKE-paket', say: ['stig', 'Det är ungefär så här stort.'] })`  [F]
+7. `grab({ at: 'supermercado', mesh: 'knacke', text: 'Ta ett SPORT-KNÄCKE-paket', say: ['stig', 'Det är ungefär så här stort.'] })`  [F](t)
 8. `scene({ frame: ['ole', 'stig'], lines: [['ole', 'Og så maler vi den rød.', { cut: 'ferreteria' }], ['stig', 'Och blommor där.', { cut: null }]], doneCue: { flash: 'rgba(216,50,30,.4)', toast: 'Åsnan är nu en dalahäst. Nästan.' } })`  [F*](t) · [F](t) · toast [N]
    (played in the car in the Centro Nórdico lot right after the knäcke grab: `frame` alone keeps
    both seated, their positions are live, §9.2; the cut shows the FERRETERÍA front, so there is no
@@ -1786,10 +1797,10 @@ then a nervous drive with a wet-painted donkey on board.
 9. `goto({ to: 'vikingbar', radius: 7, inCar: true, passenger: 'ole', timer: 19, fragile: { label: 'SKICK', failText: 'Färgen blev förstörd!' }, text: 'Kör försiktigt till Viking Bar – färgen är våt!' })`  [N]
 10. `goto({ to: 'vikingbar', radius: 2.5, onFoot: true, text: 'Lämna paketet i baren' })`
 
-**Outro** (`outroPlace: { carmencita: ['vikingbar', 0, 1.5], angerud: ['vikingbar', 2.5, 1.2] }`):
+**Outro** (`outroPlace: { carmencita: ['vikingbar', -0.8, 1.6, 0], angerud: ['vikingbar', 0.9, 1.3, 0] }`: both face the street, where the cut camera stands; Phase 3, they showed their backs):
 - stig: "Ett paket till Viking Bar. Det är till en moster."  [N]
 - carmencita: "Jag lägger det bakom disken."  [N]  {toast: 'Senare samma dag…'}
-- angerud: "Buenas dias, lilla vikingen. Har paketet kommit?"  [F]  {cut: 'vikingbar'}
+- angerud: "Buenas dias, lilla vikingen. Har paketet kommit?"  [F]  {cut: {at: 'vikingbar', dist: 6.5, height: 3.4}, place: {stig: ['vikingbar', 4, -9, 0]}} (Stig, who has left, out of the shot; the camera high enough to see over a car parked at the door)
 - angerud: "God jul, moster."  [F] (he reads the card)
 - angerud: "Hur såg han som lämnade in det ut?"  [F]
 - carmencita: "Han var lång, mörkhårig… hade glasögon och mustasch."  [F]
@@ -1820,9 +1831,11 @@ Hitch-hike logic (judge fix): Stig refuses the dirt road (åksjuka), drops them,
 1. `getInCar({ text: 'Hoppa in i en bil' })`
 2. `pickup({ who: 'berra', name: 'Berra', at: 'flamencoBar', rider: 'robban', hello: 'Ditåt!' })`  [N]
 3. `goto({ to: 'playa', radius: 14, inCar: true, passenger: 'berra', text: 'Bodegan ligger ditåt – mot havet!', radio: [['robban', 'Fan Berra, ja ä tösstig.'], ['berra', 'Fan Robban, du har ingen karaktär!']], doneCue: { radio: ['berra', 'Ingen bodega här. Då ligger den åt andra hållet.'] } })`  [F] [F] · doneCue [N]
-4. `goto({ to: 'vischan', radius: 14, inCar: true, passenger: 'berra', timer: 31, text: 'Leta inåt land', radio: [['berra', 'Det här är ju rena vischan. Vi måste ha kört för långt.'], ['robban', 'Fan, vad jag är törstig.']], overhear: [{ at: 'eslovVag', r: 25, radio: true, lines: [['berra', 'Heja Eslöv!'], ['robban', 'Herre jävlar!']] }] })`  [F*] (the film's "gått", said on foot) · [F] · [F] ×2
+4. `goto({ to: 'vischan', radius: 14, inCar: true, passenger: 'berra', timer: 31, text: 'Leta inåt land', radio: [['berra', 'Det här är ju rena vischan. Vi måste ha kört för långt.'], ['robban', 'Fan, vad jag är törstig.']], overhear: [{ at: 'eslovVag', r: 25, radio: true, lines: [['berra', 'Heja Eslöv!'], ['robban', 'Herre jävlar!']] }] })`  [F*] (the film's "gått", said on foot) · [F] · [F] · [F](t)
 5. `dropoff({ who: 'berra', at: 'vischan', riderOff: true, text: 'Stanna vid tomatfälten' })`  [N]
-6. `scene({ frame: ['berra', 'stig'], lines: [['stig', 'Jag kör inte längre på grusvägen. Jag har anlag för åksjuka.'], ['berra', 'Jag går inte en meter till. Vi liftar.']], doneCue: { toast: 'En grisbil stannar…' } })`  [N] · [F] · [N]
+6. `scene({ frame: ['berra', 'stig'], exitCar: true, lines: [['stig', 'Jag kör inte längre på grusvägen. Jag har anlag för åksjuka.'], ['berra', 'Jag går inte en meter till. Vi liftar.']], doneCue: { toast: 'En grisbil stannar…' } })`  [N] · [F](t) · [N]
+   (`exitCar`, Phase 3: Stig steps out to refuse the dirt road; seated, the two-shot saw the car
+   roof. The follow's tail starts once he is back in a car, §9.2.)
 7. `follow({ type: 'grisbil', carName: 'grisbilFollow', driver: 'grisbonde', riders: ['berra', 'robban'], hideRiders: true, start: { lane: [[0, 2], [1, 2]], t: 12 }, via: [[1, 2], [1, 1], [2, 1]], to: 'grisfestGate', maxDist: 55, cruise: 15, wobble: 0.12, text: 'Följ grisbilen – Berra och Robban har liftat!', radio: [['robban', 'Fan, de luktar.'], ['berra', 'Skit i det. Vi slipper gå.'], ['robban', 'Snacka om grisfest.']] })`  [N] · [F](t) ×3
    (`via` given as `[i, j]` node pairs; `start.lane` = edge from node (0,2) to (1,2), 12 m in; the
    route runs east along z = −200 from node (2,1) and ends at the kerbside `grisfestGate` 40 m
@@ -1840,17 +1853,17 @@ Hitch-hike logic (judge fix): Stig refuses the dirt road (åksjuka), drops them,
 - robban: "Ja, herre jävlar, minns du Benidorm? Snacka om grisfest!"  [F]  {cut: 'bodega'}
 - berra: "Var jag med där? Hade jag kul?"  [F]
 - berra: "Pepes Bodega… Den måste ligga nånstans, Robban."  [N]  {cut: null}
-- pax: "Hytt två!"  [F](t)  {cut: 'telefon', toast: 'Samtidigt har direktör Angerud öppnat sitt paket…'}
+- telefonist: "Hytt två!"  [F](t) (the phone-station clerk, said in English in the film)  {cut: 'telefon', place: {angerud: ['telefon', 0.6, 2.4]}, toast: 'Samtidigt har direktör Angerud öppnat sitt paket…'} (Angerud at the booths)
 - levander: "Detta är dr Levanders automatiska telefonsvarare. Solariet, flygrädslekliniken, bantningen och örtshopen är stängda över jul."  [F]
 - levander: "Viktiga meddelanden kan lämnas till hotell Ambassadör i Åre."  [F]
 - levander: "En målad åsna…? Idén med paketet var idiotisk redan från början."  [F]  {toast: 'Senare, i Åre…'}
 - levander: "Nu måste du få tillbaka pengarna. Snacka med honom. Han vill kanske ha hittelön. Gör nåt!"  [F]
-- angerud: "Man måste ha mycket svenska pengar med sig hit… om man säger."  [F]  {cut: 'flamencoPool', place: {angerud: ['flamencoPool', 1.2, 1.0]}}
+- angerud: "Man måste ha mycket svenska pengar med sig hit… om man säger."  [F]  {cut: 'flamencoPool', place: {angerud: ['flamencoPool', 1.2, 1.0, π/2], stig: ['flamencoPool', -0.3, 0.8, -π/2], siv: ['flamencoPool', 3.0, 0.2, 0], majsan: ['flamencoPool', -2.6, 0.2, 0]}} (the sisters face the cut camera for their two lines)
 - angerud: "Men det är ju inte samma sak att hitta något som att stjäla."  [F]
 - angerud: "För om man hittar något, så kan man få hittelön. Tänk på det."  [F]  {sfx: 'slap'}
 - stig: "Aj! Det ska jag göra."  [F]
-- siv: "Vad konstig han var!"  [F]
-- majsan: "Det är kombinationen av sol och…"  [F]  {cut: null}
+- siv: "Vad konstig han var!"  [F](t)
+- majsan: "Det är kombinationen av sol och…"  [F](t)  {cut: null}
 
 Unlock toast: `Upplåst: <b>Grisbilen</b> – parkerad vid Hotell Flamenco. Den luktar.` [N]
 
@@ -1878,14 +1891,14 @@ he doesn't see you. The reveal: his mother is sitting in the back seat the whole
    node (3,4) (§9.2 `follow`); the outro still places the family at `grillpaco`.
 3. `goto({ to: 'plaza', radius: 4, onFoot: true, text: 'Parkera och spana diskret från fontänen' })`  [N]
 
-**Outro** (`outroPlace: { jose: ['grillpaco', 0, 0], siv: ['grillpaco', 1.2, 0], mamma: ['grillpacoMamma', 0, 0] }`, outro camera `['jose', 'siv']`):
+**Outro** (`outroPlace: { jose: ['grillpaco', 0, 0], siv: ['grillpaco', 1.2, 0], mamma: ['grillpacoMamma', 0, 0, 0] }` (Mamma faces her cut), outro camera `['jose', 'siv']`):
 - jose: "Kanarisk specialitet! Ropa vieja – gamla kläder."  [F]
 - siv: "Vad sa du?"  [F]
 - jose: "Gamla kläder. Det är ungefär som pyttipanna."  [F]
-- jose: "Är det säkert att det inte gör nåt att mamma följde med?"  [F]  {cut: 'grillpacoMamma'}
-- siv: "Vill hon inte sitta här?"  [F]
-- jose: "Nej, hon vill inte vara i vägen."  [F]  {cut: null}
-- siv: "Jag fick användning för din peppar."  [F]  {toast: 'Dagen efter, vid poolen…', place: {siv: ['flamencoPool', 2, 0], majsan: ['flamencoPool', -2, 0]}, cut: 'flamencoPool'}
+- jose: "Är det säkert att det inte gör nåt att mamma följde med?"  [F]  {cut: {at: 'grillpacoMamma', dist: 5, height: 1.9}} (Phase 3: the default 9 m cut stood in the Casa Lola pergola)
+- siv: "Vill hon inte sitta här?"  [F]  {cut: null} (back to the two-shot: Siv was outside the Mamma cut)
+- jose: "Nej, hon vill inte vara i vägen."  [F]
+- siv: "Jag fick användning för din peppar."  [F]  {toast: 'Dagen efter, vid poolen…', place: {siv: ['flamencoPool', 1.2, 0.6, π/2], majsan: ['flamencoPool', -1.2, 0.6, -π/2]}, cut: 'flamencoPool'} (the sisters face each other, side-on to the cut)
 - siv: "Han kom och hämtade mig. Gissa vem han hade med sig… Morsan!"  [F]
 - siv: "Jag ska satsa på Ole nu. Jag har inga fördomar mot norrmän."  [F]
 - majsan: "Nej, bara de inte går på tur…"  [F]  {cut: null}
@@ -1912,11 +1925,15 @@ the tourists' pity into a sheep stampede you have to round up.
 2. `pickup({ who: 'majsan', name: 'Majsan', at: 'flamencoDrive', rider: 'siv', hello: 'Kör!' })`  [N]
 3. `follow({ type: 'bus', carName: 'utflyktsbuss', driver: 'affe', start: { lane: [[3, 2], [3, 1]], t: 14 }, via: [[3, 1], [2, 1], [1, 1]], to: 'fatagaBus', maxDist: 55, cruise: 14, text: 'Följ utflyktsbussen till Fataga', radio: [['lasse', 'Fataga är en av de få ursprungliga byar som finns kvar på Gran Canaria.'], ['lasse', 'Om ni vill köpa deras broderade dukar, så pruta inte. Prutning och sånt kan ni hålla på med på marknaden.']] })`  [N] · [F] ×2 (radio voiced by Lasse, the bus driven by Affe). The bus stops kerbside at
    `fatagaBus`, 40 m west of node (1,1); the scene and the outro use `fataga`/`fatagaFold`.
-4. `scene({ place: { fruStorch: ['fataga', -2, 2], mamma: ['fatagaDukar', 0, 0], siv: ['fataga', 2, 2], majsan: ['fataga', 1, 3] }, frame: ['mamma', 'fruStorch'], lines: [['fruStorch', 'Stackars människor som lever så här.'], ['mamma', 'Stackars människor. Släpas runt på dagarna som en skock får…!'], ['mamma', '¡Las ovejas!', { sfx: 'baa' }]] })`  [F](t) · [F] · [N]
+4. `scene({ place: { mamma: ['fatagaDukar', 0, 0], fruStorch: ['fatagaDukar', -1.8, 2.2, π + 0.5], siv: ['fatagaDukar', 1.5, 2.4, π - 0.5], majsan: ['fatagaDukar', 2.9, 1.8, π - 0.8] }, cam: { at: 'dukarCam', dist: 7.5, height: 2.1 }, lines: [['fruStorch', 'Stackars människor som lever så här.'], ['mamma', 'Stackars människor. Släpas runt på dagarna som en skock får…!'], ['mamma', '¡Las ovejas!', { sfx: 'baa' }]] })`  [F](t) · [F] · [N]
+   (Phase 3: everyone at Mamma's stall, shot from the square (`dukarCam` is `fatagaDukar` turned
+   round), Mamma facing the camera and the tourists either side of her, half turned to her. With
+   the tourists at `fataga`, 13 m away, the two-shot stood 24 m out inside a village house, and a
+   two-shot at the stall put the sisters in front of Mamma from one side.)
 5. `rabbits({ mesh: 'faar', count: 6, near: 'fataga', rMin: 10, rMax: 35, timer: 42, text: 'Fånga fåren åt Josés pappa', barLabel: 'FÅR', gotText: 'Bäää!', failText: 'Fåren sprang hela vägen till Maspalomas.' })`  [N]
 6. `goto({ to: 'fatagaFold', radius: 4, text: 'Tillbaka till fårfållan' })`  [N]
 
-**Outro** (`outroPlace: { pappa: ['fatagaFold', 1.5, 0], mamma: ['fatagaDukar', 0, 0], siv: ['fatagaDukar', 2, 1.5], majsan: ['fatagaDukar', 3, 1.5] }`):
+**Outro** (`outroPlace: { pappa: ['fatagaFold', 1.5, 0], mamma: ['fatagaFold', -1.2, 0.6], siv: ['fatagaFold', -2.4, 1.6], majsan: ['fatagaFold', -1.4, 2.0] }`: everyone at the fold, Phase 3):
 - pappa: "¡Gracias, señor!"  [N]
 - mamma: "Det är hon som vill ta min Josito ifrån mig."  [F]
 - majsan: "Ska du inte köpa dukar av svärmor?"  [F](t)
@@ -1939,7 +1956,7 @@ banner).
 - ole: "Skal du ha B-vitaminer? Bra for leveren. Grisefest, vet du. Ta to."  [F]
 - ole: "Og jeg har C-vitaminer… jerntabletter, ginseng, tannkrem…?"  [F*]
 - ole: "Du, de er fine de rødhårete. Vi skulle ha satt inn et støt der."  [F]
-- ole: "Vi kan be resepsjonen sette en blomster på rommet deres."  [F*](t) (rendered in Norwegian: "blomster" is Ole's word)
+- ole: "Vi kan be resepsjonen sette blomster på rommet deres."  [F*](t) (rendered in Norwegian: "blomster" is Ole's word)
 - ole: "Blomster? … Meloner? Agurker? Bananer?"  [F]
 - stig: "Men blommor… Gör man så i Norge?"  [F](t)
 - ole: "Blomsterspråket er internasjonalt."  [F]
@@ -1961,8 +1978,12 @@ banner).
    road, never offset along world z (§9.2). Fail text = the kind's default `${name} vann!` →
    "Gabbe vann!".)
 4. `smash({ type: 'tallrikar', area: { lm: 'dansgolv', r: 22 }, count: 10, timer: 45, lockMeter: true, onFoot: true, text: 'Porslinskross! Krossa tallrikarna medan bandet spelar', barLabel: 'TALLRIKAR', failText: 'Bandet slutade spela.', radio: [['pax', 'Vad skickliga de är!']], checkpoint: true, retryAt: 'dansgolv' })`  [N] · radio [F](t)
-5. `scene({ place: { majsan: ['dansgolv', 1, 0], siv: ['dansgolv', 2.5, 0.5], ole: ['dansgolv', -1.5, 0.5] }, frame: ['majsan', 'stig'], checkpoint: true, retryAt: 'dansgolv', startCue: { outfit: { who: 'ole', name: 'gris' } }, lines: [...] })`
-   (Ole's `gris` outfit goes on the stage's `startCue`, not on a line, so a retry re-applies it, §10.4):
+5. `scene({ place: { majsan: ['dansgolv', 1.2, 1.6, -π/2], siv: ['dansgolv', 2.8, 1.9, -π/2], ole: ['dansgolv', -1.8, 1.9, π/2], stig: ['dansgolv', -0.2, 1.6, π/2] }, frame: ['majsan', 'stig'], checkpoint: true, retryAt: 'dansgolv', startCue: { outfit: { who: 'ole', name: 'gris' } }, lines: [...] })`
+   (Ole's `gris` outfit goes on the stage's `startCue`, not on a line, so a retry re-applies it, §10.4;
+   Phase 3: a row across the floor, Ole, Stig facing Majsan, Siv, so the two-shot sees all four in
+   profile from either side; Stig stood wherever he broke the last plate, so the two-shot was shot
+   from ~36 m and the pair danced up to 20 m apart. His spot is the calibrate Tonga start,
+   `approachSpot('dansgolv')`, within 0.2 m):
    - ole: "Neida, det er bare å spørre: Skal vi danse! Eller kjør litt større: Sånn! … Voulez-vous danse avec moi? Fransk."  [F]
    - stig: "Jag är skraj att de ska nobba."  [F]
    - majsan: "Vill du dansa med mig?"  [F]
@@ -1971,24 +1992,24 @@ banner).
    - ole: "Heia Norge!"  [F]  {anim: {who: 'ole', flag: 'dance', secs: 4}, applause: 2}
    - siv: "Majsan, ta med dig giraffen så går vi på Tonga Tonga."  [F]
 6. `goto({ to: 'tongatonga', radius: 10, inCar: true, timer: 23, text: 'Till Tonga Tonga!' })`  [N]
-7. `scene({ place: { ole: ['tongatonga', -2, 1], majsan: ['tongatonga', 1, 1], siv: ['tongatonga', 2, 1], robban: ['tongatonga', 0, 3], berra: ['tongaLot', 0, 0] }, anim: { berra: 'slump' }, lines: [['ole', 'Samba er fine greier!', { music: 'samba' }], ['robban', 'Kan du hjälpa mig bära hem Berra?'], ['stig', 'Vilket snack! "Bärra hem Berra!"']] })`  [F] ×3
+7. `scene({ place: { ole: ['tongatonga', -2.2, 3.2, 0], majsan: ['tongatonga', 2.0, 3.0, 0], siv: ['tongatonga', 3.0, 3.4, 0], robban: ['tongatonga', -0.8, 1.2, -π/2], berra: ['tongaLot', 0, 0], stig: ['tongatonga', 0.8, 1.2, π/2] }, anim: { berra: 'slump' }, cam: { at: 'tongatonga', dist: 6, height: 2.6 }, lines: [['ole', 'Samba er fine greier!', { music: 'samba' }], ['robban', 'Kan du hjälpa mig bära hem Berra?'], ['stig', 'Vilket snack! "Bärra hem Berra!"']] })`  [F] ×3
 8. `pickup({ who: 'berra', name: 'Berra', at: 'tongaLot', rider: 'robban', hello: '…zzz' })`  [N]
 9. `goto({ to: 'flamencoDrive', radius: 10, inCar: true, passenger: 'berra', text: 'Kör hem till Hotell Flamenco' })`  [N]
 10. `carry({ who: 'berra', to: 'flamencoRecepcion', radius: 2.2, walkSpeed: 3.2, failOn: { fall: true }, text: 'Bärra hem Berra!', failText: 'Berra vaknade och började sjunga.' })`  [F*] · [N] — **P1**; P0 fallback:
     `dropoff({ who: 'berra', at: 'flamencoDrive', text: 'Släpp av Berra vid hotellet' })`.
 
-**Outro** (night; `outroPlace: { portier: ['flamencoRecepcion', 0, 0], angerud: ['flamencoRecepcion', -1.6, 1.2], carmencita: ['flamencoRecepcion', -2.4, 1.2], majsan: ['flamencoPool', 0, 0], stig: ['flamencoRecepcion', 1.5, 3.0] }`; `stig` matters for the P0 `dropoff` fallback, which ends at `flamencoDrive`):
+**Outro** (night; `outroPlace: { portier: ['flamencoRecepcion', 0, 0, 0], angerud: ['flamencoRecepcion', -1.4, 1.4, π/2], carmencita: ['flamencoRecepcion', -2.2, 1.6, π/2], majsan: ['flamencoPool', 0, 0], stig: ['flamencoRecepcion', 1.6, 2.6, -π/2] }`, `outroCam: { at: 'recepcionCam', dist: 7.5, height: 2.0 }`: the desk from the porch front, the porter facing the camera, Angerud and Carmencita on his left and Stig on his right side-on; Phase 3, the two-shot from under the porch put Angerud in front of the porter. `stig` matters for the P0 `dropoff` fallback, which ends at `flamencoDrive`):
 - portier: "Det är förbjudet att ta med damer på rummet. Men för 500 pesetas kanske vi kommer överens."  [F]
 - angerud: "500 pesetas…? Det här är ju min fru."  [F]
 - portier: "Det tror jag inte."  [F]
 - angerud: "En cigarrett, älskling?"  [F](t)
 - carmencita: "Nej tack. Jag röker inte."  [F](t)
 - portier: "Jaså, din fru…?"  [F](t)
-- angerud: "Måtte djävulen ta alla fruntimmer!"  [F]  {cut: 'flamencoBalcony'}
-- majsan: "Vad härligt det är med de här varma nätterna. Snart ska man hem till slasket igen. Jag vill inte åka hem."  [F*]  {cut: 'flamencoPool'}
+- angerud: "Måtte djävulen ta alla fruntimmer!"  [F]  {cut: 'flamencoBalcony', place: {angerud: ['flamencoBalcony', 0, 1.2, 0]}} (on his room-113 patio)
+- majsan: "Vad härligt det är med de här varma nätterna. Snart ska man hem till slasket igen. Jag vill inte åka hem."  [F*](t)  {cut: 'flamencoPool', place: {majsan: ['flamencoPool', 0, 0, π/2], stig: ['flamencoPool', -1.3, 0, -π/2]}, hide: ['siv']} (just the two of them; Siv's home is beside the pool)
 - majsan: "Jag gruvar mig lite för flygresan."  [F*]
 - stig: "Jag kan flyga, jag är inte rädd."  [F*]  {anim: {who: 'stig', flag: 'wings', secs: 3}}
-- majsan: "Nu skulle Levander se oss!"  [F*]
+- majsan: "Nu skulle Levander se oss!"  [F*](t)
 - majsan: "Du… gillar du bruna bönor?"  [F*](t)
 - stig: "Jag avskyr bruna bönor."  [F*](t)  {cut: null}
 
@@ -2008,7 +2029,7 @@ then every running gag pays off by the pool before the fear-of-flying arc closes
 - ole: "Feliz navidad."  [F](t)
 - stig: "Vad sa du?"  [F](t)
 - ole: "Det betyr 'god jul' på spansk."  [F*](t)
-- stig: "Javisst, det är julafton i dag."  [F](t)  {sfx: 'knock', place: {hittegods: ['flamencoPatio', 1.5, 2.0]}}
+- stig: "Javisst, det är julafton i dag."  [F](t)  {sfx: 'knock', cut: {at: 'rum107Cam', dist: 7.5, height: 2.1}, place: {ole: ['flamencoPatio', -1.5, 0.9, 0.6], stig: ['flamencoPatio', 0, 1.5, 1.3], hittegods: ['flamencoPatio', 1.5, 2.7, -1.6]}} (Phase 3: a cut to the patio front of room 107, held to the end of the intro; Stig on his approach spot, the man from the airport facing him. In the giver two-shot he stood behind Stig)
 - hittegods: "Hammarby…?"  [F]
 - stig: "Ja!"  [F]  {toast: 'Väskan är tillbaka!'}
 - hittegods: "Hittelön."  [F](t)  {coins: -25}
@@ -2026,7 +2047,7 @@ then every running gag pays off by the pool before the fear-of-flying arc closes
    - berra (behind the hotel, staring at nothing in particular): stig "Berra! Julfesten!" [N] · berra "Jag kommer, jag ska bara kolla en grej." [N]
    - majsan (at the market, hiding something): majsan "Titta inte! Det är en hemlighet." [N]
 2. `goto({ to: 'flamencoPool', radius: 8, text: 'Till julfesten vid poolen!', startCue: { music: 'jul', outfit: { who: 'lasse', name: 'jul' } } })`  [N]
-3. `scene({ place: { lasse: ['flamencoPool', 0, 3], ole: ['flamencoPool', -1.5, 1], herrStorch: ['flamencoPool', 3, 2], fruStorch: ['flamencoPool', 4, 2], majsan: ['flamencoPool', -2.5, 0.5], siv: ['flamencoPool', -3.5, 1], berra: ['flamencoPool', 5, -1], robban: ['flamencoPool', 6, -1] }, lines: [...] })` — the party payoffs:
+3. `scene({ place: { lasse: ['flamencoPool', 0, 3], ole: ['flamencoPool', -1.5, 1], herrStorch: ['flamencoPool', 3, 2], fruStorch: ['flamencoPool', 4, 2], majsan: ['flamencoPool', -2.5, 0.5], siv: ['flamencoPool', -3.5, 1], berra: ['flamencoPool', 5, -1], robban: ['flamencoPool', 6, -1], portier: ['flamencoPool', -7, 0.5, -π/4] }, lines: [...] })` — the party payoffs (the porter watches from the side, by the pool-deck Christmas tree):
    - lasse: "Hej tomtegubbar, slå i glasen… Skål och god jul!"  [F](t)  {music: 'hejTomtegubbar', applause: 2}
    - ole: "Ta av lokket! Objektivlokket. Må ta av det, vet du."  [F]
    - ole: "Har du filmet sånn lenge?"  [F]
@@ -2039,7 +2060,7 @@ then every running gag pays off by the pool before the fear-of-flying arc closes
    - robban: "Det var som fan! Var låg det?"  [F]
    - berra: "Det ligger på baksidan av hotellet."  [F]  {cut: 'bodega'}
    - robban: "Och vi som har letat igenom hela jävla Nueva Estocolmo!"  [F]  {cut: null}
-   - pax: "De där svenskarna är heltokiga!"  [F](t)  {music: 'smaGrodorna'}
+   - portier: "De där svenskarna är heltokiga!"  [F](t) (the Spaniards' line, research-plot §8.3; was `pax`)  {music: 'smaGrodorna'}
    - stig: "Julmaten från väskan… och knäckebrödet."  [N]  {anim: {who: 'stig', flag: 'butterKnife', secs: 3}}
    - ole: "Hva i all verden…"  [N]  {sparkle: true, sfx: 'pryl'}
    - stig: "Femtio… tusen… kronor. I knäckebrödet."  [N]
@@ -2053,10 +2074,10 @@ then every running gag pays off by the pool before the fear-of-flying arc closes
    - stadare: "God jul! Hoppsan. Stör jag?"  [F]
    - siv: "Gösta, ska du inte med på julfesten?"  [F]
    - angerud: "Ut! Ut!"  [F]  {sfx: 'doorSlam', flash: 'white', hide: ['angerud']}
-   - pa: "…"  {sfx: 'ambulance', toast: 'En ambulans hämtade direktör Angerud. Han kommer att bli bra igen.'}  [N] (a silent PA line carrying the caption; the text shown is "…")
+   - siv: "…"  {sfx: 'ambulance', toast: 'En ambulans hämtade direktör Angerud. Han kommer att bli bra igen.'}  [N] (Siv's silent beat carries the caption; the text shown is "…". Phase 3: it was the PA voice, which read as a loudspeaker announcing the ambulance)
 5. `mantra({ duet: 'majsan', at: 'flamencoPool', radius: 4, secs: 4, text: 'Visa Majsan övningen – håll J', barLabel: 'JAG KAN FLYGA', startCue: { sky: 'sunset', place: { majsan: ['flamencoPool', 1.2, 0] }, say: ['majsan', 'Visa mig igen. Inför hemresan.'] } })`  [N] ×2
 
-**Outro** (sunset, both in the `wings` pose):
+**Outro** (sunset, both in the `wings` pose; `outroPlace: { majsan: ['flamencoPool', 0.9, 0.6, 0], stig: ['flamencoPool', -0.9, 0.6, 0], ole: ['flamencoPool', -2.6, 1.6, 0], siv: ['flamencoPool', 2.6, 1.6, 0] }`, `outroCam: { at: 'flamencoPool', dist: 7, height: 2.4 }`: the pair in front, Ole and Siv behind them, the four of the Rio card; Phase 3, Ole said the last line from his pergola 34 m away):
 - stig: "Jag kan flyga, jag är inte rädd."  [F]
 - majsan: "Jag kan flyga, jag är inte rädd."  [F*] (our staging of the binding duet; in the film Stig
   says it to Majsan at night, research-plot §8.1; the "two voices" before Rio are probably
@@ -2075,22 +2096,19 @@ the banners.
 
 The shipped missions (src/game/missions/island.js) add camera/placement polish that the §8 literals
 above (and the `fullstory` fixture) do not carry:
-- buss17 outro: on the "havsutsikt" line the porter stands under the balcony facing the cut camera
-  (`flamencoBalcony` 0.6, 1.2, yaw 0); on Ole's next line he goes back to the desk.
 - julafton party: the scene's `cam` is a group shot from the pool deck (`PARTY_CAM`); every guest
   gets yaw 0, Stig is placed in the group, and the bodega cut returns to the group shot instead of
   `null`. Room 113: the `place` tuples carry yaw π, so the cast faces the in-room camera.
-- grisfest Tonga scene: `frame: ['robban', 'stig']`, Stig placed at `tongatonga` (0.4, 5.2, yaw 0).
-- grisfest and bodega outros: at the pool cut Stig is placed at the pool facing his partner (in
-  grisfest Majsan is re-placed with yaw π/2); the last line's `cut: null` is dropped in the
-  grisfest, bodega and ropavieja outros, so the pool cut holds to the end.
-- julafton outro: `outroPlace` puts Majsan and Stig side by side, `outroCam: { at: 'flamencoPool',
-  dist: 7, height: 2.4 }`, and Majsan's own line carries a `wings` cue.
+- the last line's `cut: null` is dropped in the grisfest, bodega and ropavieja outros, so the pool
+  cut holds to the end.
+- julafton outro: Majsan's own line carries a `wings` cue.
 - `grisfestGate` stays at world (−80, −204), on the farm side of the z −200 road: the truck pulls
   across into the farm gate (G checked it; Phase 0a's z ≈ −195.5 idea is not needed).
-- Still open for the Phase 3 staging pass: hittegods hidden behind Stig in the julafton intro; the
-  camera behind the heads for "Hä-pååre", the haggle "Hvor mye?" and the grisfest porter outro;
-  "Momento." shows the porter without the balcony/mirror; the "Heia Norge!" dancers are small.
+- Phase 3 r1 (island-staging) moved the rest of this list into the §8 literals and the fixture:
+  the room-107 "havsutsikt"/"Momento." cut, the Tonga Tonga street shot, Stig at the pool cuts and
+  on the dance floor, the julafton outro four and camera, the hittegods cut, the porter outro's
+  desk camera and the friskotek group shot. The haggle talks' framing is the `haggle` kind's
+  (§9.2), not mission data.
 
 ## 9. Stage kinds and the mission runner
 
@@ -2384,19 +2402,19 @@ COLLECTIBLES = {
   prylar: { kind: 'pryl', motion: 'spin', beam: true, pickup: 'touch', jingle: 'pryl',
     label: 'Oles prylar', marker: 'pryl', icon: 'pryl-icon', bonus: 1000,
     first: ['ole', 'En av dingsene mine! Finn resten, Stig-Helmer.'],               // [N]
-    complete: ['ole', 'Det fikser vi. Vi fikser alt!'], completeUnlock: 'samba',     // [F]
+    complete: ['ole', 'Det fikser vi. Vi fikser alt!'], completeUnlock: 'samba',     // [F*]
     items: [
-      { id: 'klocka',     lm: 'pryl_klocka',     line: 'Digital, analog, spansk, norsk, svensk tid, kronometer, og så klokke.' }, // [F]
-      { id: 'poolpen',    lm: 'pryl_poolpen',    line: 'Penn som skriver under vannet.' },          // [F]
+      { id: 'klocka',     lm: 'pryl_klocka',     line: 'Digital, analog, spansk, norsk, svensk tid, kronometer, og så klokke.' }, // [F*]
+      { id: 'poolpen',    lm: 'pryl_poolpen',    line: 'Penn som skriver under vannet.' },          // [F*]
       { id: 'kalkylator', lm: 'pryl_kalkylator', line: 'Kalkulator – med vekkerklokke!' },          // [F*]
-      { id: 'kniv',       lm: 'pryl_kniv',       line: 'Swiss Army Knife… Saks – uten skrutrekker.' }, // [F]
-      { id: 'kamera',     lm: 'pryl_kamera',     line: 'Kamera. Skjerpe. Smil.' },                  // [F]
-      { id: 'glasogon',   lm: 'pryl_glasogon',   line: 'Mot klor.' },                               // [F]
+      { id: 'kniv',       lm: 'pryl_kniv',       line: 'Swiss Army Knife… Saks – uten skrutrekker.' }, // [F*]
+      { id: 'kamera',     lm: 'pryl_kamera',     line: 'Kamera. Skjerpe. Smil.' },                  // [F*]
+      { id: 'glasogon',   lm: 'pryl_glasogon',   line: 'Mot klor.' },                               // [F*]
       { id: 'pung',       lm: 'pryl_pung',       line: 'Å ha penger i når man svømmer.' },         // [F*]
     ] },
   fenor: { kind: 'fena', motion: 'circle', pickup: 'squash', jingle: 'squeak',
     label: 'Hajfenor', marker: 'fena', icon: 'fena-icon', bonus: 1000,
-    first: ['lasse', 'Hajar i poolen igen? Ring kliniken!'],                           // [N]
+    first: ['lasse', 'Hajar i poolen igen? Ring kliniken!'],                           // [F*] Lasse's film line, adapted
     complete: ['lasse', 'Inga fler hajar i poolerna. Berra lovar att sluta dricka. Till lunch.'], // [N]
     items: ['fena_flamenco', 'fena_suntrip', 'fena_plaza', 'fena_golf', 'fena_bungalow', 'fena_hamn', 'fena_hav']
       .map((lm, i) => ({ id: lm, lm })) },
@@ -2830,7 +2848,7 @@ Init: `initGfx` → `input.init` → `hud.init` → `fx.init` → fonts (Luckies
 `buildRioCard(scene)` (if present) → `finalizeProps(scene)` → `initCoins(scene)` →
 `hud.buildBaseMap()` → `placeWorldCoins()` → `this.cabin.placeCoins()` → parked cars → traffic (20)
 → peds (34) → NPC `Character`s (one per `CHARS` key except `stig`, the radio-only keys `levander
-kapten pa guardia pax` and the cabin-owned `vardinna2`; `key` field; hidden until placed, §2.3) →
+kapten pa guardia pax telefonist` and the cabin-owned `vardinna2`; `key` field; hidden until placed, §2.3) →
 player `Character(CHARS.stig)` (`key = 'stig'`) → collectibles (`COLLECTIBLES`) → markers → `Shame`
 → `MissionRunner` → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
 `placeNpcs(true)` → spawn the player → portraits for every key in `CAST` (`renderPortrait`
@@ -3297,7 +3315,7 @@ CHATTER = {
             'Jag har hört att kriminaliteten har gått upp här nere sedan Franco dog.' /*[F*]*/],
   siv: ['Gud, vad han är söt!' /*[F*]*/], majsan: ['Här nere parkerar de hursomhelst.' /*[F*]*/],
   fruStorch: ['Det var så kallt på rummet i natt, och ändå har vi betalat bränsletillägg!' /*[F*]*/],
-  herrStorch: ['Lite film.' /*[F*]*/], jose: ['Jag ska inte bort, jag ska hem.' /*[F*]*/],
+  herrStorch: ['Lite film.' /*[F*](t)*/], jose: ['Jag ska inte bort, jag ska hem.' /*[F*]*/],
   mamma: ['Inga svenskor!' /*[F*]*/], portier: ['Momento.' /*[F*]*/],
   affe: ['Va fan, jag hade ju natturen i natt!' /*[F*]*/], gabbe: ['Natturen går klockan nio!' /*[N]*/],
   souvenir: ['Hallå där!' /*[F*]*/], saljare: ['Välkommen i det gröna!' /*[F*]*/],
@@ -3669,7 +3687,7 @@ ropavieja fataga grisfest julafton`.
 
 **CHARS keys**: `stig ole majsan siv berra robban angerud levander lasse affe gabbe jose mamma pappa
 carmencita herrStorch fruStorch portier sulan vardinna vardinna2 kapten pa kontrollant hittegods
-saljare souvenir stadare eslov grisbonde varden guardia pax`. Player key `stig`.
+saljare souvenir stadare eslov grisbonde varden guardia pax telefonist`. Player key `stig`.
 
 **Home sets**: `gate flight island`. **Levels**: `flight island`. **Flight phases**: `gate takeoff
 climb cruise approach landing landed`. **Palettes**: flight `gate clouds above descent island`;
@@ -3686,6 +3704,7 @@ vikingbar tongatonga tongaLot cita supermercado ferreteria telefon plaza grillpa
 marknad asnestand kyrka bensin guardia vischan eslovVag packhus grisfest dansgolv fataga fatagaFold
 fatagaDukar golf bungalow bygge dromplan airport hittegods busBay bagageband dyner fyren playa hamn`
 + kerbside `follow` endpoints `grisfestGate fatagaBus grillpacoCurb`
++ cut anchors `rum107Cam recepcionCam dukarCam` (Phase 3)
 + collectibles `pryl_klocka pryl_poolpen pryl_kalkylator pryl_kniv pryl_kamera pryl_glasogon
 pryl_pung fena_flamenco fena_suntrip fena_plaza fena_golf fena_bungalow fena_hamn fena_hav` + Rio
 `rioBoat rioCam`.
@@ -4148,3 +4167,36 @@ the fixer's group.
   and Berra's "Robban! Sulan har varit…" (adds "Robban!") (§8.1, §8.2, fixture).
 - r1 flight-missions: `story` takes key-scene shots of missions 1–5 with `SHOTS=1` (`fl_*.png`, as
   the island's `isl_*`) (§16.4).
+- r1 island-staging: buss17 intro: the first line cuts to a group shot of the arrivals crowd
+  (`airport`, dist −10, height 3.2) and places Lasse, Stig and Robban (Stig stood between the camera
+  and Lasse) (§8.6, fixture).
+- r1 island-staging: buss17 outro: Ole off the camera-to-Stig line (−1.4, 4.4); from "havsutsikt" on
+  the outro plays in room 107 (new cut anchor `rum107Cam`): Stig in the doorway, the porter's mirror
+  beside him, Ole at his boombox; the cut holds to the end (§6.3, §8.6, fixture).
+- r1 island-staging: friskotek outro: everyone who speaks in one group shot (`outroPlace` with yaws,
+  `outroCam` friskotek 6/2.4); Berra, Robban and Ole spoke from 60–86 m away (§8.7, fixture).
+- r1 island-staging: asnan outro: Carmencita and Angerud face the street; the Viking Bar cut 6.5/3.4
+  sees over a car parked at the door; Stig is placed out of the shot (§8.8, fixture).
+- r1 island-staging: bodega: the vischan scene has `exitCar` (Stig steps out; seated, the shot saw the
+  car roof); "Hytt två!" is the new portrait-only `telefonist`'s (§2.1, §2.3, RADIO_ONLY), Angerud
+  at the booths; the sisters face the pool cut (§8.9, fixture).
+- r1 island-staging: ropavieja: Mamma faces her cut, 5 m out and 1.9 m up (the 9 m cut stood in the
+  Casa Lola pergola); Siv's line returns to the two-shot; the pool sisters face each other (§8.10).
+- r1 island-staging: fataga: the stall scene is shot from the square (new cut anchor `dukarCam`,
+  everyone at the stall); the outro places everyone at the fold (§6.3, §8.11, fixture).
+- r1 island-staging: grisfest: "sette blomster" (bokmål); the dance places Stig on the calibrate Tonga
+  start (`approachSpot('dansgolv')` within 0.2 m, so `grisfestTonga` keeps its T_ref) and the four in
+  a row; the Tonga scene is a street shot (`cam` tongatonga 6/2.6); the porter outro a fixed desk
+  camera (new cut anchor `recepcionCam`) with side-on placement; Angerud curses on his 113 patio;
+  Siv is hidden for the warm-nights cut (§8.12, fixture).
+- r1 island-staging: julafton: the knock cuts to room 107 (`rum107Cam` 7.5/2.1) with Ole, Stig on his
+  approach spot (the collect start the calibrate assumes) and the man from the airport; the porter
+  speaks the Spaniards' "De där svenskarna är heltokiga!" from the party's side (was `pax`); Siv's
+  silent beat carries the ambulance caption (was the PA); the duet outro holds the Rio four
+  (`outroPlace` + `outroCam` now in the literal) (§8.13, fixture).
+- r1 island-staging: source tags: `(t)` where the research leaves the speaker open (§8.6, §8.8–§8.10,
+  §8.12); `[F*]` on Ole's "…18 norske kroner.", the relocated pickup barks and Lasse's fenor line;
+  `[F*](t)` on Herr Storch's "Lite film." chatter (§10.1, §14.10).
+- r1 island-staging: "Shipped staging beyond the literals" trimmed (the staging is in the §8
+  literals and the fixture now); the story arrives at Tonga Tonga 9.5 m short of the club, as from
+  the street, and parks 6 m short of the Viking Bar door (`tools/story/island.mjs`).
