@@ -805,6 +805,7 @@ function cita(f) {
   const sm = face(f, 'S', -20, 12);
   shopGlass(sm, 0, 17, { doorAt: 2, glass: 0x8ab8d8 });
   awning(sm, 0, 17.4, 3.5, 1.4, [RED, WHITE2]);
+  f.ceiling(-20, 12.7, 17.4, 1.4, 2.74, 3.6);   // the chase camera stays under the awning (valance bottom)
   board(sm, 'SUPERMERCADO', 0, 4.0, 11, 0.85, { bg: '#d8321e', fg: '#ffffff', scale: 0.74, back: false }); // [N]
   for (const [u, t] of [[-5.5, 'OFERTAS'], [-2.4, 'LECHE · PAN · VINO'], [6, 'FRUTA FRESCA']]) sm.sign(t, u, 2.0, 0.12, 2.6, 0.7, 0, { bg: '#f7c31b', fg: '#d8321e', border: null, scale: 0.6 }); // [N]
   for (let k = 0; k < 4; k++) {
@@ -822,6 +823,7 @@ function cita(f) {
   const fe = face(f, 'S', 20, 12);
   shopGlass(fe, 0, 17, { doorAt: -2, frame: 0x3a2a1a, glass: 0x7aa0b8 });
   awning(fe, 0, 17.4, 3.5, 1.4, [GREEN, WHITE2]);
+  f.ceiling(20, 12.7, 17.4, 1.4, 2.74, 3.6);
   board(fe, 'FERRETERÍA · PINTURAS', 0, 4.0, 12, 0.85, { bg: '#8a3a1a', fg: '#fff8e6', scale: 0.74, back: false }); // [N]
   {
     f.box(WOOD, 24.6, CURB, 13.0, 3.0, 0.5, 0.75);
@@ -989,7 +991,8 @@ function plaza(f) {
   door(cl, -1, 1.5, 2.4, GREEN, { split: true });
   for (const u of [-5.5, 3, 6.5]) win(cl, u, 1.75, 1.3, 1.4, { shutters: GREEN, flowers: true });
   board(cl, 'CASA LOLA · COMIDA CANARIA', -1, 3.22, 7.8, 0.72, { bg: '#fff8e6', fg: '#c0623a', scale: 0.66, backC: GREEN, border: '#2f8a4a' }); // [N] stands in for Grill Paco (§1.5)
-  for (let k = 0; k < 9; k++) f.ico(BOUG, 13.3 + k * 0.5, CURB + 2.4 + Math.sin(k) * 0.4, 14.1, 0.7 + (k % 3) * 0.2);
+  // Bougainvillea along the eave, above the pergola's camera cap (2.6), short of the name board.
+  for (let k = 0; k < 9; k++) f.ico(BOUG, 13.3 + k * 0.3, 3.45 + Math.sin(k) * 0.12, 14.1, 0.6 + (k % 3) * 0.15);
   for (let k = 0; k < 5; k++) f.ico(BOUG, 28.9, CURB + 1.6 + k * 0.45, 5.0 + k * 1.6, 0.8);
   {
     for (const x of [12.2, 16.6, 25.4, 29.6]) for (const z of [15.0, 29.4]) { f.box(WOOD, x, CURB, z, 0.2, 2.75, 0.2); f.circ(x, z, 0.14, 99, 'pole'); }

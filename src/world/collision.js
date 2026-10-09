@@ -59,6 +59,36 @@ export function ceilingOver(x, z, y, margin = 0) {
   return best;
 }
 
+// The ceilings the 3D segment a→b passes through, each taken as a box: its footprint grown by
+// `grow`, from `below` under its underside up to its top. Ceilings whose underside is at or under
+// minUnder are skipped (a roof the player stands above). Fills out.first (the nearest along the
+// segment) with out.t (0..1) and out.low (the one with the lowest underside); returns out.first or
+// null. The chase camera keeps its eye out of them (§14.5).
+let _t0 = 0, _t1 = 1;
+function clipSlab(a, d, lo, hi) {   // narrows [_t0, _t1] to where a + d·t is in [lo, hi]
+  if (Math.abs(d) < 1e-9) { if (a < lo || a > hi) _t0 = 2; return; }
+  let ta = (lo - a) / d, tb = (hi - a) / d;
+  if (ta > tb) { const s = ta; ta = tb; tb = s; }
+  if (ta > _t0) _t0 = ta;
+  if (tb < _t1) _t1 = tb;
+}
+export function ceilingHit(ax, ay, az, bx, by, bz, minUnder, out, grow = 0.3, below = 0.3) {
+  out.first = out.low = null; out.t = 2;
+  const dx = bx - ax, dy = by - ay, dz = bz - az;
+  const x0 = Math.min(ax, bx) - grow, x1 = Math.max(ax, bx) + grow, z0 = Math.min(az, bz) - grow, z1 = Math.max(az, bz) + grow;
+  for (const c of ceilings) {
+    if (c.under <= minUnder || c.maxX < x0 || c.minX > x1 || c.maxZ < z0 || c.minZ > z1) continue;
+    _t0 = 0; _t1 = 1;
+    clipSlab(ax, dx, c.minX - grow, c.maxX + grow);
+    if (_t0 <= _t1) clipSlab(az, dz, c.minZ - grow, c.maxZ + grow);
+    if (_t0 <= _t1) clipSlab(ay, dy, c.under - below, c.top);
+    if (_t0 > _t1) continue;
+    if (_t0 < out.t) { out.t = _t0; out.first = c; }
+    if (!out.low || c.under < out.low.under) out.low = c;
+  }
+  return out.first;
+}
+
 // A ramp rising along yaw: height h0 at the back edge to h1 at the front edge.
 export const ramp = (x, z, yaw, width, length, h0, h1, kind = 'ramp') =>
   addBlock({ shape: RAMP, x, z, fx: Math.sin(yaw), fz: Math.cos(yaw), hx: width / 2, hz: length / 2, h0, h1, top: Math.max(h0, h1), kind });
@@ -286,6 +316,26 @@ export function circleVsObb(x, z, r, o, out) {
   out.nx = nlx * rx + nlz * o.fx;
   out.nz = nlx * rz + nlz * o.fz;
   return true;
+}
+
+// Push a disc of radius r at (x, z) out of every solid taller than y (`ignoreKind` aside), two
+// passes so a corner pushes it out of both walls. out.x / out.z = the summed push; returns whether
+// it moved. The chase camera keeps its eye this far off every face (§14.5).
+const _discOut = [], _disc = {};
+export function discPush(x, z, r, y, out, ignoreKind = 'prop') {
+  out.x = 0; out.z = 0;
+  queryBlocks(x - r - 0.5, z - r - 0.5, x + r + 0.5, z + r + 0.5, _discOut);
+  for (let pass = 0; pass < 2; pass++) {
+    let moved = false;
+    for (const b of _discOut) {
+      if (b.kind === ignoreKind || b.top < y) continue;
+      if (!circleVsBlock(x + out.x, z + out.z, r, b, _disc) || _disc.depth < 1e-4) continue;
+      out.x += _disc.nx * _disc.depth; out.z += _disc.nz * _disc.depth;
+      moved = true;
+    }
+    if (!moved) break;
+  }
+  return out.x !== 0 || out.z !== 0;
 }
 
 // Is the straight segment from a to b (at height y) blocked by anything taller than y? Returns the

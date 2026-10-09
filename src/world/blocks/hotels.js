@@ -161,6 +161,7 @@ function strawParasol(f, lx, lz, table = true) {
   f.cone(STRAW, lx, C + 2.75, lz, 1.7, 0.9, 10);
   f.cyl(0xc49a44, lx, C + 2.25, lz, 1.62, 0.22, 10);   // the fringe
   f.circ(lx, lz, 0.12, 99, 'pole');
+  f.ceiling(lx, lz, 2.8, 2.8, C + 2.14, C + 3.2);        // the chase camera stays under the straw
   if (table) {
     f.cyl(TRIM, lx, C + 0.74, lz, 0.5, 0.05, 12);
     f.cyl(STEEL, lx, C + 0.37, lz + 0.001, 0.05, 0.74, 6);
@@ -334,8 +335,12 @@ function flamencoSlab(f, rnd) {
   f.box(GLASS_D, -3, C + 0.05, LZ + 0.12, 2.2, 2.5, 0.06);   // entrance doors
   for (const s of [-1, 1]) f.box(GOLD, -3 + s * 0.35, C + 1.0, LZ + 0.18, 0.06, 0.6, 0.05);
 
-  // Ground-floor piers in terracotta tiles at the bay lines.
-  for (const x of [-25.7, -21, -15, -9, 9, 15, 21, 25.7]) f.box(TERRA, x, C, SZ1 + 0.15, 0.6, GH, 0.32);
+  // Ground-floor piers in terracotta tiles at the bay lines. Solid (Phase 3 r2): without a collider
+  // the chase eye stood behind one in an open room's doorway, the frame all terracotta.
+  for (const x of [-25.7, -21, -15, -9, 9, 15, 21, 25.7]) {
+    f.box(TERRA, x, C, SZ1 + 0.15, 0.6, GH, 0.32);
+    f.solid(x, SZ1 + 0.15, 0.6, 0.32, 99, 'building');
+  }
   f.box(TERRA, 0, C + GH - 0.35, SZ1 + 0.1, 2 * SX + 0.2, 0.35, 0.22);   // band under the first balconies
 
   // South face: balcony rows; the one above 113 is Angerud's (orange awning, a red towel).
@@ -345,10 +350,14 @@ function flamencoSlab(f, rnd) {
   });
   // Angerud's deck chair on the 113 balcony, its back showing over the parapet.
   f.boxC(ORANGE, 19.6, Y1 + 1.05, SZ1 + 0.5, 0.65, 0.9, 0.06, 0, -0.35);
+  // Camera ceilings (§14.3): the chase camera stays under the terracotta band over the patios and
+  // the balcony row above them, and inside the open rooms 107 and 113 (from their back wall).
+  f.ceiling(0, (ROOM_BACK + SZ1 + 1.35) / 2, 2 * SX + 0.3, SZ1 + 1.35 - ROOM_BACK, C + GH - 0.35, ROOF);
 
   // North face: access galleries, kitchen windows, the stair core with the back door.
   const NBAYS = Array.from({ length: 8 }, (_, k) => [-SX + k * 6.5, -SX + (k + 1) * 6.5]);
   balconies(f, rnd, { axis: 'x', c: SZ0, s: -1, u0: -SX, u1: SX, bays: NBAYS, y0: Y1, fh: FH, floors: NF + 1, depth: 1.25, awnP: 0, towelP: 0.25, plantP: 0.3, gallery: true });
+  f.ceiling(0, SZ0 - 0.625, 2 * SX + 0.3, 1.25, Y1 - 0.2, ROOF);   // the camera stays under the galleries
   windows(f, { axis: 'x', c: SZ0, s: -1, u0: -SX, u1: SX, step: 6, y0: C + 0.55, fh: FH, floors: 1, w: 1.1, h: 0.8, skip: (u) => (u > 3 && u < 13) || Math.abs(u + 6) < 3 });
   f.box(TRIM, 0, Y1 - 0.14, SZ0 - 0.04, 2 * SX, 0.14, 0.08);
   f.box(WHITE, -6, C, SZ0 - 0.75, 4, ROOF + 3 - C, 1.5);
@@ -357,6 +366,7 @@ function flamencoSlab(f, rnd) {
   f.box(TERRA, -6, C, SZ0 - 1.52, 4.05, 0.5, 0.06);
   f.box(WOOD_D, -6, C, SZ0 - 1.54, 1.3, 2.3, 0.08);                       // back door
   f.box(TRIM, -6, C + 2.45, SZ0 - 1.9, 2.0, 0.12, 0.8);                    // its little canopy
+  f.ceiling(-6, SZ0 - 1.9, 2.0, 0.8, C + 2.45, C + 2.57);
   f.sign('SERVICIO · PRIVADO', -6, C + 2.85, SZ0 - 1.56, 2.2, 0.35, PI, { bg: '#fff8e6', fg: '#1d1426', scale: 0.62 });   // [N]
 
   // Gables: terracotta panels and a vertical FLAMENCO sign on both ends.
@@ -502,17 +512,20 @@ function flamencoPorch(f, glow, rnd) {
   for (let x = -9.25; x <= 9.3; x += 0.75) f.box(TRIM, x, C + 3.6, -10.1, 0.16, 0.3, 7.8);
   f.box(TRIM, 0, C + 3.4, -10.1, 19.2, 0.2, 0.22);
   f.box(TERRA, 0, C + 3.1, -6.15, 19.2, 0.75, 0.3);           // fascia
-  f.ceiling(0, -10.1, 19.2, 7.9, C + 3.1, C + 4.5);             // the camera stays under it
+  f.box(TERRA, 0, C + 3.85, -6.12, 12.4, 0.82, 0.12);         // the name panel standing on it
+  f.ceiling(0, -10.1, 19.2, 7.9, C + 3.1, C + 4.7);             // the camera stays under it
   for (let k = 0; k < 16; k++) {
     const x = -8.8 + rnd() * 17.6, z = -13.4 + rnd() * 6.6;
     f.ico(k % 3 ? BOUG : LEAF2, x, C + 3.95 + rnd() * 0.2, z, 0.7 + rnd() * 0.6);
   }
   for (const x of [-8.6, -4.2, 4.2, 8.6]) f.ico(LEAF2, x, C + 3.2, -5.95, 0.55);
-  f.sign('HOTEL FLAMENCO · RECEPCIÓN', 0, C + 3.47, -5.98, 12, 0.6, 0,
+  // The name stands above the fascia: on it, it filled the top of the frame from under the pergola.
+  f.sign('HOTEL FLAMENCO · RECEPCIÓN', 0, C + 4.28, -6.04, 12, 0.6, 0,
     { bg: '#c0623a', fg: '#fff8e6', border: null, scale: 0.72 });
-  // A Christmas garland with baubles along the fascia.
-  f.cyl(0x2f6a3a, 0, C + 3.0, -5.95, 0.12, 19, 8, 0, PI / 2);
-  for (let x = -9; x <= 9; x += 1.5) f.sphere(x % 3 === 0 ? RED : GOLD, x, C + 2.82, -5.9, 0.2);
+  // A Christmas garland with baubles across the fascia's face (Phase 3 r2: it hung under the fascia,
+  // where the chase eye, capped under the pergola, met it).
+  f.cyl(0x2f6a3a, 0, C + 3.5, -5.95, 0.12, 19, 8, 0, PI / 2);
+  for (let x = -9; x <= 9; x += 1.5) f.sphere(x % 3 === 0 ? RED : GOLD, x, C + 3.32, -5.9, 0.2);
   for (const s of [-1, 1]) {
     f.cyl(TRIM, s * 9.3, C + 1.65, -6.6, 0.22, 3.3, 12);
     f.cyl(TERRA, s * 9.3, C + 0.2, -6.6, 0.3, 0.4, 12);
@@ -625,8 +638,10 @@ function flamencoBar(f, glow) {
   f.box(WOOD_D, 16.8, C + 2.15, 12, 0.08, 0.62, 5.2);
   f.sign('BAR PISCINA · SVENSKT KAFFE', 16.74, C + 2.46, 12, 5.0, 0.5, -PI / 2,
     { bg: '#f7c31b', fg: '#d8321e', border: '#1d1426', scale: 0.66 });   // §6.3 [N]
-  // The chase camera stays under the thatch over the counter and the bartender's aisle (front
-  // edge x 16.7 to the kiosk wall; underside = the sign board's bottom edge).
+  // The chase camera stays under the thatch (its fringe's bottom edge) all round the kiosk, and
+  // over the counter and the bartender's aisle under the sign board's bottom edge (front edge x 16.7
+  // to the kiosk wall).
+  f.ceiling(21.0, 12, 8.6, 10.2, C + 2.45, C + 4.5);
   f.ceiling(18.35, 12, 3.3, 10.2, C + 2.15, C + 4.5);
   for (const z of [6.85, 17.15]) stringLights(f, glow, 16.8, C + 2.55, z, 25.2, C + 2.55, z, 7, 0.25);
   f.prop('automat', 24.9, 5.9, -PI / 2);
@@ -664,7 +679,8 @@ function flamencoBack(f) {
   f.prop('butano', -8.5, -29.0); f.prop('butano', -8.9, -29.6); f.prop('butano', -3.4, -29.2);
   f.prop('tomatlada', -1.2, -29.5); f.prop('tomatlada', 0.2, -29.7, 0.3);
   f.prop('papelera', 1.6, -30.5);
-  for (const x of [-20, 16, 22]) { f.box(0xb8bcc2, x, C + 2.8, SZ0 - 0.25, 1.0, 0.7, 0.5); f.box(STEEL, x, C + 2.8, SZ0 - 0.52, 0.8, 0.5, 0.05); }
+  // Air-con units, 0.4 m deep: under the galleries the chase eye keeps 0.45 m off the wall.
+  for (const x of [-20, 16, 22]) { f.box(0xb8bcc2, x, C + 2.8, SZ0 - 0.2, 1.0, 0.7, 0.4); f.box(STEEL, x, C + 2.8, SZ0 - 0.42, 0.8, 0.5, 0.05); }
   for (const x of [17.5, 23.5]) cardon(f, x, -29.4, 0.9);
   agave(f, 20.5, -29.5, 1.1);
   agave(f, 14.2, -29.3, 0.9);
@@ -848,6 +864,10 @@ function suntripWings(f, rnd) {
   for (const fc of faces) {
     const bs = bays(fc.u0, fc.u1, fc.n);
     balconies(f, rnd, { axis: fc.axis, c: fc.c, s: fc.s, u0: fc.u0, u1: fc.u1, bays: bs, y0: Y1, fh: FH, floors: NF, stripe: SUN, depth: 1.25, awnP: 0.45 });
+    // The balcony row is a camera ceiling (§14.3): the chase eye stays under its first slab.
+    const cu = (fc.u0 + fc.u1) / 2, cl = fc.u1 - fc.u0 + 0.3, cv = fc.c + fc.s * 0.625;
+    if (fc.axis === 'x') f.ceiling(cu, cv, cl, 1.25, Y1 - 0.2, TOP);
+    else f.ceiling(cv, cu, 1.25, cl, Y1 - 0.2, TOP);
     const B = (color, u, y, v, wu, h, wv) => (fc.axis === 'x' ? f.box(color, u, y, fc.c + fc.s * v, wu, h, wv) : f.box(color, fc.c + fc.s * v, y, u, wv, h, wu));
     for (const [b0, b1] of bs) {
       const bu = (b0 + b1) / 2;

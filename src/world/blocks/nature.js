@@ -500,6 +500,7 @@ function grisgard(f, W, ctx) {
       f.circ(px + dx, z, 0.16, 99, 'pole');
     }
     for (const dx of [-6, 0, 6]) f.box(WOOD, px + dx, CURB + 3.0, 1, 0.26, 0.22, 15.4);
+    f.ceiling(px, 1, 13.2, 16, CURB + 2.95, CURB + 3.9);   // the chase camera stays under beams and vines
     for (let k = 0; k < 9; k++) f.box(WOOD, px, CURB + 3.22, -6.5 + k * 1.875, 12.6, 0.12, 0.16);
     for (let k = 0; k < 7; k++) {
       const vx = px + (rnd() - 0.5) * 10, vz = -5 + k * 2;
@@ -723,6 +724,7 @@ function fataga(f, W, ctx) {
   f.flat(0xa88a5a, -19, -23, 17, 13, CURB + 0.022);
   for (const [x, z] of [[-26.5, -28.5], [-20, -28.5], [-13.5, -28.5], [-26.5, -25], [-13.5, -25]]) f.box(WOOD_D, x, CURB, z, 0.2, 2.2, 0.2);
   f.box(TERRA, -20, CURB + 2.2, -26.7, 14.2, 0.14, 4.4);
+  f.ceiling(-20, -26.7, 14.2, 4.4, CURB + 2.2, CURB + 2.34);   // the chase camera stays under the shelter
   f.solid(-20, -28.5, 14, 0.4, 99, 'post');
   f.box(0xd8c060, -24, CURB, -28.4, 3, 0.8, 1.2);
   for (const [x, z, a] of [[-15, -20, 0.4], [-22, -21.5, 2.2], [-18.5, -24, 4.1]]) sheep(f, x, z, a);
@@ -794,6 +796,7 @@ function golf(f, W, ctx) {
   house(f, -18, 21, 18, 10, 3.6, { roof: 'tile', doors: [['e', 0], ['s', 3]] });
   for (const z of [16.6, 25.4]) { f.box(WHITE, -7.4, CURB, z, 0.3, 3.0, 0.3); f.circ(-7.4, z, 0.2, 99, 'pole'); }
   f.box(TERRA_D, -7.9, CURB + 3.0, 21, 1.4, 0.14, 9.6);
+  f.ceiling(-8.1, 21, 1.8, 9.6, CURB + 3.0, CURB + 3.6);   // the chase camera stays under the veranda
   f.prop('julgran', -8.0, 23.6);   // Christmas week (§6.9): by the clubhouse door, under the veranda
   postSign(f, 'CAMPO DE GOLF', -18, 28.6, 6.4, 1.2, 1.6, 0, { bg: '#2f6a4a', fg: '#fff8e6', border: '#fff8e6' });   // [N]
   for (const [z, c] of [[14.4, 0xf4f4f0], [11.6, 0xf2e6c0]]) golfCart(f, -14, z, c);
@@ -848,6 +851,7 @@ function bungalowTomt(f, W, ctx) {
   f.box(0xbfe6ff, 7, CURB + 0.5, -8.97, 5, 2.0, 0.06);
   f.box(WHITE2, 7, CURB + 0.4, -8.93, 5.2, 0.1, 0.1);
   for (let k = 0; k < 8; k++) f.boxC(k % 2 ? 0xf4f4f0 : BUTANO, -2.6 + k * 0.85, CURB + 2.7, -8.3, 0.85, 0.08, 1.6, 0, -0.3);
+  f.ceiling(0.375, -8.3, 6.8, 1.6, CURB + 2.42, CURB + 2.95);   // the chase camera stays under the awning
   // The pool (fena_bungalow circles in it): x [1.5, 10.5], z [-6.5, -1.5]. Depth marks on the coping.
   waterBox(f, 6, -4, 9, 5, POOL_EDGE, 0.7);
   for (const [t, x] of [['3 M', 1.15], ['1 M', 10.85]]) {   // [N] (depth marks; a nod to the Flamenco pool sign [F*])

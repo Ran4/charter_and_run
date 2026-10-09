@@ -994,11 +994,11 @@ standing there faces. `y` (optional) = absolute height for collectible spots on 
 
 | block (i,j) | type → builder (owner, file) | content | landmarks: `id` (lx, lz, yaw[, y]) | named / parked cars |
 |---|---|---|---|---|
-| (3,3) | `flamenco` → `hotelFlamenco` (C1, hotels.js) | 7-storey white slab x [−26, 26], z [−27, −14] with balcony rows, terracotta accents, `HOTEL FLAMENCO` roof sign; open reception porch (canopy, desk, plastic Christmas tree `julgran` prop, `RECEPCIÓN`) at the slab's south face; ground-floor room patios along the south face (Stig & Ole's room west, room 113 east) with a visible 1st-floor balcony above 113; pool deck south with a **walkable shallow pool** (flat blue slab at CURB+0.02 + `box(..., CURB, 'water')`, sign "TRE METER DJUPT I ENA ÄNDEN, / EN METER I DEN ANDRA. / BARNVÄNLIG!" (three lines) [F*] (the bungalow seller's line, relocated)); poolbar with straw parasols (`BAR PISCINA · SVENSKT KAFFE`); the julafton party `julgran` on the pool deck at (2.2, 16), in the party and sunset-duet shots (Phase 3); room numbers: a closed room's centred above its own glass door, an open room's (107, 113) on its right-hand pier (Phase 3); parking lot on the west; **PEPES BODEGA**: small whitewashed annex x [4, 12], z [−31, −27] on the north side with a green door, barrels, sign `PEPES BODEGA · VINOS · RON` facing north (`worldHooks.bodegaLit(on)` lights it after julafton) | `flamenco` (−4, −8, π) (faces the hotel, so the views/cutaway camera stands on the pool deck; Phase 2) · `flamencoRecepcion` (2, −10, 0) · `flamencoPatio` (−18, −11, 0) · `rum113` (18, −11, 0) · `flamencoBalcony` (18, −8, π) · `flamencoPool` (−3, 18, π) · cut anchors (Phase 3; a cut stands `dist` m behind one, looking the way it faces): `rum107Cam` (−18, −11, π) = `flamencoPatio` turned round (looks into room 107), `recepcionCam` (2, −10, π) = `flamencoRecepcion` turned round (the desk from the porch front) · `flamencoDeck` (−4, −2.5, 0) (the island spawn: approachSpot puts the player on the pool deck at (−4, −1) facing the hotel, the chase camera over the pool rather than under the pergola slats; Phase 2) · `flamencoBar` (16, 12, −π/2) · `flamencoDrive` (−26, 22, π) · `flamencoBack` (−6, −33.5, 0) · `bodega` (8, −33.5, 0) · `fena_flamenco` (−3, 7, 0, 0.35) | `hyrbil` (sedan `0xf4f4f0`) at `flamencoDrive` — default `getInCar` car and test car |
+| (3,3) | `flamenco` → `hotelFlamenco` (C1, hotels.js) | 7-storey white slab x [−26, 26], z [−27, −14] with balcony rows, terracotta accents, `HOTEL FLAMENCO` roof sign; open reception porch (canopy, desk, plastic Christmas tree `julgran` prop, `RECEPCIÓN`; Phase 3 r2: `HOTEL FLAMENCO · RECEPCIÓN` stands on a terracotta panel above the pergola's fascia, where it no longer fills the top of the chase frame, and the garland runs across the fascia's face) at the slab's south face; ground-floor room patios along the south face (Stig & Ole's room west, room 113 east) with a visible 1st-floor balcony above 113; terracotta piers at the bay lines, solid (Phase 3 r2); pool deck south with a **walkable shallow pool** (flat blue slab at CURB+0.02 + `box(..., CURB, 'water')`, sign "TRE METER DJUPT I ENA ÄNDEN, / EN METER I DEN ANDRA. / BARNVÄNLIG!" (three lines) [F*] (the bungalow seller's line, relocated)); poolbar with straw parasols (`BAR PISCINA · SVENSKT KAFFE`); the julafton party `julgran` on the pool deck at (2.2, 16), in the party and sunset-duet shots (Phase 3); room numbers: a closed room's centred above its own glass door, an open room's (107, 113) on its right-hand pier (Phase 3); parking lot on the west; **PEPES BODEGA**: small whitewashed annex x [4, 12], z [−31, −27] on the north side with a green door, barrels, sign `PEPES BODEGA · VINOS · RON` facing north (`worldHooks.bodegaLit(on)` lights it after julafton) | `flamenco` (−4, −8, π) (faces the hotel, so the views/cutaway camera stands on the pool deck; Phase 2) · `flamencoRecepcion` (2, −10, 0) · `flamencoPatio` (−18, −11, 0) · `rum113` (18, −11, 0) · `flamencoBalcony` (18, −8, π) · `flamencoPool` (−3, 18, π) · cut anchors (Phase 3; a cut stands `dist` m behind one, looking the way it faces): `rum107Cam` (−18, −11, π) = `flamencoPatio` turned round (looks into room 107), `recepcionCam` (2, −10, π) = `flamencoRecepcion` turned round (the desk from the porch front) · `flamencoDeck` (−4, −2.5, 0) (the island spawn: approachSpot puts the player on the pool deck at (−4, −1) facing the hotel, the chase camera over the pool rather than under the pergola slats; Phase 2) · `flamencoBar` (16, 12, −π/2) · `flamencoDrive` (−26, 22, π) · `flamencoBack` (−6, −33.5, 0) · `bodega` (8, −33.5, 0) · `fena_flamenco` (−3, 7, 0, 0.35) | `hyrbil` (sedan `0xf4f4f0`) at `flamencoDrive` — default `getInCar` car and test car |
 | (3,2) | `suntrip` → `hotelSunTrip` (C1, hotels.js) | lower U-shaped hotel on red rock; welcome **stage** with SunTrip sun backdrop (red text on yellow sun), accordion/conga props; pool; **friskotek lawn**; SunTrip office porch on the south side facing Flamenco's back; posters `GRISFEST TORSDAG · 800 PTA`, `FRISKOTEKET 9.30` | `suntrip` (−14, 24, π) (faces the office porch; Phase 2) · `scen` (0, −14, 0) · `friskotek` (−10, 8, 0) · `suntripPool` (14, 4, π) · `suntripLot` (24, 22, π) · `fena_suntrip` (14, 8, 0, 0.35) | — |
 | (1,2) | `kasbah` → `kasbah` (C2, centre.js) | **Centro La Medina** (fictional; internal id `kasbah`): two-level nightlife courtyard centre: arcade, stairs (ramp) to a roof terrace (top ≈ 6.0) with a balustrade above the bottom three steps and a sloped wall collider along it (Phase 3: the way on is over those three steps), neon signs `CENTRO LA MEDINA`, `VIKING BAR` (horned helmet), `TONGA TONGA` (mirror ball), `BAR SVENSKA · SMÖRGÅSAR` | `kasbah` (0, 22, π) · `vikingbar` (−16, 18, π) · `tongatonga` (14, 18, π) · `tongaLot` (20, 27, π) · `pryl_poolpen` (8, −6, 0, 7.2) | — |
 | (4,2) | `cita` → `cita` (C2, centre.js) | **Centro Nórdico** (fictional; internal id `cita`) strip mall, sign `CENTRO NÓRDICO`: `SUPERMERCADO`, `FERRETERÍA`, `FARMACIA`, `ESTANCO`, `TELÉFONOS · HYTT 1·2·3`, `SOUVENIRS`, `SVENSKT KAFFE`, `CAMBIO · 1 KR = 17 PTA` (Phase 3: the north shop row and its canopy fit the courtyard between the wings, x ±11; `SOUVENIRS · REGALOS` and `FARMACIA` with its green cross sit on the wings' courtyard faces) | `cita` (0, 22, π) · `supermercado` (−18, 18, π) · `ferreteria` (18, 18, π) · `telefon` (0, 8, π) | — |
-| (2,3) | `plaza` → `plaza` (C2, centre.js) | palms, fountain (shallow walkable pool), restaurant terraces; **CASA LOLA** (`CASA LOLA · COMIDA CANARIA`, fictional; internal id `grillpaco`) terrace on the SE corner | `plaza` (0, 6.8, π) (south of the fountain rim, facing it: the fountain column stands at (0, 0); Phase 2) · `grillpaco` (20, 22, π) · `grillpacoMamma` (25, 24, π) · `grillpacoCurb` world (−60, 36, −π/2) (westbound kerb of the z = 40 road, the `follow` endpoint) · `fena_plaza` (0, 0, 0, 0.35) | — |
+| (2,3) | `plaza` → `plaza` (C2, centre.js) | palms, fountain (shallow walkable pool), restaurant terraces; **CASA LOLA** (`CASA LOLA · COMIDA CANARIA`, fictional; internal id `grillpaco`) terrace on the SE corner (Phase 3 r2: the bougainvillea along its eave sits above the pergola's camera cap, west of the name board) | `plaza` (0, 6.8, π) (south of the fountain rim, facing it: the fountain column stands at (0, 0); Phase 2) · `grillpaco` (20, 22, π) · `grillpacoMamma` (25, 24, π) · `grillpacoCurb` world (−60, 36, −π/2) (westbound kerb of the z = 40 road, the `follow` endpoint) · `fena_plaza` (0, 0, 0, 0.35) | — |
 | (2,1) | `marknad` → `marknad` (C2, centre.js) | rows of striped stall awnings (some `bounce` awnings as climb pads), souvenir stand with painted donkeys `BURROS 500 PTA`, postcard racks, plastic giraffes | `marknad` (0, 22, π) · `asnestand` (6, 2, π) · `pryl_kalkylator` (−12, −8, 0, 3.4) (on an awning roof) | — |
 | (3,1) | `kyrka` → `kyrka` (C2, centre.js) | **Templo Ecuménico**: white rationalist church (flat planes, bell slab), palm plaza, crèche, small fountain; sign `ES UNA IGLESIA` / `Det är en kyrka.` [F*] (the sisters' language record, relocated) | `kyrka` (0, 18, π) | — |
 | (4,3) | `bensin` → `bensin` (C2, centre.js) | gas station: canopy, `GASOLINA` (no brand), prices in pesetas, kiosk; `gaspump` props explode | `bensin` (0, 16, π) | — |
@@ -1045,7 +1045,8 @@ Copacabana beach with palms, a small orchestra of busts, sunset palette. Landmar
   - Welcome sign at the west entrance: `BIENVENIDOS A NUEVA ESTOCOLMO · VÄLKOMMEN!` The entrance
     road stub (z −40, asphalt at CURB like the collision ground there) runs from the perimeter
     road's edge across the outer sidewalk ring, which is cut for it (Phase 3).
-  - Road banners `GOD JUL · FELIZ NAVIDAD` over 3 roads; tinsel spirals on some palm trunks.
+  - Road banners `GOD JUL · FELIZ NAVIDAD` over 3 roads (the banner at 7.8–9.2 m, Phase 3 r2: at
+    5.6–7.1 m the bus chase eye, ≈ 7 m, passed through it); tinsel spirals on some palm trunks.
 - Shallow pools everywhere are flat blue slabs + `box(..., CURB, 'water')` (a floor). Sunken pools
   are impossible (no holes in collision). `hud.buildBaseMap` draws BOX `water` blue.
 
@@ -3091,8 +3092,19 @@ it stays at that angle, moves in over the head (level offset = the room, ≥ 0.0
 further ahead instead (as the cabin `clampPitch`). Until Phase 3 the 1.6 m floor put the eye
 inside the wall (a one-colour frame at 2.4–8.9 % of standable spots × 8 headings in the hotel and
 centre blocks); a sweep of the real rig over the same spots finds 0. Bushes and other `prop`
-solids stay see-through by design. Camera ceilings (§14.7) still cap the eye under registered
-roofs. **Dialogue framing** (`frame`, `frameOne` without a profile): the side whose sight line is
+solids stay see-through by design. **Stand-off disc** (Phase 3 r2, both modes): the eye then keeps
+`EYE_R` 0.45 m off every solid's face (`discPush` with top ≥ the eye − 0.3), not only along the
+sight line: met at a slant the line's 0.45 m left it 0.05–0.3 m from the wall, inside façade relief
+(Flamenco's piers 0.31 m, the band 0.21 m, window boxes 0.42 m). It is pushed out; if a solid then
+stands between it and the pivot (a corner), it is pulled in along the sight line until the disc is
+clear. **Camera ceilings** (§14.7) keep the eye out of registered overhangs, on foot and (Phase 3
+r2) in cars. **Side slide** (Phase 3 r2, on foot): his back to a wall under a low ceiling, the
+capped climb left the eye 0.35–0.6 m over his head (a top-down view of his shoulders); when a
+ceiling has capped the pulled-in eye nearer the pivot than `ARM` − 0.05, it slides along the wall
+(the side with more room, or the side it is on; tested at 0.25 m with the 0.45 m stand-off) to
+`SIDE` 2.6 m from the pivot, and down to 0.6 m above the pivot only as far as that keeps it no
+nearer than before: a three-quarter view of him with the way ahead (at 1.5–1.9 m he filled the
+frame). Every pull-in, push or slide snaps the eye (no damping lag into the wall). **Dialogue framing** (`frame`, `frameOne` without a profile): the side whose sight line is
 clear; when both are blocked, the side with more room, the eye 0.45 m short of the solid (≥ 1.6 m
 out) instead of inside a house (fataga's 13 m two-shot).
 
@@ -3218,16 +3230,40 @@ export function propsOfType(type, { x, z, r }) -> props[]
 //   chase camera samples every 0.25 m, §14.5)
 // world/collision.js (Phase 2): camera ceilings, not solids (nothing collides with them)
 ceiling(minX, minZ, maxX, maxZ, under, top);  ceilingOver(x, z, y, margin = 0) -> lowest ceiling over (x, z) with under > y, or null
-//   Frame.ceiling(lx, lz, w, d, under, top) registers one from a local rectangle. CamRig.update (on
-//   foot, no profile): when the eye (footprint grown 1.5 m) or the player is under one whose
-//   underside is above the player's feet + 0.5, and the eye is below top + 2, the eye stays at
-//   under − 0.3. Registered (C = CURB): Hotel Flamenco's reception pergola (under C + 3.1 = the
-//   fascia, top C + 4.5); Phase 3: Flamenco's pool-bar thatch over the counter and the bartender's
-//   aisle (x 16.7–20, under C + 2.15 = the sign board's bottom), the SunTrip office awning (under
+ceilingHit(ax, ay, az, bx, by, bz, minUnder, out, grow = 0.3, below = 0.3) -> out.first (nearest along a→b, out.t 0..1)
+//   or null; out.low = the hit with the lowest underside. Each ceiling is a box: footprint grown by
+//   `grow`, from under − `below` up to top; ceilings with under ≤ minUnder are skipped (Phase 3 r2)
+discPush(x, z, r, y, out, ignoreKind = 'prop') -> bool; out.x/out.z = the push that takes a disc of radius r
+//   out of every solid with top ≥ y (two passes, for corners) (Phase 3 r2)
+//   Frame.ceiling(lx, lz, w, d, under, top) registers one from a local rectangle. CamRig.update
+//   (Phase 3 r2; on foot without a profile, and in cars): a ceiling counts when the sight line from
+//   the pivot to the eye passes through its box (`ceilingHit`, minUnder = the player's feet + 0.5),
+//   i.e. the eye is in it, or it would come between the eye and the player (the eye above the roof).
+//   On foot the eye then stays at the lowest hit's under − 0.3 (not below the feet + 0.6; a second
+//   pass catches a lower one); a ceiling the line passes under (the eye out in the open, the player
+//   just under the edge) leaves the eye where it is (until r2: any eye within 1.5 m of the footprint,
+//   or the player under it, capped the eye, below top + 2). A car's eye stops 0.45 m short of the
+//   first hit along the line, as at a wall, if that leaves more than half the car's length + 2 m and
+//   the car is not under that ceiling; otherwise it stays below the underside as on foot.
+//   Registered (C = CURB): Hotel Flamenco's reception pergola (under C + 3.1 = the fascia, top
+//   C + 4.7); Phase 3: Flamenco's pool-bar thatch over the counter and the bartender's aisle
+//   (x 16.7–20, under C + 2.15 = the sign board's bottom), the SunTrip office awning (under
 //   C + 2.45 = the valance); every centre.js `arcade()` (La Medina's two, the plaza's north row:
 //   under = the roof slab), Centro Nórdico's canopy (x ±11, under 3.5), the Casa Lola pergola
 //   (under 2.9), the church portico (4.0), Gasolina's pump canopy (5.0), shop canopy (3.4) and
-//   workshop bays (4.0).
+//   workshop bays (4.0). Phase 3 r2: the whole pool-bar thatch (x 16.7–25.3, z 6.9–17.1, under
+//   C + 2.45 = the fringe); Flamenco's south strip from the open rooms' back wall to the balcony
+//   edge (x ±26.15, z −21.5…−12.65: rooms 107/113, the patios' piers and band, the balcony row;
+//   under C + 3.45 = the band, top = the roof), the north access galleries (z −28.25…−27, under
+//   Y1 − 0.2 = C + 3.6, top the roof) and the back door's canopy (C + 2.45); every straw parasol
+//   (2.8 m square, under C + 2.14 = the fringe, top C + 3.2: Flamenco's deck, SunTrip's terrace);
+//   SunTrip's four courtyard balcony rows (1.25 m deep, under Y1 − 0.2 = C + 3.0, top the roof);
+//   Centro Nórdico's SUPERMERCADO and FERRETERÍA awnings (x −28.7…−11.3 and 11.3…28.7, z 12–13.4,
+//   under 2.74 = the valance); every `lagenhet` slab's entrance canopy (under C + 2.65), first
+//   balcony row (front − 1.46…front, under C + fh − 0.2 = the fins' bottom, top the roof) and café
+//   awning (C + 2.5); the grisfest pergolas (x ±16 ± 6.6, z −7…9, under C + 2.95, top C + 3.9), the
+//   Fataga fold shelter (C + 2.2), the golf clubhouse veranda (C + 3.0), the show bungalow's door
+//   awning (C + 2.42); the marina's reed terrace (C + 2.7).
 
 // world/cabin.js (WP-A1; Phase 0 stub has the full API)
 export const CABIN_X = 3000;
@@ -4380,3 +4416,22 @@ the fixer's group.
   the lens (0.97–1.0; before −0.18, 0.62, 0.66).
 - r2 spine: the Rio end card's deck offsets (§11.7): one row across rioCam's view at one depth,
   couples together (Siv, Ole, Majsan, Stig from the left); Majsan was half behind Ole.
+- r2 island-camera: camera ceilings count by the sight line (§14.7 `ceilingHit`): the eye stays
+  under one when the line from the pivot passes through it (the eye in it, or the roof between the
+  eye and the player), not whenever it is within 1.5 m or the player is under it; in cars too, where
+  the eye stops 0.45 m short of it (or stays under it with no room, or the car under it).
+- r2 island-camera: the chase eye keeps a 0.45 m disc off every solid (`discPush`, §14.5), not
+  0.45 m along the sight line; capped under a low ceiling with no room behind him it slides
+  sideways to 2.6 m from the pivot instead of sitting over his head.
+- r2 island-camera: new camera ceilings (§14.7 list): the whole pool-bar thatch, Flamenco's rooms
+  107/113 + patio strip + south balcony row, its north galleries and back-door canopy, every straw
+  parasol, SunTrip's courtyard balcony rows, Centro Nórdico's two street awnings, each `lagenhet`
+  slab's entrance canopy, first balcony row and café awning, the grisfest pergolas, the Fataga fold
+  shelter, the golf veranda, the show bungalow's awning, the marina's reed terrace.
+- r2 island-camera: Flamenco's eight ground-floor terracotta piers are solid (0.6 × 0.32 m, §6.3):
+  the eye stood behind one in room 107's doorway. No mission places anyone there; no timed route
+  runs along the façade.
+- r2 island-camera: `HOTEL FLAMENCO · RECEPCIÓN` stands on a panel above the porch fascia and the
+  Christmas garland runs across the fascia's face (it hung under it, in the capped eye's way); Casa
+  Lola's eave bougainvillea sits above the pergola cap; Flamenco's back-wall air-con units are 0.4 m
+  deep; the road banners hang at 7.8–9.2 m, over the bus chase eye (§6.3, §6.4).

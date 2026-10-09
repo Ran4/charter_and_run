@@ -1165,6 +1165,7 @@ function hamn(f, W) {
     const tz0 = -21, tz1 = -14.5;
     for (const x of [11, 17, 23, 27.5]) for (const z of [tz0 + 0.3, tz1]) { f.box(WOOD2, x, CURB, z, 0.2, 2.7, 0.2); f.circ(x, z, 0.15, 99, 'pole'); }
     for (let x = 10.5; x <= 28; x += 0.5) f.box(0xd8c08a, x, CURB + 2.7, (tz0 + tz1) / 2, 0.3, 0.08, tz1 - tz0 + 0.6);
+    f.ceiling(19.25, (tz0 + tz1) / 2, 17.8, tz1 - tz0 + 0.6, CURB + 2.7, CURB + 2.78);   // the chase camera stays under the reeds
     for (const [x, z] of [[13.5, -18.5], [19.5, -18], [25, -18.5], [16.5, -15.8], [22.5, -15.8]]) {
       f.cyl(0xf4f4f0, x, CURB + 0.72, z, 0.55, 0.06, 12);
       f.cyl(0x8a8a8a, x, CURB + 0.36, z, 0.05, 0.72, 6);

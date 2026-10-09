@@ -406,6 +406,7 @@ function slabLot(f, LW, LD, r) {
   f.box(0xd8cbb4, 0, CURB, front - 0.07, w + 0.1, 0.35, 0.12);
   f.box(accent, 0, CURB + 2.65, front - 1.5, 5.4, 0.2, 3.0);
   for (const s of [-1, 1]) { f.box(C.white2, s * 2.5, CURB, front - 2.85, 0.16, 2.65, 0.16); f.circ(s * 2.5, front - 2.85, 0.12, 99, 'pole'); }
+  f.ceiling(0, front - 1.5, 5.4, 3.0, CURB + 2.65, CURB + 2.85);   // the chase camera stays under it
   f.flat(0xe6dac4, 0, front / 2, w + 2, front - 0.3, CURB + 0.03);
   // Balcony floors.
   const units = Math.max(3, Math.round(w / 3.8)), uw = w / units;
@@ -424,6 +425,7 @@ function slabLot(f, LW, LD, r) {
     }
   }
   for (let u = 0; u <= units; u++) f.box(wall === C.white ? C.white2 : C.white, -w / 2 + u * uw, CURB + fh - 0.2, front - 0.72, 0.22, H - fh + 0.2, 1.46);
+  f.ceiling(0, front - 0.73, w + 0.3, 1.46, CURB + fh - 0.2, CURB + H);   // and under the first balcony row
   // A stair tower on one side: an accent colour with a vertical strip of glass blocks.
   const st = r() < 0.5 ? -1 : 1, stC = pick([C.terracotta, C.sun, 0x1e9aa0, C.white2, 0x2f6ad1], r);
   const stx = st * (w / 2 - 1.7), stz = front + d + 1.0;
@@ -457,6 +459,7 @@ function slabLot(f, LW, LD, r) {
     const cx = cafe * (w / 2 - 3.6);
     addSign(txt, 6.2, 0.9, { bg, fg: '#fbf7ee', border: '#fbf7ee', scale: 0.6 }, f.wx(cx, front - 0.14), CURB + 2.95, f.wz(cx, front - 0.14), f.yaw + Math.PI);
     f.box(pick(AWNINGS, r), cx, CURB + 2.5, front - 1.0, 6.4, 0.12, 2.0);
+    f.ceiling(cx, front - 1.0, 6.4, 2.0, CURB + 2.5, CURB + 2.62);
     for (const k of [-1, 1]) {
       const tx = cx + k * 1.6, tz = 3.2;
       f.cyl(0xfafafa, tx, CURB + 0.37, tz, 0.4, 0.06, 10);
@@ -726,7 +729,8 @@ function promenade(S) {
 function banners(S) {
   const spots = [[0, 40, 'x'], [-40, 0, 'z'], [0, -120, 'x']];   // [x, z, road axis]
   for (const [x, z, axis] of spots) {
-    const span = RHW + 1.0, h = 6.2, w = 2 * span - 1.2;
+    // h 8.4 (the banner 7.8–9.2 m): at 6.2 the bus chase eye (≈ 7 m) passed through it (Phase 3).
+    const span = RHW + 1.0, h = 8.4, w = 2 * span - 1.2;
     const ends = axis === 'x' ? [[x, z - span], [x, z + span]] : [[x - span, z], [x + span, z]];
     for (const [px, pz] of ends) {
       S.cyl(C.white2, px, CURB + h / 2 + 0.6, pz, 0.12, h + 1.2, 8);
