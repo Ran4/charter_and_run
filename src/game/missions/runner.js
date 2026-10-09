@@ -31,7 +31,7 @@ export class MissionRunner {
     this.cpI = 0;            // last checkpoint stage
     this.stageT = 0;         // scaled seconds in the current stage
     this.posed = [];         // [key, flag] pairs set by syncIdleAnim
-    this.lastCar = null;     // the player's car when the mission failed (retryCar)
+    this.lastCar = null;     // the car the player last drove in this mission (retryCar)
   }
 
   get current() { return MISSIONS[this.index] || null; }
@@ -61,6 +61,7 @@ export class MissionRunner {
     if (def.cost) await g.pay(def.cost);
     if (!intro.length) { hud.showBanner(def.title, sub, 'mission', 1400); audio.jingle('start'); }
     this.cpI = 0;
+    this.lastCar = null;
     this.startMission(0);
   }
 
@@ -114,6 +115,8 @@ export class MissionRunner {
   update(dt) {
     if (this.state !== 'running') return;
     const g = this.g, st = this.stage;
+    // Kept while on foot, so a stage failed on foot (grisfest's plates) still finds the car he left.
+    if (g.playerCar) this.lastCar = g.playerCar;
     this.stageT += dt * g.timeScale;
     const tc = st.timedCues;
     if (tc) while (this.timedI < tc.length && tc[this.timedI][0] <= this.stageT) g.cue(tc[this.timedI++][1]);
@@ -251,7 +254,7 @@ export class MissionRunner {
     if (this.state !== 'running') return;
     const def = this.m.def;
     this.state = 'failed';
-    this.lastCar = g.playerCar;
+    if (g.playerCar) this.lastCar = g.playerCar;
     audio.jingle('fail');
     hud.showBanner(S.failed, reason, 'bad', 0);
     this.cleanupMission();
@@ -291,7 +294,6 @@ export class MissionRunner {
     const cp = def.stages[this.cpI]();
     const spot = g.approachSpot(cp.retryAt ?? def.at);
     const prev = g.playerCar || this.lastCar;
-    this.lastCar = null;
     if (g.playerCar) g.exitCar(true);
     if (g.player.seatId) g.standPlayer();
     g.player.state = 'normal';
@@ -300,8 +302,9 @@ export class MissionRunner {
     hud.showBanner(def.title, S.retrySub, 'mission', 2000);
     audio.jingle('start');
     // `retryCar`: the car waits at its spot (the player at the wheel unless `park`) before the
-    // checkpoint stage's init, which may read g.playerCar (destroy.playerDamageScale).
-    this.startMission(this.cpI, cp.retryCar ? (m) => retryCar(g, m, cp.retryCar, prev) : null);
+    // checkpoint stage's init, which may read g.playerCar (destroy.playerDamageScale). It becomes
+    // `lastCar`, so a second failure on foot (grisfest's plates again) finds the car parked for him.
+    this.startMission(this.cpI, cp.retryCar ? (m) => { this.lastCar = retryCar(g, m, cp.retryCar, prev); } : null);
   }
 
   abort() {

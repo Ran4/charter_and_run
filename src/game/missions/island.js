@@ -17,6 +17,16 @@ import { lm } from '../../world/layout.js';
 const PI = Math.PI;
 // The julafton pool party's group shot (camera on the pool deck south of the guests, looking north).
 const PARTY_CAM = { at: 'flamencoPool', dist: 11, height: 4 };
+// Grisfest retries from the dance floor (the plates, the dance, the Tonga drive): the player on foot
+// at `dansgolv`, the car he last drove parked where the race left it, just past the finish heading
+// west (the calibrate Tonga start), so the 23 s drive is the one that was measured.
+const TONGA_CAR = { at: { x: -86, z: -202.75, yaw: -PI / 2 }, park: true };
+// The grisfest carry's retry spot: the aisle of the Flamenco lot west of the pool hedge, facing the
+// gap in it (flamencoDrive itself is the hire car's bay).
+const FLAMENCO_LOT = { x: -24, z: 16, yaw: -PI / 2 };
+// The Fataga sheep's retry spot: approachSpot puts the player on the pavement 3 m south of the bus
+// stop, facing the village (the calibrate start); `fatagaBus` itself is at the kerb of the lane.
+const FATAGA_STOP = { x: -240, z: -208.5, yaw: 0 };
 
 // Stage timers in seconds (stage timers run on unscaled time). Phase 2 balance pass, measured on
 // the merged world with `calibrate` (DESIGN §8 "Timers and difficulty", table there): T_ref = the
@@ -28,7 +38,7 @@ export const TIMERS = {
   friskotekBalls: 32,     // §8.7 s1  6 fleeing beach balls (on foot)                  T_ref 24.9 (p75 21.9 of 12 + 3)
   asnanPaint: 19,         // §8.8 s9  supermercado lot -> vikingbar, SKICK              T_ref 15.5 (median of 3 clean)
   bodegaVischan: 31,      // §8.9 s4  playa -> vischan                                  T_ref 25.8 (median of 8 clean, gate fix)
-  bodegaJeep: 42,         // §8.9 s9  wreck the fleeing Guardia jeep                    T_ref 34.4 (p75 of 35 chases; median 24.5)
+  bodegaJeep: 37,         // §8.9 s9  wreck the fleeing Guardia jeep                    T_ref 30.6 (p75 of 40 chases; median 26.9; Phase 3)
   bodegaHome: 30,         // §8.9 s10 fallback only: the stage uses homeTimer(wreck)    T_ref 25.0 at d 587 (far corner)
   fatagaSheep: 42,        // §8.11 s5 6 fleeing sheep (on foot)                         T_ref 33.3 (p75 30.3 of 12 + 3)
   grisfestFlowers: 42,    // §8.12 s1 5 flowers round Flamenco (on foot, random spawns) T_ref 33.6 (p75 31.1 of 12 + 2.5)
@@ -223,7 +233,12 @@ export const ISLAND_MISSIONS = [
         ['ole', 'Og så maler vi den rød.', { cut: 'ferreteria' }],   // [F*](t)
         ['stig', 'Och blommor där.', { cut: null }],                  // [F](t)
       ], doneCue: { flash: 'rgba(216,50,30,.4)', toast: 'Åsnan är nu en dalahäst. Nästan.' } }),   // toast [N]
-      () => goto({ to: 'vikingbar', radius: 7, inCar: true, passenger: 'ole', timer: TIMERS.asnanPaint, fragile: { label: 'SKICK', failText: 'Färgen blev förstörd!' }, text: 'Kör försiktigt till Viking Bar – färgen är våt!' }),   // [N]
+      // A checkpoint: a failed paint drive retries from the lot, Ole beside the player, facing the
+      // street (the calibrate start), not from the market and a second haggle.
+      () => goto({
+        to: 'vikingbar', radius: 7, inCar: true, passenger: 'ole', timer: TIMERS.asnanPaint, fragile: { label: 'SKICK', failText: 'Färgen blev förstörd!' }, text: 'Kör försiktigt till Viking Bar – färgen är våt!',   // [N]
+        checkpoint: true, retryAt: 'supermercado', retryCar: { at: { ...lm('supermercado'), yaw: 0 }, passenger: 'ole' },
+      }),
       () => goto({ to: 'vikingbar', radius: 2.5, onFoot: true, text: 'Lämna paketet i baren' }),   // [N]
     ],
     // Both face the street, where the cut camera stands; Stig has left by the time Angerud comes in.
@@ -278,11 +293,14 @@ export const ISLAND_MISSIONS = [
       }),
       () => getInCar({ missionCar: 'grisbilFollow', any: false, passenger: 'berra', rider: 'robban', text: 'Grisbonden lånar ut grisbilen – hoppa in!', say: ['grisbonde', 'Ta bilen, señor. Ställ den vid hotellet – jag hämtar den på torsdag.'] }),   // [N] · [N]
       // Invented (§1.6): the jeep must not reach the barracks; a mission target, so no SKANDAL.
+      // A checkpoint: a failed chase or drive home retries the chase from the farm gate in a fresh pig
+      // truck (the failed mission's cars are gone), Berra beside the player and Robban in the bed.
       () => destroy({
         type: 'guardia', carName: 'guardiaJeep', driver: 'guardia', spawn: { lane: [[3, 1], [3, 2]], t: 25 }, cruise: TUNING.jeep.cruise, damageScale: TUNING.jeep.damageScale, playerDamageScale: TUNING.jeep.playerDamageScale,
         noExplode: true, timer: TIMERS.bodegaJeep, lockMeter: true, barLabel: 'JEEPEN',
         text: 'Guardia Civil såg grisarna – stoppa jeepen innan den hämtar förstärkning!',   // [N]
         failText: 'Jeepen hann fram till kasernen.',                                         // [N]
+        checkpoint: true, retryAt: 'grisfestGate', retryCar: { at: 'grisfestGate', type: 'grisbil', name: 'grisbilFollow', passenger: 'berra', rider: 'robban' },
       }),
       () => goto({ to: 'flamencoBack', radius: 10, inCar: true, passenger: 'berra', timer: (g, m) => homeTimer(m.data.wreck), text: 'Kör hem grisarna till hotellet!', failText: 'Ni kom aldrig fram.' }),   // [N]
     ],
@@ -383,7 +401,8 @@ export const ISLAND_MISSIONS = [
           ['mamma', '¡Las ovejas!', { sfx: 'baa' }],                                     // [N]
         ],
       }),
-      () => rabbits({ mesh: 'faar', count: 6, near: 'fataga', rMin: 10, rMax: 35, timer: TIMERS.fatagaSheep, text: 'Fånga fåren åt Josés pappa', barLabel: 'FÅR', gotText: 'Bäää!', failText: 'Fåren sprang hela vägen till Maspalomas.' }),   // [N]
+      // A checkpoint: a retry starts by the bus stop (where the calibrate starts the chase), not at the pool.
+      () => rabbits({ mesh: 'faar', count: 6, near: 'fataga', rMin: 10, rMax: 35, timer: TIMERS.fatagaSheep, text: 'Fånga fåren åt Josés pappa', barLabel: 'FÅR', gotText: 'Bäää!', failText: 'Fåren sprang hela vägen till Maspalomas.', checkpoint: true, retryAt: FATAGA_STOP }),   // [N]
       () => goto({ to: 'fatagaFold', radius: 4, text: 'Tillbaka till fårfållan' }),   // [N]
     ],
     outroPlace: { pappa: ['fatagaFold', 1.5, 0], mamma: ['fatagaFold', -1.2, 0.6], siv: ['fatagaFold', -2.4, 1.6], majsan: ['fatagaFold', -1.4, 2.0] },
@@ -395,8 +414,10 @@ export const ISLAND_MISSIONS = [
   },
 
   // ===== §8.12 · 11 · grisfest · "Grisfesten" =================================================
-  // cost 800 ("Grisfesten kostar 800 pesetas" [F*]; Ole pays if short). Checkpoints at stages 3, 4
-  // and 5 (4 and 5 retry at the dance floor; a retry re-applies stage 2's night sky and `vals`).
+  // cost 800 ("Grisfesten kostar 800 pesetas" [F*]; Ole pays if short). Dusk (`sunset`) from the
+  // getInCar, night from the race. Checkpoints at stages 3, 4, 5, 6 and 10: 4-6 retry at the dance
+  // floor with the car parked at the race finish (TONGA_CAR), 10 in the Flamenco lot; a retry
+  // re-applies the earlier stages' sky and `vals`.
   {
     id: 'grisfest', title: 'Grisfesten', level: 'island', giver: 'ole', at: 'flamenco', reward: 1000, cost: 800,
     intro: [
@@ -411,7 +432,7 @@ export const ISLAND_MISSIONS = [
     ],
     stages: [
       () => rabbits({ mesh: 'blomma', flee: false, count: 5, near: 'flamenco', rMin: 8, rMax: 40, timer: TIMERS.grisfestFlowers, text: 'Plocka blomster till Siv och Maj-Britt', barLabel: 'BLOMSTER', gotText: 'Blomster!', failText: 'Blommorna vissnade.', radio: [['ole', 'Man må skifte vannet hver fjerde time og gi dem en hodepinetablett.']] }),   // [N] · radio [F*]
-      () => getInCar({ text: 'Hoppa in i en bil – det börjar skymma', startCue: { sky: 'night', music: 'vals' } }),   // [N]
+      () => getInCar({ text: 'Hoppa in i en bil – det börjar skymma', startCue: { sky: 'sunset', music: 'vals' } }),   // [N]
       // Start behind Hotel Flamenco (z -40) heading east past Pepes Bodega, Gabbe's bus on the lane
       // beside; left up x 40 past Centro Nórdico, left again along the farm road to the gate: ≈ 355 m,
       // two left turns (a 10.5 m bus cannot take the grid's tight right-turn lanes; route tuning, see
@@ -421,15 +442,15 @@ export const ISLAND_MISSIONS = [
         start: { lane: [[3, 3], [4, 3]], t: 14 }, checkpoints: [[4, 3], [4, 2], [4, 1], [3, 1]], finish: { x: -80, z: -200 },
         text: 'Bussen till grisfesten går nu – kom först!',                                   // [N]
         radio: [['gabbe', 'Grisfestbussen går nu – sista man bjuder på sangrian!']],            // [N] (§1.5: the song keeps its one line in mission 7)
-        checkpoint: true,
+        checkpoint: true, startCue: { sky: 'night' },
       }),
-      () => smash({ type: 'tallrikar', area: { lm: 'dansgolv', r: 22 }, count: 10, timer: TIMERS.grisfestPlates, lockMeter: true, onFoot: true, text: 'Porslinskross! Krossa tallrikarna medan bandet spelar', barLabel: 'TALLRIKAR', failText: 'Bandet slutade spela.', radio: [['pax', 'Vad skickliga de är!']], checkpoint: true, retryAt: 'dansgolv' }),   // [N] · radio [F](t)
+      () => smash({ type: 'tallrikar', area: { lm: 'dansgolv', r: 22 }, count: 10, timer: TIMERS.grisfestPlates, lockMeter: true, onFoot: true, text: 'Porslinskross! Sparka sönder tallrikarna (J) medan bandet spelar', barLabel: 'TALLRIKAR', failText: 'Bandet slutade spela.', radio: [['pax', 'Vad skickliga de är!']], checkpoint: true, retryAt: 'dansgolv', retryCar: TONGA_CAR }),   // [N] · radio [F](t)
       // Ole's `gris` shirt goes on the stage's startCue, so a checkpoint retry re-applies it (§10.4).
       () => scene({
         // A row across the floor: Ole, Stig facing Majsan, Siv. The two-shot comes from either side and
         // sees all four in profile. Stig's spot is the calibrate Tonga start (approachSpot('dansgolv')).
         place: { majsan: ['dansgolv', 1.2, 1.6, -PI / 2], siv: ['dansgolv', 2.8, 1.9, -PI / 2], ole: ['dansgolv', -1.8, 1.9, PI / 2], stig: ['dansgolv', -0.2, 1.6, PI / 2] }, frame: ['majsan', 'stig'],
-        checkpoint: true, retryAt: 'dansgolv', startCue: { outfit: { who: 'ole', name: 'gris' } },
+        checkpoint: true, retryAt: 'dansgolv', retryCar: TONGA_CAR, startCue: { outfit: { who: 'ole', name: 'gris' } },
         lines: [
           ['ole', 'Neida, det er bare å spørre: Skal vi danse! Eller kjør litt større: Sånn! … Voulez-vous danse avec moi? Fransk.'],   // [F]
           ['stig', 'Jag är skraj att de ska nobba.'],                                                              // [F]
@@ -440,7 +461,8 @@ export const ISLAND_MISSIONS = [
           ['siv', 'Majsan, ta med dig giraffen så går vi på Tonga Tonga.'],                                        // [F]
         ],
       }),
-      () => goto({ to: 'tongatonga', radius: 10, inCar: true, timer: TIMERS.grisfestTonga, text: 'Till Tonga Tonga!' }),   // [N]
+      // Its own checkpoint, so a failed drive does not replay the dance.
+      () => goto({ to: 'tongatonga', radius: 10, inCar: true, timer: TIMERS.grisfestTonga, text: 'Till Tonga Tonga!', checkpoint: true, retryAt: 'dansgolv', retryCar: TONGA_CAR }),   // [N]
       () => scene({
         // In front of the TONGA TONGA sign, shot from the street (a side two-shot stood in the arcade).
         place: { ole: ['tongatonga', -2.2, 3.2, 0], majsan: ['tongatonga', 2.0, 3.0, 0], siv: ['tongatonga', 3.0, 3.4, 0], robban: ['tongatonga', -0.8, 1.2, -PI / 2], berra: ['tongaLot', 0, 0], stig: ['tongatonga', 0.8, 1.2, PI / 2] }, anim: { berra: 'slump' },
@@ -453,7 +475,7 @@ export const ISLAND_MISSIONS = [
       }),
       () => pickup({ who: 'berra', name: 'Berra', at: 'tongaLot', rider: 'robban', hello: '…zzz' }),                                      // [N]
       () => goto({ to: 'flamencoDrive', radius: 10, inCar: true, passenger: 'berra', text: 'Kör hem till Hotell Flamenco' }),           // [N]
-      () => carry({ who: 'berra', to: 'flamencoRecepcion', radius: 2.2, walkSpeed: 3.2, failOn: { fall: true }, text: 'Bärra hem Berra!', failText: 'Berra vaknade och började sjunga.' }),   // [F*] · [N] (P1; P0 fallback: dropoff at flamencoDrive)
+      () => carry({ who: 'berra', to: 'flamencoRecepcion', radius: 2.2, walkSpeed: 3.2, failOn: { fall: true }, text: 'Bärra hem Berra!', failText: 'Berra vaknade och började sjunga.', checkpoint: true, retryAt: FLAMENCO_LOT }),   // [F*] · [N] (P1; P0 fallback: dropoff at flamencoDrive)
     ],
     onEnd(g, reason) {
       if (reason === 'complete') g.cue({ banner: ['MORGONEN EFTER', 'Julafton på Gran Canaria', 'mission'] });   // [N]
@@ -511,7 +533,7 @@ export const ISLAND_MISSIONS = [
         findAt: { herrStorch: ['playa', 0, 0], fruStorch: ['kyrka', 0, 2], berra: ['bodega', -2.0, 0.5], majsan: ['marknad', 1, 1] },
         sendTo: { herrStorch: ['flamencoPool', 4, 2], fruStorch: ['flamencoPool', 5, 2], berra: ['flamencoBar', 0, 0], majsan: ['flamencoPool', -2, 0] },
         inCar: true, radius: 1.6, carRadius: 4.0, timer: TIMERS.julaftonGuests,
-        text: 'Samla ihop gästerna till julfesten', barLabel: 'GÄSTER', failText: 'Julfesten började utan dem.',   // [N]
+        text: 'Samla ihop gästerna till julfesten – ta bilen!', barLabel: 'GÄSTER', failText: 'Julfesten började utan dem.',   // [N]
         lines: {
           herrStorch: [['stig', 'Herr Storch! Julfesten!'], ['herrStorch', 'Jag ska bara filma lite till.']],           // [N] · [N]
           fruStorch: [['stig', 'Fru Stork, julfesten börjar!'], ['fruStorch', 'Vi heter faktiskt Storch, inte Stork.']],   // [N] · [F*]

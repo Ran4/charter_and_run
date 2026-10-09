@@ -270,12 +270,20 @@ export async function installAutopilot() {
   }
 
   // Pushing without moving (a wall, a parked car): back up with the wheel turned the other way.
+  // Stuck again within 6 s of the last time, it backs up longer (1, 1.6, 2.2 … 3 s), the wheel
+  // the other way each time: a plain 1 s reverse could not free the jeep chase's truck from
+  // between a kerbside tree and the Flamenco bins (Phase 2: about one chase in three wedged).
   function unstick(car, st, dt) {
     const c = car.ctrl;
     if ((st.revT || 0) > 0) { st.revT -= dt; c.throttle = 0; c.brake = 1; c.park = false; c.steer = -(st.revSteer || 0); return true; }
     if (c.throttle > 0.5 && Math.abs(car.forwardSpeed) < 1) st.stuckT = (st.stuckT || 0) + dt;
     else st.stuckT = Math.max(0, (st.stuckT || 0) - dt);
-    if (st.stuckT > 0.9) { st.stuckT = 0; st.revT = 1.0; st.revSteer = c.steer || 1; st.unsticks = (st.unsticks || 0) + 1; }
+    if (st.stuckT > 0.9) {
+      st.streak = ap.t - (st.stuckAt ?? -Infinity) < 6 ? (st.streak || 0) + 1 : 0;
+      st.stuckAt = ap.t;
+      st.stuckT = 0; st.revT = Math.min(3, 1 + 0.6 * st.streak); st.revSteer = (c.steer || 1) * (st.streak % 2 ? -1 : 1);
+      st.unsticks = (st.unsticks || 0) + 1;
+    }
     return false;
   }
 
@@ -284,7 +292,9 @@ export async function installAutopilot() {
   // car stops dead 3.5 m to the right (on the kerb), or with crashSide 'left' in the left lane (the
   // race: out of the bus's lane, since the race bus does not brake and would shunt it), turned
   // 0.5 rad, and needs 1 s to recover.
-  function makeController(car, path) {
+  // `ust`: the object that keeps the unstick state (default: the controller's own), for a caller
+  // that builds a new controller on every re-plan (the chase).
+  function makeController(car, path, ust = null) {
     const lim = limits(car, path.mode);
     path.v = profile(path.pts, lim, path.vEnd ?? 10);
     path.idx = 0; path.off = 0; path.offT = 0;
@@ -357,7 +367,7 @@ export async function installAutopilot() {
         else if (vt < 0.5 && v < 0.8) { c.throttle = 0; c.brake = 0; c.park = true; }
         else { c.throttle = 0.35; c.brake = 0; }
         if (v > 0.5 && c.brake > 0) st.maxBrake = Math.max(st.maxBrake, c.brake * 24 * 1.2);
-        unstick(car, st, dt);
+        unstick(car, ust || st, dt);
       },
     };
   }
@@ -443,15 +453,19 @@ export async function installAutopilot() {
     ap.check();
     const st = a.ctl.st, f = (v) => +(v ?? 0).toFixed(1);
     const band = a.stats ? { dMin: f(a.stats.dMin), dMax: f(a.stats.dMax) } : undefined;
-    return { t: a.tEnd != null ? a.tEnd - a.t0 : null, fail: a.fail, len: Math.round(a.len), driven: Math.round(st.dist), impacts: st.impacts, hits: st.hits, crashV: st.crashV, blocked: f(st.blockedT), blockedBy: st.blockedBy ? Object.fromEntries(Object.entries(st.blockedBy).map(([k, v]) => [k, f(v)])) : undefined, maxLat: f(st.maxLat), maxBrake: f(st.maxBrake), x: f(a.car.x), z: f(a.car.z), yaw: +a.car.yaw.toFixed(2), band, escape: a.result || undefined };
+    return { t: a.tEnd != null ? a.tEnd - a.t0 : null, fail: a.fail, len: Math.round(a.len), driven: Math.round(st.dist), unsticks: st.unsticks || 0, impacts: st.impacts, hits: st.hits, crashV: st.crashV, blocked: f(st.blockedT), blockedBy: st.blockedBy ? Object.fromEntries(Object.entries(st.blockedBy).map(([k, v]) => [k, f(v)])) : undefined, maxLat: f(st.maxLat), maxBrake: f(st.maxBrake), x: f(a.car.x), z: f(a.car.z), yaw: +a.car.yaw.toFixed(2), band, escape: a.result || undefined };
   };
   ap.stop = () => { const a = ap.active; if (a && a.car.ai === a.ctl) { a.car.ai = null; a.car.ctrl.throttle = 0; a.car.ctrl.brake = 1; } ap.active = null; };
 
   // Chase (destroy): road route towards the quarry, direct pursuit with lead inside 35 m.
+  // The unstick state lives in the chase's own `st`, not in the route controller it re-builds every
+  // 1.2 s: that reset the stuck timer and cut every reverse short, so a truck nosed into a kerbside
+  // tree or the bins pushed and backed off in place until the 150 s ran out (the Phase 2 "wedges").
+  // After backing out it follows the road for 2.5 s before it rams across a corner again.
   ap.chase = (getTarget) => {
     const car = g.playerCar;
     const lim = limits(car, 'normal');
-    const st = { impacts: 0, hits: [], rams: 0, dist: 0, px: car.x, pz: car.z };
+    const st = { impacts: 0, hits: [], rams: 0, dist: 0, px: car.x, pz: car.z, roadT: 0 };
     let path = null, ctl = null, replan = 0;
     const self = {
       st,
@@ -461,8 +475,9 @@ export async function installAutopilot() {
         const t = getTarget();
         if (!t || game.freezeCar || game.inDialog || game.missions.state !== 'running') { c.throttle = 0; c.brake = 0; c.park = true; return; }
         st.dist += Math.hypot(car.x - st.px, car.z - st.pz); st.px = car.x; st.pz = car.z;
+        st.roadT = (st.revT || 0) > 0 ? 2.5 : Math.max(0, st.roadT - dt);
         const d = Math.hypot(t.x - car.x, t.z - car.z);
-        if (d < 35 && C.segmentBlocked(car.x, car.z, t.x, t.z, car.y + 0.6) < 0) {
+        if (d < 35 && !st.roadT && C.segmentBlocked(car.x, car.z, t.x, t.z, car.y + 0.6) < 0) {
           // Ram: aim at the quarry with a short lead; when glued to its bumper (closing < 5 m/s),
           // drop back ~10 m and come again, so each hit lands at a real closing speed.
           const tv = t.vx * Math.sin(car.yaw) + t.vz * Math.cos(car.yaw), closing = car.forwardSpeed - tv;
@@ -484,7 +499,7 @@ export async function installAutopilot() {
           replan = 1.2;
           const ns = plan(car, [edgeAt(t.x, t.z)]);
           path = { pts: buildPath(car, ns, { x: t.x, z: t.z }), mode: 'normal', vEnd: lim.top };
-          ctl = makeController(car, path);
+          ctl = makeController(car, path, st);
         }
         ctl.update(dt, game);
       },
@@ -896,7 +911,9 @@ export const SCENARIOS = {
         T.log('jeep run', k, 'cruise', cruise, JSON.stringify(r), 'wreck at', JSON.stringify(wreck));
         // A run averaging under 6 m/s means the autopilot wedged itself on a house while the jeep
         // drove round the block (an autopilot artefact, not the chase): reported, not used.
-        jeep.push({ t: r.t, wreck, cruise, wedged: r.t == null || r.driven / r.t < 6 });
+        const wedged = r.t == null || r.driven / r.t < 6;
+        if (wedged) await T.shot(`jeep_wedged_${k}`);
+        jeep.push({ t: r.t, wreck, cruise, wedged });
       }
       const ok = jeep.filter((j) => !j.wedged).map((j) => j.t);
       check(ok.length >= 2, 'jeep: at least two chases that did not wedge');

@@ -1335,7 +1335,7 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
 | 8.7 friskotek s1 | six fleeing beach balls round the friskotek lawn | 24.9 (p75 21.9 of 12 + 3; median 18.6) | **32** (20) | 32 % at p75 |
 | 8.8 asnan s9 | Centro Nórdico lot → 5,3 > 1,3 → vikingbar, SKICK | 15.5 (median of 3 clean; 15.5–15.6) | **19** (20) | 18 % |
 | 8.9 bodega s4 | playa → 4,7 > 4,2 > 0,2 → vischan | 25.8 (median of 8 clean in 3 runs, 25.4–26.8: 25.4 unless traffic held it up 1–1.5 s; Phase 2 gate) | **31** (35) | 17 % |
-| 8.9 bodega s9 jeep | farm gate, road-route chase, rams | 34.4 (p75 of 35 chases in 4 runs, 15 more wedged; median 24.5; Phase 2 gate) | **42** (45) | 18 % at p75 |
+| 8.9 bodega s9 jeep | farm gate, road-route chase, rams | 30.6 (p75 of 40 chases in 2 runs of 20, none wedged; median 26.9; Phase 3 r1, the chase autopilot fixed; Phase 2: 34.4 → 42) | **37** (45) | 17 % at p75 |
 | 8.9 bodega s10 home | wreck → flamencoBack | 7.9 + d/34.4 (fit 4.9 + d/34.4 of 12 clean, 6 spots, + 3 s turn) | **homeTimer**: 17–30 (30 without a wreck) | 17 % of the fit (11–27 % of a spot's own drive) |
 | 8.11 fataga s5 | six fleeing sheep round Fataga | 33.3 (p75 30.3 of 12 + 3; median 25.1) | **42** (25) | 28 % at p75 |
 | 8.12 grisfest s1 | five flowers round Hotel Flamenco (random spawns) | 33.6 (p75 31.1 of 12 + 2.5; median 27.5) | **42** (30) | 26 % at p75 |
@@ -1364,16 +1364,20 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
     roads had traffic hit the player's car and the bus (`avoid: false`) in the first junction. The race
     now runs on a closed course (§9.2 race): on the final code 12 clean runs **all won by 1.7–2.0 s**
     and 12 runs with one crash **all lost by 2.2–2.4 s**, with no car-car impact in any of them.
-  - Guardia jeep (§8.9 s9): cruise 20, damageScale 4, the truck takes half damage. Phase 2 gate
-    re-measure, four runs on the same chase code (`JEEP_RUNS=20`, twice the default 12, the gate's
-    6): 35 usable chases took 6–124 s (median 24.5 s, **p75 34.4 s** → timer 42); the single runs'
-    p75 were 37.9 (15 chases), 33.9 (6), 27.7 (10) and 49.7 (4). 15 more were autopilot wedges (excluded): most
-    on the Hotel Flamenco back-lot kerb between a street tree and the bins at (−13, −33), where its
-    1 s reverse cannot get the truck out. The balance pass had p75 33 s of 20 (15–71 s); the
-    median agrees, the tail is longer: four chases took 53–124 s following the jeep far round the
-    map. The flee route is random, so the timer is at the 75th
-    percentile: a chase that follows the jeep round every block instead of cutting it off runs out
-    of time. Default `JEEP_RUNS` is 12 (6 gave a p75 of 4 usable chases that swung 33–50 s).
+  - Guardia jeep (§8.9 s9): cruise 20, damageScale 4, the truck takes half damage. **Phase 3 r1
+    (island-flow)**: the chase autopilot kept its unstick state in the route controller it
+    re-builds every 1.2 s, so the stuck timer reset and every reverse was cut short: a truck nosed
+    into a kerbside tree or the Flamenco bins pushed and backed off in place (3 of 5 baseline
+    chases wedged, 2 of them for the whole 150 s). The chase now keeps that state itself, a repeat
+    within 6 s backs up longer with the wheel the other way (1, 1.6, 2.2 … 3 s), and after backing
+    out it follows the road for 2.5 s before it rams across a corner again. Two runs of
+    `JEEP_RUNS=20` on that code: 40 usable chases, **none wedged** (6 needed one unstick), 9–39 s,
+    median 26.9 s, **p75 30.6 s** → timer **37** (was 42); the single runs' p75 were 28.7 and 31.6.
+    Phase 2 gate (old autopilot): 35 usable chases of 6–124 s (p75 34.4 → 42) and 15 wedges
+    excluded; the long tail was largely time spent stuck. The flee route is random, so the timer
+    is at the 75th percentile: a chase that follows the jeep round every block instead of cutting
+    it off runs out of time. Default `JEEP_RUNS` is 12 (6 gave a p75 of 4 usable chases that swung
+    33–50 s).
   - Follows: tails at 24–26 m stayed inside the bands (grisbil 20.6–27.8 of 55, José 22.3–29.6 of
     14–55, excursion bus 21.7–25.0 of 55).
   - SKANDAL escape: §7.2 "Balance".
@@ -1399,10 +1403,10 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
 | 5 | 4 | `landning` | Inflygning Las Palmas | `majsan` (16E) @ `cabinRow16` | flight / cruise→landed | 400 | stage panicFails; → island |
 | 6 | 5 | `buss17` | SunTrips buss nummer 17 | `lasse` @ `airport` | island | 500 | outfit → hawaii |
 | 7 | 6 | `friskotek` | Plocka kulor! | `lasse` @ `friskotek` | island | 500 | |
-| 8 | 7 | `asnan` | Caballo folklorístico | `ole` @ `flamenco` | island | 600 | haggle pays 200 |
-| 9 | 8 | `bodega` | Pepes Bodega | `berra` @ `flamencoBar` | island | 700 | unlock `grisbil` |
+| 8 | 7 | `asnan` | Caballo folklorístico | `ole` @ `flamenco` | island | 600 | haggle pays 200, checkpoint |
+| 9 | 8 | `bodega` | Pepes Bodega | `berra` @ `flamencoBar` | island | 700 | unlock `grisbil`, checkpoint |
 | 10 | 9 | `ropavieja` | Gamla kläder | `siv` @ `flamencoPool` | island | 700 | |
-| 11 | 10 | `fataga` | En skock får | `majsan` @ `flamencoPool` | island | 800 | **P1: cut first** |
+| 11 | 10 | `fataga` | En skock får | `majsan` @ `flamencoPool` | island | 800 | **P1: cut first**, checkpoint |
 | 12 | 11 | `grisfest` | Grisfesten | `ole` @ `flamenco` | island | 1000 | cost 800, night, checkpoints |
 | 13 | 12 | `julafton` | Julafton bland palmerna | `ole` @ `flamencoPatio` | island | 2000 | cost 100, unlock `bodega`, end card |
 
@@ -1794,7 +1798,10 @@ then a nervous drive with a wet-painted donkey on board.
    (played in the car in the Centro Nórdico lot right after the knäcke grab: `frame` alone keeps
    both seated, their positions are live, §9.2; the cut shows the FERRETERÍA front, so there is no
    separate drive 36 m down the mall)
-9. `goto({ to: 'vikingbar', radius: 7, inCar: true, passenger: 'ole', timer: 19, fragile: { label: 'SKICK', failText: 'Färgen blev förstörd!' }, text: 'Kör försiktigt till Viking Bar – färgen är våt!' })`  [N]
+9. `goto({ to: 'vikingbar', radius: 7, inCar: true, passenger: 'ole', timer: 19, fragile: { label: 'SKICK', failText: 'Färgen blev förstörd!' }, text: 'Kör försiktigt till Viking Bar – färgen är våt!', checkpoint: true, retryAt: 'supermercado', retryCar: { at: { ...lm('supermercado'), yaw: 0 }, passenger: 'ole' } })`  [N]
+   (Phase 3: a checkpoint. A failed paint drive retries in the Centro Nórdico lot with Ole beside
+   the player, facing the street, the calibrate start; it used to replay the market drive and the
+   haggle, which pays the 200 again.)
 10. `goto({ to: 'vikingbar', radius: 2.5, onFoot: true, text: 'Lämna paketet i baren' })`
 
 **Outro** (`outroPlace: { carmencita: ['vikingbar', -0.8, 1.6, 0], angerud: ['vikingbar', 0.9, 1.3, 0] }`: both face the street, where the cut camera stands; Phase 3, they showed their backs):
@@ -1844,9 +1851,13 @@ Hitch-hike logic (judge fix): Stig refuses the dirt road (åksjuka), drops them,
    stage 8.)
 8. `getInCar({ missionCar: 'grisbilFollow', any: false, passenger: 'berra', rider: 'robban', text: 'Grisbonden lånar ut grisbilen – hoppa in!', say: ['grisbonde', 'Ta bilen, señor. Ställ den vid hotellet – jag hämtar den på torsdag.'] })`  [N]
    (stage init unseats the `grisbonde` driver to the roadside.)
-9. `destroy({ type: 'guardia', carName: 'guardiaJeep', driver: 'guardia', spawn: { lane: [[3, 1], [3, 2]], t: 25 }, cruise: 20, damageScale: 4, playerDamageScale: 0.5, noExplode: true, timer: 42, lockMeter: true, barLabel: 'JEEPEN', text: 'Guardia Civil såg grisarna – stoppa jeepen innan den hämtar förstärkning!', failText: 'Jeepen hann fram till kasernen.' })`  [N] (invented, §1.6)
+9. `destroy({ type: 'guardia', carName: 'guardiaJeep', driver: 'guardia', spawn: { lane: [[3, 1], [3, 2]], t: 25 }, cruise: 20, damageScale: 4, playerDamageScale: 0.5, noExplode: true, timer: 37, lockMeter: true, barLabel: 'JEEPEN', text: 'Guardia Civil såg grisarna – stoppa jeepen innan den hämtar förstärkning!', failText: 'Jeepen hann fram till kasernen.', checkpoint: true, retryAt: 'grisfestGate', retryCar: { at: 'grisfestGate', type: 'grisbil', name: 'grisbilFollow', passenger: 'berra', rider: 'robban' } })`  [N] (invented, §1.6)
    - The jeep drives away (flee AI); wrecked, it stops in steam and two officers climb out shaking
      their fists. It is a mission target (no SKANDAL for ramming it; `lockMeter`).
+   - Checkpoint (Phase 3): a failed chase or drive home (stage 10) retries the chase from the farm
+     gate in a fresh pig truck (`retryCar` with `type`: the failed mission's `grisbilFollow` went
+     with its cars), Berra beside the player and Robban in the bed. It used to replay all ten
+     stages from `flamencoBar`.
 10. `goto({ to: 'flamencoBack', radius: 10, inCar: true, passenger: 'berra', timer: (g, m) => homeTimer(m.data.wreck), text: 'Kör hem grisarna till hotellet!', failText: 'Ni kom aldrig fram.' })`  [N] — the stage starts wherever the jeep died: `homeTimer` = ceil(1.2 × (7.9 + d / 34.4)), d = Manhattan distance wreck → `flamencoBack` (17–30 s; 30 without a wreck; §8 "Timers and difficulty").
 
 **Outro** (`outroPlace: { berra: ['bodega', -1.6, -1.0], robban: ['bodega', 1.6, -1.0] }`, both facing **away** from the shop; first line cues the camera on the sign; the answering-machine call is Angerud's panic after opening the package, so it comes before Levander's reaction, in film order):
@@ -1930,7 +1941,11 @@ the tourists' pity into a sheep stampede you have to round up.
    round), Mamma facing the camera and the tourists either side of her, half turned to her. With
    the tourists at `fataga`, 13 m away, the two-shot stood 24 m out inside a village house, and a
    two-shot at the stall put the sisters in front of Mamma from one side.)
-5. `rabbits({ mesh: 'faar', count: 6, near: 'fataga', rMin: 10, rMax: 35, timer: 42, text: 'Fånga fåren åt Josés pappa', barLabel: 'FÅR', gotText: 'Bäää!', failText: 'Fåren sprang hela vägen till Maspalomas.' })`  [N]
+5. `rabbits({ mesh: 'faar', count: 6, near: 'fataga', rMin: 10, rMax: 35, timer: 42, text: 'Fånga fåren åt Josés pappa', barLabel: 'FÅR', gotText: 'Bäää!', failText: 'Fåren sprang hela vägen till Maspalomas.', checkpoint: true, retryAt: { x: -240, z: -208.5, yaw: 0 } })`  [N]
+   (Phase 3: a checkpoint. The retry is on foot by the bus stop: `approachSpot` puts the player on
+   the pavement at (−240, −207) facing the village, where the calibrate starts the chase
+   (`fatagaBus` itself is at the kerb of the lane). It used to replay the car, the pickup, the bus
+   tail and the scene.)
 6. `goto({ to: 'fatagaFold', radius: 4, text: 'Tillbaka till fårfållan' })`  [N]
 
 **Outro** (`outroPlace: { pappa: ['fatagaFold', 1.5, 0], mamma: ['fatagaFold', -1.2, 0.6], siv: ['fatagaFold', -2.4, 1.6], majsan: ['fatagaFold', -1.4, 2.0] }`: everyone at the fold, Phase 3):
@@ -1946,8 +1961,16 @@ Fun: the film's big set piece as a chain: flowers, a night race against Gabbe's 
 plate-smashing frenzy, the dance, Tonga Tonga, "Bärra hem Berra", and the porter scene.
 
 `cost: 800` ("Grisfesten kostar 800 pesetas" [F*]) is charged when the intro ends; **Ole pays** if
-the player is short. Checkpoints at stages 3, 4, 5 (4 and 5 carry `retryAt: 'dansgolv'`; a retry
-re-applies stage 2's `startCue` night sky and `vals`, §9.4 item 3). `onEnd`: on complete → banner `MORGONEN EFTER`
+the player is short. Dusk (`sunset`) from stage 2, when the player is still at the hotel, night
+from the race (Phase 3: stage 2 went straight to the darkest palette). Checkpoints at stages 3, 4,
+5, 6 and 10 (Phase 3: 6 and 10 added). 4–6 carry `retryAt: 'dansgolv'` and `retryCar: { at: { x:
+−86, z: −202.75, yaw: −π/2 }, park: true }`: the player on foot at the dance floor and the car he
+last drove parked where the race left it, just past the finish heading west, the calibrate Tonga
+start, so the 23 s drive is the one measured (without it a failed Tonga drive retried with the car
+wherever the timer ran out, often 190 m away). 10 (the carry) retries in the aisle of the Flamenco
+lot, `{ x: −24, z: 16, yaw: −π/2 }` (`approachSpot` puts the player 1.5 m west of it, facing the
+gap in the pool hedge; `flamencoDrive` is the hire car's bay). A retry re-applies stage 2's sunset,
+then stage 3's night, and `vals` (§9.4 item 3). `onEnd`: on complete → banner `MORGONEN EFTER`
 / `Julafton på Gran Canaria` [N] + palette `day` + the island tune `g.levelTune()` (`sol`, or the
 player's `samba`; Phase 3, was a fixed `sol`); on fail/abort → palette `day` + the same tune (no
 banner).
@@ -1964,8 +1987,8 @@ banner).
 
 **Stages:**
 1. `rabbits({ mesh: 'blomma', flee: false, count: 5, near: 'flamenco', rMin: 8, rMax: 40, timer: 42, text: 'Plocka blomster till Siv och Maj-Britt', barLabel: 'BLOMSTER', gotText: 'Blomster!', failText: 'Blommorna vissnade.', radio: [['ole', 'Man må skifte vannet hver fjerde time og gi dem en hodepinetablett.']] })`  [N] · radio [F*]
-2. `getInCar({ text: 'Hoppa in i en bil – det börjar skymma', startCue: { sky: 'night', music: 'vals' } })`  [N]
-3. `race({ who: 'gabbe', type: 'bus', carName: 'nattbuss', cruise: 31, oppSpec: { maxSpeed: 35, accel: 12, steer: 0.9 }, playerPassenger: 'ole', start: { lane: [[3, 3], [4, 3]], t: 14 }, checkpoints: [[4, 3], [4, 2], [4, 1], [3, 1]], finish: { x: -80, z: -200 }, text: 'Bussen till grisfesten går nu – kom först!', radio: [['gabbe', 'Grisfestbussen går nu – sista man bjuder på sangrian!']], checkpoint: true })`  [N] · radio [N] (§1.5: the song already has its one spoken line in mission 7)
+2. `getInCar({ text: 'Hoppa in i en bil – det börjar skymma', startCue: { sky: 'sunset', music: 'vals' } })`  [N]
+3. `race({ who: 'gabbe', type: 'bus', carName: 'nattbuss', cruise: 31, oppSpec: { maxSpeed: 35, accel: 12, steer: 0.9 }, playerPassenger: 'ole', start: { lane: [[3, 3], [4, 3]], t: 14 }, checkpoints: [[4, 3], [4, 2], [4, 1], [3, 1]], finish: { x: -80, z: -200 }, text: 'Bussen till grisfesten går nu – kom först!', radio: [['gabbe', 'Grisfestbussen går nu – sista man bjuder på sangrian!']], checkpoint: true, startCue: { sky: 'night' } })`  [N] · radio [N] (§1.5: the song already has its one spoken line in mission 7)
    (start: behind Hotel Flamenco (z −40) heading east past Pepes Bodega, 14 m past the junction
    (Phase 2: at t 6 the grid stood on the zebra crossing among pedestrians); left up x 40 past
    Centro Nórdico, left again along the farm road to the gate: ≈ 340 m, **two left turns** (WP-G:
@@ -1977,8 +2000,9 @@ banner).
    it, noses level, `spot − r·2·LANE` with `r = (−cos yaw, sin yaw)`, i.e. side by side across the
    road, never offset along world z (§9.2). Fail text = the kind's default `${name} vann!` →
    "Gabbe vann!".)
-4. `smash({ type: 'tallrikar', area: { lm: 'dansgolv', r: 22 }, count: 10, timer: 45, lockMeter: true, onFoot: true, text: 'Porslinskross! Krossa tallrikarna medan bandet spelar', barLabel: 'TALLRIKAR', failText: 'Bandet slutade spela.', radio: [['pax', 'Vad skickliga de är!']], checkpoint: true, retryAt: 'dansgolv' })`  [N] · radio [F](t)
-5. `scene({ place: { majsan: ['dansgolv', 1.2, 1.6, -π/2], siv: ['dansgolv', 2.8, 1.9, -π/2], ole: ['dansgolv', -1.8, 1.9, π/2], stig: ['dansgolv', -0.2, 1.6, π/2] }, frame: ['majsan', 'stig'], checkpoint: true, retryAt: 'dansgolv', startCue: { outfit: { who: 'ole', name: 'gris' } }, lines: [...] })`
+4. `smash({ type: 'tallrikar', area: { lm: 'dansgolv', r: 22 }, count: 10, timer: 45, lockMeter: true, onFoot: true, text: 'Porslinskross! Sparka sönder tallrikarna (J) medan bandet spelar', barLabel: 'TALLRIKAR', failText: 'Bandet slutade spela.', radio: [['pax', 'Vad skickliga de är!']], checkpoint: true, retryAt: 'dansgolv', retryCar: { at: { x: -86, z: -202.75, yaw: -π/2 }, park: true } })`  [N] · radio [F](t)
+   (Phase 3: the text names the kick; only a kick or a stomp breaks a stack, walking into one does nothing.)
+5. `scene({ place: { majsan: ['dansgolv', 1.2, 1.6, -π/2], siv: ['dansgolv', 2.8, 1.9, -π/2], ole: ['dansgolv', -1.8, 1.9, π/2], stig: ['dansgolv', -0.2, 1.6, π/2] }, frame: ['majsan', 'stig'], checkpoint: true, retryAt: 'dansgolv', retryCar: { at: { x: -86, z: -202.75, yaw: -π/2 }, park: true }, startCue: { outfit: { who: 'ole', name: 'gris' } }, lines: [...] })`
    (Ole's `gris` outfit goes on the stage's `startCue`, not on a line, so a retry re-applies it, §10.4;
    Phase 3: a row across the floor, Ole, Stig facing Majsan, Siv, so the two-shot sees all four in
    profile from either side; Stig stood wherever he broke the last plate, so the two-shot was shot
@@ -1991,11 +2015,12 @@ banner).
    - siv: "Nu blev hon uppbjuden."  [F](t)
    - ole: "Heia Norge!"  [F]  {anim: {who: 'ole', flag: 'dance', secs: 4}, applause: 2}
    - siv: "Majsan, ta med dig giraffen så går vi på Tonga Tonga."  [F]
-6. `goto({ to: 'tongatonga', radius: 10, inCar: true, timer: 23, text: 'Till Tonga Tonga!' })`  [N]
+6. `goto({ to: 'tongatonga', radius: 10, inCar: true, timer: 23, text: 'Till Tonga Tonga!', checkpoint: true, retryAt: 'dansgolv', retryCar: { at: { x: -86, z: -202.75, yaw: -π/2 }, park: true } })`  [N]
+   (Phase 3: its own checkpoint, so a failed drive does not replay the dance.)
 7. `scene({ place: { ole: ['tongatonga', -2.2, 3.2, 0], majsan: ['tongatonga', 2.0, 3.0, 0], siv: ['tongatonga', 3.0, 3.4, 0], robban: ['tongatonga', -0.8, 1.2, -π/2], berra: ['tongaLot', 0, 0], stig: ['tongatonga', 0.8, 1.2, π/2] }, anim: { berra: 'slump' }, cam: { at: 'tongatonga', dist: 6, height: 2.6 }, lines: [['ole', 'Samba er fine greier!', { music: 'samba' }], ['robban', 'Kan du hjälpa mig bära hem Berra?'], ['stig', 'Vilket snack! "Bärra hem Berra!"']] })`  [F] ×3
 8. `pickup({ who: 'berra', name: 'Berra', at: 'tongaLot', rider: 'robban', hello: '…zzz' })`  [N]
 9. `goto({ to: 'flamencoDrive', radius: 10, inCar: true, passenger: 'berra', text: 'Kör hem till Hotell Flamenco' })`  [N]
-10. `carry({ who: 'berra', to: 'flamencoRecepcion', radius: 2.2, walkSpeed: 3.2, failOn: { fall: true }, text: 'Bärra hem Berra!', failText: 'Berra vaknade och började sjunga.' })`  [F*] · [N] — **P1**; P0 fallback:
+10. `carry({ who: 'berra', to: 'flamencoRecepcion', radius: 2.2, walkSpeed: 3.2, failOn: { fall: true }, text: 'Bärra hem Berra!', failText: 'Berra vaknade och började sjunga.', checkpoint: true, retryAt: { x: -24, z: 16, yaw: -π/2 } })`  [F*] · [N] — **P1**; P0 fallback:
     `dropoff({ who: 'berra', at: 'flamencoDrive', text: 'Släpp av Berra vid hotellet' })`.
 
 **Outro** (night; `outroPlace: { portier: ['flamencoRecepcion', 0, 0, 0], angerud: ['flamencoRecepcion', -1.4, 1.4, π/2], carmencita: ['flamencoRecepcion', -2.2, 1.6, π/2], majsan: ['flamencoPool', 0, 0], stig: ['flamencoRecepcion', 1.6, 2.6, -π/2] }`, `outroCam: { at: 'recepcionCam', dist: 7.5, height: 2.0 }`: the desk from the porch front, the porter facing the camera, Angerud and Carmencita on his left and Stig on his right side-on; Phase 3, the two-shot from under the porch put Angerud in front of the porter. `stig` matters for the P0 `dropoff` fallback, which ends at `flamencoDrive`):
@@ -2041,7 +2066,9 @@ then every running gag pays off by the pool before the fear-of-flying arc closes
 `cost: 100` charged after the intro (Ole pays if short).
 
 **Stages:**
-1. `collect({ who: ['herrStorch', 'fruStorch', 'berra', 'majsan'], findAt: { herrStorch: ['playa', 0, 0], fruStorch: ['kyrka', 0, 2], berra: ['bodega', -2.0, 0.5], majsan: ['marknad', 1, 1] }, sendTo: { herrStorch: ['flamencoPool', 4, 2], fruStorch: ['flamencoPool', 5, 2], berra: ['flamencoBar', 0, 0], majsan: ['flamencoPool', -2, 0] }, inCar: true, radius: 1.6, carRadius: 4.0, timer: 87, text: 'Samla ihop gästerna till julfesten', barLabel: 'GÄSTER', failText: 'Julfesten började utan dem.', lines: {...} })`  [N]
+1. `collect({ who: ['herrStorch', 'fruStorch', 'berra', 'majsan'], findAt: { herrStorch: ['playa', 0, 0], fruStorch: ['kyrka', 0, 2], berra: ['bodega', -2.0, 0.5], majsan: ['marknad', 1, 1] }, sendTo: { herrStorch: ['flamencoPool', 4, 2], fruStorch: ['flamencoPool', 5, 2], berra: ['flamencoBar', 0, 0], majsan: ['flamencoPool', -2, 0] }, inCar: true, radius: 1.6, carRadius: 4.0, timer: 87, text: 'Samla ihop gästerna till julfesten – ta bilen!', barLabel: 'GÄSTER', failText: 'Julfesten började utan dem.', lines: {...} })`  [N]
+   (Phase 3: the text says to take the car. The timer is measured walking to the hire car and
+   driving; a first-timer ran on foot to Berra, 35 m away, and back.)
    - herrStorch: stig "Herr Storch! Julfesten!" [N] · herrStorch "Jag ska bara filma lite till." [N]
    - fruStorch: stig "Fru Stork, julfesten börjar!" [N] · fruStorch "Vi heter faktiskt Storch, inte Stork." [F*]
    - berra (behind the hotel, staring at nothing in particular): stig "Berra! Julfesten!" [N] · berra "Jag kommer, jag ska bara kolla en grej." [N]
@@ -2340,8 +2367,11 @@ Runner changes (Phase 0):
    `retryCar: { at, type?, name?, passenger?, rider?, park? }` a car waits at `at` (landmark,
    `{x, z, yaw}` or lane spot) before the stage's `init` runs (`startMission(from, before)`; e.g.
    `destroy.playerDamageScale` reads `g.playerCar` at init): without `type`, the car the player
-   was driving when the mission failed (`runner.lastCar`, if it is still alive and in the world;
-   repaired), else a spare `hatch` he keeps; with `type`, a new mission car named `name` (in
+   last drove in the mission (`runner.lastCar`, if it is still alive and in the world; repaired),
+   else a spare `hatch` he keeps. `lastCar` is kept up to date while the mission runs and survives
+   a retry (the retry's car becomes it; Phase 3 r1 island-flow): a stage failed on foot (grisfest's
+   plates) still finds the car he left at the finish, where the car he had when the mission failed
+   was none, and a spare stood on top of a named car (the hire car) parked at the spot; with `type`, a new mission car named `name` (in
    `m.cars`, removed at the mission's end like the car it stands in for, e.g. bodega's
    `grisbilFollow`). Unnamed parked cars on the spot are cleared; pick a spot without a named
    parked car. `passenger` is seated in it (busy), `rider` rides as a bust (NPC hidden), and the
@@ -2738,7 +2768,7 @@ orange-violet grisfest night → sunset on Christmas Eve.
 | `descent` (approach) | `0x2a86e0` | `0xf2e4c4` | 260 / 820 | `0xffe7b8` 2.8 | `0xd8ecff` / `0xa08060` 1.5 | `0x9ad0f0` |
 | `island` (landing, landed; island `day`) | `0x2a86e0` | `0xf2e4c4` | 220 / 760 | `0xffe7b8` 2.9 | `0xd8ecff` / `0xa08060` 1.45 | `0xa8d8f8` |
 | `night` (grisfest) | `0x141a3c` | `0x3a2f4e` | 120 / 600 | `0x9fb4ff` 0.9 | `0x5a6aa0` / `0x3a2a20` 0.9 | — |
-| `sunset` (julafton mantra, Rio) | `0x3a4fa0` | `0xf7a26b` | 200 / 760 | `0xffb070` 2.2 | `0xffd8b0` / `0x8a5a40` 1.3 | — |
+| `sunset` (grisfest dusk, julafton mantra, Rio) | `0x3a4fa0` | `0xf7a26b` | 200 / 760 | `0xffb070` 2.2 | `0xffd8b0` / `0x8a5a40` 1.3 | — |
 
 Flight palettes keep `fogNear ≥ 40` so the interior is never fogged. Night: string lights are unlit
 `MeshBasicMaterial` bulbs (grisfest block, Kasbah neon). Lit windows and lamps that glow only after
@@ -4200,3 +4230,27 @@ the fixer's group.
 - r1 island-staging: "Shipped staging beyond the literals" trimmed (the staging is in the §8
   literals and the fixture now); the story arrives at Tonga Tonga 9.5 m short of the club, as from
   the street, and parks 6 m short of the Viking Bar door (`tools/story/island.mjs`).
+- r1 island-flow: checkpoints with `retryCar` where a failure replayed a whole mission (§8.8, §8.9,
+  §8.11, §8.12, fixture): asnan's SKICK drive retries in the Centro Nórdico lot with Ole aboard (it
+  replayed the haggle, which pays 200 again); bodega's jeep chase is a checkpoint, so a failed chase
+  or drive home retries the chase from the farm gate in a fresh pig truck with Berra and Robban;
+  fataga's sheep retry on the pavement by the bus stop (the calibrate start).
+- r1 island-flow: grisfest: the plates, the dance and the Tonga drive (now a checkpoint itself, so
+  a failure does not replay the dance) retry at the dance floor with the car parked at the race
+  finish (`retryCar` `park`, the calibrate Tonga start); the carry is a checkpoint retrying in the
+  Flamenco lot aisle (§8.12, fixture).
+- r1 island-flow: `runner.lastCar` is the car the player last drove in the mission, kept while he is
+  on foot and across a retry (the retry's car becomes it): a plates failure found no car and put a
+  spare on top of the hire car parked at the finish (§9.4 item 3; runner.js, spine's file).
+- r1 island-flow: grisfest dusk: stage 2 cues `sunset` (it went straight to night at the hotel), the
+  race `night` (§8.12, §13.3, fixture).
+- r1 island-flow: texts: the plates `Porslinskross! Sparka sönder tallrikarna (J) medan bandet
+  spelar` (only a kick or a stomp breaks them); julafton's round-up `Samla ihop gästerna till
+  julfesten – ta bilen!` (the timer is measured by car) (§8.12, §8.13, fixture).
+- r1 island-flow: the fixture's bodega home stage uses the literal `timer: (g, m) =>
+  homeTimer(m.data.wreck)` (it had 30), so `fullstory` runs the function-timer path.
+- r1 island-flow: `calibrate` jeep chase autopilot: the unstick state lives in the chase (the route
+  controller re-built every 1.2 s reset it and cut each reverse short), a repeat within 6 s backs up
+  longer with the wheel the other way, and after backing out it follows the road for 2.5 s; wedged
+  chases get a shot (`jeep_wedged_k`) and results log `unsticks`. 40 chases, none wedged (baseline
+  3 of 5): p75 30.6 s → jeep timer **37** (was 42; §8 table, §8.9, island.js, fixture).
