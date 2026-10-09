@@ -7,13 +7,16 @@
 //   curlySides, thin (sparse hair), tuft (Stig's cowlick), brows, lashes, mustache (colour) +
 //   stache ('thin'|'thick'|'big'|'walrus'), beard, sideburns, glasses (frame colour) + glassesBig +
 //   lens (tinted lens colour) + aviator, shades (filled lens colour), hat ('trilby'|'pilot'|'tricorn'|
-//   'bucket'|'sunhat'|'tomte'|'scarf'|'cap') + hatC + capStyle ('flat'), hairFlower,
-//   shirt, longSleeves, print [c1, c2, c3] + printStyle ('confetti'|'dots'|'floral'|'check'),
+//   'bucket'|'sunhat'|'tomte'|'scarf'|'cap'|'fur') + hatC + capStyle ('flat') + peakC (the cap's
+//   peak), hairFlower,
+//   shirt, longSleeves, print [c1, c2, c3] + printStyle ('confetti'|'dots'|'floral'|'check') (under
+//   a suit or a vest only on the shirt in front), skirtPrint (the dress's dots if not the print's),
 //   stripe (one band) + stripes (several), sash, scarf (neck), apron, belly, collar, suit (colour of
 //   the shirt seen in the jacket's V), coat (long coat tails), tie, bowtie, vest, epaulets, badge,
 //   chain, belt, dress (cone skirt) + pinafore (the dress also covers the torso), pants, shorts +
-//   baggy, legsC (stockings), shoes, hands (gloves/mittens), held ('camera'|'boombox'|'accordion'|
-//   'congas'|'cup'|'mirror'|'broom'|'giraffe'|'butterKnife'|'knacke'|'handbag').
+//   baggy + shortsHem (a band at the hem), legsC (stockings), shoes, hands (gloves/mittens) +
+//   mittenBand, held ('camera'|'boombox'|'accordion'|'congas'|'cup'|'mirror'|'broom'|'giraffe'|
+//   'butterKnife'|'knacke'|'handbag').
 // Outfits are shallow-merged over the base def (outfitDef); an outfit clears a base field with null.
 
 import { THREE, GeoBuilder, toonMesh, MAT, mat, PRIM, outlineGeometry, outlineMat } from '../gfx.js';
@@ -23,15 +26,15 @@ const SV = 0xf2c9a8, ES = 0xc99a6e;   // default skins: Swedish tourist, Spanish
 const A = (o) => ({ kind: 'adult', scale: 1, skin: SV, shoes: 0x2a2a2a, brows: 0x3a2a1e, nose: 'small', ...o });
 const NO_SUIT = { suit: null, tie: null, bowtie: null, coat: null, vest: null };
 
-// Invented look details beyond §2.1 (§1.6): Stig's arlanda scarf and mittens, Ole's arlanda coat,
-// Robban's sol dots, Lasse's jul shorts, Fru Storch's white dress.
+// Invented look details beyond §2.1 and the research (§1.6): Stig's arlanda scarf, Fru Storch's
+// white dress.
 export const CHARS = {
   // "Giraffen": tall, thin, long neck, round brown glasses, a cowlick. Base look = kostym.
   stig: A({ name: 'Stig-Helmer', scale: 1.12, legK: 1.12, neckK: 1.9, armK: 1.06, wide: 0.85, skin: 0xf1c9a5, hair: 'swoop', hairC: 0x2a1e18, tuft: true, brows: 0x2a1e18,
     mustache: 0x2a1e18, stache: 'thin', glasses: 0x6b4a2a, nose: 'long', shoes: 0x3a2618,
     shirt: 0x4a3426, longSleeves: true, suit: 0xe8e0d0, tie: 0x7a2a2a, pants: 0x3a2a1e, voice: 250, ring: '#4a9ad6',
     outfits: {
-      arlanda: { shirt: 0x3a2a1e, longSleeves: true, coat: true, suit: null, tie: null, scarf: 0x8a7a5a, pants: 0x2e2620, hat: 'cap', capStyle: 'flat', hatC: 0x8a7a5a, hands: 0x9a3a2a },
+      arlanda: { shirt: 0x3a2a1e, longSleeves: true, coat: true, suit: null, tie: null, scarf: 0x8a7a5a, pants: 0x2e2620, hat: 'cap', capStyle: 'flat', hatC: 0x8a7a5a, hands: 0xf4f0e6, mittenBand: 0x9a3a2a },
       kostym: { shirt: 0x4a3426, longSleeves: true, suit: 0xe8e0d0, tie: 0x7a2a2a, pants: 0x3a2a1e },
       hawaii: { ...NO_SUIT, shirt: 0xd8321e, print: [0xffd23f, 0x3f7a3a, 0x2f6ad8], printStyle: 'floral', longSleeves: false, collar: true, shorts: true, baggy: true, pants: 0xe8dcb8, shoes: 0x6a4a2a },
       rio: { shirt: 0xf4f0e6, longSleeves: true, suit: 0xffffff, tie: null, bowtie: 0x1d1426, pants: 0x1d1426, shoes: 0x1d1426 },
@@ -43,15 +46,16 @@ export const CHARS = {
       arlanda: { hat: 'trilby', hatC: 0xe8e2d0, shirt: 0xd8c8a0, longSleeves: true, coat: true, held: 'boombox' },
       flyg: { shirt: 0xf4f4f0, collar: true },
       sol: { shirt: 0xf2c94c, print: [0xc8902a, 0xfff0b0], printStyle: 'check', collar: true, pants: 0xe8dcb8, shades: 0x2a2a2a, glasses: null },
-      gris: { shirt: 0xf4f4f0, stripe: 0xd8321e, stripes: true, collar: true },
+      gris: { shirt: 0xf4f4f0, stripe: 0xd8321e, stripes: true, collar: true, chain: 0xe8c040 },
       rio: { shirt: 0xf4f4f0, longSleeves: true, suit: 0xf4f4f0, bowtie: 0x1d1426, pants: 0x1d1426, shades: 0x2a2a2a, glasses: null },
     } }),
   majsan: A({ name: 'Majsan', scale: 0.97, hair: 'page', hairC: 0x8a3b22, brows: 0x8a3b22, lashes: true, skin: 0xf6d3c0, dress: 0x4a7fd0, print: [0xffffff], printStyle: 'dots',
     shirt: 0x4a7fd0, pants: 0x4a7fd0, shoes: 0xf4f0e6, voice: 340, ring: '#fff8e6',
     outfits: { flyg: { shirt: 0xd8c8a8, longSleeves: true, print: null }, sol: { hairFlower: 0xffffff } } }),   // flyg: plain cardigan (the dress dots would sit on it)
-  siv: A({ name: 'Sivan', hair: 'bun', hairC: 0x7a3018, brows: 0x7a3018, lashes: true, dress: 0xd8321e, print: [0xffb0c0, 0xffffff], printStyle: 'floral',
-    shirt: 0xffb0c0, pants: 0xd8321e, shoes: 0xd8321e, voice: 360, ring: '#fff8e6',
-    outfits: { flyg: { shirt: 0xc8b8a0, longSleeves: true, print: null }, sol: {} } }),
+  // White and red flowers on the pink top; the red dress keeps its pink dots.
+  siv: A({ name: 'Sivan', hair: 'bun', hairC: 0x7a3018, brows: 0x7a3018, lashes: true, dress: 0xd8321e, print: [0xffffff, 0xd8321e], printStyle: 'floral',
+    skirtPrint: [0xffb0c0, 0xffffff], shirt: 0xffb0c0, pants: 0xd8321e, shoes: 0xd8321e, voice: 360, ring: '#fff8e6',
+    outfits: { flyg: { shirt: 0xc8b8a0, longSleeves: true, print: null, skirtPrint: null }, sol: {} } }),
   // Gangly, half-long hair, walrus mustache, big tinted glasses, plain blue tee (no slogan), denim vest.
   berra: A({ name: 'Berra', wide: 0.9, legK: 1.06, hair: 'long', hairC: 0x5a3a22, mustache: 0x5a3a22, stache: 'walrus', brows: 0x5a3a22,
     glasses: 0x3a3a3a, glassesBig: true, lens: 0xa89a80, shirt: 0x2a4fa0, vest: 0x4a6a9a, pants: 0x3a4a6a, shoes: 0x6a4a2a, voice: 220, ring: '#fff8e6',
@@ -61,15 +65,20 @@ export const CHARS = {
       sol: { hat: 'cap', hatC: 0xffffff },
     } }),
   robban: A({ name: 'Robban', wide: 1.25, belly: true, hair: 'short', thin: true, hairC: 0x6a5a48, glasses: 0x2a2a2a, shirt: 0xf07a1e, pants: 0x4a4a52, voice: 235, ring: '#fff8e6',
-    outfits: { flyg: { shirt: 0xf07a1e }, sol: { shirt: 0x1f2f6a, print: [0xffd23f], printStyle: 'dots', hat: 'cap', hatC: 0xf4f4f0 } } }),
+    outfits: { flyg: { shirt: 0xf07a1e, collar: 0x1f2f6a }, sol: { shirt: 0x1f2f6a, print: [0xffd23f], printStyle: 'dots', collar: 0xffd23f, hat: 'cap', hatC: 0xf4f4f0, peakC: 0x2a4fa0 } } }),
+  // Dark suit, blue shirt, red tie; at Arlanda a camel coat and a brown fur hat over it.
   angerud: A({ name: 'Gösta Angerud', wide: 1.35, belly: true, skin: 0xf0b8a0, hair: 'balding', hairC: 0x5a4a3a, brows: 0x5a4a3a, nose: 'big',
-    shirt: 0x3a3a44, longSleeves: true, suit: 0xf4f4f0, tie: 0xc8202a, pants: 0x3a3a44, voice: 200, ring: '#fff8e6',
-    outfits: { flyg: {}, sol: { shirt: 0x9cc4e4, pants: 0x9cc4e4, tie: null, shades: 0x2a2a2a, aviator: true, shoes: 0xf0ead8 } } }),
+    shirt: 0x3a3a44, longSleeves: true, suit: 0x8ab0d8, tie: 0xc8202a, pants: 0x3a3a44, voice: 200, ring: '#fff8e6',
+    outfits: {
+      arlanda: { coat: true, shirt: 0xc8a06a, hat: 'fur', hatC: 0x5a3a22 },
+      flyg: {},
+      sol: { shirt: 0x9cc4e4, suit: 0xf4f4f0, pants: 0x9cc4e4, tie: null, shades: 0x2a2a2a, aviator: true, shoes: 0xf0ead8 },
+    } }),
   levander: A({ name: 'Dr Levander', scale: 1.06, legK: 1.08, wide: 0.85, hair: 'slick', hairC: 0x2a2a2a, glasses: 0x2a2a2a, glassesBig: true,
     shirt: 0xf4f4f0, longSleeves: true, coat: true, suit: 0x8a8a96, tie: 0x1b2f6b, pants: 0x5a5a64, voice: 290, ring: '#c8c8d8' }),
   lasse: A({ name: 'Lasse', wide: 1.08, skin: 0xc98f62, hair: 'curly', hairC: 0x1d1426, brows: 0x1d1426, sideburns: true,
     shirt: 0xffd23f, print: [0xf07a1e, 0xffffff], printStyle: 'floral', pants: 0xffd23f, longSleeves: true, suit: 0xf07a1e, shoes: 0xf4f0e6, voice: 300, ring: '#f07a1e',
-    outfits: { sol: {}, jul: { ...NO_SUIT, shirt: 0xd8321e, print: null, longSleeves: false, pants: 0xd8321e, shorts: true, hat: 'tomte' } } }),
+    outfits: { sol: {}, jul: { ...NO_SUIT, shirt: 0xd8321e, print: null, longSleeves: false, pants: 0xd8321e, shorts: true, shortsHem: 0xffffff, hat: 'tomte' } } }),
   affe: A({ name: 'Affe', wide: 0.85, hair: 'short', hairC: 0xc9a66b, brows: 0x9a7a4a, shirt: 0xf4f0e6, print: [0xf07a1e, 0xffd23f, 0x2fb8a8], printStyle: 'floral', collar: true,
     pants: 0xffd23f, shades: 0x2a2a2a, aviator: true, held: 'accordion', voice: 280, ring: '#f07a1e' }),
   gabbe: A({ name: 'Gabbe', wide: 1.4, belly: true, hair: 'afro', hairC: 0xc0602a, beard: 0xc0602a, mustache: 0xc0602a, stache: 'big', brows: 0xc0602a,
@@ -128,7 +137,7 @@ export function outfitDef(key, outfit) {
 const OUT = 0.022;
 const INK = 0x1d1426, WHITE = 0xf4f4f0;
 const THIN_TORUS = new THREE.TorusGeometry(0.5, 0.075, 6, 20);
-const HAT_C = { cap: 0xf4f4f0, trilby: 0xe8e2d0, pilot: 0x1b2f6b, tricorn: 0x121212, bucket: 0xf4f1e8, sunhat: 0xe8cf8a, tomte: 0xd8321e, scarf: 0xd8c8a0 };
+const HAT_C = { cap: 0xf4f4f0, trilby: 0xe8e2d0, pilot: 0x1b2f6b, tricorn: 0x121212, bucket: 0xf4f1e8, sunhat: 0xe8cf8a, tomte: 0xd8321e, scarf: 0xd8c8a0, fur: 0x5a3a22 };
 
 // A GeoBuilder that picks a sphere's segment count from its size (pupils and print dots don't need
 // 230 triangles each); everything in this file builds with it.
@@ -248,6 +257,9 @@ function hair(g, d, R) {
       break;
     case 'curly':
     case 'curlyLong': {
+      // A cap and a nape under the curls, so the back and sides of the head are not bald.
+      g.add(PRIM.dome(), c, mat(0, R * 0.04, -R * 0.06, HAIR_TILT, 0, 0, R * 2.12, R * 2.2, R * 2.1));
+      g.sphere(c, 0, -R * 0.25, -R * 0.45, R * 1.8, R * 1.2, R * 1.2);
       const r = mulberry32((d.name || 'x').length * 7 + (c & 0xff));
       for (let k = 0; k < 26; k++) {
         const th = r() * 1.25, ph = r() * Math.PI * 2;
@@ -329,9 +341,10 @@ function hat(g, d, R) {
         g.sphere(c, 0, R * 1.0, R * 0.0, R * 0.22);
       } else {
         // Tipped back so the peak sits on the forehead, above the brows, and the eyes stay visible.
+        const pc = d.peakC ?? c;
         g.add(PRIM.dome(), c, mat(0, R * 0.42, -R * 0.02, -0.3, 0, 0, R * 2.26, R * 1.86, R * 2.26));
-        g.cyl(c, 0, R * 0.7, R * 1.1, R * 0.72, R * 0.07, 14, 0.18, 0, 0);
-        g.box(c, 0, R * 0.7, R * 0.96, R * 1.3, R * 0.07, R * 0.5, 0, 0.18);
+        g.cyl(pc, 0, R * 0.7, R * 1.1, R * 0.72, R * 0.07, 14, 0.18, 0, 0);
+        g.box(pc, 0, R * 0.7, R * 0.96, R * 1.3, R * 0.07, R * 0.5, 0, 0.18);
         g.sphere(dark, 0, R * 1.3, -R * 0.12, R * 0.2);
       }
       break;
@@ -379,6 +392,12 @@ function hat(g, d, R) {
       g.add(PRIM.torus(), 0xffffff, mat(0, R * 0.66, -R * 0.06, Math.PI / 2 + 0.25, 0, 0, R * 2.18, R * 2.18, R * 2.4));
       break;
     }
+    case 'fur':
+      // A round fur hat (Stockholm in December): a tall, slightly flared crown with a soft top.
+      fru(g, c, 0, R * 0.98, -R * 0.03, R * 1.12, R * 1.06, R * 0.8, 14, -0.06);
+      g.sphere(c, 0, R * 1.38, -R * 0.06, R * 2.2, R * 0.36, R * 2.2, -0.06);
+      fru(g, shade(c, 0.8), 0, R * 0.64, -R * 0.01, R * 1.1, R * 1.1, R * 0.14, 14, -0.06);
+      break;
     case 'scarf':
       // Headscarf: covers the top and the back, side flaps to the jaw, a knot under the chin.
       g.add(PRIM.dome(), c, mat(0, -R * 0.02, -R * 0.12, -0.72, 0, 0, R * 2.3, R * 2.36, R * 2.26));
@@ -413,7 +432,9 @@ function onTorso(T, a, y) {
   return [x, z, Math.atan2(Math.sin(a) / rx, Math.cos(a) / rz)];
 }
 
-function torsoParts(g, d, T, lo = false) {
+// Prints go into pg: the caller adds it without an outline, which would ring every petal and dot
+// with black.
+function torsoParts(g, d, T, lo = false, pg = g) {
   const { H, W, D, s } = T;
   const top = d.pinafore && d.dress ? d.dress : d.shirt;
   g.add(PRIM.capsule(), top, mat(0, H / 2, 0, 0, 0, 0, W, H / 2, D));
@@ -423,8 +444,7 @@ function torsoParts(g, d, T, lo = false) {
   g.add(PRIM.cyl(14), waist, mat(0, H * 0.06, 0, 0, 0, 0, W * 0.98, H * 0.3, D * (d.belly ? 1.14 : 1.0)));
   if (!d.dress && (d.belt || (!d.suit && !d.shorts && !d.coat))) g.add(PRIM.cyl(14), d.belt ?? 0x3a2a1e, mat(0, H * 0.19, 0, 0, 0, 0, W * 1.0, H * 0.06, D * (d.belly ? 1.16 : 1.03)));
   // Patterns.
-  if (d.print && !lo) printParts(g, d, T);
-  else if (d.print) for (let k = 0; k < 8; k++) { const [x, z, ry] = onTorso(T, -1.2 + k * 0.34, H * (0.45 + (k % 2) * 0.22)); g.sphere(d.print[k % d.print.length], x, H * (0.45 + (k % 2) * 0.22), z, W * 0.16, W * 0.16, 0.03, 0, ry, 0, 6); }
+  if (d.print) printParts(pg, d, T, lo);
   if (d.stripe) {
     // Bands hugging the torso (and the belly): elliptic cylinders just outside the shirt.
     const n = d.stripes ? (lo ? 2 : 4) : 1;
@@ -477,10 +497,30 @@ function torsoParts(g, d, T, lo = false) {
   }
 }
 
-// Confetti / dots / floral / check on the shirt (front, sides and back).
-function printParts(g, d, T) {
+// Confetti / dots / floral / check on the shirt (front, sides and back). Under a suit jacket or a
+// vest the shirt only shows in front (the jacket's V, tipped back 0.18 rad, or the vest's opening;
+// see torsoParts), so the print does too: a few dots there, in the print colours that differ from
+// the shirt's. FRONT_DOTS are fractions of that panel's half width and half height.
+const FRONT_DOTS = [[-0.47, 0.7], [0.4, 0.4], [-0.2, 0.05], [0.47, -0.3], [-0.4, -0.6], [0.13, -0.88]];
+function printParts(g, d, T, lo = false) {
   const { H, W, D, s } = T;
   const cols = d.print, style = d.printStyle || 'confetti';
+  if (d.suit || d.vest) {
+    const vc = cols.filter((c) => c !== (d.suit ?? d.shirt));
+    if (!vc.length) vc.push(WHITE);
+    // Panel: pivot y/z, its front face's offset, tilt, half height, half width.
+    const [cy, cz, fz, tilt, hh, hw] = d.suit ? [H * 0.78, D * 0.48, D * 0.05, 0.18, H * 0.17, W * 0.15] : [H * 0.6, D * 0.52, D * 0.06, 0, H * 0.28, W * 0.1];
+    const cs = Math.cos(tilt), sn = Math.sin(tilt), zl = fz + 0.004 * s;
+    FRONT_DOTS.forEach(([xf, yf], k) => {
+      const yl = yf * hh;
+      g.cyl(vc[k % vc.length], xf * hw, cy + yl * cs + zl * sn, cz - yl * sn + zl * cs, W * 0.035, 0.012 * s, 8, Math.PI / 2 - tilt);
+    });
+    return;
+  }
+  if (lo) {
+    for (let k = 0; k < 8; k++) { const [x, z, ry] = onTorso(T, -1.2 + k * 0.34, H * (0.45 + (k % 2) * 0.22)); g.sphere(cols[k % cols.length], x, H * (0.45 + (k % 2) * 0.22), z, W * 0.16, W * 0.16, 0.03, 0, ry, 0, 6); }
+    return;
+  }
   const r = mulberry32(((d.shirt ?? 0) & 0xffff) + cols.length * 131);
   if (style === 'check') {
     for (let row = 0; row < 5; row++) for (let k = 0; k < 14; k++) {
@@ -521,15 +561,16 @@ const PROP_GEO = {
     g.cyl(0x101014, 0, 0.11, 0.28, 0.062, 0.03, 12, Math.PI / 2);
     g.box(0x1d1d22, 0, 0.2, -0.12, 0.06, 0.06, 0.12);
   },
-  boombox(g) {  // Ole's giant "bergsprängare"
+  boombox(g) {  // Ole's giant black "bergsprängare": chrome speaker rims and centres, a silver deck
     g.box(0x1d1d22, 0, -0.03, 0, 0.08, 0.06, 0.34);
     for (const z of [-0.15, 0.15]) g.box(0x1d1d22, 0, -0.06, z, 0.06, 0.08, 0.04);
-    g.box(0xc8ccd2, 0, -0.27, 0, 0.18, 0.36, 0.7);
+    g.box(0x2a2a30, 0, -0.27, 0, 0.18, 0.36, 0.7);
     for (const sx of [-1, 1]) for (const z of [-0.2, 0.2]) {
-      g.cyl(0x2a2a30, sx * 0.09, -0.28, z, 0.12, 0.03, 14, 0, 0, Math.PI / 2);
+      g.cyl(0x8a8f99, sx * 0.086, -0.28, z, 0.13, 0.03, 14, 0, 0, Math.PI / 2);
+      g.cyl(0x1d1d22, sx * 0.09, -0.28, z, 0.12, 0.03, 14, 0, 0, Math.PI / 2);
       g.cyl(0x8a8f99, sx * 0.1, -0.28, z, 0.045, 0.03, 10, 0, 0, Math.PI / 2);
     }
-    for (const sx of [-1, 1]) g.box(0x3a3a40, sx * 0.09, -0.3, 0, 0.02, 0.1, 0.14);
+    for (const sx of [-1, 1]) g.box(0x8a8f99, sx * 0.09, -0.3, 0, 0.02, 0.1, 0.14);
     g.box(0xd8321e, 0.09, -0.14, -0.26, 0.02, 0.03, 0.06);
   },
   accordion(g) {
@@ -652,17 +693,21 @@ export function buildCharacter(d) {
   m.hips = hips;
 
   // Torso (+ the skirt and coat tails, which hang from the hips and do not swing with the legs).
+  // The prints (shirt and dress) are a second mesh without an outline.
   {
-    const g = new CharBuilder();
-    torsoParts(g, d, T);
+    const g = new CharBuilder(), pg = new CharBuilder();
+    torsoParts(g, d, T, false, pg);
     if (d.dress) {
       const len = legLen * (d.pinafore ? 0.48 : 0.56);
       fru(g, d.dress, 0, torsoH * 0.2 - len / 2, 0, torsoW * 0.5, torsoW * 0.66, torsoH * 0.4 + len, 16);
-      if (d.print && d.printStyle !== 'check') {
-        const r = mulberry32(d.dress & 0xffff);
+      const sp = d.skirtPrint ?? d.print;
+      if (sp && d.printStyle !== 'check') {
+        // Flat dots lying on the (round) cone: its radius grows from 0.5 W at the top (torsoH 0.4)
+        // to 0.66 W at the hem (-len).
+        const r = mulberry32(d.dress & 0xffff), top = torsoH * 0.4, h = top + len;
         for (let k = 0; k < 16; k++) {
-          const a = r() * Math.PI * 2, f = r(), y = torsoH * 0.1 - f * len, rr = torsoW * (0.5 + f * 0.16) * 1.02;
-          g.sphere(d.print[k % d.print.length], Math.sin(a) * rr, y, Math.cos(a) * rr * (torsoD / torsoW) * 1.5, torsoW * 0.12, torsoW * 0.12, torsoW * 0.12, 0, 0, 0, 6);
+          const a = r() * Math.PI * 2, f = r(), y = torsoH * 0.1 - f * len, rr = torsoW * (0.5 + 0.16 * (top - y) / h) + 0.004 * s;
+          pg.cyl(sp[k % sp.length], Math.sin(a) * rr, y, Math.cos(a) * rr, torsoW * 0.07, 0.012 * s, 8, Math.PI / 2, a);
         }
       }
       if (d.apron) g.box(d.apron, 0, -len * 0.35, torsoW * 0.62, torsoW * 0.8, len * 0.72, 0.03, 0, 0.1);
@@ -675,6 +720,7 @@ export function buildCharacter(d) {
       for (let k = 0; k < 3; k++) g.sphere(shade(d.shirt, 0.6), torsoW * 0.06, torsoH * (0.32 + k * 0.16), torsoD * 0.5 + (d.belly ? torsoD * 0.18 : 0), 0.03 * s);
     }
     add(hips, g.build());
+    if (!pg.empty) hips.add(toonMesh(pg.build(), { outline: 0, cast: false }));
   }
   // Head on a neck pivot.
   const neck = new THREE.Group();
@@ -716,6 +762,8 @@ export function buildCharacter(d) {
     if (d.longSleeves && !d.hands) g.cyl(shade(d.shirt, d.suit ? 1 : 0.9), 0, -armLen * 0.86, 0, 0.065 * s, 0.05 * s, 8);
     if (d.suit && d.longSleeves) g.cyl(d.suit, 0, -armLen * 0.9, 0, 0.06 * s, 0.04 * s, 8);
     g.sphere(d.hands ?? d.skin, 0, -armLen - 0.02 * s, 0, 0.15 * s);
+    // Stig's Nordic-pattern mittens: a coloured band round the white mitten.
+    if (d.hands && d.mittenBand) g.cyl(d.mittenBand, 0, -armLen - 0.01 * s, 0, 0.077 * s, 0.035 * s, 10);
     add(piv, g.build());
     m.arms.push(piv);
   }
@@ -732,6 +780,8 @@ export function buildCharacter(d) {
     if (d.shorts) {
       const b = d.baggy ? 1.35 : 1;
       g.add(PRIM.capsule(), d.pants, mat(0, -legLen * (d.baggy ? 0.2 : 0.14), 0, 0, 0, side * 0.05, 0.2 * s * b, legLen * (d.baggy ? 0.2 : 0.15), 0.2 * s * b));
+      // A trim band where the leg's straight part ends (Lasse's jul shorts "med vit kant").
+      if (d.shortsHem) g.cyl(d.shortsHem, 0, -legLen * (d.baggy ? 0.3 : 0.215), 0, 0.1 * s * b + 0.006 * s, 0.04 * s, 12, 0, 0, side * 0.05);
       g.cyl(0xffffff, 0, -legLen * 0.84, 0, 0.082 * s, 0.14 * s, 8);
     } else if (!d.dress) {
       // A 1970s flare at the ankle.
@@ -1031,7 +1081,8 @@ function poseFlags(m, st, t) {
     m.hips.rotation.z = 0.12;
     m.neck.rotation.y = -0.65;
     m.neck.rotation.x = -0.15;
-    inHand(m, prop(m, 'mirror'), 0, 0, 0.05, 0, 0, Math.PI * 0.75, 0);
+    // The glass (the prop's +z face) faces forward and a little out to his right, to the camera.
+    inHand(m, prop(m, 'mirror'), 0, 0, 0.05, 0, 0, -0.3, 0);
   }
   if (st.film) {
     // Herr Storch filming (lens cap on): the Super 8 up at the eye, both hands on it.
@@ -1154,7 +1205,8 @@ export function buildBustGeo(d) {
   return g.build();
 }
 
-function bustBuilder(d) {
+// pg: where the print goes (default: merged into the bust, which the cabin and the Rio boat do).
+function bustBuilder(d, pg = null) {
   // Seated in the plane or a car, a random ped has taken the sun hat off (its brim would stick
   // through a car roof).
   if (d.name === 'ped' && (d.hat === 'sunhat' || d.hat === 'bucket')) d = { ...d, hat: null };
@@ -1162,7 +1214,7 @@ function bustBuilder(d) {
   const R = 0.25 * s, torsoH = 0.66 * s, torsoW = 0.5 * s * wide, torsoD = 0.3 * s * (wide > 1 ? 1 + (wide - 1) * 0.8 : wide);
   const T = { H: torsoH, W: torsoW, D: torsoD, s };
   const g = new CharBuilder();
-  torsoParts(g, d, T, true);
+  torsoParts(g, d, T, true, pg ?? g);
   // Arms resting forward (sleeves, hands on the lap).
   const sleeve = d.longSleeves ? d.shirt : d.skin;
   for (const sd of [-1, 1]) {
@@ -1184,9 +1236,11 @@ function bustBuilder(d) {
 export function buildBust(d) {
   const s = d.scale || 1;
   const R = 0.25 * s, torsoH = 0.66 * s;
-  const geo = bustBuilder(d).build();
+  const pg = new CharBuilder();
+  const geo = bustBuilder(d, pg).build();
   const root = new THREE.Group();
   root.add(toonMesh(geo, { outline: OUT }));
+  if (!pg.empty) root.add(toonMesh(pg.build(), { outline: 0, cast: false }));
   const mouth = new THREE.Mesh(mouthGeo(R, 1), MAT.mouth);
   mouth.position.set(0, torsoH + R * 0.45 + 0.06 * s, R * 0.8);
   mouth.scale.y = 0.3;

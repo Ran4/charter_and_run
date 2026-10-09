@@ -97,5 +97,5 @@ export const OLE_STATS = [
 ];
 
 // NPC (and player) outfits per home set (§2.2, §4.5); the gate set only while missions.index === 0.
-export const LEVEL_OUTFITS_GATE = { stig: 'arlanda', ole: 'arlanda', berra: 'arlanda' };
+export const LEVEL_OUTFITS_GATE = { stig: 'arlanda', ole: 'arlanda', berra: 'arlanda', angerud: 'arlanda' };
 export const LEVEL_OUTFITS_FLIGHT = { stig: 'kostym', ole: 'flyg', berra: 'flyg', robban: 'flyg', angerud: 'flyg', majsan: 'flyg', siv: 'flyg' };

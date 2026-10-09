@@ -170,19 +170,19 @@ with existing fields so nothing blocks.
 | `stig` | Stig-Helmer | **player** | 250 | `#4a9ad6` | scale 1.12 ("Giraffen": tall, thin, `wide` .85), skin `0xf1c9a5`, hair `swoop` `0x2a1e18` + `tuft`† (cowlick), brows `0x2a1e18`, mustache `0x2a1e18`, round glasses `0x6b4a2a`, nose `long` |
 | `ole` | Ole | companion, main giver | 270 | `#f7c31b` | `wide` 1.35, skin `0xf2b89a`, hair `balding` `0xa0522d` (curly sides), big mustache `0xa0522d`, `shades`† `0x2a2a2a` (island, aviator) |
 | `majsan` | Majsan | love interest | 340 | `#fff8e6` | scale .97, hair `page`† `0x8a3b22` (bangs), `dress`† `0x4a7fd0` + `print`† white dots, `hairFlower`† white (island) |
-| `siv` | Sivan | Majsan's sister, hands out points | 360 | `#fff8e6` | hair `bun` `0x7a3018`, `dress`† `0xd8321e` + `print`† `0xffb0c0` |
+| `siv` | Sivan | Majsan's sister, hands out points | 360 | `#fff8e6` | hair `bun` `0x7a3018`, pink top `0xffb0c0` with `print`† white and red flowers, `dress`† `0xd8321e` + `skirtPrint` `0xffb0c0`/white dots |
 | `berra` | Berra | bodega hunter | 220 | `#fff8e6` | `wide` .9, hair `long` `0x5a3a22`, walrus mustache, big tinted glasses `0x3a3a3a`, shirt `0x2a4fa0` (plain, **no text**), `vest`† denim `0x4a6a9a`; gate: cream cowichan cardigan `0xf0ead8` + stripe `0x4a3a2a` |
-| `robban` | Robban | Berra's Gothenburg mate | 235 | `#fff8e6` | `wide` 1.25, hair `short` thin `0x6a5a48`, glasses; flight: shirt `0xf07a1e`; island: `0x1f2f6a` + `hat:'cap'`† |
-| `angerud` | Gösta Angerud | antagonist (comic) | 200 | `#fff8e6` | `wide` 1.35, skin ruddy `0xf0b8a0`, hair `balding` `0x5a4a3a`; flight: dark suit `0x3a3a44` + `tie`† `0xc8202a`; island: light-blue suit `0x9cc4e4` longSleeves + `shades`† |
+| `robban` | Robban | Berra's Gothenburg mate | 235 | `#fff8e6` | `wide` 1.25, hair `short` thin `0x6a5a48`, glasses; flight: shirt `0xf07a1e` + blue collar; island: `0x1f2f6a` with small yellow dots + yellow collar, white `hat:'cap'`† with a blue peak |
+| `angerud` | Gösta Angerud | antagonist (comic) | 200 | `#fff8e6` | `wide` 1.35, skin ruddy `0xf0b8a0`, hair `balding` `0x5a4a3a`; flight: dark suit `0x3a3a44`, blue shirt `0x8ab0d8` + `tie`† `0xc8202a`; gate: + camel coat, brown fur hat; island: light-blue suit `0x9cc4e4` longSleeves + `shades`† |
 | `levander` | Dr Levander | radio/phone/portrait only | 290 | `#c8c8d8` | tall thin, hair `slick` `0x2a2a2a`, big glasses, shirt white (coat) longSleeves, `tie`† navy |
-| `lasse` | Lasse | SunTrip platschef, giver | 300 | `#f07a1e` | athletic, skin tan `0xc98f62`, hair `curly` `0x1d1426`, sun-yellow suit `0xffd23f` (shirt+pants, longSleeves), `print`† shirt; julafton: red + `hat:'tomte'`† |
+| `lasse` | Lasse | SunTrip platschef, giver | 300 | `#f07a1e` | athletic, skin tan `0xc98f62`, hair `curly` `0x1d1426`, sun-yellow suit `0xffd23f` (shirt+pants, longSleeves), `print`† on the orange shirt in the jacket's V; julafton: red, shorts with a white hem + `hat:'tomte'`† |
 | `affe` | Affe | guide, accordion | 280 | `#f07a1e` | thin, hair `short` `0xc9a66b`, shirt print†, pants `0xffd23f`, `shades`†, `held:'accordion'`† |
 | `gabbe` | Gabbe | guide, congas, night bus | 190 | `#f07a1e` | `wide` 1.4, hair `afro` `0xc0602a`, `beard`† `0xc0602a`, `shades`†, pants `0xffd23f`, `held:'congas'`† (decor) |
 | `jose` | José | "pizza-racern" | 280 | `#d8321e` | hair `slick` `0x1d1426`, thick mustache, shiny royal-blue shirt `0x2048c8` longSleeves |
 | `mamma` | Josés mamma | chaperone | 380 | `#d8321e` | hair `bun` grey `0x9a9a9a`, glasses, `dress`† black `0x1d1426` |
 | `pappa` | Josés pappa | Josés pappa (in game a shepherd: invented, a nod to the actor Juan Socorra Vega, a real shepherd) | 180 | `#d8321e` | black suit `0x1d1426`, `hat:'trilby'`† black |
 | `carmencita` | Carmencita | Viking Bar, José's sister | 360 | `#d8321e` | hair `short` `0x1d1426`, `dress`† black, stripe `0xd8321e` (red scarf) |
-| `herrStorch` | Herr Storch | newlywed from Mjölby | 300 | `#fff8e6` | young tall, hair `curly` `0x9a7a52`, dark floral shirt `0x3a2a4a` print†, `vest`† suede `0xb07a5a`, `held:'camera'`† (Super 8, lens cap ON) |
+| `herrStorch` | Herr Storch | newlywed from Mjölby | 300 | `#fff8e6` | young tall, hair `curly` `0x9a7a52`, dark floral shirt `0x3a2a4a` print† (shows in the vest's opening), `vest`† suede `0xb07a5a`, `held:'camera'`† (Super 8, lens cap ON) |
 | `fruStorch` | Fru Storch | newlywed, "Storch, inte Stork" | 410 | `#fff8e6` | `wide` 1.15, hair `curly` blonde `0xf0dca0`, glasses, shirt cerise `0xd0307a`, `hairFlower`† |
 | `portier` | Portiern | Flamenco reception | 255 | `#d8321e` | white shirt, black `vest`†, `bowtie`†, mustache |
 | `sulan` | Sulan | gate only: the bodega tip | 245 | `#fff8e6` | hair `short` `0x6a4a2a`, shirt `0x6a4a2a`, tanned `0xd9a07a` (just home) |
@@ -208,13 +208,18 @@ Removed Bigmouth keys: `nick maurice andrew steve jay jessi connie duke shame` (
 
 | key | outfits (name: fields) | when |
 |---|---|---|
-| `stig` | `arlanda`: shirt `0x3a2a1e` longSleeves (dark brown coat), pants `0x2e2620`, `hat:'cap'`† tweed `0x8a7a5a` · `kostym`: shirt `0x4a3426` longSleeves, pants `0x3a2a1e`, `tie`† `0x7a2a2a` · `hawaii`: shirt `0xd8321e` `print`† `[0xffd23f,0x3f7a3a,0x2f6ad8]`, short sleeves, `shorts:true` (oversized), pants `0xe8dcb8` · `rio`: shirt `0xf4f0e6` longSleeves, `bowtie`† `0x1d1426`, pants `0x1d1426` | `arlanda` mission 1 (gate) → `kostym` from mission 1 outro (boarding) → `hawaii` from the buss17 outro → `rio` only in the end card |
-| `ole` | `arlanda`: + `hat:'trilby'`† `0xe8e2d0`, shirt beige `0xd8c8a0` longSleeves, `held:'boombox'`† · `flyg`: white polo `0xf4f4f0` · `sol`: shirt `0xf2c94c` `print`† check, pants `0xe8dcb8`, `shades`† · `gris`: shirt `0xf4f4f0` stripe `0xd8321e` · `rio`: white jacket + `bowtie`† + `shades`† | per level/home set (§4.5) and by dialogue cue |
+| `stig` | `arlanda`: shirt `0x3a2a1e` longSleeves (dark brown coat), pants `0x2e2620`, `hat:'cap'`† tweed `0x8a7a5a`, white mittens `hands` `0xf4f0e6` with a red `mittenBand` `0x9a3a2a` (the research's Nordic pattern) · `kostym`: shirt `0x4a3426` longSleeves, pants `0x3a2a1e`, `tie`† `0x7a2a2a` · `hawaii`: shirt `0xd8321e` `print`† `[0xffd23f,0x3f7a3a,0x2f6ad8]`, short sleeves, `shorts:true` (oversized), pants `0xe8dcb8` · `rio`: shirt `0xf4f0e6` longSleeves, `bowtie`† `0x1d1426`, pants `0x1d1426` | `arlanda` mission 1 (gate) → `kostym` from mission 1 outro (boarding) → `hawaii` from the buss17 outro → `rio` only in the end card |
+| `ole` | `arlanda`: + `hat:'trilby'`† `0xe8e2d0`, shirt beige `0xd8c8a0` longSleeves, `held:'boombox'`† (black, chrome speaker rims) · `flyg`: white polo `0xf4f4f0` · `sol`: shirt `0xf2c94c` `print`† check, pants `0xe8dcb8`, `shades`† · `gris`: shirt `0xf4f4f0` stripe `0xd8321e`, gold `chain` (the pendant) · `rio`: white jacket + `bowtie`† + `shades`† | per level/home set (§4.5) and by dialogue cue |
 | `berra` | `arlanda` (cowichan), `flyg`, `sol` (+ `hat:'cap'`† white) | per level |
-| `robban` | `flyg` (orange), `sol` (navy + cap) | per level |
-| `angerud` | `flyg` (dark suit), `sol` (light-blue suit + shades) | per level |
-| `lasse` | `sol` (yellow suit), `jul` (red + tomte hat) | `jul` in julafton |
-| `majsan`, `siv` | `flyg` (cardigan over dress: shirt colour on top), `sol` | per level |
+| `robban` | `flyg` (orange, `collar` `0x1f2f6a`), `sol` (navy with yellow dots, `collar` `0xffd23f`, white cap with `peakC` `0x2a4fa0`) | per level |
+| `angerud` | `arlanda` (`coat` camel `0xc8a06a`, `hat:'fur'` `0x5a3a22`), `flyg` (dark suit, blue shirt), `sol` (light-blue suit, white shirt + shades) | `arlanda` at the gate (mission 1), then per level |
+| `lasse` | `sol` (yellow suit), `jul` (red T-shirt, red shorts with a white `shortsHem` + tomte hat) | `jul` in julafton |
+| `majsan`, `siv` | `flyg` (cardigan over dress: shirt colour on top; no print, no `skirtPrint`), `sol` | per level |
+
+Invented look details (§1.6): Stig's arlanda scarf and Fru Storch's white dress. The other looks in
+§2.1/§2.2 follow `notes/research-characters.md` (Ole's beige coat and black boombox, Robban's dots and
+collars, Lasse's jul shorts "med vit kant", Stig's white patterned mittens, Angerud's Stockholm coat
+and fur hat).
 
 `Character.setDef(def, outfitName)` rebuilds the model under the same parent and keeps the transform
 (Phase 0). Player outfit changes re-render the portrait. **Fallback (cut):** keep the base look.
@@ -443,7 +448,7 @@ HOMES = {
 // ole: ['flamenco', 2.0, 1.0, 0] (under the pergola facing the pool; `flamenco` itself faces π).
 // A giver placed at its mission's `at` still faces the landmark's yaw.
 // Keys absent from a set are treated as null (hidden).
-LEVEL_OUTFITS = { gate: { stig:'arlanda', ole:'arlanda', berra:'arlanda' },
+LEVEL_OUTFITS = { gate: { stig:'arlanda', ole:'arlanda', berra:'arlanda', angerud:'arlanda' },
                   flight: { stig:'kostym', ole:'flyg', berra:'flyg', robban:'flyg', angerud:'flyg', majsan:'flyg', siv:'flyg' },
                   island: { ole:'sol', berra:'sol', robban:'sol', angerud:'sol', majsan:'sol', siv:'sol', lasse:'sol' } };
 // The player's island outfit is 'kostym' until the buss17 outro cue switches it to 'hawaii'
@@ -1032,12 +1037,15 @@ player's car (the night bus's `oppSpec` steer matches it); the player's bus keep
 
 **Occupants** (Phase 2; replaces Bigmouth's heads through the roof): `car.seatY()` = wheelR·0.95 +
 0.2 for ordinary cars (sedan, hatch, wagon, taxi, pickup, grisbil: people sit low, the opaque body
-sides hide the legs), + 0.36 for the cab of `van`/`icecream`/`guardia`, + 0.9 for buses;
-`car.roofY()` = the roof underside − 0.08 (wheelR·0.95 + bodyH (+ cabinH for open-cabin cars)),
-Infinity for buses. A driver bust stands at seatY, rear/window rider busts too; each is scaled by
+sides hide the legs), + 0.36 for the cab of `van`/`icecream`/`guardia`, + 0.55 for buses (the bus
+floor and seat backs sit under it, so the heads fill the window band: sill 1.595, roof underside
+2.455); `car.roofY()` = the roof underside − 0.08 (wheelR·0.95 + bodyH (+ cabinH for open-cabin cars),
+− 0.22 for a bus's roof slab). A driver bust stands at seatY, rear/window rider busts too; each is scaled by
 `fitScale(userData.h)` (≥ 0.72; ≈ 0.82 in a sedan) so the head clears the roof. A seated character
 (player included) has its hips at seatY + 0.12 and is scaled about them by `fitScale(headTop −
-legLen, hips)`; `unseat` restores scale 1. Bed riders (`slot: 'bed'`) stand in the open load bed.
+legLen, hips)` (bus 17: Stig ≈ 0.81, Ole ≈ 0.99, Gabbe ≈ 0.87); `unseat` restores scale 1. Bed riders
+(`slot: 'bed'`) stand in the open load bed. A rider given by cast key wears that character's current
+outfit (`npc(key).def`).
 
 ### 6.7 Pedestrians (models.js `randomPed`, peds.js; WP-E)
 
@@ -1353,7 +1361,7 @@ Fun: fear as a resource from minute one. A beeping arch, a timed toilet dash wit
 thumping, holding the mantra in the men's room, and the bodega tip in the queue to the plane.
 
 No `extra` (the gate cast already stands at its `HOMES.gate` spots; an `extra` would pull them into the security queue). Player outfit `arlanda`. Ole outfit `arlanda`
-(trilby, boombox). Phase `gate` (stage 1 `startCue: { phase: ['gate', { instant: true }] }`).
+(trilby, boombox), Angerud `arlanda` (camel coat, fur hat). Phase `gate` (stage 1 `startCue: { phase: ['gate', { instant: true }] }`).
 
 **Intro** (in the security queue):
 - stig: "Vad ska de göra?"  [F]
@@ -2926,7 +2934,11 @@ WP-E added (full list in the models.js header): `capStyle`, `printStyle` (`confe
 check`), `stripe`/`stripes`, `sash`, `scarf` (neck), `apron`, `belly`, `collar`, `suit` (shirt colour
 in the jacket's V), `coat`, `epaulets`, `badge`, `chain`, `belt`, `pinafore`, `shorts`/`baggy`,
 `legsC`, `hands`, `glassesBig`, `lens`, `aviator`, `lashes`, `curlySides`, `thin`, `sideburns`, `nose`
-shapes. An outfit clears a base field with `null` (e.g. the flyg cardigans drop the dress print).
+shapes. Phase 3: `skirtPrint` (the dress's dots, else `print`), `mittenBand`, `shortsHem`, `peakC`
+(a cap's peak), hat `'fur'`. Prints (shirt and dress) are a second mesh without an outline (one extra
+draw call on printed models; the cabin and Rio busts keep them merged); under a `suit` or a `vest`
+the shirt print is a few dots in the V or the vest's opening only. An outfit clears a base field with
+`null` (e.g. the flyg cardigans drop the dress print).
 Carmencita's scarf, Städerskan's apron, the Grisfestvärd's sash and a real `hat: 'cap'` replace the
 Phase 0 stand-ins. Content may give an outfit a `held` field or use the `giraffe`, `butterKnife`,
 `film`, `mirror` or `shoeOff` anim flags, which bring their own props.
@@ -2953,7 +2965,7 @@ export function registerCarType(key, spec)            // used by cabin.js for 't
 // car fields: noEnter (never offered to the player), noExplode (damage → dead + fx.steam, no fire,
 // no burn), isPursuer, riders[], decals[].
 // Occupants (Phase 2, §6.6): car.seatY() (bust base / hips − 0.12, car-local), car.roofY() (roof
-// underside − 0.08; Infinity for buses), car.fitScale(h, base = seatY()) = clamp((roofY − base) / h,
+// underside − 0.08; buses too), car.fitScale(h, base = seatY()) = clamp((roofY − base) / h,
 // 0.72, 1). main.addBust / addRider (not 'bed') / seat use them, so no head pokes through a roof.
 ```
 
@@ -3938,3 +3950,23 @@ the fixer's group.
 - r1 world-outskirts: no towel on the sand in front of each sunbed pair (`solstol` carries its own,
   §6.9); the Gando canopy roof hides with 1.5 m hysteresis (a player shuffling outside the hall
   flipped it 8 times in 2.3 s, now 0).
+- r1 cast-vehicles: bus occupants (§6.6): `seatY` wheelR·0.95 + 0.55 for buses (was + 0.9) and
+  `roofY` = the roof underside (− 0.22 slab) − 0.08 (was Infinity), so bus 17's driver, passenger
+  and window riders, Gabbe's night bus and the guagua/SunTrip driver busts have their heads in the
+  window band, not in or through the roof; the bus floor, seat backs and steering wheel moved down
+  with them.
+- r1 cast-vehicles: rider busts by cast key wear the character's current outfit (`main.addRider`
+  uses `npc(key).def`): Robban's island shirt and cap, Berra's cap, Majsan's flower (§6.6).
+- r1 cast-vehicles: the porter's "Momento." mirror shows its glass to the camera (it showed its gold
+  back).
+- r1 cast-vehicles: prints are a second mesh without an outline (each petal and dot had a black
+  ring), dress dots are flat discs on the skirt cone (they sank in or stuck out as pearls), and under
+  a suit or vest the shirt print shows only in the V or the opening: Lasse's yellow jacket is plain,
+  his orange shirt patterned; Herr Storch's vest is plain (§2.1, §14.6).
+- r1 cast-vehicles: curly hair has a cap and a nape under the curls (the back of the head was bald).
+- r1 cast-vehicles: looks from the research (§2.1, §2.2): Siv's top white and red flowers on pink
+  (`skirtPrint` keeps the dress's pink dots), Stig's white mittens with a red band, Ole's black
+  boombox and grisfest pendant, Robban's collars and blue-peaked cap, Angerud's blue shirt and his
+  gate look (camel coat, fur hat; `LEVEL_OUTFITS.gate`), Lasse's jul shorts with a white hem; the
+  invented-details note names only Stig's arlanda scarf and Fru Storch's white dress.
+- r1 cast-vehicles: `castsheet` frames the anim-flag rows wider, so the giraffe is not cut off.

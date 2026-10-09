@@ -347,10 +347,11 @@ class Game {
     return obj;
   }
 
-  // Decorative rider busts (riders cannot be real passengers: one passenger seat per car).
+  // Decorative rider busts (riders cannot be real passengers: one passenger seat per car). A cast
+  // key rides in the outfit its character wears now (Character.setDef keeps it in def).
   addRider(defKey, car, slot = 'rear') {
     const s = car.spec;
-    const def = typeof defKey === 'string' ? (CHARS[defKey] || randomPed()) : defKey;
+    const def = typeof defKey === 'string' ? (this.npc(defKey)?.def || CHARS[defKey] || randomPed()) : defKey;
     const obj = buildBust(def);
     const top = s.wheelR * 0.95 + s.bodyH, seatY = car.seatY();
     // Bed riders stand in the open load bed (no roof); window and rear riders sit like the driver.

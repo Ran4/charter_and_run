@@ -239,13 +239,14 @@ function busBody(ctx) {
   }
   g.boxB(color, 0, sill, -L / 2 + 0.1, W, roofY - sill, 0.2);
   g.box(TRIM, 0, (sill + roofY) / 2, -L / 2 - 0.01, W * 0.7, (roofY - sill) * 0.7, 0.02);
-  // Inside: a floor at the sill and rows of orange seat backs.
-  g.boxB(0x5a4a3a, 0, sill - 0.3, -0.6, W - 0.2, 0.05, L - 2.4);
-  for (let k = 0; k < nWin; k++) for (const sx of [-1, 1]) g.boxB(0xd2601f, sx * (W / 2 - 0.55), sill - 0.25, z0 + (k + 0.6) * pitch, 0.8, 0.85, 0.14);
+  // Inside: a floor under the seats (car.seatY() is y0 + 0.55) and rows of orange seat backs whose
+  // tops show in the windows.
+  g.boxB(0x5a4a3a, 0, y0 + 0.47, -0.6, W - 0.2, 0.05, L - 2.4);
+  for (let k = 0; k < nWin; k++) for (const sx of [-1, 1]) g.boxB(0xd2601f, sx * (W / 2 - 0.55), y0 + 0.52, z0 + (k + 0.6) * pitch, 0.8, 0.85, 0.14);
   // Cab: pillars, dashboard, steering wheel, the big windscreen; the door on the right (-x).
   for (const sx of [-1, 1]) g.box(color, sx * (W / 2 - 0.08), (sill + roofY) / 2, fz - 0.1, 0.16, roofY - sill, 0.2);
   g.box(TRIM, 0, sill + 0.05, fz - 0.4, W - 0.2, 0.25, 0.5);
-  g.add(PRIM.torus(), TYRE, mat(W * 0.22, sill + 0.15, fz - 1.0, -0.9, 0, 0, 0.55, 0.55, 0.55));
+  g.add(PRIM.torus(), TYRE, mat(W * 0.22, sill, fz - 1.0, -0.9, 0, 0, 0.55, 0.55, 0.55));
   glass.box(0xffffff, 0, (sill + roofY) / 2 + 0.02, fz - 0.08, W - 0.3, roofY - sill + 0.05, 0.04, 0, -0.06);
   glass.box(0xffffff, -(W / 2 + 0.005), (y0 + roofY) / 2 + 0.2, fz - 1.3, 0.03, roofY - y0 - 0.3, 0.9);
   g.box(TRIM, -(W / 2 + 0.01), (y0 + sill) / 2 + 0.05, fz - 1.3, 0.02, sill - y0 - 0.2, 0.9);
@@ -680,11 +681,12 @@ export class Car {
 
   // Occupants (DESIGN §6.6; main.addBust/addRider/seat): seatY() is the car-local height a driver
   // bust stands on and a seated character's hips rest 0.12 above; roofY() is the underside of the
-  // roof less a hair's margin (Infinity for buses). Ordinary cars sit people low in the body (its
-  // opaque sides hide the legs) and the vans/jeep on their cab seats, so heads clear the roof; who
-  // is still taller than the room is scaled down (fitScale, never below 0.72).
-  seatY() { const s = this.spec; return s.wheelR * 0.95 + (s.bus ? 0.9 : s.tall ? 0.36 : 0.2); }
-  roofY() { const s = this.spec; return s.bus ? Infinity : s.wheelR * 0.95 + s.bodyH + (s.tall ? 0 : s.cabinH) - 0.08; }
+  // roof less a hair's margin (a bus's roof slab is 0.22 thick). Ordinary cars sit people low in the
+  // body (its opaque sides hide the legs), the vans/jeep on their cab seats and buses on seats whose
+  // heads fill the window band, so heads clear the roof; who is still taller than the room is
+  // scaled down (fitScale, never below 0.72).
+  seatY() { const s = this.spec; return s.wheelR * 0.95 + (s.bus ? 0.55 : s.tall ? 0.36 : 0.2); }
+  roofY() { const s = this.spec; return s.wheelR * 0.95 + s.bodyH + (s.tall ? 0 : s.cabinH) - (s.bus ? 0.22 : 0) - 0.08; }
   fitScale(h, base = this.seatY()) { return Math.min(1, Math.max(0.72, (this.roofY() - base) / h)); }
 }
 

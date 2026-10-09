@@ -188,7 +188,8 @@ export const SCENARIOS = {
     flagRow.push({ key: 'stig', outfit: 'kostym', flags: { wave: true }, label: 'wave' });
     flagRow.push({ key: 'stig', outfit: 'kostym', flags: { cheer: true }, label: 'cheer' });
     flagRow.push({ key: 'stig', outfit: 'kostym', flags: { kick: 0.5 }, label: 'kick' });
-    for (let i = 0; i < flagRow.length; i += 6) await row(T, `cast_flags_${i / 6}`, flagRow.slice(i, i + 6), { gap: 2.0 });
+    // A little wider than the row: held props (the giraffe) reach out past the end figures.
+  for (let i = 0; i < flagRow.length; i += 6) await row(T, `cast_flags_${i / 6}`, flagRow.slice(i, i + 6), { gap: 2.0, dist: 8.6 });
     await row(T, 'cast_flags_story', [
       { key: 'stig', outfit: 'arlanda', flags: { shoeOff: true }, label: 'stig shoeOff' },
       { key: 'ole', outfit: 'flyg', flags: { laugh: true }, label: 'ole laugh' },
