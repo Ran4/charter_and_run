@@ -99,11 +99,17 @@ export function buildRioCard(scene) {
   Y.box(0xf7c31b, X - 1.4, deck + 2.25, 7.0, 0.05, 0.16, 1.12);
   Y.box(0xf7c31b, X - 1.4, deck + 2.25, 6.95, 0.05, 0.72, 0.16);
 
-  // The band: five busts on the wheelhouse roof, facing the camera, with their instruments.
+  // The band: five busts on the wheelhouse roof, facing the camera, with their instruments. They
+  // stand in one row across the end card's view (screen right = (0.447, -0.894) from (rioCam,
+  // y 3.2) to (rioBoat, z + 1.5)), 0.7 m apart round the roof's middle; left to right guitar
+  // (its neck points out of the row), drum, trumpet, maracas, accordion (the roof rail's posts
+  // cross the left half; Phase 3 r2: a row along x ran 27° off the sight line and two busts stood
+  // behind the others).
   const look = (x, z) => Math.atan2(cam.x - x, cam.z - z);
   const shirts = [0xfafafa, 0xf7c31b, 0xfafafa, 0xd8321e, 0xfafafa];
   for (let k = 0; k < 5; k++) {
-    const x = X - 1.4 + k * 0.7, z = -2.4 + (k % 2) * 0.5, yaw = look(x, z);
+    const slot = [0, 1, -2, -1, 2][k];
+    const x = X + slot * 0.7 * 0.447, z = -2.2 - slot * 0.7 * 0.894, yaw = look(x, z);
     const d = { ...randomPed(r), kind: 'adult', scale: 0.95, shirt: shirts[k], skin: pick([0xc99a6e, 0xa8774f, 0x8a5a3a, 0xe8b894], r), glasses: 0 };
     const g = buildBustGeo(d);
     g.applyMatrix4(mat(x, roof, z, 0, yaw, 0));
@@ -111,7 +117,14 @@ export function buildRioCard(scene) {
     const fx = Math.sin(yaw), fz = Math.cos(yaw);
     const ix = x + fx * 0.32, iz = z + fz * 0.32, iy = roof + 0.45;
     if (k === 0) { Y.cyl(0xe8c040, ix, iy + 0.08, iz, 0.03, 0.5, 6, Math.PI / 2, yaw); Y.cone(0xe8c040, ix + fx * 0.3, iy + 0.08, iz + fz * 0.3, 0.09, 0.16, 8, Math.PI / 2, yaw); }
-    else if (k === 1) { for (const s of [-1, 1]) Y.sphere(s > 0 ? 0xd8321e : 0x2f8a4a, ix + s * 0.2 * fz, iy + 0.35, iz - s * 0.2 * fx, 0.16, 0.2, 0.16); }
+    else if (k === 1) {
+      // Maracas held up in front of the chest (at head height they read as earmuffs).
+      for (const s of [-1, 1]) {
+        const mx = ix + s * 0.17 * fz, mz = iz - s * 0.17 * fx;
+        Y.sphere(s > 0 ? 0xd8321e : 0x2f8a4a, mx, iy + 0.12, mz, 0.16, 0.2, 0.16);
+        Y.cyl(0x5a3a1a, mx, iy - 0.05, mz, 0.022, 0.18, 5);
+      }
+    }
     else if (k === 2) { Y.sphere(0x8a5a2a, ix, iy - 0.05, iz, 0.5, 0.5, 0.18, 0, yaw, 0.4); Y.box(0x5a3a1a, ix - fz * 0.35, iy + 0.12, iz + fx * 0.35, 0.5, 0.06, 0.06, yaw, 0, 0.4); }
     else if (k === 3) { taper(Y, 0xc0623a, ix + fx * 0.15, roof + 0.35, iz + fz * 0.15, 0.17, 0.12, 0.7); Y.cyl(0xf2e6d0, ix + fx * 0.15, roof + 0.71, iz + fz * 0.15, 0.17, 0.03, 10); }
     else { Y.box(0xd8321e, ix, iy, iz, 0.42, 0.34, 0.2, yaw); for (let p = 0; p < 4; p++) Y.box(0xfafafa, ix - 0.15 * Math.cos(yaw) + p * 0.1 * Math.cos(yaw), iy, iz + 0.15 * Math.sin(yaw) - p * 0.1 * Math.sin(yaw), 0.03, 0.34, 0.22, yaw); }

@@ -1017,9 +1017,11 @@ function bygge(f, W, ctx) {
 
 // Hip-roof dune geometry in local (u along x, v along z): crest at v = 0, height h, base from
 // v = -Dw (windward, gentle) to v = +Dl (lee, steep), ends sloping down over e. Two parts so the
-// sunlit windward side and the shaded slip face get their own sand tones.
+// sunlit windward side and the shaded slip face get their own sand tones. town.js builds the big
+// visual-only dunes beyond the west bound from it too.
+export const DUNE_WIND = 0xf2dca6, DUNE_LEE = 0xd4ac70;
 const _dg = new Map();
-function duneGeo(L, Dw, Dl, h, e) {
+export function duneGeo(L, Dw, Dl, h, e) {
   const key = [L, Dw, Dl, h, e].join(',');
   if (_dg.has(key)) return _dg.get(key);
   const R = L / 2 - e;
@@ -1052,8 +1054,8 @@ function duneGeo(L, Dw, Dl, h, e) {
 function dune(f, lx, lz, phi, L, Dw, Dl, h, e = Math.min(L / 2 - 0.5, h / 0.2)) {
   const cx = f.wx(lx, lz), cz = f.wz(lx, lz), s = Math.sin(phi), c = Math.cos(phi);
   const g = duneGeo(L, Dw, Dl, h, e), m = mat(cx, CURB, cz, 0, phi, 0);
-  f.S.add(g.wind, 0xf2dca6, m);
-  f.S.add(g.lee, 0xd4ac70, m);
+  f.S.add(g.wind, DUNE_WIND, m);
+  f.S.add(g.lee, DUNE_LEE, m);
   const P = (u, v) => [cx + u * c + v * s, cz - u * s + v * c];
   const R = L / 2 - e;
   if (R > 0.01) {

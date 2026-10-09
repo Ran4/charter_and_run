@@ -145,6 +145,21 @@ function gardenLamp(f, glow, lx, lz, h = 2.6) {
   f.circ(lx, lz, 0.12, 99, 'pole');
 }
 
+// Parking sign: a blue P plate over a name strip, both faces, on a post that stops under the
+// plate (Phase 3 r2: one two-line plate shrank the P to the name's size, and the post ran up
+// through both faces).
+function parkingSign(f, lx, lz, name) {
+  f.box(STEEL, lx, C, lz, 0.1, 1.87, 0.1);
+  f.circ(lx, lz, 0.1, 99, 'pole');
+  f.box(STEEL, lx, C + 1.87, lz, 1.26, 1.16, 0.05);
+  const o = { bg: '#2f5a8a', fg: '#fff8e6', border: '#fff8e6' };
+  for (const s of [1, -1]) {
+    const ly = s > 0 ? 0 : PI;
+    f.sign('P', lx, C + 2.6, lz + s * 0.03, 1.2, 0.8, ly, { ...o, scale: 0.9 });
+    f.sign(name, lx, C + 2.05, lz + s * 0.03, 1.2, 0.3, ly, { ...o, scale: 0.62, ppm: 192, borderW: 0.12 });
+  }
+}
+
 // White plastic patio chair facing ly.
 function chair(f, lx, lz, ly = 0) {
   const fx = Math.sin(ly), fz = Math.cos(ly);
@@ -663,9 +678,7 @@ function flamencoLot(f, glow) {
     f.solid(-18, zc, 0.8, d, C + 1.15, 'hedge');
   }
   // Parking sign at the south entrance; lamps along the hedge (the west side stays open for the bus).
-  f.box(STEEL, -18.0, C, 30.9, 0.1, 2.6, 0.1);
-  f.circ(-18.0, 30.9, 0.1, 99, 'pole');
-  f.sign('P\nHOTEL FLAMENCO', -18.0, C + 2.45, 30.9, 1.2, 1.1, 0, { bg: '#2f5a8a', fg: '#fff8e6', border: '#fff8e6', scale: 0.55, double: true });
+  parkingSign(f, -18.0, 30.9, 'HOTEL FLAMENCO');
   for (const z of [-1.2, 14]) gardenLamp(f, glow, -18.9, z, 3.2);
 }
 
@@ -1063,9 +1076,7 @@ function suntripLot(f, glow) {
   for (const x of [17, 19.8, 22.6, 25.4, 28.2]) f.flat(STRIPE, x, 22, 0.12, 5, Y_LINE);
   f.flat(STRIPE, 22.6, 19.5, 11.2, 0.12, Y_LINE);
   f.car('hatch', 18.4, 22, PI, { color: 0xc8202a });
-  f.box(STEEL, 16.6, C, 30.0, 0.1, 2.6, 0.1);
-  f.circ(16.6, 30.0, 0.1, 99, 'pole');
-  f.sign('P\nSUNTRIP', 16.6, C + 2.45, 30.0, 1.2, 1.1, 0, { bg: '#2f5a8a', fg: '#fff8e6', border: '#fff8e6', scale: 0.55, double: true });
+  parkingSign(f, 16.6, 30.0, 'SUNTRIP');
   gardenLamp(f, glow, 30.3, 17, 3.2);
 }
 

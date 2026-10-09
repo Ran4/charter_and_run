@@ -18,6 +18,7 @@ import { placeProp } from './props.js';
 import { Frame, parkedCars, setFrameScene } from './frame.js';
 import { registerIslandLandmarks } from './landmarks-island.js';
 import { BLOCK_BUILDERS } from './blocks/index.js';
+import { duneGeo, DUNE_WIND, DUNE_LEE } from './blocks/nature.js';
 import { mulberry32, pick } from '../util.js';
 
 export { parkedCars };
@@ -809,17 +810,34 @@ function outskirts(S, F) {
     } else if (r() < 0.55) cardon(S, x, z, R(0.8, 1.3, r), r);
     else agave(S, x, z, R(0.8, 1.3, r), r);
   }
+  // West, opposite the dyner blocks (Phase 3 r2): two rows of big hip-roof dunes just beyond the
+  // bound, visual only (no colliders), crests running north-south and their slip faces, in the
+  // dyner lee tone, towards the town, so they read as Maspalomas from the boardwalk and the west
+  // road (the drivable dunes stop at 2.6 m; rounded beige dunes further out fade into the fog).
+  // [z, crest h, length, lee turn from east, set back]: the front row's lee base at x -318 - set
+  // back, the back row's crest at -410 - set back.
+  for (const [row, list] of [[0, [[40, 8, 58, 0.35, 0], [96, 10.5, 70, -0.2, 8], [150, 9, 64, 0.3, 2], [204, 10, 72, -0.15, 10], [256, 7.5, 54, 0.4, 0]]],
+    [1, [[66, 14, 84, 0.15, 0], [124, 17, 92, -0.25, -6], [182, 15, 86, 0.2, 4], [238, 13, 76, -0.1, -4]]]]) {
+    for (const [z, h, L, d, back] of list) {
+      const phi = Math.PI / 2 + d, Dl = 1.5 * h, Dw = 3.2 * h;
+      const x = row ? -410 - back : -318 - back - (L / 2) * Math.abs(Math.sin(d)) - Dl * Math.cos(d);
+      const g = duneGeo(L, Dw, Dl, h, Math.min(L / 2 - 2, 1.8 * h)), m = mat(x, CURB - 0.2, z, 0, phi, 0);
+      S.add(g.wind, DUNE_WIND, m);
+      S.add(g.lee, DUNE_LEE, m);
+    }
+  }
+  const bigDunes = (x, z) => x > -480 && z > 10 && z < 300;
   // West: Maspalomas-style dunes and palm groves beyond the bound, sloping down to the beach.
   for (let k = 0; k < 70; k++) {
     const s = R(20, 60, r), sx = s * R(2.0, 3.2, r), sz = s * R(0.9, 1.4, r), half = Math.max(sx, sz) / 2;
     const x = -R(BOUND + 12 + half, 900 - half, r), z = R(-460, 300, r);
-    if (Math.abs(z + 40) < 8 + half) continue;
+    if (Math.abs(z + 40) < 8 + half || bigDunes(x, z)) continue;
     const ry = R(-0.5, 0.5, r);   // ridges run roughly north-south, as the trade wind piles them
     S.sphere(r() < 0.5 ? C.dune : C.dune2, x, -s * 0.18, z, sz, s * R(0.6, 1.0, r), sx, 0, ry, 0, 12);
   }
   for (let k = 0; k < 40; k++) {
     const x = -R(BOUND + 15, 520, r), z = R(-300, 280, r);
-    if (Math.abs(z + 40) < 14) continue;
+    if (Math.abs(z + 40) < 14 || bigDunes(x, z)) continue;
     palm(S, x, z, R(1.0, 1.5, r), { r, collide: false });
   }
   // South-east headland: red rocks running into the sea.

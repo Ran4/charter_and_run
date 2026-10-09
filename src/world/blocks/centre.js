@@ -623,7 +623,7 @@ function kasbah(f) {
   bz.boxC(WOOD_D, -2.64, 4.75, 0.06, 0.16, 2.4, 0.06, 0, 0, 0.5);
   bz.boxC(WOOD_D, 2.64, 4.75, 0.06, 0.16, 2.4, 0.06, 0, 0, -0.5);
   board(bz, 'CERVECERÍA · ÖL', 0, 4.75, 3.2, 0.8, { bg: '#f4e4b0', fg: '#6a3a1a', scale: 0.6 }); // [N]
-  for (const [fr2, txt, c] of [[face(f, 'E', -7, -3.5), 'PUB LOS AMIGOS', '#ffd23f'], [face(f, 'W', 7, -4.5), 'CLUB 2000', '#ff5ab4']]) { // [N]
+  for (const [fr2, txt, c] of [[face(f, 'E', -7, -3.5), 'TASCA LOS AMIGOS', '#ffd23f'], [face(f, 'W', 7, -4.5), 'CLUB 2000', '#ff5ab4']]) { // [N]
     win(fr2, 0, 4.7, 1.2, 1.6, { arch: true, shutters: GREEN });
     fr2.boxC(DARK, 0, 2.9, 0.08, 3.3, 0.65, 0.06);
     fr2.sign(txt, 0, 2.9, 0.14, 3.2, 0.55, 0, { bg: null, fg: c, border: null, scale: 0.8, stroke: '#1d1426' });
@@ -926,7 +926,9 @@ function plaza(f) {
   for (const [x, z] of [[9.6, 9.6], [-9.6, 9.6], [-9.6, -9.6], [9.6, -9.6]]) lantern(f, x, z, 4.2, PI / 4);
   xmasTree(f, -6.5, -11.6, 6.4);
 
-  // North row: three storeys with a round-arched arcade, wrought-iron balconies, shops.
+  // North row: three storeys with a round-arched arcade, wrought-iron balconies, shops. The west
+  // row stands on its west end (x < -19), so the arcade, the shops, the windows and the café tables
+  // keep to the free span x -19…29 (Phase 3 r2: two arches, the café sign and two tables were in it).
   const NR = [-29, -29, 29, -17];
   rbox(f, WHITE, ...NR, CURB, 9.8 - CURB);
   rbox(f, OCHRE, -29.1, -29.1, 29.1, -16.9, 9.5, 0.35);
@@ -935,22 +937,24 @@ function plaza(f) {
   rooftop(f, -28, -28, 28, -18, 9.85, 9);
   const nr = face(f, 'S', 0, -17);
   const us = [];
-  for (let k = 0; k <= 14; k++) us.push(-28 + k * 4);
+  for (let k = 0; k <= 12; k++) us.push(-18.6 + k * (47.2 / 12));
   arcade(nr, us, 2.4, { top: 4.4, spring: 2.25, al: 0, capC: OCHRE, band: OCHRE });
-  rflat(f, CREAM, -29, -17, 29, -14.6, CURB + 0.025);
-  const shopsN = [[-21, 10, 'CAFETERÍA EL SOL', '#f07a1e', '#fff8e6'], [-9, 8, 'HELADERÍA LA PALMERA', '#f4d0e0', '#c2307a'], [3, 8, 'CORREOS · TELÉGRAFOS', '#f7c31b', '#1d1426'], [14, 8, 'BANCO · CAMBIO', '#2f5a9a', '#ffffff'], [24, 7, 'PELUQUERÍA', '#1e9aa0', '#ffffff']]; // [N]
+  rflat(f, CREAM, -19, -17, 29, -14.6, CURB + 0.025);
+  const mid = (k) => (us[k] + us[k + 1]) / 2;   // each shop's sign centred in an arch
+  const shopsN = [[mid(1), 8, 'CAFETERÍA EL SOL', '#f07a1e', '#fff8e6'], [mid(3), 7.6, 'HELADERÍA LA PALMERA', '#f4d0e0', '#c2307a'], [mid(5), 7.4, 'CORREOS · TELÉGRAFOS', '#f7c31b', '#1d1426'], [mid(7), 7.4, 'BANCO · CAMBIO', '#2f5a9a', '#ffffff'], [mid(10), 7, 'PELUQUERÍA', '#1e9aa0', '#ffffff']]; // [N]
   for (const [u, w, name, bg, fg] of shopsN) {
     shopGlass(nr, u, w, { h: 3.0, glass: GLASS });
     nr.sign(name, u, 3.62, 0.12, w - 1.4, 0.55, 0, { bg, fg, border: null, scale: 0.78 });
   }
-  for (const fl of [5.9, 8.4]) for (let u = -26; u <= 26.01; u += 4) {
-    win(nr, u, fl, 1.2, 1.7, { shutters: Math.round(u / 4) % 2 === 0 ? GREEN : BLUE });
+  for (const fl of [5.9, 8.4]) for (let k = 0; k < 12; k++) {
+    const u = mid(k);
+    win(nr, u, fl, 1.2, 1.7, { shutters: k % 2 === 0 ? GREEN : BLUE });
     nr.box(DARK, u, fl - 1.0, 0.4, 1.9, 0.08, 0.7);
     for (let b = 0; b < 8; b++) nr.box(DARK, u - 0.84 + b * 0.24, fl - 0.92, 0.72, 0.03, 0.85, 0.03, 0, f.F);
     nr.box(DARK, u, fl - 0.07, 0.72, 1.9, 0.05, 0.05, 0, f.F);
     if (RND() < 0.4) for (let p = 0; p < 3; p++) sph(nr, pickR([0xd8321e, BOUG, 0xf04a6a]), u - 0.6 + p * 0.6, fl - 0.8, 0.55, 0.3);
   }
-  for (const [x, z] of [[-25, -11.4], [-20, -11.0], [-15.2, -11.6]]) { cafeTable(f, x, z, { chairs: 3 }); f.prop('parasoll', x, z); }
+  for (const [x, z] of [[-17.0, -11.4], [-13.6, -11.0], [-10.2, -11.6]]) { cafeTable(f, x, z, { chairs: 3 }); f.prop('parasoll', x, z); }
   f.prop('correos', 5.6, -13.4);
   f.prop('papelera', -2.4, -13.6);
 
@@ -1185,7 +1189,7 @@ function kyrka(f) {
     disc(f, 0x9a7a52, x, z, 1.1, CURB + 0.03, 14);
     palm(f, x, z, R(1.0, 1.15), { tinsel: t });
   }
-  standSign(f, 'ES UNA IGLESIA\nDet är en kyrka.', -6.4, 9.6, 1.35, 3.0, 1.2, 0, { bg: '#fbf7ef', fg: '#2f5a9a', backC: 0xd8d0c0, scale: 0.6 }); // [F*] the sisters' language record, relocated
+  standSign(f, 'ES UNA IGLESIA\nDET ÄR EN KYRKA.', -6.4, 9.6, 1.35, 3.0, 1.2, 0, { bg: '#fbf7ef', fg: '#2f5a9a', backC: 0xd8d0c0, scale: 0.6 }); // [F*] the sisters' language record, relocated
   standSign(f, 'MISA 10.00\nGUDSTJÄNST 11.30', 6.4, 9.6, 1.35, 3.0, 1.0, 0, { bg: '#fbf7ef', fg: '#1d1426', backC: 0xd8d0c0, scale: 0.55 }); // [N]
   f.prop('julgran', -4.4, 7.2);
   f.prop('julgran', 4.4, 7.2);
