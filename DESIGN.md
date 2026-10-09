@@ -1379,17 +1379,29 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
   - **Rounding: up to a whole second.** (Phase 1 rounded up to 5 s; a 5 s step alone added up to
     5 s of slack, e.g. vischan 30.6 → 35 = 27 % left, or the gate dash 5.1 → 10 = 50 %.)
   - **Percentiles interpolate** linearly between order statistics (h = (n − 1)·q). The
-    nearest-rank form first used returned the slowest run for n = 4, i.e. a worst case. Random
-    stages get 12 runs on foot (with the final walker) and 20 jeep chases.
+    nearest-rank form first used returned the slowest run for n = 4, i.e. a worst case. A random
+    stage's pool holds at least 24 runs on foot (36 for the balls) and 40 jeep chases, on the final
+    walker / chase autopilot. The default `calibrate` run (`FOOT_RUNS` 4, `JEEP_RUNS` 12,
+    `PLATE_RUNS` 6; about 35 min) is a regression check, not a measurement of a random timer: its
+    samples are too small for that (gate 2's two n = 4 balls samples: timer ranges 28–51 and 31–47) and
+    enter a pool only as one more sample. Raising the defaults to the pool sizes would take a
+    default run past an hour.
   - **One sample does not pin a random stage's timer down** (Phase 3 r1): on the same code the p75
     of 12 ball chases gave timers of 31–38 and 20 jeep chases 35–42. A random stage's shipped timer
-    is the rule applied to a **pooled** sample (its `n` is in the table), and `calibrate` (`CAL
-    CHECK`) / `calibflight` (`CALF CHECK`) print each new sample's 90 % bootstrap range of the timer
-    (`timerRange` in tools/lib.mjs). A shipped timer inside that range agrees with the sample; one
-    outside it means re-measure: pool more runs, and look for a change in the stage or the
-    autopilot. A measurement is only as good as its autopilot: a random stage whose runs split
-    into clusters is first checked for an autopilot artefact (the jeep wedged on houses in Phase 2,
-    the sprit sweeper hid in a row behind three serve stops until Phase 3 r1).
+    is **the rule applied to the pooled samples in `notes/calibration-samples.md`** (the raw-sample
+    ledger: every run's time, the code and autopilot it ran on, the runs left out and why), and
+    `node tools/pool.mjs` re-derives each pool's n, median, p75, timer and range from it. Pool only
+    samples taken on the same stage code and the same autopilot code: a change to either starts a
+    new pool. (Phase 3 r1 repair 1 shipped the balls timer from 72 runs whose logs were lost; the
+    next gate's 20 runs pooled to 41 against the shipped 33, and nobody could check which was
+    right.) `calibrate` (`CAL CHECK`) / `calibflight` (`CALF CHECK`) print each new sample's 90 %
+    bootstrap range of the timer (`timerRange` in tools/lib.mjs). A shipped timer inside that range
+    agrees with the sample; one outside it means re-measure: pool more runs, and look for a change
+    in the stage or the autopilot. A measurement is only as good as its autopilot: a random stage
+    whose runs split into clusters is first checked for an autopilot artefact (the jeep wedged on
+    houses in Phase 2, the sprit sweeper hid in a row behind three serve stops until Phase 3 r1,
+    the walker's straight-line progress rule called a detour round a wall "stuck" until Phase 3 r1
+    repair 2).
   - `rabbits` targets (balls, sheep, flowers) spawn only where the player can run to from the
     `near` landmark (`g.footReach`, §9.2): a sheep used to spawn behind the 2.55 m tomato-field
     wall north of Fataga, 14 m from the player and about 50 m round.
@@ -1412,16 +1424,16 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
 | 8.5 landning [0] round-up | row 16 → José → Berra → Herr Storch (walk, sign lit) | 9.1 (7.6 + 1.5; 2 orders) | **12** (20) | 37 % |
 | 8.5 landning [1] back to 14B | from the far end (Berra) | 3.7 (3.2 + 0.5; 2) | **5** (10) | 36 % |
 | 8.6 buss17 s2 | busBay → 7,1 > 3,1 > 3,4 → flamencoDrive, ÅKSJUKA, stop | 45.0 (median of 10 clean in 4 sets, 44.4–47.0) | **54** (60) | 17 % |
-| 8.7 friskotek s1 | six fleeing beach balls round the friskotek lawn | 26.1 (p75 23.1 of 72 + 3; median 19.5; Phase 3 r1 repair, the walker walks round stopped cars and walking into a car no longer flings: the old walker's 84 runs: median 22.1, p75 25.9 → 37; Phase 2: p75 21.9 of 12 → 32) | **33** (20) | 30 % at p75 |
+| 8.7 friskotek s1 | six fleeing beach balls round the friskotek lawn | 18.6 (p75 15.59 of 44 + 3; median 13.73; Phase 3 r1 repair 2, the fixed walker: no pacing, an A* that reaches round the hotel; pool `walker-r1r2/d9451f8` in `notes/calibration-samples.md`. The old walker: gate 2's 20 runs p75 29.40 → 41, r1 repair's lost 72 runs 23.1 → 33, Phase 2 21.9 of 12 → 32) | **24** (20) | 35 % at p75 |
 | 8.8 asnan s9 | Centro Nórdico lot → 5,3 > 1,3 → vikingbar, SKICK | 15.5 (median of 3 clean; 15.5–15.6) | **19** (20) | 18 % |
 | 8.9 bodega s4 | playa → 4,7 > 4,2 > 0,2 → vischan | 25.8 (median of 8 clean in 3 runs, 25.4–26.8: 25.4 unless traffic held it up 1–1.5 s; Phase 2 gate) | **31** (35) | 17 % |
-| 8.9 bodega s9 jeep | farm gate, road-route chase, rams | 32.5 (p75 of 98 chases in 5 runs of 20 on the fixed chase autopilot, 2 more lost the truck; median 27.8; single runs' p75 28.7–34.2; Phase 3 r1 repair; island-flow's first 40: 30.6 → 37; Phase 2: 34.4 → 42) | **40** (45) | 19 % at p75 |
+| 8.9 bodega s9 jeep | farm gate, road-route chase, rams | 34.45 (p75 of 83 usable chases in 6 samples on the fixed chase autopilot; 4 more lost the truck and 1 wedged, excluded; median 28.38; single samples' p75 29.7–43.0; Phase 3 r1 repair 2, pool `chase-r1if/d9451f8`; the 98 chases behind the earlier 40 (p75 32.5) are lost; island-flow's first 40: 30.6 → 37; Phase 2: 34.4 → 42) | **42** (45) | 18 % at p75 |
 | 8.9 bodega s10 home | wreck → flamencoBack | 7.9 + d/34.4 (fit 4.9 + d/34.4 of 12 clean, 6 spots, + 3 s turn) | **homeTimer**: 17–30 (30 without a wreck) | 17 % of the fit (11–27 % of a spot's own drive) |
-| 8.11 fataga s5 | six fleeing sheep round Fataga | 33.3 (p75 30.3 of 12 + 3; median 25.1) | **42** (25) | 28 % at p75 |
-| 8.12 grisfest s1 | five flowers round Hotel Flamenco (random spawns) | 33.6 (p75 31.1 of 12 + 2.5; median 27.5) | **42** (30) | 26 % at p75 |
-| 8.12 grisfest s4 | ten plate stacks at the dance floor (kick, random spawns) | 35.3 (p75 30.3 of 10 + 5; median 30.3) | **45** (35) | 33 % at p75 |
-| 8.12 grisfest s6 | dance floor → car at the finish → 3,1 > 2,3 → tongatonga | 19.0 (walk 6.4 + 0.5 + drive 12.1; 2) | **23** (30) | 17 % |
-| 8.13 julafton s1 | patio → hire car → Majsan, Fru Storch, Berra, Herr Storch | 72.4 (median of 8 clean in 6 runs, 72.1–74.5; Phase 2 gate) | **87** (80) | 17 % |
+| 8.11 fataga s5 | six fleeing sheep round Fataga | 21.5 (p75 18.53 of 32 + 3; median 15.90; Phase 3 r1 repair 2, the fixed walker, pool `walker-r1r2/d9451f8`; the old walker: 18 runs p75 27.94 → 39, Phase 2 30.3 of 12 → 42) | **27** (25) | 31 % at p75 |
+| 8.12 grisfest s1 | five flowers round Hotel Flamenco (random spawns) | 20.3 (p75 17.79 of 32 + 2.5; median 16.18; Phase 3 r1 repair 2, the fixed walker, pool `walker-r1r2/d9451f8`; the old walker: 8 runs p75 29.51 → 41, Phase 2 31.1 of 12 → 42) | **26** (30) | 32 % at p75 |
+| 8.12 grisfest s4 | ten of the twelve plate stacks at the dance floor (kick; a fixed layout, three per table) | 25.8 (median 20.77 of 20 + 5, 20.77–21.03: the same tour every run; Phase 3 r1 repair 2, the fixed walker; a deterministic stage now, it was timed at the p75 of "random spawns"; the old walker: 30.33 (one run 37.95, pacing) → 45) | **33** (35) | 37 % at the median |
+| 8.12 grisfest s6 | dance floor → car at the finish → 3,1 > 2,3 → tongatonga | 15.8 (walk 3.9 + 0.5 + drive 11.4: walk + drive median 15.28 of 12 clean, + 0.5; Phase 3 r1 repair 2, the fixed walker: 33 m in 3.9 s where the old one took 44–45 m and 6.3–6.5 s; was 19.0 → 23) | **19** (30) | 17 % |
+| 8.13 julafton s1 | patio → hire car → Majsan, Fru Storch, Berra, Herr Storch | 67.4 (median of 11 clean runs: 67.0–68.6, and one held up 14.5 s by traffic, 81.7; Phase 3 r1 repair 2, the fixed walker reaches the hire car in 3.5 s (30 m) where the old one took 8.3–8.4 s (50 m); the drives are unchanged; was 72.4, Phase 2 gate) | **81** (80) | 17 % |
 
   On foot the slack is larger than 20 % by design: the 0.5 s per target is a human's reaction,
   not slack, and × 1.25 is the on-foot rule. The flight's short stages keep more for a sprinter
@@ -1455,7 +1467,15 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
     median 26.9 s, **p75 30.6 s** → timer 37 (was 42); the single runs' p75 were 28.7 and 31.6. The
     gate's and r1 repair's three more runs of 20 on the same code gave 34.2, 34.1 and 30.4: pooled
     over 98 usable chases (2 more lost the truck after 2–3 unsticks, excluded) 9–73 s, median
-    27.8 s, **p75 32.5 s** → timer **40** (90 % range 37–42).
+    27.8 s, **p75 32.5 s** → timer **40** (90 % range 37–42). Those 98 chases' raw times were
+    lost, and 1.2 × 32.5 is 39, not 40. **Phase 3 r1 repair 2**: the timer is now the rule on the
+    83 usable chases kept raw in `notes/calibration-samples.md` (gate 2's 22, two new runs of
+    `JEEP_RUNS=20` and the repair's two default `calibrate` runs, all on the same chase code; 4 lost
+    the truck and 1 wedged, excluded): 8–90 s, median 28.38, **p75 34.45 s** → ceil(1.2 × 34.45 =
+    41.34) = **42** (90 % range 37–48). The p75 is noisy: the six samples of 11–19 alone gave
+    29.7–43.0, and the pool gave 45 at 60 chases and 43 at 72. The tail is the chases where the
+    truck had to back out: 54 with no unstick have a median of 26.0 s, the 8 with two or more
+    47.0 s (max 89.5).
     Phase 2 gate (old autopilot): 35 usable chases of 6–124 s (p75 34.4 → 42) and 15 wedges
     excluded; the long tail was largely time spent stuck. The flee route is random, so the timer
     is at the 75th percentile: a chase that follows the jeep round every block instead of cutting
@@ -1850,7 +1870,7 @@ SunTrip lawn and pool while Berra and Robban heckle; ends with "Hä-pååre!".
 - lasse: "Och nu – friskotek! Men vinden har tagit badbollarna!"  [N]
 
 **Stages:**
-1. `rabbits({ mesh: 'badboll', count: 6, near: 'friskotek', rMin: 6, rMax: 30, timer: 33, text: 'Plocka kulor! Plocka med höger… plocka med vänster!', barLabel: 'KULOR', gotText: 'Plocka med höger!', failText: 'Bollarna rullade ner till stranden.', radio: [['berra', 'Kolla storken!'], ['robban', 'Att de bara orkar, våra storkar…']] })`
+1. `rabbits({ mesh: 'badboll', count: 6, near: 'friskotek', rMin: 6, rMax: 30, timer: 24, text: 'Plocka kulor! Plocka med höger… plocka med vänster!', barLabel: 'KULOR', gotText: 'Plocka med höger!', failText: 'Bollarna rullade ner till stranden.', radio: [['berra', 'Kolla storken!'], ['robban', 'Att de bara orkar, våra storkar…']] })`
    text [F]; gotText [F*]; failText [N]; radio [F](t) ×2 (the research does not say who).
 2. `goto({ to: 'friskotek', radius: 5, text: 'Lämna bollarna till Lasse' })`
 
@@ -1955,7 +1975,7 @@ Hitch-hike logic (judge fix): Stig refuses the dirt road (åksjuka), drops them,
    stage 8.)
 8. `getInCar({ missionCar: 'grisbilFollow', any: false, passenger: 'berra', rider: 'robban', text: 'Grisbonden lånar ut grisbilen – hoppa in!', say: ['grisbonde', 'Ta bilen, señor. Ställ den vid hotellet – jag hämtar den på torsdag.'] })`  [N]
    (stage init unseats the `grisbonde` driver to the roadside.)
-9. `destroy({ type: 'guardia', carName: 'guardiaJeep', driver: 'guardia', spawn: { lane: [[3, 1], [3, 2]], t: 25 }, cruise: 20, damageScale: 4, playerDamageScale: 0.5, noExplode: true, timer: 40, lockMeter: true, barLabel: 'JEEPEN', text: 'Guardia Civil såg grisarna – stoppa jeepen innan den hämtar förstärkning!', failText: 'Jeepen hann fram till kasernen.', checkpoint: true, retryAt: 'grisfestGate', retryCar: { at: 'grisfestGate', type: 'grisbil', name: 'grisbilFollow', passenger: 'berra', rider: 'robban' } })`  [N] (invented, §1.6)
+9. `destroy({ type: 'guardia', carName: 'guardiaJeep', driver: 'guardia', spawn: { lane: [[3, 1], [3, 2]], t: 25 }, cruise: 20, damageScale: 4, playerDamageScale: 0.5, noExplode: true, timer: 42, lockMeter: true, barLabel: 'JEEPEN', text: 'Guardia Civil såg grisarna – stoppa jeepen innan den hämtar förstärkning!', failText: 'Jeepen hann fram till kasernen.', checkpoint: true, retryAt: 'grisfestGate', retryCar: { at: 'grisfestGate', type: 'grisbil', name: 'grisbilFollow', passenger: 'berra', rider: 'robban' } })`  [N] (invented, §1.6)
    - The jeep drives away (flee AI); wrecked, it stops in steam and two officers climb out shaking
      their fists. It is a mission target (no SKANDAL for ramming it; `lockMeter`).
    - Checkpoint (Phase 3): a failed chase or drive home (stage 10) retries the chase from the farm
@@ -2045,7 +2065,7 @@ the tourists' pity into a sheep stampede you have to round up.
    round), Mamma facing the camera and the tourists either side of her, half turned to her. With
    the tourists at `fataga`, 13 m away, the two-shot stood 24 m out inside a village house, and a
    two-shot at the stall put the sisters in front of Mamma from one side.)
-5. `rabbits({ mesh: 'faar', count: 6, near: 'fataga', rMin: 10, rMax: 35, timer: 42, text: 'Fånga fåren åt Josés pappa', barLabel: 'FÅR', gotText: 'Bäää!', failText: 'Fåren sprang hela vägen till Maspalomas.', checkpoint: true, retryAt: { x: -240, z: -208.5, yaw: 0 } })`  [N]
+5. `rabbits({ mesh: 'faar', count: 6, near: 'fataga', rMin: 10, rMax: 35, timer: 27, text: 'Fånga fåren åt Josés pappa', barLabel: 'FÅR', gotText: 'Bäää!', failText: 'Fåren sprang hela vägen till Maspalomas.', checkpoint: true, retryAt: { x: -240, z: -208.5, yaw: 0 } })`  [N]
    (Phase 3: a checkpoint. The retry is on foot by the bus stop: `approachSpot` puts the player on
    the pavement at (−240, −207) facing the village, where the calibrate starts the chase
    (`fatagaBus` itself is at the kerb of the lane). It used to replay the car, the pickup, the bus
@@ -2090,7 +2110,7 @@ banner).
 - ole: "Fikser du ikke damer på grisefesten, da er det slutt. I kveld setter vi inn støtet!"  [F]
 
 **Stages:**
-1. `rabbits({ mesh: 'blomma', flee: false, count: 5, near: 'flamenco', rMin: 8, rMax: 40, timer: 42, text: 'Plocka blomster till Siv och Maj-Britt', barLabel: 'BLOMSTER', gotText: 'Blomster!', failText: 'Blommorna vissnade.', radio: [['ole', 'Man må skifte vannet hver fjerde time og gi dem en hodepinetablett.']] })`  [N] · radio [F*]
+1. `rabbits({ mesh: 'blomma', flee: false, count: 5, near: 'flamenco', rMin: 8, rMax: 40, timer: 26, text: 'Plocka blomster till Siv och Maj-Britt', barLabel: 'BLOMSTER', gotText: 'Blomster!', failText: 'Blommorna vissnade.', radio: [['ole', 'Man må skifte vannet hver fjerde time og gi dem en hodepinetablett.']] })`  [N] · radio [F*]
 2. `getInCar({ text: 'Hoppa in i en bil – det börjar skymma', startCue: { sky: 'sunset', music: 'vals' } })`  [N]
 3. `race({ who: 'gabbe', type: 'bus', carName: 'nattbuss', cruise: 31, oppSpec: { maxSpeed: 35, accel: 12, steer: 0.9 }, playerPassenger: 'ole', start: { lane: [[3, 3], [4, 3]], t: 14 }, checkpoints: [[4, 3], [4, 2], [4, 1], [3, 1]], finish: { x: -80, z: -200 }, text: 'Bussen till grisfesten går nu – kom först!', radio: [['gabbe', 'Grisfestbussen går nu – sista man bjuder på sangrian!']], checkpoint: true, startCue: { sky: 'night' } })`  [N] · radio [N] (§1.5: the song already has its one spoken line in mission 7)
    (start: behind Hotel Flamenco (z −40) heading east past Pepes Bodega, 14 m past the junction
@@ -2104,7 +2124,7 @@ banner).
    it, noses level, `spot − r·2·LANE` with `r = (−cos yaw, sin yaw)`, i.e. side by side across the
    road, never offset along world z (§9.2). Fail text = the kind's default `${name} vann!` →
    "Gabbe vann!".)
-4. `smash({ type: 'tallrikar', area: { lm: 'dansgolv', r: 22 }, count: 10, timer: 45, lockMeter: true, onFoot: true, text: 'Porslinskross! Sparka sönder tallrikarna (J) medan bandet spelar', barLabel: 'TALLRIKAR', failText: 'Bandet slutade spela.', radio: [['pax', 'Vad skickliga de är!']], checkpoint: true, retryAt: 'dansgolv', retryCar: { at: { x: -86, z: -202.75, yaw: -π/2 }, park: true } })`  [N] · radio [F](t)
+4. `smash({ type: 'tallrikar', area: { lm: 'dansgolv', r: 22 }, count: 10, timer: 33, lockMeter: true, onFoot: true, text: 'Porslinskross! Sparka sönder tallrikarna (J) medan bandet spelar', barLabel: 'TALLRIKAR', failText: 'Bandet slutade spela.', radio: [['pax', 'Vad skickliga de är!']], checkpoint: true, retryAt: 'dansgolv', retryCar: { at: { x: -86, z: -202.75, yaw: -π/2 }, park: true } })`  [N] · radio [F](t)
    (Phase 3: the text names the kick; only a kick or a stomp breaks a stack, walking into one does nothing.)
 5. `scene({ place: { majsan: ['dansgolv', 1.2, 1.6, -π/2], siv: ['dansgolv', 2.8, 1.9, -π/2], ole: ['dansgolv', -1.8, 1.9, π/2], stig: ['dansgolv', -0.2, 1.6, π/2] }, frame: ['majsan', 'stig'], checkpoint: true, retryAt: 'dansgolv', retryCar: { at: { x: -86, z: -202.75, yaw: -π/2 }, park: true }, startCue: { outfit: { who: 'ole', name: 'gris' } }, lines: [...] })`
    (Ole's `gris` outfit goes on the stage's `startCue`, not on a line, so a retry re-applies it, §10.4;
@@ -2119,7 +2139,7 @@ banner).
    - siv: "Nu blev hon uppbjuden."  [F](t)
    - ole: "Heia Norge!"  [F]  {anim: {who: 'ole', flag: 'dance', secs: 4}, applause: 2}
    - siv: "Majsan, ta med dig giraffen så går vi på Tonga Tonga."  [F]
-6. `goto({ to: 'tongatonga', radius: 10, inCar: true, timer: 23, text: 'Till Tonga Tonga!', checkpoint: true, retryAt: 'dansgolv', retryCar: { at: { x: -86, z: -202.75, yaw: -π/2 }, park: true } })`  [N]
+6. `goto({ to: 'tongatonga', radius: 10, inCar: true, timer: 19, text: 'Till Tonga Tonga!', checkpoint: true, retryAt: 'dansgolv', retryCar: { at: { x: -86, z: -202.75, yaw: -π/2 }, park: true } })`  [N]
    (Phase 3: its own checkpoint, so a failed drive does not replay the dance.)
 7. `scene({ place: { ole: ['tongatonga', -2.2, 3.2, 0], majsan: ['tongatonga', 2.0, 3.0, 0], siv: ['tongatonga', 3.0, 3.4, 0], robban: ['tongatonga', -0.8, 1.2, -π/2], berra: ['tongaLot', 0, 0], stig: ['tongatonga', 0.8, 1.2, π/2] }, anim: { berra: 'slump' }, cam: { at: 'tongatonga', dist: 6, height: 2.6 }, lines: [['ole', 'Samba er fine greier!', { music: 'samba' }], ['robban', 'Kan du hjälpa mig bära hem Berra?'], ['stig', 'Vilket snack! "Bärra hem Berra!"']] })`  [F] ×3
 8. `pickup({ who: 'berra', name: 'Berra', at: 'tongaLot', rider: 'robban', hello: '…zzz' })`  [N]
@@ -2170,7 +2190,7 @@ then every running gag pays off by the pool before the fear-of-flying arc closes
 `cost: 100` charged after the intro (Ole pays if short).
 
 **Stages:**
-1. `collect({ who: ['herrStorch', 'fruStorch', 'berra', 'majsan'], findAt: { herrStorch: ['playa', 0, 0], fruStorch: ['kyrka', 0, 2], berra: ['bodega', -2.0, 0.5], majsan: ['marknad', 1, 1] }, sendTo: { herrStorch: ['flamencoPool', 4, 2], fruStorch: ['flamencoPool', 5, 2], berra: ['flamencoBar', 0, 0], majsan: ['flamencoPool', -2, 0] }, inCar: true, radius: 1.6, carRadius: 4.0, timer: 87, text: 'Samla ihop gästerna till julfesten – ta bilen!', barLabel: 'GÄSTER', failText: 'Julfesten började utan dem.', lines: {...} })`  [N]
+1. `collect({ who: ['herrStorch', 'fruStorch', 'berra', 'majsan'], findAt: { herrStorch: ['playa', 0, 0], fruStorch: ['kyrka', 0, 2], berra: ['bodega', -2.0, 0.5], majsan: ['marknad', 1, 1] }, sendTo: { herrStorch: ['flamencoPool', 4, 2], fruStorch: ['flamencoPool', 5, 2], berra: ['flamencoBar', 0, 0], majsan: ['flamencoPool', -2, 0] }, inCar: true, radius: 1.6, carRadius: 4.0, timer: 81, text: 'Samla ihop gästerna till julfesten – ta bilen!', barLabel: 'GÄSTER', failText: 'Julfesten började utan dem.', lines: {...} })`  [N]
    (Phase 3: the text says to take the car. The timer is measured walking to the hire car and
    driving; a first-timer ran on foot to Berra, 35 m away, and back.)
    - herrStorch: stig "Herr Storch! Julfesten!" [N] · herrStorch "Jag ska bara filma lite till." [N]
@@ -2974,6 +2994,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `index.html`, `style.css` | edit | **H** | §11, §13.4 |
 | `tools/shot.mjs`, `tools/lib.mjs`, `tools/scenarios/core.mjs`, `tools/story/common.mjs` | edit/new | none (Phase 2) | harness, `T` API, core scenarios `start walk aerial drive traffic title talk missions views transition` + `levels` (boots into both levels) + `api` (Game API smoke test) |
 | `tools/fixtures/full-missions.js`, `tools/scenarios/kinds.mjs` | new (Phase 0b) | none (Phase 2) | the literal §8 missions as a test fixture; scenarios `fullstory` (plays them per §16.3) and `kinds` (option checks) |
+| `notes/calibration-samples.md`, `tools/pool.mjs` | new (Phase 3 r1 repair 2) | none | the raw-sample ledger of the random stages' timers (every run's time, code, autopilot version, exclusions) and the tool that pools it by stage and pool and prints n, median, p75, T_ref, timer and the 90 % range (§8 "Timers and difficulty") |
 | `src/world/blocks/stub.js` | **deleted** (Phase 2 docs step) | — | was `stubBlock()`, the shared placeholder look of the Phase 0 stub block builders; unused once every block had its real builder |
 | `tools/scenarios/flight.mjs` | new | **A1** | gate, cabin, trolley, turbulence, panic |
 | `tools/scenarios/scenery.mjs` | new | **A2** | phases (one shot per flight phase from inside and outside) |
@@ -3844,7 +3865,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `sceneryPeek`, `flightseq`, `dc8` [A2] | outside views of the flight scenery; the takeoff→cruise chain driven through `cabin.setPhase`; the parked airframe |
 | `propsheet`, `riocard`, `islandtour`, `islandstats` [B] | every §6.8 prop in a row; the Rio set from `rioCam`; streets/outskirts/sea tour; triangle budget |
 | `endcard` [Phase 2] | `game.playEndCard()`: Stig on the Rio deck in `rio`, Ole in `rio`, sunset, letterbox, frozen input, `RIO…?`; then back within 2.5 m of `flamencoPool` in island clothes, free roam, `NUEVA ESTOCOLMO KLARAT!` |
-| `calibrate` [G, Phase 2] | island timer calibration and difficulty checks (§8 "Timers and difficulty"): a headless autopilot in the player's car (env `CAL=id,…` from buss17 asnan vischan jeep home flowers plates tonga race guests balls sheep follow pursuit haggle; `RUNS` = 3, `JEEP_RUNS` = 12, `HOME_RUNS` = 2 (per spot), `FOOT_RUNS` = 4, `RACE_RUNS` = 2 (+ 2 with one crash; every car-car impact of the player's car or the bus is logged, and a run whose car was lost counts as lost), `PURSUIT_RUNS` = 3, `RACE_SWEEP`, `JEEP`, `RACE_CAR`); medians of clean runs / 75th percentiles, on-foot A* walker (round static solids and stopped cars), crash injection; `CAL CHECK` compares each measured timer with the shipped one and, for a random stage (jeep, balls, sheep, flowers, plates), says whether the shipped timer lies inside this sample's 90 % bootstrap range of the timer (`timerRange` in `tools/lib.mjs`; §8 "Timers and difficulty"); checks: deterministic shipped timers ≥ T_ref, a clean race wins and a crashed one loses, a clean SKANDAL escape is possible, follows stay in band; prints the timer table. `story` supports `SHOTS=1` (key-scene screenshots) |
+| `calibrate` [G, Phase 2] | island timer calibration and difficulty checks (§8 "Timers and difficulty"): a headless autopilot in the player's car (env `CAL=id,…` from buss17 asnan vischan jeep home flowers plates tonga race guests balls sheep follow pursuit haggle; `RUNS` = 3, `JEEP_RUNS` = 12, `HOME_RUNS` = 2 (per spot), `FOOT_RUNS` = 4 (balls, sheep, flowers), `PLATE_RUNS` = 6, `RACE_RUNS` = 2 (+ 2 with one crash; every car-car impact of the player's car or the bus is logged, and a run whose car was lost counts as lost), `PURSUIT_RUNS` = 3, `RACE_SWEEP`, `JEEP`, `RACE_CAR`); medians of clean runs (the plates' fixed layout too) / 75th percentiles, on-foot A* walker (round static solids and stopped cars; it tracks its place on the route, measures progress along it (12 s without 1 m of it, or 30 s without getting 1 m closer along the route, is stuck and fails the run), re-plans at once on a new target, and backs out along its trail from a spot the grid cannot leave; walk results log `falls` and `wedges`), crash injection; the default run is a regression check, and a random stage's timer comes from its pool in `notes/calibration-samples.md` (`node tools/pool.mjs`); `CAL CHECK` compares each measured timer with the shipped one and, for a random stage (jeep, balls, sheep, flowers), says whether the shipped timer lies inside this sample's 90 % bootstrap range of the timer (`timerRange` in `tools/lib.mjs`; §8 "Timers and difficulty"); checks: deterministic shipped timers ≥ T_ref, a clean race wins and a crashed one loses, a clean SKANDAL escape is possible, follows stay in band; prints the timer table. `story` supports `SHOTS=1` (key-scene screenshots) |
 | `calibflight` [Phase 2] | flight timer calibration and FLYGRÄDSLA balance (env `FLIGHT=gate/sprint,…`, `SPRIT_RUNS` = 5, `DEBUG_SPRIT=1` traces the player, the trolley and the bottles twice a second): careful vs careless autopilots at timeScale 1; the sprit sweeper waits for bottles in the aisle clear of the trolley (2.4 m moving, 1.7 m stopped), steps into a free row only in turbulence and holds Space only while it shakes (not through the 1.5 s warning; Phase 3 r2); `CALF CHECK sprit[0]` compares with the shipped timer and the sample's 90 % bootstrap range; checks that careful players never panic (and the sprit sweeper is never bowled over and never falls) and careless ones do in missions 1, 2 and 5 |
 | `perf` [Phase 2] | frame rate (2 s of play) plus the mean `game.update` ms and the GPU-synced `renderer.render` ms in the cabin in every phase (seated in 14B and from the aisle), at the gate, and on the island (spawn, plaza, marknad, kasbah, a drive through the centre, the high view); fails below 45 fps or above 1000/45 ms per frame. Phase 2: worst cabin 7.2 ms, worst island 9.0 ms (marknad, ~810 calls, 3.3 M triangles), all at 60 fps |
 
@@ -4470,6 +4491,56 @@ the fixer's group.
   with only 1 knock-over in the 12 that counted them: most of the time went on running into and
   round parked cars the walker did not plan for (the friskotek lawn borders the SunTrip car park).
   That, not the bench, was the "drift" world-town reported.
+- r1 repair 2: the raw-sample ledger `notes/calibration-samples.md` and `tools/pool.mjs` (§8
+  "Timers and difficulty", §14 file table, README, CLAUDE.md). Every run of a random stage goes in
+  raw (date, code, autopilot version, env, every time, every exclusion and why); a stage's timer is
+  the rule on its current pool, and pools only join samples on the same stage and autopilot code.
+  `node tools/pool.mjs` re-derives n, median, p75, T_ref, the timer and the 90 % range (it
+  reproduces gate 2's balls pool: 20 runs, p75 29.40 → 41, 34–47). Seeded with gate 2's samples;
+  repair 1's, gate 1's, island-flow's and Phase 2's runs are listed as lost, not poolable.
+- r1 repair 2: the `calibrate` on-foot walker (`walker-r1r2`; §16.4). Gate 2's B1 (the sheep
+  walker gave up at the tomato-field wall, `calibrate` FAIL) did not recur in 24 old-walker runs
+  and re-enactments; the traces showed three defects, all fixed: (1) **pacing**: the route index
+  advanced only within 0.7 m of a cell, so it fell behind and the walker ran back and forth round
+  its aim window's end for 2–3 s at a time (about 40 % of a traced sheep chase; plates walked
+  200 m for a 147 m tour); now it moves on to the nearest next cell it can walk straight to;
+  (2) **progress was the straight line to the target**, so a detour round a wall counted as
+  stalling; now progress is measured along the route (12 s without 1 m of it, or 30 s without
+  getting 1 m closer along the route, is stuck; the 2 s stall re-plan uses the same measure);
+  (3) **`footPath`'s A* failed round large obstacles**: its Float32Array costs let equal paths
+  "better" each other by rounding, cells were expanded 3–4 times, and from Hotel Flamenco's north
+  side to the pool deck 160000 expansions ran out and the part path led into the hotel's back wall
+  (two flowers runs stuck); now float64 costs and a real improvement only (4057 expansions), exact
+  √2 diagonals, jumps ordered by their full cost, stale entries not counted, and a walker in a spot
+  the grid cannot leave backs out along its trail. It also re-plans at once on a new target and
+  keeps a target until another is 1 m nearer. A better player, so faster: its samples start new
+  pools, and the old walker's (gate 2, Phase 2, repair 1) do not pool with them.
+- r1 repair 2: on-foot timers from the fixed walker's pools (§8 table, §8.7, §8.11, §8.12,
+  island.js, fixture): friskotek balls **24** (was 33; p75 15.59 of 44 + 3; range 22–25), fataga
+  sheep **27** (was 42; p75 18.53 of 32 + 3; range 25–31), grisfest flowers **26** (was 42; p75
+  17.79 of 32 + 2.5; range 25–28), grisfest plates **33** (was 45; median 20.77 of 20 + 5). The
+  pools hold the three 12-run measurement batches (balls; two for sheep and flowers; one 8-run
+  batch for the plates) and the two default check runs of this repair.
+- r1 repair 2: the plates are a deterministic stage in `calibrate` (a fixed layout of 12 stacks;
+  §8 table, §16.4): T_ref = the median + 0.5 s × 10, `PLATE_RUNS` (default 6), no bootstrap range,
+  checked like a deterministic stage (shipped ≥ T_ref). It was the p75 of 2 runs, which a single
+  37.9 s run could fail.
+- r1 repair 2: jeep timer **42** (was 40; §8 table, "Races and chases", §8.9, island.js,
+  fixture): 83 usable chases kept raw (gate 2's 22, two new `JEEP_RUNS=20` runs and the two default
+  `calibrate` check runs, all on the same chase code), p75 34.45 → ceil(41.34) = 42 (range 37–48).
+  The 98 chases behind 40 were lost, and "ceil(1.2 × 32.5) = 40" was 39 at the shown precision
+  (gate 2, N1).
+- r1 repair 2: the default `calibrate` run (`FOOT_RUNS` 4, `JEEP_RUNS` 12, `PLATE_RUNS` 6, about
+  35 min) is a regression check, not the measurement of a random timer (§8, §16.4, calibrate.mjs
+  header; gate 2 N5): the pools hold at least 24 runs on foot (36 for the balls) and 40 jeep chases.
+- r1 repair 2: the fixed walker also walks the on-foot legs of two deterministic stages, so they
+  were re-measured (`CAL=tonga,guests RUNS=9`, 8 runs each; §8 table, §8.12, §8.13, island.js,
+  fixture): grisfest Tonga **19** (was 23; walk 3.9 s for 33 m instead of 6.3–6.5 s for 44–45 m,
+  + 0.5 + drive 11.4: T_ref 15.8, median of 12 clean with the check runs) and julafton guests
+  **81** (was 87; the walk to the hire car 3.5 s for 30 m instead of 8.3–8.4 s for 50 m, every
+  drive leg unchanged: T_ref 67.4, median of 11 clean with the check runs). The default run's 2 guests runs (67.1, and 81.7 with a 14.5 s
+  traffic hold-up) and buss17's (49.7 with a 7.1 s hold-up, 44.8; the route is unchanged) show why
+  a deterministic drive is measured over more than two runs.
 - r2 spine: a frozen player car (dialogue, fail screen, `frozenT`, PANIK, `freezeCar`) brakes only
   while rolling forward and holds on the handbrake (§14.3, under `game.frozenT`): brake 1 read as
   reverse below 0.5 m/s, and every car but the bus crept back to −0.35 × top speed (the night race

@@ -240,6 +240,7 @@ node tools/shot.mjs smash foot propsheet riocard endcard islandstats islandtour
 node tools/shot.mjs castsheet cars heads ui skandal perf
 node tools/shot.mjs fullstory kinds      # the literal §8 missions and the stage-kind checks
 node tools/shot.mjs calibrate calibflight  # timer and FLYGRÄDSLA calibration (slow; see DESIGN §8, §16.4)
+node tools/pool.mjs                      # random-stage timers from the raw runs in notes/calibration-samples.md
 ```
 
 `make test` runs `story`. Test mode is `?test=1` (no title, no pointer lock, dialogue

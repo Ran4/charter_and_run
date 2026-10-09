@@ -2,9 +2,14 @@
 // difficulty"). Written by WP-G, reworked by the Phase 2 balance pass (§15.3 step 5).
 //   PORT=… OUT=… node tools/shot.mjs calibrate          (all cases)
 //   CAL=buss17,race node tools/shot.mjs calibrate        (a subset; ids below)
-// Env: RUNS (drive runs per deterministic stage, default 3), JEEP_RUNS (12), FOOT_RUNS (4),
-// HOME_RUNS (2 per spot), RACE_RUNS (2 clean + 2 with one crash), PURSUIT_RUNS (3 per driver), JEEP=cruise:damageScale,
-// RACE_SWEEP='cruise:maxSpeed:accel:steer;…', RACE_CAR (sedan).
+// Env: RUNS (drive runs per deterministic stage, default 3), JEEP_RUNS (12), FOOT_RUNS (4: balls,
+// sheep, flowers), PLATE_RUNS (6), HOME_RUNS (2 per spot), RACE_RUNS (2 clean + 2 with one crash),
+// PURSUIT_RUNS (3 per driver), JEEP=cruise:damageScale, RACE_SWEEP='cruise:maxSpeed:accel:steer;…',
+// RACE_CAR (sedan).
+// The default run is a regression check, not a measurement of a random stage's timer: its jeep,
+// balls, sheep and flowers samples are too small to pin a timer down (§8). Those timers come from
+// pooled samples kept raw in notes/calibration-samples.md (`node tools/pool.mjs`); measure with
+// e.g. CAL=balls FOOT_RUNS=12 and add the `… run k` times there.
 // A headless autopilot drives the PLAYER's car (PLAYER_BOOST 1.2, timeScale 1 via &ts=1, traffic
 // on) by writing playerCar.ctrl every fixed step (it sits in car.ai, which main.js steps right after
 // the input write): lane-following pure pursuit over the road graph, full throttle, braking before
@@ -14,10 +19,11 @@
 // when a smash target is in reach).
 // Each timed stage is entered directly (runner.stageI + startStage) with the player placed where a
 // human would be when that stage starts, so a measurement never depends on earlier stages.
-// Statistics (§8): a deterministic drive's T_ref is the MEDIAN of its clean runs (no impact; within
-// the ÅKSJUKA limits for `smooth`); random stages (fleeing targets, random spawns, the jeep's flee
-// route) use the 75th percentile. On foot, T_ref = measured + 0.5 s per target (a human's reaction
-// and aim). timer = T_ref × 1.2 (drives) / × 1.25 (on foot), rounded up to a whole second.
+// Statistics (§8): a deterministic stage's T_ref is the MEDIAN of its clean runs (no impact; within
+// the ÅKSJUKA limits for `smooth`; the plates' fixed layout too); random stages (fleeing targets,
+// random spawns, the jeep's flee route) use the 75th percentile. On foot, T_ref = measured + 0.5 s
+// per target (a human's reaction and aim). timer = T_ref × 1.2 (drives) / × 1.25 (on foot),
+// rounded up to a whole second.
 // The printed table (`[t] CAL …` lines and the final summary) is DESIGN §8's timer table.
 import { check, pct, timerRange } from '../lib.mjs';
 
@@ -612,7 +618,7 @@ export async function installAutopilot() {
     const x0 = Math.min(sx, tx) - pad, z0 = Math.min(sz, tz) - pad;
     const W = Math.ceil((Math.max(sx, tx) + pad - x0) / S), H = Math.ceil((Math.max(sz, tz) + pad - z0) / S);
     if (W * H > 90000) return null;
-    const hgt = new Float32Array(W * H).fill(NaN), cost = new Float32Array(W * H).fill(Infinity), from = new Int32Array(W * H).fill(-1);
+    const hgt = new Float32Array(W * H).fill(NaN), cost = new Float64Array(W * H).fill(Infinity), from = new Int32Array(W * H).fill(-1);
     const cx = (i) => x0 + (i + 0.5) * S, cz = (j) => z0 + (j + 0.5) * S;
     // Can a body standing at height h move into cell (i, j)? Returns the new height or NaN.
     const enter = (i, j, h, st = step) => {
@@ -628,15 +634,20 @@ export async function installAutopilot() {
     const ti = clamp(Math.floor((tx - x0) / S), 0, W - 1), tj = clamp(Math.floor((tz - z0) / S), 0, H - 1);
     const s0 = sj * W + si, t0 = tj * W + ti;
     hgt[s0] = sy; cost[s0] = 0;
-    // Binary heap on f = g + h.
-    const heap = [], push = (n, f) => { heap.push([f, n]); let k = heap.length - 1; while (k > 0) { const p = (k - 1) >> 1; if (heap[p][0] <= heap[k][0]) break; [heap[p], heap[k]] = [heap[k], heap[p]]; k = p; } };
+    // Binary heap on f = g + h; each entry keeps the cost its cell had when pushed.
+    const heap = [], push = (n, f) => { heap.push([f, n, cost[n]]); let k = heap.length - 1; while (k > 0) { const p = (k - 1) >> 1; if (heap[p][0] <= heap[k][0]) break; [heap[p], heap[k]] = [heap[k], heap[p]]; k = p; } };
     const pop = () => { const top = heap[0], last = heap.pop(); if (heap.length) { heap[0] = last; let k = 0; for (;;) { const l = 2 * k + 1, r = l + 1; let m = k; if (l < heap.length && heap[l][0] < heap[m][0]) m = l; if (r < heap.length && heap[r][0] < heap[m][0]) m = r; if (m === k) break; [heap[m], heap[k]] = [heap[k], heap[m]]; k = m; } } return top; };
     push(s0, 0);
-    const D = [[1, 0, 1], [-1, 0, 1], [0, 1, 1], [0, -1, 1], [1, 1, 1.414], [1, -1, 1.414], [-1, 1, 1.414], [-1, -1, 1.414]];
-    let best = s0, bestH = Infinity, n = 0, reached = false;
+    // A diagonal step costs exactly √2 (at 1.414 the straight-line heuristic could fall by more
+    // than a step cost).
+    const R2 = Math.SQRT2, D = [[1, 0, 1], [-1, 0, 1], [0, 1, 1], [0, -1, 1], [1, 1, R2], [1, -1, R2], [-1, 1, R2], [-1, -1, R2]];
+    let best = s0, bestH = Infinity, n = 0, reached = false, pushes = 0;
     const maxN = pad > 14 ? 160000 : 60000;
-    while (heap.length && n++ < maxN) {
-      const [, c] = pop();
+    // The cap counts fresh expansions only: a stale entry (its cell got cheaper after it was
+    // pushed) repeats the fresh entry's work.
+    while (heap.length && n < maxN) {
+      const [, c, gc] = pop();
+      if (gc === cost[c]) n++;
       const ci = c % W, cj = (c / W) | 0;
       const hh = Math.hypot(ci - ti, cj - tj);
       if (hh < bestH) { bestH = hh; best = c; }
@@ -645,14 +656,21 @@ export async function installAutopilot() {
         const ni = ci + di, nj = cj + dj;
         if (ni < 0 || nj < 0 || ni >= W || nj >= H) continue;
         const nI = nj * W + ni;
+        // Costs are float64 and only a real improvement counts. In a Float32Array two equal grid
+        // paths whose float64 sums differ in the last bits rounded apart, one "bettered" the other
+        // and every cell was expanded 3–4 times: round Hotel Flamenco (its north side to the pool
+        // deck) 160000 expansions of a 48000-cell box ran out before the target, and the part path
+        // to the cell nearest it led into the hotel's back wall (two `calibrate` flowers runs stuck,
+        // Phase 3 r1 repair 2). Now 4057 expansions.
         const g2 = cost[c] + w;
-        if (g2 >= cost[nI]) continue;
+        if (g2 >= cost[nI] - 1e-9) continue;
         let h2 = enter(ni, nj, hgt[c]), jumped = 0, g3 = g2;
-        if (Number.isNaN(h2) && jump && !(di && dj)) { h2 = enter(ni, nj, hgt[c], jump); jumped = 1; g3 = g2 + 3; if (g3 >= cost[nI]) continue; }
+        if (Number.isNaN(h2) && jump && !(di && dj)) { h2 = enter(ni, nj, hgt[c], jump); jumped = 1; g3 = g2 + 3; if (g3 >= cost[nI] - 1e-9) continue; }
         if (Number.isNaN(h2)) continue;
         if (di && dj && (Number.isNaN(enter(ci + di, cj, hgt[c])) || Number.isNaN(enter(ci, cj + dj, hgt[c])))) continue;
         cost[nI] = g3; hgt[nI] = h2; from[nI] = c; jmp[nI] = jumped;
-        push(nI, g2 + Math.hypot(ni - ti, nj - tj));
+        // Ordered by the cost it got, a jump's +3 included.
+        push(nI, g3 + Math.hypot(ni - ti, nj - tj)); pushes++;
       }
     }
     const out = [];
@@ -660,6 +678,9 @@ export async function installAutopilot() {
     out.reverse();
     out.push({ x: tx, z: tz });
     out.reached = reached;
+    // Wedged: not one cell next to the start can be entered (the body fits where the grid's
+    // clearance at the cell centres does not).
+    out.boxed = pushes === 0;
     return out;
   }
   const queryBlocks = C.queryBlocks;
@@ -672,12 +693,14 @@ export async function installAutopilot() {
   };
   ap.walk = (spec) => {
     // spec.kind: 'list' (nearest alive entry of stage.list) | 'point' {x, z, r}; spec.kick
-    ap.foot = { spec, t0: ap.t, tEnd: null, stage0: g.missions.stageI, path: 0, px: g.player.x, pz: g.player.z, kicks: 0, route: null, replanT: 0, plans: 0, falls: 0, wasUp: true };
+    ap.foot = { spec, t0: ap.t, tEnd: null, stage0: g.missions.stageI, path: 0, px: g.player.x, pz: g.player.z, kicks: 0, route: null, replanT: 0, plans: 0, falls: 0, wasUp: true,
+      prog: 0, progMark: 0, progT: ap.t, bestTot: Infinity, bestTotT: ap.t, stallT: -Infinity, wedges: 0, trail: [] };
     ap.active = null;
     return true;
   };
-  // `falls`: times the walker was knocked over (flung) on the way, by a car or anything else.
-  ap.walkResult = () => { const f = ap.foot || ap.lastFoot; return f ? { t: f.tEnd != null ? f.tEnd - f.t0 : null, walked: Math.round(f.path), kicks: f.kicks, plans: f.plans, falls: f.falls, stuck: f.stuck } : null; };
+  // `falls`: times the walker was knocked over (flung) on the way, by a car or anything else;
+  // `wedges`: times it backed out of a spot too tight for the grid (below).
+  ap.walkResult = () => { const f = ap.foot || ap.lastFoot; return f ? { t: f.tEnd != null ? f.tEnd - f.t0 : null, walked: Math.round(f.path), kicks: f.kicks, plans: f.plans, falls: f.falls, wedges: f.wedges, stuck: f.stuck } : null; };
 
   // The clock and the completion checks run on the game's own frame dt (the stage timers' clock).
   g.onFrame((dt) => {
@@ -692,18 +715,25 @@ export async function installAutopilot() {
       const up = p.state !== 'flung' && p.state !== 'down';
       if (!up && f.wasUp) f.falls++;
       f.wasUp = up;
+      // Its trail (a point every 0.4 m, the last 16 m): the way it came, which the body has passed,
+      // to back out along when wedged (the re-plan below).
+      if (up && p.onGround) {
+        const l = f.trail[f.trail.length - 1];
+        if (!l || Math.hypot(p.x - l.x, p.z - l.z) > 0.4) { f.trail.push({ x: p.x, z: p.z, y: p.y }); if (f.trail.length > 40) f.trail.shift(); }
+      }
       let t = null;
       if (f.spec.kind === 'list') {
-        // Nearest by the straight line, as a player picks the next one on screen.
+        // Nearest by the straight line, as a player picks the next one on screen, and kept until
+        // another is 1 m nearer (a player does not switch between two about as near; with the
+        // re-plan on a new target the walker would re-plan every frame).
         let bd = Infinity;
         for (const e of ms.stage?.list || []) if (e.alive) { const d = Math.hypot(e.x - p.x, e.z - p.z); if (d < bd) { bd = d; t = e; } }
+        const cur = f.tgt;
+        if (t && cur && cur !== t && cur.alive && ms.stage?.list?.includes(cur) && Math.hypot(cur.x - p.x, cur.z - p.z) < bd + 1) t = cur;
       } else if (f.spec.kind === 'point') t = Math.hypot(f.spec.x - p.x, f.spec.z - p.z) > (f.spec.r ?? 1) ? f.spec : null;
       const over = f.spec.kind === 'list' ? (ms.stageI !== f.stage0 || ms.state !== 'running' || !t) : !t;
       if (over) { f.tEnd = ap.t; ap.lastFoot = f; ap.foot = null; return; }
       const dt0 = Math.hypot(t.x - p.x, t.z - p.z);
-      // Stuck: 12 s without getting 1 m closer to anything. Give up and report where.
-      if (dt0 < (f.bestD ?? Infinity) - 1 || f.tgt !== t) { f.bestD = dt0; f.bestT = ap.t; }
-      if (ap.t - (f.bestT ?? ap.t) > 12) { f.stuck = { p: [+p.x.toFixed(1), +p.y.toFixed(2), +p.z.toFixed(1)], t: [+t.x.toFixed(1), +(t.y ?? 0).toFixed(2), +t.z.toFixed(1)], route: f.route?.pts.length }; f.tEnd = null; ap.lastFoot = f; ap.foot = null; return; }
       // Kick when the target is within the kick's reach (0.9 m ahead, r 1.0) and in front.
       f.hold = false;
       if (f.spec.kick && dt0 < 1.7) {
@@ -711,11 +741,13 @@ export async function installAutopilot() {
         f.hold = dt0 < 1.2;
         if (fwd > 0.6 && g.kickT <= 0) { ap.kickNow = true; f.kicks++; }
       }
-      // Re-plan when the target changed or moved, every 0.6 s while it flees, or when stuck.
+      // Re-plan at once when the target changed (a player turns to the next one straight away; the
+      // walker used to run on towards the one just caught for up to 0.6 s), every 0.6 s while it
+      // flees, or when stuck.
       f.replanT -= dt;
-      const moved = !f.route || f.tgt !== t || Math.hypot(f.route.end.x - t.x, f.route.end.z - t.z) > 1.5;
-      if (moved && f.replanT <= 0 || !f.route) {
-        if (f.tgt !== t) f.noJump = false;
+      const moved = Math.hypot(f.route?.end.x - t.x, f.route?.end.z - t.z) > 1.5;
+      if (!f.route || f.tgt !== t || (moved && f.replanT <= 0)) {
+        if (f.tgt !== t) { f.noJump = false; f.bestTot = Infinity; f.bestTotT = ap.t; }
         f.replanT = 0.6; f.tgt = t; f.plans++;
         // After a stall, plan without jumps until the target changes (Hotel Flamenco's 1.23 m patio
         // dividers are in jump range on paper, but the jump among the patio chairs can fail; a human
@@ -727,8 +759,26 @@ export async function installAutopilot() {
         let pts = footPath(p.x, p.z, p.y, t.x, t.z, 0.4, 0.45, J, 14, f.avoid, f.cars);
         // The way round may leave the 14 m margin (e.g. round Hotel Flamenco's 52 m slab): widen it.
         if (pts && !pts.reached) pts = footPath(p.x, p.z, p.y, t.x, t.z, 0.4, 0.45, J, 45, f.avoid, f.cars) || pts;
+        // Wedged where the grid's 0.4 m clearance at its cell centres does not fit, though the
+        // body's 0.36 m did (e.g. the 0.75 m strip between a bed and the wall in room 107): A*
+        // cannot leave the start cell and the "route" is the straight line to the target, into
+        // the wall. Back out the way it came, as a player does: along its trail to the newest
+        // point the grid can plan from (up to 8 tries, 0.8 m apart), then on from there.
+        if (pts && pts.boxed) {
+          let lastTry = p;
+          for (let i = f.trail.length - 1, tries = 0; i >= 0 && tries < 8; i--) {
+            const q = f.trail[i];
+            if (Math.hypot(q.x - lastTry.x, q.z - lastTry.z) < 0.8) continue;
+            lastTry = q; tries++;
+            const r = footPath(q.x, q.z, q.y, t.x, t.z, 0.4, 0.45, J, 45, f.avoid, f.cars);
+            if (r && r.length > 1) { pts = [...f.trail.slice(i).reverse().map((c) => ({ x: c.x, z: c.z })), ...r]; f.wedges++; break; }
+          }
+        }
         pts = pts || [{ x: t.x, z: t.z }];
-        f.route = { pts, k: 0, end: { x: t.x, z: t.z } };
+        // rest[j]: the route's length from point j to its end (the target where it stood).
+        const rest = new Float64Array(pts.length);
+        for (let j = pts.length - 2; j >= 0; j--) rest[j] = rest[j + 1] + Math.hypot(pts[j + 1].x - pts[j].x, pts[j + 1].z - pts[j].z);
+        f.route = { pts, rest, k: 0, end: { x: t.x, z: t.z } };
       }
       const R = f.route;
       // Follow the route: aim at the furthest of the next few cells that the body (±0.3 m) can
@@ -752,6 +802,38 @@ export async function installAutopilot() {
       // Never skip a jump cell (a ledge or the top of a thin wall) before standing on it: from
       // 0.5 m away the walker used to drop it and walk into the wall for good.
       while (R.k < R.pts.length - 1 && Math.hypot(R.pts[R.k].x - p.x, R.pts[R.k].z - p.z) < 0.7 && !(R.pts[R.k].jump && p.y < R.pts[R.k].h - 0.3)) R.k++;
+      // ...and on to the nearest of the next cells it can walk straight to. Aiming ahead, the walker
+      // can pass a cell further than 0.7 m off (the first cell of a plan lies up to 1.06 m from the
+      // start): k then stayed behind it, the aim window (k+1…k+10) fell behind too, and it paced
+      // back and forth round the window's end (yaw flipping by π every ~0.6 s) until a re-plan or
+      // the 2 s stall rule: 2–3 s at a time, often several times a chase (Phase 3 r1 repair 2 trace).
+      {
+        let jn = R.k, dn = Math.hypot(R.pts[R.k].x - p.x, R.pts[R.k].z - p.z);
+        for (let j = R.k + 1, e = Math.min(R.pts.length - 1, R.k + 10); j <= e; j++) {
+          const q0 = R.pts[j - 1];
+          if (q0.jump && p.y < q0.h - 0.3) break;
+          const d = Math.hypot(R.pts[j].x - p.x, R.pts[j].z - p.z);
+          if (d < dn && clear(R.pts[j])) { dn = d; jn = j; }
+        }
+        R.k = jn;
+      }
+      // Progress is measured along the route, not as the straight line to the target: round the
+      // end of a wall (Fataga's 52 m tomato-field wall with the sheep on its far side) the straight
+      // line does not shrink for many seconds while the walker runs, and the old rule called that
+      // stuck (Phase 3 r1 gate 2, B1). `left`: metres still to go on this route (straight to the
+      // cell 10 ahead, then along it); `prog` counts only new lows of `left` per route, so pacing
+      // back and forth adds nothing, and a re-plan (the target moved) neither adds nor loses progress.
+      const e10 = Math.min(R.pts.length - 1, R.k + 10);
+      const left = Math.hypot(R.pts[e10].x - p.x, R.pts[e10].z - p.z) + R.rest[e10];
+      if (f.leftR !== R) { f.leftR = R; f.left = left; } else if (left < f.left) { f.prog += f.left - left; f.left = left; }
+      if (f.prog > f.progMark + 1) { f.progMark = f.prog; f.progT = ap.t; }
+      // ...and the route's length to where the target is now: a new low at least every 30 s.
+      const tot = left + Math.hypot(R.end.x - t.x, R.end.z - t.z);
+      if (tot < f.bestTot - 1) { f.bestTot = tot; f.bestTotT = ap.t; }
+      // Stuck: 12 s without 1 m of progress along the route (pressed against something, or down),
+      // or 30 s without getting 1 m closer to the target along the route (going round in circles).
+      // Give up and report where.
+      if (ap.t - f.progT > 12 || ap.t - f.bestTotT > 30) { f.stuck = { p: [+p.x.toFixed(1), +p.y.toFixed(2), +p.z.toFixed(1)], t: [+t.x.toFixed(1), +(t.y ?? 0).toFixed(2), +t.z.toFixed(1)], route: R.pts.length, why: ap.t - f.progT > 12 ? 'no progress 12 s' : 'no closer 30 s' }; f.tEnd = null; ap.lastFoot = f; ap.foot = null; return; }
       let aim = R.pts[R.k];
       // A ledge ahead on the route: jump when it is 1.2 m away (aim straight at it, no shortcut).
       let ledge = null;
@@ -761,10 +843,13 @@ export async function installAutopilot() {
       // The target itself up on a ledge within reach: jump at it.
       if (t.y != null && t.y > p.y + 0.4 && dt0 < 2.5 && p.onGround) ap.jumpNow = true;
       if (dt0 < 3 && clear(t)) aim = t;
-      // No progress for 2 s: plan again from here.
-      if (ap.t - (f.bestT ?? ap.t) > 2 && f.replanT <= -1.4) { f.noJump = true;
+      // No progress along the route for 2 s (at most once per 2 s): plan again from here. On the
+      // straight-line rule this also fired every 2 s of any longer detour towards a target that
+      // stood still (a flower, a grazing sheep), dropping an `avoid` on the walker's own good route
+      // and turning jumps off; and never while a target kept moving, however long it paced.
+      if (ap.t - f.progT > 2 && ap.t - f.stallT > 2) { f.noJump = true; f.stallT = ap.t;
         // Remember the route cell it could not get to, so the next plan goes another way.
-        const R0 = f.route, q = R0 && R0.k < R0.pts.length - 1 ? R0.pts[R0.k] : null;
+        const q = R.k < R.pts.length - 1 ? R.pts[R.k] : null;
         if (q) (f.avoid ||= []).push({ x: q.x, z: q.z });
         f.route = null; f.replanT = 0; }
       f.yaw = yawTo(aim.x - p.x, aim.z - p.z);
@@ -1005,7 +1090,7 @@ export const SCENARIOS = {
     }
     if (want('plates')) {
       const ts = [];
-      for (let k = 0; k < Math.max(2, FOOT - 2); k++) {
+      for (let k = 0; k < +(process.env.PLATE_RUNS || 6); k++) {
         await boot(T, 11);
         await T.startMission();
         // Stage 4 starts at the race finish by the farm gate; the player steps out of the car.
@@ -1021,10 +1106,12 @@ export const SCENARIOS = {
         check(st.si > 3 || st.state !== 'running', 'plates: the walker smashed ten stacks');
         ts.push(w.t);
       }
-      // The stacks spawn at random in the dance-floor area: the 75th percentile like other random stages.
-      const tRef = pct(ts, 0.75) + 0.5 * 10;
-      out.grisfestPlates = tRef; kind.grisfestPlates = 'foot'; sample.grisfestPlates = { ts, extra: 0.5 * 10 };
-      row('plates', 'grisfest s4 smash 10 plate stacks (on foot, kick)', 'race finish (-80,-203) -> nearest stack first', tRef.toFixed(1), roundTimer(tRef * 1.25), `p75 of ${ts.length} runs + 0.5 s × 10: ${ts.map(f1).join(' / ')} s; median ${f1(median(ts))}`);
+      // The 12 stacks are a fixed layout (three per table under the two pergolas, world/blocks/
+      // nature.js), so this is a deterministic stage: the median (§8). Runs differ only in the
+      // walker's tour order; the p75 of 2 runs used here before failed on that noise alone.
+      const tRef = median(ts) + 0.5 * 10;
+      out.grisfestPlates = tRef; kind.grisfestPlates = 'foot';
+      row('plates', 'grisfest s4 smash 10 of the 12 plate stacks (on foot, kick; fixed layout)', 'race finish (-80,-203) -> nearest stack first', tRef.toFixed(1), roundTimer(tRef * 1.25), `median of ${ts.length} runs + 0.5 s × 10: ${ts.map(f1).join(' / ')} s; p75 ${f1(pct(ts, 0.75))}`);
     }
     // Stage 6: from the dance floor on foot back to the car, then Tonga Tonga. The car stands where
     // the race left it: just past the finish line at the farm gate, heading west.
