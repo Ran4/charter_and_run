@@ -300,10 +300,13 @@ export const carry = (o) => common(o, {
       if (this.sprintT > F.sprintSecs) return { fail: o.failText || S.outOfTime };
     }
     if (this.npc) {
-      const n = this.npc;
-      n.x = p.x; n.y = p.y + p.height * 0.8; n.z = p.z; n.yaw = p.yaw;
-      n.root.position.set(p.x, p.y + p.height * 0.8, p.z);
-      n.root.rotation.set(0, p.yaw + Math.PI / 2, Math.PI / 2);
+      // Across his shoulders on the raised hands: the roll about z goes first (XYZ Euler), so the
+      // body lies along Stig's right, and the feet (the root) sit half a body to his left. (Yaw
+      // + π/2 laid it along his forward: Berra stuck out of Stig's face, feet in his head.)
+      const n = this.npc, h = n.height * 0.5, y = p.y + p.height;
+      n.x = p.x + Math.cos(p.yaw) * h; n.y = y; n.z = p.z - Math.sin(p.yaw) * h; n.yaw = p.yaw;
+      n.root.position.set(n.x, y, n.z);
+      n.root.rotation.set(0, p.yaw, Math.PI / 2);
     } else if (this.mesh) {
       const fx_ = Math.sin(p.yaw), fz = Math.cos(p.yaw);
       this.mesh.mesh.position.set(p.x + fx_ * 0.25, p.y + p.height + 0.15, p.z + fz * 0.25);

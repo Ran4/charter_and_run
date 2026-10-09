@@ -393,8 +393,11 @@ export const goto = (o) => common(o, {
     if (o.awaitOverhear && this.over.some((v) => v.playing)) return;
     return 'done';
   },
-  // Show the passenger as the target when they've been left behind.
+  // On foot, the car he left (a passenger only boards a car; asnan pointed at Ole 1.8 m away with
+  // the car 25 m off). In a car, the passenger when they've been left behind.
   altTarget(g) {
+    const car = g.missions.lastCar;
+    if (!g.playerCar && (o.inCar || o.passenger) && car && !car.dead && g.cars.includes(car)) return { x: car.x, z: car.z, r: 3.5 };
     if (o.passenger) {
       const p = g.npc(o.passenger);
       if (!g.playerCar || p.car !== g.playerCar) return p.car ? { x: p.car.x, z: p.car.z, r: 4 } : { x: p.x, z: p.z, r: 4 };

@@ -21,9 +21,12 @@ export class Bang {
     const beam = new THREE.Mesh(new THREE.CylinderGeometry(0.9, 0.9, 60, 12, 1, true), new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.16, depthWrite: false, side: THREE.DoubleSide }));
     beam.position.y = 30;
     this.root.add(beam);
+    this.beam = beam;
     scene.add(this.root);
     this.visible = true;
   }
+  // k = 0..1 of the beam's full opacity (main fades it near the cabin eye, §5.3).
+  fadeBeam(k) { this.beam.material.opacity = 0.16 * k; this.beam.visible = k > 0; }
   set(x, y, z, t) {
     this.root.position.set(x, y + Math.sin(t * 3) * 0.2, z);
     this.root.children[0].rotation.y = t * 2;

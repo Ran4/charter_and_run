@@ -193,9 +193,15 @@ export class CamRig {
     const pf = this.profile;
     if (pf && !this.openFloor) {
       // Dollhouse framing: from the side both are facing when they face the same way (seat-mates
-      // in a row), so the shot sees faces, not seat backs and the tops of heads.
+      // in a row), so the shot sees faces, not seat backs and the tops of heads. When that facing
+      // runs along the line between them (within 35°: one behind the other, as in the jet-bridge
+      // queue), a side shot sees neither face: frame from in front along it, as for one spot.
       const sx = Math.sin(a.yaw || 0) + Math.sin(b.yaw || 0), sz = Math.cos(a.yaw || 0) + Math.cos(b.yaw || 0);
-      if (Math.hypot(sx, sz) > 1.2 && sx * nx + sz * nz < 0) { nx = -nx; nz = -nz; }
+      const sl = Math.hypot(sx, sz);
+      if (sl > 1.2) {
+        if (apart && Math.abs(sx * dx + sz * dz) > 0.82 * sl * l) { nx = sx / sl; nz = sz / sl; }
+        else if (sx * nx + sz * nz < 0) { nx = -nx; nz = -nz; }
+      }
       const d = Math.min(Math.max(4.5, l * 1.6 + 2.5), pf.cineSide);
       this.cine = { pos: new THREE.Vector3(mx + nx * d, headY + pf.cineUp, mz + nz * d), look: new THREE.Vector3(mx, headY, mz) };
       return;

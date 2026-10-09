@@ -44,10 +44,10 @@ const params = new URLSearchParams(location.search);
 const TEST = params.has('test');
 const TRAFFIC_MIX = ['hatch', 'hatch', 'hatch', 'hatch', 'sedan', 'sedan', 'wagon', 'van', 'taxi', 'pickup', 'guagua', 'icecream'];
 
-// Is a marker point (position p raised by dy) within 3 m of the camera? Markers that close fill
+// Is a marker point (position p raised by dy) within r m of the camera? Markers that close fill
 // the lens (the cabin's z-clamped eye sits 2.5 m above the seats), so they hide.
 const _near = new THREE.Vector3();
-function camNear(p, dy) { return camera.position.distanceTo(_near.set(p.x, p.y + dy, p.z)) < 3; }
+function camNear(p, dy, r = 3) { return camera.position.distanceTo(_near.set(p.x, p.y + dy, p.z)) < r; }
 function blockCenter(i, j) { const b = blockInterior(i, j); return { x: (b.x0 + b.x1) / 2, z: (b.z0 + b.z1) / 2 }; }
 
 class Game {
@@ -1159,8 +1159,9 @@ class Game {
     this.setPlayerOutfit('rio', { persist: false });
     this.setNpcOutfit('ole', 'rio');
     // Aft deck (|dx| <= 1.4, dz 1..5 from rioBoat; teleport snaps to the deck at 0.55), everyone
-    // turned towards rioCam.
-    for (const [k, dx, dz] of [[PLAYER_KEY, 0.7, 2.0], ['majsan', -0.7, 2.6], ['ole', 1.1, 3.7], ['siv', -0.6, 4.4]]) {
+    // turned towards rioCam: one row across its view at one depth, the couples side by side (0.7 m,
+    // 1 m between them; left to right Siv, Ole, Majsan, Stig). Majsan stood half behind Ole.
+    for (const [k, dx, dz] of [[PLAYER_KEY, 0.76, 1.83], ['majsan', 0.45, 2.46], ['ole', 0, 3.35], ['siv', -0.31, 3.98]]) {
       const q = this.lmOffset(b, dx, dz);
       this.placeNpc(k, 'rioBoat', dx, dz, yawTo(c.x - q.x, c.z - q.z));
     }
@@ -1386,9 +1387,8 @@ class Game {
       // Never while busted-frozen or flailing (§14.3 frozenT, §5.9).
       if (this.frozenT > 0 || this.shame.panicT > 0) return;
       if (p.seatId) { if (this.stageLocksSeat()) return; this.standPlayer(); }
-      // R is never a free teleport to a carry goal (cabinRow14 is both): it spills the carry.
-      if (this.carrying) this.bumpedT = 0.4;
-      this.resetPlayer();
+      // A reset spills a carry: R is never a free teleport to a carry goal.
+      if (this.resetPlayer() && this.carrying) this.bumpedT = 0.4;
       return;
     }
     if (this.playerCar) {
@@ -1416,16 +1416,19 @@ class Game {
   }
 
   // R: flight -> the level's reset spot (by where the player is); island -> the nearest road.
+  // R: back to the road (island) or the level's reset spot (flight, §3). False when R does nothing.
   resetPlayer() {
     const def = this.levelDef;
     if (def.resetSpot) {
-      const s = this.approachSpot(def.resetSpot(this));
+      const spot = def.resetSpot(this);
+      if (!spot) return false;
+      const s = typeof spot === 'string' ? this.approachSpot(spot) : spot;
       if (this.playerCar) this.exitCar(true);
       this.player.state = 'normal';
       this.player.teleport(s.x, s.z, s.yaw);
       this.cam.snapNext = true;
       hud.toast(S.resetFlight);
-      return;
+      return true;
     }
     const f = this.focus();
     const i = Math.round((f.x + HALF) / P), j = Math.round((f.z + HALF) / P);
@@ -1438,6 +1441,7 @@ class Game {
     else this.player.teleport(x, z, yaw);
     this.cam.snapNext = true;
     hud.toast(S.reset);
+    return true;
   }
 
   fixedStep(h) {
@@ -1472,7 +1476,10 @@ class Game {
     // Player intent.
     if (this.playerCar) {
       const c = this.playerCar.ctrl;
-      if (frozen || this.freezeCar) { c.throttle = 0; c.brake = 1; c.steer = 0; c.handbrake = true; }
+      // Frozen: brake only while rolling forward (car.js reads brake below 0.5 m/s as reverse, and
+      // a frozen car crept back to −0.35 × top speed: 22 m back from the race grid), then the
+      // handbrake brings it to rest and holds it.
+      if (frozen || this.freezeCar) { c.throttle = 0; c.brake = this.playerCar.forwardSpeed > 0.5 ? 1 : 0; c.steer = 0; c.handbrake = true; }
       else { c.throttle = input.throttle(); c.brake = input.brake(); c.steer = input.steer(); c.handbrake = input.down('handbrake'); }
       c.park = false;
     } else if (p.state === 'normal') {
@@ -1737,12 +1744,18 @@ class Game {
     if (ms.state === 'idle' && ms.current && ms.current.level === this.level && this.npcs[ms.current.giver]) {
       const g = this.npcs[ms.current.giver];
       this.bang.show(true);
-      this.bang.set(g.x, g.y + g.height + 0.9, g.z, this.time);
+      const by = g.y + g.height + 0.9;
+      this.bang.set(g.x, by, g.z, this.time);
       // A camera right on top of the giver (cabin aisle, z-clamped eye 2.5 m above the seats) would
-      // get the "!" across the lens: hide it within 3 m of the camera, and once the player is within
-      // 3 m of the giver (the steep cabin eye put it over Stig; the talk prompt names the giver
-      // then). Its beam stays.
-      this.bang.root.children[0].visible = !camNear(this.bang.root.position, 0.88) && dist(g.x, g.z, f.x, f.z) > 3;
+      // get the "!" across the lens: hide it within 3 m of the camera (5.5 m in the flight level,
+      // where the eye 3–5 m from a seated giver showed it as a huge clipped blob in a corner; from
+      // the un-bobbed spot, so the ±0.2 m bob cannot flicker it across the line), and once the
+      // player is within 3 m of the giver (the steep cabin eye put it over Stig; the talk prompt
+      // names the giver then).
+      this.bang.root.children[0].visible = !camNear({ x: g.x, y: by, z: g.z }, 0.88, this.level === 'flight' ? 5.5 : 3) && dist(g.x, g.z, f.x, f.z) > 3;
+      // Its beam fades out between 8 and 4 m (horizontal) from the eye while the giver is in the
+      // cabin: that near, it laid a yellow wedge over a third of the frame.
+      this.bang.fadeBeam(this.cabin.inCabin(g.x, g.z) ? clamp((dist(camera.position.x, camera.position.z, g.x, g.z) - 4) / 4, 0, 1) : 1);
       if (dist(g.x, g.z, f.x, f.z) > 25) target = { x: g.x, z: g.z };
     } else this.bang.show(false);
     const t = ms.target();

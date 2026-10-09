@@ -1,8 +1,9 @@
 // The two levels are configurations of one static world, not scenes (DESIGN §4). main.js applies a
 // level with game.setLevel(name) (every row of the §4.3 table). Frozen after Phase 0.
 
-import { CAM_CABIN, FLIGHT_PALETTES } from './world/cabin.js';
-import { BOUND } from './world/layout.js';
+import { CAM_CABIN, FLIGHT_PALETTES, CABIN_X } from './world/cabin.js';
+import { BOUND, lm } from './world/layout.js';
+import { dist } from './util.js';
 import { HOMES, MAP_LABELS, LEVEL_OUTFITS } from './content/index.js';
 import { METERS } from './meters.js';                 // §5.9, §7.1 (meters.js: Phase 0, then WP-H)
 
@@ -14,6 +15,17 @@ export const ISLAND_PALETTES = {
   night: { top: 0x141a3c, horizon: 0x3a2f4e, fogNear: 120, fogFar: 600, sun: 0x9fb4ff, sunI: 0.9, hemiSky: 0x5a6aa0, hemiGround: 0x3a2a20, hemiI: 0.9, sunDir: [70, 130, 45] },
   sunset: { top: 0x3a4fa0, horizon: 0xf7a26b, fogNear: 200, fogFar: 760, sun: 0xffb070, sunI: 2.2, hemiSky: 0xffd8b0, hemiGround: 0x8a5a40, hemiI: 1.3, sunDir: [-105, 60, 60] },
 };
+
+// The aisle's centre line at the player's row: the nearest free spot within 2 m along it, else
+// where he stands.
+function aisleSpot(g) {
+  const p = g.player, z0 = Math.max(-18.5, Math.min(16.8, p.z));
+  for (let k = 0; k <= 10; k++) {
+    const z = z0 + (k % 2 ? 1 : -1) * Math.ceil(k / 2) * 0.4;
+    if (g.spotFree(CABIN_X, z)) return { x: CABIN_X, z, yaw: p.yaw };
+  }
+  return { x: p.x, z: p.z, yaw: p.yaw };
+}
 
 export const LEVELS = {
   flight: {
@@ -35,8 +47,16 @@ export const LEVELS = {
     outfits: (g) => (g.missions.index === 0 ? LEVEL_OUTFITS.gate : LEVEL_OUTFITS.flight),
     inBounds: (x, z, g) => g.cabin.inside(x, z),
     spawn: (g, i) => (i === 0 ? 'gateStart' : i === 1 ? 'cabinDoor' : 'cabinRow14'),
-    // Spots keyed on where the player is (cabin.inCabin = the interior rect only).
-    resetSpot: (g) => (g.cabin.inCabin(g.player.x, g.player.z) ? 'cabinRow14' : 'gateLounge'),
+    // R (§3), keyed on where the player is (cabin.inCabin = the interior rect only). In the cabin:
+    // back into the aisle at the same row, never along it (R to row 14 sat him in 14B for free in
+    // ombord's and landning's seat dashes). In the terminal: the lounge, unless that is nearer the
+    // running stage's target than he is (the toilet dash; the queue) — then null, R does nothing.
+    resetSpot: (g) => {
+      const p = g.player;
+      if (g.cabin.inCabin(p.x, p.z)) return aisleSpot(g);
+      const t = g.missions.target(), l = lm('gateLounge');
+      return t && dist(l.x, l.z, t.x, t.z) < dist(p.x, p.z, t.x, t.z) ? null : 'gateLounge';
+    },
     panicHome: (g) => (g.cabin.inCabin(g.player.x, g.player.z) ? { seat: '14B' } : { lm: 'gateOle' }),
     routeAim: false,                // markers/guide arrow aim straight at the target (§5.2)
     labels: () => MAP_LABELS.flight,

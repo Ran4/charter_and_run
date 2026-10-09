@@ -299,7 +299,9 @@ export class MissionRunner {
     g.player.state = 'normal';
     g.player.teleport(spot.x, spot.z, spot.yaw);
     g.cam.snapNext = true;
-    hud.showBanner(def.title, S.retrySub, 'mission', 2000);
+    // A toast, not a banner: the stage clock runs from here, and a mid-screen banner hid Stig and
+    // the aisle for 2 of ombord's 7 s (the objective card names the mission anyway).
+    hud.toast(S.retryToast);
     audio.jingle('start');
     // `retryCar`: the car waits at its spot (the player at the wheel unless `park`) before the
     // checkpoint stage's init, which may read g.playerCar (destroy.playerDamageScale). It becomes

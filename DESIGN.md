@@ -287,7 +287,7 @@ Physical keys are unchanged from Bigmouth. The level config turns verbs on and o
 | `attack` | J / left click / X | kick, stomp in the air | **hold = mantra** "Jag kan flyga, jag är inte rädd": `wings` pose, cannot move, fear −25/s after 0.3 s wind-up, bubble every 2.5 s |
 | `interact` | E / F / Enter / Y | talk, enter/exit car, steal car, interactables | talk, **sit/stand** ("E Sätt dig" / "E Res dig"), toilets ("E Lås in dig"), call button, trolley |
 | `map` | M / Tab | big map | cabin/gate plan |
-| `reset` | R | unstick (back to the road) | back to the level's reset spot (`cabinRow14` if inside the cabin, else `gateLounge`); seated: `standPlayer()` first; ignored while a `timeline` locks the seat; both levels: ignored while `frozenT > 0` or during PANIK; while `carrying`, R sets `bumpedT = 0.4` first (spills/fails the carry: R is never a free teleport to a carry goal) |
+| `reset` | R | unstick (back to the road) | `resetSpot(g)` (§4.3): inside the cabin, back into the **aisle at the same row** (the free spot on the centre line nearest his z, within 2 m; never along the tube); in the terminal, `gateLounge`, unless the lounge is nearer the running stage's target than he is, when **R does nothing** (the toilet dash; the queue goto). Phase 3 r2: R to `cabinRow14` was a free 14B for ombord's 7 s and landning's 5 s seat dashes, and a jump over the sprit sweep. Seated: `standPlayer()` first; ignored while a `timeline` locks the seat; both levels: ignored while `frozenT > 0` or during PANIK; a reset while `carrying` sets `bumpedT = 0.4` (spills/fails the carry: R is never a free teleport to a carry goal) |
 | horn / mute / pause | H / N / Esc, P | as Bigmouth | same (no horn) |
 
 - **Mantra on the island**: J is kick. A `mantra` stage sets `game.mantraMode = true` so J holds
@@ -387,7 +387,7 @@ export const LEVELS = {
 | jump / stomp / kick | off (Space = hold, J = mantra) | on |
 | entering cars | off; `car.noEnter` always skipped anyway | on |
 | `freeSpot()` bounds | `cabin.inside(x, z)` | `|x|,|z| < BOUND − 5` |
-| R reset | teleport to `resetSpot(g)` (by player position) | nearest road (layout constants, not literals) |
+| R reset | `resetSpot(g)` (by player position): a landmark name, a spot `{x, z, yaw}` (the cabin aisle at his row) or `null` (R does nothing; §3) | nearest road (layout constants, not literals) |
 | HOMES / NPC outfits | `HOMES.gate` + `LEVEL_OUTFITS.gate` while `missions.index === 0`, else `HOMES.flight` + `LEVEL_OUTFITS.flight` (any phase) | `HOMES.island` |
 | guide arrow / minimap route (`updateMarkers`) | `aim = target`, `nodes = []` (no `routeAim`) | `routeAim` |
 | title orbit | around the cabin, gate phase, snowing | around `flamencoPool` |
@@ -590,7 +590,12 @@ export const CAM_CABIN = { pivotH: 1.5, dist: 6.5, pitchMin: 0.72, pitchMax: 1.1
   mission-1 scene, and at the arch the hanging `SÄKERHETSKONTROLL` sign cut across Stig. In the
   pocket the side shot ended up across the security counters with the arch post or beam over a
   speaker, so the pocket keeps the dollhouse. The cabin and the jet bridge keep it too. Two
-  speakers on one spot (< 0.3 m) are framed from in front of the first (both modes).
+  speakers on one spot (< 0.3 m) are framed from in front of the first (both modes). In the
+  dollhouse, two speakers facing the same way (|sum of facings| > 1.2) are framed from the side
+  they face; **when that shared facing runs along the line between them (within 35°: one behind
+  the other, as in the jet-bridge queue), from in front along it** (Phase 3 r2: the side vector
+  there put the eye out over the bridge wall, with Majsan's crown behind Siv and Stig under the
+  door frame).
 - **The ceiling** is one `PlaneGeometry` at y 2.6 facing **down** (`FrontSide`, `outline: 0`,
   `cast: false`): invisible from above. **Hat racks** are drawn the same way: down-facing planes
   only (|x| ∈ [1.9, 2.45], y 2.1), invisible from the camera above. Even a narrow solid rack hides
@@ -616,10 +621,17 @@ export const CAM_CABIN = { pivotH: 1.5, dist: 6.5, pitchMin: 0.72, pitchMax: 1.1
   0.55); GuideArrow and Beacon are above the invisible ceiling and stay visible. Any marker
   shape (the giver's "!", the Beacon's arrow, the GuideArrow) hides while its centre is within 3 m
   of the camera (`main.camNear`): the z-clamped aisle eye is only 2.5 m above the seats, and the
-  "!" over Ole in 14A filled a quarter of the frame. The beams stay. (Phase 2, both levels.) The
+  "!" over Ole in 14A filled a quarter of the frame. (Phase 2, both levels.) The
   giver's "!" also hides while the player is within 3 m of the giver (Phase 3, both levels): the
   steep cabin eye 4–5 m from it put a quarter-screen "!" over Stig at the cabin door, in 14B and at
-  the gate, and within 3 m the talk prompt (3.4 m) names the giver anyway.
+  the gate, and within 3 m the talk prompt (3.4 m) names the giver anyway. **Phase 3 r2:** in the
+  flight level the giver's "!" hides within **5.5 m** of the camera, measured from its un-bobbed
+  spot (`y + height + 0.9`): the eye 3.1–5 m from a seated giver showed it as a huge clipped yellow
+  blob in a bottom corner (player a few rows forward of him, or seated beside him), and the ±0.2 m
+  bob flickered it across the 3 m line. Its **beam** (`Bang.fadeBeam`) fades out between 8 and 4 m
+  of horizontal distance from the eye while the giver is inside the cabin (`cabin.inCabin`): that
+  near, the 0.16-opacity cylinder lay as a yellow wedge over a third of the frame. Elsewhere the
+  beams stay; in the 37 m tube the minimap "!" and the talk prompt find the giver.
 
 ### 5.4 Seat map
 
@@ -2207,7 +2219,7 @@ the `missions` data checks); `kinds/core.js` exports `COMMON` and `common(o, sta
 | kind | options | done / fail | test fields |
 |---|---|---|---|
 | `getInCar` | `car?` (named car, recreated if wrecked) · `atHome?` (Phase 3; with `car`: a named car the player is not in goes back to its parking spot at init, e.g. bus 17 on a retry) · `missionCar?` (name of a car in `m.cars`) · `passenger?` (NPC seated in that car at init) · `rider?` / `riders?` (decorative busts) · `hideRiders?` (hide those NPCs for the mission) · `any = true` (set `any: false` whenever `car`/`missionCar` is given and only that car will do) · `say?` | player in a car (the named one if `any:false`) / a `missionCar` wrecked before the player is in it ("Du kvaddade {driver}s bil!", the driver it was handed over from; else "KVADDAD!"; Phase 3, was a soft lock) | `stage.car` |
-| `goto` | `to` · `radius = 7` · `timer?` (seconds, or `(g, m) => seconds` evaluated at init: a timer that depends on where the stage starts; Phase 2) · `failText = 'Tiden är ute!'` · `inCar?` · `onFoot?` (must arrive on foot; sub "Kliv ur bilen!") · `passenger?` · `stop?` (speed < 2 to finish) · `smooth?: {label, failText}` · `fragile?: {label, failText}` · `fearRate?` (+n/s FLYGRÄDSLA) · `radio?: [[who, text, {gap?, ...cue}?]]` (gap = s after the previous line, default 9–13 random) · `overhear?: [{at, r, lines, radio?}]` · `awaitOverhear = false` (the stage cannot finish while a started overhear is still playing) | within radius (and stopped) / timer, bar | `stage.dest` |
+| `goto` | `to` · `radius = 7` · `timer?` (seconds, or `(g, m) => seconds` evaluated at init: a timer that depends on where the stage starts; Phase 2) · `failText = 'Tiden är ute!'` · `inCar?` · `onFoot?` (must arrive on foot; sub "Kliv ur bilen!") · `passenger?` (marker: on foot with `inCar` or a `passenger`, `runner.lastCar` while it is alive and in `g.cars` (r 3.5; Phase 3 r2: asnan pointed at Ole 1.8 m away with the car 25 m off, and grisfest's Tonga drive at the club); in a car, a passenger left behind (or their car)) · `stop?` (speed < 2 to finish) · `smooth?: {label, failText}` · `fragile?: {label, failText}` · `fearRate?` (+n/s FLYGRÄDSLA) · `radio?: [[who, text, {gap?, ...cue}?]]` (gap = s after the previous line, default 9–13 random) · `overhear?: [{at, r, lines, radio?}]` · `awaitOverhear = false` (the stage cannot finish while a started overhear is still playing) | within radius (and stopped) / timer, bar | `stage.dest` |
 | `pickup` | `who` · `name` · `at` · `hello?` · `rider?` (bust added beside the passenger; the rider NPC is hidden while it rides) · `hideRiders?` (hide the rider NPC already at init) · `text?` | NPC seated as passenger | `stage.npc` |
 | `dropoff` | `who` · `at` · `riderOff?` (remove the rider bust, show the rider NPC beside) · `text` | NPC out at `at` | `stage.dest` |
 | `follow` | `type` · `color?` · `carName?` · `driver` (key; `who` accepted as alias) · `passenger?` (NPC in the **followed** car) · `riders?` (busts, removed when the stage ends) · `hideRiders?` (hide those NPCs; they stay hidden until a later stage seats/places them or the mission ends) · `start` (landmark / `{x,z,yaw}` / lane spot) · `via` · `to` (**kerbside**, see below) · `maxDist` · `minDist?` · `minGrace = 2` · `minText?` · `cruise = 12` · `wobble?` · `arriveDist = 35` · `radio?: [[who, text] \| text]` (string = driver speaks) | arrived and within `arriveDist` / lost > 3 s beyond `maxDist`, closer than `minDist` for > `minGrace` s, car wrecked | `stage.car`, `stage.minDist` |
@@ -2273,7 +2285,9 @@ Behaviour notes (normative):
   `stage.inZone` pause meanwhile), `miss` plays as bubbles so the rhythm keeps going. The
   dialogues frame **seller + partner** while the partner stands in the open (Phase 3: he does all
   the haggling, and the seller + player two-shot showed him from behind or hidden by Stig), else
-  seller + player.
+  seller + player. Before each framed talk the two **turn to face each other** (Phase 3 r2, as
+  `runner.begin()` turns the giver): at his stall yaw the seller had his back to the side two-shot
+  on all seven of his lines when Stig came up the street.
 - **`collect` with `who`**: on a touch the guest's `lines` play as bubbles, then `seatOnTouch` /
   `sendTo` moves him. A dialogue or cutaway that starts meanwhile (julafton's party scene right
   after the last guest) takes the live bubble down at once (`game.unsay`: no empty bubble is left
@@ -2368,7 +2382,10 @@ Runner changes (Phase 0):
    from `cpI` with a fresh `m`: it first re-applies, in stage order, the **ambient fields** (`sky
    music phase seatbelt outfit trolley blockers`; `phase` always instant) of the `startCue` and
    `doneCue` of every stage before `cpI` (so a grisfest retry is still at night with `vals`), then
-   teleports to `stage.retryAt ?? def.at` and starts the stage. The re-applied `phase` is always
+   teleports to `stage.retryAt ?? def.at` and starts the stage, with the toast `Försök igen!` and
+   the `start` jingle (Phase 3 r2: no banner; the 2 s mid-screen title over Stig and the aisle ate
+   2 of ombord's 7 s and covered the plates while their clocks ran, and the objective card names
+   the mission anyway). The re-applied `phase` is always
    `[name, { instant: true }]`, so a `hold` from the original cue is **dropped** on retry (a chained
    phase then chains on at the next tick, §5.6); a stage that needs the hold after a retry sets it
    again in its own `startCue`. **Rule:** every `checkpoint: true`
@@ -2627,7 +2644,7 @@ mutes without touching the button, which then said `Ljud: på` while muted).
 | complete | `UPPDRAG KLART!` sub `+{reward} pesetas` (`{reward}` with thin-space thousands, `pta()`: `+2 000 pesetas`) |
 | failed | `UPPDRAG MISSLYCKAT` |
 | retry prompt | `<b>E</b> Försök igen &nbsp;·&nbsp; <b>Q</b> Ge upp` |
-| retry banner sub | `Försök igen!` |
+| retry toast | `Försök igen!` (`S.retryToast`; Phase 3 r2: a toast, no longer a banner sub) |
 | new mission | `Nytt uppdrag: hitta <b>{name}</b> <span class="bang">!</span>` |
 | first start toast | `Prata med <b>Ole</b> i säkerhetskontrollen <span class="bang">!</span> – tryck <b>E</b>` |
 | wrecked | `KVADDAD!` |
@@ -2677,8 +2694,10 @@ mutes without touching the button, which then said `Ljud: på` while muted).
   **Wired in Phase 2** (`main.js playEndCard`, called by the runner after the last mission when a
   cue set `endCard`): `shame.clear()`, out of any car, `inDialog` (input frozen), letterbox, white
   flash; sky `sunset`, tune `samba`, Stig `rio` (not persisted), Ole `rio`; Stig, Majsan, Ole and Siv
-  on the aft deck at `rioBoat` offsets (0.7, 2.0), (−0.7, 2.6), (1.1, 3.7), (−0.6, 4.4), each turned
-  to `rioCam`; camera cut from (rioCam, y 3.2) at (rioBoat, y 2.3, z + 1.5); the `S.endCardMain` /
+  on the aft deck at `rioBoat` offsets (0.76, 1.83), (0.45, 2.46), (0, 3.35), (−0.31, 3.98), each
+  turned to `rioCam` (Phase 3 r2: one row across rioCam's view at one depth, the couples side by
+  side 0.7 m apart and 1 m between the couples, left to right Siv, Ole, Majsan, Stig; the Phase 2
+  offsets split the couples and put Majsan half behind Ole, 2.1 m nearer the lens); camera cut from (rioCam, y 3.2) at (rioBoat, y 2.3, z + 1.5); the `S.endCardMain` /
   `S.endCardSub` banner (cls `mission`, 6 s); after 6.6 s another white flash, camera released, sky
   back, `placeNpcs(true)` + `applyOutfits()`, player at `approachSpot('flamencoPool')`, level tune,
   letterbox off, then the completion banner and the `complete` jingle. Scenario `endcard` checks it.
@@ -3009,6 +3028,10 @@ async game.playEndCard()                  // §11.7: the Rio cinematic (wired in
 game.onPanicIdle()                        // §5.9
 game.interruptMantra()                    // jolts and fear cues: a held mantra restarts its wind-up (0.6 s)
 game.frozenT                              // > 0 while frozen (bust freeze); input ignored (R too)
+// Frozen player car (inDialog, mission 'failed', frozenT, PANIK, or game.freezeCar: the race
+// countdown): brake only while rolling forward (car.js reads brake at < 0.5 m/s as reverse),
+// handbrake on, so it stops and holds. Phase 3 r2: brake 1 crept every car but the bus backwards
+// to −0.35 × top speed, 22 m back off the race grid by "KÖR!".
 
 // ---- map ----
 game.mapMarkers(all);  game.mapLabels();  game.mapLegend() -> html
@@ -4326,3 +4349,34 @@ the fixer's group.
   with only 1 knock-over in the 12 that counted them: most of the time went on running into and
   round parked cars the walker did not plan for (the friskotek lawn borders the SunTrip car park).
   That, not the bench, was the "drift" world-town reported.
+- r2 spine: a frozen player car (dialogue, fail screen, `frozenT`, PANIK, `freezeCar`) brakes only
+  while rolling forward and holds on the handbrake (§14.3, under `game.frozenT`): brake 1 read as
+  reverse below 0.5 m/s, and every car but the bus crept back to −0.35 × top speed (the night race
+  start: 22 m back over the zebra, 45 km/h in reverse by "1"). `calibrate`'s autopilot already
+  parked through the countdown, so the measured race margins stand (§8 "Races and chases").
+- r2 spine: R in the flight level (§3, §4.3): in the cabin, back into the aisle at the same row
+  (`cabinRow14` was a free 14B for ombord's and landning's seat dashes and a jump over the sprit
+  sweep); in the terminal, `gateLounge` unless it is nearer the running stage's target than the
+  player is (then R does nothing: the toilet dash, the queue goto). `resetSpot` may return a spot
+  or `null`; `resetPlayer()` returns whether it moved him, and only then spills a carry.
+- r2 spine: a checkpoint retry shows the toast `Försök igen!` (`S.retryToast`, §11.5) with the
+  `start` jingle, no banner (§9.4 item 3): the 2 s mid-screen title covered Stig and the aisle for
+  2 of ombord's 7 s and the dance floor while the plates ran.
+- r2 spine: `goto` with `inCar` or a `passenger`, the player on foot: the marker is
+  `runner.lastCar` while it is alive and in the world (§9.2), not Ole beside him (asnan s5) or the
+  club (grisfest's Tonga drive).
+- r2 spine: the haggle talks turn seller and partner to face each other before the two-shot
+  (§9.2 haggle staging): the seller's back was to the lens on all seven of his lines; settled, all
+  13 lines now show both in profile (0.15).
+- r2 spine: "Bärra hem Berra!" (`carry` with `who`): Berra lies across Stig's raised hands, body
+  along Stig's right, his middle over Stig (rotation (0, yaw, π/2), the root half a body to the
+  left, y = p.y + height); yaw + π/2 had laid him along Stig's forward, sticking out of his face.
+- r2 spine: the giver's "!" hides within 5.5 m of the camera in the flight level (un-bobbed
+  spot), and its beam fades out between 8 and 4 m from the eye while the giver is in the cabin
+  (§5.3; `Bang.fadeBeam`).
+- r2 spine: `frame`'s dollhouse frames two speakers who face the same way along the line between
+  them (within 35°) from in front along that facing (§5.3). The line audit of the whole story
+  (280 lines) has no line on this branch; on the real jet-bridge walk the outro's three now face
+  the lens (0.97–1.0; before −0.18, 0.62, 0.66).
+- r2 spine: the Rio end card's deck offsets (§11.7): one row across rioCam's view at one depth,
+  couples together (Siv, Ole, Majsan, Stig from the left); Majsan was half behind Ole.

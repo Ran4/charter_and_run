@@ -30,7 +30,7 @@ export const S = {
   completeSub: '+{reward} pesetas',
   failed: 'UPPDRAG MISSLYCKAT',
   retryPrompt: '<b>E</b> Försök igen &nbsp;·&nbsp; <b>Q</b> Ge upp',
-  retrySub: 'Försök igen!',
+  retryToast: 'Försök igen!',
   newMission: 'Nytt uppdrag: hitta <b>{name}</b> <span class="bang">!</span>',
   firstStart: 'Prata med <b>Ole</b> i säkerhetskontrollen <span class="bang">!</span> – tryck <b>E</b>',
   wrecked: 'KVADDAD!',

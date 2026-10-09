@@ -66,8 +66,14 @@ export const haggle = (o) => common(o, {
   async talk(g, lines) {
     if (!lines?.length) return;
     const seller = g.npc(o.who), partner = o.partner && g.npc(o.partner);
-    if (seller && seller.state !== 'hidden') g.cinematic(seller, partner && partner.state === 'normal' && !partner.car ? partner : g.player);
-    else g.cinematicOne(g.player);
+    if (seller && seller.state !== 'hidden') {
+      const other = partner && partner.state === 'normal' && !partner.car ? partner : g.player;
+      // Face each other, as runner.begin() turns the giver: at his stall yaw the seller had his
+      // back to the side two-shot on every line.
+      if (seller.state === 'normal') seller.yaw = yawTo(other.x - seller.x, other.z - seller.z);
+      if (other.state === 'normal') other.yaw = yawTo(seller.x - other.x, seller.z - other.z);
+      g.cinematic(seller, other);
+    } else g.cinematicOne(g.player);
     await g.dialog(lines);
     g.endCut();
     g.endCinematic();
