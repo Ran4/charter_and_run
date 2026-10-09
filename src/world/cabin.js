@@ -25,7 +25,7 @@ import { fx } from '../game/fx.js';
 import { buildFlightScenery } from './flightScenery.js';
 import { OLE_STATS, CHATTER_FLIGHT } from '../content/flight.js';
 import { S } from '../strings.js';
-import { mulberry32, pick, dist, dampAngle } from '../util.js';
+import { mulberry32, pick, dist, dampAngle, angleDiff, clamp } from '../util.js';
 
 export const CABIN_X = 3000;
 const CX = CABIN_X;
@@ -48,6 +48,11 @@ export const FLIGHT_PALETTES = {
   gate: PALETTES.gate, takeoff: PALETTES.gate, climb: PALETTES.clouds, cruise: PALETTES.above,
   approach: PALETTES.descent, landing: PALETTES.island, landed: PALETTES.island,
 };
+// A phase change that is not `instant` blends into the new palette over PAL_BLEND seconds (§5.6):
+// 1.5 s into climb (under the whiteout puffs), else 2 s (the cruise puffs fade in over 2 s).
+const PAL_BLEND = { climb: 1.5 }, PAL_BLEND_DEFAULT = 2;
+const PAL_COLORS = ['top', 'horizon', 'sun', 'hemiSky', 'hemiGround', 'window'], PAL_NUMS = ['fogNear', 'fogFar', 'sunI', 'hemiI'];
+const _palA = new THREE.Color(), _palB = new THREE.Color();
 
 // FLYGRÄDSLA sources and reliefs owned by the cabin (§5.9). Rates are per (scaled) second.
 export const FEAR = {
@@ -369,7 +374,6 @@ export function buildCabin(scene, game) {
     vboxS(GC, C.steelLt, s, 1.5, 2.45, -15.3, -14.97, 0.8, 0.9);
     GS.cyl(C.mirror, W(s * 1.95), 0.9, -15.12, 0.09, 0.02, 10);
     vboxS(GC, C.mirror, s, 2.42, 2.45, -15.35, -14.98, 1.3, 1.85);
-    sign(signs, 'TOALETT', s * 0.98, 2.42, -15.65, 0.9, 0.24, { yaw: s > 0 ? -Math.PI / 2 : Math.PI / 2, tilt: -0.6, ...SIGN_W });
   }
 
   // Ceiling and hat racks: down-facing planes only, invisible from the camera above (§5.3).
@@ -387,13 +391,16 @@ export function buildCabin(scene, game) {
   for (const s of [-1, 1]) for (const row of ROWS) psu.push(new THREE.PlaneGeometry(0.36, 0.1).rotateX(Math.PI / 2).translate(W(s * 1.45), 2.06, rowZ(row) - 0.3));
   scene.add(new THREE.Mesh(mergePlates(psu), downMat));
 
-  // Signs: galleys, crew door, emergency exits, the smokers' section. The galley signs hang across
-  // the cabin and turn to the side the camera is on (stepAmbient): from the z-clamped eye behind
-  // one, its up-tilted face read upside down ("NASSYB ERKAB") or edge-on.
-  const galleySigns = [
-    sign(signs, 'FRÄMRE BYSSAN', -1.6, 2.35, 13.5, 1.5, 0.32, { yaw: Math.PI, tilt: -0.7, ...SIGN }),
-    sign(signs, 'BAKRE BYSSAN', 0, 2.3, -18.9, 1.7, 0.34, { yaw: 0, tilt: -0.7, ...SIGN }),
-  ];
+  // Signs: galleys, crew door, emergency exits, the smokers' section, the seatbelt signs, the toilets.
+  // The hanging ones (`hang`) turn about the vertical to face the render camera every frame (YXZ:
+  // the up-tilt turns with them; scene.onBeforeRender below): a fixed one was edge-on from the side
+  // cameras (a red strip across the speakers) and read upside down from beyond its top edge
+  // ("NASSYB ERKAB", "TTELAOT"). `swing` caps the turn away from the sign's own facing or its
+  // reverse, whichever is nearer the camera: BAKRE BYSSAN hangs 0.45 m off the rear wall.
+  const hanging = [];
+  const hang = (m, swing = Math.PI / 2) => { hanging.push({ m, base: m.rotation.y, swing }); return m; };
+  hang(sign(signs, 'FRÄMRE BYSSAN', -1.6, 2.4, 13.5, 1.5, 0.32, { yaw: Math.PI, tilt: -0.7, ...SIGN }));
+  hang(sign(signs, 'BAKRE BYSSAN', 0, 2.3, -18.45, 1.7, 0.34, { yaw: 0, tilt: -0.7, ...SIGN }), 0.6);
   sign(signs, 'BESÄTTNING', 0, 2.38, 17.36, 1.3, 0.28, { yaw: Math.PI, tilt: -0.6, ...SIGN_W });
   for (const s of [1, -1]) {
     sign(signs, 'NÖDUTGÅNG', s * 2.4, 2.32, rowZ(11) - 0.25, 1.0, 0.22, { yaw: s > 0 ? -Math.PI / 2 : Math.PI / 2, tilt: -0.55, bg: '#e0342a', fg: '#fff8e6', scale: 0.6 });
@@ -403,15 +410,35 @@ export function buildCabin(scene, game) {
   }
   // The seatbelt / no-smoking signs over the aisle, lit while the sign is on (§5.7 step 1).
   const beltSigns = [
-    sign(signs, 'SPÄNN FAST BÄLTET\nRÖKNING FÖRBJUDEN', 0, 2.42, 13.1, 1.1, 0.36, { yaw: Math.PI, tilt: -0.75, bg: '#e0342a', fg: '#fff8e6', scale: 0.7 }),
-    sign(signs, 'SPÄNN FAST BÄLTET\nRÖKNING FÖRBJUDEN', 0, 2.42, -14.7, 1.1, 0.36, { yaw: 0, tilt: -0.75, bg: '#e0342a', fg: '#fff8e6', scale: 0.7 }),
+    hang(sign(signs, 'SPÄNN FAST BÄLTET\nRÖKNING FÖRBJUDEN', 0, 2.42, 13.1, 1.1, 0.36, { yaw: Math.PI, tilt: -0.75, bg: '#e0342a', fg: '#fff8e6', scale: 0.7 })),
+    hang(sign(signs, 'SPÄNN FAST BÄLTET\nRÖKNING FÖRBJUDEN', 0, 2.42, -14.7, 1.1, 0.36, { yaw: 0, tilt: -0.75, bg: '#e0342a', fg: '#fff8e6', scale: 0.7 })),
   ];
   for (const m of beltSigns) m.material = m.material.clone();
   const setBeltSignLit = (on) => { for (const m of beltSigns) m.material.color.setHex(on ? 0xffffff : 0x4a4a4a); };
-  // UPPTAGET lamps over the toilet doors (lit while someone is locked in).
-  const lampSign = (lx, y, lz, yaw) => { const m = sign(signs, 'UPPTAGET', lx, y, lz, 0.6, 0.16, { yaw, tilt: -0.6, bg: '#e0342a', fg: '#fff8e6', scale: 0.7 }); m.material = m.material.clone(); m.material.color.setHex(0x4a4a4a); return m; };
-  toiletLamp.L = lampSign(0.97, 2.12, -15.65, -Math.PI / 2);
-  toiletLamp.R = lampSign(-0.97, 2.12, -15.65, Math.PI / 2);
+  // TOALETT over each toilet door with its UPPTAGET lamp hanging under it (lit while someone is
+  // locked in). They hang 0.2 m off the door wall, so the turning lamp (below the 2.3 m wall top)
+  // never enters it; the sign turns above the cubicle.
+  for (const s of [1, -1]) {
+    const m = hang(sign(signs, 'TOALETT', s * 0.8, 2.42, -15.65, 0.9, 0.24, { yaw: s > 0 ? -Math.PI / 2 : Math.PI / 2, tilt: -0.6, ...SIGN_W }));
+    const lamp = signMesh('UPPTAGET', 0.4, 0.16, { bg: '#e0342a', fg: '#fff8e6', scale: 0.7 });
+    lamp.position.set(0, -0.22, 0.002);
+    lamp.material.color.setHex(0x4a4a4a);
+    m.add(lamp);
+    toiletLamp[s > 0 ? 'L' : 'R'] = lamp;
+  }
+  // Turned for the camera that renders this frame (dialogue cuts included), after three has updated
+  // the matrices, so each sign refreshes its own. Chained (buildFlightScenery chains onto it).
+  const prevBefore = scene.onBeforeRender;
+  scene.onBeforeRender = function (renderer, sc, cam, rt) {
+    if (prevBefore) prevBefore.call(this, renderer, sc, cam, rt);
+    if (cam.position.x < CX - 1100) return;
+    for (const h of hanging) {
+      const m = h.m, a = Math.atan2(cam.position.x - m.position.x, cam.position.z - m.position.z);
+      const b = Math.abs(angleDiff(h.base, a)) > Math.PI / 2 ? h.base + Math.PI : h.base;
+      m.rotation.y = b + clamp(angleDiff(b, a), -h.swing, h.swing);
+      m.updateMatrixWorld(true);
+    }
+  };
 
   // ---- gate set collision + visuals (§5.2; dead and hidden unless phase gate) ------------------
   const gateBlocks = [];
@@ -536,6 +563,9 @@ export function buildCabin(scene, game) {
   vbox(GG, C.glassDk, 16.6, 19.45, 16.62, 19.85, 1.17, 1.4);
   vbox(GG, C.beige, 16.2, 21.2, 16.6, 21.7, 1.1, 1.25);
   GGF.cyl(C.ink, W(16.9), 1.25, 20.5, 0.015, 0.3, 6);
+  // Lounge passengers, but none at the east end of the front row (x >= 26): from the arch two-shot's
+  // eye a face there filled the bottom-left corner. (Its random draws are still made, so the other
+  // busts stay who they were.)
   const loungeBusts = new GeoBuilder();
   const rndL = mulberry32(1976);
   for (const z0 of [6.6, 12.6, 18.6]) {
@@ -550,7 +580,7 @@ export function buildCabin(scene, game) {
       if (rndL() < 0.3) {
         const geo = buildBustGeo(randomPed(rndL, { flight: true }));
         geo.translate(W(x), 0.54, z0 + 0.38);
-        loungeBusts.parts.push(geo);
+        if (!(z0 === 6.6 && k >= 10)) loungeBusts.parts.push(geo);
       }
     }
   }
@@ -561,8 +591,12 @@ export function buildCabin(scene, game) {
     GG.ico(C.plantLt, W(x + 0.15), FLOOR + 1.45, z - 0.1, 0.6, 1);
   }
   for (const [x, z] of [[18.4, 10.0], [27.6, 16.0], [18.4, 22.0]]) { GG.cyl(C.chrome, W(x), FLOOR + 0.4, z, 0.06, 0.8, 8); GG.cyl(C.steelDk, W(x), FLOOR + 0.82, z, 0.17, 0.06, 10); }
-  GG.cyl(C.skin, W(30.0), 2.0, 0.02, 0.3, 0.04, 16, Math.PI / 2);
-  GG.cyl(C.ink, W(30.0), 2.0, 0.045, 0.32, 0.02, 16, Math.PI / 2);
+  // The clock: an ink rim behind the face, hands at 9.05 (the flight leaves 09.40).
+  GG.cyl(C.ink, W(30.0), 2.0, 0.015, 0.33, 0.03, 16, Math.PI / 2);
+  GG.cyl(C.skin, W(30.0), 2.0, 0.035, 0.3, 0.03, 16, Math.PI / 2);
+  for (const [a, len, w] of [[-(9 + 5 / 60) / 12 * Math.PI * 2, 0.16, 0.035], [-5 / 60 * Math.PI * 2, 0.24, 0.025]]) {
+    vb(GGF, C.ink, 30.0 - Math.sin(a) * len / 2, 2.0 + Math.cos(a) * len / 2, 0.055, w, len, 0.01, 0, 0, a);
+  }
   sign(gateGroup, 'AVGÅNGAR\nLAS PALMAS 09.40 · GATE 8 · I TID', 25.75, 1.85, 0.32, 5.3, 1.1, { yaw: 0, tilt: -0.3, bg: '#1d1426', fg: '#ffd23f', scale: 0.62 });
   sign(gateGroup, 'SUNTRIP\nSOLEN VÄNTAR', 18.0, 1.55, 0.3, 2.2, 1.4, { yaw: 0, tilt: -0.25, bg: '#f7c31b', fg: '#d8321e', scale: 0.7 });
   GG.cyl(C.orange, W(18.0), 2.62, 0.12, 0.4, 0.05, 16, Math.PI / 2);
@@ -698,6 +732,7 @@ export function buildCabin(scene, game) {
     _drone: DRONE.gate, _droneUp: false, _bounce: 0, _ratataCd: 0, _angerudDone: false, _juiceT: { front: 0, back: 0 },
     _toilet: { L: null, R: null, gate: null },   // who is locked in: 'stig' | walker key | null
     _smokeT: 2, _chatCd: 0,
+    _pal: { now: null, from: null, to: null, t: 0, len: 0 },   // palette blend (applyPalette)
 
     inside(x, z) {
       const lx = x - CX;
@@ -729,18 +764,41 @@ export function buildCabin(scene, game) {
       this._fired = {};
       this.setGateActive(name === 'gate');
       if (name === 'gate') { this._beltWant = false; this._applyBelt(); }
-      this.applyPalette();
+      this.applyPalette(instant ? 0 : PAL_BLEND[name] ?? PAL_BLEND_DEFAULT);
       scenery.setPhaseVisual(name, this.phaseT);
       this._setDrone(DRONE[name] || [0, 0]);
       if (name === 'takeoff' && !instant) { this._beltWant = true; this._applyBelt(); }
       if (name === 'cruise' && prev !== 'cruise') this._angerudDone = false;
       for (const fn of listeners.phase.slice()) fn(name);
     },
-    applyPalette() {
-      const pal = FLIGHT_PALETTES[this.phase];
-      windowMat.color.setHex(pal.window);
-      if (game.level === 'flight') setSkyPalette(pal);
+    // The phase's palette: at once, or blended over `secs` from what is on screen now (stepPalette;
+    // a blend under way starts the next one from where it stands).
+    applyPalette(secs = 0) {
+      const P = this._pal, pal = FLIGHT_PALETTES[this.phase];
+      P.to = pal;
+      P.t = 0;
+      if (secs > 0 && P.now && P.now !== pal) { P.from = P.now; P.len = secs; return; }
+      P.len = 0;
+      this._writePalette(pal);
     },
+    _writePalette(p) {
+      windowMat.color.setHex(p.window);
+      if (game.level === 'flight') setSkyPalette(p);
+      this._pal.now = p;
+    },
+    stepPalette(dt) {
+      const P = this._pal;
+      if (!P.len) return;
+      P.t = Math.min(P.len, P.t + dt);
+      if (P.t >= P.len) { P.len = 0; this._writePalette(P.to); return; }
+      const k = P.t / P.len, s = k * k * (3 - 2 * k), p = {};
+      for (const key of PAL_COLORS) p[key] = _palA.setHex(P.from[key]).lerp(_palB.setHex(P.to[key]), s).getHex();
+      for (const key of PAL_NUMS) p[key] = P.from[key] + (P.to[key] - P.from[key]) * s;
+      this._writePalette(p);
+    },
+    // A stage that plays Angerud's row-6 complaint itself (juice stage 1, rowSixComplaint) takes the
+    // line: the trolley's own row-6 bark stays quiet until the next cruise.
+    skipRowSixBark() { this._angerudDone = true; },
     onPhase(fn) { listeners.phase.push(fn); return () => { const i = listeners.phase.indexOf(fn); if (i >= 0) listeners.phase.splice(i, 1); }; },
     onJolt(fn) { listeners.jolt.push(fn); return () => { const i = listeners.jolt.indexOf(fn); if (i >= 0) listeners.jolt.splice(i, 1); }; },
 
@@ -901,14 +959,15 @@ export function buildCabin(scene, game) {
     },
 
     placeCoins() {
-      // 24 fixed coins (§5.2 budget ≤ 30): the aisle, the galleys, a few in dodge-row leg room.
-      for (let k = 0; k < 15; k++) placeCoin(W(0), 0.9, 11.6 - k * 1.8);
+      // 24 fixed coins (§5.2 budget ≤ 30): the aisle, the galleys, a few in dodge-row leg room. The
+      // aisle line stops at z -10.0: the `row22Cam` cut looks down the aisle past row 22.
+      for (let k = 0; k < 13; k++) placeCoin(W(0), 0.9, 11.6 - k * 1.8);
       placeCoin(W(-0.3), 0.9, 14.2);
       placeCoin(W(0.3), 0.9, 15.6);
       placeCoin(W(0), 0.9, -16.4);
       placeCoin(W(0), 0.9, -18.4);
       placeCoin(W(-1.2), 0.9, 12.9);
-      for (const [row, s] of [[8, 1], [15, -1], [20, 1], [23, -1]]) placeCoin(W(s * 1.0), 0.9, rowZ(row) + 0.31);
+      for (const [row, s] of [[3, -1], [8, 1], [15, -1], [18, 1], [20, 1], [23, -1]]) placeCoin(W(s * 1.0), 0.9, rowZ(row) + 0.31);
     },
 
     // The minimap plan (§5.11). Only live blocks: the gate plan has the door open and the bridge
@@ -952,6 +1011,7 @@ export function buildCabin(scene, game) {
     // ---- per frame (dt already scaled by timeScale) ----
     tick(dt, t, g) {
       this.stepPhase(dt, g);
+      this.stepPalette(dt);
       this.stepTurbulence(dt, g);
       this.stepPusher(dt, g);
       this.stepFear(dt, g);
@@ -1394,9 +1454,6 @@ export function buildCabin(scene, game) {
       if (this._toilet.R === 'stig' && p.state !== 'hidden') this._toilet.R = null;
       toiletLamp.L.material.color.setHex(this._toilet.L ? 0xffffff : 0x4a4a4a);
       toiletLamp.R.material.color.setHex(this._toilet.R ? 0xffffff : 0x4a4a4a);
-      // The galley signs face the camera's side (YXZ: the up-tilt turns with them).
-      const camZ = g.cam.cam.position.z;
-      for (const m of galleySigns) m.rotation.y = camZ > m.position.z ? 0 : Math.PI;
       // Seated cast idle bubbles: free play only (not in the 1.6 s gap before an outro, where they
       // used to stack over its first line), at most one every 5 s for the whole cabin.
       this._chatCd -= dt;

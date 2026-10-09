@@ -530,6 +530,10 @@ offered). Sitting down is chosen per seat, not per aisle spot (§5.10).
 - No breakable props in the cabin. Mission items are `Collectible`s.
 - **Coins**: 24 fixed coins (`placeCoin`) in the aisle and galleys, placed by `cabin.placeCoins()`
   **after `initCoins`** (Phase 0 calls it in init order, §14.2). Budget: cabin ≤ 30 fixed coins.
+  The aisle line runs every 1.8 m from z 11.6 to **−10.0** (13 coins); the rest are in the galleys
+  and the leg room of the dodge rows 3, 8, 15, 18, 20 and 23 (x ±1.0, rowZ + 0.31). (Phase 3 r2:
+  the line went on to z −13.6, and the `row22Cam` cut showed the coin at z −11.8 between Berra
+  and Robban; it and the one at −13.6 moved to rows 3 and 18.)
 
 **Gate set** (only in phase `gate`; `cabin.setGateActive(on)` toggles `group.visible` and every
 gate block's `dead`):
@@ -557,7 +561,11 @@ I TID`, `HERRAR`, `DAMER`, poster `SUNTRIP – SOLEN VÄNTAR`, window wall at x 
 orange-and-wood 1976 terminal palette, brown carpet. Men's room: mirror, 3 basins (visual), a
 cubicle (solid, top 2.2). Newsstand (A1) with a vendor bust. No landmark or HOMES spot is affected
 by the A1 solids. The terminal facade box around the lounge is part of the gate group; A2's
-`gateVisual` adds only the far apron and terminal backdrop.
+`gateVisual` adds only the far apron and terminal backdrop. Lounge passengers: busts on ~30 % of
+the chairs, none at the east end of the front row (x ≥ 26, z 6.6; Phase 3 r2: from the arch
+two-shot's eye a face there filled the bottom-left corner). The wall clock right of the departures
+board (x 30, y 2.0) has its ink rim behind the face and reads 9.05 (Phase 3 r2: the rim sat in
+front and drew a black disc).
 
 **Flight bounds** for `cabin.inside(x, z)`: the cabin interior rect; plus, in phase `gate`, the jet
 bridge interior (x 3.45–14, z 13.7–15.7) and the lounge interior (x 14–38, z 0–30). Level-wide
@@ -613,10 +621,18 @@ export const CAM_CABIN = { pivotH: 1.5, dist: 6.5, pitchMin: 0.72, pitchMax: 1.1
   if any sample is covered by cabin geometry over head height inside the walls. The row-number
   strip "…11 12 14 15…" is painted on the inner wall face above the windows, at y 1.7–1.9, on both
   sides.
-- The galley signs `FRÄMRE BYSSAN` (z 13.5) and `BAKRE BYSSAN` (z −18.9) hang across the cabin and
-  turn every frame to the side the camera is on (yaw 0 if the eye's z is greater than the sign's,
-  else π; Phase 3): from the z-clamped eye behind one, its up-tilted face read upside down
-  ("NASSYB ERKAB" at the rear galley) or edge-on.
+- **Hanging signs turn to the camera** (Phase 3 r2; r1 turned only the galley signs between yaw 0
+  and π): `FRÄMRE BYSSAN` (−1.6, y 2.4, z 13.5), `BAKRE BYSSAN` (0, y 2.3, z −18.45), the two
+  `SPÄNN FAST BÄLTET / RÖKNING FÖRBJUDEN` signs (z 13.1 and −14.7) and the two `TOALETT` signs
+  with their `UPPTAGET` lamps hanging under them (±0.8, y 2.42, z −15.65: 0.2 m out from the door
+  wall, so the turning lamp, below the 2.3 m wall top, never enters it) turn about the vertical
+  every rendered frame to face the render camera (`scene.onBeforeRender`, chained; the Euler order
+  YXZ keeps each sign's up-tilt). A fixed sign was edge-on from the side cameras (a red strip
+  across Stig in the ombord intro) and read upside down from beyond its top edge ("NASSYB ERKAB",
+  "TTELAOT" from the rear-galley camera). The turn takes the sign's own facing or its reverse,
+  whichever is nearer the camera, capped at ±90° from it; `BAKRE BYSSAN` (0.45 m off the rear
+  wall) is capped at ±0.6 rad so it never swings into the wall. The wall signs (`BESÄTTNING`,
+  `NÖDUTGÅNG`, `RÖKARE`) stay fixed.
 - Flight level: `sun.castShadow = false`, hemisphere light raised (palette `hemiI`).
 - **No global fog on the interior**: every flight palette keeps `fogNear ≥ 40` m (the interior is
   ≤ 12 m from the camera). The climb whiteout is faked with cloud puffs streaming past the plane
@@ -708,9 +724,11 @@ stub with this exact shape):
 - The town clouds `MAT._clouds` are hidden for the whole flight level. Snow: flightScenery's own
   point snow (A2; it keeps out of the cabin, bridge and lounge) in phase `gate`, fading out over
   `takeoff` t 4–7. (A1's earlier cabin `fx.snow` emitter was removed in Phase 2: one snow system.)
-  Over the bridge and the lounge rects no flake falls at any height (Phase 3: flakes between the
-  2.6 m wall tops and the high camera landed, on screen, on the roofless rooms' floors); over the
-  cabin only below y 2.7.
+  Over the cabin (x ±3.6, z −27…18.6), the bridge and the lounge rects no flake falls at any
+  height (Phase 3: flakes between the 2.6 m wall tops and the high camera landed, on screen, on the
+  roofless rooms' floors; r2 extended it from the bridge and lounge to the cabin, where flakes
+  drifted over the seated passengers during boarding and the takeoff roll). From an outside camera
+  the column over the plane is free of snow too, next to the free block over the terminal.
 - The snowfield's ~70 drift lumps (`drifts`) show in phase `gate` only. The runway tile carries its
   own low drifts between the plough banks and the forest (|x| 50–78, 10 per tile, none at the
   turn-off), which scroll with it (Phase 3: the field's lumps stood still while the runway scrolled
@@ -736,6 +754,17 @@ stub with this exact shape):
 | `approach` | 14 | `descent` | deck rises past (2 s whiteout), then sea + island domes slide closer; pitch −0.03 (nose slightly down) | fear source +1/s; drone 0.7 |
 | `landing` | 6 | `island` | `landingStrip` rises to y 0.13 under the plane | t 5: touchdown thud + shake 0.6 + fear +10; t 5.5: reverse thrust (drone bright 1 for 3 s) + fear +5 |
 | `landed` | — | `island` | static runway, sea on the left, terminal | — |
+
+**Palette blend** (Phase 3 r2): a phase change without `instant` (the chained boundaries and a
+mission cue's `phase`) blends the sky, fog, light and window palette from what is on screen to the
+new phase's over **1.5 s into `climb`** (under the whiteout puffs) and **2 s** otherwise (into
+`cruise` it matches the cruise puffs' fade-in), smoothstep, in `cabin.tick` (`stepPalette`; colours
+lerped in linear space, fog near/far and intensities linearly). `instant` (level switches,
+`restoreAmbience`, checkpoint retries) and `cabin.applyPalette()` with no argument snap. Before,
+takeoff → climb turned grey Arlanda white in one frame while the plane was still over the runway
+(fog far 300 → 520 m popped a band of trees in), and climb → cruise turned white to deep blue with
+the interior brightening in the same frame (RMSE between frames 0.1 s apart, outside camera:
+0.21 → 0.10 and 0.15 → 0.03; the rest of the takeoff → climb change is the scenery's own).
 
 Phases `takeoff → climb → cruise` and `approach → landing → landed` chain automatically unless the
 phase was set with `hold: true` (`cabin.setPhase(name, { instant, hold })`): a held phase stops at
@@ -926,7 +955,8 @@ METERS.flygradsla = { mode: 'panic', label: 'FLYGRÄDSLA', cls: 'fear', hot: 70,
 - **"Ra-tara-tara…"** [F]: when `vardinna2` (with the trolley) passes rows 21–23, Berra and Robban
   bubble it (45 s cooldown). (In the film they say it at the stewardess; never triggered by Stig.)
 - Angerud (6C) bubbles the "varm middag" complaint when the trolley stops at row 6 (once per
-  cruise).
+  cruise). `cabin.skipRowSixBark()` (Phase 3 r2) spends that once for a stage that plays the
+  complaint itself (juice stage 2, §8.3): both used to play, and he opened with the line twice.
 - 2–3 standing passengers ("aisle walkers", P1; `cabin.walkers`, keys `walker0..2`): shuffle between
   the galleys and a toilet; when the player comes within 1.5 m in the aisle they step into the
   nearest free row ("Ursäkta!" [N]). A seat's `taken` may be `'walkerN'` or `'blockerN'`;
@@ -1602,7 +1632,7 @@ for stage 1.
 2. `interact({ at: (g) => g.cabin.trolleyEnd(g), radius: 1.3, enabled: g => g.cabin.trolleyStopped, prompt: '<b>E</b> Ta en juice', text: 'Hämta juicen vid serveringsvagnen – men akta tårna!', checkpoint: true, startCue: { trolley: true } })`
    (`cabin.trolleyEnd(g)` = the trolley end nearest the player, §5.8; `interact` re-reads a
    function `at` every frame through `addInteractable({ pos })`, §14.3.)
-   Bubbles (shipped as a stage wrapper in missions/flight.js, not `timedCues`: they start when the trolley stands at row 6 and the player is within 7.5 m of Angerud in 6C; `pax` speaks from a passenger bust across the aisle) while the trolley serves near row 6: angerud "Kallar ni det här 'varm middag'? Så ser
+   Bubbles (shipped as a stage wrapper in missions/flight.js, not `timedCues`: they start when the trolley stands at row 6 and the player is within 7.5 m of Angerud in 6C; `pax` speaks from a passenger bust across the aisle; the wrapper calls `cabin.skipRowSixBark()` from the stage's first frame, so the cabin's own row-6 bark (§5.12) does not open the complaint a second time, Phase 3 r2) while the trolley serves near row 6: angerud "Kallar ni det här 'varm middag'? Så ser
    det inte ut när jag flyger reguljärt." [F](t) · angerud "Jag har inte fått resan gratis. Jag har
    betalat 3 000 för den." [F](t) · pax "Jag betalade bara 995. Sista minuten." [F](t) · angerud
    "Det fattades bara det…!" [F](t)
@@ -2804,7 +2834,14 @@ orange-violet grisfest night → sunset on Christmas Eve.
 
 ### 13.3 Sky / fog / light palettes (fog colour = sky horizon = `body` background, always together)
 
-`setSkyPalette({ top, horizon, fogNear, fogFar, sun, sunI, hemiSky, hemiGround, hemiI, sunDir })`.
+`setSkyPalette({ top, horizon, fogNear, fogFar, sun, sunI, hemiSky, hemiGround, hemiI, sunDir, cloudRim })`.
+
+**Cloud rim** (Phase 3 r2, optional field): the town clouds' outline colour (`MAT.cloudRim`, the
+clouds' own `outlineMat(0.6, …)`). The island palettes set it: `day` `0x6f9ccc` (as before),
+`night` `0x101433`, `sunset` `0xa0605a`. A fixed sky-blue rim glowed cyan round the dark night
+clouds over the farm, the lighthouse and the race, and blue round the peach sunset clouds on the
+julafton mantra and the Rio card; now night clouds get a dark ink-like line and sunset ones a warm
+one. The flight palettes leave it out (the town clouds are hidden in the flight level).
 
 | palette | top | horizon | fog near/far | sun / I | hemi sky / ground / I | cabin window |
 |---|---|---|---|---|---|---|
@@ -3064,10 +3101,11 @@ list, `got.records/mosquitoes`, `spawnMuscle`, `'hydrant'`/`'pump'` special case
 ### 14.4 gfx.js (Phase 0)
 
 ```js
-export function setSkyPalette({ top, horizon, fogNear, fogFar, sun, sunI, hemiSky, hemiGround, hemiI, sunDir })
+export function setSkyPalette({ top, horizon, fogNear, fogFar, sun, sunI, hemiSky, hemiGround, hemiI, sunDir, cloudRim })
   // sky uniforms (sky material stashed as MAT.sky), scene.fog colour/near/far, document.body bg,
   // sun colour/intensity, hemi colours/intensity, sunDir [x, y, z] = the sun's offset from the
-  // followSun point (Phase 3, §13.3). Missing fields keep their value.
+  // followSun point (Phase 3, §13.3), cloudRim = the town clouds' outline colour (MAT.cloudRim;
+  // Phase 3 r2, §13.3). Missing fields keep their value.
 export function setCloudsVisible(on)     // MAT._clouds.visible
 export function setShadows(on)           // sun.castShadow
 export function signMesh(text, w, h, opts) -> Mesh   // opts.double (Polish): adds a child plane
@@ -3294,6 +3332,7 @@ cabin = {
   seatCharacter(ch, seatId),  unseatCharacter(ch, spot?),  unseatAll(),  seatOf(ch) -> id | null,
   startTrolley(),  stopTrolley(),  trolleyEnd(g) -> { x, z },
   stopTurbulence(),              // Phase 2: ends a running turbulence now (restoreAmbience)
+  skipRowSixBark(),              // Phase 3 r2: a stage takes Angerud's row-6 line (§5.12)
   walkers,                       // the aisle walkers (keys walker0..2; §5.12); _t.serving
   setAisleBlockers(on),
   setGateActive(on),
@@ -3304,7 +3343,8 @@ cabin = {
 // Phase 0a extras (additive): FLIGHT_PALETTES is keyed by PHASE (gate takeoff climb cruise approach
 // landing landed -> the §13.3 palettes, which are exported by name as PALETTES); also exported:
 // ROWS, rowZ(row), SEAT_X, CAST_SEATS, DODGE_ROWS. cabin.bestSeat(g) (the §5.10 seat choice),
-// cabin.applyPalette(), cabin.pusher (the vardinna2 Character; game.npc('vardinna2') returns it),
+// cabin.applyPalette(secs = 0) (Phase 3 r2: secs > 0 blends, §5.6), cabin.pusher (the vardinna2
+// Character; game.npc('vardinna2') returns it),
 // cabin.blockers (the stower Characters). Plane seats live on the Character as ch.seatId (player
 // and NPCs alike); seatOf(ch) reads it.
 
@@ -4457,3 +4497,18 @@ the fixer's group.
 - r2 world: the Rio card's five band busts stand in one row across the end card's view, and the
   maracas are held before the chest (§6.3): two busts stood behind the others and the maracas at
   head height read as earmuffs.
+- r2 cabin-flight: every hanging cabin sign (both galley signs, both seatbelt signs, both `TOALETT`
+  signs with their `UPPTAGET` lamps now hanging under them at ±0.8) turns about the vertical to
+  face the render camera each frame, replacing the galley signs' two-way flip; `FRÄMRE BYSSAN` at
+  y 2.4 (clears the curtain rail), `BAKRE BYSSAN` at z −18.45 capped at ±0.6 rad (§5.3).
+- r2 cabin-flight: a phase change without `instant` blends the flight palette over 1.5 s (into
+  climb) or 2 s (`stepPalette`, §5.6); tests that park a phase call `applyPalette()` to snap.
+- r2 cabin-flight: no snow over the cabin at any height (was only below y 2.7; §5.6).
+- r2 cabin-flight: no lounge busts at the east end of the front chair row (the arch two-shot's
+  corner face); the lounge clock's rim is behind its face, with hands at 9.05 (§5.2).
+- r2 cabin-flight: the aisle coins stop at z −10.0; the two at −11.8 and −13.6 (in the `row22Cam`
+  cut) moved to the leg room of dodge rows 3 and 18; still 24 (§5.2).
+- r2 cabin-flight: `cabin.skipRowSixBark()`; juice stage 2's `rowSixComplaint` calls it, so Angerud
+  opens the complaint once (§5.12, §8.3).
+- r2 cabin-flight: optional palette field `cloudRim` (town clouds' outline): day `0x6f9ccc`, night
+  `0x101433`, sunset `0xa0605a` (§13.3).

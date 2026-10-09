@@ -55,10 +55,12 @@ async function bubbles(g, m, lines) {
 
 // The row-6 complaint (§8.3 stage 2): plays once, when the serving trolley stands at row 5-7 and
 // the player is near enough to see it (within 7.5 m of Angerud in 6C, i.e. on screen). 'pax' is a
-// passenger bust across the aisle (the first bust seat of 6D 7D 5D 6E 7C).
+// passenger bust across the aisle (the first bust seat of 6D 7D 5D 6E 7C). The stage owns the
+// line: the cabin's own row-6 bark is switched off, or Angerud opened with it twice.
 function rowSixComplaint(g, m) {
   if (this.complained) return;
   const c = g.cabin, t = c.trolley, p = g.player, a = g.npc('angerud');
+  c.skipRowSixBark();
   if (!c.trolleyStopped || Math.abs(t.z - rowZ(6)) > 1.4 || dist(p.x, p.z, a.x, a.z) > 7.5) return;
   this.complained = true;
   const s = ['6D', '7D', '5D', '6E', '7C'].map((id) => c.seats[id]).find((q) => q?.taken === 'bust') || c.seats['6D'];

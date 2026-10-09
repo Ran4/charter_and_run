@@ -997,9 +997,9 @@ export function buildFlightScenery(scene) {
       if (snowOff[j] < -SX) snowOff[j] += 2 * SX; else if (snowOff[j] > SX) snowOff[j] -= 2 * SX;
       if (snowOff[j + 2] < -SZ) snowOff[j + 2] += 2 * SZ; else if (snowOff[j + 2] > SZ) snowOff[j + 2] -= 2 * SZ;
       const x = lx + snowOff[j], y = ly + snowOff[j + 1], z = lz + snowOff[j + 2];
-      // No snow inside the roofless cabin, jet bridge or lounge. Over the terminal rooms at any
-      // height: a flake between the wall tops and the high camera lands, on screen, on their floors.
-      const inside = (y < 2.7 && x > -3.6 && x < 3.6 && z > -27 && z < 18.6) || (gate && ((x > 3.4 && x < 14 && z > 12.6 && z < 16.8) || (x > 13 && x < 39 && z > -1 && z < 31)));
+      // No snow over the roofless cabin, jet bridge or lounge, at any height: a flake between the
+      // wall tops and the high camera lands, on screen, on their floors.
+      const inside = (x > -3.6 && x < 3.6 && z > -27 && z < 18.6) || (gate && ((x > 3.4 && x < 14 && z > 12.6 && z < 16.8) || (x > 13 && x < 39 && z > -1 && z < 31)));
       snowPos[j] = x; snowPos[j + 1] = inside || y < GY ? -1e4 : y; snowPos[j + 2] = z;
     }
     snowGeo.attributes.position.needsUpdate = true;

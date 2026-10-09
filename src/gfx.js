@@ -313,19 +313,23 @@ function addSky() {
     }
   }
   const cm = new THREE.Mesh(gb.build(), new THREE.MeshToonMaterial({ vertexColors: true, gradientMap: toonGradient(), fog: false }));
+  // The clouds' own outline material (no other mesh uses this key): its colour follows the palette.
   const om = outlineMat(0.6, 0x6f9ccc);
   om.fog = false;
   cm.add(new THREE.Mesh(outlineGeometry(cm.geometry), om));
   clouds.add(cm);
   scene.add(clouds);
   MAT._clouds = clouds;
+  MAT.cloudRim = om;
 }
 
 // Sky gradient, fog, page background, sun and hemisphere light in one go (DESIGN §13.3: fog colour
 // = sky horizon = body background, always together). Missing fields keep their value. sunDir
-// [x, y, z] = the sun's offset from the point it follows (followSun).
-export function setSkyPalette({ top, horizon, fogNear, fogFar, sun: sunC, sunI, hemiSky, hemiGround, hemiI, sunDir } = {}) {
+// [x, y, z] = the sun's offset from the point it follows (followSun); cloudRim = the town clouds'
+// outline colour.
+export function setSkyPalette({ top, horizon, fogNear, fogFar, sun: sunC, sunI, hemiSky, hemiGround, hemiI, sunDir, cloudRim } = {}) {
   if (sunDir) SUN_OFFSET.set(...sunDir);
+  if (cloudRim !== undefined) MAT.cloudRim.color.set(cloudRim);
   if (top !== undefined) MAT.sky.uniforms.top.value.set(top);
   if (horizon !== undefined) {
     MAT.sky.uniforms.horizon.value.set(horizon);

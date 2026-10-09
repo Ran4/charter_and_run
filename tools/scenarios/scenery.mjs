@@ -21,13 +21,15 @@ const OUTSIDE = {
 };
 
 // Park the cabin (and its scenery) at phase ph, time t: start it animated a little earlier so
-// particles and snow are flowing, then freeze game time (timeScale 0) for the shots.
+// particles and snow are flowing, then freeze game time (timeScale 0) for the shots. The palette
+// snaps (a non-instant setPhase blends it over 1.5-2 s, §5.6).
 async function parkAt(T, ph, t) {
   const t0 = Math.max(0, t - 0.8);
   await T.ev((ph, t0) => {
     const g = __game, c = g.cabin;
     g.timeScale = 1;
     c.setPhase(ph, { hold: true });
+    c.applyPalette();
     c.phaseT = t0;
     c._fired = { drone: true, 'bump1.5': true, bump4: true, 'bump6.5': true, touch: true, rev: true };
     c.scenery.setPhaseVisual(ph, t0);
