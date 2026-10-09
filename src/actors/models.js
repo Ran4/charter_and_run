@@ -45,6 +45,7 @@ export const CHARS = {
     outfits: {
       arlanda: { hat: 'trilby', hatC: 0xe8e2d0, shirt: 0xd8c8a0, longSleeves: true, coat: true, held: 'boombox' },
       flyg: { shirt: 0xf4f4f0, collar: true },
+      flygRadio: { shirt: 0xf4f4f0, collar: true, held: 'boombox' },   // the sprit outro's demonstration (cue)
       sol: { shirt: 0xf2c94c, print: [0xc8902a, 0xfff0b0], printStyle: 'check', collar: true, pants: 0xe8dcb8, shades: 0x2a2a2a, glasses: null },
       gris: { shirt: 0xf4f4f0, stripe: 0xd8321e, stripes: true, collar: true, chain: 0xe8c040 },
       rio: { shirt: 0xf4f4f0, longSleeves: true, suit: 0xf4f4f0, bowtie: 0x1d1426, pants: 0x1d1426, shades: 0x2a2a2a, glasses: null },
@@ -917,6 +918,13 @@ function heldPose(m, st, t, place = false) {
       if (place) inHand(m, prop(m, 'camera'), 0, 0, -0.02, 0.02);
       break;
     case 'boombox':
+      if (st.seated) {
+        // In a seat (Ole's flygRadio on the plane): on his lap, the speakers to the front, a hand on
+        // it (hanging at his side it sank into the next seat).
+        if (pose) R.rotation.set(-0.95, 0, 0.3);
+        if (place) { const p = prop(m, 'boombox'); p.position.set(0, m.torsoH * 0.7, m.torsoD * 0.5 + 0.12 * m.s); p.rotation.set(0, Math.PI / 2, 0); }
+        break;
+      }
       if (pose) R.rotation.set(moving ? -0.12 * Math.sin(m.phase) : 0, 0, -0.22);
       if (place) inHand(m, prop(m, 'boombox'), 0, 0, 0.0, 0);
       break;

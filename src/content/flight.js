@@ -59,8 +59,9 @@ export const CHATTER_FLIGHT = {
     'Ja, men dyr!',                                          // [F*] (his hand luggage at the check-in)
     'Min drøm er å fly med Concorde fra Paris til Rio.',      // [F*]
   ],
+  // (Not "Kallar ni det här 'varm middag'?": it would play at the gate and before takeoff; the
+  // complaint has its scene at the trolley's row-6 stop.)
   angerud: [
-    'Kallar ni det här \'varm middag\'?',                     // [F*](t)
     'Det är sista gången jag åker med SunTrip!',             // [F*]
     'Jag har inte fått resan gratis.',                        // [F*](t)
   ],
@@ -84,14 +85,15 @@ export const CHATTER_FLIGHT = {
 };
 
 // Ole's statistics barks (cabin.tick: player within 4 m of Ole, no mission running or stage
-// `oleBarks`, every 25 s, fear +8). The gate lines are film content relocated as barks.
+// `oleBarks`, every 25 s, fear +8). The gate lines are film content relocated as barks. Every line
+// must work at the gate too (the first bark comes 10 s after the start, before the two have met).
 export const OLE_STATS = [
   'Du vet vel at det er 50 prosent sjanse å overleve en flyulykke.',          // [F*]
   'Det er farligere å kjøre bil enn å fly.',                                   // [F*]
   'Man regner mellom to og fem millioner flytimer pr. kræsj.',                // [F*]
   'Leste du om en sånn jumbopilot som gjorde en looping? To ganger.',         // [F*]
-  'Det her er bare luftlommer, Stig-Helmer. Helt normalt!',                   // [N]
-  'Tre ganger så fort som en geværkule, Concorde!',                           // [F*]
+  'Det blir nok litt luftlommer underveis. Helt normalt!',                    // [N]
+  'Concorde flyr tre ganger så fort som en geværkule!',                       // [F*]
   'Statistisk sett er det tryggest å sitte bakerst. Eller var det fremst?',   // [N]
   'Hører du den lyden? Helt normalt. Tror jeg.',                              // [N]
 ];

@@ -7,8 +7,8 @@
 // the real collision geometry): T_ref = the clean autopilot time on the sensible route (sprinting
 // where sprint fear is small next to the stage's own) + 0.5 s per target (reaction and aim), the
 // 75th percentile for the random bottle sweep; timer = ceil(1.25 × T_ref). Gate dash 3.6 s -> 6,
-// seat 2.9 s past three stowers -> 7, bottles p75 17.0 s of 14 -> 25, round-up 7.6 s -> 12, back
-// to 14B from the far end 3.2 s -> 5.
+// seat 2.9 s past three stowers -> 7, bottles p75 14.4 s of 12 runs + 2.5 -> 22 (Phase 3 r1, the
+// trolley frozen through the intro), round-up 7.6 s -> 12, back to 14B from the far end 3.2 s -> 5.
 //
 // FLYGRÄDSLA balance (§5.9; binding: a careful player never panics, a careless one does in
 // missions 1, 2 and 5), measured by `calibflight` (careful vs careless autopilots):
@@ -25,6 +25,10 @@
 import { goto, scene, interact, mantra, sit, timeline, carry, collect } from './kinds/index.js';
 import { rowZ } from '../../world/cabin.js';
 import { dist } from '../../util.js';
+
+// Cutaway onto Berra and Robban in 22C/D: the camera stands in the aisle in front of row 22, looking
+// aft and down at their faces (a `cut` cue, §9.3).
+const ROW22 = { at: 'row22Cam', dist: 0, height: 3.6 };
 
 // Stage decorator (flavour only): runs `tick(g, m, dt)` (this = the stage) every frame after the
 // kind's own update while the stage is still going. Used for scene-dressing bubbles that depend on
@@ -74,25 +78,27 @@ export const FLIGHT_MISSIONS = [
   {
     id: 'gate', title: 'Jag kan flyga, jag är inte rädd', level: 'flight', giver: 'ole', at: 'gateQueue', reward: 200,
     intro: [
-      ['stig', 'Vad ska de göra?'],                                        // [F]
+      ['stig', 'Vad ska de göra?'],                                        // [F](t)
       ['ole', 'Rutinekontroll. Narkotika, våpen, bomber…'],                  // [F*](t)
       ['stig', 'Bomber…?!', { fear: 10 }],                                  // [F]
       ['ole', 'Du ser nervøs ut, du. Første gang du flyr?'],                 // [N]
       ['stig', 'Jag kan flyga, jag är inte rädd.'],                          // [F]
     ],
     stages: [
-      // [0] the metal detector beeps
+      // [0] the metal detector beeps. Berra waits in the queue behind Stig (local (35.8, 4.6), by the
+      // x-ray belt's landside end, clear of the walk from Ole to the arch), so his heckle comes from
+      // the shot (from the lounge it came from 14.5 m off screen); stage 5 moves him on.
       () => interact({
         at: 'gateArch', radius: 1.4, prompt: '<b>E</b> Gå genom metallbågen', text: 'Gå genom säkerhetskontrollen',   // [N] · [N]
-        startCue: { phase: ['gate', { instant: true }] },
+        startCue: { phase: ['gate', { instant: true }], place: { berra: ['gateArch', -0.4, -2.8] } },
         useCue: { sfx: 'beep', fear: 12, flash: 'rgba(255,60,40,.35)' },
         lines: [
           ['kontrollant', 'Vill ni vara vänlig och ta av er skon.', { anim: { who: 'stig', flag: 'shoeOff', secs: 2 }, sfx: 'laugh' }],   // [F]
           ['berra', 'Kolla terroristen!'],                                                                                             // [F](t)
         ],
       }),
-      // [1] to Ole's seat by gate 8
-      () => goto({ to: 'gateOle', radius: 2.5, text: 'Sätt dig vid gate 8', startCue: { place: { ole: ['gateOle', 0, 0] } } }),   // [N]
+      // [1] to Ole by gate 8 (not "Sätt dig": that is the seat prompt, and there is nothing to sit on)
+      () => goto({ to: 'gateOle', radius: 2.5, text: 'Gå till Ole vid gate 8', startCue: { place: { ole: ['gateOle', 0, 0] } } }),   // [N]
       // [2] Ole's statistics. Only Ole's six statistics lines carry fear. Checkpoint: a failed
       // dash replays the statistics (which rebuild the fear the dash needs), not the arch.
       () => scene({
@@ -102,7 +108,7 @@ export const FLIGHT_MISSIONS = [
           ['ole', 'Det er farligere å kjøre bil enn å fly.', { fear: 8 }],                          // [F]
           ['ole', 'Man regner mellom to og fem millioner flytimer pr. kræsj.', { fear: 8 }],        // [F]
           ['stig', 'Krasch?'],                                                                       // [F]
-          ['ole', 'Kræsj.', { fear: 8 }],                                                            // [F]
+          ['ole', 'Kræsj.', { fear: 8 }],                                                            // [F*] (bokmål echo; SUB-NO stops at "pr kræsj.")
           ['ole', 'Leste du om en sånn jumbopilot som gjorde en looping?', { fear: 8 }],             // [F]
           ['stig', 'Looping med en jumbo?'],                                                         // [F]
           ['ole', 'Ja. To ganger.', { fear: 8 }],                                                    // [F]
@@ -117,16 +123,19 @@ export const FLIGHT_MISSIONS = [
       // [4] Levander's exercise
       () => mantra({ at: 'herrtoa', radius: 2.2, secs: 3, text: 'Håll J: sträck ut armarna – Jag kan flyga, jag är inte rädd', barLabel: 'JAG KAN FLYGA' }),   // [N] · [N]
       // [5] Berra comes in: 2.2 m inside the men's room door, turned toward the basins where Stig
-      // stands (§8.1 has dz -1.5, which is outside the door in the lounge, behind the wall).
+      // stands (§8.1 has dz -1.5, which is outside the door in the lounge, behind the wall). He goes
+      // back to the lounge when the scene is over (a cue on his last line fires as it starts, and
+      // took him out of the shot before his punchline).
       () => scene({
         place: { berra: ['herrtoaDoor', 0, 2.2, 1.25] }, frame: ['berra', 'stig'],
+        doneCue: { place: { berra: ['gateLounge', -1.2, 0] } },
         lines: [
           ['berra', 'Hur mår du?'],                                                          // [F](t)
           ['stig', 'Bra.'],                                                                  // [F]
           ['stig', 'Jag håller på med yoga, avslappningsövningar. Isometrisk träning…'],     // [F]
           ['berra', 'Jaha… Ja, själv tar jag mig ett järn. Ska du ha?'],                      // [F]
           ['stig', 'Nej tack, jag tål inte starksprit.'],                                     // [F]
-          ['berra', 'Nej, vem fan gör det?', { place: { berra: ['gateLounge', -1.2, 0] } }],  // [F]
+          ['berra', 'Nej, vem fan gör det?'],                                                 // [F]
         ],
       }),
       // [6] the queue to gate 8: the Stork PA, and the sisters overheard through the ladies' door
@@ -153,7 +162,7 @@ export const FLIGHT_MISSIONS = [
           ['sulan', 'Här ligger Pepes Bodega. Det står på skylten.'],                                    // [F]
           ['berra', 'De häller upp och allt är klart?'],                                                 // [F]
           ['sulan', 'Plomberat och klart.'],                                                             // [F]
-          ['berra', 'Robban! Sulan har varit på Pepes Bodega. De häller 80-procentig rom på vinflaskor.'],   // [F]
+          ['berra', 'Robban! Sulan har varit på Pepes Bodega. De häller 80-procentig rom på vinflaskor.'],   // [F*] (+ "Robban!")
           ['robban', 'Vad hette det, sa du?'],                                                           // [F]
           ['berra', 'Pepes Bodega.'],                                                                    // [F]
           ['robban', 'Glöm aldrig det, du.'],                                                            // [F]
@@ -189,13 +198,14 @@ export const FLIGHT_MISSIONS = [
         startCue: { phase: ['gate', { instant: true }], seatbelt: true, blockers: true }, doneCue: { blockers: false },
       }),
       // [1] the takeoff (scaled seconds, the cabin phases on the same clock; PANIK fails).
-      // Checkpoint: a panicked takeoff is retried from row 14, not from the door.
+      // Checkpoint: a panicked takeoff is retried from row 14, not from the door. The bar is the
+      // takeoff's elapsed time (labelled FLYGRÄDSLA it read as the fear meter).
       () => timeline({
         checkpoint: true, retryAt: 'cabinRow14',
-        seat: '14B', lockSeat: true, panicFails: true, oleBarks: true, secs: 27, text: 'Starten! Håll J om det blir för mycket', barLabel: 'FLYGRÄDSLA',   // [N] · [N]
+        seat: '14B', lockSeat: true, panicFails: true, oleBarks: true, secs: 27, text: 'Starten! Håll J om det blir för mycket', barLabel: 'STARTEN',   // [N] · [N]
         events: [
           [0, { phase: 'takeoff', toast: 'Håll <b>J</b>: Jag kan flyga, jag är inte rädd' }],                                                                      // [N]
-          [10, { sfx: 'thud', fear: 20, shake: 0.4, say: ['stig', 'Vad är det för ljud?', 1.5] }],                                                                // [F]
+          [10, { sfx: 'thud', fear: 20, shake: 0.4, say: ['stig', 'Vad är det för ljud?', 1.5] }],                                                                // [F](t)
           [11.5, { say: ['ole', 'Landingshjulene som går opp. Hydraulikk, vet du.', 2.4] }],                                                                     // [F](t)
           // "Ellers…" is ours: the Norwegian subtitle stops at "få fart", the Swedish one goes on to "annars…".
           [14, { say: ['ole', 'De går opp sånn, og så lukker lemmene seg. Så flyet ikke skal stoppe, men få fart. Ellers…', 3.4] }],                            // [F*](t)
@@ -206,7 +216,7 @@ export const FLIGHT_MISSIONS = [
     ],
     outroCam: 'player',
     outro: [
-      ['ole', 'Hva er det for et merke du har?'],                                                          // [F*]
+      ['ole', 'Hva er det for et merke du har?'],                                                          // [F*](t)
       ['stig', 'Hammarby. Känner du till Hammarby?'],                                                      // [F]
       ['ole', 'Eneste svenske byene jeg kjenner til er Stockholm og Göteborg og Malmö.'],                  // [F]
       ['stig', 'Det här är ett fotbollslag.'],                                                             // [F]
@@ -232,15 +242,17 @@ export const FLIGHT_MISSIONS = [
       ['ole', 'Ja, da trykker du der oppe.'],                                                                                        // [F*]
     ],
     stages: [
-      // [0] the call button: he holds the cup up to it and waits for the juice to come out
+      // [0] the call button: on Ole's "Ja." he holds the cup up to it and waits for the juice to come
+      // out (as in the film, so "Nei…!" answers the cup). No cup on the press itself: that anim's
+      // off-timer would drop the cup again under "Nei…!" when the lines go quickly.
       () => interact({
         at: 'call14', whileSeated: true, seat: '14B', prompt: '<b>E</b> Tryck där uppe', text: 'Sätt dig på 14B och tryck på knappen ovanför',   // [N] · [N]
         startCue: { phase: ['cruise', { instant: true }] },
-        useCue: { sfx: 'pling', anim: { who: 'stig', flag: 'cupUp', secs: 6 } },
+        useCue: { sfx: 'pling' },
         lines: [
           ['ole', 'Nei…'],                                                              // [F*](t)
           ['stig', 'Där?'],                                                             // [F]
-          ['ole', 'Ja.'],                                                               // [F]
+          ['ole', 'Ja.', { anim: { who: 'stig', flag: 'cupUp', secs: 6 } }],             // [F]
           ['ole', 'Nei…!', { anim: { who: 'ole', flag: 'laugh', secs: 3 } }],             // [F*](t)
           ['ole', 'Så… så kommer flyvertinnen. Juice, whisky.'],                        // [F*]
           ['stig', 'Hon har visst fullt upp.'],                                         // [N]
@@ -251,9 +263,10 @@ export const FLIGHT_MISSIONS = [
         at: (g) => g.cabin.trolleyEnd(g), radius: 1.3, enabled: (g) => g.cabin.trolleyStopped, prompt: '<b>E</b> Ta en juice',   // [N]
         text: 'Hämta juicen vid serveringsvagnen – men akta tårna!', checkpoint: true, startCue: { trolley: true },              // [N]
       }), rowSixComplaint),
-      // [2] carry it back through the turbulence: hold Space, never run, keep clear of the trolley
+      // [2] carry it back through the turbulence: hold Space, never run (the text says so: one
+      // second of sprinting spills it), keep clear of the trolley
       () => carry({
-        item: 'juice', to: 'cabinRow14', radius: 1.2, text: 'Bär juicen till 14B utan att spilla', failText: 'Du spillde juicen!',   // [N] · [N]
+        item: 'juice', to: 'cabinRow14', radius: 1.2, text: 'Bär juicen till 14B – gå, spring inte!', failText: 'Du spillde juicen!',   // [N] · [N]
         failOn: { bumped: true, sprintSecs: 1.0 }, startCue: { turbulence: [0.6, 5, { delay: 2 }] },
       }),
       // [3] sit down and enjoy it
@@ -267,14 +280,15 @@ export const FLIGHT_MISSIONS = [
 
   // ===== §8.4 · 3 · sprit =====================================================================
   // A scramble for rolling bottles in a moving aisle while turbulence tips them back and forth and
-  // the trolley keeps coming. Berra and Robban stay seated (22C/D).
+  // the trolley keeps coming. Berra and Robban stay seated (22C/D); their lines cut to `row22Cam`
+  // (in front of row 22, looking aft), since no frame round row 14 or the galley holds them.
   {
     id: 'sprit', title: 'Medhavd sprit', level: 'flight', giver: 'vardinna', at: 'galleyBack', reward: 300, extra: [],
     intro: [
       ['vardinna', 'Tack. Det är förbjudet att dricka medhavd sprit.'],                                        // [F]
       ['vardinna', 'Tar du det inte lugnt med spriten, kan det bli problem att komma in i Spanien.'],           // [F]
-      ['berra', 'Ta det vackert, vi har varit ute och flugit förr.'],                                          // [F]
-      ['vardinna', 'Och resten av flaskorna rullar runt i hela planet.'],                                       // [N]
+      ['berra', 'Ta det vackert, vi har varit ute och flugit förr.', { cut: ROW22 }],                          // [F]
+      ['vardinna', 'Och resten av flaskorna rullar runt i hela planet.', { cut: null }],                        // [N]
       ['stig', 'Jag tål inte starksprit.'],                                                                    // [F*]
       ['vardinna', 'Då är du rätt man.'],                                                                      // [N]
     ],
@@ -291,12 +305,13 @@ export const FLIGHT_MISSIONS = [
       // [1] hand them in
       () => goto({ to: 'galleyFront', radius: 1.6, text: 'Lämna flaskorna i främre byssan' }),   // [N]
     ],
-    // Front galley first (Berra calls out from row 22), then back at row 14 with Ole's boombox.
+    // Berra at row 22 first, then back at row 14 with Ole's boombox (his hand luggage: the
+    // `flygRadio` outfit; the next mission's home set gives him `flyg` again).
     outroPlace: { stig: ['cabinRow14', 0, 0] },
     outroCam: ['ole', 'stig'],
     outro: [
-      ['berra', 'Ja, vad fan, man var ju nykter i morse, men nu börjar det ordna upp sig!'],   // [F*] (Arlanda line, relocated)
-      ['stig', 'Är den bra den där?'],                                                        // [F]
+      ['berra', 'Ja, vad fan, man var ju nykter i morse, men nu börjar det ordna upp sig!', { cut: ROW22, outfit: { who: 'ole', name: 'flygRadio' } }],   // [F*] (Arlanda line, relocated)
+      ['stig', 'Är den bra den där?', { cut: null }],                                         // [F]
       ['ole', 'Ja… Kvarts og digital. Level her, input, FM, tape, tape run.'],                 // [F]
       ['ole', 'Hører du? Samba.', { music: { tune: 'samba', secs: 6 } }],                      // [F]
       ['stig', 'Fin musik!'],                                                                 // [F](t)
@@ -333,7 +348,8 @@ export const FLIGHT_MISSIONS = [
           jose: [['siv', 'Vad skönt att komma bort!'], ['jose', 'Jag ska inte bort, jag ska hem.']],            // [F*] · [F*]
           berra: [['berra', 'Ska vi inte landa snart?']],                                                    // [N]
         },
-        startCue: { phase: ['cruise', { instant: true }], trolley: false }, timedCues: [[12, { turbulence: [0.3, 4] }]],
+        // The intro's PA lights the sign; a retry (no intro) needs it lit here too.
+        startCue: { phase: ['cruise', { instant: true }], trolley: false, seatbelt: true }, timedCues: [[12, { turbulence: [0.3, 4] }]],
       }),
       // [1] back to the seat before the approach. Checkpoint: a panicked approach is retried from
       // here (row 16), not from the round-up.
@@ -350,9 +366,9 @@ export const FLIGHT_MISSIONS = [
     ],
     outroCam: 'player',
     outro: [
-      ['berra', 'Om de kraschar, kastar man tomater på piloterna då?', { applause: 3 }],   // [F*](t)
-      ['robban', 'Nej, skärpning nu, Berra, annars får vi ena jävla problem här.'],      // [F]
-      ['ole', 'Ser du, Stig-Helmer? Hydraulikk, vet du. Helt normalt!'],                 // [N]
+      ['berra', 'Om de kraschar, kastar man tomater på piloterna då?', { applause: 3, cut: ROW22 }],   // [F*](t)
+      ['robban', 'Nej, skärpning nu, Berra, annars får vi ena jävla problem här.'],                  // [F]
+      ['ole', 'Ser du, Stig-Helmer? Hydraulikk, vet du. Helt normalt!', { cut: null }],              // [N]
     ],
   },
 ];

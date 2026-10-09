@@ -216,7 +216,7 @@ Removed Bigmouth keys: `nick maurice andrew steve jay jessi connie duke shame` (
 | key | outfits (name: fields) | when |
 |---|---|---|
 | `stig` | `arlanda`: shirt `0x3a2a1e` longSleeves (dark brown coat), pants `0x2e2620`, `hat:'cap'`† tweed `0x8a7a5a`, white mittens `hands` `0xf4f0e6` with a red `mittenBand` `0x9a3a2a` (the research's Nordic pattern) · `kostym`: shirt `0x4a3426` longSleeves, pants `0x3a2a1e`, `tie`† `0x7a2a2a` · `hawaii`: shirt `0xd8321e` `print`† `[0xffd23f,0x3f7a3a,0x2f6ad8]`, short sleeves, `shorts:true` (oversized), pants `0xe8dcb8` · `rio`: shirt `0xf4f0e6` longSleeves, `bowtie`† `0x1d1426`, pants `0x1d1426` | `arlanda` mission 1 (gate) → `kostym` from mission 1 outro (boarding) → `hawaii` from the buss17 outro → `rio` only in the end card |
-| `ole` | `arlanda`: + `hat:'trilby'`† `0xe8e2d0`, shirt beige `0xd8c8a0` longSleeves, `held:'boombox'`† (black, chrome speaker rims) · `flyg`: white polo `0xf4f4f0` · `sol`: shirt `0xf2c94c` `print`† check, pants `0xe8dcb8`, `shades`† · `gris`: shirt `0xf4f4f0` stripe `0xd8321e`, gold `chain` (the pendant) · `rio`: white jacket + `bowtie`† + `shades`† | per level/home set (§4.5) and by dialogue cue |
+| `ole` | `arlanda`: + `hat:'trilby'`† `0xe8e2d0`, shirt beige `0xd8c8a0` longSleeves, `held:'boombox'`† (black, chrome speaker rims) · `flyg`: white polo `0xf4f4f0` · `flygRadio`: `flyg` + `held:'boombox'` (seated, the box lies on his lap, speakers to the front; the sprit outro, §8.4) · `sol`: shirt `0xf2c94c` `print`† check, pants `0xe8dcb8`, `shades`† · `gris`: shirt `0xf4f4f0` stripe `0xd8321e`, gold `chain` (the pendant) · `rio`: white jacket + `bowtie`† + `shades`† | per level/home set (§4.5) and by dialogue cue |
 | `berra` | `arlanda` (cowichan), `flyg`, `sol` (+ `hat:'cap'`† white) | per level |
 | `robban` | `flyg` (orange, `collar` `0x1f2f6a`), `sol` (navy with yellow dots, `collar` `0xffd23f`, white cap with `peakC` `0x2a4fa0`) | per level |
 | `angerud` | `arlanda` (`coat` camel `0xc8a06a`, `hat:'fur'` `0x5a3a22`), `flyg` (dark suit, blue shirt), `sol` (light-blue suit, white shirt + shades) | `arlanda` at the gate (mission 1), then per level |
@@ -661,6 +661,7 @@ root placed by hand, `ch.x/y/z` set for bubbles, anim flag `planeSeat` = arms on
 | `cabinRow14` | 0.25, −2.1 | π/2 | aisle beside 14ABC facing the seats; mission 3 `at`; R-reset |
 | `cabinRow16` | −0.25, −4.5 | −π/2 | aisle beside 16DEF; mission 5 `at` |
 | `cabinRow22` | 0, −11.7 | π/2 | |
+| `row22Cam` | 0, −9.2 | π | cut camera onto 22C/D (Berra, Robban): `{ at: 'row22Cam', dist: 0, height: 3.6 }` stands in the aisle in front of row 22 and looks aft and down at their faces (§8.4, §8.5) |
 | `cabinCentre` | 0, 0 | 0 | |
 | `toiletBackL` / `toiletBackR` | 0.6, −15.6 / −0.6, −15.6 | ±π/2 | toilet doors (interactables) |
 | `galleyBack` | 0, −17.6 | 0 | rear galley; mission 4 `at` |
@@ -1418,17 +1419,17 @@ No `extra` (the gate cast already stands at its `HOMES.gate` spots; an `extra` w
 (trilby, boombox), Angerud `arlanda` (camel coat, fur hat). Phase `gate` (stage 1 `startCue: { phase: ['gate', { instant: true }] }`).
 
 **Intro** (in the security queue):
-- stig: "Vad ska de göra?"  [F]
+- stig: "Vad ska de göra?"  [F](t)
 - ole: "Rutinekontroll. Narkotika, våpen, bomber…"  [F*](t)
 - stig: "Bomber…?!"  [F]  {fear: 10}
 - ole: "Du ser nervøs ut, du. Første gang du flyr?"  [N]
 - stig: "Jag kan flyga, jag är inte rädd."  [F]
 
 **Stages** (0-based `stageI` in brackets, for the story script):
-1. [0] `interact({ at: 'gateArch', radius: 1.4, prompt: '<b>E</b> Gå genom metallbågen', text: 'Gå genom säkerhetskontrollen', startCue: { phase: ['gate', { instant: true }] }, useCue: { sfx: 'beep', fear: 12, flash: 'rgba(255,60,40,.35)' }, lines: [...] })` — on use the `useCue` fires, then the `lines`:
+1. [0] `interact({ at: 'gateArch', radius: 1.4, prompt: '<b>E</b> Gå genom metallbågen', text: 'Gå genom säkerhetskontrollen', startCue: { phase: ['gate', { instant: true }], place: { berra: ['gateArch', -0.4, -2.8] } }, useCue: { sfx: 'beep', fear: 12, flash: 'rgba(255,60,40,.35)' }, lines: [...] })` — Berra waits in the queue behind Stig (local (35.8, 4.6), by the x-ray belt's landside end, clear of the walk from Ole to the arch; in both the side two-shot and the landside dollhouse frame of the arch he is in shot, so his heckle is not spoken from the lounge 14.5 m away). On use the `useCue` fires, then the `lines`:
    - kontrollant: "Vill ni vara vänlig och ta av er skon."  [F]  {anim: {who:'stig', flag:'shoeOff', secs: 2}, sfx: 'laugh'}
    - berra: "Kolla terroristen!"  [F](t)
-2. [1] `goto({ to: 'gateOle', radius: 2.5, text: 'Sätt dig vid gate 8', startCue: { place: { ole: ['gateOle', 0, 0] } } })`
+2. [1] `goto({ to: 'gateOle', radius: 2.5, text: 'Gå till Ole vid gate 8', startCue: { place: { ole: ['gateOle', 0, 0] } } })`
 3. [2] `scene({ checkpoint: true, retryAt: 'gateOle', frame: ['ole', 'stig'], lines: [...] })` — Ole's statistics (a failed dash replays them, which rebuilds the fear the dash needs; WP-F). **Only Ole's six
    statistics lines carry `{fear: 8}`** (+48; with "Bomber" and the arch the meter sits ≈ 70 when
    the dash starts, so the heartbeat is on):
@@ -1436,7 +1437,7 @@ No `extra` (the gate cast already stands at its `HOMES.gate` spots; an `extra` w
    - ole: "Det er farligere å kjøre bil enn å fly."  [F]  {fear: 8}
    - ole: "Man regner mellom to og fem millioner flytimer pr. kræsj."  [F]  {fear: 8}
    - stig: "Krasch?"  [F]
-   - ole: "Kræsj."  [F]  {fear: 8}
+   - ole: "Kræsj."  [F*]  {fear: 8} (our bokmål echo of the Swedish "Krasch."; SUB-NO stops at "pr kræsj.")
    - ole: "Leste du om en sånn jumbopilot som gjorde en looping?"  [F]  {fear: 8}
    - stig: "Looping med en jumbo?"  [F]
    - ole: "Ja. To ganger."  [F]  {fear: 8}
@@ -1447,13 +1448,13 @@ No `extra` (the gate cast already stands at its `HOMES.gate` spots; an `extra` w
    5.0 s; fear at the start ≈ 69; a sprinter arrives at ≈ 94, a walker at ≈ 98, a dawdler panics
    at ≈ 5.5 s.)
 5. [4] `mantra({ at: 'herrtoa', radius: 2.2, secs: 3, text: 'Håll J: sträck ut armarna – Jag kan flyga, jag är inte rädd', barLabel: 'JAG KAN FLYGA' })`
-6. [5] `scene({ place: { berra: ['herrtoaDoor', 0, 2.2, 1.25] }, frame: ['berra', 'stig'], lines: [...] })` (inside the men's room; the old offset was behind the wall):
+6. [5] `scene({ place: { berra: ['herrtoaDoor', 0, 2.2, 1.25] }, frame: ['berra', 'stig'], doneCue: { place: { berra: ['gateLounge', -1.2, 0] } }, lines: [...] })` (inside the men's room; the old offset was behind the wall; he goes back to the lounge when the scene ends: a `place` cue on his last line fired as the line started and emptied the frame for the punchline):
    - berra: "Hur mår du?"  [F](t)
    - stig: "Bra."  [F]
    - stig: "Jag håller på med yoga, avslappningsövningar. Isometrisk träning…"  [F]
    - berra: "Jaha… Ja, själv tar jag mig ett järn. Ska du ha?"  [F]
    - stig: "Nej tack, jag tål inte starksprit."  [F]
-   - berra: "Nej, vem fan gör det?"  [F]  {place: {berra: ['gateLounge', -1.2, 0]}}
+   - berra: "Nej, vem fan gör det?"  [F]
 7. [6] `goto({ to: 'gateLounge', radius: 4, text: 'Ställ dig i kön till gate 8', radio: [['pa', 'Herr Stork ombedes kontakta informationen i avgångshallen.', { gap: 1, pa: true }]], overhear: [...], awaitOverhear: true })`
    - PA right after the stage starts (ding-dong first) [F].
    - `overhear` at `damtoaDoor`, **r 8** (it starts as he leaves the men's room; bubbles anchored on
@@ -1471,7 +1472,7 @@ No `extra` (the gate cast already stands at its `HOMES.gate` spots; an `extra` w
    - sulan: "Här ligger Pepes Bodega. Det står på skylten."  [F]
    - berra: "De häller upp och allt är klart?"  [F]
    - sulan: "Plomberat och klart."  [F]
-   - berra: "Robban! Sulan har varit på Pepes Bodega. De häller 80-procentig rom på vinflaskor."  [F]
+   - berra: "Robban! Sulan har varit på Pepes Bodega. De häller 80-procentig rom på vinflaskor."  [F*] (+ "Robban!")
    - robban: "Vad hette det, sa du?"  [F]
    - berra: "Pepes Bodega."  [F]
    - robban: "Glöm aldrig det, du."  [F]
@@ -1505,11 +1506,11 @@ The cast is already seated (`HOMES.flight` from index 1 on, §4.2) although the 
      (P0, §5.12: E "Ursäkta!" moves them; bumping costs fear). Aisle walkers (P1). Crossing
      **lz −1.4** going aft (the midpoint between row 12's seats at −1.02 and row 14's at −2.22) the
      first time shows the toast `Rad 13 finns inte!` [N] (cabin-owned, once per load).
-2. `timeline({ checkpoint: true, retryAt: 'cabinRow14', seat: '14B', lockSeat: true, panicFails: true, oleBarks: true, secs: 27, text: 'Starten! Håll J om det blir för mycket', barLabel: 'FLYGRÄDSLA', events: [...] })`
+2. `timeline({ checkpoint: true, retryAt: 'cabinRow14', seat: '14B', lockSeat: true, panicFails: true, oleBarks: true, secs: 27, text: 'Starten! Håll J om det blir för mycket', barLabel: 'STARTEN', events: [...] })`
    (times in scaled seconds; the cabin phases run on the same clock; `lockSeat` hides "Res dig"
    and ignores R for the stage, so time never pauses while the phases run on)
    - t 0: `{phase: 'takeoff', toast: 'Håll <b>J</b>: Jag kan flyga, jag är inte rädd'}`
-   - t 10: `{sfx: 'thud', fear: 20, shake: 0.4, say: ['stig', 'Vad är det för ljud?', 1.5]}`  [F]
+   - t 10: `{sfx: 'thud', fear: 20, shake: 0.4, say: ['stig', 'Vad är det för ljud?', 1.5]}`  [F](t)
    - t 11.5: `{say: ['ole', 'Landingshjulene som går opp. Hydraulikk, vet du.', 2.4]}`  [F](t)
    - t 14: `{say: ['ole', 'De går opp sånn, og så lukker lemmene seg. Så flyet ikke skal stoppe, men få fart. Ellers…', 3.4]}`  [F*](t) (Ole's Norwegian "Ellers…" = the Swedish subtitle's "annars…"; the speaker is uncertain in the sources)
    - t 17.5: `{say: ['stig', 'Annars…?!'], fear: 8}`  [N] (echoes the subtitle's "annars…")
@@ -1520,7 +1521,7 @@ The cast is already seated (`HOMES.flight` from index 1 on, §4.2) although the 
 
 **Outro** (seated, cruise; outro camera `player`; the Concorde dream is film row 10, before the
 captain's PA and the juice gag of mission 3):
-- ole: "Hva er det for et merke du har?"  [F*]
+- ole: "Hva er det for et merke du har?"  [F*](t)
 - stig: "Hammarby. Känner du till Hammarby?"  [F]
 - ole: "Eneste svenske byene jeg kjenner til er Stockholm og Göteborg og Malmö."  [F]
 - stig: "Det här är ett fotbollslag."  [F]
@@ -1551,10 +1552,10 @@ for stage 1.
 - ole: "Ja, da trykker du der oppe."  [F*]
 
 **Stages:**
-1. `interact({ at: 'call14', whileSeated: true, seat: '14B', prompt: '<b>E</b> Tryck där uppe', text: 'Sätt dig på 14B och tryck på knappen ovanför', startCue: { phase: ['cruise', { instant: true }] }, useCue: { sfx: 'pling', anim: { who: 'stig', flag: 'cupUp', secs: 6 } }, lines: [...] })` — on use the `useCue` fires, then:
+1. `interact({ at: 'call14', whileSeated: true, seat: '14B', prompt: '<b>E</b> Tryck där uppe', text: 'Sätt dig på 14B och tryck på knappen ovanför', startCue: { phase: ['cruise', { instant: true }] }, useCue: { sfx: 'pling' }, lines: [...] })` — on use the `useCue` fires, then (the cup goes up on "Ja.", as in the film, so "Nei…!" answers it; a `cupUp` on the press as well would end under the punchline when the lines go quickly):
    - ole: "Nei…"  [F*](t)
    - stig: "Där?"  [F]
-   - ole: "Ja."  [F]
+   - ole: "Ja."  [F]  {anim: {who: 'stig', flag: 'cupUp', secs: 6}}
    - ole: "Nei…!"  [F*](t)  {anim: {who: 'ole', flag: 'laugh', secs: 3}}
    - ole: "Så… så kommer flyvertinnen. Juice, whisky."  [F*]
    - stig: "Hon har visst fullt upp."  [N]
@@ -1565,7 +1566,7 @@ for stage 1.
    det inte ut när jag flyger reguljärt." [F](t) · angerud "Jag har inte fått resan gratis. Jag har
    betalat 3 000 för den." [F](t) · pax "Jag betalade bara 995. Sista minuten." [F](t) · angerud
    "Det fattades bara det…!" [F](t)
-3. `carry({ item: 'juice', to: 'cabinRow14', radius: 1.2, text: 'Bär juicen till 14B utan att spilla', failText: 'Du spillde juicen!', failOn: { bumped: true, sprintSecs: 1.0 }, startCue: { turbulence: [0.6, 5, { delay: 2 }] } })`
+3. `carry({ item: 'juice', to: 'cabinRow14', radius: 1.2, text: 'Bär juicen till 14B – gå, spring inte!', failText: 'Du spillde juicen!', failOn: { bumped: true, sprintSecs: 1.0 }, startCue: { turbulence: [0.6, 5, { delay: 2 }] } })`
    - Hold Space through the turbulence; getting bowled by the trolley, falling or PANIK
      (`onPanicIdle` sets `bumpedT`) spills it.
 4. `sit({ seat: '14B', text: 'Sätt dig och njut av juicen', doneCue: { relieve: 30, sfx: 'pickup' } })`
@@ -1586,8 +1587,8 @@ and the trolley keeps coming.
 **Intro:**
 - vardinna: "Tack. Det är förbjudet att dricka medhavd sprit."  [F]
 - vardinna: "Tar du det inte lugnt med spriten, kan det bli problem att komma in i Spanien."  [F]
-- berra: "Ta det vackert, vi har varit ute och flugit förr."  [F]
-- vardinna: "Och resten av flaskorna rullar runt i hela planet."  [N]
+- berra: "Ta det vackert, vi har varit ute och flugit förr."  [F]  {cut: {at: 'row22Cam', dist: 0, height: 3.6}}
+- vardinna: "Och resten av flaskorna rullar runt i hela planet."  [N]  {cut: null}
 - stig: "Jag tål inte starksprit."  [F*]
 - vardinna: "Då är du rätt man."  [N]
 
@@ -1600,9 +1601,9 @@ and the trolley keeps coming.
    - PA line [F]: the film's cabin PA [SUB-SV 00:25:43]. Seatbelt on during the turbulence (standing costs fear; hold Space).
 2. `goto({ to: 'galleyFront', radius: 1.6, text: 'Lämna flaskorna i främre byssan' })`
 
-**Outro** (`outroPlace: { stig: ['cabinRow14', 0, 0] }`, `outroCam: ['ole', 'stig']`; back at row 14):
-- berra: "Ja, vad fan, man var ju nykter i morse, men nu börjar det ordna upp sig!"  [F*] (Arlanda line, relocated)
-- stig: "Är den bra den där?"  [F]
+**Outro** (`outroPlace: { stig: ['cabinRow14', 0, 0] }`, `outroCam: ['ole', 'stig']`; Berra at row 22, then back at row 14, where Ole has his boombox on his lap: outfit `flygRadio`, §2.2; the next mission's home set gives him `flyg` again):
+- berra: "Ja, vad fan, man var ju nykter i morse, men nu börjar det ordna upp sig!"  [F*] (Arlanda line, relocated)  {cut: {at: 'row22Cam', dist: 0, height: 3.6}, outfit: {who: 'ole', name: 'flygRadio'}}
+- stig: "Är den bra den där?"  [F]  {cut: null}
 - ole: "Ja… Kvarts og digital. Level her, input, FM, tape, tape run."  [F]
 - ole: "Hører du? Samba."  [F]  {music: {tune: 'samba', secs: 6}}
 - stig: "Fin musik!"  [F](t)
@@ -1630,7 +1631,7 @@ just after takeoff, ~0:23, so every line is relocated `[F*]`, and the siv/majsan
 - vardinna: "Alla ska sitta! Hjälp mig få folk på plats, är du snäll."  [N]
 
 **Stages:**
-1. `collect({ who: ['herrStorch', 'jose', 'berra'], standAt: { herrStorch: [3000.2, 3.4], jose: [2999.8, -9.2], berra: [3000.0, -14.4] }, seatOnTouch: true, timer: 12, text: 'Få de stående passagerarna att sätta sig', barLabel: 'STÅENDE', failText: 'Värdinnan fick göra det själv.', lines: {...}, startCue: { phase: ['cruise', { instant: true }], trolley: false }, timedCues: [[12, {turbulence: [0.3, 4]}]] })`
+1. `collect({ who: ['herrStorch', 'jose', 'berra'], standAt: { herrStorch: [3000.2, 3.4], jose: [2999.8, -9.2], berra: [3000.0, -14.4] }, seatOnTouch: true, timer: 12, text: 'Få de stående passagerarna att sätta sig', barLabel: 'STÅENDE', failText: 'Värdinnan fick göra det själv.', lines: {...}, startCue: { phase: ['cruise', { instant: true }], trolley: false, seatbelt: true }, timedCues: [[12, {turbulence: [0.3, 4]}]] })` (the intro's PA lights the sign; `seatbelt: true` relights it on a retry, which has no intro, so standing costs fear there too)
    - herrStorch: "Lite film."  [F*](t) (Arlanda line)  {anim: {who:'herrStorch', flag:'film', secs:2}}
    - jose: siv "Vad skönt att komma bort!" [F*] then jose "Jag ska inte bort, jag ska hem." [F*] (mid-flight in the film, relocated)
    - berra: "Ska vi inte landa snart?"  [N]
@@ -1643,9 +1644,9 @@ just after takeoff, ~0:23, so every line is relocated `[F*]`, and the siv/majsan
      full).
 
 **Outro** (`landed`; outro camera `player`):
-- berra: "Om de kraschar, kastar man tomater på piloterna då?"  [F*](t)  {applause: 3}
+- berra: "Om de kraschar, kastar man tomater på piloterna då?"  [F*](t)  {applause: 3, cut: {at: 'row22Cam', dist: 0, height: 3.6}}
 - robban: "Nej, skärpning nu, Berra, annars får vi ena jävla problem här."  [F]
-- ole: "Ser du, Stig-Helmer? Hydraulikk, vet du. Helt normalt!"  [N]
+- ole: "Ser du, Stig-Helmer? Hydraulikk, vet du. Helt normalt!"  [N]  {cut: null}
 
 Then `transitionTo('island')`.
 
@@ -3254,7 +3255,9 @@ labels (§11.6), outfits (§4.5), `COLLECTIBLES`/`UNLOCKS` (§10), `OLE_STATS` (
 
 Every film line here is a bark outside its own scene, so it is tagged `[F*]` (§1.4). Chatter plays
 in free play only, Ole's barks in free play and `oleBarks` stages; neither over a dialogue or in
-the gap before an outro (§5.9, §5.12).
+the gap before an outro (§5.9, §5.12). The flight tables also play at the gate (Ole's first bark
+comes 10 s after the start, before mission 1's intro where he and Stig meet): no line may need the
+air, a served meal, Stig's name or the Concorde dream of the ombord outro.
 
 ```js
 OLE_STATS = [
@@ -3262,16 +3265,17 @@ OLE_STATS = [
   'Det er farligere å kjøre bil enn å fly.',                                   // [F*]
   'Man regner mellom to og fem millioner flytimer pr. kræsj.',                // [F*]
   'Leste du om en sånn jumbopilot som gjorde en looping? To ganger.',         // [F*]
-  'Det her er bare luftlommer, Stig-Helmer. Helt normalt!',                   // [N]
-  'Tre ganger så fort som en geværkule, Concorde!',                           // [F*]
+  'Det blir nok litt luftlommer underveis. Helt normalt!',                    // [N]
+  'Concorde flyr tre ganger så fort som en geværkule!',                       // [F*]
   'Statistisk sett er det tryggest å sitte bakerst. Eller var det fremst?',   // [N] (WP-F)
   'Hører du den lyden? Helt normalt. Tror jeg.',                              // [N] (WP-F)
 ];
 CHATTER_FLIGHT = {
   ole: ['Hører du? Samba.' /*[F*]*/, 'Kvarts og digital.' /*[F*]*/, 'Ja, men dyr!' /*[F*]*/,
         'Min drøm er å fly med Concorde fra Paris til Rio.' /*[F*]*/],
-  angerud: ['Kallar ni det här \'varm middag\'?' /*[F*](t)*/, 'Det är sista gången jag åker med SunTrip!' /*[F*]*/,
-            'Jag har inte fått resan gratis.' /*[F*](t)*/],
+  angerud: ['Det är sista gången jag åker med SunTrip!' /*[F*]*/, 'Jag har inte fått resan gratis.' /*[F*](t)*/],
+           // (not "Kallar ni det här 'varm middag'?": it played at the gate and before takeoff; the
+           // complaint has its scene at the trolley's row-6 stop, §5.8, §8.3)
   berra: ['Ra-tara-tara…' /*[F*]*/, 'Ta det vackert, vi har varit ute och flugit förr.' /*[F*]*/],
   robban: ['Fan, vad jag är törstig.' /*[F*]*/],   // (not "Pepes Bodega…": it would come before the gate's bodega tip)
   siv: ['Bara de inte är ingenjörer.' /*[F*](t)*/, 'Vilket gäng man har hamnat i!' /*[F*](t)*/],
@@ -4116,3 +4120,31 @@ the fixer's group.
 - r1 audio-ui-meters: all Luckiest Guy text is uppercase: mission titles on banners and the
   objective card, dialogue names and big-map labels uppercased in hud.js; the title subtitle, pause
   buttons and keycaps as uppercase literals (§1.3, §11.1, §11.3, §11.4).
+- r1 flight-missions: gate stage 0 places Berra in the security queue behind Stig (`gateArch`
+  −0.4, −2.8), so "Kolla terroristen!" comes from the shot; his men's-room exit to the lounge is the
+  scene's `doneCue` (the `place` cue on "Nej, vem fan gör det?" emptied the frame as the punchline
+  started) (§8.1, fixture).
+- r1 flight-missions: cabin landmark `row22Cam` (0, −9.2, π); Berra's lines in the sprit intro and
+  outro and the landning outro cut to it (`{ at: 'row22Cam', dist: 0, height: 3.6 }`, `cut: null`
+  on the next line not at row 22): they were spoken off screen from 12–13 m away (§5.5, §8.4, §8.5,
+  fixture).
+- r1 flight-missions: Ole outfit `flygRadio` (`flyg` + `held: 'boombox'`) by cue on the sprit
+  outro's first line, so the boombox the outro is about is there; a seated character holds a boombox
+  on his lap, speakers to the front (it hung into the next seat) (§2.2, §8.4, models.js, fixture).
+- r1 flight-missions: the juice cup goes up on Ole's "Ja." (6 s), not on the press, as in the film
+  (§8.3, fixture).
+- r1 flight-missions: landning stage 0 `startCue` adds `seatbelt: true`: a retry (no intro) ran the
+  round-up with the sign dark (§8.5, fixture).
+- r1 flight-missions: texts: gate stage 1 `Gå till Ole vid gate 8` (it said "Sätt dig", the seat
+  prompt's verb, with nothing to sit on); juice carry `Bär juicen till 14B – gå, spring inte!` (one
+  second of sprinting spills it); the takeoff timeline's bar is `STARTEN` (labelled `FLYGRÄDSLA` it
+  read as the fear meter) (§8.1–8.3, fixture).
+- r1 flight-missions: Ole's barks work at the gate: `Det blir nok litt luftlommer underveis. Helt
+  normalt!` [N] and `Concorde flyr tre ganger så fort som en geværkule!` [F*]; Angerud's "varm
+  middag" chatter is gone (no meal at the gate or before takeoff; the row-6 trolley stop keeps it)
+  (§14.10).
+- r1 flight-missions: source tags: `(t)` on "Vad ska de göra?", "Vad är det för ljud?" and "Hva er
+  det for et merke du har?" (the speakers are our reading); `[F*]` on Ole's "Kræsj." (our bokmål echo)
+  and Berra's "Robban! Sulan har varit…" (adds "Robban!") (§8.1, §8.2, fixture).
+- r1 flight-missions: `story` takes key-scene shots of missions 1–5 with `SHOTS=1` (`fl_*.png`, as
+  the island's `isl_*`) (§16.4).
