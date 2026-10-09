@@ -30,9 +30,12 @@ async function install(T) {
     const orig = { moveY: input.moveY.bind(input), moveX: input.moveX.bind(input), down: input.down.bind(input) };
     input.moveY = () => (ap.go ? 1 : orig.moveY());
     input.moveX = () => (ap.go ? 0 : orig.moveX());
+    // Space (hold on: he stands still) while the turbulence shakes, not through its 1.5 s warning
+    // (`cabin.turbulent` covers both), which overstated a sweep by up to the warning.
+    const shaking = () => { const c = g.cabin, t = c._turb; return c.turbulent && t.t - t.delay - t.warn >= 0; };
     input.down = (a) => {
       if (a === 'sprint') return ap.go && ap.sprint;
-      if (a === 'jump') return ap.holdSpace || (ap.autoSpace && g.cabin.turbulent && g.player.state === 'normal');
+      if (a === 'jump') return ap.holdSpace || (ap.autoSpace && shaking() && g.player.state === 'normal');
       if (a === 'attack') return ap.mantraOn;
       return orig.down(a);
     };

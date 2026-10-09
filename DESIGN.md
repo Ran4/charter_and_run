@@ -131,6 +131,10 @@ Every scripted line in `src/content/*.js` and `src/game/missions/*.js` carries a
 Any film line used in a CHATTER / OUCH / GETUP / CARJACK / NPC_KICKED / OLE_STATS table, or as a
 sign, outside its own film scene is `[F*]` (relocated), never plain `[F]`.
 
+Mission titles (shown on banners and the objective card) carry one too, on the `title:` line:
+`// title [F*]` for a title taken from film dialogue, `// title [N]` for our own (Phase 3 r2: the
+five flight titles; the island titles are film-4's).
+
 ### 1.5 Brands, real people, music
 
 - Fictional only: **SunTrip** (the film's own), plane **"Sol-Viking"** reg. **SE-SOL**, crispbread
@@ -291,7 +295,7 @@ Physical keys are unchanged from Bigmouth. The level config turns verbs on and o
 | `attack` | J / left click / X | kick, stomp in the air | **hold = mantra** "Jag kan flyga, jag är inte rädd": `wings` pose, cannot move, fear −25/s after 0.3 s wind-up, bubble every 2.5 s |
 | `interact` | E / F / Enter / Y | talk, enter/exit car, steal car, interactables | talk, **sit/stand** ("E Sätt dig" / "E Res dig"), toilets ("E Lås in dig"), call button, trolley |
 | `map` | M / Tab | big map | cabin/gate plan |
-| `reset` | R | unstick (back to the road) | `resetSpot(g)` (§4.3): inside the cabin, back into the **aisle at the same row** (the free spot on the centre line nearest his z, within 2 m; never along the tube); in the terminal, `gateLounge`, unless the lounge is nearer the running stage's target than he is, when **R does nothing** (the toilet dash; the queue goto). Phase 3 r2: R to `cabinRow14` was a free 14B for ombord's 7 s and landning's 5 s seat dashes, and a jump over the sprit sweep. Seated: `standPlayer()` first; ignored while a `timeline` locks the seat; both levels: ignored while `frozenT > 0` or during PANIK; a reset while `carrying` sets `bumpedT = 0.4` (spills/fails the carry: R is never a free teleport to a carry goal) |
+| `reset` | R | unstick (back to the road) | `resetSpot(g)` (§4.3): inside the cabin, back into the **aisle at the same row** (the free spot on the centre line nearest his z, within 2 m; never along the tube); in the terminal, `gateLounge`, unless the lounge is nearer the running stage's target than he is, when **R does nothing** (the toilet dash; the queue goto; a guide waypoint's own `goal` counts, not the waypoint: §8.1 [3]). Phase 3 r2: R to `cabinRow14` was a free 14B for ombord's 7 s and landning's 5 s seat dashes, and a jump over the sprit sweep. Seated: `standPlayer()` first; ignored while a `timeline` locks the seat; both levels: ignored while `frozenT > 0` or during PANIK; a reset while `carrying` sets `bumpedT = 0.4` (spills/fails the carry: R is never a free teleport to a carry goal) |
 | horn / mute / pause | H / N / Esc, P | as Bigmouth | same (no horn) |
 
 - **Mantra on the island**: J is kick. A `mantra` stage sets `game.mantraMode = true` so J holds
@@ -530,10 +534,14 @@ offered). Sitting down is chosen per seat, not per aisle spot (§5.10).
 - No breakable props in the cabin. Mission items are `Collectible`s.
 - **Coins**: 24 fixed coins (`placeCoin`) in the aisle and galleys, placed by `cabin.placeCoins()`
   **after `initCoins`** (Phase 0 calls it in init order, §14.2). Budget: cabin ≤ 30 fixed coins.
-  The aisle line runs every 1.8 m from z 11.6 to **−10.0** (13 coins); the rest are in the galleys
-  and the leg room of the dodge rows 3, 8, 15, 18, 20 and 23 (x ±1.0, rowZ + 0.31). (Phase 3 r2:
-  the line went on to z −13.6, and the `row22Cam` cut showed the coin at z −11.8 between Berra
-  and Robban; it and the one at −13.6 moved to rows 3 and 18.)
+  The aisle line runs every 1.8 m from z **9.8** to **−10.0** (12 coins); the rest are in the
+  galleys (one at the front, (−1.2, 12.9); two at the rear) and the leg room of the dodge rows 3,
+  8 (both sides), 15, 18 (both sides), 20 (both sides) and 23 (x ±1.0, rowZ + 0.31). (Phase 3 r2:
+  the line went on to z −13.6, and the `row22Cam` cut showed the coin at z −11.8 between Berra and
+  Robban; it and the one at −13.6 moved to rows 3 and 18. Then the `galleyCam` cut, looking
+  forward along the aisle, showed the line's coin at z 11.6 and the front galley's at (−0.3, 14.2)
+  and (0.3, 15.6); they moved to the other side of rows 8, 18 and 20 (behind both cut cameras, and
+  more than the 3.4 m coin magnet from 14B, where the `panic` checks count coins).)
 
 **Gate set** (only in phase `gate`; `cabin.setGateActive(on)` toggles `group.visible` and every
 gate block's `dead`):
@@ -601,7 +609,13 @@ export const CAM_CABIN = { pivotH: 1.5, dist: 6.5, pitchMin: 0.72, pitchMax: 1.1
   `clearSide` flip, fov 50; `cine.open`): the 61°-down dollhouse showed the tops of hats in every
   mission-1 scene, and at the arch the hanging `SÄKERHETSKONTROLL` sign cut across Stig. In the
   pocket the side shot ended up across the security counters with the arch post or beam over a
-  speaker, so the pocket keeps the dollhouse. The cabin and the jet bridge keep it too. Two
+  speaker, so the pocket keeps the dollhouse. The cabin and the jet bridge keep it too. **Fixed
+  eye-level cuts (Phase 3 r2)** stage the mission scenes there that the dollhouse showed as hat
+  tops, backs or heads under the door frame, each with its speakers placed for it (§5.5 `*Cam`
+  landmarks, `{ at, dist: 0, height }`): the gate intro in the pocket (`queueCam`), the gate
+  statistics (`statsCam`, which no longer depends on where the player arrived), the jet-bridge
+  outro (`bridgeCam`), the ombord intro at the front door (`doorCam`) and the landning
+  stewardess at the front galley (`galleyCam`); §8.1, §8.2, §8.5. Two
   speakers on one spot (< 0.3 m) are framed from in front of the first (both modes). In the
   dollhouse, two speakers facing the same way (|sum of facings| > 1.2) are framed from the side
   they face; **when that shared facing runs along the line between them (within 35°: one behind
@@ -679,16 +693,21 @@ root placed by hand, `ch.x/y/z` set for bubbles, anim flag `planeSeat` = arms on
 | `gateStart` | 36.5, 5.0 | −π/2 | player spawn at index 0 (landside of the arch) |
 | `gateQueue` | 35.6, 6.6 | π/2 | mission 1 `at` (Ole in the security queue, facing the player coming from `gateStart`; `+1.5 m` along the yaw = (37.1, 6.6), clear of the barriers) |
 | `gateArch` | 33.0, 5.0 | −π/2 | metal detector (interact) |
+| `queueCam` | 36.1, 1.2 | 0 | cut camera (height 2.0) from the pocket's south end onto the gate intro: Ole and Stig side by side across the pocket (§8.1) |
+| `statsCam` | 24.0, 6.8 | 0 | cut camera (height 1.9) onto Ole's statistics: Ole on his spot, Stig on the dash start (§8.1) |
 | `gateOle` | 23.0, 11.8 | π | Ole's lounge spot (stats scene); panic home outside the cabin |
 | `gateLounge` | 22.0, 16.0 | 0 | Berra/Robban/Sulan cluster; R-reset outside the cabin |
 | `gateDesk` | 18.0, 20.5 | −π/2 | gate desk |
-| `herrtoaDoor` | 29.0, 25.2 | π/2 | men's room door |
+| `herrtoaGang` | 27.9, 12.2 | 0 | past the east end of the middle bench row, where the corridor to the toilets starts: the gate dash's first guide waypoint (§8.1 [3]) |
+| `herrtoaDoor` | 29.0, 25.2 | π/2 | men's room door (the dash's second guide waypoint) |
 | `herrtoa` | 33.5, 26.0 | π/2 | inside the men's room (mantra) |
 | `damtoaDoor` | 28.8, 18.4 | π/2 | facing the closed ladies' door (bubble anchor) |
-| `bridge` | 8.0, 14.7 | −π/2 | jet bridge middle |
-| `bridgeQueue1` / `bridgeQueue2` | 4.2, 14.2 / 5.2, 15.2 | −π/2 | outro spots (Majsan, Siv) |
+| `bridge` | 8.0, 14.7 | −π/2 | jet bridge middle; the gate outro's spots are offsets from it |
+| `bridgeCam` | 3.7, 14.7 | π/2 | cut camera (height 1.9) at the plane end of the bridge, looking up it to the `GATE 8` sign: the gate outro (§8.1) |
 | `cabinDoor` | 0.8, 14.7 | π | inside the front door; mission 2 `at` (vardinna) |
+| `doorCam` | −1.2, 14.2 | π/2 | cut camera (height 2.0) over the front galley's worktop, looking across at the open front door: the ombord intro (§8.2) |
 | `galleyFront` | −0.2, 13.0 | π | front galley (aisle side) |
+| `galleyCam` | 0, 8.6 | 0 | cut camera (height 3.6) over the aisle at row 4, looking forward to the stewardess at the front galley (§8.5); no coin in its view (§5.2) |
 | `cockpitDoor` | 0, 16.6 | π | |
 | `cabinRow6` / `cabinRow10` | 0, 6.3 / 0, 1.5 | 0 | aisle spots |
 | `cabinRow14` | 0.25, −2.1 | π/2 | aisle beside 14ABC facing the seats; mission 3 `at`; R-reset |
@@ -1387,9 +1406,9 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
 
 | stage | route | T_ref (n runs) | timer (Phase 1) | slack: (timer − clean time) / timer |
 |---|---|---|---|---|
-| 8.1 gate [3] toilet dash | gateOle → round the ladies' room → herrtoa (r 1.8), sprint 3.6 s (walk 5.0) | 4.1 (3.6 + 0.5; 1) | **6** (was 10) | 40 % sprint, 16 % walk |
-| 8.2 ombord [0] find 14B | cabinDoor → 14B past three stowers (E each), sprint 2.9 s (walk 4.2) | 4.9 (2.9 + 4 × 0.5; 1) | **7** (15) | 58 % sprint, 40 % walk |
-| 8.4 sprit [0] five bottles | sprint after the nearest, wait in the aisle clear of the trolley for the bottles it pushes out, Space in turbulence | 8.5 (p75 6.0 of 48 + 2.5; 3.8–6.4 s, median 4.9; Phase 3 r1 repair, the sweeper no longer hides in a row: the old one was bimodal, 4–12 s or 28–30 s, p75 14.4 → 22, Phase 2 17.1 → 25) | **11** (35) | 45 % at p75 |
+| 8.1 gate [3] toilet dash | gateOle → round the ladies' room → herrtoa (r 1.8), sprint 3.6 s (walk 5.0; Phase 3 r2 from the statistics' placed start (25.0, 11.6): 3.6 / 5.1) | 4.1 (3.6 + 0.5; 1) | **6** (was 10) | 40 % sprint, 16 % walk |
+| 8.2 ombord [0] find 14B | the intro's spot at the front door (1.6, 13.55) → 14B past three stowers (E each), sprint 3.1 s (walk 4.4) | 5.1 (3.1 + 4 × 0.5; 1; Phase 3 r2, the intro places him there; from `cabinDoor`'s approach spot 2.9 → 4.9) | **7** (15) | 56 % sprint, 37 % walk |
+| 8.4 sprit [0] five bottles | sprint after the nearest, wait in the aisle clear of the trolley for the bottles it pushes out, Space while the 3.0–6.0 s turbulence shakes | 10.1 (p75 7.6 of 36 + 2.5; 5.5–7.8 s, median 7.4; Phase 3 r2, the turbulence moved inside the sweep. Before it, with none: p75 6.0 of 48 → 11 (r1 repair); the old sweeper that hid in a row was bimodal, 4–12 s or 28–30 s, p75 14.4 → 22, Phase 2 17.1 → 25) | **13** (35) | 42 % at p75 |
 | 8.5 landning [0] round-up | row 16 → José → Berra → Herr Storch (walk, sign lit) | 9.1 (7.6 + 1.5; 2 orders) | **12** (20) | 37 % |
 | 8.5 landning [1] back to 14B | from the far end (Berra) | 3.7 (3.2 + 0.5; 2) | **5** (10) | 36 % |
 | 8.6 buss17 s2 | busBay → 7,1 > 3,1 > 3,4 → flamencoDrive, ÅKSJUKA, stop | 45.0 (median of 10 clean in 4 sets, 44.4–47.0) | **54** (60) | 17 % |
@@ -1454,8 +1473,9 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
   at ≈ 94, a walker at ≈ 98, a dawdler (2 s idle, then walking) panics at 5.5 s (`fearRate` 5,
   timer 6); ombord — holding J at 70 peaks at ≈ 75, never holding J panics at t 21.5 of the
   takeoff; landning — J from the start of the approach peaks at ≈ 20, J only after the shaking
-  panics at t 24. Missions 3 and 4 never came near 70 for a careful player (sprit peaks ≈ 5 over
-  48 sweeps; ≈ 20–35 while the old sweeper stood in a row for up to 18 s).
+  panics at t 24. Missions 3 and 4 never came near 70 for a careful player (sprit peaks 12–17 over
+  36 sweeps through the turbulence, Phase 3 r2; ≈ 5 with none; ≈ 20–35 while the old sweeper stood
+  in a row for up to 18 s).
 
 ### Mission summary
 
@@ -1488,7 +1508,7 @@ thumping, holding the mantra in the men's room, and the bodega tip in the queue 
 No `extra` (the gate cast already stands at its `HOMES.gate` spots; an `extra` would pull them into the security queue). Player outfit `arlanda`. Ole outfit `arlanda`
 (trilby, boombox), Angerud `arlanda` (camel coat, fur hat). Phase `gate` (stage 1 `startCue: { phase: ['gate', { instant: true }] }`).
 
-**Intro** (in the security queue):
+**Intro** (in the security queue; the first line's cue stages it, Phase 3 r2: `{place: {ole: ['gateQueue', 0, 1.2, -PI/2], stig: ['gateQueue', 0, -0.2, PI/2]}, cut: {at: 'queueCam', dist: 0, height: 2.0}}` — side by side across the 3 m pocket, facing each other, Stig clear of the tray counter, seen at eye level from the pocket's south end, held to the end of the intro; the dollhouse showed two hat tops and a side shot ran across the counters):
 - stig: "Vad ska de göra?"  [F](t)
 - ole: "Rutinekontroll. Narkotika, våpen, bomber…"  [F*](t)
 - stig: "Bomber…?!"  [F]  {fear: 10}
@@ -1500,7 +1520,7 @@ No `extra` (the gate cast already stands at its `HOMES.gate` spots; an `extra` w
    - kontrollant: "Vill ni vara vänlig och ta av er skon."  [F]  {anim: {who:'stig', flag:'shoeOff', secs: 2}, sfx: 'laugh'}
    - berra: "Kolla terroristen!"  [F](t)
 2. [1] `goto({ to: 'gateOle', radius: 2.5, text: 'Gå till Ole vid gate 8', startCue: { place: { ole: ['gateOle', 0, 0] } } })`
-3. [2] `scene({ checkpoint: true, retryAt: 'gateOle', frame: ['ole', 'stig'], lines: [...] })` — Ole's statistics (a failed dash replays them, which rebuilds the fear the dash needs; WP-F). **Only Ole's six
+3. [2] `scene({ checkpoint: true, retryAt: 'gateOle', frame: ['ole', 'stig'], place: { stig: ['gateOle', -2.0, 0.2, -1.47] }, cam: { at: 'statsCam', dist: 0, height: 1.9 }, lines: [...] })` — Ole's statistics (a failed dash replays them, which rebuilds the fear the dash needs; WP-F). Stig stands on the measured dash start (25.0, 11.6), turned to Ole, and the fixed cut frames both from the south (Phase 3 r2: the side two-shot followed the arrival, and a player coming from the arch got José's head across the bottom of the frame for all nine lines). **Only Ole's six
    statistics lines carry `{fear: 8}`** (+48; with "Bomber" and the arch the meter sits ≈ 70 when
    the dash starts, so the heartbeat is on):
    - ole: "Du vet vel at det er 50 prosent sjanse å overleve en flyulykke."  [F]  {fear: 8}
@@ -1516,9 +1536,17 @@ No `extra` (the gate cast already stands at its `HOMES.gate` spots; an `extra` w
    ([N] texts; radio [F*]). PANIK here does **not** fail: idle-panic returns him to `gateOle` and
    the 6 s timer keeps running. (Phase 2 balance, `calibflight`: about 18 m, sprint 3.6 s / walk
    5.0 s; fear at the start ≈ 69; a sprinter arrives at ≈ 94, a walker at ≈ 98, a dawdler panics
-   at ≈ 5.5 s.)
+   at ≈ 5.5 s.) **Guide** (Phase 3 r2, shipped as a stage decorator `via` in missions/flight.js,
+   not a kind option): the beacon and arrow lead along the measured route, `herrtoaGang` (past the
+   middle bench row's east end), then `herrtoaDoor`, then `herrtoa`; a waypoint is passed within
+   1.5 m or once the player is nearer the next point than it is. The waypoint target carries the
+   stage's own as `goal`, which R's terminal rule uses (§3). The flight level aims straight
+   (`routeAim: false`), and the straight line from the dash start crossed the middle bench row
+   and the toilet block's west wall: an arrow-follower was pinned on the men's door jamb and failed
+   2 of 2; on the guide it arrives in 3.9 s at fear ≈ 97. No timer change (the measured route
+   already went that way; re-measured 3.6 s).
 5. [4] `mantra({ at: 'herrtoa', radius: 2.2, secs: 3, text: 'Håll J: sträck ut armarna – Jag kan flyga, jag är inte rädd', barLabel: 'JAG KAN FLYGA' })`
-6. [5] `scene({ place: { berra: ['herrtoaDoor', 0, 2.2, 1.25] }, frame: ['berra', 'stig'], doneCue: { place: { berra: ['gateLounge', -1.2, 0] } }, lines: [...] })` (inside the men's room; the old offset was behind the wall; he goes back to the lounge when the scene ends: a `place` cue on his last line fired as the line started and emptied the frame for the punchline):
+6. [5] `scene({ place: { berra: ['herrtoaDoor', 0, 2.2, 1.25], stig: ['herrtoa', 0, 0, -1.9] }, frame: ['berra', 'stig'], doneCue: { place: { berra: ['gateLounge', -1.2, 0] } }, lines: [...] })` (inside the men's room; the old offset was behind the wall; Stig turns to the door where Berra stands (Phase 3 r2: `scene` leaves an unplaced player as he arrived, and he faced the urinals with his back to Berra); Berra goes back to the lounge when the scene ends: a `place` cue on his last line fired as the line started and emptied the frame for the punchline):
    - berra: "Hur mår du?"  [F](t)
    - stig: "Bra."  [F]
    - stig: "Jag håller på med yoga, avslappningsövningar. Isometrisk träning…"  [F]
@@ -1548,8 +1576,13 @@ No `extra` (the gate cast already stands at its `HOMES.gate` spots; an `extra` w
    - robban: "Glöm aldrig det, du."  [F]
 9. [8] `goto({ to: 'cabinDoor', radius: 2.0, text: 'Gå ombord – gate 8' })`
 
-**Outro** (`outroPlace: { majsan: ['bridgeQueue1', 0, 0], siv: ['bridgeQueue2', 0, 0] }`; first line
-cue `{outfit: {who: 'stig', name: 'kostym'}}` — he hands his coat in):
+**Outro** (`outroPlace: { majsan: ['bridge', 0.55, 1.4, -2.79], siv: ['bridge', -0.15, 0.2, -1.04], stig: ['bridge', -0.55, 1.4, -0.35] }`, `outroCam: { at: 'bridgeCam', dist: 0, height: 1.9 }`; first line
+cue `{outfit: {who: 'stig', name: 'kostym'}}` — he hands his coat in). On the jet bridge (Phase 3
+r2): Stig and Majsan face each other across the 2 m tube, both turned 20° to the lens, Siv between
+them 1.2 m further up it, turned to Majsan; the eye-level camera at the plane end looks up the
+bridge to the `GATE 8` sign. The dollhouse saw them from 51–61° above, with Stig under the door
+frame and Majsan behind Siv (the r2 `frame` fix turned their faces to the lens but kept it steep).
+After the outro Stig stands on the bridge, 5 m from the stewardess (mission 2's giver).
 - majsan: "Nämen… hejsan!"  [F](t)
 - stig: "Jaså, vi kom på samma resa."  [F](t)
 - siv: "Jag dör! Såg du vad han stötte på dig? Han som såg ut som en giraff."  [F]
@@ -1564,7 +1597,7 @@ goes DUNS.
 
 The cast is already seated (`HOMES.flight` from index 1 on, §4.2) although the phase is still `gate`.
 
-**Intro:**
+**Intro** (the first line's cue stages it, Phase 3 r2: `{place: {vardinna: ['cabinDoor', -0.8, -0.15, 3.49], stig: ['cabinDoor', -0.8, 1.15, -0.35]}, cut: {at: 'doorCam', dist: 0, height: 2.0}}` — at the open front door, forward of the galley curtain: she by the coat closet, Stig just in, facing each other along the cabin and turned 20° to the lens, which looks across from the galley worktop with the door and the jet bridge between them; held to the end of the intro. The dollhouse showed her back and Stig's hair under the door frame; from the aisle, the curtain rail (y 2.24, at the head height of the 2.6 m Stig) crossed both faces. The seat dash starts from Stig's spot, (1.6, 13.55)):
 - vardinna: "God morgon och välkommen ombord!"  [N]
 - stig: "Fjorton B… Efter rad tolv kommer väl rad tretton?"  [N]
 - vardinna: "Inte hos oss. Fjorton B ligger mitt i planet."  [N]
@@ -1593,7 +1626,7 @@ The cast is already seated (`HOMES.flight` from index 1 on, §4.2) although the 
 captain's PA and the juice gag of mission 3):
 - ole: "Hva er det for et merke du har?"  [F*](t)
 - stig: "Hammarby. Känner du till Hammarby?"  [F]
-- ole: "Eneste svenske byene jeg kjenner til er Stockholm og Göteborg og Malmö."  [F]
+- ole: "Eneste svenske byene jeg kjenner til er Stockholm og Göteborg og Malmö."  [F](t)
 - stig: "Det här är ett fotbollslag."  [F]
 - ole: "Min drøm er å fly med Concorde fra Paris til Rio. 2 300 km i timen. Det er flyging!"  [F](t)
 - ole: "Tre ganger så fort som en geværkule."  [F](t)
@@ -1663,16 +1696,18 @@ and the trolley keeps coming.
 - vardinna: "Då är du rätt man."  [N]
 
 **Stages:**
-1. `collect({ kind: 'flaska', motion: 'roll', items: [{x:3000.2,z:9.0},{x:2999.8,z:2.5},{x:3000.3,z:-6.0},{x:2999.7,z:-10.5},{x:3000.0,z:-13.5}], radius: 0.9, timer: 11, text: 'Fånga flaskorna som rullar i gången', barLabel: 'FLASKOR', failText: 'Flaskorna rullade in under sätena.', startCue: { phase: ['cruise', { instant: true }], trolley: true }, timedCues: [[8, {radio: ['pa', 'Herr Storch ombedes kontakta kabinpersonalen.'], pa: true}], [20, {turbulence: [0.5, 6]}]] })`
+1. `collect({ kind: 'flaska', motion: 'roll', items: [{x:3000.2,z:9.0},{x:2999.8,z:2.5},{x:3000.3,z:-6.0},{x:2999.7,z:-10.5},{x:3000.0,z:-13.5}], radius: 0.9, timer: 13, text: 'Fånga flaskorna som rullar i gången', barLabel: 'FLASKOR', failText: 'Flaskorna rullade in under sätena.', startCue: { phase: ['cruise', { instant: true }], trolley: true }, timedCues: [[1.5, {turbulence: [0.5, 3]}], [8, {radio: ['pa', 'Herr Storch ombedes kontakta kabinpersonalen.'], pa: true}]] })`
    - `roll`: bottles slide along the aisle (|x| ≤ 0.45) at 0.6–1.4 m/s, bounce at z +12.5 / −16,
      roll out from under the serving trolley towards the player's side (Phase 2: a bottle beyond a
      trolley stopped at a row was out of reach for 20–45 s), get kicked ±1.5 m/s by every
      turbulence jolt (`cabin.onJolt`); touching collects one.
    - PA line [F]: the film's cabin PA [SUB-SV 00:25:43]. Seatbelt on during the turbulence (standing costs fear; hold Space).
-   - **Open (Phase 3 r1 repair)**: the measured timer (11 s, §8 table) ends before the 20 s
-     turbulence cue, so as shipped the sweep has no turbulence (with 22 s it came only in the last
-     2 s). Round 2 (flight missions): move the cue inside the stage and re-measure with
-     `FLIGHT=sprit SPRIT_RUNS=36 calibflight`, or drop the turbulence from "Fun" and README.
+   - **Turbulence inside the sweep (Phase 3 r2)**: warned at 1.5 s, shaking 3.0–6.0 s (three
+     jolts that kick the bottles), so every sweep meets it. Until r2 the cue sat at 20 s, past the
+     measured 11 s timer (timed cues run on scaled stage time, the timer on real time, so only test
+     mode ever saw it). Re-measured with `FLIGHT=sprit SPRIT_RUNS=36 calibflight`, the sweeper
+     holding Space only while it shakes: 36 clean sweeps 5.5–7.8 s, median 7.4, p75 7.6 → T_ref
+     10.1 → timer **13** (90 % range 13–13); a careful sweeper's FLYGRÄDSLA peaks at 12–17.
 2. `goto({ to: 'galleyFront', radius: 1.6, text: 'Lämna flaskorna i främre byssan' })`
 
 **Outro** (`outroPlace: { stig: ['cabinRow14', 0, 0] }`, `outroCam: ['ole', 'stig']`; Berra at row 22, then back at row 14, where Ole has his boombox on his lap: outfit `flygRadio`, §2.2; the next mission's home set gives him `flyg` again):
@@ -1702,10 +1737,10 @@ just after takeoff, ~0:23, so every line is relocated `[F*]`, and the siv/majsan
 - siv: "Han är så bortkommen. Det blir minuspoäng."  [F*](t)
 - stig: "…Fyra?"  [N]
 - kapten: "Vi har påbörjat inflygningen mot Las Palmas. Var vänliga och fäst säkerhetsbältena."  [N]  {pa: true, seatbelt: true}
-- vardinna: "Alla ska sitta! Hjälp mig få folk på plats, är du snäll."  [N]
+- vardinna: "Alla ska sitta! Hjälp mig få folk på plats, är du snäll."  [N]  {cut: {at: 'galleyCam', dist: 0, height: 3.6}} (Phase 3 r2: she stands at the front galley, 16 m behind the row-16 shot's lens, and spoke off screen; the cut looks forward along the aisle to her, the `row22Cam` recipe, and holds to the end of the intro. She is not placed in the aisle: the timed round-up runs both ways from row 16.)
 
 **Stages:**
-1. `collect({ who: ['herrStorch', 'jose', 'berra'], standAt: { herrStorch: [3000.2, 3.4], jose: [2999.8, -9.2], berra: [3000.0, -14.4] }, seatOnTouch: true, timer: 12, text: 'Få de stående passagerarna att sätta sig', barLabel: 'STÅENDE', failText: 'Värdinnan fick göra det själv.', lines: {...}, startCue: { phase: ['cruise', { instant: true }], trolley: false, seatbelt: true }, timedCues: [[12, {turbulence: [0.3, 4]}]] })` (the intro's PA lights the sign; `seatbelt: true` relights it on a retry, which has no intro, so standing costs fear there too)
+1. `collect({ who: ['herrStorch', 'jose', 'berra'], standAt: { herrStorch: [3000.2, 3.4], jose: [2999.8, -9.2], berra: [3000.0, -14.4] }, seatOnTouch: true, timer: 12, text: 'Få de stående passagerarna att sätta sig', barLabel: 'STÅENDE', failText: 'Värdinnan fick göra det själv.', lines: {...}, startCue: { phase: ['cruise', { instant: true }], trolley: false, seatbelt: true } })` (the intro's PA lights the sign; `seatbelt: true` relights it on a retry, which has no intro, so standing costs fear there too). No turbulence here (Phase 3 r2): the `timedCues: [[12, {turbulence: [0.3, 4]}]]` shake fired on the frame its 12 s timer failed (timed cues run on scaled stage time, the timer on real time, so only test mode ever saw it); the approach (stage 3) is the mission's turbulence. Measured times unchanged (the clean round-up, 7.6 s, never reached the cue).
    - herrStorch: "Lite film."  [F*](t) (Arlanda line)  {anim: {who:'herrStorch', flag:'film', secs:2}}
    - jose: siv "Vad skönt att komma bort!" [F*] then jose "Jag ska inte bort, jag ska hem." [F*] (mid-flight in the film, relocated)
    - berra: "Ska vi inte landa snart?"  [N]
@@ -3810,7 +3845,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `propsheet`, `riocard`, `islandtour`, `islandstats` [B] | every §6.8 prop in a row; the Rio set from `rioCam`; streets/outskirts/sea tour; triangle budget |
 | `endcard` [Phase 2] | `game.playEndCard()`: Stig on the Rio deck in `rio`, Ole in `rio`, sunset, letterbox, frozen input, `RIO…?`; then back within 2.5 m of `flamencoPool` in island clothes, free roam, `NUEVA ESTOCOLMO KLARAT!` |
 | `calibrate` [G, Phase 2] | island timer calibration and difficulty checks (§8 "Timers and difficulty"): a headless autopilot in the player's car (env `CAL=id,…` from buss17 asnan vischan jeep home flowers plates tonga race guests balls sheep follow pursuit haggle; `RUNS` = 3, `JEEP_RUNS` = 12, `HOME_RUNS` = 2 (per spot), `FOOT_RUNS` = 4, `RACE_RUNS` = 2 (+ 2 with one crash; every car-car impact of the player's car or the bus is logged, and a run whose car was lost counts as lost), `PURSUIT_RUNS` = 3, `RACE_SWEEP`, `JEEP`, `RACE_CAR`); medians of clean runs / 75th percentiles, on-foot A* walker (round static solids and stopped cars), crash injection; `CAL CHECK` compares each measured timer with the shipped one and, for a random stage (jeep, balls, sheep, flowers, plates), says whether the shipped timer lies inside this sample's 90 % bootstrap range of the timer (`timerRange` in `tools/lib.mjs`; §8 "Timers and difficulty"); checks: deterministic shipped timers ≥ T_ref, a clean race wins and a crashed one loses, a clean SKANDAL escape is possible, follows stay in band; prints the timer table. `story` supports `SHOTS=1` (key-scene screenshots) |
-| `calibflight` [Phase 2] | flight timer calibration and FLYGRÄDSLA balance (env `FLIGHT=gate/sprint,…`, `SPRIT_RUNS` = 5, `DEBUG_SPRIT=1` traces the player, the trolley and the bottles twice a second): careful vs careless autopilots at timeScale 1; the sprit sweeper waits for bottles in the aisle clear of the trolley (2.4 m moving, 1.7 m stopped) and steps into a free row only in turbulence; `CALF CHECK sprit[0]` compares with the shipped timer and the sample's 90 % bootstrap range; checks that careful players never panic (and the sprit sweeper is never bowled over and never falls) and careless ones do in missions 1, 2 and 5 |
+| `calibflight` [Phase 2] | flight timer calibration and FLYGRÄDSLA balance (env `FLIGHT=gate/sprint,…`, `SPRIT_RUNS` = 5, `DEBUG_SPRIT=1` traces the player, the trolley and the bottles twice a second): careful vs careless autopilots at timeScale 1; the sprit sweeper waits for bottles in the aisle clear of the trolley (2.4 m moving, 1.7 m stopped), steps into a free row only in turbulence and holds Space only while it shakes (not through the 1.5 s warning; Phase 3 r2); `CALF CHECK sprit[0]` compares with the shipped timer and the sample's 90 % bootstrap range; checks that careful players never panic (and the sprit sweeper is never bowled over and never falls) and careless ones do in missions 1, 2 and 5 |
 | `perf` [Phase 2] | frame rate (2 s of play) plus the mean `game.update` ms and the GPU-synced `renderer.render` ms in the cabin in every phase (seated in 14B and from the aisle), at the gate, and on the island (spawn, plaza, marknad, kasbah, a drive through the centre, the high view); fails below 45 fps or above 1000/45 ms per frame. Phase 2: worst cabin 7.2 ms, worst island 9.0 ms (marknad, ~810 calls, 3.3 M triangles), all at 60 fps |
 
 ---
@@ -3859,9 +3894,10 @@ saljare souvenir stadare eslov grisbonde varden guardia pax telefonist`. Player 
 climb cruise approach landing landed`. **Palettes**: flight `gate clouds above descent island`;
 island `day night sunset`. **Meters**: `flygradsla skandal`.
 
-**Flight landmarks**: `gateStart gateQueue gateArch gateOle gateLounge gateDesk herrtoaDoor herrtoa
-damtoaDoor bridge bridgeQueue1 bridgeQueue2 cabinDoor galleyFront cockpitDoor cabinRow6 cabinRow10
-cabinRow14 cabinRow16 cabinRow22 cabinCentre toiletBackL toiletBackR galleyBack trolleyPark call14`.
+**Flight landmarks**: `gateStart gateQueue queueCam gateArch statsCam gateOle gateLounge gateDesk
+herrtoaGang herrtoaDoor herrtoa damtoaDoor bridge bridgeCam cabinDoor doorCam galleyFront galleyCam
+cockpitDoor cabinRow6 cabinRow10 cabinRow14 cabinRow16 cabinRow22 row22Cam cabinCentre toiletBackL
+toiletBackR galleyBack trolleyPark call14`.
 **Seats**: `<row><A–F>`, rows 1–12 and 14–24.
 
 **Island landmarks**: `flamenco flamencoRecepcion flamencoPatio rum113 flamencoBalcony flamencoPool
@@ -4512,3 +4548,29 @@ the fixer's group.
   opens the complaint once (§5.12, §8.3).
 - r2 cabin-flight: optional palette field `cloudRim` (town clouds' outline): day `0x6f9ccc`, night
   `0x101433`, sunset `0xa0605a` (§13.3).
+- r2 flight-missions: fixed eye-level cuts for the mission scenes the dollhouse could not frame
+  (§5.3, new §5.5 landmarks `queueCam statsCam bridgeCam doorCam galleyCam`), each with its
+  speakers placed: the gate intro in the landside pocket (Ole and Stig across it, §8.1), Ole's
+  statistics (Stig on the measured dash start; a player from the arch had José's head across the
+  frame), the jet-bridge outro (Stig and Majsan across the tube, Siv between them, looking up to
+  `GATE 8`; `bridgeQueue1/2` removed), the ombord intro at the open front door (forward of the
+  galley curtain, whose rail at y 2.24 crossed every face from the aisle; §8.2) and the landning
+  stewardess at the front galley (§8.5). The men's-room scene turns Stig to Berra (§8.1 [5]).
+- r2 flight-missions: the gate dash's guide (`via` in missions/flight.js, new landmark
+  `herrtoaGang`): the beacon and arrow lead past the middle bench row and up the corridor to the
+  men's door, then in (§8.1 [3]); R in the terminal judges the waypoint's `goal` (§3). An
+  arrow-follower failed 2 of 2 (pinned on the door jamb) and now arrives in 3.9 s. No timer change
+  (`calibflight` gate: 3.6 s sprint, 5.1 s walk, fear 69 → 94).
+- r2 flight-missions: ombord's seat dash starts from the intro's spot by the door (1.6, 13.55):
+  re-measured 3.1 s (walk 4.4), T_ref 5.1, timer still 7 (§8 table).
+- r2 flight-missions: landning's round-up has no turbulence cue (it fired on the frame its 12 s
+  timer failed; §8.5); its measured times are unchanged.
+- r2 flight-missions: three cabin coins out of the `galleyCam` view (the aisle line starts at z
+  9.8; the front galley's two and the line's first moved to dodge-row leg room); still 24 (§5.2).
+- r2 flight-missions: tags (§1.4): Ole's "Eneste svenske byene…" is `[F](t)` (§8.2); the five
+  flight mission titles carry `// title [F*]` / `// title [N]`.
+- r2 flight-missions: sprit's turbulence moved inside the sweep (`timedCues [[1.5, {turbulence:
+  [0.5, 3]}], [8, PA]]`: warned at 1.5 s, shaking 3–6 s; it sat at 20 s, past the 11 s timer). The
+  `calibflight` sweeper holds Space only while it shakes, not through the warning (§16.4).
+  `FLIGHT=sprit SPRIT_RUNS=36`: 36 clean sweeps 5.5–7.8 s, median 7.4, p75 7.6 → T_ref 10.1 →
+  timer **13** (was 11; 90 % range 13–13); FLYGRÄDSLA peaks 12–17 (§8 table, §8.4, fixture).

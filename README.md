@@ -81,7 +81,7 @@ också: A hopp/handbroms, B spring, X sparka/mantra, Y prata, Start paus, triggr
 | 1 | Jag kan flyga, jag är inte rädd | Ole, vid gate 8 | Metallbågen piper, Ole läser statistik, du spurtar till herrtoaletten innan rädslan tar över, gör Levanders övning och hör tipset om Pepes Bodega i kön. |
 | 2 | Rad 13 finns inte | Flygvärdinnan | Hitta 14B förbi folk som stuvar bagage (det finns ingen rad 13) och klara starten med mantrat när landningsstället går DUNS. |
 | 3 | Mer juice | Ole | Anropsknappen, juicen vid serveringsvagnen – akta tårna – och tillbaka till 14B genom turbulensen utan att spilla. |
-| 4 | Medhavd sprit | Flygvärdinnan | Fånga fem flaskor som rullar i gången medan vagnen kommer och planet skakar. |
+| 4 | Medhavd sprit | Flygvärdinnan | Fånga fem flaskor som rullar i gången medan vagnen kommer – och håll i dig när planet skakar och flaskorna far åt alla håll. |
 | 5 | Inflygning Las Palmas | Majsan | Fyra poäng? Få de stående passagerarna att sätta sig, hinn tillbaka till 14B och håll mantrat genom inflygningen tills hjulen tar Gran Canaria. |
 | 6 | SunTrips buss nummer 17 | Lasse, på flygplatsen | Kör gruppen till Hotell Flamenco – mjukt, annars blir de åksjuka. |
 | 7 | Plocka kulor! | Lasse, vid friskoteket | Jaga sex vindblåsta badbollar. Plocka med höger, plocka med vänster. |

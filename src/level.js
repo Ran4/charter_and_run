@@ -53,10 +53,11 @@ export const LEVELS = {
     // back into the aisle at the same row, never along it (R to row 14 sat him in 14B for free in
     // ombord's and landning's seat dashes). In the terminal: the lounge, unless that is nearer the
     // running stage's target than he is (the toilet dash; the queue) — then null, R does nothing.
+    // A guide waypoint's own `goal` counts, not the waypoint (the dash's corridor guide).
     resetSpot: (g) => {
       const p = g.player;
       if (g.cabin.inCabin(p.x, p.z)) return aisleSpot(g);
-      const t = g.missions.target(), l = lm('gateLounge');
+      const w = g.missions.target(), t = w?.goal || w, l = lm('gateLounge');
       return t && dist(l.x, l.z, t.x, t.z) < dist(p.x, p.z, t.x, t.z) ? null : 'gateLounge';
     },
     panicHome: (g) => (g.cabin.inCabin(g.player.x, g.player.z) ? { seat: '14B' } : { lm: 'gateOle' }),

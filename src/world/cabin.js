@@ -79,13 +79,16 @@ export const DODGE_ROWS = [3, 8, 12, 15, 18, 20, 23];
 const BLOCKER_ROWS = [3, 8, 12];
 const SMOKING_FROM = 20;   // rows 20-24: the smokers' section (1980: allowed, at the rear)
 
-// §5.5 landmarks: [lx, lz, yaw, y?]
+// §5.5 landmarks: [lx, lz, yaw, y?]. The *Cam ones are cut cameras (`{ at, dist: 0, height }`: the
+// eye on the spot, looking along the yaw) for the mission-1/2/5 scenes the dollhouse cannot frame.
 const LANDMARKS = {
   gateStart: [36.5, 5.0, -Math.PI / 2], gateQueue: [35.6, 6.6, Math.PI / 2], gateArch: [33.0, 5.0, -Math.PI / 2],
+  queueCam: [36.1, 1.2, 0], statsCam: [24.0, 6.8, 0],
   gateOle: [23.0, 11.8, Math.PI], gateLounge: [22.0, 16.0, 0], gateDesk: [18.0, 20.5, -Math.PI / 2],
-  herrtoaDoor: [29.0, 25.2, Math.PI / 2], herrtoa: [33.5, 26.0, Math.PI / 2], damtoaDoor: [28.8, 18.4, Math.PI / 2],
-  bridge: [8.0, 14.7, -Math.PI / 2], bridgeQueue1: [4.2, 14.2, -Math.PI / 2], bridgeQueue2: [5.2, 15.2, -Math.PI / 2],
+  herrtoaGang: [27.9, 12.2, 0], herrtoaDoor: [29.0, 25.2, Math.PI / 2], herrtoa: [33.5, 26.0, Math.PI / 2], damtoaDoor: [28.8, 18.4, Math.PI / 2],
+  bridge: [8.0, 14.7, -Math.PI / 2], bridgeCam: [3.7, 14.7, Math.PI / 2],
   cabinDoor: [0.8, 14.7, Math.PI], galleyFront: [-0.2, 13.0, Math.PI], cockpitDoor: [0, 16.6, Math.PI],
+  doorCam: [-1.2, 14.2, Math.PI / 2], galleyCam: [0, 8.6, 0],
   cabinRow6: [0, 6.3, 0], cabinRow10: [0, 1.5, 0], cabinRow14: [0.25, -2.1, Math.PI / 2], cabinRow16: [-0.25, -4.5, -Math.PI / 2],
   cabinRow22: [0, -11.7, Math.PI / 2], row22Cam: [0, -9.2, Math.PI], cabinCentre: [0, 0, 0], toiletBackL: [0.6, -15.6, Math.PI / 2], toiletBackR: [-0.6, -15.6, -Math.PI / 2],
   galleyBack: [0, -17.6, 0], trolleyPark: [0, 16.2, Math.PI], call14: [1.45, -2.2, 0, 2.2],
@@ -960,14 +963,13 @@ export function buildCabin(scene, game) {
 
     placeCoins() {
       // 24 fixed coins (§5.2 budget ≤ 30): the aisle, the galleys, a few in dodge-row leg room. The
-      // aisle line stops at z -10.0: the `row22Cam` cut looks down the aisle past row 22.
-      for (let k = 0; k < 13; k++) placeCoin(W(0), 0.9, 11.6 - k * 1.8);
-      placeCoin(W(-0.3), 0.9, 14.2);
-      placeCoin(W(0.3), 0.9, 15.6);
+      // aisle line runs z 9.8 to -10.0, clear of the cut cameras that look along it: `row22Cam` aft
+      // past row 22, `galleyCam` forward to the front galley (none in its galley either).
+      for (let k = 0; k < 12; k++) placeCoin(W(0), 0.9, 9.8 - k * 1.8);
       placeCoin(W(0), 0.9, -16.4);
       placeCoin(W(0), 0.9, -18.4);
       placeCoin(W(-1.2), 0.9, 12.9);
-      for (const [row, s] of [[3, -1], [8, 1], [15, -1], [18, 1], [20, 1], [23, -1]]) placeCoin(W(s * 1.0), 0.9, rowZ(row) + 0.31);
+      for (const [row, s] of [[3, -1], [8, 1], [8, -1], [15, -1], [18, 1], [18, -1], [20, 1], [20, -1], [23, -1]]) placeCoin(W(s * 1.0), 0.9, rowZ(row) + 0.31);
     },
 
     // The minimap plan (§5.11). Only live blocks: the gate plan has the door open and the bridge

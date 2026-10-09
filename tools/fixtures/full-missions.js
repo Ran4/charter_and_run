@@ -15,9 +15,9 @@ import { lm } from '../../src/world/layout.js';
 export const FULL_MISSIONS = [
   // ===== §8.1 · 0 · gate =====================================================================
   {
-    id: 'gate', title: 'Jag kan flyga, jag är inte rädd', level: 'flight', giver: 'ole', at: 'gateQueue', reward: 200,
+    id: 'gate', title: 'Jag kan flyga, jag är inte rädd', level: 'flight', giver: 'ole', at: 'gateQueue', reward: 200,   // title [F*]
     intro: [
-      ['stig', 'Vad ska de göra?'],                                        // [F](t)
+      ['stig', 'Vad ska de göra?', { place: { ole: ['gateQueue', 0, 1.2, -Math.PI / 2], stig: ['gateQueue', 0, -0.2, Math.PI / 2] }, cut: { at: 'queueCam', dist: 0, height: 2.0 } }],   // [F](t)
       ['ole', 'Rutinekontroll. Narkotika, våpen, bomber…'],                  // [F*](t)
       ['stig', 'Bomber…?!', { fear: 10 }],                                  // [F]
       ['ole', 'Du ser nervøs ut, du. Første gang du flyr?'],                 // [N]
@@ -29,7 +29,7 @@ export const FULL_MISSIONS = [
         ['berra', 'Kolla terroristen!'],                                                                                             // [F](t)
       ] }),
       () => goto({ to: 'gateOle', radius: 2.5, text: 'Gå till Ole vid gate 8', startCue: { place: { ole: ['gateOle', 0, 0] } } }),
-      () => scene({ checkpoint: true, retryAt: 'gateOle', frame: ['ole', 'stig'], lines: [
+      () => scene({ checkpoint: true, retryAt: 'gateOle', frame: ['ole', 'stig'], place: { stig: ['gateOle', -2.0, 0.2, -1.47] }, cam: { at: 'statsCam', dist: 0, height: 1.9 }, lines: [
         ['ole', 'Du vet vel at det er 50 prosent sjanse å overleve en flyulykke.', { fear: 8 }],   // [F]
         ['ole', 'Det er farligere å kjøre bil enn å fly.', { fear: 8 }],                          // [F]
         ['ole', 'Man regner mellom to og fem millioner flytimer pr. kræsj.', { fear: 8 }],        // [F]
@@ -42,7 +42,7 @@ export const FULL_MISSIONS = [
       ] }),
       () => goto({ to: 'herrtoa', radius: 1.8, fearRate: 5, timer: 6, text: 'Till herrtoaletten – fort!', failText: 'Du hann inte fram…', radio: [['ole', 'To ganger, Stig-Helmer! Looping med en jumbo!', { gap: 3, fear: 4 }]] }),
       () => mantra({ at: 'herrtoa', radius: 2.2, secs: 3, text: 'Håll J: sträck ut armarna – Jag kan flyga, jag är inte rädd', barLabel: 'JAG KAN FLYGA' }),
-      () => scene({ place: { berra: ['herrtoaDoor', 0, 2.2, 1.25] }, frame: ['berra', 'stig'], doneCue: { place: { berra: ['gateLounge', -1.2, 0] } }, lines: [
+      () => scene({ place: { berra: ['herrtoaDoor', 0, 2.2, 1.25], stig: ['herrtoa', 0, 0, -1.9] }, frame: ['berra', 'stig'], doneCue: { place: { berra: ['gateLounge', -1.2, 0] } }, lines: [
         ['berra', 'Hur mår du?'],                                                          // [F](t)
         ['stig', 'Bra.'],                                                                  // [F]
         ['stig', 'Jag håller på med yoga, avslappningsövningar. Isometrisk träning…'],     // [F]
@@ -72,7 +72,8 @@ export const FULL_MISSIONS = [
       ] }),
       () => goto({ to: 'cabinDoor', radius: 2.0, text: 'Gå ombord – gate 8' }),
     ],
-    outroPlace: { majsan: ['bridgeQueue1', 0, 0], siv: ['bridgeQueue2', 0, 0] },
+    outroPlace: { majsan: ['bridge', 0.55, 1.4, -2.79], siv: ['bridge', -0.15, 0.2, -1.04], stig: ['bridge', -0.55, 1.4, -0.35] },
+    outroCam: { at: 'bridgeCam', dist: 0, height: 1.9 },
     outro: [
       ['majsan', 'Nämen… hejsan!', { outfit: { who: 'stig', name: 'kostym' } }],                    // [F](t)
       ['stig', 'Jaså, vi kom på samma resa.'],                                                     // [F](t)
@@ -82,9 +83,9 @@ export const FULL_MISSIONS = [
 
   // ===== §8.2 · 1 · ombord ===================================================================
   {
-    id: 'ombord', title: 'Rad 13 finns inte', level: 'flight', giver: 'vardinna', at: 'cabinDoor', reward: 250,
+    id: 'ombord', title: 'Rad 13 finns inte', level: 'flight', giver: 'vardinna', at: 'cabinDoor', reward: 250,   // title [N]
     intro: [
-      ['vardinna', 'God morgon och välkommen ombord!'],                         // [N]
+      ['vardinna', 'God morgon och välkommen ombord!', { place: { vardinna: ['cabinDoor', -0.8, -0.15, 3.49], stig: ['cabinDoor', -0.8, 1.15, -0.35] }, cut: { at: 'doorCam', dist: 0, height: 2.0 } }],   // [N]
       ['stig', 'Fjorton B… Efter rad tolv kommer väl rad tretton?'],             // [N]
       ['vardinna', 'Inte hos oss. Fjorton B ligger mitt i planet.'],             // [N]
       ['vardinna', 'Skynda dig – vi ska taxa ut.'],                               // [N]
@@ -104,7 +105,7 @@ export const FULL_MISSIONS = [
     outro: [
       ['ole', 'Hva er det for et merke du har?'],                                                          // [F*](t)
       ['stig', 'Hammarby. Känner du till Hammarby?'],                                                      // [F]
-      ['ole', 'Eneste svenske byene jeg kjenner til er Stockholm og Göteborg og Malmö.'],                  // [F]
+      ['ole', 'Eneste svenske byene jeg kjenner til er Stockholm og Göteborg og Malmö.'],                  // [F](t)
       ['stig', 'Det här är ett fotbollslag.'],                                                             // [F]
       ['ole', 'Min drøm er å fly med Concorde fra Paris til Rio. 2 300 km i timen. Det er flyging!'],       // [F](t)
       ['ole', 'Tre ganger så fort som en geværkule.'],                                                     // [F](t)
@@ -117,7 +118,7 @@ export const FULL_MISSIONS = [
 
   // ===== §8.3 · 2 · juice ====================================================================
   {
-    id: 'juice', title: 'Mer juice', level: 'flight', giver: 'ole', at: 'cabinRow14', reward: 300,
+    id: 'juice', title: 'Mer juice', level: 'flight', giver: 'ole', at: 'cabinRow14', reward: 300,   // title [F*]
     intro: [
       ['kapten', 'Mina damer och herrar, det är kapten. Vi flyger just nu ut över Atlanten.', { pa: true }],                          // [F]
       ['kapten', 'Vi beräknas landa om en timme och 35 minuter. Vädret i Las Palmas är bra – soldis och 22 grader varmt.'],           // [F]
@@ -150,7 +151,7 @@ export const FULL_MISSIONS = [
 
   // ===== §8.4 · 3 · sprit ====================================================================
   {
-    id: 'sprit', title: 'Medhavd sprit', level: 'flight', giver: 'vardinna', at: 'galleyBack', reward: 300, extra: [],
+    id: 'sprit', title: 'Medhavd sprit', level: 'flight', giver: 'vardinna', at: 'galleyBack', reward: 300, extra: [],   // title [F*]
     intro: [
       ['vardinna', 'Tack. Det är förbjudet att dricka medhavd sprit.'],                                        // [F]
       ['vardinna', 'Tar du det inte lugnt med spriten, kan det bli problem att komma in i Spanien.'],           // [F]
@@ -160,7 +161,7 @@ export const FULL_MISSIONS = [
       ['vardinna', 'Då är du rätt man.'],                                                                      // [N]
     ],
     stages: [
-      () => collect({ kind: 'flaska', motion: 'roll', items: [{ x: 3000.2, z: 9.0 }, { x: 2999.8, z: 2.5 }, { x: 3000.3, z: -6.0 }, { x: 2999.7, z: -10.5 }, { x: 3000.0, z: -13.5 }], radius: 0.9, timer: 11, text: 'Fånga flaskorna som rullar i gången', barLabel: 'FLASKOR', failText: 'Flaskorna rullade in under sätena.', startCue: { phase: ['cruise', { instant: true }], trolley: true }, timedCues: [[8, { radio: ['pa', 'Herr Storch ombedes kontakta kabinpersonalen.'], pa: true }], [20, { turbulence: [0.5, 6] }]] }),
+      () => collect({ kind: 'flaska', motion: 'roll', items: [{ x: 3000.2, z: 9.0 }, { x: 2999.8, z: 2.5 }, { x: 3000.3, z: -6.0 }, { x: 2999.7, z: -10.5 }, { x: 3000.0, z: -13.5 }], radius: 0.9, timer: 13, text: 'Fånga flaskorna som rullar i gången', barLabel: 'FLASKOR', failText: 'Flaskorna rullade in under sätena.', startCue: { phase: ['cruise', { instant: true }], trolley: true }, timedCues: [[1.5, { turbulence: [0.5, 3] }], [8, { radio: ['pa', 'Herr Storch ombedes kontakta kabinpersonalen.'], pa: true }]] }),
       () => goto({ to: 'galleyFront', radius: 1.6, text: 'Lämna flaskorna i främre byssan' }),
     ],
     outroPlace: { stig: ['cabinRow14', 0, 0] },
@@ -177,7 +178,7 @@ export const FULL_MISSIONS = [
 
   // ===== §8.5 · 4 · landning =================================================================
   {
-    id: 'landning', title: 'Inflygning Las Palmas', level: 'flight', giver: 'majsan', at: 'cabinRow16', reward: 400,
+    id: 'landning', title: 'Inflygning Las Palmas', level: 'flight', giver: 'majsan', at: 'cabinRow16', reward: 400,   // title [N]
     intro: [
       ['siv', 'Pizza-racern, då? Han får fem poäng.'],                                                                       // [F*](t)
       ['majsan', 'Sex, tycker jag.'],                                                                                       // [F*](t)
@@ -186,14 +187,14 @@ export const FULL_MISSIONS = [
       ['siv', 'Han är så bortkommen. Det blir minuspoäng.'],                                                                // [F*](t)
       ['stig', '…Fyra?'],                                                                                                   // [N]
       ['kapten', 'Vi har påbörjat inflygningen mot Las Palmas. Var vänliga och fäst säkerhetsbältena.', { pa: true, seatbelt: true }],   // [N]
-      ['vardinna', 'Alla ska sitta! Hjälp mig få folk på plats, är du snäll.'],                                              // [N]
+      ['vardinna', 'Alla ska sitta! Hjälp mig få folk på plats, är du snäll.', { cut: { at: 'galleyCam', dist: 0, height: 3.6 } }],   // [N]
     ],
     stages: [
       () => collect({ who: ['herrStorch', 'jose', 'berra'], standAt: { herrStorch: [3000.2, 3.4], jose: [2999.8, -9.2], berra: [3000.0, -14.4] }, seatOnTouch: true, timer: 12, text: 'Få de stående passagerarna att sätta sig', barLabel: 'STÅENDE', failText: 'Värdinnan fick göra det själv.', lines: {
         herrStorch: [['herrStorch', 'Lite film.', { anim: { who: 'herrStorch', flag: 'film', secs: 2 } }]],   // [F*](t)
         jose: [['siv', 'Vad skönt att komma bort!'], ['jose', 'Jag ska inte bort, jag ska hem.']],            // [F*] · [F*]
         berra: [['berra', 'Ska vi inte landa snart?']],                                                    // [N]
-      }, startCue: { phase: ['cruise', { instant: true }], trolley: false, seatbelt: true }, timedCues: [[12, { turbulence: [0.3, 4] }]] }),
+      }, startCue: { phase: ['cruise', { instant: true }], trolley: false, seatbelt: true } }),
       () => sit({ checkpoint: true, seat: '14B', timer: 5, text: 'Skylten lyser! Tillbaka till 14B', failText: 'Alla måste sitta vid landningen.', startCue: { seatbelt: true } }),
       () => mantra({ seated: '14B', secs: 8, panicFails: true, text: 'Inflygning! Håll J – Jag kan flyga, jag är inte rädd', barLabel: 'JAG KAN FLYGA', startCue: { phase: ['approach', { hold: true }], turbulence: [0.75, 14] }, fillCue: { phase: 'landing' }, waitPhase: 'landed' }),
     ],

@@ -7,8 +7,9 @@
 // the real collision geometry): T_ref = the clean autopilot time on the sensible route (sprinting
 // where sprint fear is small next to the stage's own) + 0.5 s per target (reaction and aim), the
 // 75th percentile for the random bottle sweep; timer = ceil(1.25 × T_ref). Gate dash 3.6 s -> 6,
-// seat 2.9 s past three stowers -> 7, bottles p75 14.4 s of 12 runs + 2.5 -> 22 (Phase 3 r1, the
-// trolley frozen through the intro), round-up 7.6 s -> 12, back to 14B from the far end 3.2 s -> 5.
+// seat 3.1 s from the door past three stowers -> 7, bottles p75 7.6 s of 36 sweeps through the
+// 3-6 s turbulence + 2.5 -> 13 (Phase 3 r2), round-up 7.6 s -> 12, back to 14B from the far end
+// 3.2 s -> 5.
 //
 // FLYGRÄDSLA balance (§5.9; binding: a careful player never panics, a careless one does in
 // missions 1, 2 and 5), measured by `calibflight` (careful vs careless autopilots):
@@ -17,6 +18,7 @@
 //            just inside the 6 s timer.
 //   ombord   DUNS fear 20 (§8.2: 15) and "Annars…?!" 8 (5): a never-J player panics in the takeoff
 //            even after a perfect seat run (measured: PANIK at t 21.5); holding J at 70 peaks ~75.
+//   sprit    standing with the sign lit and three held jolts: a careful sweeper peaks 12-17.
 //   landning approach turbulence [0.75, 14] (§8.5: [0.7, 10]): no J while it shakes -> PANIK even
 //            after a perfect round-up; holding J peaks ~18-20.
 // Retries stay short (§8 "Timers and difficulty"): checkpoints on the gate statistics, the takeoff
@@ -26,9 +28,34 @@ import { goto, scene, interact, mantra, sit, timeline, carry, collect } from './
 import { rowZ } from '../../world/cabin.js';
 import { dist } from '../../util.js';
 
+const PI = Math.PI;
+
 // Cutaway onto Berra and Robban in 22C/D: the camera stands in the aisle in front of row 22, looking
 // aft and down at their faces (a `cut` cue, §9.3).
 const ROW22 = { at: 'row22Cam', dist: 0, height: 3.6 };
+
+// Guide decorator: the stage's target (the beacon and the guide arrow, which the flight level aims
+// straight, `routeAim: false`) leads through the landmarks `names` in turn, then to the stage's own
+// target. A waypoint is passed once the player is within 1.5 m of it or nearer the next point than
+// it is. The gate dash's straight line from gateOle to the men's room crossed the middle bench row
+// and ran into the toilet block's west wall, pinning an arrow-follower on the door jamb. Only the
+// guide changes: the stage still completes at its own target, which a waypoint carries as `goal`
+// (R in the terminal is judged against it, level.js `resetSpot`).
+function via(st, names) {
+  const target = st.target;
+  st.target = function (g) {
+    const p = g.player, own = target.call(this, g);
+    const pts = names.map((n) => g.lmOffset(n));
+    this.viaI ??= 0;
+    while (this.viaI < pts.length) {
+      const w = pts[this.viaI], n = pts[this.viaI + 1] || own;
+      if (dist(p.x, p.z, w.x, w.z) < 1.5 || (n && dist(p.x, p.z, n.x, n.z) < dist(w.x, w.z, n.x, n.z))) this.viaI++;
+      else break;
+    }
+    return this.viaI < pts.length ? { x: pts[this.viaI].x, z: pts[this.viaI].z, r: 1.0, goal: own } : own;
+  };
+  return st;
+}
 
 // Stage decorator (flavour only): runs `tick(g, m, dt)` (this = the stage) every frame after the
 // kind's own update while the stage is still going. Used for scene-dressing bubbles that depend on
@@ -78,9 +105,11 @@ export const FLIGHT_MISSIONS = [
   // A beeping arch, Ole's statistics, a timed toilet dash with the heartbeat on, the mantra in
   // the men's room, and the bodega tip in the queue to the plane.
   {
-    id: 'gate', title: 'Jag kan flyga, jag är inte rädd', level: 'flight', giver: 'ole', at: 'gateQueue', reward: 200,
+    id: 'gate', title: 'Jag kan flyga, jag är inte rädd', level: 'flight', giver: 'ole', at: 'gateQueue', reward: 200,   // title [F*]
+    // In the 3 m landside pocket: side by side across it, facing each other, and a fixed eye-level
+    // cut from its south end (the dollhouse showed two hat tops; a side shot ran across the counters).
     intro: [
-      ['stig', 'Vad ska de göra?'],                                        // [F](t)
+      ['stig', 'Vad ska de göra?', { place: { ole: ['gateQueue', 0, 1.2, -PI / 2], stig: ['gateQueue', 0, -0.2, PI / 2] }, cut: { at: 'queueCam', dist: 0, height: 2.0 } }],   // [F](t)
       ['ole', 'Rutinekontroll. Narkotika, våpen, bomber…'],                  // [F*](t)
       ['stig', 'Bomber…?!', { fear: 10 }],                                  // [F]
       ['ole', 'Du ser nervøs ut, du. Første gang du flyr?'],                 // [N]
@@ -102,9 +131,12 @@ export const FLIGHT_MISSIONS = [
       // [1] to Ole by gate 8 (not "Sätt dig": that is the seat prompt, and there is nothing to sit on)
       () => goto({ to: 'gateOle', radius: 2.5, text: 'Gå till Ole vid gate 8', startCue: { place: { ole: ['gateOle', 0, 0] } } }),   // [N]
       // [2] Ole's statistics. Only Ole's six statistics lines carry fear. Checkpoint: a failed
-      // dash replays the statistics (which rebuild the fear the dash needs), not the arch.
+      // dash replays the statistics (which rebuild the fear the dash needs), not the arch. Stig
+      // stands on the measured dash start, beside Ole, and a fixed cut from the south frames both
+      // (the side two-shot followed the arrival: from the arch it put José's head in the frame).
       () => scene({
         checkpoint: true, retryAt: 'gateOle', frame: ['ole', 'stig'],
+        place: { stig: ['gateOle', -2.0, 0.2, -1.47] }, cam: { at: 'statsCam', dist: 0, height: 1.9 },
         lines: [
           ['ole', 'Du vet vel at det er 50 prosent sjanse å overleve en flyulykke.', { fear: 8 }],   // [F]
           ['ole', 'Det er farligere å kjøre bil enn å fly.', { fear: 8 }],                          // [F]
@@ -117,19 +149,22 @@ export const FLIGHT_MISSIONS = [
           ['stig', 'Det går väl inte? Kan du se till mitt handbagage ett tag, jag måste…'],          // [F]
         ],
       }),
-      // [3] the toilet dash: fear keeps rising as he runs (fearRate 5, see the balance note).
-      () => goto({
+      // [3] the toilet dash: fear keeps rising as he runs (fearRate 5, see the balance note). The
+      // guide follows the measured route: past the end of the middle bench row, up the corridor to
+      // the men's door, in.
+      () => via(goto({
         to: 'herrtoa', radius: 1.8, fearRate: 5, timer: 6, text: 'Till herrtoaletten – fort!', failText: 'Du hann inte fram…',   // [N] · [N]
         radio: [['ole', 'To ganger, Stig-Helmer! Looping med en jumbo!', { gap: 3, fear: 4 }]],                                   // [F*]
-      }),
+      }), ['herrtoaGang', 'herrtoaDoor']),
       // [4] Levander's exercise
       () => mantra({ at: 'herrtoa', radius: 2.2, secs: 3, text: 'Håll J: sträck ut armarna – Jag kan flyga, jag är inte rädd', barLabel: 'JAG KAN FLYGA' }),   // [N] · [N]
       // [5] Berra comes in: 2.2 m inside the men's room door, turned toward the basins where Stig
-      // stands (§8.1 has dz -1.5, which is outside the door in the lounge, behind the wall). He goes
-      // back to the lounge when the scene is over (a cue on his last line fires as it starts, and
-      // took him out of the shot before his punchline).
+      // stands (§8.1 has dz -1.5, which is outside the door in the lounge, behind the wall), and Stig
+      // turns to him (the scene left him facing the urinals, his back to Berra). Berra goes back to
+      // the lounge when the scene is over (a cue on his last line fires as it starts, and took him
+      // out of the shot before his punchline).
       () => scene({
-        place: { berra: ['herrtoaDoor', 0, 2.2, 1.25] }, frame: ['berra', 'stig'],
+        place: { berra: ['herrtoaDoor', 0, 2.2, 1.25], stig: ['herrtoa', 0, 0, -1.9] }, frame: ['berra', 'stig'],
         doneCue: { place: { berra: ['gateLounge', -1.2, 0] } },
         lines: [
           ['berra', 'Hur mår du?'],                                                          // [F](t)
@@ -173,8 +208,12 @@ export const FLIGHT_MISSIONS = [
       // [8] boarding
       () => goto({ to: 'cabinDoor', radius: 2.0, text: 'Gå ombord – gate 8' }),   // [N]
     ],
-    // He hands his coat in on the jet bridge, where the sisters catch up with him.
-    outroPlace: { majsan: ['bridgeQueue1', 0, 0], siv: ['bridgeQueue2', 0, 0] },
+    // He hands his coat in on the jet bridge, where the sisters catch up with him: Stig and Majsan
+    // face each other across the 2 m tube, Siv between them further up it, all turned a little to an
+    // eye-level camera at the plane end that looks up the bridge to the GATE 8 sign. (The dollhouse
+    // saw them from 51-61° above, Stig under the door frame and Majsan behind Siv.)
+    outroPlace: { majsan: ['bridge', 0.55, 1.4, -2.79], siv: ['bridge', -0.15, 0.2, -1.04], stig: ['bridge', -0.55, 1.4, -0.35] },
+    outroCam: { at: 'bridgeCam', dist: 0, height: 1.9 },
     outro: [
       ['majsan', 'Nämen… hejsan!', { outfit: { who: 'stig', name: 'kostym' } }],                    // [F](t)
       ['stig', 'Jaså, vi kom på samma resa.'],                                                     // [F](t)
@@ -186,9 +225,13 @@ export const FLIGHT_MISSIONS = [
   // Find 14B against the clock past the luggage stowers (there is no row 13), then survive the
   // takeoff in the seat with the mantra while the gear goes DUNS. The cast is already seated.
   {
-    id: 'ombord', title: 'Rad 13 finns inte', level: 'flight', giver: 'vardinna', at: 'cabinDoor', reward: 250,
+    id: 'ombord', title: 'Rad 13 finns inte', level: 'flight', giver: 'vardinna', at: 'cabinDoor', reward: 250,   // title [N]
+    // At the open front door, forward of the galley curtain: she by the coat closet, Stig just in,
+    // facing each other along the cabin and turned a little to a fixed cut from the galley side, with
+    // the door and the jet bridge between them. (The dollhouse showed her back and Stig under the
+    // door frame; from the aisle the curtain rail, at head height, crossed both faces.)
     intro: [
-      ['vardinna', 'God morgon och välkommen ombord!'],                         // [N]
+      ['vardinna', 'God morgon och välkommen ombord!', { place: { vardinna: ['cabinDoor', -0.8, -0.15, 3.49], stig: ['cabinDoor', -0.8, 1.15, -0.35] }, cut: { at: 'doorCam', dist: 0, height: 2.0 } }],   // [N]
       ['stig', 'Fjorton B… Efter rad tolv kommer väl rad tretton?'],             // [N]
       ['vardinna', 'Inte hos oss. Fjorton B ligger mitt i planet.'],             // [N]
       ['vardinna', 'Skynda dig – vi ska taxa ut.'],                               // [N]
@@ -220,7 +263,7 @@ export const FLIGHT_MISSIONS = [
     outro: [
       ['ole', 'Hva er det for et merke du har?'],                                                          // [F*](t)
       ['stig', 'Hammarby. Känner du till Hammarby?'],                                                      // [F]
-      ['ole', 'Eneste svenske byene jeg kjenner til er Stockholm og Göteborg og Malmö.'],                  // [F]
+      ['ole', 'Eneste svenske byene jeg kjenner til er Stockholm og Göteborg og Malmö.'],                  // [F](t)
       ['stig', 'Det här är ett fotbollslag.'],                                                             // [F]
       ['ole', 'Min drøm er å fly med Concorde fra Paris til Rio. 2 300 km i timen. Det er flyging!'],       // [F](t)
       ['ole', 'Tre ganger så fort som en geværkule.'],                                                     // [F](t)
@@ -235,7 +278,7 @@ export const FLIGHT_MISSIONS = [
   // The call-button gag as an interaction, then a trolley-dodging, turbulence-surviving juice run.
   // The player talks to Ole from the aisle (no giver talk while seated) and sits for stage 1.
   {
-    id: 'juice', title: 'Mer juice', level: 'flight', giver: 'ole', at: 'cabinRow14', reward: 300,
+    id: 'juice', title: 'Mer juice', level: 'flight', giver: 'ole', at: 'cabinRow14', reward: 300,   // title [F*]
     intro: [
       ['kapten', 'Mina damer och herrar, det är kapten. Vi flyger just nu ut över Atlanten.', { pa: true }],                          // [F]
       ['kapten', 'Vi beräknas landa om en timme och 35 minuter. Vädret i Las Palmas är bra – soldis och 22 grader varmt.'],           // [F]
@@ -285,7 +328,7 @@ export const FLIGHT_MISSIONS = [
   // the trolley keeps coming. Berra and Robban stay seated (22C/D); their lines cut to `row22Cam`
   // (in front of row 22, looking aft), since no frame round row 14 or the galley holds them.
   {
-    id: 'sprit', title: 'Medhavd sprit', level: 'flight', giver: 'vardinna', at: 'galleyBack', reward: 300, extra: [],
+    id: 'sprit', title: 'Medhavd sprit', level: 'flight', giver: 'vardinna', at: 'galleyBack', reward: 300, extra: [],   // title [F*]
     intro: [
       ['vardinna', 'Tack. Det är förbjudet att dricka medhavd sprit.'],                                        // [F]
       ['vardinna', 'Tar du det inte lugnt med spriten, kan det bli problem att komma in i Spanien.'],           // [F]
@@ -295,14 +338,15 @@ export const FLIGHT_MISSIONS = [
       ['vardinna', 'Då är du rätt man.'],                                                                      // [N]
     ],
     stages: [
-      // [0] five bottles rolling in the aisle; the PA at 8 s, turbulence at 20 s (seatbelt on: hold Space)
+      // [0] five bottles rolling in the aisle; turbulence warned at 1.5 s, shaking 3-6 s (seatbelt
+      // on: hold Space; the jolts kick the bottles), the PA at 8 s
       () => collect({
         kind: 'flaska', motion: 'roll',
         items: [{ x: 3000.2, z: 9.0 }, { x: 2999.8, z: 2.5 }, { x: 3000.3, z: -6.0 }, { x: 2999.7, z: -10.5 }, { x: 3000.0, z: -13.5 }],
-        radius: 0.9, timer: 11, text: 'Fånga flaskorna som rullar i gången', barLabel: 'FLASKOR', failText: 'Flaskorna rullade in under sätena.',   // [N] · [N] · [N]
+        radius: 0.9, timer: 13, text: 'Fånga flaskorna som rullar i gången', barLabel: 'FLASKOR', failText: 'Flaskorna rullade in under sätena.',   // [N] · [N] · [N]
         startCue: { phase: ['cruise', { instant: true }], trolley: true },
         // The film's cabin PA [SUB-SV 00:25:43].
-        timedCues: [[8, { radio: ['pa', 'Herr Storch ombedes kontakta kabinpersonalen.'], pa: true }], [20, { turbulence: [0.5, 6] }]],   // [F]
+        timedCues: [[1.5, { turbulence: [0.5, 3] }], [8, { radio: ['pa', 'Herr Storch ombedes kontakta kabinpersonalen.'], pa: true }]],   // [F]
       }),
       // [1] hand them in
       () => goto({ to: 'galleyFront', radius: 1.6, text: 'Lämna flaskorna i främre byssan' }),   // [N]
@@ -326,7 +370,7 @@ export const FLIGHT_MISSIONS = [
   // the sign goes red, race back to 14B, then hold the mantra through a bumpy approach until the
   // wheels touch Gran Canaria. After the outro the runner hands over to the island (§5.13).
   {
-    id: 'landning', title: 'Inflygning Las Palmas', level: 'flight', giver: 'majsan', at: 'cabinRow16', reward: 400,
+    id: 'landning', title: 'Inflygning Las Palmas', level: 'flight', giver: 'majsan', at: 'cabinRow16', reward: 400,   // title [N]
     // The points scene is just after takeoff in the film (~0:23): every line relocated, the
     // siv/majsan split is ours.
     intro: [
@@ -337,10 +381,12 @@ export const FLIGHT_MISSIONS = [
       ['siv', 'Han är så bortkommen. Det blir minuspoäng.'],                                                                // [F*](t)
       ['stig', '…Fyra?'],                                                                                                   // [N]
       ['kapten', 'Vi har påbörjat inflygningen mot Las Palmas. Var vänliga och fäst säkerhetsbältena.', { pa: true, seatbelt: true }],   // [N]
-      ['vardinna', 'Alla ska sitta! Hjälp mig få folk på plats, är du snäll.'],                                              // [N]
+      // She is at the front galley, 16 m behind the row-16 shot's lens: a cut forward to her.
+      ['vardinna', 'Alla ska sitta! Hjälp mig få folk på plats, är du snäll.', { cut: { at: 'galleyCam', dist: 0, height: 3.6 } }],   // [N]
     ],
     stages: [
-      // [0] the round-up (sign lit: standing costs fear; a short shake at 12 s: hold Space)
+      // [0] the round-up (sign lit: standing costs fear). No turbulence here: a 12 s cue fired on the
+      // frame the 12 s timer failed; the approach (stage 2) is the mission's turbulence.
       () => collect({
         who: ['herrStorch', 'jose', 'berra'], standAt: { herrStorch: [3000.2, 3.4], jose: [2999.8, -9.2], berra: [3000.0, -14.4] }, seatOnTouch: true,
         timer: 12, text: 'Få de stående passagerarna att sätta sig', barLabel: 'STÅENDE', failText: 'Värdinnan fick göra det själv.',   // [N] · [N] · [N]
@@ -351,7 +397,7 @@ export const FLIGHT_MISSIONS = [
           berra: [['berra', 'Ska vi inte landa snart?']],                                                    // [N]
         },
         // The intro's PA lights the sign; a retry (no intro) needs it lit here too.
-        startCue: { phase: ['cruise', { instant: true }], trolley: false, seatbelt: true }, timedCues: [[12, { turbulence: [0.3, 4] }]],
+        startCue: { phase: ['cruise', { instant: true }], trolley: false, seatbelt: true },
       }),
       // [1] back to the seat before the approach. Checkpoint: a panicked approach is retried from
       // here (row 16), not from the round-up.
