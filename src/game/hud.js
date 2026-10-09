@@ -13,11 +13,18 @@ import { NAMED_CARS } from '../content/index.js';
 
 const $ = (id) => document.getElementById(id);
 const el = (tag, cls, parent, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html !== undefined) e.innerHTML = html; parent?.appendChild(e); return e; };
+// Luckiest Guy's lowercase glyphs are odd small caps ('GRISFeSTeN'): text set in it (banner mains,
+// the objective title, dialogue names, big-map labels) is uppercased here (§1.3; no CSS
+// text-transform).
+const upper = (s) => String(s).toLocaleUpperCase('sv');
+// A toast fades out (0.5 s transition) and is removed.
+const dropToast = (t) => { if (t.classList.contains('out')) return; t.classList.add('out'); setTimeout(() => t.remove(), 600); };
 
 let root, mapCanvas, mapCtx;
 const _bubbleV = new THREE.Vector3();
 const MAP_SCALE = 1.6; // px per metre on the town base map
 const MAP_EXT = BOUND + 20;
+const BUBBLE_TOP = 96;   // px: speech bubbles stay under the coins / meter row
 
 export const hud = {
   portraits: {},
@@ -193,7 +200,7 @@ export const hud = {
   setObjective(o) {
     if (!o) { this.obj.classList.remove('show'); return; }
     this.obj.classList.add('show');
-    this.objTitle.textContent = o.title || '';
+    this.objTitle.textContent = upper(o.title || '');
     this.objText.textContent = o.text || '';
     if (o.timer != null) {
       const t = Math.max(0, o.timer);
@@ -237,20 +244,28 @@ export const hud = {
     this.prompt.classList.toggle('show', !!text);
   },
 
-  toast(text, cls = '') {
+  // Up long enough to read (radio lines run to 100 characters): 2.4–7 s by length unless `secs`
+  // says otherwise. At most three at once: a fourth pushes the oldest out.
+  toast(text, cls = '', secs) {
     const t = el('div', 'toast ' + cls, this.toastsEl, text);
-    setTimeout(() => t.classList.add('out'), 2200);
-    setTimeout(() => t.remove(), 2800);
+    const ms = (secs ?? Math.min(7, Math.max(2.4, 1 + t.textContent.length * 0.06))) * 1000;
+    const live = [...this.toastsEl.children].filter((e) => !e.classList.contains('out'));
+    if (live.length > 3) dropToast(live[0]);
+    setTimeout(() => dropToast(t), ms);
   },
+  // Gameplay toasts do not carry over into a dialogue (runDialog); its own cue toasts come after.
+  clearToasts() { for (const t of this.toastsEl.children) dropToast(t); },
 
   showBanner(main, sub = '', cls = '', ms = 2600) {
     clearTimeout(this._bannerT);
     this.banner.className = 'show ' + cls;
-    this.banner.querySelector('.banner-main').textContent = main;
+    this.banner.querySelector('.banner-main').textContent = upper(main);
     this.banner.querySelector('.banner-sub').textContent = sub;
     if (ms) this._bannerT = setTimeout(() => this.hideBanner(), ms);
   },
-  hideBanner() { this.banner.className = ''; },
+  // Keeps the cls while it fades, so it fades where it stood (an intro title card in the top bar
+  // used to slide down across the faces).
+  hideBanner() { this.banner.classList.remove('show'); },
 
   flashColor(color, ms = 400) {
     this.flash.style.background = color;
@@ -273,6 +288,7 @@ export const hud = {
     this.dialogActive = true;
     this.dialog.classList.add('show');
     document.body.classList.add('in-dialog');
+    this.clearToasts();
     const speed = game.dialogSpeed || 55, pad = game.testMode ? 8 : 30;
     for (const line of lines) {
       if (line.cue) game.cue(line.cue);
@@ -280,7 +296,7 @@ export const hud = {
       const img = this.dialog.querySelector('img');
       img.src = this.portraits[line.who] || '';
       this.dialog.style.setProperty('--ring', def?.ring || '#f7c31b');
-      this.dialog.querySelector('.dlg-name').textContent = def?.name || line.who;
+      this.dialog.querySelector('.dlg-name').textContent = upper(def?.name || line.who);
       const textEl = this.dialog.querySelector('.dlg-text');
       textEl.textContent = '';
       game.setTalker(line.who);
@@ -318,7 +334,9 @@ export const hud = {
 
   // Speech bubbles over characters in the world. One bubble per speaker: a new line replaces the
   // speaker's live bubble. Bubbles that would overlap on screen stack upwards, the newer one above
-  // (scripted lines, Ole's barks and the mantra over neighbouring seats).
+  // (scripted lines, Ole's barks and the mantra over neighbouring seats). A bubble wraps at 300 px
+  // and stays on screen, under the coins / meter row and under a shown objective card; a stacked
+  // bubble with no room left above waits, hidden, until the ones below it are gone.
   say(target, text, secs = 2) {
     if (!target) return;
     const list = (this._bubbles ||= []);
@@ -331,6 +349,8 @@ export const hud = {
     const now = performance.now();
     const v = _bubbleV;
     const placed = [];
+    const W = window.innerWidth, H = window.innerHeight;
+    let ob;   // the objective card's rect, read once per tick when needed
     for (let k = 0; k < list.length; k++) {   // oldest first: newer bubbles move up out of the way
       const it = list[k];
       if (now > it.until) { it.b.remove(); list.splice(k--, 1); continue; }
@@ -340,16 +360,19 @@ export const hud = {
       v.project(camera);
       if (v.z > 1 || Math.abs(v.x) > 1.1 || Math.abs(v.y) > 1.1) { it.b.style.display = 'none'; continue; }
       it.b.style.display = '';
-      const x = (v.x * 0.5 + 0.5) * window.innerWidth;
-      let y = (-v.y * 0.5 + 0.5) * window.innerHeight;
       const w = it.b.offsetWidth, h = it.b.offsetHeight;
       // The bubble's anchor is its bottom centre (translate(-50%, -100%)).
+      const x = Math.min(W - w / 2 - 8, Math.max(w / 2 + 8, (v.x * 0.5 + 0.5) * W));
+      if (ob === undefined) ob = this.obj.classList.contains('show') ? this.obj.getBoundingClientRect() : null;
+      const top = ob && x + w / 2 > ob.left && x - w / 2 < ob.right ? Math.max(BUBBLE_TOP, ob.bottom + 8) : BUBBLE_TOP;
+      let y = Math.max((-v.y * 0.5 + 0.5) * H, top + h);
       for (let moved = true, n = 0; moved && n < 8; n++) {
         moved = false;
         for (const p of placed) {
           if (Math.abs(p.x - x) < (p.w + w) / 2 + 4 && y > p.y - p.h - 4 && y - h < p.y + 4) { y = p.y - p.h - 6; moved = true; }
         }
       }
+      if (y - h < top - 1) { it.b.style.display = 'none'; continue; }
       placed.push({ x, y, w, h });
       it.b.style.left = `${x}px`;
       it.b.style.top = `${y}px`;
@@ -434,12 +457,15 @@ export const hud = {
     c.drawImage(src.canvas, (cr.x0 - src.x0) * src.scale, (cr.z0 - src.z0) * src.scale, w * src.scale, h * src.scale, ox, oz, w * k, h * k);
     c.restore();
     const toC = flip ? (x, z) => [Sz - (ox + (x - cr.x0) * k), Sz - (oz + (z - cr.z0) * k)] : (x, z) => [ox + (x - cr.x0) * k, oz + (z - cr.z0) * k];
-    // Labels: laid out once per label set (collision-free), then drawn every refresh.
+    // Labels: laid out once per label set (collision-free), then drawn every refresh. The giver's
+    // "!" and the objective star are drawn on top, so the layout keeps clear of them too (the gate
+    // map's "!" sat on SÄKERHETSKONTROLL); their spots are part of the key, in 8 px steps.
     const labels = game.mapLabels();
-    const key = `${flip}${cr.x0},${cr.z0},${cr.x1},${cr.z1}|${labels.map((l) => l[0] + l[1].toFixed(0) + l[2].toFixed(0)).join('|')}`;
+    const marks = game.mapMarkers(true).filter((m) => m.type === 'mission' || m.type === 'objective').map((m) => toC(m.x, m.z));
+    const key = `${flip}${cr.x0},${cr.z0},${cr.x1},${cr.z1}|${labels.map((l) => l[0] + l[1].toFixed(0) + l[2].toFixed(0)).join('|')}|${marks.map(([x, y]) => `${Math.round(x / 8)},${Math.round(y / 8)}`).join(';')}`;
     if (key !== this._labelKey) {
       this._labelKey = key;
-      this.labelLayout = layoutLabels(c, labels.map(([name, lx, lz]) => { const [ax, ay] = toC(lx, lz); return { name, ax, ay }; }), Sz);
+      this.labelLayout = layoutLabels(c, labels.map(([name, lx, lz]) => { const [ax, ay] = toC(lx, lz); return { name: upper(name), ax, ay }; }), Sz, marks);
     }
     drawLabels(c, this.labelLayout);
     // Markers and the player on top of the labels.
@@ -471,13 +497,15 @@ export const hud = {
 // ---- big-map labels ------------------------------------------------------------------------------
 // Greedy placement without collisions: the most crowded labels first; each tries a ring of spots
 // around its landmark (above, below, right, left, diagonals, then further out) and takes the first
-// that overlaps no placed label, no other landmark dot and stays on the canvas; failing that, a
-// smaller font, and as a last resort the spot with the least overlap. A label set off its landmark
-// gets a leader line to the dot.
+// that overlaps no placed label, no other landmark dot, no map marker (`marks`, [x, y] canvas
+// spots of the 1.3× "!" and star) and stays on the canvas; failing that, a smaller font, and as a
+// last resort the spot with the least overlap. A label set off its landmark gets a leader line to
+// the dot.
 const LABEL_FONT = (px) => `${px}px "Luckiest Guy", Impact, sans-serif`;
-function layoutLabels(c, items, Sz) {
-  const dotR = 5, pad = 3;
+function layoutLabels(c, items, Sz, marks = []) {
+  const dotR = 5, pad = 3, markR = 13;
   const dots = items.map((it) => ({ x0: it.ax - dotR, y0: it.ay - dotR, x1: it.ax + dotR, y1: it.ay + dotR }));
+  for (const [x, y] of marks) dots.push({ x0: x - markR, y0: y - markR, x1: x + markR, y1: y + markR });
   const crowd = items.map((a) => items.reduce((n, b) => n + (Math.hypot(a.ax - b.ax, a.ay - b.ay) < 150 ? 1 : 0), 0));
   const order = items.map((_, i) => i).sort((a, b) => crowd[b] - crowd[a] || items[a].ay - items[b].ay);
   const placed = [], out = new Array(items.length);

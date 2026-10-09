@@ -277,6 +277,13 @@ export const SCENARIOS = {
     check(r.id === 'hideout:flamencoRecepcion' && r.prompt.includes('Muta portiern'), 'hideout prompt at the reception during a pursuit');
     await T.ev(() => { __game.shame.officer && (__game.shame.caughtT = 99); __game.interact(); });
     await T.frames(10);
+    // The porter's [F*] line first, then the banner (drawn over bubbles, it hid the line).
+    const bribeBanner = () => document.getElementById('banner').classList.contains('show') && document.querySelector('.banner-main').textContent === 'PORTIERN TITTADE BORT';
+    r = await T.ev(() => [...document.querySelectorAll('.bubble')].some((b) => b.textContent.includes('500 pesetas')));
+    const early = await T.ev(bribeBanner);
+    T.log('bribe line', r, 'banner yet', early);
+    check(r && !early, 'bribe: the porter says his line before the banner');
+    await T.until(bribeBanner, 6000);
     r = await T.ev(() => ({ pursuit: __game.shame.pursuit, coins: __game.coins, v: __game.shame.v, main: document.querySelector('.banner-main').textContent, cd: __game.shame.hideoutT }));
     T.log('bribed', JSON.stringify(r));
     check(!r.pursuit && r.coins === before - 500 && r.v === 0 && r.main === 'PORTIERN TITTADE BORT' && r.cd > 50, 'bribe: pursuit over, -500 pta, cooldown');

@@ -441,7 +441,7 @@ export const ISLAND_MISSIONS = [
     ],
     onEnd(g, reason) {
       if (reason === 'complete') g.cue({ banner: ['MORGONEN EFTER', 'Julafton på Gran Canaria', 'mission'] });   // [N]
-      g.cue({ sky: 'day', music: 'sol' });
+      g.cue({ sky: 'day', music: g.levelTune() });   // the island's tune: `sol`, or the player's `samba`
     },
     outroPlace: { portier: ['flamencoRecepcion', 0, 0], angerud: ['flamencoRecepcion', -1.6, 1.2], carmencita: ['flamencoRecepcion', -2.4, 1.2], majsan: ['flamencoPool', 0, 0], stig: ['flamencoRecepcion', 1.5, 3.0] },
     outro: [

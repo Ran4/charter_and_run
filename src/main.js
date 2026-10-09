@@ -26,7 +26,7 @@ import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
 import { LEVELS, ISLAND_PALETTES } from './level.js';
 import { METERS } from './meters.js';
-import { S, fmt } from './strings.js';
+import { S, fmt, pta } from './strings.js';
 import { CHATTER, CHATTER_FLIGHT, OUCH, GETUP, CARJACK, NPC_KICKED, COLLECTIBLES, UNLOCKS } from './content/index.js';
 import { clamp, dist, yawTo, pick, mulberry32, lerp } from './util.js';
 
@@ -956,7 +956,7 @@ class Game {
   async pay(n) {
     if (this.coins >= n) { this.addCoins(-n); return true; }
     this.radio('ole', S.olePaysRadio);
-    hud.toast(fmt('olePays', { n }));
+    hud.toast(fmt('olePays', { n: pta(n) }));
     return true;
   }
 
@@ -964,9 +964,12 @@ class Game {
   // Talking, cues, cinematics (§9.3)
 
   // `saying(t)`: t's bubble is still up; `sayEnd`: when the last bubble said ends (hud's clock).
+  // A long line stays up long enough to read (1 s + 0.045 s a character; halved in test mode, like
+  // the stage kinds' lineSecs): a 97-character chatter line no longer goes after 2.6 s.
   say(target, text, secs = 2) {
     const t = typeof target === 'string' ? this.npc(target) : target;
     if (!t) return;
+    secs = Math.max(secs, (1 + String(text).length * 0.045) * (this.testMode ? 0.5 : 1));
     hud.say(t, text, secs);
     t.sayEnd = performance.now() + secs * 1000;
     this.sayEnd = Math.max(this.sayEnd || 0, t.sayEnd);

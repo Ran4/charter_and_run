@@ -73,7 +73,7 @@ export const S = {
   promptJuice: '<b>E</b> Ta en juice',
   promptExcuse: '<b>E</b> Ursäkta!',
   promptBid: '<b>E</b> Bjud!',
-  promptHold: '<b>Space</b> Håll i dig!',
+  promptHold: '<b>SPACE</b> Håll i dig!',
   promptMantra: '<b>J</b> håll: Jag kan flyga!',
   mantraLine: 'Jag kan flyga, jag är inte rädd.',   // [F]
   speedUnit: 'KM/H',
@@ -85,15 +85,15 @@ export const S = {
   noMap: 'Ingen karta ombord – följ pilen.',   // §5.11 fallback toast
   // §11.2 loading lines
   loading: ['Avisar vingarna…', 'Bygger Nueva Estocolmo…', 'Överbokar Hotell Flamenco…', 'Häller 80-procentig rom på vinflaskor…', 'Målar åsnan röd…', 'Ritar mustascher…'],
-  // §11.3 pause
+  // §11.3 pause (the buttons and keycaps are set in Luckiest Guy: uppercase, §1.3)
   pause: 'Paus',
-  resume: 'Fortsätt',
-  musicOn: 'Musik: på',
-  musicOff: 'Musik: av',
-  musicSamba: 'Musik: samba',
-  soundBtnOn: 'Ljud: på',
-  soundBtnOff: 'Ljud: av',
-  erase: 'Radera resan',
+  resume: 'FORTSÄTT',
+  musicOn: 'MUSIK: PÅ',
+  musicOff: 'MUSIK: AV',
+  musicSamba: 'MUSIK: SAMBA',
+  soundBtnOn: 'LJUD: PÅ',
+  soundBtnOff: 'LJUD: AV',
+  erase: 'RADERA RESAN',
   eraseConfirm: 'Vill du radera resan och börja om på Arlanda?',
 };
 

@@ -19,7 +19,7 @@ import { audio } from '../audio.js';
 import { hud } from './hud.js';
 import { fx } from './fx.js';
 import { yawTo, pick, clamp, dist } from '../util.js';
-import { fmt } from '../strings.js';
+import { S, pta } from '../strings.js';
 
 const STEER_REPLAN = 0.25;   // s between officer route plans
 const rc = (i) => i * P - HALF;
@@ -139,6 +139,9 @@ export class Shame {
     hud.showBanner(main, sub, 'skandal', 2600);
     hud.flashColor('rgba(60,110,70,0.45)');
     if (c.siren) audio.siren(true);
+    // The tune to come back to: a mission's (the night grisfest's `vals`, the julafton party's
+    // `jul`); null = the level's ambient tune, read again at the end (a pause-menu change counts).
+    this.tuneBefore = audio.tune !== 'skandal' && audio.tune !== g.levelTune?.() ? audio.tune : null;
     audio.setTune('skandal');
     const f = g.focus();
     // Spawn the Land Rovers on the streets a little way off, out of the player's face
@@ -192,7 +195,8 @@ export class Shame {
     this.pursuers = [];
     this.hideOfficer();
     audio.siren(false);
-    audio.setTune(g.levelTune?.() || g.levelDef?.tune || 'sol');
+    audio.setTune(this.tuneBefore || g.levelTune?.() || g.levelDef?.tune || 'sol');
+    this.tuneBefore = null;
     if (!caught) {
       const [main, sub] = this.cfg.bannerEscape || ['', ''];
       hud.showBanner(main, sub, 'good', 2200);
@@ -213,7 +217,7 @@ export class Shame {
     fx.meterPuff(f.x, f.y + 1, f.z, 0x3d5a3a, 30);
     hud.flashColor('rgba(60,110,70,0.7)');
     const [main, sub, none] = c.bannerCaught || ['', '', ''];
-    hud.showBanner(main, fine ? String(sub || fmt('busted', { n: fine })).replace('{n}', fine) : none, 'multa', 3000);
+    hud.showBanner(main, fine ? String(sub || S.busted).replace('{n}', pta(fine)) : none, 'multa', 1800);
     audio.slap();
     // Frozen beside the officer for bustFreeze seconds. endPursuit first (it hides the officer),
     // then the officer is (re)placed 1.1 m in front of the player, whether the bust came on foot or
@@ -227,8 +231,9 @@ export class Shame {
     o.wishX = o.wishZ = 0;
     o.yaw = yawTo(p.x - o.x, p.z - o.z);
     o.sync(0);
-    g.say(o, c.bustLine || '¡Documentación!', 2.2);
+    // His line after the stamp (the banner is drawn over bubbles); he lingers bustFreeze s.
     this.officerLinger = c.bustFreeze ?? 3;
+    g.wait?.(1.8).then(() => { if (o.state !== 'hidden' && this.officerLinger > 0) g.say(o, c.bustLine || '¡Documentación!', 1.2); });
     // P1 flavour: Lasse on the radio, once the freeze is over; free roam only (never after a bust
     // that fails or interrupts a mission).
     if (c.bustRadio && g.wait && g.missions.state === 'idle') g.wait((c.bustFreeze ?? 3) + 0.3).then(() => { if (g.level === 'island' && g.missions.state === 'idle') g.radio(c.bustRadio[0], c.bustRadio[1]); });
@@ -259,15 +264,21 @@ export class Shame {
     this.hideoutT = h.cooldown ?? 60;
     this.v = 0;
     this.endPursuit(true);
+    audio.coin();
+    // The porter's line first, then the banner: it is drawn over bubbles and hid his [F*] line.
     const [who, text] = h.line || [];
     const n = who && g.npcs?.[who];
-    if (n && n.state !== 'hidden') g.say(n, text, 3.2);
+    let secs = 0;
+    if (n && n.state !== 'hidden') { secs = (1 + String(text).length * 0.045) * (g.testMode ? 0.5 : 1); g.say(n, text, secs); }
     else if (who) g.radio(who, text);
-    const [main, sub] = h.banner || ['', ''];
-    hud.showBanner(main, sub, 'good', 2600);
-    hud.flashColor('rgba(247,195,27,0.4)');
-    audio.coin();
-    audio.jingle('complete');
+    const banner = () => {
+      if (this.pursuit) return;
+      const [main, sub] = h.banner || ['', ''];
+      hud.showBanner(main, sub, 'good', 2600);
+      hud.flashColor('rgba(247,195,27,0.4)');
+      audio.jingle('complete');
+    };
+    if (secs && g.wait) g.wait(secs).then(banner); else banner();
   }
 
   // ---- the officer on foot ----------------------------------------------------------------------

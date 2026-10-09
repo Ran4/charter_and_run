@@ -13,7 +13,7 @@ import { retryCar } from './kinds/core.js';
 import { lm } from '../../world/layout.js';
 import { audio } from '../../audio.js';
 import { hud } from '../hud.js';
-import { S, fmt } from '../../strings.js';
+import { S, fmt, pta } from '../../strings.js';
 import { METERS } from '../../meters.js';
 import { dist, yawTo } from '../../util.js';
 
@@ -49,12 +49,17 @@ export class MissionRunner {
     if (g.player.state === 'normal') g.player.yaw = yawTo(giver.x - g.player.x, giver.z - g.player.z);
     if (giver.state === 'normal') giver.yaw = yawTo(g.player.x - giver.x, g.player.z - giver.z);
     g.cinematic(giver, g.player);
-    await g.dialog(def.intro || []);
+    // The title card rides in the top letterbox bar while the intro plays (cls `intro`), clear of
+    // the framed faces, so stage 0 (often timed: ombord's 7 s seat dash) starts on a clear screen.
+    // Without an intro it follows the talk as before, shorter.
+    const intro = def.intro || [], sub = fmt('missionSub', { i: this.index + 1, n: MISSIONS.length });
+    if (intro.length) { hud.showBanner(def.title, sub, 'mission intro', 3200); audio.jingle('start'); }
+    await g.dialog(intro);
+    if (hud.banner.classList.contains('intro')) hud.hideBanner();
     g.endCut();
     g.endCinematic();
     if (def.cost) await g.pay(def.cost);
-    hud.showBanner(def.title, fmt('missionSub', { i: this.index + 1, n: MISSIONS.length }), 'mission', 2800);
-    audio.jingle('start');
+    if (!intro.length) { hud.showBanner(def.title, sub, 'mission', 1400); audio.jingle('start'); }
     this.cpI = 0;
     this.startMission(0);
   }
@@ -172,7 +177,7 @@ export class MissionRunner {
     this.cleanupMission();
     if (g.shame.pursuit) g.shame.endPursuit(true);
     if (g.shame.mode === 'pursuit') g.shame.v = 0;
-    hud.showBanner(S.complete, fmt('completeSub', { reward: def.reward }), 'good', 2400);
+    hud.showBanner(S.complete, fmt('completeSub', { reward: pta(def.reward) }), 'good', 2400);
     audio.applause(2);
     audio.jingle('complete');
     g.addCoins(def.reward);
@@ -217,6 +222,7 @@ export class MissionRunner {
     else if (oc) { g.cutTo(oc); g.inDialog = true; hud.letterbox(true); }
     else if (speaker) g.cinematic(speaker, g.player);
     else g.cinematicOne(g.player);
+    hud.hideBanner();   // UPPDRAG KLART! (2.4 s) would sit over the framed faces of the first line
     await g.dialog(def.outro || []);
     g.endCut();
     g.endCinematic();

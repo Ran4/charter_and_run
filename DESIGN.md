@@ -101,6 +101,11 @@ gadget-mad Norwegian **Ole Bramserud**, who calms him down with air-crash statis
 
 - **All player-facing text is Swedish.** Banners are written UPPERCASE in the source literal
   (`'UPPDRAG KLART!'`); no CSS text-transform.
+- **Everything set in Luckiest Guy is uppercase** (its lowercase glyphs are odd small caps:
+  `GRISFeSTeN`). Literals are written uppercase (the title's `SÄLLSKAPSRESAN`, the pause buttons,
+  the keycaps `SHIFT` `SPACE` `ESC` on the title, the pause card and in prompts); text that comes
+  from data is uppercased where hud.js draws it (`toLocaleUpperCase('sv')`): banner mains (mission
+  titles), the objective card's title, the dialogue name box and the big-map labels (Phase 3).
 - **Ole speaks Norwegian bokmål** in every line (use the Norwegian subtitle wording where it exists).
   Ole never speaks Swedish.
 - José's family, the porter, the Guardia: Swedish "subtitle style" with Spanish words
@@ -800,7 +805,7 @@ registerCarType('trolley', { name: 'Serveringsvagn', len: 0.85, wid: 0.45, bodyH
 METERS.flygradsla = { mode: 'panic', label: 'FLYGRÄDSLA', cls: 'fear', hot: 70,
   decayIdle: 2, idleDelay: 4,
   panicBanner: ['PANIK!', 'Jag kan flyga… jag kan flyga…'],          // [F*]
-  panicFailText: 'Stig-Helmer fick panik!',                           // [N]
+  panicFailText: 'Stig-Helmer fick panik! Håll J: ”Jag kan flyga, jag är inte rädd.”',   // [N] · the mantra [F]
   panicFee: 50, panicResetTo: 40, flailSecs: 2.5 };
 ```
 
@@ -837,7 +842,8 @@ METERS.flygradsla = { mode: 'panic', label: 'FLYGRÄDSLA', cls: 'fear', hot: 70,
   heartbeat burst; the player is frozen `flailSecs` in the `flail` pose; then
   `game.missions.onPanic()`:
   - returns **true** if a mission is running and the current stage has `panicFails: true` (or the
-    def has `panicFails: true`) → the mission fails with `panicFailText`;
+    def has `panicFails: true`) → the mission fails with `panicFailText`, which says how to avoid
+    it (hold J; Phase 3: the only other J hint was a toast at the start);
   - else `game.onPanicIdle()`: fade, `vardinna` "walks him back": the player is placed at
     `levelDef.panicHome(g)` (sit 14B inside the cabin, else stand at `gateOle`), `game.pay(50)` is
     **not** used (no Ole bail-out): `coins -= min(coins, 50)` with toast `S.panicIdle` inside the
@@ -1223,14 +1229,21 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
   Removed when the player enters a car; re-spawned 30 m away when the player leaves it.
 - **Busted** (officer within 1.4 m, or a pursuer car rams the player's car with impact > 1.5):
   fine `n = min(coins, clamp(round25(0.2·coins), 250, 1500))`, `coins −= n`, banner ¡MULTA!
-  (`Guardia Civil tog {n} pesetas i böter`), flash; the player is **pulled out of the car** (if in
-  one) and frozen `bustFreeze` = 3 s beside the officer, who bubbles "¡Documentación!" (in timed
-  stages the bust costs time); `endPursuit(true)`, then `missions.onBusted()` (fails only
+  (`Guardia Civil tog {n} pesetas i böter`, `{n}` with thin-space thousands, `pta()`; 1.8 s), flash;
+  the player is **pulled out of the car** (if in one) and frozen `bustFreeze` = 3 s beside the
+  officer, who bubbles "¡Documentación!" once the stamp is gone (1.8 s in, for 1.2 s; the banner is
+  drawn over bubbles and hid it) (in timed stages the bust costs time); `endPursuit(true)`, then `missions.onBusted()` (fails only
   `bustFails` missions). The 500-pta porter bribe beats the fine once the purse is ≈ 2 500 pta. P1 flavour: radio `lasse` "Friskotek i morgon bitti, Olsson!" [N] (`bustRadio`), only for a bust in free roam (no mission running, then or 3.3 s later).
-- **Escape**: banner SKANDALEN TYSTAD + `complete` jingle; music back to `sol`.
+- **Escape**: banner SKANDALEN TYSTAD + `complete` jingle. **Music after a pursuit** (escape, bust
+  or bribe): the tune that played when it started if that was a mission's (the night grisfest's
+  `vals`, the julafton party's `jul`; `shame.tuneBefore`), else `game.levelTune()` read at the end
+  (`sol`, or `samba` if the player picked it meanwhile). (Until Phase 3 it was always the level
+  tune: a pursuit at the grisfest ended in daytime `sol`.)
 - **Hideout** (P1): the porter at `flamencoRecepcion`: during a pursuit, on foot within 2.6 m,
   prompt `<b>E</b> Muta portiern (500 pta)`; pays via `game.pay(500)` (**Ole pays** if short), clears
-  the meter, ends the pursuit with the hideout banner. 60 s cooldown.
+  the meter, ends the pursuit; the porter says his `line` first (bubble, 1 s + 0.045 s a character,
+  halved in test mode; a radio toast if he is not there) and the hideout banner, flash and jingle
+  follow when it ends (Phase 3: the banner, drawn over bubbles, hid the [F*] line). 60 s cooldown.
 - **Witness rule** (P1): an offence within 20 m of `herrStorch` adds **0** SKANDAL (no evidence:
   the lens cap is on) and shows the toast `Ingen fara: linsskyddet sitter på.` (≤ once per 60 s;
   offences inside the cooldown still add 0).
@@ -1917,8 +1930,9 @@ plate-smashing frenzy, the dance, Tonga Tonga, "Bärra hem Berra", and the porte
 `cost: 800` ("Grisfesten kostar 800 pesetas" [F*]) is charged when the intro ends; **Ole pays** if
 the player is short. Checkpoints at stages 3, 4, 5 (4 and 5 carry `retryAt: 'dansgolv'`; a retry
 re-applies stage 2's `startCue` night sky and `vals`, §9.4 item 3). `onEnd`: on complete → banner `MORGONEN EFTER`
-/ `Julafton på Gran Canaria` [N] + palette `day` + tune `sol`; on fail/abort → palette `day` + tune
-`sol` (no banner).
+/ `Julafton på Gran Canaria` [N] + palette `day` + the island tune `g.levelTune()` (`sol`, or the
+player's `samba`; Phase 3, was a fixed `sol`); on fail/abort → palette `day` + the same tune (no
+banner).
 
 **Intro:**
 - ole: "Skal du ha B-vitaminer? Bra for leveren. Grisefest, vet du. Ta to."  [F]
@@ -2281,8 +2295,12 @@ def = { id, title, level: 'flight' | 'island', giver, at, reward,
 
 Runner changes (Phase 0):
 1. `MISSIONS = [...FLIGHT_MISSIONS, ...ISLAND_MISSIONS]` from `missions/index.js`.
-2. `begin()`: intro cinematic → `if (def.cost) await g.pay(def.cost)` → banner
-   `def.title` / `Uppdrag ${index + 1} av ${MISSIONS.length}` → `startMission(0)`.
+2. `begin()`: intro cinematic with the title card (banner `def.title` / `Uppdrag ${index + 1} av
+   ${MISSIONS.length}`, cls `mission intro`, 3.2 s, and the `start` jingle) in the top letterbox
+   bar while the intro plays; it is hidden when the intro ends if still up → `if (def.cost) await
+   g.pay(def.cost)` → `startMission(0)`. Stage 0 starts on a clear screen (Phase 3: the 2.8 s
+   banner in mid-screen covered 40 % of ombord's 7 s seat dash). A def without an intro gets the
+   banner (cls `mission`) after the talk, 1.4 s. Stage timers are not paused or delayed for it.
 3. **Checkpoints**: entering a stage with `checkpoint: true` records `cpI`; `retry()` restarts
    from `cpI` with a fresh `m`: it first re-applies, in stage order, the **ambient fields** (`sky
    music phase seatbelt outfit trolley blockers`; `phase` always instant) of the `startCue` and
@@ -2323,7 +2341,9 @@ Runner changes (Phase 0):
    the first placed NPC. Speaker = the **first NPC placed by `outroPlace`**; without `outroPlace`, the first outro `who`
    that is an NPC and not `busy`/seated/hidden, moved next to the player with `freeSpot` (skip if
    none). Camera: `outroCam`, else `frame(speaker, player)`, else `frameOne(player)`. (When
-   `outroCam` is given the player is not moved, e.g. ropavieja's spying shot.)
+   `outroCam` is given the player is not moved, e.g. ropavieja's spying shot.) The `UPPDRAG
+   KLART!` banner (`+{reward} pesetas`, `pta()`), shown when the last stage is done, is hidden when
+   the outro dialogue starts 1.6 s later (Phase 3: it sat over the framed faces of the first line).
 6. **Ambience**: `fail()` and `abort()` call `def.onEnd?.(g, reason)` and `g.restoreAmbience()`
    (level tune, `mantraMode = false`; island: level palette; flight: the cabin goes back to the
    level's ambient state for the current index: `cabin.stopTurbulence()` (Phase 2), then
@@ -2458,15 +2478,15 @@ Tags: all UI strings are [N] unless noted.
 - Logo: `<h1><span class="t1">CHARTER</span><span class="amp">&amp;</span><span class="t2">RUN</span></h1>`
   in **Shrikhand** (Google Fonts; fallback Luckiest Guy). `.t1` SunTrip yellow `#f7c31b`, `.t2`
   butano orange `#f07a1e`, `.amp` a spinning sun disc.
-- Subtitle (Luckiest Guy): **Sällskapsresan**.
+- Subtitle (Luckiest Guy): **SÄLLSKAPSRESAN** (uppercase literal, §1.3).
 - Line: **Julen 1979. Stig-Helmer är flygrädd.**
 - Tagline (italic, small): *"Svenskarna reser inte till någonting… dom reser från någonting."* [F]
   (the film's opening card).
 - Buttons: `SPELA` / `Laddar…`.
-- Controls card (two columns): `WASD / pilar` gå · kör — `Mus` titta — `Shift` spring —
-  `Space` hoppa · handbroms · i planet: håll i dig — `J / klick` sparka · i planet: håll för
-  "Jag kan flyga!" — `E` prata · sätt dig · kliv in/ur — `M` karta — `H` tuta — `N` ljud av —
-  `R` loss — `Esc` paus.
+- Controls card (two columns; the keycaps are Luckiest Guy, so uppercase): `WASD / PILAR` gå · kör
+  — `MUS` titta — `SHIFT` spring — `SPACE` hoppa · handbroms · i planet: håll i dig — `J / KLICK`
+  sparka · i planet: håll för "Jag kan flyga!" — `E` prata · sätt dig · kliv in/ur — `M` karta —
+  `H` tuta — `N` ljud av — `R` loss — `ESC` paus.
 - Fine print: `Ett hyllningsspel gjort av fans. Inte knutet till filmens upphovsmän – eller till
   SunTrip, som inte finns. Bränsletillägg tillkommer.`
 - Background: the live 3D orbit (§4.2 `titleOrbit`) under a 1979 charter-brochure gradient
@@ -2480,8 +2500,9 @@ Tags: all UI strings are [N] unless noted.
 
 ### 11.3 Pause
 
-`Paus` · `Fortsätt` · `Musik: på` / `Musik: av` / `Musik: samba` (P1, after the unlock) ·
-`Ljud: på` / `Ljud: av` · `Radera resan` → confirm `Vill du radera resan och börja om på Arlanda?`
+`Paus` (Shrikhand) · the Luckiest Guy buttons, uppercase (§1.3): `FORTSÄTT` · `MUSIK: PÅ` /
+`MUSIK: AV` / `MUSIK: SAMBA` (P1, after the unlock) · `LJUD: PÅ` / `LJUD: AV` · `RADERA RESAN` →
+confirm `Vill du radera resan och börja om på Arlanda?`
 Opening the card refreshes both the Musik and the Ljud label from the live state (Phase 3: **N**
 mutes without touching the button, which then said `Ljud: på` while muted).
 
@@ -2495,7 +2516,24 @@ mutes without touching the button, which then said `Ljud: på` while muted).
 | dialogue next | `E ▸` |
 | minimap rim badge | `N` (island) / `FRAM` (flight) |
 | big-map legend | from `game.mapLegend()` (§10.1) |
-| prompts | `<b>E</b> Prata med {name}` · `<b>E</b> Kliv in` · `<b>E</b> Ta bilen` · `<b>E</b> Sätt dig` · `<b>E</b> Res dig` · `<b>E</b> Lås in dig` · `<b>E</b> Ta en juice` · `<b>Space</b> Håll i dig!` · `<b>J</b> håll: Jag kan flyga!` |
+| prompts | `<b>E</b> Prata med {name}` · `<b>E</b> Kliv in` · `<b>E</b> Ta bilen` · `<b>E</b> Sätt dig` · `<b>E</b> Res dig` · `<b>E</b> Lås in dig` · `<b>E</b> Ta en juice` · `<b>SPACE</b> Håll i dig!` · `<b>J</b> håll: Jag kan flyga!` (the `<b>` keycap is Luckiest Guy: uppercase) |
+
+**Toasts, bubbles and the objective card** (Phase 3):
+- **Toasts** (`hud.toast(text, cls = '', secs)`; radio lines are toasts) stay up `secs`, by default
+  by length: `min(7, max(2.4, 1 + 0.06 · characters))` s (the 99-character PANIK toast 6.9 s; it was
+  a fixed 2.2 s). At most three at once: a fourth fades the oldest out. A dialogue fades out the
+  toasts up when it starts (`hud.clearToasts()`; its own cue toasts come after): the GÄSTER n/4
+  toasts stood over the julafton party shot. The column starts at 104 px, or at 196 px while the
+  objective card is shown (`#objective.show ~ #toasts`; a stage's radio line overlapped the card by
+  7×40 px at 1280×720, 115×40 px at 1024×576).
+- **Speech bubbles** wrap at 300 px (they were one line up to 750 px), are kept on screen (8 px
+  margin), under the coins / meter row (top ≥ 96 px) and under a shown objective card they would
+  overlap; a stacked bubble with no room left above waits hidden until the ones below it end.
+  `game.say` keeps a line up at least `1 + 0.045 · characters` s (halved in test mode, like the
+  kinds' `lineSecs`): chatter of 97 characters went after the fixed 2.6 s.
+- **The objective card** slides up out of view while the letterbox is on (an in-stage talk:
+  haggle, collect, interact lines), where only its bar stuck out under the top bar, and comes back
+  with the play.
 
 ### 11.5 Engine/stage strings
 
@@ -2520,7 +2558,7 @@ mutes without touching the button, which then said `Ljud: på` while muted).
 | got away | `Den kom undan!` |
 | caught one | `{label} {n}/{m}` |
 | mission banner sub | `Uppdrag {i} av {n}` |
-| complete | `UPPDRAG KLART!` sub `+{reward} pesetas` |
+| complete | `UPPDRAG KLART!` sub `+{reward} pesetas` (`{reward}` with thin-space thousands, `pta()`: `+2 000 pesetas`) |
 | failed | `UPPDRAG MISSLYCKAT` |
 | retry prompt | `<b>E</b> Försök igen &nbsp;·&nbsp; <b>Q</b> Ge upp` |
 | retry banner sub | `Försök igen!` |
@@ -2534,10 +2572,11 @@ mutes without touching the button, which then said `Ljud: på` while muted).
 | sound | `Ljud av` / `Ljud på` |
 | fatal | `Något gick sönder: ` |
 | game complete | `NUEVA ESTOCOLMO KLARAT!` / `God jul – och tack för resan!` |
-| Ole pays | `Ole betalade {n} pta.` |
+| Ole pays | `Ole betalade {n} pta.` (`pta()`) |
 | panic idle (`S.panicIdle`, in the cabin) | `Värdinnan följde dig tillbaka till din plats och bjöd på ett glas vatten. Serviceavgift: −50 pta.` |
 | panic idle (`S.panicIdleGate`, outside the cabin) | `En SunTrip-värdinna gav dig ett glas vatten vid gate 8. Serviceavgift: −50 pta.` |
-| busted | `Guardia Civil tog {n} pesetas i böter` |
+| busted | `Guardia Civil tog {n} pesetas i böter` (`pta()`: `1 500`) |
+| PANIK fail (`METERS.flygradsla.panicFailText`, §5.9) | `Stig-Helmer fick panik! Håll J: ”Jag kan flyga, jag är inte rädd.”` |
 
 ### 11.6 Big-map labels (`MAP_LABELS`)
 
@@ -2551,10 +2590,17 @@ mutes without touching the button, which then said `Ljud: på` while muted).
   `Bygget` bygge · `Drömplanet` dromplan · `Flygplatsen` airport · `Dynerna` dyner ·
   `Faro de Maspalomas` fyren · `Stranden` playa · `Hamnen` hamn. **`Pepes Bodega` bodega only
   after the `bodega` unlock.** Labels whose landmark is missing are skipped with a console warning.
+- The names are data in mixed case; hud.js draws them uppercase (Luckiest Guy, §1.3). The layout
+  (`layoutLabels`) avoids other landmark dots and, since Phase 3, the giver's "!" and the objective
+  star (13 px boxes; their spots in 8 px steps are part of the layout key): on the gate map, the
+  first one a player opens, Ole's "!" covered `SÄKE!ETSKONTROLL`.
 
 ### 11.7 Banners and end card
 
-- Mission start: `def.title` / `Uppdrag i av 13` (cls `mission`).
+- Mission start: `def.title` / `Uppdrag i av 13` (cls `mission intro`): a one-line title card in
+  the top letterbox bar while the intro plays (§9.4 item 2), clear of the framed faces and gone
+  before stage 0 starts. `#hud #banner.intro`: top 4.5vh, flex row (main + pill), main
+  `clamp(22px, 5vh, 40px)`, no tilt.
 - Transition: `LAS PALMAS` / `Soldis och 22 grader varmt.` [F*].
 - Grisfest end: `MORGONEN EFTER` / `Julafton på Gran Canaria`.
 - **End card** (`game.playEndCard()`, P1, ~10 s, letterboxed): fade to white; camera to `rioCam`
@@ -2571,6 +2617,9 @@ mutes without touching the button, which then said `Ljud: på` while muted).
   back, `placeNpcs(true)` + `applyOutfits()`, player at `approachSpot('flamencoPool')`, level tune,
   letterbox off, then the completion banner and the `complete` jingle. Scenario `endcard` checks it.
 - Fallback (cut): only the last banner (used when no `endCard` cue fired).
+- Width (Phase 3): `width: max-content; max-width: 94vw` (shrink-to-fit at `left: 50%` had only half
+  the screen, so a sub longer than its main wrapped at 50 vw: the end card's quote left
+  "någonting." alone). `hud.hideBanner()` only drops `show`, so a banner fades where it stood.
 - Placement (Phase 2): the banner sits at 32 % of the height, or 40 % while the objective card
   is shown (`#objective.show ~ #banner`), so the two never overlap; it is drawn above the speech
   bubbles (`z-index` 2 inside `#hud`, which is `isolation: isolate`, so the pause and title cards
@@ -2610,7 +2659,8 @@ Scheduler fixes (Phase 0): catch-up guard `if (next < ctx.currentTime) next = ct
   `main.updateAudio()` (which zeroes the car engine every frame on foot). Silenced by `pause()` and
   by `setLevel('island')`. Cabin levels: gate 0.25 (APU-less DC-8: an external ground unit hum),
   takeoff 0.9/1.0, climb 0.7, cruise 0.45/0.3, approach 0.6, landing reverse 1.0/1.0, landed 0.2.
-- Island: `sol`; pursuit → `skandal` + `siren(true)`; escape/bust → back to `sol`.
+- Island: `sol`; pursuit → `skandal` + `siren(true)`; escape/bust/bribe → back to the tune before
+  the pursuit if it was a mission's (`vals`, `jul`), else the level tune (§7.2).
 - **Every mission complete**: `audio.applause(2)` + `jingle('complete')` (the film's applause gag).
 
 ### 12.3 Sound effects (Phase 0 placeholders with these names; WP-H polishes)
@@ -2823,7 +2873,8 @@ game.restoreAmbience()                    // level tune, mantraMode=false; islan
                                           // seatbelt off, palette + map for it (§9.4 item 6)
 game.levelTune() -> name                  // review fix 1: the level's ambient tune (flight `muzak`;
                                           // island game.islandTune). Everything that reverts the
-                                          // music uses it (setLevel, restoreAmbience, shame.endPursuit)
+                                          // music uses it (setLevel, restoreAmbience, shame.endPursuit
+                                          // unless a mission's tune played before, grisfest onEnd)
 game.islandTune                           // 'sol' | 'samba' (saved as `tune`, §10.5)
 game.setIslandTune(name)                  // switches now only if the island's ambient tune is
                                           // playing (never over `skandal` or a music cue); saves
@@ -2841,7 +2892,8 @@ game.hideNpc(key);  game.showNpc(key)     // hideNpc unseats first too
 game.placeNpcs(force = false)             // §4.5; force also re-applies levelDef.outfits(g)
                                           // (applyOutfits) except during an outro (§10.4)
 game.setNpcOutfit(key, name);  game.setPlayerOutfit(name)   // re-render portraits
-game.say(target, text, secs = 2);  game.radio(who, text)
+game.say(target, text, secs = 2);  game.radio(who, text)   // say: at least 1 + 0.045 s a character
+                                          // (halved in test mode; Phase 3, §11.4)
 
 // ---- flight seats ----
 game.sitPlayer(seatId) -> bool            // via cabin.seatCharacter; sets player.seatId
@@ -3152,9 +3204,13 @@ fx.spill(x, y, z, color, n);  fx.wisp(x, y, z)   // A1: trolley juice spill, smo
 // hud.panic(secs); hud.labelLayout (big-map label layout, cached on labels + crop); body classes
 //   pursuit / panik / in-dialog; banner classes multa (bust) and fear; toast class witness; HUD
 //   elements #vignette #sirenlights #panik. hud.say: one bubble per speaker (a new line replaces
-//   it) and overlapping bubbles stack upwards, the newer above (Phase 2).
+//   it) and overlapping bubbles stack upwards, the newer above (Phase 2); wrapped at 300 px, kept on
+//   screen and under the top HUD row and a shown objective card (Phase 3). hud.toast(text, cls,
+//   secs?) (by length, ≤ 3 at once), hud.clearToasts() (runDialog calls it), hideBanner() drops
+//   only `show` (Phase 3, §11.4, §11.7).
 // shame.inScene (getter: inDialog || inCutaway); shame.hideoutT; steer state; a teleports debug
-//   counter; hideout interactable id 'hideout:<landmark>' (registered in configure()).
+//   counter; hideout interactable id 'hideout:<landmark>' (registered in configure());
+//   shame.tuneBefore (a mission tune to restore after the pursuit, else null; Phase 3, §7.2).
 // audio.sirenNear(d); audio.trad(name, { vol }) -> length in s (respects mute and the music toggle);
 //   audio.sweep(...); audio.level() test hook { rms, state, tune }; export TRAD_NAMES; tune bar()
 //   voices snare/accordion/chime/pad/conga/pluck/brass/surdo/agogo/sleigh/flute; setTune(current)
@@ -3556,7 +3612,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `foot` [B] | trampoline bounce, kick a fin (`fena`), stand on a car roof, double jump |
 | `castsheet`, `cars` [E] | lineups; no errors |
 | `ui` [H] | long Swedish strings in toasts/banners/objective; glyph check shot; dialogue with Norwegian line |
-| `skandal` [H] | `addCoins(2000)`, `shame.add(100)`: 2 `guardia` cars spawn; exit car → officer walks (not through walls); block him behind a building → teleported within 6 s; get busted → coins −400 (20 %), ¡MULTA!, player frozen ~3 s; an offence within 20 m of Herr Storch adds 0 |
+| `skandal` [H] | `addCoins(2000)`, `shame.add(100)`: 2 `guardia` cars spawn; exit car → officer walks (not through walls); block him behind a building → teleported within 6 s; get busted → coins −400 (20 %), ¡MULTA!, player frozen ~3 s; an offence within 20 m of Herr Storch adds 0; the porter bribe: his line shows before the `PORTIERN TITTADE BORT` banner (Phase 3) |
 | `talk` [Phase 0] | `autoDialog = false`, walk to Ole at `gateQueue`, E, Space twice |
 | `fullstory` [Phase 0b] | swaps the literal §8 missions (`tools/fixtures/full-missions.js`) into `MISSIONS` and plays all 13 per §16.3 (`FROM`/`TO` as `story`); must end `#13 idle`, `RESULT: PASS` |
 | `kinds` [Phase 0b] | fixture data checks; haggle misses fail; follow `minDist` fails; smooth/fragile bars (teleports never count); carry spill; checkpoint retry re-applies night + `vals` and revives plates at `dansgolv`; destroy default spawn; grab at the wreck; scene `exitCar` |
@@ -4035,3 +4091,28 @@ the fixer's group.
   own scrolling drifts (§5.6).
 - r1 cabin-flight: the on-board toilet hideout and the galley self-serve juice are labelled
   invented (§1.6, README, cabin.js).
+- r1 audio-ui-meters: toasts stay up by length (2.4–7 s, was a fixed 2.2 s), at most three at once,
+  are faded out when a dialogue starts, and sit below a shown objective card (§11.4).
+- r1 audio-ui-meters: speech bubbles wrap at 300 px, stay on screen, under the coins/meter row and
+  a shown objective card; a stacked one with no room above waits hidden; `game.say` keeps a line
+  up ≥ 1 + 0.045 s a character (halved in test mode) (§11.4, §14.3).
+- r1 audio-ui-meters: the mission title card shows in the top letterbox bar during the intro (cls
+  `mission intro`) and is gone before stage 0, so timed first stages start on a clear screen; no
+  stage timer changed (§9.4 item 2, §11.7).
+- r1 audio-ui-meters: `UPPDRAG KLART!` is hidden when the outro starts (§9.4 item 5); banners are
+  `width: max-content` (the end card's quote on one line) and fade where they stood (§11.7).
+- r1 audio-ui-meters: the porter's bribe line plays before the hideout banner, the officer's
+  "¡Documentación!" after the 1.8 s ¡MULTA! (§7.2); `skandal` checks the bribe order (§16.4).
+- r1 audio-ui-meters: after a pursuit the music returns to a mission's tune (`vals`, `jul`) or the
+  level tune read at the end; grisfest `onEnd` uses `g.levelTune()` (a chosen `samba` survives)
+  (§7.2, §8.12, §12.2; fixture).
+- r1 audio-ui-meters: peseta amounts in banners and the Ole-pays toast use `pta()` thin-space
+  thousands (`+2 000 pesetas`, `1 500`) (§7.2, §11.5).
+- r1 audio-ui-meters: the PANIK fail text says how to avoid it: `Stig-Helmer fick panik! Håll J:
+  ”Jag kan flyga, jag är inte rädd.”` (§5.9, §11.5).
+- r1 audio-ui-meters: the objective card slides out of view under the letterbox (in-stage talks)
+  (§11.4).
+- r1 audio-ui-meters: big-map labels keep clear of the giver's "!" and the objective star (§11.6).
+- r1 audio-ui-meters: all Luckiest Guy text is uppercase: mission titles on banners and the
+  objective card, dialogue names and big-map labels uppercased in hud.js; the title subtitle, pause
+  buttons and keycaps as uppercase literals (§1.3, §11.1, §11.3, §11.4).

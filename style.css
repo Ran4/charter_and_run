@@ -125,6 +125,9 @@ body.panik #app canvas { filter: saturate(1.5) contrast(1.08); }
 #prompt.show { opacity: 1; transform: translateX(-50%) scale(1); }
 #prompt b { background: var(--sun); color: var(--ink); border-radius: 6px; padding: 0 7px; margin-right: 4px; font-family: var(--display); font-weight: 400; box-shadow: 0 2px 0 #b8860b; }
 #toasts { position: absolute; right: 24px; top: 104px; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; max-width: min(430px, 40vw); }
+/* Below a shown objective card (with timer, bar and two text lines it reaches about 170 px down),
+   which a wide toast column would otherwise overlap (a stage's radio line on the card's edge). */
+#objective.show ~ #toasts { top: 196px; }
 .toast { background: var(--cream); border: 3px solid var(--ink); border-radius: 14px; padding: 8px 14px; font: 700 15px/1.3 var(--body); box-shadow: 3px 4px 0 var(--ink); animation: toastIn 0.3s cubic-bezier(.3, 1.6, .5, 1); transition: 0.5s; display: flex; align-items: center; gap: 8px; }
 .toast.out { opacity: 0; transform: translateX(40px); }
 .toast.radio { background: #fff; border-left-width: 8px; border-left-color: var(--sun); }
@@ -134,7 +137,9 @@ body.panik #app canvas { filter: saturate(1.5) contrast(1.08); }
 .toast .bang, .bang { display: inline-block; background: var(--sun); color: var(--ink); border: 2px solid var(--ink); border-radius: 50%; width: 20px; height: 20px; text-align: center; font: 15px/18px var(--display); }
 @keyframes toastIn { from { opacity: 0; transform: translateX(60px) rotate(4deg); } }
 
-#banner { position: absolute; left: 50%; top: 32%; transform: translate(-50%, -50%) scale(0.3); opacity: 0; text-align: center; transition: 0.3s cubic-bezier(.3, 1.6, .5, 1); pointer-events: none; max-width: 96vw; }
+/* width max-content: shrink-to-fit at left 50 % only had half the screen, so a sub longer than its
+   main wrapped at 50 vw (the end card's quote left "någonting." alone on a line). */
+#banner { position: absolute; left: 50%; top: 32%; transform: translate(-50%, -50%) scale(0.3); opacity: 0; text-align: center; transition: 0.3s cubic-bezier(.3, 1.6, .5, 1); pointer-events: none; width: max-content; max-width: 94vw; }
 #banner.show { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(-2deg); }
 /* Below a shown objective card (with timer and bar it reaches about 150 px down). */
 #objective.show ~ #banner { top: 40%; }
@@ -147,6 +152,12 @@ body.panik #app canvas { filter: saturate(1.5) contrast(1.08); }
 .banner-sub:empty { display: none; }
 #banner.mission .banner-main { color: var(--cream); font-size: clamp(36px, 5vw, 62px); }
 #banner.mission .banner-sub { display: inline-block; margin-top: 10px; padding: 3px 16px 4px; background: var(--terracotta); border: 3px solid var(--ink); border-radius: 999px; box-shadow: 3px 4px 0 var(--ink); -webkit-text-stroke: 0; text-shadow: none; }
+/* A mission's title card during its intro (runner.begin): one line in the top letterbox bar (9vh),
+   clear of the framed faces, gone before stage 0 starts. */
+#hud #banner.intro { top: 4.5vh; display: flex; align-items: center; justify-content: center; gap: 14px; }
+#hud #banner.intro.show { transform: translate(-50%, -50%) scale(1); }
+#hud #banner.intro .banner-main { font-size: clamp(22px, 5vh, 40px); -webkit-text-stroke-width: 3px; text-shadow: none; }
+#hud #banner.intro .banner-sub { margin-top: 0; }
 #banner.bad .banner-main { color: #ff5a4a; }
 #banner.good .banner-main { color: var(--sun); text-shadow: 5px 6px 0 var(--orange), 8px 10px 0 rgba(29, 20, 38, 0.4); }
 #banner.good .banner-sub { display: inline-block; margin-top: 10px; padding: 3px 16px 4px; background: var(--teal); border: 3px solid var(--ink); border-radius: 999px; box-shadow: 3px 4px 0 var(--ink); -webkit-text-stroke: 0; text-shadow: none; }
@@ -164,7 +175,7 @@ body.panik #app canvas { filter: saturate(1.5) contrast(1.08); }
 @keyframes wobble { 25% { transform: rotate(3deg) scale(1.05); } 75% { transform: rotate(-3deg) scale(0.97); } }
 
 #bubbles { position: absolute; inset: 0; }
-.bubble { position: absolute; transform: translate(-50%, -100%); background: #fff; border: 3px solid var(--ink); border-radius: 16px; padding: 4px 10px; font: 900 15px var(--body); white-space: nowrap; animation: pop 0.25s cubic-bezier(.3, 1.8, .5, 1); }
+.bubble { position: absolute; transform: translate(-50%, -100%); background: #fff; border: 3px solid var(--ink); border-radius: 16px; padding: 4px 10px; font: 900 15px/1.25 var(--body); width: max-content; max-width: 300px; text-align: center; animation: pop 0.25s cubic-bezier(.3, 1.8, .5, 1); }
 .bubble::after { content: ""; position: absolute; left: 50%; bottom: -11px; margin-left: -8px; border: 8px solid transparent; border-top-color: var(--ink); border-bottom: 0; }
 @keyframes pop { from { transform: translate(-50%, -100%) scale(0.2); } }
 
@@ -173,6 +184,9 @@ body.panik #app canvas { filter: saturate(1.5) contrast(1.08); }
 #letterbox .lb-bot { bottom: 0; }
 #letterbox.on .lb-top, #letterbox.on .lb-bot { height: 9vh; }
 body:has(#letterbox.on) #coins, body:has(#letterbox.on) #shame, body:has(#letterbox.on) #minimap-wrap, body:has(#letterbox.on) #speedo { opacity: 0; }
+/* An in-stage talk (haggle, collect, interact lines): the objective card slides up out of the way
+   (only its bar stuck out under the top bar) and comes back with the play. */
+body:has(#letterbox.on) #objective.show { transform: translate(-50%, -220%); }
 #coins, #shame, #minimap-wrap, #speedo { transition: opacity 0.3s; }
 /* The dialogue box sits where the minimap is: hide it while someone talks. */
 body.in-dialog #minimap-wrap, body.in-dialog #speedo, body.in-dialog #prompt { opacity: 0; }

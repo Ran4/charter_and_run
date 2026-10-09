@@ -8,7 +8,7 @@ export const METERS = {
     mode: 'panic', label: 'FLYGRÄDSLA', cls: 'fear', hot: 70,
     decayIdle: 2, idleDelay: 4,
     panicBanner: ['PANIK!', 'Jag kan flyga… jag kan flyga…'],          // [F*]
-    panicFailText: 'Stig-Helmer fick panik!',                           // [N]
+    panicFailText: 'Stig-Helmer fick panik! Håll J: ”Jag kan flyga, jag är inte rädd.”',   // [N] · the mantra [F]: how to avoid it
     panicFee: 50, panicResetTo: 40, flailSecs: 2.5,
   },
   skandal: {
