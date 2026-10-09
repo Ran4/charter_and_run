@@ -469,25 +469,30 @@ export function buildFlightScenery(scene) {
   const R = rng(1979);
 
   // ================= ground (Arlanda: snowfield, forest, runway for the takeoff roll) ==========
+  let drifts;
   {
-    const g = new GeoBuilder();
+    const g = new GeoBuilder(), gd = new GeoBuilder();
     g.cyl(COL.snow, 0, GY - 0.06, 120, 640, 0.1, 48);
-    // Low snow drifts break the white plain up a little.
+    // Low snow drifts break the white plain up a little. At the gate only: during the takeoff roll
+    // they would stand still while the runway tile scrolls past (the tile has its own).
     for (let k = 0; k < 70; k++) {
       const a = R() * Math.PI * 2, d = 60 + R() * 520, x = Math.cos(a) * d, z = 120 + Math.sin(a) * d;
       if (x < -850 + 30 || (x > -70 && x < 95 && z > -140 && z < 200)) continue;
-      g.sphere(COL.snowShade, x, GY, z, 8 + R() * 20, 1.2 + R() * 1.5, 6 + R() * 14);
+      gd.sphere(COL.snowShade, x, GY, z, 8 + R() * 20, 1.2 + R() * 1.5, 6 + R() * 14);
     }
     const m = toonMesh(g.build(), { outline: 0, cast: false });
     m.name = 'snowfield';
     ground.add(m);
+    drifts = toonMesh(gd.build(), { outline: 0, cast: false });
+    drifts.name = 'drifts';
+    ground.add(drifts);
   }
   const runwayTile = new THREE.Group();
   runwayTile.name = 'runway';
   ground.add(runwayTile);
   const RUN_P = 240;   // the runway pattern repeats every 240 m; the tile scrolls modulo that
   {
-    const g = new GeoBuilder(), gl = new GeoBuilder(), r = rng(8);
+    const g = new GeoBuilder(), gl = new GeoBuilder(), gd = new GeoBuilder(), r = rng(8);
     const z0 = -2 * RUN_P, z1 = 3 * RUN_P;
     g.boxB(COL.asphalt, 0, GY, (z0 + z1) / 2, 50, 0.04, z1 - z0);
     g.boxB(COL.slush, 0, GY + 0.002, (z0 + z1) / 2, 6, 0.04, z1 - z0);
@@ -508,6 +513,14 @@ export function buildFlightScenery(scene) {
         const zz = zt + rr() * RUN_P, len = 10 + rr() * 22;
         g.sphere(COL.snow, s * (36 + rr() * 4), GY, zz, 3 + rr() * 2, 1.6 + rr() * 1.4, len);
       }
+      // Low drifts in the field between the banks and the forest (scroll with the tile; soft, no
+      // outline, like the gate's).
+      const rd = rng(140 + t);
+      for (let k = 0; k < 10; k++) {
+        const s = rd() < 0.5 ? -1 : 1, x = s * (50 + rd() * 28), z = zt + rd() * RUN_P;
+        if (s < 0 && Math.abs(z - (zt + 120)) < 20) continue;   // the turn-off
+        gd.sphere(COL.snowShade, x, GY, z, 6 + rd() * 10, 0.8 + rd() * 1.0, 6 + rd() * 12);
+      }
       // A taxiway sign and a turn-off per tile.
       const zs = zt + 120;
       g.boxB(COL.asphalt, -60, GY - 0.01, zs, 70, 0.04, 22, 0);
@@ -524,6 +537,7 @@ export function buildFlightScenery(scene) {
     }
     const m = toonMesh(g.build(), { outline: 0.05, cast: false });
     runwayTile.add(m);
+    runwayTile.add(toonMesh(gd.build(), { outline: 0, cast: false }));
     runwayTile.add(new THREE.Mesh(gl.build(), new THREE.MeshBasicMaterial({ vertexColors: true })));
   }
 
@@ -930,6 +944,7 @@ export function buildFlightScenery(scene) {
     for (const k in groups) groups[k].visible = show.includes(k);
     ground.visible = ground.visible && gnd;
     runwayTile.visible = ph !== 'gate';
+    drifts.visible = !runwayTile.visible;
     deck.visible = deck.visible && (st.deckOn || st.inCloud);
     deckL.mesh.visible = st.deckOn;
     puffs.visible = puffs.visible && st.puffN > 0.001;
@@ -982,8 +997,9 @@ export function buildFlightScenery(scene) {
       if (snowOff[j] < -SX) snowOff[j] += 2 * SX; else if (snowOff[j] > SX) snowOff[j] -= 2 * SX;
       if (snowOff[j + 2] < -SZ) snowOff[j + 2] += 2 * SZ; else if (snowOff[j + 2] > SZ) snowOff[j + 2] -= 2 * SZ;
       const x = lx + snowOff[j], y = ly + snowOff[j + 1], z = lz + snowOff[j + 2];
-      // No snow inside the roofless cabin, jet bridge or lounge.
-      const inside = y < 2.7 && ((x > -3.6 && x < 3.6 && z > -27 && z < 18.6) || (gate && ((x > 3.4 && x < 14 && z > 12.6 && z < 16.8) || (x > 13 && x < 39 && z > -1 && z < 31))));
+      // No snow inside the roofless cabin, jet bridge or lounge. Over the terminal rooms at any
+      // height: a flake between the wall tops and the high camera lands, on screen, on their floors.
+      const inside = (y < 2.7 && x > -3.6 && x < 3.6 && z > -27 && z < 18.6) || (gate && ((x > 3.4 && x < 14 && z > 12.6 && z < 16.8) || (x > 13 && x < 39 && z > -1 && z < 31)));
       snowPos[j] = x; snowPos[j + 1] = inside || y < GY ? -1e4 : y; snowPos[j + 2] = z;
     }
     snowGeo.attributes.position.needsUpdate = true;

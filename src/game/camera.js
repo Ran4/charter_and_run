@@ -40,6 +40,8 @@ export class CamRig {
     this.snapNext = true;
     this.profile = null;
     this.clampActive = false; // set each frame by main: flight level && cabin.inCabin(focus)
+    this.openFloor = false;   // set each frame by main: the gate lounge, where dialogue is framed
+                              // as Bigmouth's (from the side, eye level) despite the profile
   }
 
   setProfile(p) {
@@ -58,7 +60,7 @@ export class CamRig {
       this.look.lerp(this.cine.look, 1 - Math.exp(-5 * dt));
       cam.position.copy(this.pos);
       cam.lookAt(this.look);
-      this.fov = damp(this.fov, pf ? pf.fov : 50, 4, dt);
+      this.fov = damp(this.fov, pf && !this.cine.open ? pf.fov : 50, 4, dt);
       cam.fov = this.fov; cam.updateProjectionMatrix();
       return;
     }
@@ -174,17 +176,22 @@ export class CamRig {
   }
 
   // Frame two people talking. Bigmouth: from the side, at least 4.5 m out. With a profile: from
-  // above and a little to the side (pos = mid + perp * min(d, cineSide) + up * cineUp).
+  // above and a little to the side (pos = mid + perp * min(d, cineSide) + up * cineUp), except on
+  // an open floor (`openFloor`: the gate lounge), where the dollhouse shot showed hat tops and the
+  // hanging signs cut across the speakers; there the Bigmouth framing applies (`cine.open`).
   frame(a, b) {
     const mx = (a.x + b.x) / 2, mz = (a.z + b.z) / 2;
-    const dx = b.x - a.x, dz = b.z - a.z, l = Math.hypot(dx, dz) || 1;
-    let nx = -dz / l, nz = dx / l;
+    const dx = b.x - a.x, dz = b.z - a.z, l = Math.hypot(dx, dz);
+    // Two people on (nearly) one spot have no sides: frame from in front of the first. (The side
+    // vector was zero there, and the side shot put the eye in their heads.)
+    const apart = l > 0.3;
+    let nx = apart ? -dz / l : Math.sin(a.yaw || 0), nz = apart ? dx / l : Math.cos(a.yaw || 0);
     const top = Math.max(a.height || 1.6, b.height || 1.6);
     const headY = Math.max(a.y, b.y) + top * 0.72;
     // Prefer the side the camera is already on.
-    if ((this.pos.x - mx) * nx + (this.pos.z - mz) * nz < 0) { nx = -nx; nz = -nz; }
+    if (apart && (this.pos.x - mx) * nx + (this.pos.z - mz) * nz < 0) { nx = -nx; nz = -nz; }
     const pf = this.profile;
-    if (pf) {
+    if (pf && !this.openFloor) {
       // Dollhouse framing: from the side both are facing when they face the same way (seat-mates
       // in a row), so the shot sees faces, not seat backs and the tops of heads.
       const sx = Math.sin(a.yaw || 0) + Math.sin(b.yaw || 0), sz = Math.cos(a.yaw || 0) + Math.cos(b.yaw || 0);
@@ -194,7 +201,7 @@ export class CamRig {
       return;
     }
     const p = clearSide(mx, mz, nx, nz, Math.max(4.5, l * 1.6 + 2.5), 1.5);
-    this.cine = { pos: new THREE.Vector3(p.x, Math.max(a.y, b.y) + top * 0.75 + 0.6, p.z), look: new THREE.Vector3(mx, headY, mz) };
+    this.cine = { pos: new THREE.Vector3(p.x, Math.max(a.y, b.y) + top * 0.75 + 0.6, p.z), look: new THREE.Vector3(mx, headY, mz), open: !!pf };
   }
 
   // Frame one character, from in front of them (both modes).
@@ -203,12 +210,12 @@ export class CamRig {
     const top = a.height || 1.8;
     const headY = a.y + top * 0.8;
     const pf = this.profile;
-    if (pf) {
+    if (pf && !this.openFloor) {
       this.cine = { pos: new THREE.Vector3(a.x + fx * pf.cineSide, headY + pf.cineUp, a.z + fz * pf.cineSide), look: new THREE.Vector3(a.x, headY, a.z) };
       return;
     }
     const p = clearSide(a.x, a.z, fx, fz, 3.6, a.y + 1.4);
-    this.cine = { pos: new THREE.Vector3(p.x, headY + 0.6, p.z), look: new THREE.Vector3(a.x, headY - 0.1, a.z) };
+    this.cine = { pos: new THREE.Vector3(p.x, headY + 0.6, p.z), look: new THREE.Vector3(a.x, headY - 0.1, a.z), open: !!pf };
   }
 
   // A fixed cutaway: camera at pos looking at look ({x, y, z} each). release() returns.

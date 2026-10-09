@@ -10,7 +10,7 @@ import { finalizeProps, tickProps, breakProp, propsNear, props as allProps } fro
 import { lm, landmarks, routeAim, N, P, HALF, LANE, nodeX, nodeZ, neighbors, blockInterior } from './world/layout.js';
 import { groundAt, queryBlocks, contains, circleVsObb, circleVsBlock, topAt } from './world/collision.js';
 import { worldHooks } from './world/registry.js';
-import { buildCabin } from './world/cabin.js';
+import { buildCabin, CABIN_X } from './world/cabin.js';
 import { buildRioCard } from './world/rio.js';
 import { Car, collideCars } from './actors/car.js';
 import { Character } from './actors/character.js';
@@ -963,10 +963,15 @@ class Game {
   // ------------------------------------------------------------------------------------------
   // Talking, cues, cinematics (§9.3)
 
+  // `saying(t)`: t's bubble is still up; `sayEnd`: when the last bubble said ends (hud's clock).
   say(target, text, secs = 2) {
     const t = typeof target === 'string' ? this.npc(target) : target;
-    if (t) hud.say(t, text, secs);
+    if (!t) return;
+    hud.say(t, text, secs);
+    t.sayEnd = performance.now() + secs * 1000;
+    this.sayEnd = Math.max(this.sayEnd || 0, t.sayEnd);
   }
+  saying(t) { return performance.now() < (t?.sayEnd ?? 0); }
   radio(who, text) {
     hud.toast(`<img class="radio-face" src="${hud.portraits[who] || ''}"><b>${CHARS[who]?.name || who}:</b> ${text}`, 'radio');
     for (let k = 0; k < 8; k++) setTimeout(() => audio.talk(CHARS[who]?.voice || 300), k * 70);
@@ -1333,6 +1338,11 @@ class Game {
     tickTown(this.time);
     this.updateMarkers();
     this.cam.clampActive = this.level === 'flight' && this.cabin.inCabin(f.x, f.z);
+    // The open gate lounge (past the jet bridge): dialogue framing without the dollhouse (§5.3).
+    // Not in the 3 m wide landside pocket: there the side shot stood across the security counters,
+    // with the arch post or beam over a speaker.
+    const flx = f.x - CABIN_X;
+    this.cam.openFloor = this.level === 'flight' && this.cabin.phase === 'gate' && flx > 14 && !(flx > 34.5 && f.z < 10.5);
     this.cam.update(dt, { ...f, autoTurn: false, lookBack: input.down('lookBack') }, this.inDialog ? null : input.look(), this.cars);
     // Debug overview. The flight level's fog ends at 300 m (gate), so the camera comes in to ~85 m.
     if (this.aerial) { const k = this.level === 'flight' ? 0.17 : 1; camera.position.set(f.x, 420 * k, f.z + 260 * k); camera.lookAt(f.x, 0, f.z); camera.fov = 50; camera.updateProjectionMatrix(); }
@@ -1426,8 +1436,10 @@ class Game {
       if (this.mantraHeldT >= this.mantraWindUp) {
         this.mantraOn = true;
         if (this.shame.mode === 'panic') this.shame.relieve(25 * h * this.timeScale);
+        // The auto-bubble waits while any other bubble is up (straight to hud, so it does not
+        // count itself): it covered the takeoff's scripted lines and replaced Stig's own.
         this.mantraSayT -= h;
-        if (this.mantraSayT <= 0) { this.mantraSayT = 2.5; this.say(p, S.mantraLine, 2.2); }
+        if (this.mantraSayT <= 0 && performance.now() >= (this.sayEnd || 0)) { this.mantraSayT = 2.5; hud.say(p, S.mantraLine, 2.2); }
       }
     } else {
       if (this.mantraHeldT > 0 || this.mantraOn) this.mantraWindUp = 0.3;
@@ -1597,7 +1609,8 @@ class Game {
       const posed = !!ms.idlePose(k);   // §9.4 idleAnim (e.g. Berra asleep): no wave, turn or chatter
       n.anim.wave = giver && !posed && near < 9 && !this.inDialog && n.state === 'normal';
       if (n.state === 'normal' && !posed && near < 10 && !this.inDialog) n.yaw += Math.atan2(Math.sin(yawTo(this.player.x - n.x, this.player.z - n.z) - n.yaw), Math.cos(yawTo(this.player.x - n.x, this.player.z - n.z) - n.yaw)) * Math.min(1, dt * 3);
-      if (near < 9 && n.state === 'normal' && !posed && !this.inDialog && ms.state !== 'running' && chatter[k]) {
+      // Free play only: not in the gap before an outro (bubbles stacked over its first line).
+      if (near < 9 && n.state === 'normal' && !posed && !this.inDialog && ms.state === 'idle' && chatter[k]) {
         n.chatT = (n.chatT ?? 2 + Math.random() * 3) - dt;
         if (n.chatT <= 0) { n.chatT = 7 + Math.random() * 6; this.say(n, pick(chatter[k]), 2.6); }
       }

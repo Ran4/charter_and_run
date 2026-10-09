@@ -1,8 +1,9 @@
 // Flight scenarios (WP-A1, DESIGN §16.4): gate, cabin, trolley, turbulence, panic.
 //   gate        the Arlanda set: shots (arch, lounge, toilets, bridge), walls hold, the arch is the
 //               only way out of the landside pocket, the kontrollant and gateQueue spots are free
-//   cabin       one shot per phase, walls hold, camera above the walls, seated cast visible, row
-//               strip, Ole in 14A after ?mission=2 and an outfit swap, the camera at the cabin ends
+//   cabin       one shot per phase, walls hold, camera above the walls, seated heads clear of the
+//               overhead (aisle view and two-shots), row strip, Ole in 14A after ?mission=2 and an
+//               outfit swap, the camera at the cabin ends
 //   trolley     bowling, dodging into a row, waiting for an NPC, manual modes fall back to auto,
 //               an excused stower takes his seat
 //   turbulence  unheld falls, held does not; seatbelt sign and drone; a mission-set sign stays lit
@@ -24,6 +25,40 @@ async function overview(T, name, pos, look) {
   await T.shot(name);
   await T.ev(() => __game.cam.release());
 }
+// In the page: how much of each seated head the cabin's overhead covers from the current camera. A
+// 9×9 grid of rays over the head's screen box; a sample that hits the head counts (`seen`), and is
+// covered (`occ`) when the first thing in front of it is cabin geometry over head height inside the
+// walls (y > 1.9, |lx| < 2.42): racks, rails, service units. The cut-away walls do not count.
+async function overhead(T, keys) {
+  return T.ev(async (keys) => {
+    const THREE = await import('three');
+    const g = __game, cam = g.cam.cam, rc = new THREE.Raycaster();
+    cam.updateMatrixWorld();
+    const roots = [g.player.root, ...Object.values(g.npcs).map((n) => n.root)];
+    const own = (o) => { for (; o; o = o.parent) if (roots.includes(o)) return true; return false; };
+    const right = new THREE.Vector3().setFromMatrixColumn(cam.matrixWorld, 0), up = new THREE.Vector3().setFromMatrixColumn(cam.matrixWorld, 1);
+    const out = {};
+    for (const key of keys) {
+      const head = (key === 'stig' ? g.player : g.npc(key)).model.head;
+      const box = new THREE.Box3().setFromObject(head), c = box.getCenter(new THREE.Vector3()), r = box.getSize(new THREE.Vector3()).length() / 2;
+      let seen = 0, occ = 0;
+      const what = new Set();
+      for (let i = 0; i < 9; i++) for (let j = 0; j < 9; j++) {
+        const p = c.clone().addScaledVector(right, (i / 4 - 1) * r).addScaledVector(up, (j / 4 - 1) * r);
+        rc.set(cam.position, p.sub(cam.position).normalize());
+        rc.far = 40;
+        const hh = rc.intersectObject(head, true);
+        if (!hh.length) continue;
+        seen++;
+        const first = rc.intersectObjects(g.scene.children, true).find((h) => h.distance < hh[0].distance - 0.01 && h.object.visible && h.object.name !== 'outline' && !h.object.material?.transparent && !own(h.object));
+        if (first && first.point.y > 1.9 && Math.abs(first.point.x - 3000) < 2.42) { occ++; what.add(`y${first.point.y.toFixed(2)}/x${(first.point.x - 3000).toFixed(2)}`); }
+      }
+      out[key] = { seen, occ, what: [...what].slice(0, 4) };
+    }
+    return out;
+  }, keys);
+}
+
 // In the page: flood fill over a 0.25 m grid of spots where a 0.33 m body fits, from `start`
 // (local), inside `box` = [x0, x1, z0, z1]; with `forbidArch` the arch corridor is removed.
 // Returns the westmost reached x and whether `goal` was reached.
@@ -140,28 +175,25 @@ export const SCENARIOS = {
     await T.shot('cabin_aisle_aft');
     await stand(T, 0, -8.0, 0, 0);
     await T.shot('cabin_aisle_fwd');
-    // Seated cast visible from the default camera (no rack or rail between camera and heads).
+    // Seated faces clear of the overhead (§5.3: racks and service units are down-facing planes): no
+    // rack, rail or service unit between the camera and any part of a seated head, from the default
+    // camera beside row 14 and from the seat-mates' dialogue two-shots.
     await stand(T, 0.25, -2.1, Math.PI / 2, Math.PI / 2);
     await T.frames(6);
-    const vis = await T.ev(async () => {
-      const THREE = await import('three');
-      const g = __game, cam = g.cam.cam, rc = new THREE.Raycaster();
-      const out = {};
-      for (const key of ['ole', 'majsan', 'siv', 'jose']) {
-        const n = g.npc(key);
-        const head = new THREE.Vector3(n.x, n.y + 0.95, n.z);
-        const dir = head.clone().sub(cam.position);
-        const len = dir.length();
-        rc.set(cam.position, dir.normalize());
-        rc.far = len - 0.35;
-        const hits = rc.intersectObjects(g.scene.children, true).filter((h) => h.object.visible && h.object.name !== 'outline' && !h.object.material?.transparent);
-        out[key] = hits.filter((h) => { for (let o = h.object; o; o = o.parent) if (o === n.root) return false; return true; }).map((h) => h.object.type + ':' + h.point.y.toFixed(2));
-      }
-      return out;
-    });
-    T.log('cast occluders', JSON.stringify(vis));
-    check(vis.ole.length === 0, 'Ole (14A) is not hidden from the default camera');
+    const over = {};
+    over.aisle = await overhead(T, ['ole', 'majsan', 'siv', 'jose']);
     await T.shot('cabin_row14');
+    await T.ev(() => { const g = __game; g.sitPlayer('14B'); g.cinematic(g.npc('ole'), g.player); g.cam.snapNext = true; });
+    await T.frames(10);
+    over.row14 = await overhead(T, ['ole', 'stig']);
+    await T.shot('cabin_frame_row14');
+    await T.ev(() => { const g = __game; g.endCinematic(); g.cinematic(g.npc('majsan'), g.npc('siv')); g.cam.snapNext = true; });
+    await T.frames(10);
+    over.row16 = await overhead(T, ['majsan', 'siv']);
+    await T.shot('cabin_frame_row16');
+    await T.ev(() => { const g = __game; g.endCinematic(); g.standPlayer(); });
+    T.log('overhead over seated heads', JSON.stringify(over));
+    for (const [view, r] of Object.entries(over)) for (const [key, v] of Object.entries(r)) check(v.seen > 4 && v.occ === 0, `${key}'s head is clear of the overhead (${view}: ${v.occ} of ${v.seen} samples behind ${v.what.join(' ')})`);
     // The row-number strip "…11 12 14 15…".
     await overview(T, 'cabin_strip', { x: X(-1.0), y: 2.4, z: -0.8 }, { x: X(2.45), y: 1.6, z: -0.8 });
     await overview(T, 'cabin_cutaway', { x: X(-9), y: 11, z: -24 }, { x: X(0), y: 0, z: -4 });

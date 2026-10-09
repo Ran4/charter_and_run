@@ -146,13 +146,15 @@ pursuit and ¡MULTA!; haggling as a timing game; the wet-paint "SKICK" bar; the 
 porter bribe as a hideout; Oles prylar and hajfenor as collectibles; the grisbil being lent to
 Stig-Helmer; rounding up the Christmas-party guests; the Rio end card as a playable epilogue;
 the serving trolley itself (the film shows stewardesses with trays only) and fetching juice from
-it (in the film the stewardess brings it); the luggage stowers blocking the aisle; Stig-Helmer
+it (in the film the stewardess brings it); the luggage stowers blocking the aisle; locking
+yourself into the plane's toilet against the fear (the on-board toilet hideout) and helping
+yourself to juice in the galleys (`toilet:L/R`, `juice:front/back`, §5.10); Stig-Helmer
 driving SunTrip bus 17 (in the film Lasse ends up taking the transfer); "Plocka kulor" as a chase
 after wind-blown beach balls; the Fataga sheep stampede and round-up; the night-bus race; porcelain
 smashing as a timed game; following José's car and the pig truck; the Guardia jeep chase; Ole's
 gadgets scattered over the island; Majsan saying the mantra together with Stig-Helmer.
 The film's flight has **no turbulence** and **no in-flight toilet scene**: both toilet scenes are
-at Arlanda (we keep them there).
+at Arlanda (we keep them there). The plane's toilets are only an invented hideout.
 
 ---
 
@@ -574,13 +576,32 @@ export const CAM_CABIN = { pivotH: 1.5, dist: 6.5, pitchMin: 0.72, pitchMax: 1.1
   airframe sub-mesh whose bounding box contains the camera.
 - `cam.frame(a, b)` with a profile: `pos = mid + perp·min(d, cineSide) + up·cineUp`, look at head
   height — never the 4.5 m side two-shot. `cam.frameOne(target)` (new) frames one character the
-  same way.
+  same way. **Exception (Phase 3): the open gate lounge.** `cam.openFloor` (main, every frame:
+  phase `gate` and the focus at lx > 14, except the 3 m wide landside pocket lx > 34.5, z < 10.5;
+  the spawn stands at lx 35.0)
+  gives `frame`/`frameOne` the Bigmouth framing (side two-shot ≥ 4.5 m out at eye level with the
+  `clearSide` flip, fov 50; `cine.open`): the 61°-down dollhouse showed the tops of hats in every
+  mission-1 scene, and at the arch the hanging `SÄKERHETSKONTROLL` sign cut across Stig. In the
+  pocket the side shot ended up across the security counters with the arch post or beam over a
+  speaker, so the pocket keeps the dollhouse. The cabin and the jet bridge keep it too. Two
+  speakers on one spot (< 0.3 m) are framed from in front of the first (both modes).
 - **The ceiling** is one `PlaneGeometry` at y 2.6 facing **down** (`FrontSide`, `outline: 0`,
   `cast: false`): invisible from above. **Hat racks** are drawn the same way: down-facing planes
   only (|x| ∈ [1.9, 2.45], y 2.1), invisible from the camera above. Even a narrow solid rack hides
-  Ole in 14A from the default camera behind 14B (the sight line crosses y 2.1 at x ≈ 1.97). The
-  row-number strip "…11 12 14 15…" is painted on the inner wall face above the windows, at
-  y 1.7–1.9, on both sides.
+  Ole in 14A from the default camera behind 14B (the sight line crosses y 2.1 at x ≈ 1.97). So are
+  the **passenger service units** (one 0.36 × 0.1 m plane per row over the B/E seats, y 2.06,
+  z rowZ − 0.3, merged into one mesh) and there is **no rail** along the rack lip: A1 drew both as
+  outlined solids, and from the high camera the strip lay across every seated B/E forehead and the
+  rail ran down the A/F faces (Phase 3). The only overhead solid is the 5 cm orange call button
+  over 14B (the juice gag's "knappen ovanför", `call14`). The `cabin` scenario casts a 9 × 9 ray
+  grid over each seated head (aisle view at row 14, the 14A/14B and 16E/16F two-shots) and fails
+  if any sample is covered by cabin geometry over head height inside the walls. The row-number
+  strip "…11 12 14 15…" is painted on the inner wall face above the windows, at y 1.7–1.9, on both
+  sides.
+- The galley signs `FRÄMRE BYSSAN` (z 13.5) and `BAKRE BYSSAN` (z −18.9) hang across the cabin and
+  turn every frame to the side the camera is on (yaw 0 if the eye's z is greater than the sign's,
+  else π; Phase 3): from the z-clamped eye behind one, its up-tilted face read upside down
+  ("NASSYB ERKAB" at the rear galley) or edge-on.
 - Flight level: `sun.castShadow = false`, hemisphere light raised (palette `hemiI`).
 - **No global fog on the interior**: every flight palette keeps `fogNear ≥ 40` m (the interior is
   ≤ 12 m from the camera). The climb whiteout is faked with cloud puffs streaming past the plane
@@ -664,6 +685,13 @@ stub with this exact shape):
 - The town clouds `MAT._clouds` are hidden for the whole flight level. Snow: flightScenery's own
   point snow (A2; it keeps out of the cabin, bridge and lounge) in phase `gate`, fading out over
   `takeoff` t 4–7. (A1's earlier cabin `fx.snow` emitter was removed in Phase 2: one snow system.)
+  Over the bridge and the lounge rects no flake falls at any height (Phase 3: flakes between the
+  2.6 m wall tops and the high camera landed, on screen, on the roofless rooms' floors); over the
+  cabin only below y 2.7.
+- The snowfield's ~70 drift lumps (`drifts`) show in phase `gate` only. The runway tile carries its
+  own low drifts between the plough banks and the forest (|x| 50–78, 10 per tile, none at the
+  turn-off), which scroll with it (Phase 3: the field's lumps stood still while the runway scrolled
+  past at up to 70 m/s).
 - **Pitch** is owned by `flightScenery.tick` (`scenery.rotation.x`, **positive = nose up**, rewritten
   every frame as a function of phase and t); `cabin.js` writes only `rotation.z` (turbulence wobble).
 - A2 additions: `PLANE_GROUND_Y = −4.65` (plane-local; the Arlanda apron/runway and the Gando strip
@@ -745,6 +773,10 @@ registerCarType('trolley', { name: 'Serveringsvagn', len: 0.85, wid: 0.45, bodyH
   stowers) stands within 1.2 m ahead of it in the aisle (`vardinna`'s home is beside the aisle): only the player gets bowled
   over, NPCs are never shoved along by depenetration. A **downed or flung player** lying up to 2 m
   ahead is waited for too, plus 1.2 s of grace once he is up (no re-bowling a player who just got up).
+- **Scripted moments freeze it** (Phase 3): while `game.inDialog` or `game.inCutaway`, or the
+  runner is in `intro`, `outro` or `failed`, the trolley halts where it stands (`trolleyStopped`;
+  no serving stop, bubble, bowling or wait countdown) and goes on afterwards. It bowled Stig over
+  in the landning intro (+12 inside a cutscene) and called "Juice, whisky?" over scripted lines.
 - `cabin.trolleyEnd(g)` → `{x, z}` = the trolley end (front or back face, 0.85 m from its centre)
   nearest the player; the juice interact anchors there, so a trolley that has already passed row 14
   is still reachable.
@@ -784,7 +816,7 @@ METERS.flygradsla = { mode: 'panic', label: 'FLYGRÄDSLA', cls: 'fear', hot: 70,
 | touchdown / reverse thrust | +10 / +5 | cabin |
 | turbulence jolt: unheld / fall / held / seated / seated with mantra | +6 / +12 / +1 / +4 / +1 | cabin |
 | trolley bowls you over | +12 | cabin |
-| **Ole's statistics bark** (player within 4 m of Ole, no mission running or stage `oleBarks: true`, every 25 s; line from `OLE_STATS`) | +8 | cabin.tick |
+| **Ole's statistics bark** (player within 4 m of Ole, in free play (runner `idle`) or a stage with `oleBarks: true`, every 25 s; the timer runs only outside dialogue, and a due bark waits while Ole's own bubble is up (`game.saying(ole)`; Phase 3); line from `OLE_STATS`) | +8 | cabin.tick |
 | scripted dialogue/timeline cues `{fear: n}` | n | missions |
 | stage `fearRate` (e.g. the toilet dash) | +n/s | missions (goto option) |
 
@@ -857,7 +889,16 @@ METERS.flygradsla = { mode: 'panic', label: 'FLYGRÄDSLA', cls: 'fear', hot: 70,
 
 ### 5.12 Ambient cabin life (cabin.tick)
 
-- Seated cast idle bubbles from `CHATTER_FLIGHT` when the player is within 6 m (12–20 s apart).
+- Seated cast idle bubbles from `CHATTER_FLIGHT` when the player is within 6 m (12–20 s apart),
+  in free play only (runner `idle`, no dialogue) and at most one every 5 s for the whole cabin
+  (`cabin._chatCd`; a member due during the cooldown skips his turn). Phase 3: they fired in the
+  1.6 s gap between UPPDRAG KLART and the outro and stacked 3–4 bubbles over its first line. The
+  island's chatter (main.js) has the same free-play rule.
+- **Bubbles over scripted lines** (Phase 3): `game.say` records when each speaker's bubble ends
+  (`saying(t)`, `sayEnd`). The mantra's auto-bubble ("Jag kan flyga, jag är inte rädd" every
+  2.5 s while J is held) goes straight to `hud.say` and waits while any other bubble is up (it
+  covered the takeoff's timeline lines and replaced Stig's own "Annars…?!"); Ole's bark waits for
+  his own bubble (§5.9); an aisle walker's "Ursäkta!" is not said in a dialogue.
 - **"Ra-tara-tara…"** [F]: when `vardinna2` (with the trolley) passes rows 21–23, Berra and Robban
   bubble it (45 s cooldown). (In the film they say it at the stewardess; never triggered by Stig.)
 - Angerud (6C) bubbles the "varm middag" complaint when the trolley stops at row 6 (once per
@@ -1272,7 +1313,7 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
 |---|---|---|---|---|
 | 8.1 gate [3] toilet dash | gateOle → round the ladies' room → herrtoa (r 1.8), sprint 3.6 s (walk 5.0) | 4.1 (3.6 + 0.5; 1) | **6** (was 10) | 40 % sprint, 16 % walk |
 | 8.2 ombord [0] find 14B | cabinDoor → 14B past three stowers (E each), sprint 2.9 s (walk 4.2) | 4.9 (2.9 + 4 × 0.5; 1) | **7** (15) | 58 % sprint, 40 % walk |
-| 8.4 sprit [0] five bottles | sprint after the nearest, trolley dodges, Space in turbulence | 19.6 (p75 17.1 of 12 + 2.5; bimodal: 4–7 s or ≈ 17 s) | **25** (35) | 32 % at p75 |
+| 8.4 sprit [0] five bottles | sprint after the nearest, trolley dodges, Space in turbulence | 16.9 (p75 14.4 of 12 + 2.5; bimodal: 4–10 s or 28–30 s; Phase 3 r1, with the trolley frozen through the intro: Phase 2 had 19.6, p75 17.1, → 25) | **22** (35) | 35 % at p75 |
 | 8.5 landning [0] round-up | row 16 → José → Berra → Herr Storch (walk, sign lit) | 9.1 (7.6 + 1.5; 2 orders) | **12** (20) | 37 % |
 | 8.5 landning [1] back to 14B | from the far end (Berra) | 3.7 (3.2 + 0.5; 2) | **5** (10) | 36 % |
 | 8.6 buss17 s2 | busBay → 7,1 > 3,1 > 3,4 → flamencoDrive, ÅKSJUKA, stop | 45.0 (median of 10 clean in 4 sets, 44.4–47.0) | **54** (60) | 17 % |
@@ -1538,7 +1579,7 @@ and the trolley keeps coming.
 - vardinna: "Då är du rätt man."  [N]
 
 **Stages:**
-1. `collect({ kind: 'flaska', motion: 'roll', items: [{x:3000.2,z:9.0},{x:2999.8,z:2.5},{x:3000.3,z:-6.0},{x:2999.7,z:-10.5},{x:3000.0,z:-13.5}], radius: 0.9, timer: 25, text: 'Fånga flaskorna som rullar i gången', barLabel: 'FLASKOR', failText: 'Flaskorna rullade in under sätena.', startCue: { phase: ['cruise', { instant: true }], trolley: true }, timedCues: [[8, {radio: ['pa', 'Herr Storch ombedes kontakta kabinpersonalen.'], pa: true}], [20, {turbulence: [0.5, 6]}]] })`
+1. `collect({ kind: 'flaska', motion: 'roll', items: [{x:3000.2,z:9.0},{x:2999.8,z:2.5},{x:3000.3,z:-6.0},{x:2999.7,z:-10.5},{x:3000.0,z:-13.5}], radius: 0.9, timer: 22, text: 'Fånga flaskorna som rullar i gången', barLabel: 'FLASKOR', failText: 'Flaskorna rullade in under sätena.', startCue: { phase: ['cruise', { instant: true }], trolley: true }, timedCues: [[8, {radio: ['pa', 'Herr Storch ombedes kontakta kabinpersonalen.'], pa: true}], [20, {turbulence: [0.5, 6]}]] })`
    - `roll`: bottles slide along the aisle (|x| ≤ 0.45) at 0.6–1.4 m/s, bounce at z +12.5 / −16,
      roll out from under the serving trolley towards the player's side (Phase 2: a bottle beyond a
      trolley stopped at a row was out of reach for 20–45 s), get kicked ±1.5 m/s by every
@@ -2887,8 +2928,10 @@ export function signMesh(text, w, h, opts) -> Mesh   // opts.double (Polish): ad
 cam.profile = null | { pivotH, dist, pitchMin, pitchMax, pitch0, noPull, fov, cineSide, cineUp, clampZ? }
 cam.clampActive = bool     // set each frame by main: flight level && cabin.inCabin(focus); then the eye z
                            // is clamped to profile.clampZ and pitch steepens (§5.3)
+cam.openFloor = bool       // set each frame by main: the gate lounge (§5.3); frame/frameOne then use the
+                           // Bigmouth framing despite the profile (cine.open: fov 50)
 cam.setProfile(p)          // sets profile, snaps pitch to p.pitch0, snapNext; null = Bigmouth
-cam.frame(a, b)            // profile-aware (§5.3)
+cam.frame(a, b)            // profile-aware (§5.3); two people < 0.3 m apart: from in front of a
 cam.frameOne(a)            // single-target framing (both modes)
 cam.cutTo({ x, y, z }, { x, y, z })   // cine pos/look; release() returns
 // on-foot branch: pivotH/dist/fov from profile; pitch clamped to [pitchMin, pitchMax] in both the
@@ -3153,7 +3196,9 @@ labels (§11.6), outfits (§4.5), `COLLECTIBLES`/`UNLOCKS` (§10), `OLE_STATS` (
 
 ### 14.10 Chatter and bark tables (initial content)
 
-Every film line here is a bark outside its own scene, so it is tagged `[F*]` (§1.4).
+Every film line here is a bark outside its own scene, so it is tagged `[F*]` (§1.4). Chatter plays
+in free play only, Ole's barks in free play and `oleBarks` stages; neither over a dialogue or in
+the gap before an outro (§5.9, §5.12).
 
 ```js
 OLE_STATS = [
@@ -3498,7 +3543,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 |---|---|
 | `missions` [Phase 0] | for N = 0..12: `fresh('&mission=N')`: `level === levelFor(N)`, giver visible within 40 m of `at`, no errors; at `&mission=1`: `cabin.seatOf(npc('ole')) === '14A'` and Majsan seated in 16E (cast seated from the start of ombord); **data checks**: every key used in any `place`/`extra`/`outroPlace`/`who`/`findAt`/`standAt`/`sendTo`/`frame`/`duet` resolves via `game.npc(key)`; every `checkpoint: true` stage acting > 60 m from `def.at` has `retryAt` (§9.4) |
 | `gate` [A1] | mission 0 loaded: shots of arch, lounge, toilet, bridge; walking into every gate wall for 2 s keeps `cabin.inside()` true; the arch is the only way out of the landside pocket; `kontrollant` and the `gateQueue` warp spot are not inside a solid |
-| `cabin` [A1] | `setPhase(p, {instant})` for every phase → shot each; walk into each cabin wall 2 s → still inside; `camera.position.y > 4`; seated cast visible (not hidden by racks); row-number strip shot; after `?mission=2` boots and after `setNpcOutfit('ole', 'flyg')`, Ole's root world position is within 0.5 m of seat 14A; player at `galleyBack` and `toiletBackL` with camera yaw toward the nose → shot + raycast: no airframe mesh between camera and player |
+| `cabin` [A1] | `setPhase(p, {instant})` for every phase → shot each; walk into each cabin wall 2 s → still inside; `camera.position.y > 4`; seated heads clear of the overhead (a 9 × 9 ray grid per head: no rack, rail or service unit in front of any sample, from the row-14 aisle view and the 14A/14B and 16E/16F two-shots; Phase 3, §5.3); row-number strip shot; after `?mission=2` boots and after `setNpcOutfit('ole', 'flyg')`, Ole's root world position is within 0.5 m of seat 14A; player at `galleyBack` and `toiletBackL` with camera yaw toward the nose → shot + raycast: no airframe mesh between camera and player |
 | `trolley` [A1] | `startTrolley`; stand in the aisle ahead for 40 s: `stats.bowled ≥ 1`, fear rose, no NaN; stepping into a free row avoids it; an NPC standing in the aisle makes the trolley wait (not shoved) |
 | `turbulence` [A1] | standing, not holding: `turbulence(0.8, 6)` → `stats.falls ≥ 1`; repeat holding Space → no fall |
 | `panic` [A1] | cruise idle: `addCoins(100)`; `shame.add(100)` → within 4 s player seated in 14B, coins 50, v 40; player in the lounge (outside the cabin) → player at `gateOle`, gate toast text; mission 2 takeoff stage → mission failed with the panic text; PANIK during a `scene` is deferred until it ends |
@@ -3970,3 +4015,23 @@ the fixer's group.
   gate look (camel coat, fur hat; `LEVEL_OUTFITS.gate`), Lasse's jul shorts with a white hem; the
   invented-details note names only Stig's arlanda scarf and Fru Storch's white dress.
 - r1 cast-vehicles: `castsheet` frames the anim-flag rows wider, so the giraffe is not cut off.
+- r1 cabin-flight: the hat-rack rail is gone and the passenger service units are down-facing planes
+  (one merged mesh); only 14B's call button is a solid (§5.3). From the high camera the cream strip
+  lay across every seated B/E forehead and the rail ran down the A/F faces. The `cabin` scenario
+  checks every seated head with a 9 × 9 ray grid from the aisle and the two-shots (§16.4).
+- r1 cabin-flight: the trolley freezes during a dialogue or cutaway and in the runner's intro,
+  outro and fail screen (§5.8): it bowled Stig over in the landning intro and called "Juice,
+  whisky?" over scripted lines. Sprit re-measured (`calibflight`, 12 runs): p75 14.4 → T_ref 16.9
+  → timer **22** (was 25; §8 table, flight.js, fixture).
+- r1 cabin-flight: cabin and island chatter in free play only, the cabin's at most one per 5 s;
+  Ole's bark timer stops in dialogue and a due bark waits for his own bubble; the mantra
+  auto-bubble waits while any other bubble is up (`game.say` records `sayEnd`, `saying(t)`); a
+  walker's "Ursäkta!" not in a dialogue (§5.9, §5.12, §14.10).
+- r1 cabin-flight: `cam.openFloor` (§5.3, §14.5): in the gate lounge (not the landside pocket)
+  `frame`/`frameOne` use the Bigmouth side two-shot at eye level instead of the dollhouse; two
+  speakers < 0.3 m apart are framed from in front of the first.
+- r1 cabin-flight: the galley signs turn to the camera's side (§5.3); no snow over the bridge and
+  lounge at any height; the snowfield drifts show at the gate only and the runway tile carries its
+  own scrolling drifts (§5.6).
+- r1 cabin-flight: the on-board toilet hideout and the galley self-serve juice are labelled
+  invented (§1.6, README, cabin.js).

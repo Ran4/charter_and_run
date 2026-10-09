@@ -123,6 +123,7 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
   hämtar juicen vid den (i filmen kommer värdinnan med den)
 - att samla rullande flaskor och att få stående passagerare att sätta sig
 - passagerarna som stuvar bagage och blockerar gången
+- att låsa in sig på planets toalett mot flygrädslan, och att ta juice själv i byssan
 - att Stig-Helmer kör SunTrips buss 17 (i filmen tar Lasse transfern)
 - "Plocka kulor" som jakt efter vindblåsta badbollar
 - prutning som tajmingspel, SKICK-mätaren för den våta färgen och ÅKSJUKA-mätaren
@@ -136,7 +137,8 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
 - Rio-slutbilden som spelbar epilog
 
 Filmens flygresa har **ingen turbulens** och **ingen toalettscen ombord**: båda toalettscenerna
-utspelar sig på Arlanda, och där ligger de i spelet också.
+utspelar sig på Arlanda, och där ligger de i spelet också. Toaletten ombord är bara ett påhittat
+gömställe.
 
 ## Filmcitat och källmärkning
 

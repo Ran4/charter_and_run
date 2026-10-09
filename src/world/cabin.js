@@ -9,7 +9,8 @@
 // bubbles, "Ra-tara-tara", Angerud's complaint, aisle walkers and the luggage stowers.
 // Visuals: one merged vertex-coloured toon mesh for the cabin, one for the gate set (cut-away
 // walls 2.6 m, no roof, 1979 brochure palette §13.2); racks and ceiling are down-facing planes.
-// Invented (DESIGN §1.6): turbulence, holding on, the trolley and its bowling, the stowers.
+// Invented (DESIGN §1.6): turbulence, holding on, the trolley and its bowling, the stowers, the
+// on-board toilet hideout and the galley self-serve juice.
 
 import { THREE, GeoBuilder, toonMesh, signMesh, setSkyPalette, MAT } from '../gfx.js';
 import { box, circle } from './collision.js';
@@ -311,18 +312,11 @@ export function buildCabin(scene, game) {
     }
   }
 
-  // Hat racks: a slim rail at each side (the shelf itself is a down-facing plane, below), passenger
-  // service units with reading lamps and the call buttons.
-  for (const s of [1, -1]) {
-    GC.cyl(C.steelLt, W(s * 1.9), 2.1, -0.95, 0.022, 28.1, 6, Math.PI / 2);
-    for (const row of ROWS) {
-      const z = rowZ(row) - 0.3;
-      vb(GC, C.rack, s * 1.45, 2.075, z, 0.36, 0.025, 0.1);
-      vb(GS, C.orange, s * 1.45, 2.058, z + 0.03, 0.05, 0.012, 0.04);
-      vb(GS, 0xfff3b0, s * 1.3, 2.058, z, 0.05, 0.012, 0.05);
-      vb(GS, 0xfff3b0, s * 1.6, 2.058, z, 0.05, 0.012, 0.05);
-    }
-  }
+  // The call button above 14B (the juice gag, `call14`): the one passenger-service part drawn as a
+  // solid, so it shows from above. The rest of the service units are down-facing planes with the
+  // racks (below). Phase 1 drew them, and a rail along each rack lip, as outlined solids: from the
+  // high camera the strip lay across every seated B/E forehead and the rail ran down the A/F faces.
+  vb(GS, C.orange, 1.45, 2.058, rowZ(14) - 0.27, 0.05, 0.012, 0.04);
 
   // Front galley (starboard): counter, ovens against the wall, coffee and juice on the worktop.
   vbox(GC, C.steel, -2.45, 13.6, -0.7, 16.8, FLOOR, 0.95);
@@ -388,10 +382,18 @@ export function buildCabin(scene, game) {
     rack.position.set(CX + s * 2.175, 2.1, -0.95);
     scene.add(rack);
   }
+  // A passenger service unit over each B/E seat (reading lamps, call button), one merged mesh.
+  const psu = [];
+  for (const s of [-1, 1]) for (const row of ROWS) psu.push(new THREE.PlaneGeometry(0.36, 0.1).rotateX(Math.PI / 2).translate(W(s * 1.45), 2.06, rowZ(row) - 0.3));
+  scene.add(new THREE.Mesh(mergePlates(psu), downMat));
 
-  // Signs: galleys, crew door, emergency exits, the smokers' section.
-  sign(signs, 'FRÄMRE BYSSAN', -1.6, 2.35, 13.5, 1.5, 0.32, { yaw: Math.PI, tilt: -0.7, ...SIGN });
-  sign(signs, 'BAKRE BYSSAN', 0, 2.3, -18.9, 1.7, 0.34, { yaw: 0, tilt: -0.7, ...SIGN });
+  // Signs: galleys, crew door, emergency exits, the smokers' section. The galley signs hang across
+  // the cabin and turn to the side the camera is on (stepAmbient): from the z-clamped eye behind
+  // one, its up-tilted face read upside down ("NASSYB ERKAB") or edge-on.
+  const galleySigns = [
+    sign(signs, 'FRÄMRE BYSSAN', -1.6, 2.35, 13.5, 1.5, 0.32, { yaw: Math.PI, tilt: -0.7, ...SIGN }),
+    sign(signs, 'BAKRE BYSSAN', 0, 2.3, -18.9, 1.7, 0.34, { yaw: 0, tilt: -0.7, ...SIGN }),
+  ];
   sign(signs, 'BESÄTTNING', 0, 2.38, 17.36, 1.3, 0.28, { yaw: Math.PI, tilt: -0.6, ...SIGN_W });
   for (const s of [1, -1]) {
     sign(signs, 'NÖDUTGÅNG', s * 2.4, 2.32, rowZ(11) - 0.25, 1.0, 0.22, { yaw: s > 0 ? -Math.PI / 2 : Math.PI / 2, tilt: -0.55, bg: '#e0342a', fg: '#fff8e6', scale: 0.6 });
@@ -695,7 +697,7 @@ export function buildCabin(scene, game) {
     _beltWant: false,       // the sign as missions/phases set it; turbulence lights it on top (§5.7 step 4)
     _drone: DRONE.gate, _droneUp: false, _bounce: 0, _ratataCd: 0, _angerudDone: false, _juiceT: { front: 0, back: 0 },
     _toilet: { L: null, R: null, gate: null },   // who is locked in: 'stig' | walker key | null
-    _smokeT: 2,
+    _smokeT: 2, _chatCd: 0,
 
     inside(x, z) {
       const lx = x - CX;
@@ -1067,6 +1069,11 @@ export function buildCabin(scene, game) {
       }
       trolley.x = CX + jx;
       const halt = () => { T.v = 0; T.running = false; this.trolleyStopped = true; trolley.updateObb(); };
+      // Scripted moments freeze it where it stands (no serving, bubbles or bowling): a dialogue or
+      // cutaway, and the intro, outro and fail screen around them. It bowled Stig over in the
+      // landning intro and called "Juice, whisky?" over scripted lines.
+      const ms = g.missions?.state;
+      if (g.inDialog || g.inCutaway || (ms && ms !== 'idle' && ms !== 'running')) return halt();
       if (T.wait > 0) { T.wait -= h; return halt(); }
       if (T.pauseT > 0) { T.pauseT -= h; return halt(); }
       if (T.stopAt === null) { T.stopAt = rowZ(3); T.stopRow = 3; }
@@ -1156,12 +1163,14 @@ export function buildCabin(scene, game) {
       if (ph === 'takeoff' && this.phaseT < FEAR.takeoffRollSecs && this.phaseT > 0) fear(FEAR.takeoffRoll * dt);
       if (ph === 'approach') fear(FEAR.approach * dt);
       if (seated && ph !== 'takeoff' && ph !== 'climb' && ph !== 'approach') relieve((this.seatbelt ? FEAR.seatedReliefBelt : FEAR.seatedRelief) * dt);
-      // Ole's statistics.
+      // Ole's statistics: in free play or an `oleBarks` stage, never in a dialogue (the timer used to
+      // run on through it, so a bark was due the moment every dialogue ended) and never over a line
+      // of his own still on screen (it would replace a scripted takeoff line mid-sentence).
       const ole = g.npcs?.ole;
-      const running = g.missions?.state === 'running';
-      if (ole && ole.state !== 'hidden' && (!running || g.missions.stage?.oleBarks) && dist(ole.x, ole.z, p.x, p.z) < FEAR.oleBarkR) {
+      const ms = g.missions?.state;
+      if (ole && ole.state !== 'hidden' && !g.inDialog && (ms === 'idle' || (ms === 'running' && g.missions.stage?.oleBarks)) && dist(ole.x, ole.z, p.x, p.z) < FEAR.oleBarkR) {
         this._oleBarkT -= dt;
-        if (this._oleBarkT <= 0 && !g.inDialog) {
+        if (this._oleBarkT <= 0 && !g.saying?.(ole)) {
           this._oleBarkT = FEAR.oleBarkEvery;
           g.say(ole, pick(OLE_STATS), 3);
           fear(FEAR.oleBark);
@@ -1331,7 +1340,7 @@ export function buildCabin(scene, game) {
           if (spot) {
             w.dodge = { x: spot.x, z: spot.z, why, t: 0, inSpot: false, back: false, resume: w.mode };
             w.mode = 'dodge';
-            if (why === 'player' && w.sayCd <= 0) { w.sayCd = 6; g.say(ch, 'Ursäkta!', 1.3); }   // [N]
+            if (why === 'player' && w.sayCd <= 0 && !g.inDialog) { w.sayCd = 6; g.say(ch, 'Ursäkta!', 1.3); }   // [N]
             ch.sync(dt);
             continue;
           }
@@ -1385,13 +1394,20 @@ export function buildCabin(scene, game) {
       if (this._toilet.R === 'stig' && p.state !== 'hidden') this._toilet.R = null;
       toiletLamp.L.material.color.setHex(this._toilet.L ? 0xffffff : 0x4a4a4a);
       toiletLamp.R.material.color.setHex(this._toilet.R ? 0xffffff : 0x4a4a4a);
-      // Seated cast idle bubbles.
-      if (g.missions?.state !== 'running' && !g.inDialog) {
+      // The galley signs face the camera's side (YXZ: the up-tilt turns with them).
+      const camZ = g.cam.cam.position.z;
+      for (const m of galleySigns) m.rotation.y = camZ > m.position.z ? 0 : Math.PI;
+      // Seated cast idle bubbles: free play only (not in the 1.6 s gap before an outro, where they
+      // used to stack over its first line), at most one every 5 s for the whole cabin.
+      this._chatCd -= dt;
+      if (g.missions?.state === 'idle' && !g.inDialog) {
         for (const key in g.npcs) {
           const n = g.npcs[key];
           if (n.state !== 'seated' || !n.seatId || dist(n.x, n.z, p.x, p.z) > 6) continue;
           n.cabinChatT = (n.cabinChatT ?? 4 + Math.random() * 8) - dt;
-          if (n.cabinChatT <= 0) { n.cabinChatT = 12 + Math.random() * 8; if (CHATTER_FLIGHT[key]) g.say(n, pick(CHATTER_FLIGHT[key]), 2.6); }
+          if (n.cabinChatT > 0) continue;
+          n.cabinChatT = 12 + Math.random() * 8;
+          if (this._chatCd <= 0 && CHATTER_FLIGHT[key]) { this._chatCd = 5; g.say(n, pick(CHATTER_FLIGHT[key]), 2.6); }
         }
       }
     },
