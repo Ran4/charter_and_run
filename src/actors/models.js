@@ -911,7 +911,7 @@ function heldPose(m, st, t, place = false) {
   const h = m.def.held;
   if (!h || !PROP_GEO[h]) return;
   const [R, L] = m.arms;
-  const busy = st.wings || st.cupUp || st.push || st.hold || st.flail || st.oath || st.dance || st.laugh || st.mirror || st.film || st.giraffe || st.butterKnife || st.carryOver || st.shoeOff || st.cheer || st.wave || st.kick > 0;
+  const busy = st.wings || st.cupUp || st.cupHeld || st.push || st.hold || st.flail || st.oath || st.dance || st.laugh || st.mirror || st.film || st.giraffe || st.butterKnife || st.carryOver || st.shoeOff || st.cheer || st.wave || st.kick > 0;
   const pose = !place && !busy;
   const moving = st.speed > 0.3;
   switch (h) {
@@ -1018,7 +1018,13 @@ function poseFlags(m, st, t) {
       m.neck.rotation.x = -0.12;
     }
   }
-  if (st.cupUp) R.rotation.set(-2.75, 0, -0.08);
+  if (st.cupUp) R.rotation.set(-2.75, 0, -0.08);   // an empty hand up (the stowers at the rack, the carried juice)
+  if (st.cupHeld) {
+    // A paper cup in the right hand: raised from a seat (Stig's "Ja." to the call button, §8.3),
+    // held out to the row standing (the trolley stewardess serving).
+    R.rotation.set(st.seated ? -2.75 : -1.65, 0, st.seated ? -0.08 : 0.12);
+    inHand(m, prop(m, 'cup'), 0, 0, 0.01, 0);
+  }
   if (st.oath) {
     R.rotation.set(-0.15, 0, -2.85);
     L.rotation.set(-1.25, 0, -0.75);

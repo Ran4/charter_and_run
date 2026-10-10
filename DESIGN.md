@@ -128,7 +128,8 @@ Every scripted line in `src/content/*.js` and `src/game/missions/*.js` carries a
 | `// [N]` | new line written for the game. **Never** present as a film quote (README, credits, loading tips) |
 | `(t)` | appended to any tag when the speaker is our interpretation (sources don't say who speaks): `// [F](t)` |
 
-Any film line used in a CHATTER / OUCH / GETUP / CARJACK / NPC_KICKED / OLE_STATS table, or as a
+Any film line used in a CHATTER / OUCH / GETUP / CARJACK / NPC_KICKED / OLE_STATS table (or their
+`_OLE` / `_LOCAL` variants, §14.10), or as a
 sign, outside its own film scene is `[F*]` (relocated), never plain `[F]`.
 
 Mission titles (shown on banners and the objective card) carry one too, on the `title:` line:
@@ -852,7 +853,9 @@ registerCarType('trolley', { name: 'Serveringsvagn', len: 0.85, wid: 0.45, bodyH
 - `cabin.trolleyEnd(g)` → `{x, z}` = the trolley end (front or back face, 0.85 m from its centre)
   nearest the player; the juice interact anchors there, so a trolley that has already passed row 14
   is still reachable.
-- **Pusher**: `vardinna2` Character glued 0.9 m behind (at z + 0.9), anim `push`.
+- **Pusher**: `vardinna2` Character glued 0.9 m behind (at z + 0.9), anim `push`; at a serving stop
+  she turns to a seat row with anim `cupHeld` (Phase 3 r2: a paper cup held out to the row; `cupUp`
+  served empty-handed, an arm raised over her head).
 - **Bowling** (invented): if the trolley is moving, the player is standing `normal`, |x| < 0.75 and
   0 < (trolley.z − player.z) < 0.95 → `player.fling(0, 3.0, −2.6)`, fear +12, `vardinna2` bubble
   "Akta tårna!" [N], `cabin.stats.bowled++`, `game.bumpedT = 0.4`, trolley pauses 1.5 s; 2 s
@@ -1145,7 +1148,7 @@ against ×1.2 (§8 "Timers and difficulty").
 | `icecream` | Glassbil | `icecream`, sign `HELADOS` | `0xfafafa` | traffic, rare |
 | `taxi` | Taxi | sedan + flag `taxi` (cream body, roof `TAXI` box with a green LIBRE lamp) | `0xe8dcb8` | traffic ×1, `taxiAirport` |
 | `guardia` | Guardia Civil | new: `tall`, len 4.2, wid 1.9, bodyH 1.45, cabinH 0, wheelR 0.4, maxSpeed 30, accel 12, grip 9, steer .58, mass 2000, hp 160; flag `guardia` (white roof, blue lamp, white door band, spare wheel on the bonnet) | `0x2e5e3e` | pursuit, `guardia1/2` parked |
-| `grisbil` | Grisbilen | pickup + flag `pigs` (slatted rack + 3 pink pig blobs), maxSpeed 34, accel 14 | rust `0xa8442a` | bodega mission, unlock |
+| `grisbil` | Grisbilen | pickup + flag `pigs` (slatted rack + 3 pink pig blobs: one at −0.15 L, the back two across the bed snout to snout at −0.41/−0.425 L, scale 0.72, wholly inside the rack — Phase 3 r2, they faced aft and their snouts stuck ~0.2 m out over the tailgate; the bed-rider slots at −0.3 L stay free), maxSpeed 34, accel 14 | rust `0xa8442a` | bodega mission, unlock |
 | `trolley` | Serveringsvagn | registered by cabin.js (§5.8) | `0xc8ccd2` | cabin only |
 
 Removed: `hearse`, `muscle` (their geometry branches may stay as dead code). Traffic mix (main.js):
@@ -1164,7 +1167,11 @@ floor and seat backs sit under it, so the heads fill the window band: sill 1.595
 − 0.22 for a bus's roof slab). A driver bust stands at seatY, rear/window rider busts too; each is scaled by
 `fitScale(userData.h)` (≥ 0.72; ≈ 0.82 in a sedan) so the head clears the roof. A seated character
 (player included) has its hips at seatY + 0.12 and is scaled about them by `fitScale(headTop −
-legLen, hips)` (bus 17: Stig ≈ 0.81, Ole ≈ 0.99, Gabbe ≈ 0.87); `unseat` restores scale 1. Bed riders
+legLen, hips)` (bus 17: Stig ≈ 0.81, Ole ≈ 0.99, Gabbe ≈ 0.87); `unseat` restores scale 1. **Who
+is still taller than the room at the 0.72 floor sits lower by the rest** (Phase 3 r2: hips −=
+`max(0, (headTop − legLen)·k − (roofY − hips))`, so the head top never passes roofY): Stig ≈ 0.15 m
+lower in a van, 0.19 in a sedan or taxi, 0.20 in the Guardia jeep; his cowlick stood 7 cm out of
+a van's roof (its slab is `top − 0.12 … top`, roofY = top − 0.08) and 1 cm out of the jeep's. Bed riders
 (`slot: 'bed'`) stand in the open load bed. A rider given by cast key wears that character's current
 outfit (`npc(key).def`).
 
@@ -1176,7 +1183,8 @@ outfit (`npc(key).def`).
   `held` 10 %.
 - 30 % locals: skins `0xc99a6e`, `0xa8774f`; white shirt + black trousers (waiters) or black dress.
 - Dodge shouts (`peds.js`): tourists `'Akta!' 'Hallå där!' 'Herre jävlar!'`, locals `'¡Cuidado!'
-  '¡Turistas!'` (`Herre jävlar` [F*], relocated; others [N]).
+  '¡Turistas!'` (`Herre jävlar` [F*], relocated; others [N]). Their barks when kicked, run over or
+  carjacked follow the same split (Phase 3 r2, `Game.bark`, §14.10): locals use the `_LOCAL` tables.
 
 ### 6.8 Props (`props.js` `TYPES`; WP-B)
 
@@ -1689,10 +1697,10 @@ for stage 1.
 - ole: "Ja, da trykker du der oppe."  [F*]
 
 **Stages:**
-1. `interact({ at: 'call14', whileSeated: true, seat: '14B', prompt: '<b>E</b> Tryck där uppe', text: 'Sätt dig på 14B och tryck på knappen ovanför', startCue: { phase: ['cruise', { instant: true }] }, useCue: { sfx: 'pling' }, lines: [...] })` — on use the `useCue` fires, then (the cup goes up on "Ja.", as in the film, so "Nei…!" answers it; a `cupUp` on the press as well would end under the punchline when the lines go quickly):
+1. `interact({ at: 'call14', whileSeated: true, seat: '14B', prompt: '<b>E</b> Tryck där uppe', text: 'Sätt dig på 14B och tryck på knappen ovanför', startCue: { phase: ['cruise', { instant: true }] }, useCue: { sfx: 'pling' }, lines: [...] })` — on use the `useCue` fires, then (the cup goes up on "Ja.", as in the film, so "Nei…!" answers it; a cup raised on the press as well would end under the punchline when the lines go quickly; Phase 3 r2: `cupHeld`, the paper cup in his hand, where `cupUp` raised an empty fist):
    - ole: "Nei…"  [F*](t)
    - stig: "Där?"  [F]
-   - ole: "Ja."  [F]  {anim: {who: 'stig', flag: 'cupUp', secs: 6}}
+   - ole: "Ja."  [F]  {anim: {who: 'stig', flag: 'cupHeld', secs: 6}}
    - ole: "Nei…!"  [F*](t)  {anim: {who: 'ole', flag: 'laugh', secs: 3}}
    - ole: "Så… så kommer flyvertinnen. Juice, whisky."  [F*]
    - stig: "Hon har visst fullt upp."  [N]
@@ -2775,15 +2783,28 @@ mutes without touching the button, which then said `Ljud: på` while muted).
   toasts up when it starts (`hud.clearToasts()`; its own cue toasts come after): the GÄSTER n/4
   toasts stood over the julafton party shot. The column starts at 104 px, or at 196 px while the
   objective card is shown (`#objective.show ~ #toasts`; a stage's radio line overlapped the card by
-  7×40 px at 1280×720, 115×40 px at 1024×576).
+  7×40 px at 1280×720, 115×40 px at 1024×576). **Under a wide banner** (Phase 3 r2): while a
+  banner whose layout box reaches the column (`W/2 + width/2 + 12 > W − 24 − min(430, 0.4 W)`;
+  never the `intro` card in the top bar) shows, `hud.showBanner` gives it cls `wide` and sets
+  `--banner-drop` on `#hud` (half its height + its tilt's reach, 4 %, 13 % for `multa`, of half its
+  width + 12 px), and the column starts at `32 % + --banner-drop` (`40 % + …` with the objective
+  card), `transition: top 0.25s`. ¡GUARDIA CIVIL!, UPPDRAG KLART!, KVADDAD!, TURBULENS! and
+  SKANDALEN TYSTAD covered the radio toasts' portraits and names (~3 900 px² each at 1280×720).
 - **Speech bubbles** wrap at 300 px (they were one line up to 750 px), are kept on screen (8 px
   margin), under the coins / meter row (top ≥ 96 px) and under a shown objective card they would
   overlap; a stacked bubble with no room left above waits hidden until the ones below it end.
+  **Anchor** (Phase 3 r2): the speaker's real head top, `root.localToWorld(0, model.headTop, 0)`,
+  so a plane seat, a car seat (scaled about the hips) and a lean count; the tail tip stops 6 px
+  above it (`BUBBLE_GAP`; tail 11 px). A flung or fallen body keeps the steady `y + height`, and a
+  plain anchor `{ x, y, z, height }` gives its own head height. The old standing height + 0.6 m put
+  a seated passenger's bubble ~1.5 m (113 px) up over the bins and Stig's 40–55 px above his head.
   `game.say` keeps a line up at least `1 + 0.045 · characters` s (halved in test mode, like the
   kinds' `lineSecs`): chatter of 97 characters went after the fixed 2.6 s.
 - **The objective card** slides up out of view while the letterbox is on (an in-stage talk:
   haggle, collect, interact lines), where only its bar stuck out under the top bar, and comes back
-  with the play.
+  with the play. Its **timer** shows the whole seconds left rounded up, `ceil(t)` as `m:ss`, red
+  (`urgent`) at ≤ 0:10 (Phase 3 r2): a 6 s stage starts at 0:06 and its last second reads 0:01.
+  Flooring showed 0:05 at the start and a whole second of 0:00 with the stage still running.
 
 ### 11.5 Engine/stage strings
 
@@ -2793,7 +2814,7 @@ mutes without touching the button, which then said `Ljud: på` while muted).
 | out of time | `Tiden är ute!` |
 | back in car | `Tillbaka in i bilen!` |
 | go back for X | `Åk tillbaka efter {name}!` |
-| never leave me | `Lämna mig aldrig igen!` |
+| never leave me | `Lämna mig aldrig igen!`; Ole: `Ikke kjør fra meg igjen!` (`S.neverLeaveOle`, Phase 3 r2: `reboard` picks it for Ole, §1.3) |
 | pick up X | `Hämta {name}` |
 | slow down | `Sakta in så de kan hoppa in!` |
 | go go go | `Kör, kör, kör!` |
@@ -2876,7 +2897,8 @@ mutes without touching the button, which then said `Ljud: på` while muted).
   is shown (`#objective.show ~ #banner`), so the two never overlap; it is drawn above the speech
   bubbles (`z-index` 2 inside `#hud`, which is `isolation: isolate`, so the pause and title cards
   still cover it). The end card's banner adds cls `endcard` (top 20 %), clear of the cast and the
-  orchestra busts on the wheelhouse roof.
+  orchestra busts on the wheelhouse roof. A banner wide enough to reach the toast column (cls
+  `wide`, Phase 3 r2) moves the column under it while it shows (§11.4 "Under a wide banner").
 
 ---
 
@@ -3023,7 +3045,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/strings.js` | new | **H** | `S`, `fmt()` (§11) |
 | `src/content/index.js` | new | none | merges `HOMES`, `MAP_LABELS`, `LEVEL_OUTFITS`, re-exports all content |
 | `src/content/flight.js` | new | **F** | `HOMES_GATE`, `HOMES_FLIGHT`, `MAP_LABELS_FLIGHT`, `CHATTER_FLIGHT`, `OLE_STATS`, `LEVEL_OUTFITS_GATE`, `LEVEL_OUTFITS_FLIGHT` |
-| `src/content/island.js` | new | **G** | `HOMES_ISLAND`, `MAP_LABELS_ISLAND`, `CHATTER`, `OUCH`, `GETUP`, `CARJACK`, `NPC_KICKED`, `COLLECTIBLES`, `UNLOCKS`, `NAMED_CARS`, `LEVEL_OUTFITS_ISLAND` |
+| `src/content/island.js` | new | **G** | `HOMES_ISLAND`, `MAP_LABELS_ISLAND`, `CHATTER`, `OUCH`, `GETUP`, `CARJACK`, `NPC_KICKED` (+ the `_OLE` / `_LOCAL` tables, `LOCAL_CAST`, `BARKS`: Phase 3 r2, §14.10), `COLLECTIBLES`, `UNLOCKS`, `NAMED_CARS`, `LEVEL_OUTFITS_ISLAND` |
 | `src/game/missions/index.js` | new | none | `MISSIONS = [...FLIGHT_MISSIONS, ...ISLAND_MISSIONS]`, `MissionRunner` re-export |
 | `src/game/missions/runner.js` | new (from missions.js) | none | `MissionRunner` (§9.4) |
 | `src/game/missions/kinds/core.js` | new | **none** (frozen after Phase 0) | getInCar goto pickup dropoff follow rabbits race destroy grab scene |
@@ -3157,6 +3179,8 @@ game.say(target, text, secs = 2);  game.radio(who, text)   // say: at least 1 + 
                                           // secs <= 0 is an unsay
 game.unsay(target)                        // takes target's bubble down now (hud.unsay); saying(t)
                                           // false, sayEnd back to the bubbles still up (Phase 3)
+game.bark(ch, kind) -> text               // kind ouch | getUp | kicked | carjack: a line from the
+                                          // speaker's table (Ole / local / Swedish; §14.10, r2)
 
 // ---- flight seats ----
 game.sitPlayer(seatId) -> bool            // via cabin.seatCharacter; sets player.seatId
@@ -3318,7 +3342,11 @@ Phase 0 stand-ins. Content may give an outfit a `held` field or use the `giraffe
 `film`, `mirror` or `shoeOff` anim flags, which bring their own props.
 
 Anim flags on `Character.anim` (Phase 0 adds them all with a minimal arm pose where noted; WP-E
-polishes): `wings` (arms straight out — Phase 0), `cupUp` (right arm up+forward — Phase 0),
+polishes): `wings` (arms straight out — Phase 0), `cupUp` (right arm up+forward, empty-handed —
+Phase 0; the luggage stowers' arm at the rack and the carried juice, which is its own mesh),
+`cupHeld` (Phase 3 r2: the `cup` prop in the right hand, raised like `cupUp` when seated — Stig's
+"Ja." in juice, §8.3 — and held out at shoulder height standing — the trolley stewardess serving,
+§5.8),
 `push` (both arms forward at waist — Phase 0), `planeSeat` (seated, arms on armrests — Phase 0),
 `hold` (arms out to the sides low — Phase 0), `flail` (Phase 0), `oath` (right hand up, left on
 chest — Phase 0), `dance` (Phase 0: cheer variant), `laugh`, `slump`, `shoeOff`, `mirror`, `film`,
@@ -3548,6 +3576,7 @@ export const HOMES_ISLAND = {...};  export const MAP_LABELS_ISLAND = [['Hotell F
   ['Pepes Bodega', 'bodega', { unlock: 'bodega' }]];
 export const CHATTER = {...};  export const OUCH = [...];  export const GETUP = [...];
 export const CARJACK = [...];  export const NPC_KICKED = [...];
+export const OUCH_OLE, GETUP_OLE, NPC_KICKED_OLE, LOCAL_CAST, OUCH_LOCAL, GETUP_LOCAL, CARJACK_LOCAL, NPC_KICKED_LOCAL, BARKS;   // Phase 3 r2, §14.10
 export const COLLECTIBLES = {...};  export const UNLOCKS = {...};
 export const NAMED_CARS = { buss17: 'SunTrips buss 17', hyrbil: 'Hyrbilen', grisbil: 'Grisbilen', nattbuss: 'Nattbussen', joseBil: 'Josés bil', guardiaJeep: 'Guardia-jeepen' };
 export const LEVEL_OUTFITS_ISLAND = {...};
@@ -3615,13 +3644,35 @@ CHATTER = {
   souvenir: ['Hallå där!' /*[F*]*/], saljare: ['Välkommen i det gröna!' /*[F*]*/],
   carmencita: ['Jag är 28 år, mamma.' /*[F*]*/], hittegods: ['Hammarby…?' /*[F*]*/],
 };
+// The Swedish tourists' barks (charter complaints; no names: strangers and the gate crowd bark too).
 OUCH = ['Jag ska tala med platschefen!' /*[F*]*/, 'Det är sista gången jag åker med SunTrip!' /*[F*]*/,
-        'Och ändå har vi betalat bränsletillägg!' /*[F*]*/, '¡Ay, mi madre!' /*[N]*/, 'Turister!' /*[N]*/, 'Aj!' /*[N]*/];
+        'Och ändå har vi betalat bränsletillägg!' /*[F*]*/, 'Aj!' /*[N]*/];
 GETUP = ['Det måste vara värmen.' /*[F*]*/, 'Det är kombinationen av sol och…' /*[F*]*/,
          'Det är ju fan vad solen tar här nere.' /*[F*]*/];
-CARJACK = ['Det fattades bara det…!' /*[F*]*/, 'Jag har betalat 3 000 för den!' /*[F*]*/, '¡Ladrón!' /*[N]*/];
-NPC_KICKED = ['Aj!' /*[N]*/, 'Hallå!' /*[N]*/, 'Var inte så typiskt svensk.' /*[F*]*/, 'Va fan, Stig-Helmer!' /*[N]*/];
+CARJACK = ['Det fattades bara det…!' /*[F*]*/, 'Jag har betalat 3 000 för den!' /*[F*]*/];
+NPC_KICKED = ['Aj!' /*[N]*/, 'Hallå!' /*[N]*/, 'Var inte så typiskt svensk.' /*[F*]*/, 'Va fan håller du på med?' /*[N]*/];
+// Ole's (bokmål, cheerful and unshakeable; no names: he barks at the gate before they have met).
+OUCH_OLE = ['Au! Hva i all verden…' /*[N]*/, 'Oi! Se deg for, da!' /*[N]*/, 'Det gikk bra, det!' /*[N]*/,
+            'Au, au… Godt jeg tok B-vitaminene mine i dag.' /*[N]*/];
+GETUP_OLE = ['Tenk ikke mer på det.' /*[F*]*/, 'Ingen fare. Jeg har reisesyketabletter.' /*[F*]*/, 'Sånn ja! Helt normalt.' /*[N]*/];
+NPC_KICKED_OLE = ['Au!' /*[N]*/, 'Au! Hva er det med deg?' /*[N]*/, 'Ta det rolig, kompis!' /*[N]*/,
+                  'Oi! Er det sånn man gjør i Sverige?' /*[N]*/];
+// The Spanish cast and the local pedestrians: Spanish exclamations a Swedish player understands (§1.3).
+LOCAL_CAST = ['jose', 'mamma', 'pappa', 'carmencita', 'portier', 'hittegods', 'souvenir', 'stadare', 'grisbonde', 'varden', 'telefonist'];
+OUCH_LOCAL = ['¡Ay, mi madre!' /*[N]*/, '¡Ay, ay, ay!' /*[N]*/, '¡Turistas!' /*[N]*/, '¡Cuidado!' /*[N]*/];
+GETUP_LOCAL = ['¡Madre mía…!' /*[N]*/, 'Suecos…' /*[N]*/, 'Nada, nada.' /*[N]*/];
+CARJACK_LOCAL = ['¡Ladrón!' /*[N]*/, '¡Mi coche!' /*[N]*/, '¡Policía!' /*[N]*/];
+NPC_KICKED_LOCAL = ['¡Ay!' /*[N]*/, '¡Señor, por favor!' /*[N]*/, '¡Loco!' /*[N]*/, '¡Basta!' /*[N]*/];
+BARKS = { ouch: { sv, ole, local }, getUp: { sv, ole, local }, kicked: { sv, ole, local }, carjack: { sv, local } };
 ```
+
+**Barks by speaker** (Phase 3 r2). `Game.bark(ch, kind)` (main.js; kind `ouch` run over or a
+pedestrian kicked, `getUp`, `kicked` a cast NPC kicked, `carjack`) picks `BARKS[kind].ole` for
+Ole, `.local` for `LOCAL_CAST` keys and `randomPed` locals (`def.local`), else `.sv`. One shared
+Swedish table gave Ole "Va fan, Stig-Helmer!" and "Det är sista gången jag åker med SunTrip!"
+(§1.3: Ole never speaks Swedish), and the porter, Josés mamma and the souvenir seller complained
+about SunTrip and the fuel surcharge. José is in `LOCAL_CAST`: Swedish in his scenes, a Spaniard
+(and a mamma's boy) on the pavement. `reboard` gives Ole `S.neverLeaveOle` (§11.5).
 
 ---
 
@@ -4021,7 +4072,7 @@ faar blomma gris`. **Collectible sets**: `prylar fenor`. **Unlocks**: `grisbil s
 **Stage kinds**: `getInCar goto pickup dropoff follow rabbits race destroy grab collect sit interact
 carry mantra timeline scene haggle smash`.
 
-**Anim flags**: `wings cupUp push planeSeat hold flail oath dance laugh slump shoeOff mirror film
+**Anim flags**: `wings cupUp cupHeld push planeSeat hold flail oath dance laugh slump shoeOff mirror film
 giraffe butterKnife carryOver` (+ existing `kick talk wave cheer sprint spin look`).
 
 **Tunes**: `muzak sol skandal vals jul samba`; trad cues `smaGrodorna hejTomtegubbar helanGar`.
@@ -4786,3 +4837,32 @@ the fixer's group.
   closing without a stuck teleport: from behind a building he first walks to a block corner, and
   from inside the market block closed 3 m only after 5.3–6.7 s (it failed ~1 run in 3 at 1.5 s)
   (§16.4).
+- r2 voices-ui-cast: barks by speaker. `Game.bark(ch, kind)` picks Ole's bokmål tables
+  (`OUCH_OLE`, `GETUP_OLE`, `NPC_KICKED_OLE`), the local ones for `LOCAL_CAST` (José, his family,
+  the porter, the lost-property boy, the souvenir seller, the cleaner, the pig farmer, the grisfest
+  host, the telephonist) and local pedestrians (`OUCH_LOCAL`, `GETUP_LOCAL`, `CARJACK_LOCAL`,
+  `NPC_KICKED_LOCAL`: Spanish exclamations), else the Swedish tourists' tables, all new lines
+  `[N]` but two relocated Ole lines `[F*]`. Ole had said "Va fan, Stig-Helmer!" and "Det är sista
+  gången jag åker med SunTrip!", and the porter complained about the fuel surcharge.
+  `¡Ay, mi madre!`, `Turister!` and `¡Ladrón!` moved out of the tourist tables; the tourists'
+  "Va fan, Stig-Helmer!" is now "Va fan håller du på med?" (strangers and the gate crowd do not
+  know his name). `reboard` gives Ole `S.neverLeaveOle` "Ikke kjør fra meg igjen!" (§1.3, §1.4,
+  §6.7, §11.5, §14.3, §14.9, §14.10).
+- r2 voices-ui-cast: the toast column moves under a wide banner while it shows (cls `wide`,
+  `--banner-drop`; §11.4, §11.7): ¡GUARDIA CIVIL! and UPPDRAG KLART! covered the radio toasts'
+  portraits and names by ~3 900 / 4 660 px² at 1280×720; now 0.
+- r2 voices-ui-cast: speech bubbles anchor at the real head top (`root.localToWorld(0, headTop,
+  0)`) with the tail tip 6 px above it (§11.4). The tail tip was 113 px over Stig's head in 14B,
+  134 px over him in a sedan and 39–55 px on foot; now 2–6 px.
+- r2 voices-ui-cast: the objective timer rounds up (`ceil`, red at ≤ 0:10; §11.4): a 6 s stage read
+  0:05 at its start and its last second read 0:00.
+- r2 voices-ui-cast: the grisbil's back two pigs stand across the bed snout to snout, inside the
+  rack (§6.6); facing aft, their heads and snouts stuck ~0.2 m out over the tailgate and into the
+  bed-rider slots.
+- r2 voices-ui-cast: a seated character still taller than the room at fitScale's 0.72 floor sits
+  lower by the rest, so no head passes roofY (§6.6): Stig's cowlick stood 7 cm out of a van's roof
+  and 1 cm out of the Guardia jeep's (and 2 cm under a sedan's roof top).
+- r2 voices-ui-cast: new anim flag `cupHeld`, the `cup` prop in the right hand (raised seated,
+  held out standing): Stig's "Ja." in juice (§8.3 cue, fixture) and the trolley stewardess's
+  serving stops (§5.8). `cupUp` stays the empty-handed arm of the luggage stowers and the juice
+  carry (§14.6, Appendix A; `castsheet` shows `vardinna2 cupHeld`).

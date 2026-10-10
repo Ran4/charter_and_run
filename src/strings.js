@@ -8,6 +8,7 @@ export const S = {
   backInCar: 'Tillbaka in i bilen!',
   goBackFor: 'Åk tillbaka efter {name}!',
   neverLeave: 'Lämna mig aldrig igen!',
+  neverLeaveOle: 'Ikke kjør fra meg igjen!',   // Ole re-boarding (§1.3: bokmål)
   pickUp: 'Hämta {name}',
   slowDown: 'Sakta in så de kan hoppa in!',
   goGoGo: 'Kör, kör, kör!',

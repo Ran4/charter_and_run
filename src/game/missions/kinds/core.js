@@ -89,7 +89,7 @@ function reboard(g, n) {
     g.seat(n, c, -1);
     n.busy = true;
     audio.door();
-    g.say(n, S.neverLeave, 1.6);
+    g.say(n, n.key === 'ole' ? S.neverLeaveOle : S.neverLeave, 1.6);   // Ole speaks Norwegian (§1.3)
   }
 }
 

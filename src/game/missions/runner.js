@@ -160,7 +160,7 @@ export class MissionRunner {
     g.speedCap = null;
     g.holding = false;
     g.mantraMode = false;
-    for (const f of ['carryOver', 'cupUp', 'wings', 'oath', 'dance', 'shoeOff']) g.player.anim[f] = false;
+    for (const f of ['carryOver', 'cupUp', 'cupHeld', 'wings', 'oath', 'dance', 'shoeOff']) g.player.anim[f] = false;
     if (g.playerCar) g.removeRiders?.(g.playerCar);
     for (const k of Object.keys(g.npcs)) {
       const n = g.npcs[k];

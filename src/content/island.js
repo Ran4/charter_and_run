@@ -77,12 +77,40 @@ export const CHATTER = {
   grisbonde: ['Akta grisarna, señor!' /* [N] */],
 };
 
+// Barks by speaker (§14.10; Game.bark picks the table). These four are the Swedish tourists' (charter
+// complaints). Strangers and the gate crowd (before Stig has met anyone) bark too: no names.
 export const OUCH = ['Jag ska tala med platschefen!' /* [F*] */, 'Det är sista gången jag åker med SunTrip!' /* [F*] */,
-  'Och ändå har vi betalat bränsletillägg!' /* [F*] */, '¡Ay, mi madre!' /* [N] */, 'Turister!' /* [N] */, 'Aj!' /* [N] */];
+  'Och ändå har vi betalat bränsletillägg!' /* [F*] */, 'Aj!' /* [N] */];
 export const GETUP = ['Det måste vara värmen.' /* [F*] */, 'Det är kombinationen av sol och…' /* [F*] */,
   'Det är ju fan vad solen tar här nere.' /* [F*] */];
-export const CARJACK = ['Det fattades bara det…!' /* [F*] */, 'Jag har betalat 3 000 för den!' /* [F*] */, '¡Ladrón!' /* [N] */];
-export const NPC_KICKED = ['Aj!' /* [N] */, 'Hallå!' /* [N] */, 'Var inte så typiskt svensk.' /* [F*] */, 'Va fan, Stig-Helmer!' /* [N] */];
+export const CARJACK = ['Det fattades bara det…!' /* [F*] */, 'Jag har betalat 3 000 för den!' /* [F*] */];
+export const NPC_KICKED = ['Aj!' /* [N] */, 'Hallå!' /* [N] */, 'Var inte så typiskt svensk.' /* [F*] */, 'Va fan håller du på med?' /* [N] */];
+
+// Ole's (bokmål, §1.3: Ole never speaks Swedish): cheerful and unshakeable, and no names (he barks
+// at the gate before the two have met).
+export const OUCH_OLE = ['Au! Hva i all verden…' /* [N] */, 'Oi! Se deg for, da!' /* [N] */, 'Det gikk bra, det!' /* [N] */,
+  'Au, au… Godt jeg tok B-vitaminene mine i dag.' /* [N] */];
+export const GETUP_OLE = ['Tenk ikke mer på det.' /* [F*] */, 'Ingen fare. Jeg har reisesyketabletter.' /* [F*] */,
+  'Sånn ja! Helt normalt.' /* [N] */];
+export const NPC_KICKED_OLE = ['Au!' /* [N] */, 'Au! Hva er det med deg?' /* [N] */, 'Ta det rolig, kompis!' /* [N] */,
+  'Oi! Er det sånn man gjør i Sverige?' /* [N] */];
+
+// The Spanish cast and the local pedestrians (randomPed `local`): Spanish exclamations a Swedish
+// player understands (§1.3, like the locals' ¡Cuidado! in §6.7). José is here too: Swedish in his
+// scenes, but a Spaniard (and a mamma's boy) when he lands on the pavement.
+export const LOCAL_CAST = ['jose', 'mamma', 'pappa', 'carmencita', 'portier', 'hittegods', 'souvenir', 'stadare', 'grisbonde', 'varden', 'telefonist'];
+export const OUCH_LOCAL = ['¡Ay, mi madre!' /* [N] */, '¡Ay, ay, ay!' /* [N] */, '¡Turistas!' /* [N] */, '¡Cuidado!' /* [N] */];
+export const GETUP_LOCAL = ['¡Madre mía…!' /* [N] */, 'Suecos…' /* [N] */, 'Nada, nada.' /* [N] */];
+export const CARJACK_LOCAL = ['¡Ladrón!' /* [N] */, '¡Mi coche!' /* [N] */, '¡Policía!' /* [N] */];
+export const NPC_KICKED_LOCAL = ['¡Ay!' /* [N] */, '¡Señor, por favor!' /* [N] */, '¡Loco!' /* [N] */, '¡Basta!' /* [N] */];
+
+// Game.bark(ch, kind): `ole` for Ole, `local` for LOCAL_CAST and local pedestrians, else `sv`.
+export const BARKS = {
+  ouch: { sv: OUCH, ole: OUCH_OLE, local: OUCH_LOCAL },
+  getUp: { sv: GETUP, ole: GETUP_OLE, local: GETUP_LOCAL },
+  kicked: { sv: NPC_KICKED, ole: NPC_KICKED_OLE, local: NPC_KICKED_LOCAL },
+  carjack: { sv: CARJACK, local: CARJACK_LOCAL },   // only pedestrians lose a car
+};
 
 // Collectible sets (DESIGN §10.1). Generic pickup code lives in main.js.
 export const COLLECTIBLES = {

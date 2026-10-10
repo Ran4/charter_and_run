@@ -128,6 +128,11 @@ body.panik #app canvas { filter: saturate(1.5) contrast(1.08); }
 /* Below a shown objective card (with timer, bar and two text lines it reaches about 170 px down),
    which a wide toast column would otherwise overlap (a stage's radio line on the card's edge). */
 #objective.show ~ #toasts { top: 196px; }
+/* Under a wide banner while it shows (hud.showBanner sets .wide and --banner-drop): the banner sits
+   at 32 % (40 % under the objective card) and reached the column's portraits and names. */
+#toasts { transition: top 0.25s; }
+#hud:has(#banner.show.wide) #toasts { top: calc(32% + var(--banner-drop, 80px)); }
+#hud:has(#banner.show.wide):has(#objective.show) #toasts { top: calc(40% + var(--banner-drop, 80px)); }
 .toast { background: var(--cream); border: 3px solid var(--ink); border-radius: 14px; padding: 8px 14px; font: 700 15px/1.3 var(--body); box-shadow: 3px 4px 0 var(--ink); animation: toastIn 0.3s cubic-bezier(.3, 1.6, .5, 1); transition: 0.5s; display: flex; align-items: center; gap: 8px; }
 .toast.out { opacity: 0; transform: translateX(40px); }
 .toast.radio { background: #fff; border-left-width: 8px; border-left-color: var(--sun); }

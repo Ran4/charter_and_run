@@ -130,7 +130,7 @@ export const FULL_MISSIONS = [
       () => interact({ at: 'call14', whileSeated: true, seat: '14B', prompt: '<b>E</b> Tryck där uppe', text: 'Sätt dig på 14B och tryck på knappen ovanför', startCue: { phase: ['cruise', { instant: true }] }, useCue: { sfx: 'pling' }, lines: [
         ['ole', 'Nei…'],                                                              // [F*](t)
         ['stig', 'Där?'],                                                             // [F]
-        ['ole', 'Ja.', { anim: { who: 'stig', flag: 'cupUp', secs: 6 } }],             // [F]
+        ['ole', 'Ja.', { anim: { who: 'stig', flag: 'cupHeld', secs: 6 } }],             // [F]
         ['ole', 'Nei…!', { anim: { who: 'ole', flag: 'laugh', secs: 3 } }],             // [F*](t)
         ['ole', 'Så… så kommer flyvertinnen. Juice, whisky.'],                        // [F*]
         ['stig', 'Hon har visst fullt upp.'],                                         // [N]

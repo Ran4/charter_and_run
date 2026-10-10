@@ -301,7 +301,7 @@ export const FLIGHT_MISSIONS = [
         lines: [
           ['ole', 'Nei…'],                                                              // [F*](t)
           ['stig', 'Där?'],                                                             // [F]
-          ['ole', 'Ja.', { anim: { who: 'stig', flag: 'cupUp', secs: 6 } }],             // [F]
+          ['ole', 'Ja.', { anim: { who: 'stig', flag: 'cupHeld', secs: 6 } }],             // [F]
           ['ole', 'Nei…!', { anim: { who: 'ole', flag: 'laugh', secs: 3 } }],             // [F*](t)
           ['ole', 'Så… så kommer flyvertinnen. Juice, whisky.'],                        // [F*]
           ['stig', 'Hon har visst fullt upp.'],                                         // [N]

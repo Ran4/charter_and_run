@@ -137,7 +137,7 @@ async function portraits(T) {
   await T.ev(() => document.getElementById('portraitSheet')?.remove());
 }
 
-const FLAGS = ['wings', 'cupUp', 'push', 'hold', 'flail', 'oath', 'dance', 'laugh', 'slump', 'shoeOff', 'mirror', 'film', 'giraffe', 'butterKnife', 'carryOver'];
+const FLAGS = ['wings', 'cupUp', 'cupHeld', 'push', 'hold', 'flail', 'oath', 'dance', 'laugh', 'slump', 'shoeOff', 'mirror', 'film', 'giraffe', 'butterKnife', 'carryOver'];
 
 export const SCENARIOS = {
   async castsheet(T) {
@@ -198,6 +198,7 @@ export const SCENARIOS = {
       { key: 'berra', outfit: 'sol', flags: { slump: true }, label: 'berra slump' },
       { key: 'majsan', outfit: 'sol', flags: { dance: true }, label: 'majsan dance' },
       { key: 'vardinna2', flags: { push: true }, label: 'vardinna2 push' },
+      { key: 'vardinna2', flags: { cupHeld: true }, label: 'vardinna2 cupHeld' },
     ], { gap: 1.9 });
     await row(T, 'cast_held', [
       { key: 'ole', outfit: 'arlanda', flags: { speed: 2.5 }, label: 'boombox (walking)' },

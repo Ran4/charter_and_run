@@ -323,10 +323,12 @@ function pigsIn(ctx) {
     g.box(wood, 0, top + y, bz0, W - 0.08, 0.07, 0.05);
   }
   // Pigs at the front and the back of the bed, leaving the middle (z = -0.3 L, the 'bed' rider
-  // slots of main.addRider) free for hitch-hikers.
+  // slots of main.addRider) free for hitch-hikers. The back two stand across the bed, snout to snout
+  // and a little apart, wholly inside the rack (facing aft at -0.42 L their heads and snouts stuck
+  // ~0.2 m out over the tailgate).
   pigBody(g, 0.05, top, -L * 0.15, Math.PI / 2 + 0.15, 0.85);
-  pigBody(g, -0.42, top, -L * 0.42, Math.PI - 0.25, 0.8);
-  pigBody(g, 0.42, top, -L * 0.43, Math.PI + 0.35, 0.78);
+  pigBody(g, -0.47, top, -L * 0.41, Math.PI / 2 - 0.12, 0.72);
+  pigBody(g, 0.47, top, -L * 0.425, -Math.PI / 2 - 0.12, 0.72);
 }
 
 function taxiSign(ctx) {

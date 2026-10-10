@@ -25,6 +25,8 @@ const _bubbleV = new THREE.Vector3();
 const MAP_SCALE = 1.6; // px per metre on the town base map
 const MAP_EXT = BOUND + 20;
 const BUBBLE_TOP = 96;   // px: speech bubbles stay under the coins / meter row
+const BUBBLE_TAIL = 11;  // px: the tail below a bubble (style.css .bubble::after)
+const BUBBLE_GAP = 6;    // px: between the tail tip and the speaker's head top
 
 export const hud = {
   portraits: {},
@@ -203,10 +205,12 @@ export const hud = {
     this.objTitle.textContent = upper(o.title || '');
     this.objText.textContent = o.text || '';
     if (o.timer != null) {
-      const t = Math.max(0, o.timer);
-      const m = Math.floor(t / 60), s = Math.floor(t % 60);
+      // Whole seconds left, rounded up: a 6 s stage starts at 0:06 and the last second reads 0:01
+      // (flooring showed 0:05 and a whole second of 0:00 with the stage still running).
+      const c = Math.max(0, Math.ceil(o.timer - 1e-6));
+      const m = Math.floor(c / 60), s = c % 60;
       this.objTimer.textContent = `${m}:${String(s).padStart(2, '0')}`;
-      this.objTimer.classList.toggle('urgent', t < 10);
+      this.objTimer.classList.toggle('urgent', c <= 10);
       this.objTimer.style.display = '';
     } else this.objTimer.style.display = 'none';
     if (o.bar != null || o.zone || o.marker != null) {
@@ -261,6 +265,14 @@ export const hud = {
     this.banner.className = 'show ' + cls;
     this.banner.querySelector('.banner-main').textContent = upper(main);
     this.banner.querySelector('.banner-sub').textContent = sub;
+    // A banner wide enough to reach the toast column (right 24 px, up to 430 px / 40 vw) moves the
+    // column under it while it shows (style.css `#banner.wide`, §11.4): ¡GUARDIA CIVIL!, UPPDRAG
+    // KLART!, KVADDAD!… covered the radio toasts' portraits and names. The layout box ignores the
+    // pop-in transform; --banner-drop is half its height plus the tilt's reach and a margin.
+    const b = this.banner, W = window.innerWidth;
+    const wide = !cls.includes('intro') && W / 2 + b.offsetWidth / 2 + 12 > W - 24 - Math.min(430, W * 0.4);
+    b.classList.toggle('wide', wide);
+    if (wide) root.style.setProperty('--banner-drop', `${Math.round(b.offsetHeight / 2 + b.offsetWidth / 2 * (cls.includes('multa') ? 0.13 : 0.04) + 12)}px`);
     if (ms) this._bannerT = setTimeout(() => this.hideBanner(), ms);
   },
   // Keeps the cls while it fades, so it fades where it stood (an intro title card in the top bar
@@ -367,16 +379,25 @@ export const hud = {
       if (now > it.until) { it.b.remove(); list.splice(k--, 1); continue; }
       const t = it.target;
       if (t.state === 'hidden') { it.b.style.display = 'none'; continue; }
-      v.set(t.x, t.y + (t.height || 2) + 0.6, t.z);
+      // Anchored at the real head top: the model's headTop in the root's frame, so a plane seat, a
+      // car seat (scaled about the hips) and a lean all count. The standing height + 0.6 m left a
+      // seated passenger's bubble ~1.5 m up over the bins. A flung or fallen body keeps the steady
+      // standing anchor (a spinning head would drag the bubble round, and an "Aj!" said in the air
+      // must not drop to the pavement on landing); plain anchors ({ x, y, z, height }) give theirs.
+      if (t.root && t.model?.headTop && t.state !== 'flung' && t.state !== 'down') {
+        t.root.updateWorldMatrix(true, false);
+        t.root.localToWorld(v.set(0, t.model.headTop, 0));
+      } else v.set(t.x, t.y + (t.height || 2), t.z);
       v.project(camera);
       if (v.z > 1 || Math.abs(v.x) > 1.1 || Math.abs(v.y) > 1.1) { it.b.style.display = 'none'; continue; }
       it.b.style.display = '';
       const w = it.b.offsetWidth, h = it.b.offsetHeight;
-      // The bubble's anchor is its bottom centre (translate(-50%, -100%)).
+      // The bubble's anchor is its bottom centre (translate(-50%, -100%)); its tail tip hangs
+      // BUBBLE_TAIL below that and stops BUBBLE_GAP above the head.
       const x = Math.min(W - w / 2 - 8, Math.max(w / 2 + 8, (v.x * 0.5 + 0.5) * W));
       if (ob === undefined) ob = this.obj.classList.contains('show') ? this.obj.getBoundingClientRect() : null;
       const top = ob && x + w / 2 > ob.left && x - w / 2 < ob.right ? Math.max(BUBBLE_TOP, ob.bottom + 8) : BUBBLE_TOP;
-      let y = Math.max((-v.y * 0.5 + 0.5) * H, top + h);
+      let y = Math.max((-v.y * 0.5 + 0.5) * H - BUBBLE_TAIL - BUBBLE_GAP, top + h);
       for (let moved = true, n = 0; moved && n < 8; n++) {
         moved = false;
         for (const p of placed) {

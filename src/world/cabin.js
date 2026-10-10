@@ -1202,7 +1202,7 @@ export function buildCabin(scene, game) {
       const yaw = serving ? T.serveYaw : Math.PI;
       pusher.standAt(trolley.x, trolley.z + 0.9, yaw);
       pusher.anim.push = !serving;
-      pusher.anim.cupUp = serving;
+      pusher.anim.cupHeld = serving;   // a cup held out to the row (§14.6)
       pusher.sync(dt);
       // "Ra-tara-tara…" [F]: Berra and Robban, at the stewardess, as she passes rows 21-23.
       this._ratataCd -= dt;

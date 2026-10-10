@@ -27,7 +27,7 @@ import { Bang, Beacon, GuideArrow } from './game/markers.js';
 import { LEVELS, ISLAND_PALETTES } from './level.js';
 import { METERS } from './meters.js';
 import { S, fmt, pta } from './strings.js';
-import { CHATTER, CHATTER_FLIGHT, OUCH, GETUP, CARJACK, NPC_KICKED, COLLECTIBLES, UNLOCKS } from './content/index.js';
+import { CHATTER, CHATTER_FLIGHT, BARKS, LOCAL_CAST, COLLECTIBLES, UNLOCKS } from './content/index.js';
 import { clamp, dist, yawTo, pick, mulberry32, lerp } from './util.js';
 
 const STEP = 1 / 60;
@@ -469,9 +469,13 @@ class Game {
     ch.car = car;
     ch.vx = ch.vz = ch.vy = 0;
     car.tilt.add(ch.root);
-    // Hips 0.12 above the seat; shrunk (about the hips) only as far as the roof needs.
-    const hips = car.seatY() + 0.12, m = ch.model;
-    const k = car.fitScale(m.headTop - m.legLen, hips);
+    // Hips 0.12 above the seat; shrunk (about the hips) only as far as the roof needs. Who is still
+    // taller than the room at fitScale's 0.72 floor sits lower by the rest (Stig: his cowlick stood
+    // 7 cm out of a van's roof, 1 cm out of the Guardia jeep's), so no head passes roofY.
+    const m = ch.model, h = m.headTop - m.legLen;
+    let hips = car.seatY() + 0.12;
+    const k = car.fitScale(h, hips);
+    hips -= Math.max(0, h * k - (car.roofY() - hips));
     const z = s.tall ? s.len / 2 - 1.6 : -0.05;
     ch.root.scale.setScalar(k);
     ch.root.position.set(side * s.wid * 0.22, hips - m.legLen * k, z + 0.12);
@@ -596,7 +600,7 @@ class Game {
         ped.char.teleport(e.x, e.z);
         ped.char.state = 'normal';
         ped.char.fling(Math.cos(car.yaw) * 4, 4, -Math.sin(car.yaw) * 4);
-        this.say(ped.char, pick(CARJACK), 2);
+        this.say(ped.char, this.bark(ped.char, 'carjack'), 2);
       }
       this.shame.add(8);
     }
@@ -922,10 +926,16 @@ class Game {
     audio.thud();
     if (ch === this.player) { hud.flashColor('rgba(255,80,60,0.35)'); return; }
     if (byPlayer) this.shame.add(ch.key ? 14 : 18);
-    if (Math.random() < 0.8) this.say(ch, pick(OUCH), 1.6);
+    if (Math.random() < 0.8) this.say(ch, this.bark(ch, 'ouch'), 1.6);
   }
   onGetUp(ch) {
-    if (ch !== this.player && Math.random() < 0.35 && dist(ch.x, ch.z, this.player.x, this.player.z) < 30) this.say(ch, pick(GETUP), 1.8);
+    if (ch !== this.player && Math.random() < 0.35 && dist(ch.x, ch.z, this.player.x, this.player.z) < 30) this.say(ch, this.bark(ch, 'getUp'), 1.8);
+  }
+  // A bark from the speaker's own table (§14.10): Ole's Norwegian one, the local one for the Spanish
+  // cast and the local pedestrians, else the Swedish tourists'. kind: ouch | getUp | kicked | carjack.
+  bark(ch, kind) {
+    const t = BARKS[kind];
+    return pick((ch.key === 'ole' && t.ole) || ((ch.def?.local || LOCAL_CAST.includes(ch.key)) && t.local) || t.sv);
   }
   onBodyBounce(ch) { if (dist(ch.x, ch.z, this.focus().x, this.focus().z) < 40) audio.thud(); }
   onBounce(ch) { if (ch === this.player) audio.boing(); }
@@ -1535,12 +1545,12 @@ class Game {
       c.fling(dx * 7 + (c.x - x) * 2, 5, dz * 7 + (c.z - z) * 2);
       this.shame.add(9);
       audio.ouch();
-      this.say(c, pick(OUCH), 1.5);
+      this.say(c, this.bark(c, 'ouch'), 1.5);
     }
     for (const k in this.npcs) {
       const n = this.npcs[k];
       if (n.state !== 'normal' || dist(n.x, n.z, x, z) > r + 0.6) continue;
-      this.say(n, pick(NPC_KICKED), 1.4);
+      this.say(n, this.bark(n, 'kicked'), 1.4);
     }
     for (const [setName, list] of Object.entries(this.collectibles)) {
       if (COLLECTIBLES[setName].pickup !== 'squash') continue;
