@@ -1428,13 +1428,13 @@ class Game {
     if (input.pressed('interact')) this.interact();
   }
 
-  // R: flight -> the level's reset spot (by where the player is); island -> the nearest road.
-  // R: back to the road (island) or the level's reset spot (flight, §3). False when R does nothing.
+  // R: back to the road (island) or the level's reset spot (flight, §3). False when R does nothing
+  // (the terminal on a timed stage, when every spot is nearer its target than he is: a toast says so).
   resetPlayer() {
     const def = this.levelDef;
     if (def.resetSpot) {
       const spot = def.resetSpot(this);
-      if (!spot) return false;
+      if (!spot) { hud.toast(S.resetNone); return false; }
       const s = typeof spot === 'string' ? this.approachSpot(spot) : spot;
       if (this.playerCar) this.exitCar(true);
       this.player.state = 'normal';

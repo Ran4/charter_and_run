@@ -427,7 +427,11 @@ export class Shame {
 
   update(dt) {
     const g = this.game, c = this.cfg;
-    this.sinceOffense += dt;
+    // FLYGRÄDSLA's idle decay (and its delay) pause in a scene, a dialogue, cinematic or cut (§5.9):
+    // it ran while a line waited for E, so a player who read Ole's statistics started the gate dash
+    // at 57 (25 at a slow pace), not ≈ 70.
+    const held = c.mode === 'panic' && this.inScene;
+    if (!held) this.sinceOffense += dt;
     this.caughtT = Math.max(0, this.caughtT - dt);
     this.witnessT -= dt;
     this.hideoutT -= dt;
@@ -449,7 +453,7 @@ export class Shame {
         if (this.panicT <= 0) this.endPanic();
       } else {
         if (this.deferred && !this.inScene) { if (this.v >= 95) this.panic(); else this.deferred = false; }
-        if (this.sinceOffense > (c.idleDelay ?? 4)) this.v = Math.max(0, this.v - (c.decayIdle ?? 2) * dt);
+        if (!held && this.sinceOffense > (c.idleDelay ?? 4)) this.v = Math.max(0, this.v - (c.decayIdle ?? 2) * dt);
       }
       hud.setMeter(this.v, this.v >= (c.hot ?? 70), false);
       hud.setFear(this.v / 100);

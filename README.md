@@ -49,7 +49,7 @@ Samma tangenter i båda nivåerna; nivån bestämmer vad de gör.
 | B | | titta bakåt | |
 | M / Tab | stor karta | stor karta | plan över gaten/kabinen |
 | N | ljud av | ljud av | ljud av |
-| R | fast? tillbaka till vägen | fast? tillbaka till vägen | tillbaka ut i gången på samma rad (i terminalen: loungen) |
+| R | fast? tillbaka till vägen | fast? tillbaka till vägen | tillbaka ut i gången på samma rad (i terminalen: loungen, men under rusningen till toaletten aldrig närmare den) |
 | Esc / P | paus | paus | paus |
 
 Sitter Stig-Helmer ner i planet rör han sig inte; E reser honom upp (eller trycker på knappen

@@ -2,7 +2,7 @@
 // level with game.setLevel(name) (every row of the §4.3 table). Frozen after Phase 0.
 
 import { CAM_CABIN, FLIGHT_PALETTES, CABIN_X } from './world/cabin.js';
-import { BOUND, lm } from './world/layout.js';
+import { BOUND } from './world/layout.js';
 import { dist } from './util.js';
 import { HOMES, MAP_LABELS, LEVEL_OUTFITS } from './content/index.js';
 import { METERS } from './meters.js';                 // §5.9, §7.1 (meters.js: Phase 0, then WP-H)
@@ -51,14 +51,19 @@ export const LEVELS = {
     spawn: (g, i) => (i === 0 ? 'gateStart' : i === 1 ? 'cabinDoor' : 'cabinRow14'),
     // R (§3), keyed on where the player is (cabin.inCabin = the interior rect only). In the cabin:
     // back into the aisle at the same row, never along it (R to row 14 sat him in 14B for free in
-    // ombord's and landning's seat dashes). In the terminal: the lounge, unless that is nearer the
-    // running stage's target than he is (the toilet dash; the queue) — then null, R does nothing.
-    // A guide waypoint's own `goal` counts, not the waypoint (the dash's corridor guide).
+    // ombord's and landning's seat dashes). In the terminal: the lounge; on a timed stage (the
+    // toilet dash) the lounge or else Ole's spot (the PANIK home, behind the dash start), whichever
+    // is not nearer the stage's target than he is, else null: R does nothing (main.js says so). A
+    // guide waypoint's own `goal` counts, not the waypoint (the dash's corridor guide). Phase 3 r3:
+    // R did nothing whenever the lounge was nearer the target, on the untimed stages too (the
+    // queue, boarding), where it is the only way out of a wedge (no jump in the flight level).
     resetSpot: (g) => {
       const p = g.player;
       if (g.cabin.inCabin(p.x, p.z)) return aisleSpot(g);
-      const w = g.missions.target(), t = w?.goal || w, l = lm('gateLounge');
-      return t && dist(l.x, l.z, t.x, t.z) < dist(p.x, p.z, t.x, t.z) ? null : 'gateLounge';
+      const w = g.missions.target(), t = w?.goal || w;
+      if (!t || g.missions.stage?.o?.timer == null) return 'gateLounge';
+      const d = dist(p.x, p.z, t.x, t.z);
+      return ['gateLounge', 'gateOle'].map((n) => g.approachSpot(n)).find((s) => dist(s.x, s.z, t.x, t.z) >= d) || null;
     },
     panicHome: (g) => (g.cabin.inCabin(g.player.x, g.player.z) ? { seat: '14B' } : { lm: 'gateOle' }),
     routeAim: false,                // markers/guide arrow aim straight at the target (§5.2)

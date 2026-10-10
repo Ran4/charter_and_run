@@ -86,7 +86,7 @@ const LANDMARKS = {
   queueCam: [36.1, 1.2, 0], statsCam: [24.0, 6.8, 0],
   gateOle: [23.0, 11.8, Math.PI], gateLounge: [22.0, 16.0, 0], gateDesk: [18.0, 20.5, -Math.PI / 2],
   herrtoaGang: [27.9, 12.2, 0], herrtoaDoor: [29.0, 25.2, Math.PI / 2], herrtoa: [33.5, 26.0, Math.PI / 2], damtoaDoor: [28.8, 18.4, Math.PI / 2],
-  bridge: [8.0, 14.7, -Math.PI / 2], bridgeCam: [3.7, 14.7, Math.PI / 2],
+  bridge: [8.0, 14.7, -Math.PI / 2], bridgeCam: [3.7, 14.7, Math.PI / 2], bridgeMouth: [15.5, 14.7, -Math.PI / 2],
   cabinDoor: [0.8, 14.7, Math.PI], galleyFront: [-0.2, 13.0, Math.PI], cockpitDoor: [0, 16.6, Math.PI],
   doorCam: [-1.2, 14.2, Math.PI / 2], galleyCam: [0, 8.6, 0],
   cabinRow1: [0, 12.6, Math.PI], cabinRow6: [0, 6.3, 0], cabinRow10: [0, 1.5, 0], cabinRow14: [0.25, -2.1, Math.PI / 2], cabinRow16: [-0.25, -4.5, -Math.PI / 2],

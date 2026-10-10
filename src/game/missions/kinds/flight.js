@@ -194,10 +194,13 @@ export const sit = (o) => common(o, {
 // interact: at (landmark, {x, z, y?} or (g) => {x, z}) · radius = 1.4 · prompt · whileSeated =
 // false · seat? (only from this seat) · enabled?(g) · lines? · use?: async (g, m) · useCue?
 // Registers one interactable at init (removed in cleanup); a function `at` is re-read every frame.
-// On use: useCue, then use(), then the lines; the stage is done when they have finished.
+// On use: useCue, then use(), then the lines; the stage is done when they have finished. `seat`
+// is also the stage's seat (as timeline's), so "E Sätt dig" offers it first (cabin.bestSeat;
+// juice's 14B gag offered 14C from the aisle).
 
 export const interact = (o) => common(o, {
   text: o.text,
+  seat: o.seat,
   init(g, m) {
     this.g = g;
     this.used = false;
@@ -337,10 +340,12 @@ export const carry = (o) => common(o, {
 // pose) · waitPhase? (also wait for cabin.phase) · fillCue? (applied when the bar fills; its
 // `phase` only if cabin.phase is still the phase the stage started in)
 // The bar fills only while J is held (g.mantraOn, after the wind-up) in place. Sets
-// g.mantraMode = true (island J = mantra) for the stage.
+// g.mantraMode = true (island J = mantra) for the stage. `seated` is the stage's seat (as
+// timeline's `seat`): "E Sätt dig" offers it first.
 
 export const mantra = (o) => common(o, {
   text: o.text,
+  seat: o.seated,
   init(g) {
     this.t = 0;
     this.secs = o.secs;

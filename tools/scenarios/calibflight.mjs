@@ -3,8 +3,10 @@
 //   PORT=… OUT=… node tools/shot.mjs calibflight                 (every case)
 //   FLIGHT=gate/sprint,ombord/careless node tools/shot.mjs calibflight   (a subset)
 //   SPRIT_RUNS=n (bottle sweeps, default 5; the stage is random: DESIGN's timer pools 30+ runs),
-//   DEBUG_SPRIT=1 (the sweep traced twice a second into the run's log line)
-// The game runs at timeScale 1 (&ts=1) with dialogue at the real reading speed (55 chars/s). A
+//   DEBUG_SPRIT=1 (the sweep traced twice a second into the run's log line),
+//   DIALOG_CPS=n (dialogue typing speed, default 55 chars/s; 20 is a player who reads every line:
+//   FLYGRÄDSLA must not depend on it, §5.9)
+// The game runs at timeScale 1 (&ts=1) with dialogue at the real typing speed (55 chars/s). A
 // page-side autopilot walks the player through the real collision geometry (waypoints; the camera
 // yaw points W at the next one, optional Shift), presses the stage's interactions, holds Space in
 // turbulence and J when the meter is hot, as a careful player would. A careless player never holds
@@ -22,10 +24,10 @@ export const timerFor = (tRef, k = 1.25) => Math.ceil(tRef * k);
 
 // ---- page-side autopilot -------------------------------------------------------------------
 async function install(T) {
-  await T.ev(async () => {
+  await T.ev(async (cps) => {
     const { input } = await import('/src/input.js');
     const g = __game;
-    g.dialogSpeed = 55;
+    g.dialogSpeed = cps;
     const ap = window.__fap = { pts: [], i: 0, sprint: false, holdSpace: false, mantraAt: 999, mantraTo: 0, mantraOn: false, mantraForce: false, autoSpace: false, t: 0, maxV: 0, panics: 0, log: [], go: false, r: 0.35, wait: null };
     const orig = { moveY: input.moveY.bind(input), moveX: input.moveX.bind(input), down: input.down.bind(input) };
     input.moveY = () => (ap.go ? 1 : orig.moveY());
@@ -61,7 +63,7 @@ async function install(T) {
       g.cam.manualT = 1;
       ap.go = true;
     });
-  });
+  }, +(process.env.DIALOG_CPS || 55));
 }
 async function path(T, pts, { sprint = false, r = 0.35 } = {}) {
   await T.ev((pts, sprint, r) => { const ap = window.__fap; ap.pts = pts; ap.i = 0; ap.sprint = sprint; ap.r = r; ap.arrivedT = null; ap.go = true; }, pts, sprint, r);
@@ -294,7 +296,7 @@ export const SCENARIOS = {
     if (res.ombordCareful) {
       const o = res.ombordCareful;
       // Targets: the three stowers (E each) and the seat.
-      row(T, 'ombord[0]', 'cabinDoor -> 14B past three stowers (E each), sprint', o.seat, 4, `walk ${res.ombordWalk?.seat?.toFixed(1) ?? '-'} s`);
+      row(T, 'ombord[0]', 'the intro\'s spot at the front door (1.6, 13.55) -> 14B past three stowers (E each), sprint', o.seat, 4, `walk ${res.ombordWalk?.seat?.toFixed(1) ?? '-'} s`);
       check(o.panics === 0 && o.state !== 'failed', 'ombord: the careful player never panics');
     }
     if (res.ombordWalk) check(res.ombordWalk.panics === 0 && res.ombordWalk.state !== 'failed', 'ombord: the careful walker never panics');

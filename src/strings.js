@@ -37,6 +37,7 @@ export const S = {
   wrecked: 'KVADDAD!',
   reset: 'Tillbaka på vägen!',
   resetFlight: 'Tillbaka i gången!',
+  resetNone: 'Inte härifrån!',
   carBusy: 'Den är upptagen!',
   noCars: 'Det finns inga bilar i ett flygplan.',
   spaceFirst: 'Space: håll i dig (vid turbulens)',

@@ -10,7 +10,7 @@
 
 import { MISSIONS } from './index.js';
 import { retryCar } from './kinds/core.js';
-import { lm } from '../../world/layout.js';
+import { lm, routeAim } from '../../world/layout.js';
 import { audio } from '../../audio.js';
 import { hud } from '../hud.js';
 import { S, fmt, pta } from '../../strings.js';
@@ -298,6 +298,7 @@ export class MissionRunner {
     if (g.player.seatId) g.standPlayer();
     g.player.state = 'normal';
     g.player.teleport(spot.x, spot.z, spot.yaw);
+    g.cam.yaw = spot.yaw;
     g.cam.snapNext = true;
     // A toast, not a banner: the stage clock runs from here, and a mid-screen banner hid Stig and
     // the aisle for 2 of ombord's 7 s (the objective card names the mission anyway).
@@ -307,6 +308,16 @@ export class MissionRunner {
     // checkpoint stage's init, which may read g.playerCar (destroy.playerDamageScale). It becomes
     // `lastCar`, so a second failure on foot (grisfest's plates again) finds the car parked for him.
     this.startMission(this.cpI, cp.retryCar ? (m) => { this.lastCar = retryCar(g, m, cp.retryCar, prev); } : null);
+    // On foot he and the camera face the retried stage's guide (the arrow's aim, along the road
+    // route on the island); a stage without a target (a scene) keeps the spot's yaw. Phase 3 r3: the
+    // camera kept the yaw it had when the stage failed, and the spots face their landmark, not the
+    // way to go: ombord's seat dash looked at the cockpit door, sprit's sweep at the rear galley,
+    // landning's 14B dash at row 16's seats and the Tonga walk away from the car.
+    const p = g.player, t = this.state === 'running' && !g.playerCar && p.state === 'normal' ? this.target() : null;
+    if (t) {
+      const a = g.levelDef.routeAim ? routeAim(p.x, p.z, t.x, t.z) : t;
+      if (dist(a.x, a.z, p.x, p.z) > 0.3) p.yaw = g.cam.yaw = yawTo(a.x - p.x, a.z - p.z);
+    }
   }
 
   abort() {

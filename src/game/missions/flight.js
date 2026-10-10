@@ -7,14 +7,16 @@
 // the real collision geometry): T_ref = the clean autopilot time on the sensible route (sprinting
 // where sprint fear is small next to the stage's own) + 0.5 s per target (reaction and aim), the
 // 75th percentile for the random bottle sweep; timer = ceil(1.25 × T_ref). Gate dash 3.6 s -> 6,
-// seat 3.1 s from the door past three stowers -> 7, bottles p75 7.6 s of 36 sweeps through the
-// 3-6 s turbulence + 2.5 -> 13 (Phase 3 r2), round-up 7.6 s -> 12, back to 14B from the far end
-// 3.2 s -> 5.
+// seat 3.1 s from the intro's spot at the door past three stowers -> 7, bottles p75 7.60 s of 56
+// sweeps through the 3-6 s turbulence + 2.5 -> 13 (Phase 3 r2; the pool `sweeper-r2fm/b69c64e`
+// in notes/calibration-samples.md, `node tools/pool.mjs`), round-up 7.6 s -> 12, back to 14B from
+// the far end 3.2 s -> 5.
 //
 // FLYGRÄDSLA balance (§5.9; binding: a careful player never panics, a careless one does in
 // missions 1, 2 and 5), measured by `calibflight` (careful vs careless autopilots):
-//   gate     the toilet dash starts at ~69 (the statistics); fearRate 5 (Phase 1: 3), so a sprint
-//            (3.6 s) arrives at ~94 and a walk (5.0 s) at ~98, while a dawdler panics at ~5.5 s,
+//   gate     the toilet dash starts at ~70 (the statistics; at any reading pace since Phase 3 r3,
+//            when the idle decay stopped running in scenes); fearRate 5 (Phase 1: 3), so a sprint
+//            (3.6 s) arrives at ~96 and a walk (5.1 s) at ~99.4, while a dawdler panics at ~5.2 s,
 //            just inside the 6 s timer.
 //   ombord   DUNS fear 20 (§8.2: 15) and "Annars…?!" 8 (5): a never-J player panics in the takeoff
 //            even after a perfect seat run (measured: PANIK at t 21.5); holding J at 70 peaks ~75.
@@ -26,6 +28,7 @@
 
 import { goto, scene, interact, mantra, sit, timeline, carry, collect } from './kinds/index.js';
 import { rowZ } from '../../world/cabin.js';
+import { segmentBlocked } from '../../world/collision.js';
 import { dist } from '../../util.js';
 
 const PI = Math.PI;
@@ -36,25 +39,30 @@ const ROW22 = { at: 'row22Cam', dist: 0, height: 3.6 };
 
 // Guide decorator: the stage's target (the beacon and the guide arrow, which the flight level aims
 // straight, `routeAim: false`) leads through the landmarks `names` in turn, then to the stage's own
-// target. A waypoint is passed once the player is within `pass` m of it or nearer the next point
-// than it is. The gate dash's straight line from gateOle to the men's room crossed the middle bench
-// row and ran into the toilet block's west wall, pinning an arrow-follower on the door jamb; ombord's
-// from the door to 14B ran down the A/B seats and stuck on row 1. Only the guide changes: the stage
-// still completes at its own target, which a waypoint carries as `goal` (R in the terminal is judged
-// against it, level.js `resetSpot`). In the 0.9 m cabin aisle `pass` is small: passed 1.5 m short,
-// the arrow cut the corner into row 1's C seat.
+// target. It aims at the furthest point of that chain the player is on his way to: one he is nearer
+// than the point before it is (or within `pass` m of that point), with a clear line to it (seat
+// backs, benches and walls block it). The gate dash's straight line from gateOle to the men's room
+// crossed the middle bench row and ran into the toilet block's west wall, pinning an arrow-follower
+// on the door jamb; ombord's from the door to 14B ran down the A/B seats and stuck on row 1. Only the
+// guide changes: the stage still completes at its own target, which a waypoint carries as `goal` (R
+// in the terminal is judged against it, level.js `resetSpot`). In the 0.9 m cabin aisle `pass` is
+// small: passed 1.5 m short, the arrow cut the corner into row 1's C seat. Phase 3 r3: re-derived
+// every frame (a stored index only stepped forward, so after a PANIK sent Stig back to Ole mid-dash
+// the arrow aimed at the men's door through the benches), and the clear line keeps a door from being
+// skipped from a room's far corner (the queue's arrow aimed through the men's room wall).
 function via(st, names, pass = 1.5) {
   const target = st.target;
   st.target = function (g) {
     const p = g.player, own = target.call(this, g);
     const pts = names.map((n) => g.lmOffset(n));
-    this.viaI ??= 0;
-    while (this.viaI < pts.length) {
-      const w = pts[this.viaI], n = pts[this.viaI + 1] || own;
-      if (dist(p.x, p.z, w.x, w.z) < pass || (n && dist(p.x, p.z, n.x, n.z) < dist(w.x, w.z, n.x, n.z))) this.viaI++;
-      else break;
+    if (own) pts.push(own);
+    let k = pts.length - 1;
+    for (; k > 0; k--) {
+      const a = pts[k - 1], b = pts[k];
+      const on = dist(p.x, p.z, a.x, a.z) < pass || dist(p.x, p.z, b.x, b.z) < dist(a.x, a.z, b.x, b.z);
+      if (on && segmentBlocked(p.x, p.z, b.x, b.z, p.y + 0.5, 'prop', 0.1) < 0) break;
     }
-    return this.viaI < pts.length ? { x: pts[this.viaI].x, z: pts[this.viaI].z, r: 1.0, goal: own } : own;
+    return own && k === pts.length - 1 ? own : { x: pts[k].x, z: pts[k].z, r: 1.0, goal: own };
   };
   return st;
 }
@@ -177,8 +185,11 @@ export const FLIGHT_MISSIONS = [
           ['berra', 'Nej, vem fan gör det?'],                                                 // [F]
         ],
       }),
-      // [6] the queue to gate 8: the Stork PA, and the sisters overheard through the ladies' door
-      () => goto({
+      // [6] the queue to gate 8: the Stork PA, and the sisters overheard through the ladies' door.
+      // The guide leads out of the men's door and down the corridor past the ladies' door (straight
+      // at the lounge it aimed through the men's room wall, and from the door across the back bench
+      // row).
+      () => via(goto({
         to: 'gateLounge', radius: 4, text: 'Ställ dig i kön till gate 8',                                           // [N]
         radio: [['pa', 'Herr Stork ombedes kontakta informationen i avgångshallen.', { gap: 1, pa: true }]],          // [F]
         overhear: [{ at: 'damtoaDoor', r: 8, lines: [
@@ -188,7 +199,7 @@ export const FLIGHT_MISSIONS = [
           ['majsan', '…och prit!'],                                                         // [F](t)
         ] }],
         awaitOverhear: true,
-      }),
+      }), ['herrtoaDoor', 'damtoaDoor']),
       // [7] the Stork joke and the bodega tip (a mandatory beat: it sets up missions 9 and 13)
       () => scene({
         frame: ['berra', 'sulan'],
@@ -207,8 +218,9 @@ export const FLIGHT_MISSIONS = [
           ['robban', 'Glöm aldrig det, du.'],                                                            // [F]
         ],
       }),
-      // [8] boarding
-      () => goto({ to: 'cabinDoor', radius: 2.0, text: 'Gå ombord – gate 8' }),   // [N]
+      // [8] boarding. The guide leads to the jet bridge's mouth first (straight at the plane's door
+      // it aimed into the window wall north of the opening).
+      () => via(goto({ to: 'cabinDoor', radius: 2.0, text: 'Gå ombord – gate 8' }), ['bridgeMouth']),   // [N]
     ],
     // He hands his coat in on the jet bridge, where the sisters catch up with him: Stig and Majsan
     // face each other across the 2 m tube, Siv between them further up it, all turned a little to an
@@ -404,11 +416,13 @@ export const FLIGHT_MISSIONS = [
         startCue: { phase: ['cruise', { instant: true }], trolley: false, seatbelt: true },
       }),
       // [1] back to the seat before the approach. Checkpoint: a panicked approach is retried from
-      // here (row 16), not from the round-up.
-      () => sit({
+      // here (row 16), not from the round-up. The guide follows the measured route, up or down the
+      // aisle to row 14, then the seat (straight at 14B an arrow-follower wedged on row 11's or row
+      // 16's seats, 6 of 6 from the three round-up ends).
+      () => via(sit({
         checkpoint: true, seat: '14B', timer: 5, text: 'Skylten lyser! Tillbaka till 14B', failText: 'Alla måste sitta vid landningen.',   // [N] · [N]
         startCue: { seatbelt: true },   // already lit by the intro; re-lit on a retry
-      }),
+      }), ['cabinRow14'], 0.5),
       // [2] the approach: the bar fills only while J is held; the phase holds until it is full,
       // then the landing runs (touchdown, reverse thrust) and the stage ends on 'landed'. PANIK fails.
       () => mantra({
