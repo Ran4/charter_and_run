@@ -44,6 +44,9 @@ export const ISLAND_LANDMARKS = {
   vikingbar: { b: [1, 2], at: [-16, 18], yaw: PI },
   tongatonga: { b: [1, 2], at: [14, 18], yaw: PI },
   tongaLot: { b: [1, 2], at: [20, 27], yaw: PI },
+  // Where Berra slumps after Tonga Tonga (`tongatonga` offset (−2.3, 0.6)): at the right of the group
+  // in the street shot of "bära hem Berra", and his pickup spot (Phase 3 r3; tongaLot is behind it).
+  tongaSlump: { b: [1, 2], at: [16.3, 17.4], yaw: 0.5 },
   pryl_poolpen: { b: [1, 2], at: [8, -6], yaw: 0, y: 7.2 },
   // (4,2) Centro Nórdico
   cita: { b: [4, 2], at: [0, 22], yaw: PI },

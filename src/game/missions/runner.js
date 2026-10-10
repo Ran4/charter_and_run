@@ -254,7 +254,10 @@ export class MissionRunner {
     g.endCinematic();
     def.onEnd?.(g, 'complete');
     this.index++;
-    if (def.unlock) g.unlock(def.unlock);
+    // Before the end card the unlock holds its toast and shows it back on the island (Phase 3 r3:
+    // julafton's "Pepes Bodega har öppnat…" lay over the Rio card and was gone before the pool).
+    const endCard = g.pendingEndCard && this.index >= MISSIONS.length;
+    const heldToast = def.unlock ? g.unlock(def.unlock, { holdToast: endCard }) : null;
     this.m = null;
     g.save();
     let transitioned = false;
@@ -265,7 +268,7 @@ export class MissionRunner {
     this.state = 'idle';
     g.placeNpcs(true);
     if (this.index >= MISSIONS.length) {
-      if (g.pendingEndCard) { g.pendingEndCard = false; await g.playEndCard(); }
+      if (g.pendingEndCard) { g.pendingEndCard = false; await g.playEndCard(); if (heldToast) hud.toast(heldToast); }
       else { hud.showBanner(S.gameComplete, S.gameCompleteSub, 'good', 5000); audio.jingle('complete'); }
     } else if (!transitioned) {
       hud.toast(fmt('newMission', { name: g.charDef(this.current.giver).name }));

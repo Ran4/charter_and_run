@@ -13,7 +13,7 @@ import { worldHooks } from './world/registry.js';
 import { buildCabin, CABIN_X } from './world/cabin.js';
 import { buildRioCard } from './world/rio.js';
 import { Car, collideCars } from './actors/car.js';
-import { Character } from './actors/character.js';
+import { Character, ANIM_FLAGS } from './actors/character.js';
 import { CHARS, CAST, buildBust, buildCharacter, randomPed, outfitDef } from './actors/models.js';
 import { AIDriver } from './actors/drivers.js';
 import { spawnPeds } from './actors/peds.js';
@@ -27,7 +27,7 @@ import { Bang, Beacon, GuideArrow } from './game/markers.js';
 import { LEVELS, ISLAND_PALETTES } from './level.js';
 import { METERS } from './meters.js';
 import { S, fmt, pta } from './strings.js';
-import { CHATTER, CHATTER_FLIGHT, BARKS, LOCAL_CAST, COLLECTIBLES, UNLOCKS } from './content/index.js';
+import { CHATTER, CHATTER_FLIGHT, BARKS, LOCAL_CAST, STAFF_CAST, COLLECTIBLES, UNLOCKS } from './content/index.js';
 import { clamp, dist, yawTo, pick, mulberry32, lerp } from './util.js';
 
 const STEP = 1 / 60;
@@ -932,10 +932,11 @@ class Game {
     if (ch !== this.player && Math.random() < 0.35 && dist(ch.x, ch.z, this.player.x, this.player.z) < 30) this.say(ch, this.bark(ch, 'getUp'), 1.8);
   }
   // A bark from the speaker's own table (§14.10): Ole's Norwegian one, the local one for the Spanish
-  // cast and the local pedestrians, else the Swedish tourists'. kind: ouch | getUp | kicked | carjack.
+  // cast and the local pedestrians, SunTrip staff's where the kind has one, else the Swedish
+  // tourists'. kind: ouch | getUp | kicked | carjack.
   bark(ch, kind) {
     const t = BARKS[kind];
-    return pick((ch.key === 'ole' && t.ole) || ((ch.def?.local || LOCAL_CAST.includes(ch.key)) && t.local) || t.sv);
+    return pick((ch.key === 'ole' && t.ole) || ((ch.def?.local || LOCAL_CAST.includes(ch.key)) && t.local) || (STAFF_CAST.includes(ch.key) && t.staff) || t.sv);
   }
   onBodyBounce(ch) { if (dist(ch.x, ch.z, this.focus().x, this.focus().z) < 40) audio.thud(); }
   onBounce(ch) { if (ch === this.player) audio.boing(); }
@@ -1130,13 +1131,18 @@ class Game {
   // ------------------------------------------------------------------------------------------
   // Unlocks, end card (§10.3, §11.7)
 
-  unlock(name) {
-    if (!UNLOCKS[name]) { this.unlocked.add(name); return; }
+  // `holdToast`: the toast is not shown but returned (null when there is none, or it is not the
+  // first unlock), for the caller to show later: the runner holds julafton's until the end card is
+  // over (§11.7).
+  unlock(name, { holdToast = false } = {}) {
+    if (!UNLOCKS[name]) { this.unlocked.add(name); return null; }
     const first = !this.unlocked.has(name);
     this.unlocked.add(name);
     this.applyUnlock(name);
-    if (first && UNLOCKS[name].toast) hud.toast(UNLOCKS[name].toast);
+    const toast = (first && UNLOCKS[name].toast) || null;
+    if (toast && !holdToast) hud.toast(toast);
     this.save();
+    return holdToast ? toast : null;
   }
   applyUnlock(name) {
     const u = UNLOCKS[name];
@@ -1165,6 +1171,7 @@ class Game {
     if (this.playerCar) this.exitCar(true);
     this.inDialog = true;
     hud.letterbox(true);
+    hud.clearToasts();   // nothing from the island lies over the card (the runner holds the unlock's toast)
     hud.flashColor(white);
     const b = lm('rioBoat'), c = lm('rioCam');
     this.setSky('sunset');
@@ -1174,9 +1181,12 @@ class Game {
     // Aft deck (|dx| <= 1.4, dz 1..5 from rioBoat; teleport snaps to the deck at 0.55), everyone
     // turned towards rioCam: one row across its view at one depth, the couples side by side (0.7 m,
     // 1 m between them; left to right Siv, Ole, Majsan, Stig). Majsan stood half behind Ole.
+    // Arms down: the outro's poses (the duet's 6 s `wings`) end here, not on their cue's clock, which
+    // still ran when a player read on, and Majsan's arm lay across Ole on the deck (Phase 3 r3).
     for (const [k, dx, dz] of [[PLAYER_KEY, 0.76, 1.83], ['majsan', 0.45, 2.46], ['ole', 0, 3.35], ['siv', -0.31, 3.98]]) {
       const q = this.lmOffset(b, dx, dz);
       this.placeNpc(k, 'rioBoat', dx, dz, yawTo(c.x - q.x, c.z - q.z));
+      for (const f of ANIM_FLAGS) this.npc(k).anim[f] = false;
     }
     this.endCut();
     this.cam.cutTo({ x: c.x, y: 3.2, z: c.z }, { x: b.x, y: 2.3, z: b.z + 1.5 });

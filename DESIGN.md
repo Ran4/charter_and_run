@@ -1077,7 +1077,7 @@ standing there faces. `y` (optional) = absolute height for collectible spots on 
 |---|---|---|---|---|
 | (3,3) | `flamenco` → `hotelFlamenco` (C1, hotels.js) | 7-storey white slab x [−26, 26], z [−27, −14] with balcony rows, terracotta accents, `HOTEL FLAMENCO` roof sign; open reception porch (canopy, desk, plastic Christmas tree `julgran` prop, `RECEPCIÓN`; Phase 3 r2: `HOTEL FLAMENCO · RECEPCIÓN` stands on a terracotta panel above the pergola's fascia, where it no longer fills the top of the chase frame, and the garland runs across the fascia's face) at the slab's south face; ground-floor room patios along the south face (Stig & Ole's room west, room 113 east) with a visible 1st-floor balcony above 113; terracotta piers at the bay lines, solid (Phase 3 r2); pool deck south with a **walkable shallow pool** (flat blue slab at CURB+0.02 + `box(..., CURB, 'water')`, sign "TRE METER DJUPT I ENA ÄNDEN, / EN METER I DEN ANDRA. / BARNVÄNLIG!" (three lines) [F*] (the bungalow seller's line, relocated)); poolbar with straw parasols (`BAR PISCINA · SVENSKT KAFFE`); the julafton party `julgran` on the pool deck at (2.2, 16), in the party and sunset-duet shots (Phase 3); room numbers: a closed room's centred above its own glass door, an open room's (107, 113) on its right-hand pier (Phase 3); parking lot on the west; the parking signs here and at SunTrip's lot are a blue `P` plate over a name strip (`HOTEL FLAMENCO`, `SUNTRIP`) on a post that stops under them (Phase 3 r2: one two-line plate had shrunk the P to the name's size, and the post ran through both faces); **PEPES BODEGA**: small whitewashed annex x [4, 12], z [−31, −27] on the north side with a green door, barrels, sign `PEPES BODEGA · VINOS · RON` facing north (`worldHooks.bodegaLit(on)` lights it after julafton) | `flamenco` (−4, −8, π) (faces the hotel, so the views/cutaway camera stands on the pool deck; Phase 2) · `flamencoRecepcion` (2, −10, 0) · `flamencoPatio` (−18, −11, 0) · `rum113` (18, −11, 0) · `flamencoBalcony` (18, −8, π) · `flamencoPool` (−3, 18, π) · cut anchors (Phase 3; a cut stands `dist` m behind one, looking the way it faces): `rum107Cam` (−18, −11, π) = `flamencoPatio` turned round (looks into room 107), `recepcionCam` (2, −10, π) = `flamencoRecepcion` turned round (the desk from the porch front) · `flamencoDeck` (−4, −2.5, 0) (the island spawn: approachSpot puts the player on the pool deck at (−4, −1) facing the hotel, the chase camera over the pool rather than under the pergola slats; Phase 2) · `flamencoBar` (16, 12, −π/2) · `flamencoDrive` (−26, 22, π) · `flamencoBack` (−6, −33.5, 0) · `bodega` (8, −33.5, 0) · `fena_flamenco` (−3, 7, 0, 0.35) | `hyrbil` (sedan `0xf4f4f0`) at `flamencoDrive` — default `getInCar` car and test car |
 | (3,2) | `suntrip` → `hotelSunTrip` (C1, hotels.js) | lower U-shaped hotel on red rock; welcome **stage** with SunTrip sun backdrop (red text on yellow sun), accordion/conga props; pool; **friskotek lawn**; SunTrip office porch on the south side facing Flamenco's back; posters `GRISFEST TORSDAG · 800 PTA`, `FRISKOTEKET 9.30` | `suntrip` (−14, 24, π) (faces the office porch; Phase 2) · `scen` (0, −14, 0) · `friskotek` (−10, 8, 0) · `suntripPool` (14, 4, π) · `suntripLot` (24, 22, π) · `fena_suntrip` (14, 8, 0, 0.35) | — |
-| (1,2) | `kasbah` → `kasbah` (C2, centre.js) | **Centro La Medina** (fictional; internal id `kasbah`): two-level nightlife courtyard centre: arcade, stairs (ramp) to a roof terrace (top ≈ 6.0) with a balustrade above the bottom three steps and a sloped wall collider along it (Phase 3: the way on is over those three steps), neon signs `CENTRO LA MEDINA`, `VIKING BAR` (horned helmet), `TONGA TONGA` (mirror ball), `BAR SVENSKA · SMÖRGÅSAR` | `kasbah` (0, 22, π) · `vikingbar` (−16, 18, π) · `tongatonga` (14, 18, π) · `tongaLot` (20, 27, π) · `pryl_poolpen` (8, −6, 0, 7.2) | — |
+| (1,2) | `kasbah` → `kasbah` (C2, centre.js) | **Centro La Medina** (fictional; internal id `kasbah`): two-level nightlife courtyard centre: arcade, stairs (ramp) to a roof terrace (top ≈ 6.0) with a balustrade above the bottom three steps and a sloped wall collider along it (Phase 3: the way on is over those three steps), neon signs `CENTRO LA MEDINA`, `VIKING BAR` (horned helmet), `TONGA TONGA` (mirror ball), `BAR SVENSKA · SMÖRGÅSAR` | `kasbah` (0, 22, π) · `vikingbar` (−16, 18, π) · `tongatonga` (14, 18, π) · `tongaLot` (20, 27, π) · `tongaSlump` (16.3, 17.4, 0.5) (where Berra slumps after Tonga Tonga and is picked up, at the right of the group in the street shot; Phase 3 r3) · `pryl_poolpen` (8, −6, 0, 7.2) | — |
 | (4,2) | `cita` → `cita` (C2, centre.js) | **Centro Nórdico** (fictional; internal id `cita`) strip mall, sign `CENTRO NÓRDICO`: `SUPERMERCADO`, `FERRETERÍA`, `FARMACIA`, `ESTANCO`, `TELÉFONOS · HYTT 1·2·3`, `SOUVENIRS`, `SVENSKT KAFFE`, `CAMBIO · 1 KR = 17 PTA` (Phase 3: the north shop row and its canopy fit the courtyard between the wings, x ±11; `SOUVENIRS · REGALOS` and `FARMACIA` with its green cross sit on the wings' courtyard faces) | `cita` (0, 22, π) · `supermercado` (−18, 18, π) · `ferreteria` (18, 18, π) · `telefon` (0, 8, π) | — |
 | (2,3) | `plaza` → `plaza` (C2, centre.js) | palms, fountain (shallow walkable pool), restaurant terraces; the north row's arcade (12 arches), shops `CAFETERÍA EL SOL` · `HELADERÍA LA PALMERA` · `CORREOS · TELÉGRAFOS` · `BANCO · CAMBIO` · `PELUQUERÍA` (each sign centred in an arch) and the arcade café tables keep to x [−19, 29], clear of the west row (x [−29, −19]) that stands on the north row's west end (Phase 3 r2: two arches, the café sign and two tables were inside it); **CASA LOLA** (`CASA LOLA · COMIDA CANARIA`, fictional; internal id `grillpaco`) terrace on the SE corner (Phase 3 r2: the bougainvillea along its eave sits above the pergola's camera cap, west of the name board) | `plaza` (0, 6.8, π) (south of the fountain rim, facing it: the fountain column stands at (0, 0); Phase 2) · `grillpaco` (20, 22, π) · `grillpacoMamma` (25, 24, π) · `grillpacoCurb` world (−60, 36, −π/2) (westbound kerb of the z = 40 road, the `follow` endpoint) · `fena_plaza` (0, 0, 0, 0.35) | — |
 | (2,1) | `marknad` → `marknad` (C2, centre.js) | rows of striped stall awnings (some `bounce` awnings as climb pads), souvenir stand with painted donkeys `BURROS 500 PTA`, postcard racks, plastic giraffes | `marknad` (0, 22, π) · `asnestand` (6, 2, π) · `pryl_kalkylator` (−12, −8, 0, 3.4) (on an awning roof) | — |
@@ -2000,7 +2000,7 @@ Fun: Ole haggles like a smålänning (a timing minigame), a hunt for the right c
 then a nervous drive with a wet-painted donkey on board.
 
 **Intro:**
-- stig: "Det var julmat – i julklappen. Och väskan är borta."  [F*]
+- stig: "Det var julmat – i julklappen. Och väskan är borta."  [F*]  {cut: {at: 'flamenco', dist: 6, height: 2.2}, place: {ole: ['flamenco', 0.8, 0.4, 1.07], stig: ['flamenco', −0.8, 0.4, −1.07]}} (Phase 3 r3: a fixed porch shot from the pool deck, held to the end of the intro, the two half turned to each other under the pergola with the reception behind; walking straight from the island spawn to Ole put the giver two-shot's eye 0.85–0.93 m from the reception porch's west post, which has no collider, so `clearSide` never rejected that side, and the post filled 15–30 % of the frame on every line)
 - ole: "Tenk ikke mer på det. Vi fikser en ny julegave."  [F]
 - stig: "Undrar vad dalahäst heter på spanska."  [F]
 - ole: "Cabalho folkloristico…"  [F]
@@ -2039,14 +2039,14 @@ then a nervous drive with a wet-painted donkey on board.
    haggle, which pays the 200 again.)
 10. `goto({ to: 'vikingbar', radius: 2.5, onFoot: true, text: 'Lämna paketet i baren' })`
 
-**Outro** (`outroPlace: { carmencita: ['vikingbar', -0.8, 1.6, 0], angerud: ['vikingbar', 0.9, 1.3, 0] }`: both face the street, where the cut camera stands; Phase 3, they showed their backs):
-- stig: "Ett paket till Viking Bar. Det är till en moster."  [N]
+**Outro** (`outroPlace: { carmencita: ['vikingbar', -0.8, 1.6, 0], stig: ['vikingbar', 0.9, 1.3, 1.75] }`, `outroCam: { at: 'vikingbar', dist: 6.5, height: 3.4 }`: one shot of the bar front from the street, high enough to see over a car parked at the door, held to the end; Carmencita faces it (Phase 3, she showed her back) and Stig stands side-on to her on the spot where Angerud stands later. Phase 3 r3: Angerud, placed there by `outroPlace`, stood between Stig and Carmencita while Stig handed the package in, before "Senare samma dag…", and Stig said his line three-quarters from behind; now the two never meet. Do not only drop Angerud from `outroPlace`: the giver two-shot then loses the VIKING BAR sign and the old `cut: null` went back to it with Angerud over Carmencita):
+- stig: "Ett paket till Viking Bar. Det är till en moster."  [N]  {hide: ['angerud']} (his home is the bar)
 - carmencita: "Jag lägger det bakom disken."  [N]  {toast: 'Senare samma dag…'}
-- angerud: "Buenas dias, lilla vikingen. Har paketet kommit?"  [F]  {cut: {at: 'vikingbar', dist: 6.5, height: 3.4}, place: {stig: ['vikingbar', 4, -9, 0]}} (Stig, who has left, out of the shot; the camera high enough to see over a car parked at the door)
+- angerud: "Buenas dias, lilla vikingen. Har paketet kommit?"  [F]  {place: {stig: ['vikingbar', 4, -9, 0], angerud: ['vikingbar', 0.9, 1.3, 0]}} (Stig, who has left, out of the shot; Angerud where Stig stood, facing the street)
 - angerud: "God jul, moster."  [F] (he reads the card)
 - angerud: "Hur såg han som lämnade in det ut?"  [F]
 - carmencita: "Han var lång, mörkhårig… hade glasögon och mustasch."  [F]
-- angerud: "Då är det grönt."  [F]  {cut: null}
+- angerud: "Då är det grönt."  [F] (the bar cut holds to the end: a `cut: null` would release the `outroCam`)
 
 (The answering-machine call is Angerud's panic after he opens the package: it plays in the bodega
 outro, in film order.)
@@ -2095,9 +2095,18 @@ Hitch-hike logic (judge fix): Stig refuses the dirt road (åksjuka), drops them,
    so the shot never depends on the stop. The follow is untouched: the truck's start is its lane
    spot, and its tail starts once he is back in a car within 40 m of it, from 42.6 m here (a stop
    at the far end of the dropoff radius was ≈ 44 m; §9.2); `CAL=follow` checks the band.)
-7. `follow({ type: 'grisbil', carName: 'grisbilFollow', driver: 'grisbonde', riders: ['berra', 'robban'], hideRiders: true, start: { lane: [[0, 2], [1, 2]], t: 12 }, via: [[1, 2], [1, 1], [2, 1]], to: 'grisfestGate', maxDist: 55, cruise: 15, wobble: 0.12, text: 'Följ grisbilen – Berra och Robban har liftat!', radio: [['robban', 'Fan, de luktar.'], ['berra', 'Skit i det. Vi slipper gå.', { gap: 4.5 }], ['robban', 'Snacka om grisfest.', { gap: 4.5 }]] })`  [N] · [F](t) ×3
+7. `follow({ type: 'grisbil', carName: 'grisbilFollow', driver: 'grisbonde', riders: ['berra', 'robban'], hideRiders: true, start: { lane: [[0, 2], [1, 2]], t: 12 }, via: [[1, 2], [1, 1], [2, 1]], to: 'grisfestGate', maxDist: 55, cruise: 15, wobble: 0.12, checkpoint: true, retryAt: 'vischan', retryCar: { at: { x: -234, z: -143, yaw: 0 } }, text: 'Följ grisbilen – Berra och Robban har liftat!', radio: [['robban', 'Fan, de luktar.'], ['berra', 'Skit i det. Vi slipper gå.', { gap: 4.5 }], ['robban', 'Snacka om grisfest.', { gap: 4.5 }]] })`  [N] · [F](t) ×3
    (Phase 3 r2: the lines at 8, 12.5 and 17 s of the tail, which takes ≈ 21 s; the follow's
    default 10 s spacing put the third at 28 s, after the radio had stopped.)
+   (Phase 3 r3: a checkpoint. Losing the truck ("Du tappade bort Grisbonden!") or wrecking it
+   before he is in (stage 8, "Du kvaddade Grisbondens bil!") retried from the vischan drive's
+   checkpoint: the 31 s timed drive from the beach, the dropoff, the hitch scene and the tail
+   again, for losing an untimed tail. Now the retry puts him at the wheel of the car he last drove
+   (repaired; `retryCar` without `park`) on the vischan track where the scene parked it,
+   (−234, −143) = the decorator's `['vischan', 0, 7, 0]`, nose to the road, the truck on its lane
+   spot ahead to the left with its riders: the tail starts as on the first attempt, from 42.6 m.
+   At the wheel rather than parked: on foot the retry turns him to the stage's guide, the truck,
+   and the car would be behind him. No timer: the stage is untimed.)
    (`via` given as `[i, j]` node pairs; `start.lane` = edge from node (0,2) to (1,2), 12 m in; the
    route runs east along z = −200 from node (2,1) and ends at the kerbside `grisfestGate` 40 m
    ahead, ≈ 270 m in all (§9.2 `follow`: `to` must be kerbside and ahead of the last via node).
@@ -2142,7 +2151,7 @@ he doesn't see you. The reveal: his mother is sitting in the back seat the whole
 `extra: ['majsan']`.
 
 **Intro:**
-- siv: "Han heter José. Och han jobbar inte på pizzeria."  [F*](t) (a plane line, relocated to the pool; research-plot §6 #9 says only "Systrarna om José")
+- siv: "Han heter José. Och han jobbar inte på pizzeria."  [F*](t) (a plane line, relocated to the pool; research-plot §6 #9 says only "Systrarna om José")  {cut: {at: 'flamencoPool', dist: 5.5, height: 2.1}, place: {siv: ['flamencoPool', 0.2, 0.5, π/4], majsan: ['flamencoPool', 1.3, 1.1, π/5], stig: ['flamencoPool', −1.3, 0.5, −π/4]}} (Phase 3 r3: a fixed pool shot, held to the end of the intro, the sisters side by side half turned to the lens and Stig facing them, the hotel and the pool behind; the giver two-shot followed the arrival and placed nobody else, so Majsan said her three lines with her back to the lens or behind Siv from three of six arrival sides)
 - majsan: "Datatekniker."  [F](t)
 - siv: "Äkta spansk restaurang. Klockan sju."  [F*](t)
 - majsan: "Ta pepparn. Om han blir närgången."  [F*]
@@ -2157,12 +2166,12 @@ he doesn't see you. The reveal: his mother is sitting in the back seat the whole
    node (3,4) (§9.2 `follow`); the outro still places the family at `grillpaco`.
 3. `goto({ to: 'plaza', radius: 4, onFoot: true, text: 'Parkera och spana diskret från fontänen' })`  [N]
 
-**Outro** (`outroPlace: { jose: ['grillpaco', 0, 0], siv: ['grillpaco', 1.2, 0], mamma: ['grillpacoMamma', 0, 0, 0] }` (Mamma faces her cut), outro camera `['jose', 'siv']`):
+**Outro** (`outroPlace: { jose: ['grillpaco', 0, 0], siv: ['grillpaco', 1.2, 0], mamma: ['grillpacoMamma', 0, 0, π] }` (Mamma faces the table), outro camera `['jose', 'siv']`):
 - jose: "Kanarisk specialitet! Ropa vieja – gamla kläder."  [F]
 - siv: "Vad sa du?"  [F]
 - jose: "Gamla kläder. Det är ungefär som pyttipanna."  [F]
-- jose: "Är det säkert att det inte gör nåt att mamma följde med?"  [F]  {cut: {at: 'grillpacoMamma', dist: 5, height: 1.9}} (Phase 3: the default 9 m cut stood in the Casa Lola pergola)
-- siv: "Vill hon inte sitta här?"  [F]  {cut: null} (back to the two-shot: Siv was outside the Mamma cut)
+- jose: "Är det säkert att det inte gör nåt att mamma följde med?"  [F]  {cut: {at: 'grillpaco', dist: −7, height: 2.2}} (Phase 3 r3: from the plaza side of the table, José centred facing the lens, Siv at the right, Mamma behind them at the left at her own table, turned to it; the `grillpacoMamma` cut (Phase 3: the default 9 m cut stood in the Casa Lola pergola) showed José at the frame's left edge with his back to the lens. `{at: 'grillpacoMamma', dist: −9}` put him at the right edge, `{at: 'grillpaco', dist: −6}` Mamma at the edge)
+- siv: "Vill hon inte sitta här?"  [F]  {cut: null} (back to the two-shot)
 - jose: "Nej, hon vill inte vara i vägen."  [F]
 - siv: "Jag fick användning för din peppar."  [F]  {toast: 'Dagen efter, vid poolen…', place: {siv: ['flamencoPool', 1.2, 0.6, π/2], majsan: ['flamencoPool', -1.2, 0.6, -π/2]}, cut: 'flamencoPool'} (the sisters face each other, side-on to the cut)
 - siv: "Han kom och hämtade mig. Gissa vem han hade med sig… Morsan!"  [F]
@@ -2179,7 +2188,7 @@ the tourists' pity into a sheep stampede you have to round up.
 `extra: ['siv']`.
 
 **Intro:**
-- stig: "Om du köper en brödrost, och det står 'Kontrollerad av G17', så är det jag."  [F]
+- stig: "Om du köper en brödrost, och det står 'Kontrollerad av G17', så är det jag."  [F]  {cut: {at: 'flamencoPool', dist: 5.5, height: 2.1}, place: {majsan: ['flamencoPool', 0.2, 0.5, π/4], siv: ['flamencoPool', 1.3, 1.1, π/5], stig: ['flamencoPool', −1.3, 0.5, −π/4]}} (Phase 3 r3: the ropavieja intro's pool shot with the sisters swapped, held to the end of the intro; Siv said her line with her back to the lens or behind Majsan from three of six arrival sides, and from a fresh load)
 - majsan: "Själv brukar jag säga att jag går på gatan."  [F*]
 - majsan: "Gillar du fotboll också?"  [F](t)
 - majsan: "Du, vill du smörja in mig på ryggen?"  [F](t)
@@ -2232,7 +2241,7 @@ player's `samba`; Phase 3, was a fixed `sol`); on fail/abort → palette `day` +
 banner).
 
 **Intro:**
-- ole: "Skal du ha B-vitaminer? Bra for leveren. Grisefest, vet du. Ta to."  [F]
+- ole: "Skal du ha B-vitaminer? Bra for leveren. Grisefest, vet du. Ta to."  [F]  {cut: {at: 'flamenco', dist: 6, height: 2.2}, place: {stig: ['flamenco', 0, 1.5, −1.07], ole: ['flamenco', 1.6, 1.4, 1.07]}} (Phase 3 r3: the asnan intro's porch shot, §8.8, held to the end of the intro; Stig stands on `approachSpot('flamenco')`, (−4, −9.5), where `calibrate` starts the flowers, so the flowers stage always starts from the measured spot and the flowers pool stands; the runner then turns him to the guide)
 - ole: "Og jeg har C-vitaminer… jerntabletter, ginseng, tannkrem…?"  [F*]
 - ole: "Du, de er fine de rødhårete. Vi skulle ha satt inn et støt der."  [F]
 - ole: "Vi kan be resepsjonen sette blomster på rommet deres."  [F*](t) (rendered in Norwegian: "blomster" is Ole's word)
@@ -2283,13 +2292,16 @@ banner).
    - siv: "Majsan, ta med dig giraffen så går vi på Tonga Tonga."  [F]
 6. `goto({ to: 'tongatonga', radius: 10, inCar: true, timer: 19, text: 'Till Tonga Tonga!', checkpoint: true, retryAt: 'dansgolv', retryCar: { at: { x: -86, z: -202.75, yaw: -π/2 }, park: true } })`  [N]
    (Phase 3: its own checkpoint, so a failed drive does not replay the dance.)
-7. `scene({ place: { ole: ['tongatonga', -2.2, 3.2, 0], majsan: ['tongatonga', 2.0, 3.0, 0], siv: ['tongatonga', 3.0, 3.4, 0], robban: ['tongatonga', -0.8, 1.2, -π/2], berra: ['tongaLot', 0, 0], stig: ['tongatonga', 0.8, 1.2, π/2] }, anim: { berra: 'slump' }, cam: { at: 'tongatonga', dist: 6, height: 2.6 }, lines: [['ole', 'Samba er fine greier!', { music: 'samba' }], ['robban', 'Kan du hjälpa mig bära hem Berra?'], ['stig', 'Vilket snack! "Bärra hem Berra!"']] })`  [F] ×3
+7. `scene({ place: { ole: ['tongatonga', -2.2, 3.2, 0], majsan: ['tongatonga', 2.0, 3.0, 0], siv: ['tongatonga', 3.0, 3.4, 0], robban: ['tongatonga', -0.8, 1.2, -π/2], berra: ['tongaSlump', 0, 0], stig: ['tongatonga', 0.8, 1.2, π/2] }, anim: { berra: 'slump' }, cam: { at: 'tongatonga', dist: 6, height: 2.6 }, lines: [['ole', 'Samba er fine greier!', { music: 'samba' }], ['robban', 'Kan du hjälpa mig bära hem Berra?'], ['stig', 'Vilket snack! "Bärra hem Berra!"']] })`  [F] ×3
    (Phase 3 r2: shipped wrapped in the decorator `parkCar(stage, ['tongatonga', -10, -10, 0])`,
-   §8.9 stage 6: the car he came in parks in the lot at (−136, −52), nose to the street, 4 m east
-   of Berra and behind the camera, which stands in the same lot; parked where he stopped, a bus
-   covered the lens (5 of 5 rays). No timer follows: the
-   pickup, the drive home and the carry are untimed.)
-8. `pickup({ who: 'berra', name: 'Berra', at: 'tongaLot', rider: 'robban', hello: '…zzz' })`  [N]
+   §8.9 stage 6: the car he came in parks in the lot at (−136, −52), nose to the street, behind
+   the camera, which stands in the same lot; parked where he stopped, a bus covered the lens (5 of
+   5 rays). Phase 3 r3: Berra slumps at `tongaSlump` (−143.7, −62.6), at the right of the group in
+   the shot (`tongatonga` offset (−2.3, 0.6), yaw 0.5), so he is in the frame of the two lines
+   about him; at `tongaLot` he lay behind the camera. The car is 13 m from him. No timer follows:
+   the pickup, the drive home and the carry are untimed.)
+8. `pickup({ who: 'berra', name: 'Berra', at: 'tongaSlump', rider: 'robban', hello: '…zzz' })`  [N]
+   (Phase 3 r3: `pickup` places its NPC at `at`, so with `tongaLot` he would pop away in view.)
 9. `goto({ to: 'flamencoDrive', radius: 10, inCar: true, passenger: 'berra', text: 'Kör hem till Hotell Flamenco' })`  [N]
 10. `carry({ who: 'berra', to: 'flamencoRecepcion', radius: 2.2, walkSpeed: 3.2, failOn: { fall: true }, text: 'Bärra hem Berra!', failText: 'Berra vaknade och började sjunga.', checkpoint: true, retryAt: { x: -24, z: 16, yaw: -π/2 } })`  [F*] · [N] — **P1**; P0 fallback:
     `dropoff({ who: 'berra', at: 'flamencoDrive', text: 'Släpp av Berra vid hotellet' })`.
@@ -2363,7 +2375,7 @@ then every running gag pays off by the pool before the fear-of-flying arc closes
    - ole: "Hva i all verden…"  [N]  {sparkle: true, sfx: 'pryl'}
    - stig: "Femtio… tusen… kronor. I knäckebrödet."  [N]
    - ole: "Femti tusen… Rio, Stig-Helmer! Stranda, jentene og samba!"  [F*]
-4. `scene({ cam: { at: 'rum113', dist: 6, height: 3 }, place: { angerud: ['rum113', 0, 0.8], stadare: ['rum113', -1.5, 1.6], saljare: ['rum113', 1.5, 1.6], mamma: ['rum113', -2.5, 2.4], pappa: ['rum113', -3.2, 2.4], carmencita: ['rum113', 2.5, 2.4], jose: ['rum113', 3.2, 2.4], siv: ['rum113', 0, 3.2] }, lines: [...] })` — the chaos at room 113 (heart attack **off-screen**):
+4. `scene({ cam: { at: 'rum113', dist: 6, height: 3 }, place: { angerud: ['rum113', 0, 0.8], stadare: ['rum113', -1.5, 1.6], saljare: ['rum113', 1.5, 1.6], mamma: ['rum113', -2.5, 2.4], pappa: ['rum113', -3.2, 2.4], carmencita: ['rum113', 2.5, 2.4], jose: ['rum113', 3.2, 2.4], siv: ['rum113', 0.9, 3.0] }, lines: [...] })` — the chaos at room 113 (heart attack **off-screen**; Phase 3 r3: Siv off the lens axis between Carmencita and Angerud; at (0, 3.2) she stood straight behind him and only her hair showed on her line):
    - stadare: "Limpio!"  [F]
    - saljare: "Jag var tvungen att sälja tomten i morse. De skrev på."  [F]
    - mamma: "Ni har dragit skam över vår familj!"  [F](t)
@@ -2383,7 +2395,9 @@ then every running gag pays off by the pool before the fear-of-flying arc closes
 - ole: "Og så Rio!"  [F*]  {endCard: true}
 
 **After the outro** (index 13 = complete): `game.playEndCard()` (P1; §11.7) → Rio card → back to the
-island: `unlock('bodega')` (lit sign, map label "Pepes Bodega", Berra and Robban posted at
+island: `unlock('bodega')` (applied and saved before the card, its toast held until the player is
+back at the pool, under the completion banner; Phase 3 r3: the toast lay over the Rio card and was
+gone before the pool; lit sign, map label "Pepes Bodega", Berra and Robban posted at
 `bodega` in free roam with chatter berra "Robban! Jag hittade Pepes Bodega!" [F*] and robban
 "Pepes Bodega. Glöm aldrig det, du." [F*], relocated: the unlock's `chatter` replaces their
 CHATTER, which is about looking for it; Angerud's home is `null`, so he is gone from the Viking
@@ -2706,7 +2720,9 @@ Runner changes (Phase 0):
 8. **After the outro**: `index++` → unlock → save → **if `g.levelFor(index) !== g.level` await
    `g.transitionTo(...)`** → `state = 'idle'` → **`g.placeNpcs(true)`** (giver race fix) →
    toast `Nytt uppdrag: hitta <b>${name}</b> <span class="bang">!</span>` or game complete
-   (+ end card).
+   (+ end card). When the end card follows (the last mission, `pendingEndCard`), the unlock is
+   `g.unlock(name, { holdToast: true })` and its toast is shown after `playEndCard()` returns
+   (Phase 3 r3, §11.7).
 9. `onBusted()`: fails `bustFails` missions with `METERS.skandal.bustedFailText`.
    `onPanic()`: returns true and fails with `panicFailText` when running and
    `stage.panicFails || def.panicFails`; else false.
@@ -2789,7 +2805,9 @@ UNLOCKS = {
 `home` overrides the island HOMES entry (main.js `homeOverrides`); a `null` home hides the NPC
 (`key in homeOverrides`, Phase 3 r2: a falsy override used to be ignored). `chatter` (Phase 3 r2,
 main.js `chatterOverrides`) replaces that NPC's free-roam CHATTER on the island. Both are applied
-by `applyUnlock`, so a loaded save gets them too.
+by `applyUnlock`, so a loaded save gets them too. The toast shows on the first unlock only;
+`game.unlock(name, { holdToast: true })` (Phase 3 r3) applies and saves the unlock but returns the
+toast (or null) instead of showing it, for the runner to show after the end card (§9.4 item 8).
 P2: `guardiaJeep` (buyable Land Rover that halves SKANDAL gain).
 
 ### 10.4 Outfits
@@ -2989,15 +3007,22 @@ mutes without touching the button, which then said `Ljud: på` while muted).
   reser från någonting."* [F] (6 s); fade back; player at `flamencoPool`; banner
   `NUEVA ESTOCOLMO KLARAT!` / `God jul – och tack för resan!`; free roam continues.
   **Wired in Phase 2** (`main.js playEndCard`, called by the runner after the last mission when a
-  cue set `endCard`): `shame.clear()`, out of any car, `inDialog` (input frozen), letterbox, white
+  cue set `endCard`): `shame.clear()`, out of any car, `inDialog` (input frozen), letterbox, every
+  toast dropped (`hud.clearToasts()`, Phase 3 r3), white
   flash; sky `sunset`, tune `samba`, Stig `rio` (not persisted), Ole `rio`; Stig, Majsan, Ole and Siv
   on the aft deck at `rioBoat` offsets (0.76, 1.83), (0.45, 2.46), (0, 3.35), (−0.31, 3.98), each
   turned to `rioCam` (Phase 3 r2: one row across rioCam's view at one depth, the couples side by
   side 0.7 m apart and 1 m between the couples, left to right Siv, Ole, Majsan, Stig; the Phase 2
-  offsets split the couples and put Majsan half behind Ole, 2.1 m nearer the lens); camera cut from (rioCam, y 3.2) at (rioBoat, y 2.3, z + 1.5); the `S.endCardMain` /
+  offsets split the couples and put Majsan half behind Ole, 2.1 m nearer the lens) with every
+  `ANIM_FLAGS` pose off (Phase 3 r3: the julafton duet's `wings`, 6 s on Stig and 4 s on Majsan,
+  ran on into the card for a player who read on, Majsan's arm across Ole's chest); camera cut from (rioCam, y 3.2) at (rioBoat, y 2.3, z + 1.5); the `S.endCardMain` /
   `S.endCardSub` banner (cls `mission`, 6 s); after 6.6 s another white flash, camera released, sky
   back, `placeNpcs(true)` + `applyOutfits()`, player at `approachSpot('flamencoPool')`, level tune,
-  letterbox off, then the completion banner and the `complete` jingle. Scenario `endcard` checks it.
+  letterbox off, then the completion banner and the `complete` jingle. The runner then shows the
+  last mission's held unlock toast (julafton's `Pepes Bodega har öppnat – på baksidan av
+  hotellet.`) under the completion banner (Phase 3 r3: unlocked in the frame the card started, it
+  lay over the Rio shot for 3.7 s and was gone before the pool). Scenario `endcard` checks the
+  card (it calls `playEndCard()` directly, without the runner's unlock).
 - Fallback (cut): only the last banner (used when no `endCard` cue fired).
 - Width (Phase 3): `width: max-content; max-width: 94vw` (shrink-to-fit at `left: 50%` had only half
   the screen, so a sub longer than its main wrapped at 50 vw: the end card's quote left
@@ -3328,7 +3353,7 @@ game.wait(secs)
 // ---- money / unlocks / end ----
 async game.pay(n) -> true                 // Ole pays if short (§10.2)
 game.addCoins(n)                          // negative allowed, floors at 0
-game.unlock(name)                         // UNLOCKS[name]
+game.unlock(name, { holdToast }?) -> held toast | null   // UNLOCKS[name] (§10.3)
 async game.playEndCard()                  // §11.7: the Rio cinematic (wired in Phase 2), then
                                           // back at flamencoPool with the completion banner
 
@@ -3774,7 +3799,10 @@ OUCH_LOCAL = ['¡Ay, mi madre!' /*[N]*/, '¡Ay, ay, ay!' /*[N]*/, '¡Turistas!' 
 GETUP_LOCAL = ['¡Madre mía…!' /*[N]*/, 'Suecos…' /*[N]*/, 'Nada, nada.' /*[N]*/];
 CARJACK_LOCAL = ['¡Ladrón!' /*[N]*/, '¡Mi coche!' /*[N]*/, '¡Policía!' /*[N]*/];
 NPC_KICKED_LOCAL = ['¡Ay!' /*[N]*/, '¡Señor, por favor!' /*[N]*/, '¡Loco!' /*[N]*/, '¡Basta!' /*[N]*/];
-BARKS = { ouch: { sv, ole, local }, getUp: { sv, ole, local }, kicked: { sv, ole, local }, carjack: { sv, local } };
+// SunTrip's staff and the resident bungalow seller (Phase 3 r3): only their run-over table differs.
+STAFF_CAST = ['lasse', 'affe', 'gabbe', 'saljare'];
+OUCH_STAFF = ['Aj!' /*[N]*/, 'Hoppsan!' /*[N]*/, 'Det ingår inte i mina åtaganden!' /*[F*] Lasse's reply to Angerud*/];
+BARKS = { ouch: { sv, ole, local, staff }, getUp: { sv, ole, local }, kicked: { sv, ole, local }, carjack: { sv, local } };
 ```
 
 **Barks by speaker** (Phase 3 r2). `Game.bark(ch, kind)` (main.js; kind `ouch` run over or a
@@ -3784,6 +3812,13 @@ Swedish table gave Ole "Va fan, Stig-Helmer!" and "Det är sista gången jag åk
 (§1.3: Ole never speaks Swedish), and the porter, Josés mamma and the souvenir seller complained
 about SunTrip and the fuel surcharge. José is in `LOCAL_CAST`: Swedish in his scenes, a Spaniard
 (and a mamma's boy) on the pavement. `reboard` gives Ole `S.neverLeaveOle` (§11.5).
+Phase 3 r3: a fourth class, `STAFF_CAST` (SunTrip's platschef Lasse, the guides Affe and Gabbe,
+and the resident bungalow seller), takes `BARKS[kind].staff` where the kind has one (only `ouch`):
+run over, Lasse said "Jag ska tala med platschefen!" although he is the platschef (in the film
+Angerud says it to him and he answers "Tja, det är ju jag, det…"), and all four swore off SunTrip
+and the fuel surcharge (3 of the 4 `OUCH` lines, which play on 80 % of hits). Their `getUp` and
+`kicked` barks stay the tourists' (no complaint among them). Order in `Game.bark`: Ole, local,
+staff, Swedish.
 
 ---
 
@@ -4157,7 +4192,7 @@ toiletBackR galleyBack trolleyPark call14`.
 
 **Island landmarks**: `flamenco flamencoRecepcion flamencoPatio rum113 flamencoBalcony flamencoPool
 flamencoBar flamencoDrive flamencoBack bodega suntrip scen friskotek suntripPool suntripLot kasbah
-vikingbar tongatonga tongaLot cita supermercado ferreteria telefon plaza grillpaco grillpacoMamma
+vikingbar tongatonga tongaLot tongaSlump cita supermercado ferreteria telefon plaza grillpaco grillpacoMamma
 marknad asnestand kyrka bensin guardia vischan eslovVag packhus grisfest dansgolv fataga fatagaFold
 fatagaDukar golf bungalow bygge dromplan airport hittegods busBay bagageband dyner fyren playa hamn`
 + kerbside `follow` endpoints `grisfestGate fatagaBus grillpacoCurb`
@@ -5058,3 +5093,40 @@ the fixer's group.
   same timers (gate 3.6 → 6, ombord 3.1 → 7, sprit inside 13, landning 7.6 → 12 and 3.2 → 5); its
   5 sprit sweeps join the pool (n 61, p75 7.60 → still 13; §8 table, §8.4, flight.js header,
   `notes/calibration-samples.md`).
+- r3 island-staging: the pool and porch giver intros get a fixed shot from the first line, held to
+  the end of the intro (§8.8, §8.10, §8.11, §8.12, fixture; r3staging-1, -4): ropavieja and fataga
+  place the sisters side by side half turned to the lens, Stig facing them, cut `{ at:
+  'flamencoPool', dist: 5.5, height: 2.1 }` (the giver two-shot followed the arrival and placed
+  nobody else: the second sister spoke with her back to the lens or behind the other from three of
+  six sides); asnan and grisfest place Ole and Stig under the pergola, cut `{ at: 'flamenco', dist:
+  6, height: 2.2 }` (walking straight from the spawn to Ole, the two-shot's eye stood 0.9 m from the
+  un-collided porch post, 15–30 % of the frame). Grisfest's Stig stands on `approachSpot('flamenco')`
+  (−4, −9.5), the `calibrate` flowers start, so the flowers pool and timer stand.
+- r3 island-staging: asnan's Viking Bar outro is one `outroCam` shot of the bar front (§8.8,
+  fixture; r3staging-2): Stig hands the package in side-on to Carmencita on the spot where Angerud
+  stands later, Angerud is hidden until his own line (he stood between them before "Senare samma
+  dag…"), and the last line's `cut: null` is gone (it would release the outroCam).
+- r3 island-staging: ropavieja's "…mamma följde med?" is cut from the plaza side of the table,
+  `{ at: 'grillpaco', dist: −7, height: 2.2 }`, Mamma turned to the table (`outroPlace` yaw π)
+  (§8.10, fixture; r3staging-3): José was at the frame's left edge with his back to the lens.
+- r3 island-staging: room 113's Siv at `['rum113', 0.9, 3.0]`, off the lens axis (§8.13 stage 4,
+  fixture; r3staging-5): straight behind Angerud only her hair showed on her line.
+- r3 island-staging: new landmark `tongaSlump` (−143.7, −62.6, yaw 0.5) = `tongatonga` offset
+  (−2.3, 0.6) for Berra in the Tonga Tonga scene and his pickup (§8.12 stages 7–8, §6.3 table,
+  Appendix A, fixture; r3staging-6): at `tongaLot` he lay behind the camera on the lines about
+  carrying him. Untimed stages only.
+- r3 island-staging: the bodega pig-truck follow is a checkpoint, `retryAt: 'vischan'`, `retryCar:
+  { at: { x: −234, z: −143, yaw: 0 } }` (§8.9 stage 7, fixture; r3play-1): losing the truck or
+  wrecking it before getting in retried the 31 s timed vischan drive, the dropoff and the hitch
+  scene; now he is back at the wheel of his car on the track where the scene parked it, the truck
+  on its lane spot. Untimed stage, no timer.
+- r3 island-staging: the end card (§11.7, §9.4 item 8, §10.3, §8.13 "After the outro"; r3text-2,
+  -4): `playEndCard` drops every toast and turns every `ANIM_FLAGS` pose off on the four on deck
+  (the duet's `wings` ran into the Rio card), and the last mission's unlock holds its toast
+  (`game.unlock(name, { holdToast: true })`, applied and saved as before) until the card is over:
+  "Pepes Bodega har öppnat – på baksidan av hotellet." lay over the Rio shot and was gone before the
+  pool; now it shows under the completion banner.
+- r3 island-staging: barks by speaker get a fourth class, `STAFF_CAST` (Lasse, Affe, Gabbe, the
+  bungalow seller) with `OUCH_STAFF` (`Aj!`, `Hoppsan!`, `Det ingår inte i mina åtaganden!` [F*])
+  for `ouch` (§14.10; r3text-3): run over, the platschef threatened to talk to the platschef, and
+  SunTrip's own staff swore off SunTrip and the fuel surcharge.

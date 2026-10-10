@@ -104,9 +104,16 @@ export const GETUP_LOCAL = ['¡Madre mía…!' /* [N] */, 'Suecos…' /* [N] */,
 export const CARJACK_LOCAL = ['¡Ladrón!' /* [N] */, '¡Mi coche!' /* [N] */, '¡Policía!' /* [N] */];
 export const NPC_KICKED_LOCAL = ['¡Ay!' /* [N] */, '¡Señor, por favor!' /* [N] */, '¡Loco!' /* [N] */, '¡Basta!' /* [N] */];
 
-// Game.bark(ch, kind): `ole` for Ole, `local` for LOCAL_CAST and local pedestrians, else `sv`.
+// SunTrip's own staff and the resident bungalow seller (Phase 3 r3): run over, they do not threaten
+// the platschef (Lasse is one), swear off SunTrip or count the fuel surcharge. Their other barks
+// are the tourists'.
+export const STAFF_CAST = ['lasse', 'affe', 'gabbe', 'saljare'];
+export const OUCH_STAFF = ['Aj!' /* [N] */, 'Hoppsan!' /* [N] */, 'Det ingår inte i mina åtaganden!' /* [F*] Lasse's reply to Angerud */];
+
+// Game.bark(ch, kind): `ole` for Ole, `local` for LOCAL_CAST and local pedestrians, `staff` for
+// STAFF_CAST where the kind has one, else `sv`.
 export const BARKS = {
-  ouch: { sv: OUCH, ole: OUCH_OLE, local: OUCH_LOCAL },
+  ouch: { sv: OUCH, ole: OUCH_OLE, local: OUCH_LOCAL, staff: OUCH_STAFF },
   getUp: { sv: GETUP, ole: GETUP_OLE, local: GETUP_LOCAL },
   kicked: { sv: NPC_KICKED, ole: NPC_KICKED_OLE, local: NPC_KICKED_LOCAL },
   carjack: { sv: CARJACK, local: CARJACK_LOCAL },   // only pedestrians lose a car

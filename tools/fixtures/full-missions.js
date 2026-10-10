@@ -300,7 +300,7 @@ export const FULL_MISSIONS = [
   {
     id: 'asnan', title: 'Caballo folklorístico', level: 'island', giver: 'ole', at: 'flamenco', reward: 600,   // title [F*]
     intro: [
-      ['stig', 'Det var julmat – i julklappen. Och väskan är borta.'],   // [F*]
+      ['stig', 'Det var julmat – i julklappen. Och väskan är borta.', { cut: { at: 'flamenco', dist: 6, height: 2.2 }, place: { ole: ['flamenco', 0.8, 0.4, 1.07], stig: ['flamenco', -0.8, 0.4, -1.07] } }],   // [F*]
       ['ole', 'Tenk ikke mer på det. Vi fikser en ny julegave.'],       // [F]
       ['stig', 'Undrar vad dalahäst heter på spanska.'],                 // [F]
       ['ole', 'Cabalho folkloristico…'],                                 // [F]
@@ -327,15 +327,16 @@ export const FULL_MISSIONS = [
       () => goto({ to: 'vikingbar', radius: 7, inCar: true, passenger: 'ole', timer: 19, fragile: { label: 'SKICK', failText: 'Färgen blev förstörd!' }, text: 'Kör försiktigt till Viking Bar – färgen är våt!', checkpoint: true, retryAt: 'supermercado', retryCar: { at: { ...lm('supermercado'), yaw: 0 }, passenger: 'ole' } }),
       () => goto({ to: 'vikingbar', radius: 2.5, onFoot: true, text: 'Lämna paketet i baren' }),
     ],
-    outroPlace: { carmencita: ['vikingbar', -0.8, 1.6, 0], angerud: ['vikingbar', 0.9, 1.3, 0] },
+    outroPlace: { carmencita: ['vikingbar', -0.8, 1.6, 0], stig: ['vikingbar', 0.9, 1.3, 1.75] },
+    outroCam: { at: 'vikingbar', dist: 6.5, height: 3.4 },
     outro: [
-      ['stig', 'Ett paket till Viking Bar. Det är till en moster.'],                     // [N]
+      ['stig', 'Ett paket till Viking Bar. Det är till en moster.', { hide: ['angerud'] }],   // [N]
       ['carmencita', 'Jag lägger det bakom disken.', { toast: 'Senare samma dag…' }],      // [N]
-      ['angerud', 'Buenas dias, lilla vikingen. Har paketet kommit?', { cut: { at: 'vikingbar', dist: 6.5, height: 3.4 }, place: { stig: ['vikingbar', 4, -9, 0] } }],   // [F]
+      ['angerud', 'Buenas dias, lilla vikingen. Har paketet kommit?', { place: { stig: ['vikingbar', 4, -9, 0], angerud: ['vikingbar', 0.9, 1.3, 0] } }],   // [F]
       ['angerud', 'God jul, moster.'],                                                   // [F]
       ['angerud', 'Hur såg han som lämnade in det ut?'],                                 // [F]
       ['carmencita', 'Han var lång, mörkhårig… hade glasögon och mustasch.'],            // [F]
-      ['angerud', 'Då är det grönt.', { cut: null }],                                    // [F]
+      ['angerud', 'Då är det grönt.'],                                                   // [F]
     ],
   },
 
@@ -356,7 +357,7 @@ export const FULL_MISSIONS = [
       () => goto({ to: 'vischan', radius: 14, inCar: true, passenger: 'berra', timer: 31, text: 'Leta inåt land', radio: [['berra', 'Det här är ju rena vischan. Vi måste ha kört för långt.'], ['robban', 'Fan, vad jag är törstig.']], overhear: [{ at: 'eslovVag', r: 40, radio: true, lines: [['berra', 'Heja Eslöv!'], ['robban', 'Herre jävlar!']] }], checkpoint: true, retryAt: 'playa', retryCar: { at: { x: 0, z: 236, yaw: 0 }, passenger: 'berra', rider: 'robban' } }),
       () => dropoff({ who: 'berra', at: 'vischan', riderOff: true, text: 'Stanna vid tomatfälten' }),
       () => scene({ place: { stig: ['vischan', 2.0, -4.4, 2.03], berra: ['vischan', -0.2, -4.3, -2.0], robban: ['vischan', -1.7, -5.3, -2.4] }, cam: { at: 'vischanCam', dist: 0, height: 1.9 }, lines: [['stig', 'Jag kör inte längre på grusvägen. Jag har anlag för åksjuka.'], ['berra', 'Jag går inte en meter till. Vi liftar.']], doneCue: { toast: 'En grisbil stannar…' } }),   // [N] · [F](t) · [N]
-      () => follow({ type: 'grisbil', carName: 'grisbilFollow', driver: 'grisbonde', riders: ['berra', 'robban'], hideRiders: true, start: { lane: [[0, 2], [1, 2]], t: 12 }, via: [[1, 2], [1, 1], [2, 1]], to: 'grisfestGate', maxDist: 55, cruise: 15, wobble: 0.12, text: 'Följ grisbilen – Berra och Robban har liftat!', radio: [['robban', 'Fan, de luktar.'], ['berra', 'Skit i det. Vi slipper gå.', { gap: 4.5 }], ['robban', 'Snacka om grisfest.', { gap: 4.5 }]] }),
+      () => follow({ type: 'grisbil', carName: 'grisbilFollow', driver: 'grisbonde', riders: ['berra', 'robban'], hideRiders: true, start: { lane: [[0, 2], [1, 2]], t: 12 }, via: [[1, 2], [1, 1], [2, 1]], to: 'grisfestGate', maxDist: 55, cruise: 15, wobble: 0.12, checkpoint: true, retryAt: 'vischan', retryCar: { at: { x: -234, z: -143, yaw: 0 } }, text: 'Följ grisbilen – Berra och Robban har liftat!', radio: [['robban', 'Fan, de luktar.'], ['berra', 'Skit i det. Vi slipper gå.', { gap: 4.5 }], ['robban', 'Snacka om grisfest.', { gap: 4.5 }]] }),
       () => getInCar({ missionCar: 'grisbilFollow', any: false, passenger: 'berra', rider: 'robban', text: 'Grisbonden lånar ut grisbilen – hoppa in!', say: ['grisbonde', 'Ta bilen, señor. Ställ den vid hotellet – jag hämtar den på torsdag.'] }),
       () => destroy({ type: 'guardia', carName: 'guardiaJeep', driver: 'guardia', spawn: { lane: [[3, 1], [3, 2]], t: 25 }, cruise: 20, damageScale: 4, playerDamageScale: 0.5, noExplode: true, timer: 42, lockMeter: true, barLabel: 'JEEPEN', text: 'Guardia Civil såg grisarna – stoppa jeepen innan den hämtar förstärkning!', failText: 'Jeepen hann fram till kasernen.', checkpoint: true, retryAt: 'grisfestGate', retryCar: { at: 'grisfestGate', type: 'grisbil', name: 'grisbilFollow', passenger: 'berra', rider: 'robban' } }),
       () => goto({ to: 'flamencoBack', radius: 10, inCar: true, passenger: 'berra', timer: (g, m) => homeTimer(m.data.wreck), text: 'Kör hem grisarna till hotellet!', failText: 'Ni kom aldrig fram.' }),
@@ -384,7 +385,7 @@ export const FULL_MISSIONS = [
   {
     id: 'ropavieja', title: 'Gamla kläder', level: 'island', giver: 'siv', at: 'flamencoPool', reward: 700, extra: ['majsan'],   // title [F*]
     intro: [
-      ['siv', 'Han heter José. Och han jobbar inte på pizzeria.'],             // [F*](t)
+      ['siv', 'Han heter José. Och han jobbar inte på pizzeria.', { cut: { at: 'flamencoPool', dist: 5.5, height: 2.1 }, place: { siv: ['flamencoPool', 0.2, 0.5, Math.PI / 4], majsan: ['flamencoPool', 1.3, 1.1, Math.PI / 5], stig: ['flamencoPool', -1.3, 0.5, -Math.PI / 4] } }],   // [F*](t)
       ['majsan', 'Datatekniker.'],                                            // [F](t)
       ['siv', 'Äkta spansk restaurang. Klockan sju.'],                         // [F*](t)
       ['majsan', 'Ta pepparn. Om han blir närgången.'],                       // [F*]
@@ -395,13 +396,13 @@ export const FULL_MISSIONS = [
       () => follow({ type: 'hatch', color: 0x2a4fa8, carName: 'joseBil', driver: 'jose', passenger: 'siv', riders: ['mamma'], start: { lane: [[5, 3], [4, 3]], t: 12 }, via: [[4, 4], [3, 4]], to: 'grillpacoCurb', maxDist: 55, minDist: 14, minGrace: 2, minText: 'José såg dig! Håll avståndet.', cruise: 13, text: 'Följ José – men inte för nära!', radio: [['jose', 'Jag ska bjuda dig på ett ställe som inga turister kommer till.'], ['siv', 'Det låter ju trevligt.', { gap: 4.5 }], ['jose', 'Äkta spanska maten på en restaurang.', { gap: 4.5 }]] }),
       () => goto({ to: 'plaza', radius: 4, onFoot: true, text: 'Parkera och spana diskret från fontänen' }),
     ],
-    outroPlace: { jose: ['grillpaco', 0, 0], siv: ['grillpaco', 1.2, 0], mamma: ['grillpacoMamma', 0, 0, 0] },
+    outroPlace: { jose: ['grillpaco', 0, 0], siv: ['grillpaco', 1.2, 0], mamma: ['grillpacoMamma', 0, 0, Math.PI] },
     outroCam: ['jose', 'siv'],
     outro: [
       ['jose', 'Kanarisk specialitet! Ropa vieja – gamla kläder.'],                                                                                       // [F]
       ['siv', 'Vad sa du?'],                                                                                                                             // [F]
       ['jose', 'Gamla kläder. Det är ungefär som pyttipanna.'],                                                                                          // [F]
-      ['jose', 'Är det säkert att det inte gör nåt att mamma följde med?', { cut: { at: 'grillpacoMamma', dist: 5, height: 1.9 } }],                     // [F]
+      ['jose', 'Är det säkert att det inte gör nåt att mamma följde med?', { cut: { at: 'grillpaco', dist: -7, height: 2.2 } }],                         // [F]
       ['siv', 'Vill hon inte sitta här?', { cut: null }],                                                                                                // [F]
       ['jose', 'Nej, hon vill inte vara i vägen.'],                                                                                                      // [F]
       ['siv', 'Jag fick användning för din peppar.', { toast: 'Dagen efter, vid poolen…', place: { siv: ['flamencoPool', 1.2, 0.6, Math.PI / 2], majsan: ['flamencoPool', -1.2, 0.6, -Math.PI / 2] }, cut: 'flamencoPool' }],   // [F]
@@ -415,7 +416,7 @@ export const FULL_MISSIONS = [
   {
     id: 'fataga', title: 'En skock får', level: 'island', giver: 'majsan', at: 'flamencoPool', reward: 800, extra: ['siv'],   // title [F*]
     intro: [
-      ['stig', 'Om du köper en brödrost, och det står \'Kontrollerad av G17\', så är det jag.'],   // [F]
+      ['stig', 'Om du köper en brödrost, och det står \'Kontrollerad av G17\', så är det jag.', { cut: { at: 'flamencoPool', dist: 5.5, height: 2.1 }, place: { majsan: ['flamencoPool', 0.2, 0.5, Math.PI / 4], siv: ['flamencoPool', 1.3, 1.1, Math.PI / 5], stig: ['flamencoPool', -1.3, 0.5, -Math.PI / 4] } }],   // [F]
       ['majsan', 'Själv brukar jag säga att jag går på gatan.'],                                   // [F*]
       ['majsan', 'Gillar du fotboll också?'],                                                      // [F](t)
       ['majsan', 'Du, vill du smörja in mig på ryggen?'],                                          // [F](t)
@@ -443,7 +444,7 @@ export const FULL_MISSIONS = [
   {
     id: 'grisfest', title: 'Grisfesten', level: 'island', giver: 'ole', at: 'flamenco', reward: 1000, cost: 800,   // title [F*]
     intro: [
-      ['ole', 'Skal du ha B-vitaminer? Bra for leveren. Grisefest, vet du. Ta to.'],                    // [F]
+      ['ole', 'Skal du ha B-vitaminer? Bra for leveren. Grisefest, vet du. Ta to.', { cut: { at: 'flamenco', dist: 6, height: 2.2 }, place: { stig: ['flamenco', 0, 1.5, -1.07], ole: ['flamenco', 1.6, 1.4, 1.07] } }],   // [F]
       ['ole', 'Og jeg har C-vitaminer… jerntabletter, ginseng, tannkrem…?'],                            // [F*]
       ['ole', 'Du, de er fine de rødhårete. Vi skulle ha satt inn et støt der.'],                       // [F]
       ['ole', 'Vi kan be resepsjonen sette blomster på rommet deres.'],                                 // [F*](t)
@@ -467,8 +468,8 @@ export const FULL_MISSIONS = [
         ['siv', 'Majsan, ta med dig giraffen så går vi på Tonga Tonga.'],                                        // [F]
       ] }),
       () => goto({ to: 'tongatonga', radius: 10, inCar: true, timer: 19, text: 'Till Tonga Tonga!', checkpoint: true, retryAt: 'dansgolv', retryCar: { at: { x: -86, z: -202.75, yaw: -Math.PI / 2 }, park: true } }),
-      () => scene({ place: { ole: ['tongatonga', -2.2, 3.2, 0], majsan: ['tongatonga', 2.0, 3.0, 0], siv: ['tongatonga', 3.0, 3.4, 0], robban: ['tongatonga', -0.8, 1.2, -Math.PI / 2], berra: ['tongaLot', 0, 0], stig: ['tongatonga', 0.8, 1.2, Math.PI / 2] }, anim: { berra: 'slump' }, cam: { at: 'tongatonga', dist: 6, height: 2.6 }, lines: [['ole', 'Samba er fine greier!', { music: 'samba' }], ['robban', 'Kan du hjälpa mig bära hem Berra?'], ['stig', 'Vilket snack! "Bärra hem Berra!"']] }),   // [F] ×3
-      () => pickup({ who: 'berra', name: 'Berra', at: 'tongaLot', rider: 'robban', hello: '…zzz' }),
+      () => scene({ place: { ole: ['tongatonga', -2.2, 3.2, 0], majsan: ['tongatonga', 2.0, 3.0, 0], siv: ['tongatonga', 3.0, 3.4, 0], robban: ['tongatonga', -0.8, 1.2, -Math.PI / 2], berra: ['tongaSlump', 0, 0], stig: ['tongatonga', 0.8, 1.2, Math.PI / 2] }, anim: { berra: 'slump' }, cam: { at: 'tongatonga', dist: 6, height: 2.6 }, lines: [['ole', 'Samba er fine greier!', { music: 'samba' }], ['robban', 'Kan du hjälpa mig bära hem Berra?'], ['stig', 'Vilket snack! "Bärra hem Berra!"']] }),   // [F] ×3
+      () => pickup({ who: 'berra', name: 'Berra', at: 'tongaSlump', rider: 'robban', hello: '…zzz' }),
       () => goto({ to: 'flamencoDrive', radius: 10, inCar: true, passenger: 'berra', text: 'Kör hem till Hotell Flamenco' }),
       () => carry({ who: 'berra', to: 'flamencoRecepcion', radius: 2.2, walkSpeed: 3.2, failOn: { fall: true }, text: 'Bärra hem Berra!', failText: 'Berra vaknade och började sjunga.', checkpoint: true, retryAt: { x: -24, z: 16, yaw: -Math.PI / 2 } }),
     ],
@@ -540,7 +541,7 @@ export const FULL_MISSIONS = [
         ['stig', 'Femtio… tusen… kronor. I knäckebrödet.'],                                                         // [N]
         ['ole', 'Femti tusen… Rio, Stig-Helmer! Stranda, jentene og samba!'],                                       // [F*]
       ] }),
-      () => scene({ cam: { at: 'rum113', dist: 6, height: 3 }, place: { angerud: ['rum113', 0, 0.8], stadare: ['rum113', -1.5, 1.6], saljare: ['rum113', 1.5, 1.6], mamma: ['rum113', -2.5, 2.4], pappa: ['rum113', -3.2, 2.4], carmencita: ['rum113', 2.5, 2.4], jose: ['rum113', 3.2, 2.4], siv: ['rum113', 0, 3.2] }, lines: [
+      () => scene({ cam: { at: 'rum113', dist: 6, height: 3 }, place: { angerud: ['rum113', 0, 0.8], stadare: ['rum113', -1.5, 1.6], saljare: ['rum113', 1.5, 1.6], mamma: ['rum113', -2.5, 2.4], pappa: ['rum113', -3.2, 2.4], carmencita: ['rum113', 2.5, 2.4], jose: ['rum113', 3.2, 2.4], siv: ['rum113', 0.9, 3.0] }, lines: [
         ['stadare', 'Limpio!'],                                                                                                 // [F]
         ['saljare', 'Jag var tvungen att sälja tomten i morse. De skrev på.'],                                                  // [F]
         ['mamma', 'Ni har dragit skam över vår familj!'],                                                                       // [F](t)
