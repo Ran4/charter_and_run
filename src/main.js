@@ -235,8 +235,7 @@ class Game {
     hud.flashColor('rgba(255,255,255,0.95)');
     hud.showBanner(S.transitionMain, S.transitionSub, 'mission', 3200);
     this.cabin.unseatAll();
-    this.cabin.stopTrolley();
-    this.cabin.trolley.place(lm('trolleyPark').x, lm('trolleyPark').z, Math.PI);
+    this.cabin.parkTrolley();
     if (this.playerCar) this.exitCar(true);
     this.player.state = 'normal';
     this.setLevel(name, { index: this.missions.index });
@@ -1032,7 +1031,7 @@ class Game {
     if (c.phase !== undefined) { const [n, o] = Array.isArray(c.phase) ? c.phase : [c.phase, {}]; cab.setPhase(n, o || {}); }
     if (c.seatbelt !== undefined) cab.setSeatbelt(c.seatbelt);
     if (c.turbulence) cab.turbulence(...c.turbulence);
-    if (c.trolley !== undefined) { if (c.trolley) cab.startTrolley(); else cab.stopTrolley(); }
+    if (c.trolley !== undefined) { if (c.trolley === 'park') cab.parkTrolley(); else if (c.trolley) cab.startTrolley(); else cab.stopTrolley(); }
     if (c.blockers !== undefined) cab.setAisleBlockers(!!c.blockers);
     if (c.outfit) { if (c.outfit.who === PLAYER_KEY) this.setPlayerOutfit(c.outfit.name); else this.setNpcOutfit(c.outfit.who, c.outfit.name); }
     if (c.music) {

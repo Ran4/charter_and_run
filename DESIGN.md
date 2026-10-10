@@ -889,6 +889,14 @@ registerCarType('trolley', { name: 'Serveringsvagn', len: 0.85, wid: 0.45, bodyH
   `cruise` from mission 3 on; parked at `trolleyPark` otherwise. A manual mode set by
   `startTrolley`/`stopTrolley` belongs to the current mission run (`game.missions.m`) and reverts to
   auto when that run ends (complete, fail or abort). `cabin._t.serving` is true during a stop.
+- `cabin.parkTrolley()` (cue `trolley: 'park'`; Phase 3 r3): `stopTrolley()` **at `trolleyPark`**
+  (the serving, wait and grace state cleared, the next run starts at row 3). The front galley is
+  clear of every flight route and target (the door at z 14.7, `galleyFront` 13.0 r 1.6, the aisle
+  from row 1 aft), so a stage that needs the aisle and must not have the trolley moving parks it
+  instead of freezing it: frozen wherever an intro had caught it, mid-aisle it is a wall (the
+  0.45 m trolley and the firm pusher fill the aisle; seat backs stop a detour through the rows).
+  `transitionTo` parks it the same way. **Rule:** no mission stage uses `trolley: false`; a moving
+  trolley (`true`, juice and sprit) is a designed, passing obstacle, never a permanent one.
 - Fallback if the trolley misbehaves (P0 safety): `stopTrolley()` permanently and serve juice from
   the galley interactable; missions 3–4 still work.
 - P2 only: player-driven trolley (needs hard speed cap, `noBoost`, `pushed` seat, ~10 car.js edits).
@@ -1459,7 +1467,7 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
 |---|---|---|---|---|
 | 8.1 gate [3] toilet dash | gateOle → round the ladies' room → herrtoa (r 1.8), sprint 3.6 s (walk 5.0; Phase 3 r2 from the statistics' placed start (25.0, 11.6): 3.6 / 5.1) | 4.1 (3.6 + 0.5; 1) | **6** (was 10) | 40 % sprint, 16 % walk |
 | 8.2 ombord [0] find 14B | the intro's spot at the front door (1.6, 13.55) → 14B past three stowers (E each), sprint 3.1 s (walk 4.4) | 5.1 (3.1 + 4 × 0.5; 1; Phase 3 r2, the intro places him there; from `cabinDoor`'s approach spot 2.9 → 4.9) | **7** (15) | 56 % sprint, 37 % walk |
-| 8.4 sprit [0] five bottles | sprint after the nearest, wait in the aisle clear of the trolley for the bottles it pushes out, Space while the 3.0–6.0 s turbulence shakes | 10.1 (p75 7.60 of 61 + 2.5; 5.5–7.8 s, median 7.40; pool `sweeper-r2fm/b69c64e` in `notes/calibration-samples.md`: r2 flight-missions' 36 + 5, r2 gate's 5, r3 flight-flow's 10, r3 flight-look's 5; Phase 3 r2, the turbulence moved inside the sweep. Before it, with none: p75 6.0 of 48 → 11 (r1 repair); the old sweeper that hid in a row was bimodal, 4–12 s or 28–30 s, p75 14.4 → 22, Phase 2 17.1 → 25) | **13** (35) | 42 % at p75 |
+| 8.4 sprit [0] five bottles | sprint after the nearest, wait in the aisle clear of the trolley for the bottles it pushes out, Space while the 3.0–6.0 s turbulence shakes | 10.1 (p75 7.60 of 71 + 2.5; 5.4–7.8 s, median 7.40; pool `sweeper-r2fm/b69c64e` in `notes/calibration-samples.md`: r2 flight-missions' 36 + 5, r2 gate's 5, r3 flight-flow's 10, r3 flight-look's 5, r3 flight-trolley's 10; Phase 3 r2, the turbulence moved inside the sweep. Before it, with none: p75 6.0 of 48 → 11 (r1 repair); the old sweeper that hid in a row was bimodal, 4–12 s or 28–30 s, p75 14.4 → 22, Phase 2 17.1 → 25) | **13** (35) | 42 % at p75 |
 | 8.5 landning [0] round-up | row 16 → José → Berra → Herr Storch (walk, sign lit) | 9.1 (7.6 + 1.5; 2 orders) | **12** (20) | 37 % |
 | 8.5 landning [1] back to 14B | from the far end (Berra) | 3.7 (3.2 + 0.5; 2) | **5** (10) | 36 % |
 | 8.6 buss17 s2 | busBay → 7,1 > 3,1 > 3,4 → flamencoDrive, ÅKSJUKA, stop | 45.0 (median of 10 clean in 4 sets, 44.4–47.0) | **54** (60) | 17 % |
@@ -1818,9 +1826,9 @@ and the trolley keeps coming.
      mode ever saw it). Re-measured with `FLIGHT=sprit SPRIT_RUNS=36 calibflight`, the sweeper
      holding Space only while it shakes: 36 clean sweeps 5.5–7.8 s, median 7.4, p75 7.6 → T_ref
      10.1 → timer **13** (90 % range 13–13); a careful sweeper's FLYGRÄDSLA peaks at 12–17. The
-     pool (`notes/calibration-samples.md`, `node tools/pool.mjs`) has since grown to 61 sweeps on
+     pool (`notes/calibration-samples.md`, `node tools/pool.mjs`) has since grown to 71 sweeps on
      the same stage and sweeper code (r2's 5 more, the r2 gate's 5, r3 flight-flow's 10, r3
-     flight-look's 5): median
+     flight-look's 5, r3 flight-trolley's 10): median
      7.40, p75 7.60 → still **13** (90 % range 13–13).
 2. `goto({ to: 'galleyFront', radius: 1.6, text: 'Lämna flaskorna i främre byssan' })`
 
@@ -1851,10 +1859,10 @@ just after takeoff, ~0:23, so every line is relocated `[F*]`, and the siv/majsan
 - siv: "Han är så bortkommen. Det blir minuspoäng."  [F*](t)
 - stig: "…Fyra?"  [N]
 - kapten: "Vi har påbörjat inflygningen mot Las Palmas. Var vänliga och fäst säkerhetsbältena."  [N]  {pa: true, seatbelt: true}
-- vardinna: "Alla ska sitta! Hjälp mig få folk på plats, är du snäll."  [N]  {cut: {at: 'galleyCam', dist: 0, height: 3.6}} (Phase 3 r2: she stands at the front galley, 16 m behind the row-16 shot's lens, and spoke off screen; the cut looks forward along the aisle to her, the `row22Cam` recipe, and holds to the end of the intro. She is not placed in the aisle: the timed round-up runs both ways from row 16.)
+- vardinna: "Alla ska sitta! Hjälp mig få folk på plats, är du snäll."  [N]  {cut: {at: 'galleyCam', dist: 0, height: 3.6}, trolley: 'park'} (Phase 3 r2: she stands at the front galley, 16 m behind the row-16 shot's lens, and spoke off screen; the cut looks forward along the aisle to her, the `row22Cam` recipe, and holds to the end of the intro. She is not placed in the aisle: the timed round-up runs both ways from row 16. Phase 3 r3: the trolley is parked in the galley behind her on this cut, which hides the move; see stage 1.)
 
 **Stages:**
-1. `collect({ who: ['herrStorch', 'jose', 'berra'], standAt: { herrStorch: [3000.2, 3.4], jose: [2999.8, -9.2], berra: [3000.0, -14.4] }, seatOnTouch: true, timer: 12, text: 'Få de stående passagerarna att sätta sig', barLabel: 'STÅENDE', failText: 'Värdinnan fick göra det själv.', lines: {...}, startCue: { phase: ['cruise', { instant: true }], trolley: false, seatbelt: true } })` (the intro's PA lights the sign; `seatbelt: true` relights it on a retry, which has no intro, so standing costs fear there too). No turbulence here (Phase 3 r2): the `timedCues: [[12, {turbulence: [0.3, 4]}]]` shake fired on the frame its 12 s timer failed (timed cues run on scaled stage time, the timer on real time, so only test mode ever saw it); the approach (stage 3) is the mission's turbulence. Measured times unchanged (the clean round-up, 7.6 s, never reached the cue).
+1. `collect({ who: ['herrStorch', 'jose', 'berra'], standAt: { herrStorch: [3000.2, 3.4], jose: [2999.8, -9.2], berra: [3000.0, -14.4] }, seatOnTouch: true, timer: 12, text: 'Få de stående passagerarna att sätta sig', barLabel: 'STÅENDE', failText: 'Värdinnan fick göra det själv.', lines: {...}, startCue: { phase: ['cruise', { instant: true }], trolley: 'park', seatbelt: true } })` (the intro's PA lights the sign; `seatbelt: true` relights it on a retry, which has no intro, so standing costs fear there too). **The trolley is parked** in the front galley for the whole mission (Phase 3 r3, the user's own play: §5.8 `parkTrolley`, re-applied by a checkpoint retry, §9.4 item 3). `trolley: false` froze it where the intro had caught the auto trolley (it runs in cruise from mission 3): anywhere between Herr Storch (z 3.4) and Berra (−14.4) it walled off one of them, with the pusher, for the 12 s and for every retry, and the 14B dash inherited it (a probe: the trolley caught on its way to row 19, at z −6.5, Stig stuck at −4.9 behind the pusher, failed twice). The timers stand: `calibflight` logs the trolley, and the shipped measurement had it frozen at z 15.7 in the front galley, as parked now (round-up 7.62 / 6.9 s, back to 14B 1.3 / 3.2 s). No turbulence here (Phase 3 r2): the `timedCues: [[12, {turbulence: [0.3, 4]}]]` shake fired on the frame its 12 s timer failed (timed cues run on scaled stage time, the timer on real time, so only test mode ever saw it); the approach (stage 3) is the mission's turbulence. Measured times unchanged (the clean round-up, 7.6 s, never reached the cue).
    - herrStorch: "Lite film."  [F*](t) (Arlanda line)  {anim: {who:'herrStorch', flag:'film', secs:2}}
    - jose: siv "Vad skönt att komma bort!" [F*] then jose "Jag ska inte bort, jag ska hem." [F*] (mid-flight in the film, relocated)
    - berra: "Ska vi inte landa snart?"  [N]
@@ -2608,7 +2616,7 @@ kind cues `useCue` (interact) and `fillCue` (mantra).
 | `fear: n` / `relieve: n` | `shame.add(n, { force: true })` / `shame.relieve(n)` (flight meter; bypass `locked`; `fear` interrupts a held mantra) |
 | `shake: n` | `cam.shake = max(cam.shake, n)` |
 | `applause: secs` | `audio.applause(secs)` |
-| `phase: name \| [name, { instant, hold }]` · `seatbelt: bool` · `turbulence: [s, secs, {delay}?]` · `trolley: bool` · `blockers: bool` | cabin calls (`phase` animates unless `instant`; `trolley` = `startTrolley`/`stopTrolley`; `blockers` = `setAisleBlockers`) |
+| `phase: name \| [name, { instant, hold }]` · `seatbelt: bool` · `turbulence: [s, secs, {delay}?]` · `trolley: bool \| 'park'` · `blockers: bool` | cabin calls (`phase` animates unless `instant`; `trolley` = `startTrolley`/`stopTrolley`, `'park'` = `parkTrolley` (Phase 3 r3, §5.8); `blockers` = `setAisleBlockers`) |
 | `outfit: {who, name}` | `setPlayerOutfit` / `setNpcOutfit` (re-renders the portrait) |
 | `music: name \| {tune, secs}` | `audio.setTune(name)`; with `secs`, revert to the previous tune after; a trad name plays `audio.trad(name)` over the current tune |
 | `sky: 'day' \| 'night' \| 'sunset'` | island palette |
@@ -2656,11 +2664,15 @@ Runner changes (Phase 0):
    Only the yaws change, never a position, and every autopilot sets the camera itself, so no timer
    moves (the walk's velocity follows the camera, not his facing; §8 "Timers and difficulty").
 3. **Checkpoints**: entering a stage with `checkpoint: true` records `cpI`; `retry()` restarts
-   from `cpI` with a fresh `m`: it first re-applies, in stage order, the **ambient fields** (`sky
-   music phase seatbelt outfit trolley blockers`; `phase` always instant) of the `startCue` and
-   `doneCue` of every stage before `cpI` (so a grisfest retry is still at night with `vals`), then
-   teleports to `stage.retryAt ?? def.at` (its `approachSpot`, facing its yaw, the camera too) and
-   starts the stage; on foot he and the camera then turn to the started stage's guide (the arrow's
+   from `cpI` with a fresh `m`: it teleports to `stage.retryAt ?? def.at` (its `approachSpot`,
+   facing its yaw, the camera too), then, on the fresh `m` (startMission's `before`, ahead of a
+   `retryCar`), re-applies in stage order the **ambient fields** (`sky music phase seatbelt outfit
+   trolley blockers`; `phase` always instant) of the `startCue` and `doneCue` of every stage before
+   `cpI` (so a grisfest retry is still at night with `vals`), and starts the stage. (Phase 3 r3:
+   they were applied before the teleport, under the failed run's `m`, and a manual trolley mode,
+   which belongs to the run that set it, §5.8, fell back to auto at once: landning's re-parked
+   trolley set off down the aisle in the retried 14B dash. No other field depends on the order.)
+   On foot he and the camera then turn to the started stage's guide (the arrow's
    aim: `routeAim` on the island, straight in the flight level; `runner.faceGuide()`), and a stage
    without a target (a scene) keeps the spot's yaw (a timed stage after that scene then faces its
    guide, item 2). Phase 3 r3: the camera kept the yaw it had when the stage failed
@@ -3646,7 +3658,7 @@ cabin = {
   turbulent -> bool,             // getter (review fix 1): true from the warning until the shaking
                                  // ends; main.js shows the `Håll i dig!` prompt on it (§5.7 step 1)
   seatCharacter(ch, seatId),  unseatCharacter(ch, spot?),  unseatAll(),  seatOf(ch) -> id | null,
-  startTrolley(),  stopTrolley(),  trolleyEnd(g) -> { x, z },
+  startTrolley(),  stopTrolley(),  parkTrolley(),  trolleyEnd(g) -> { x, z },
   stopTurbulence(),              // Phase 2: ends a running turbulence now (restoreAmbience)
   skipRowSixBark(),              // Phase 3 r2: a stage takes Angerud's row-6 line (§5.12)
   walkers,                       // the aisle walkers (keys walker0..2; §5.12); _t.serving
@@ -4139,7 +4151,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `missions` [Phase 0] | for N = 0..12: `fresh('&mission=N')`: `level === levelFor(N)`, giver visible within 40 m of `at`, no errors; at `&mission=1`: `cabin.seatOf(npc('ole')) === '14A'` and Majsan seated in 16E (cast seated from the start of ombord); **data checks**: every key used in any `place`/`extra`/`outroPlace`/`who`/`findAt`/`standAt`/`sendTo`/`frame`/`duet` resolves via `game.npc(key)`; every `checkpoint: true` stage acting > 60 m from `def.at` has `retryAt` (§9.4) |
 | `gate` [A1] | mission 0 loaded: shots of arch, lounge, toilet, bridge; walking into every gate wall for 2 s keeps `cabin.inside()` true; the arch is the only way out of the landside pocket; `kontrollant` and the `gateQueue` warp spot are not inside a solid |
 | `cabin` [A1] | `setPhase(p, {instant})` for every phase → shot each; walk into each cabin wall 2 s → still inside; `camera.position.y > 4`; seated heads clear of the overhead (a 9 × 9 ray grid per head: no rack, rail or service unit in front of any sample, from the row-14 aisle view and the 14A/14B and 16E/16F two-shots; Phase 3, §5.3); row-number strip shot; after `?mission=2` boots and after `setNpcOutfit('ole', 'flyg')`, Ole's root world position is within 0.5 m of seat 14A; player at `galleyBack` and `toiletBackL` with camera yaw toward the nose → shot + raycast: no airframe mesh between camera and player |
-| `trolley` [A1] | `startTrolley`; stand in the aisle ahead for 40 s: `stats.bowled ≥ 1`, fear rose, no NaN; stepping into a free row avoids it; an NPC standing in the aisle makes the trolley wait (not shoved) |
+| `trolley` [A1] | `startTrolley`; stand in the aisle ahead for 40 s: `stats.bowled ≥ 1`, fear rose, no NaN; stepping into a free row avoids it; an NPC standing in the aisle makes the trolley wait (not shoved); Phase 3 r3: landning started with the auto trolley aft of row 16 has it parked at `trolleyPark` (`stop`) in the round-up, and a stage-1 checkpoint retry keeps it there (§5.8, §9.4 item 3) |
 | `turbulence` [A1] | standing, not holding: `turbulence(0.8, 6)` → `stats.falls ≥ 1`; repeat holding Space → no fall |
 | `panic` [A1] | cruise idle: `addCoins(100)`; `shame.add(100)` → within 4 s player seated in 14B, coins 50, v 40; player in the lounge (outside the cabin) → player at `gateOle`, gate toast text; mission 2 takeoff stage → mission failed with the panic text; PANIK during a `scene` is deferred until it ends |
 | `phases` [A2] | every phase at `t = 0.5·len`: one shot from the default cabin camera and one from outside the plane |
@@ -4161,7 +4173,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `propsheet`, `riocard`, `islandtour`, `islandstats` [B] | every §6.8 prop in a row; the Rio set from `rioCam`; streets/outskirts/sea tour; triangle budget |
 | `endcard` [Phase 2] | `game.playEndCard()`: Stig on the Rio deck in `rio`, Ole in `rio`, sunset, letterbox, frozen input, `RIO…?`; then back within 2.5 m of `flamencoPool` in island clothes, free roam, `NUEVA ESTOCOLMO KLARAT!` |
 | `calibrate` [G, Phase 2] | island timer calibration and difficulty checks (§8 "Timers and difficulty"): a headless autopilot in the player's car (env `CAL=id,…` from buss17 asnan vischan jeep home flowers plates tonga race guests balls sheep follow pursuit haggle; `RUNS` = 3, `JEEP_RUNS` = 12, `HOME_RUNS` = 2 (per spot), `FOOT_RUNS` = 4 (balls, sheep, flowers), `PLATE_RUNS` = 6, `RACE_RUNS` = 2 (+ 2 with one crash; every car-car impact of the player's car or the bus is logged, and a run whose car was lost counts as lost), `PURSUIT_RUNS` = 3, `RACE_SWEEP`, `JEEP`, `RACE_CAR`); medians of clean runs (the plates' fixed layout too) / 75th percentiles, on-foot A* walker (round static solids and stopped cars; it tracks its place on the route, measures progress along it (12 s without 1 m of it, or 30 s without getting 1 m closer along the route, is stuck and fails the run), re-plans at once on a new target, and backs out along its trail from a spot the grid cannot leave; walk results log `falls` and `wedges`), crash injection; the default run is a regression check, and a random stage's timer comes from its pool in `notes/calibration-samples.md` (`node tools/pool.mjs`); `CAL CHECK` compares each measured timer with the shipped one and, for a random stage (jeep, balls, sheep, flowers), says whether the shipped timer lies inside this sample's 90 % bootstrap range of the timer (`timerRange` in `tools/lib.mjs`; §8 "Timers and difficulty"); checks: deterministic shipped timers ≥ T_ref, a clean race wins and a crashed one loses, a clean SKANDAL escape is possible, follows stay in band; prints the timer table. `story` supports `SHOTS=1` (key-scene screenshots; every mission script slows the dialogue, which a `FROM` reload resets, and a shot wait gives up once the mission reaches the stage it names in `before`, so a missed line never holds the script while a timed stage runs; Phase 3 r2) |
-| `calibflight` [Phase 2] | flight timer calibration and FLYGRÄDSLA balance (env `FLIGHT=gate/sprint,…`, `SPRIT_RUNS` = 5, `DEBUG_SPRIT=1` traces the player, the trolley and the bottles twice a second, `DIALOG_CPS` = 55 the dialogue's typing speed, 20 for a player who reads every line: Phase 3 r3, FLYGRÄDSLA must not depend on it, §5.9): careful vs careless autopilots at timeScale 1; the sprit sweeper waits for bottles in the aisle clear of the trolley (2.4 m moving, 1.7 m stopped), steps into a free row only in turbulence and holds Space only while it shakes (not through the 1.5 s warning; Phase 3 r2); `CALF CHECK sprit[0]` compares with the shipped timer and the sample's 90 % bootstrap range; checks that careful players never panic (and the sprit sweeper is never bowled over and never falls) and careless ones do in missions 1, 2 and 5 |
+| `calibflight` [Phase 2] | flight timer calibration and FLYGRÄDSLA balance (env `FLIGHT=gate/sprint,…`, `SPRIT_RUNS` = 5, `DEBUG_SPRIT=1` traces the player, the trolley and the bottles twice a second, `DIALOG_CPS` = 55 the dialogue's typing speed, 20 for a player who reads every line: Phase 3 r3, FLYGRÄDSLA must not depend on it, §5.9): careful vs careless autopilots at timeScale 1; the landning round-up logs where the trolley stands at its start and end (Phase 3 r3); the sprit sweeper waits for bottles in the aisle clear of the trolley (2.4 m moving, 1.7 m stopped), steps into a free row only in turbulence and holds Space only while it shakes (not through the 1.5 s warning; Phase 3 r2); `CALF CHECK sprit[0]` compares with the shipped timer and the sample's 90 % bootstrap range; checks that careful players never panic (and the sprit sweeper is never bowled over and never falls) and careless ones do in missions 1, 2 and 5 |
 | `perf` [Phase 2] | frame rate (2 s of play) plus the mean `game.update` ms and the GPU-synced `renderer.render` ms in the cabin in every phase (seated in 14B and from the aisle), at the gate, and on the island (spawn, plaza, marknad, kasbah, a drive through the centre, the high view); fails below 45 fps or above 1000/45 ms per frame. Phase 2: worst cabin 7.2 ms, worst island 9.0 ms (marknad, ~810 calls, 3.3 M triangles), all at 60 fps |
 
 ---
@@ -5205,3 +5217,19 @@ the fixer's group.
   kerb, where the crag stood between him and the player, and needed about 10 s; on 302d4c2 he took
   about 7 s by walking through the rock); now he rounds the house in 4 s. `skandal`, `CAL=pursuit`
   (the car escape: clean 2 of 3 escaped, one crash 0 of 3) pass.
+- r3 flight-trolley: landning's round-up and 14B dash have the trolley **parked** in the front galley
+  (`trolley: 'park'` on stage 1's `startCue` and on the intro's galleyCam line, whose cut hides the
+  move; new `cabin.parkTrolley()`, a `stopTrolley` at `trolleyPark`; §5.8, §8.5, §9.3; r3user-1, the
+  user's own play). `trolley: false` froze it where the intro had caught the auto trolley: mid-aisle,
+  trolley and pusher walled off Herr Storch or José and Berra, and the round-up failed on every retry
+  (a probe: caught on its way to row 19, z −6.5, Stig stuck at −4.9, failed twice). Rule: no stage uses
+  `trolley: false`. `transitionTo` parks it through the same call. No timer changes: `calibflight`
+  now logs the trolley, and the shipped measurement had it frozen at z 15.7 in the front galley
+  (round-up 7.62 / 6.9 s, back to 14B 1.3 / 3.2 s, as before).
+- r3 flight-trolley: a checkpoint retry re-applies the ambient cue fields on the retried run's fresh
+  `m`, after the teleport (§9.4 item 3; runner.js `retry`): under the failed run's `m`, a manual
+  trolley mode fell back to auto at once, so landning's retried 14B dash had the trolley set off from
+  the galley (16.2 → 12.1 in 4 s). `trolley` checks both (the park, the retry).
+- r3 flight-trolley: two full `calibflight` runs' 10 sprit sweeps join the pool (same stage and
+  sweeper code): n 71, 5.40–7.80 s, median 7.40, p75 7.60 → still **13** (90 % range 13–13; §8
+  table, §8.4, flight.js header, `notes/calibration-samples.md` r3ft-C1/C2).

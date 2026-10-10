@@ -909,6 +909,15 @@ export function buildCabin(scene, game) {
     // ---- trolley ----
     startTrolley() { const T = this._t; T.mode = 'run'; T.owner = missionToken(); this.trolleyStopped = false; },
     stopTrolley() { const T = this._t; T.mode = 'stop'; T.owner = missionToken(); T.v = 0; this.trolleyStopped = true; },
+    // Stopped at `trolleyPark` in the front galley, clear of every route (a stage that needs the
+    // aisle: landning's round-up and 14B dash). Phase 3 r3: stopTrolley froze it wherever the intro
+    // had caught it, mid-aisle between the player and a standing passenger, for the whole mission.
+    parkTrolley() {
+      const T = this._t;
+      this.stopTrolley();
+      Object.assign(T, { wait: 0, pauseT: 0, graceT: 0, stopAt: null, stopRow: null, running: false, serving: false });
+      trolley.place(park.x, park.z, Math.PI);
+    },
     trolleyEnd(g) {
       const p = g.player;
       const a = { x: trolley.x, z: trolley.z + 0.85 }, b = { x: trolley.x, z: trolley.z - 0.85 };

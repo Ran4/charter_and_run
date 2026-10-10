@@ -241,12 +241,17 @@ async function landning(T, variant) {
   const timers = await T.ev(() => __game.missions.stage.o.timer);
   const careful = variant !== 'careless';
   await T.ev((c) => { window.__fap.autoSpace = c; }, careful);
+  // Where the trolley stands for the round-up and the walk back (Phase 3 r3: the stage froze it
+  // where the intro had caught it, mid-aisle between the player and a standing passenger; now it is
+  // parked in the front galley, z 16.2, out of every route).
+  const trolley = () => T.ev(() => { const c = __game.cabin; return `trolley z ${c.trolley.z.toFixed(2)} ${c._t.mode}${c.trolleyStopped ? ' stopped' : ''}`; });
+  const tr0 = await trolley();
   // Nearest neighbour from row 16: José (-9.2), Berra (-14.4), Herr Storch (3.4); 'reverse' goes
   // forward first and ends at Berra, the far end for the walk back to 14B.
   const order = variant === 'reverse' ? [[W(0.2), 3.4], [W(-0.2), -9.2], [W(0.0), -14.4]] : [[W(-0.2), -9.2], [W(0.0), -14.4], [W(0.2), 3.4]];
   await path(T, order, { r: 0.85 });
   const a = await timeStage(T, 0, 60000);
-  T.log(`landning/${variant}: round-up ${a.s.st === 'failed' ? 'FAILED' : `done in ${a.secs} s`} (timer ${timers}); fear ${a.s.v} max ${a.s.maxV}`, JSON.stringify(a.s.log));
+  T.log(`landning/${variant}: round-up ${a.s.st === 'failed' ? 'FAILED' : `done in ${a.secs} s`} (timer ${timers}); fear ${a.s.v} max ${a.s.maxV}; ${tr0} at the start, ${await trolley()} at the end`, JSON.stringify(a.s.log));
   const seatTimer = await T.ev(() => __game.missions.stage?.o?.timer);
   // To the aisle beside 14B (z -2.0), from whichever side he is on (the seat is reached at 1.6 m).
   const aft = await T.ev(() => __game.player.z < -2);

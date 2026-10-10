@@ -7,7 +7,7 @@
 // the real collision geometry): T_ref = the clean autopilot time on the sensible route (sprinting
 // where sprint fear is small next to the stage's own) + 0.5 s per target (reaction and aim), the
 // 75th percentile for the random bottle sweep; timer = ceil(1.25 × T_ref). Gate dash 3.6 s -> 6,
-// seat 3.1 s from the intro's spot at the door past three stowers -> 7, bottles p75 7.60 s of 61
+// seat 3.1 s from the intro's spot at the door past three stowers -> 7, bottles p75 7.60 s of 71
 // sweeps through the 3-6 s turbulence + 2.5 -> 13 (Phase 3 r2; the pool `sweeper-r2fm/b69c64e`
 // in notes/calibration-samples.md, `node tools/pool.mjs`), round-up 7.6 s -> 12, back to 14B from
 // the far end 3.2 s -> 5.
@@ -404,12 +404,16 @@ export const FLIGHT_MISSIONS = [
       ['siv', 'Han är så bortkommen. Det blir minuspoäng.'],                                                                // [F*](t)
       ['stig', '…Fyra?'],                                                                                                   // [N]
       ['kapten', 'Vi har påbörjat inflygningen mot Las Palmas. Var vänliga och fäst säkerhetsbältena.', { pa: true, seatbelt: true }],   // [N]
-      // She is at the front galley, 16 m behind the row-16 shot's lens: a cut forward to her.
-      ['vardinna', 'Alla ska sitta! Hjälp mig få folk på plats, är du snäll.', { cut: { at: 'galleyCam', dist: 0, height: 3.6 } }],   // [N]
+      // She is at the front galley, 16 m behind the row-16 shot's lens: a cut forward to her. The
+      // trolley is parked in the galley behind her on that cut, which hides the move (stage 0).
+      ['vardinna', 'Alla ska sitta! Hjälp mig få folk på plats, är du snäll.', { cut: { at: 'galleyCam', dist: 0, height: 3.6 }, trolley: 'park' }],   // [N]
     ],
     stages: [
       // [0] the round-up (sign lit: standing costs fear). No turbulence here: a 12 s cue fired on the
-      // frame the 12 s timer failed; the approach (stage 2) is the mission's turbulence.
+      // frame the 12 s timer failed; the approach (stage 2) is the mission's turbulence. The trolley
+      // stays parked in the front galley, clear of every route, to the end of the mission (Phase 3
+      // r3: `trolley: false` froze it where the intro had caught it, and mid-aisle between Stig and
+      // a standing passenger it made the round-up impossible, retries included).
       () => collect({
         who: ['herrStorch', 'jose', 'berra'], standAt: { herrStorch: [3000.2, 3.4], jose: [2999.8, -9.2], berra: [3000.0, -14.4] }, seatOnTouch: true,
         timer: 12, text: 'Få de stående passagerarna att sätta sig', barLabel: 'STÅENDE', failText: 'Värdinnan fick göra det själv.',   // [N] · [N] · [N]
@@ -419,8 +423,9 @@ export const FLIGHT_MISSIONS = [
           jose: [['siv', 'Vad skönt att komma bort!'], ['jose', 'Jag ska inte bort, jag ska hem.']],            // [F*] · [F*]
           berra: [['berra', 'Ska vi inte landa snart?']],                                                    // [N]
         },
-        // The intro's PA lights the sign; a retry (no intro) needs it lit here too.
-        startCue: { phase: ['cruise', { instant: true }], trolley: false, seatbelt: true },
+        // The intro's PA lights the sign and its last cut parks the trolley; a retry (no intro)
+        // needs both here too.
+        startCue: { phase: ['cruise', { instant: true }], trolley: 'park', seatbelt: true },
       }),
       // [1] back to the seat before the approach. Checkpoint: a panicked approach is retried from
       // here (row 16), not from the round-up. The guide follows the measured route, up or down the

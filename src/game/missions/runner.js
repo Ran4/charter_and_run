@@ -307,16 +307,21 @@ export class MissionRunner {
     hud.setPrompt('');
     const def = this.current;
     // Re-apply the ambient cue fields of every stage before the checkpoint (phase always instant).
-    for (let k = 0; k < this.cpI; k++) {
-      const st = def.stages[k]();
-      for (const cue of [st.startCue, st.doneCue]) {
-        if (!cue) continue;
-        const amb = {};
-        for (const f of AMBIENT) if (cue[f] !== undefined) amb[f] = cue[f];
-        if (amb.phase !== undefined) amb.phase = [Array.isArray(amb.phase) ? amb.phase[0] : amb.phase, { instant: true }];
-        if (Object.keys(amb).length) g.cue(amb);
+    // On the retry's fresh `m` (startMission's `before`): a manual trolley mode belongs to the run
+    // that set it (cabin.stopTrolley), and set under the failed run's `m` it fell back to auto at
+    // once (Phase 3 r3: landning's re-parked trolley set off down the aisle in the 14B dash).
+    const ambient = () => {
+      for (let k = 0; k < this.cpI; k++) {
+        const st = def.stages[k]();
+        for (const cue of [st.startCue, st.doneCue]) {
+          if (!cue) continue;
+          const amb = {};
+          for (const f of AMBIENT) if (cue[f] !== undefined) amb[f] = cue[f];
+          if (amb.phase !== undefined) amb.phase = [Array.isArray(amb.phase) ? amb.phase[0] : amb.phase, { instant: true }];
+          if (Object.keys(amb).length) g.cue(amb);
+        }
       }
-    }
+    };
     const cp = def.stages[this.cpI]();
     const spot = g.approachSpot(cp.retryAt ?? def.at);
     const prev = g.playerCar || this.lastCar;
@@ -333,7 +338,7 @@ export class MissionRunner {
     // `retryCar`: the car waits at its spot (the player at the wheel unless `park`) before the
     // checkpoint stage's init, which may read g.playerCar (destroy.playerDamageScale). It becomes
     // `lastCar`, so a second failure on foot (grisfest's plates again) finds the car parked for him.
-    this.startMission(this.cpI, cp.retryCar ? (m) => { this.lastCar = retryCar(g, m, cp.retryCar, prev); } : null);
+    this.startMission(this.cpI, (m) => { ambient(); if (cp.retryCar) this.lastCar = retryCar(g, m, cp.retryCar, prev); });
     // On foot he and the camera face the retried stage's guide; a stage without a target (a scene)
     // keeps the spot's yaw. Phase 3 r3: the camera kept the yaw it had when the stage failed, and the
     // spots face their landmark, not the way to go: ombord's seat dash looked at the cockpit door,

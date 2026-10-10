@@ -5,7 +5,8 @@
 //               overhead (aisle view and two-shots), row strip, Ole in 14A after ?mission=2 and an
 //               outfit swap, the camera at the cabin ends
 //   trolley     bowling, dodging into a row, waiting for an NPC, manual modes fall back to auto,
-//               an excused stower takes his seat
+//               an excused stower takes his seat, landning parks it in the front galley (a
+//               checkpoint retry too)
 //   turbulence  unheld falls, held does not; seatbelt sign and drone; a mission-set sign stays lit
 //   panic       PANIK in the cabin and at the gate, panicFails in ombord, deferred in dialogue
 // Shots go to $OUT (contact sheets: montage … -tile 3x3 -geometry 640x360+4+4).
@@ -289,6 +290,34 @@ export const SCENARIOS = {
     const mode = await T.ev(() => __game.cabin._t.mode);
     T.log('mode after abort', during, '->', mode);
     check(during === 'stop' && mode === 'auto', 'a cue stopTrolley falls back to auto when the mission ends');
+    // Phase 3 r3: landning's round-up parks it in the front galley (`trolley: 'park'`; `false`
+    // froze it where the intro had caught it, mid-aisle between Stig and a standing passenger), and
+    // a checkpoint retry re-parks it under the retried run (re-applied on the failed run's `m`, the
+    // stop fell back to auto at once and it set off down the aisle in the 14B dash).
+    await T.fresh('&mission=4');
+    // The auto trolley on its way to row 19 (aft of the giver's row 16) when the talk starts.
+    await T.ev(() => {
+      const g = __game, c = g.cabin;
+      c._idleTurbT = 1e9; g.sitPlayer('14B'); c.trolley.place(3000, -5.5, Math.PI); Object.assign(c._t, { wait: 0, pauseT: 0, stopAt: -8.0, stopRow: 19 });
+      window.__caught = null;
+      g.onFrame(() => { if (g.missions.state === 'intro' && window.__caught === null) window.__caught = c.trolley.z; });
+    });
+    await T.startMission();
+    const caught = await T.ev(() => window.__caught);
+    await T.sleep(1500);
+    const tr = () => T.ev(() => { const c = __game.cabin; return { z: +c.trolley.z.toFixed(2), mode: c._t.mode, running: c._t.running, stage: __game.missions.stageI, st: __game.missions.state }; });
+    const parked = await tr();
+    await T.ev(() => { const m = __game.missions; m.stage.update = () => 'done'; });
+    await T.until(() => __game.missions.stageI >= 1, 5000);
+    await T.ev(() => __game.missions.fail('test'));
+    await T.sleep(1000);
+    await T.ev(() => __game.missions.retry());
+    await T.sleep(2500);
+    const retried = await tr();
+    T.log('landning trolley', JSON.stringify({ caught: caught == null ? null : +caught.toFixed(2), parked, retried }));
+    await T.ev(() => __game.missions.abort());
+    check(caught < -5.5 && caught > -8.5 && Math.abs(parked.z - 16.2) < 0.05 && parked.mode === 'stop' && parked.stage === 0, 'landning\'s round-up has the trolley parked in the front galley, not frozen mid-aisle');
+    check(retried.stage === 1 && retried.st === 'running' && Math.abs(retried.z - 16.2) < 0.05 && retried.mode === 'stop' && !retried.running, 'a landning checkpoint retry keeps it parked (the ambient cue belongs to the retried run)');
   },
 
   // ---------------------------------------------------------------------------------------------

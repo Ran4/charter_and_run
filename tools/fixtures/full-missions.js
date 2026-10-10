@@ -187,14 +187,14 @@ export const FULL_MISSIONS = [
       ['siv', 'Han är så bortkommen. Det blir minuspoäng.'],                                                                // [F*](t)
       ['stig', '…Fyra?'],                                                                                                   // [N]
       ['kapten', 'Vi har påbörjat inflygningen mot Las Palmas. Var vänliga och fäst säkerhetsbältena.', { pa: true, seatbelt: true }],   // [N]
-      ['vardinna', 'Alla ska sitta! Hjälp mig få folk på plats, är du snäll.', { cut: { at: 'galleyCam', dist: 0, height: 3.6 } }],   // [N]
+      ['vardinna', 'Alla ska sitta! Hjälp mig få folk på plats, är du snäll.', { cut: { at: 'galleyCam', dist: 0, height: 3.6 }, trolley: 'park' }],   // [N]
     ],
     stages: [
       () => collect({ who: ['herrStorch', 'jose', 'berra'], standAt: { herrStorch: [3000.2, 3.4], jose: [2999.8, -9.2], berra: [3000.0, -14.4] }, seatOnTouch: true, timer: 12, text: 'Få de stående passagerarna att sätta sig', barLabel: 'STÅENDE', failText: 'Värdinnan fick göra det själv.', lines: {
         herrStorch: [['herrStorch', 'Lite film.', { anim: { who: 'herrStorch', flag: 'film', secs: 2 } }]],   // [F*](t)
         jose: [['siv', 'Vad skönt att komma bort!'], ['jose', 'Jag ska inte bort, jag ska hem.']],            // [F*] · [F*]
         berra: [['berra', 'Ska vi inte landa snart?']],                                                    // [N]
-      }, startCue: { phase: ['cruise', { instant: true }], trolley: false, seatbelt: true } }),
+      }, startCue: { phase: ['cruise', { instant: true }], trolley: 'park', seatbelt: true } }),
       () => sit({ checkpoint: true, seat: '14B', timer: 5, text: 'Skylten lyser! Tillbaka till 14B', failText: 'Alla måste sitta vid landningen.', startCue: { seatbelt: true } }),
       () => mantra({ seated: '14B', secs: 8, panicFails: true, text: 'Inflygning! Håll J – Jag kan flyga, jag är inte rädd', barLabel: 'JAG KAN FLYGA', startCue: { phase: ['approach', { hold: true }], turbulence: [0.75, 14] }, fillCue: { phase: 'landing' }, waitPhase: 'landed' }),
     ],
