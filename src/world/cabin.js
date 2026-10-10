@@ -80,10 +80,11 @@ const BLOCKER_ROWS = [3, 8, 12];
 const SMOKING_FROM = 20;   // rows 20-24: the smokers' section (1980: allowed, at the rear)
 
 // §5.5 landmarks: [lx, lz, yaw, y?]. The *Cam ones are cut cameras (`{ at, dist: 0, height }`: the
-// eye on the spot, looking along the yaw) for the mission-1/2/5 scenes the dollhouse cannot frame.
+// eye on the spot, looking along the yaw) for the mission-1/2/5 scenes the dollhouse or the open
+// floor's side two-shot cannot frame.
 const LANDMARKS = {
   gateStart: [36.5, 5.0, -Math.PI / 2], gateQueue: [35.6, 6.6, Math.PI / 2], gateArch: [33.0, 5.0, -Math.PI / 2],
-  queueCam: [36.1, 1.2, 0], statsCam: [24.0, 6.8, 0],
+  queueCam: [36.1, 1.2, 0], statsCam: [24.0, 6.8, 0], loungeCam: [24.4, 13.8, -0.6],
   gateOle: [23.0, 11.8, Math.PI], gateLounge: [22.0, 16.0, 0], gateDesk: [18.0, 20.5, -Math.PI / 2],
   herrtoaGang: [27.9, 12.2, 0], herrtoaDoor: [29.0, 25.2, Math.PI / 2], herrtoa: [33.5, 26.0, Math.PI / 2], damtoaDoor: [28.8, 18.4, Math.PI / 2],
   bridge: [8.0, 14.7, -Math.PI / 2], bridgeCam: [3.7, 14.7, Math.PI / 2], bridgeMouth: [15.5, 14.7, -Math.PI / 2],
@@ -1058,7 +1059,11 @@ export function buildCabin(scene, game) {
         T.warned = true;
         audio.chime();
         this._applyBelt();
-        hud.showBanner(S.turbulence, '', 'count', 1200);
+        // While a mission stage runs it is a toast: the mid-screen banner (40 % down under the
+        // objective card) covered Stig and the aisle the sprit bottles roll in for 1.2 s of the 13 s
+        // sweep (Phase 3 r3). The chime, the sign and the hold prompt carry the warning.
+        if (g.missions?.state === 'running') hud.toast(S.turbulence, 'alert');
+        else hud.showBanner(S.turbulence, '', 'count', 1200);
       }
       const run = tt - T.warn;
       if (run < 0) return;

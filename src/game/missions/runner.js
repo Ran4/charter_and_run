@@ -63,6 +63,7 @@ export class MissionRunner {
     this.cpI = 0;
     this.lastCar = null;
     this.startMission(0);
+    if (intro.length) this.faceTimedGuide();
   }
 
   // §9.4 `idleAnim`: the flags the current mission holds on `key` while it waits (idle, in its own
@@ -108,6 +109,7 @@ export class MissionRunner {
     g.shame.forced = !!st.shame;
     this.stageT = 0;
     this.timedI = 0;
+    this.framed = false;
     if (st.startCue) g.cue(st.startCue);
     st.init?.(g, this.m);
   }
@@ -120,15 +122,36 @@ export class MissionRunner {
     this.stageT += dt * g.timeScale;
     const tc = st.timedCues;
     if (tc) while (this.timedI < tc.length && tc[this.timedI][0] <= this.stageT) g.cue(tc[this.timedI++][1]);
+    if (g.inDialog) this.framed = true;   // the stage played a framed dialogue (a scene, interact lines)
     const r = st.update(g, this.m, dt);
     if (this.state !== 'running' || this.stage !== st) return;
     if (r === 'done') {
       if (st.doneCue) g.cue(st.doneCue);
       this.stageI++;
       if (this.stageI >= this.m.def.stages.length) this.complete();
-      else { audio.checkpoint(); this.startStage(); }
+      else {
+        const framed = this.framed;
+        audio.checkpoint();
+        this.startStage();
+        if (framed) this.faceTimedGuide();
+      }
     } else if (r && r.fail) this.fail(r.fail);
   }
+
+  // On foot he and the camera face the running stage's guide (the arrow's aim: along the road route
+  // on the island, straight in the flight level); in a car, or for a stage without a target (a
+  // scene), nothing changes.
+  faceGuide() {
+    const g = this.g, p = g.player, t = this.state === 'running' && !g.playerCar && p.state === 'normal' ? this.target() : null;
+    if (!t) return;
+    const a = g.levelDef.routeAim ? routeAim(p.x, p.z, t.x, t.z) : t;
+    if (dist(a.x, a.z, p.x, p.z) > 0.3) p.yaw = g.cam.yaw = yawTo(a.x - p.x, a.z - p.z);
+  }
+  // A timed stage that starts as the intro or a framed dialogue ends turns him and the camera to its
+  // guide, as a retry does (Phase 3 r3): the camera kept its yaw from before the dialogue, and the
+  // first gate dash started 168° off its route, ombord's seat dash 121° (at the stewardess), the
+  // Tonga drive at the dancers.
+  faceTimedGuide() { if (this.objective()?.timer != null) this.faceGuide(); }
 
   objective() {
     if (this.state !== 'running' || !this.stage) return null;
@@ -308,16 +331,12 @@ export class MissionRunner {
     // checkpoint stage's init, which may read g.playerCar (destroy.playerDamageScale). It becomes
     // `lastCar`, so a second failure on foot (grisfest's plates again) finds the car parked for him.
     this.startMission(this.cpI, cp.retryCar ? (m) => { this.lastCar = retryCar(g, m, cp.retryCar, prev); } : null);
-    // On foot he and the camera face the retried stage's guide (the arrow's aim, along the road
-    // route on the island); a stage without a target (a scene) keeps the spot's yaw. Phase 3 r3: the
-    // camera kept the yaw it had when the stage failed, and the spots face their landmark, not the
-    // way to go: ombord's seat dash looked at the cockpit door, sprit's sweep at the rear galley,
-    // landning's 14B dash at row 16's seats and the Tonga walk away from the car.
-    const p = g.player, t = this.state === 'running' && !g.playerCar && p.state === 'normal' ? this.target() : null;
-    if (t) {
-      const a = g.levelDef.routeAim ? routeAim(p.x, p.z, t.x, t.z) : t;
-      if (dist(a.x, a.z, p.x, p.z) > 0.3) p.yaw = g.cam.yaw = yawTo(a.x - p.x, a.z - p.z);
-    }
+    // On foot he and the camera face the retried stage's guide; a stage without a target (a scene)
+    // keeps the spot's yaw. Phase 3 r3: the camera kept the yaw it had when the stage failed, and the
+    // spots face their landmark, not the way to go: ombord's seat dash looked at the cockpit door,
+    // sprit's sweep at the rear galley, landning's 14B dash at row 16's seats and the Tonga walk away
+    // from the car.
+    this.faceGuide();
   }
 
   abort() {

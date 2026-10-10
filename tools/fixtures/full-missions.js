@@ -56,7 +56,7 @@ export const FULL_MISSIONS = [
         ['siv', 'Pass, pesetas, piral och piljetter!'],                                   // [F](t)
         ['majsan', '…och prit!'],                                                         // [F](t)
       ] }], awaitOverhear: true }),
-      () => scene({ frame: ['berra', 'sulan'], lines: [
+      () => scene({ frame: ['berra', 'sulan'], place: { berra: ['gateLounge', -0.8, 0.6, 2.0], robban: ['gateLounge', 0.3, 1.1, 2.66], sulan: ['gateLounge', 1.4, 0.5, -2.6], stig: ['gateLounge', 2.3, 1.2, -1.77] }, cam: { at: 'loungeCam', dist: 0, height: 1.9 }, lines: [
         ['robban', 'Han måste vara bror med Lennart Swahn.'],                                          // [F](t)
         ['berra', 'Och Karin Falk!'],                                                                  // [F](t)
         ['robban', 'Och Magnus Uggla!'],                                                               // [F](t)

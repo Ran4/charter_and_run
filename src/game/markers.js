@@ -40,6 +40,7 @@ export class Beacon {
     const beam = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 1.6, 120, 16, 1, true), new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.22, depthWrite: false, side: THREE.DoubleSide }));
     beam.position.y = 60;
     this.root.add(beam);
+    this.beam = beam;
     const ring = new THREE.Mesh(new THREE.TorusGeometry(3.2, 0.22, 6, 32), new THREE.MeshBasicMaterial({ color }));
     ring.rotation.x = Math.PI / 2;
     ring.position.y = 0.4;
@@ -62,6 +63,8 @@ export class Beacon {
     this.arrow.position.y = 4.5 + Math.sin(t * 4) * 0.5;
     this.arrow.rotation.y = t * 2;
   }
+  // k = 0..1 of the beam's full opacity (main fades it near the cabin eye, §5.3).
+  fadeBeam(k) { this.beam.material.opacity = 0.22 * k; this.beam.visible = k > 0; }
   hide() { this.root.visible = false; }
 }
 

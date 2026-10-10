@@ -27,6 +27,7 @@ const MAP_EXT = BOUND + 20;
 const BUBBLE_TOP = 96;   // px: speech bubbles stay under the coins / meter row
 const BUBBLE_TAIL = 11;  // px: the tail below a bubble (style.css .bubble::after)
 const BUBBLE_GAP = 6;    // px: between the tail tip and the speaker's head top
+const TAIL_H = 8;        // px: the drawn tail's length below the bubble's bottom edge (its 8 px border)
 
 export const hud = {
   portraits: {},
@@ -408,6 +409,20 @@ export const hud = {
       placed.push({ x, y, w, h });
       it.b.style.left = `${x}px`;
       it.b.style.top = `${y}px`;
+      // The tail points at the speaker (Phase 3 r3: a bubble stacked above another pointed at the
+      // bubble below). Stacked, or held on screen at an edge, it is longer and slanted, from the
+      // bottom edge to where the plain tail ends over his head, and it runs behind the older bubbles
+      // below (older bubbles on top; #bubbles keeps these z-indices to itself).
+      const dx = (v.x * 0.5 + 0.5) * W - x, dy = (-v.y * 0.5 + 0.5) * H - BUBBLE_TAIL - BUBBLE_GAP + TAIL_H - y;
+      const lead = dy > TAIL_H + 1 || (Math.abs(dx) > 4 && dy > 2);
+      it.b.classList.toggle('lead', lead);
+      it.b.style.zIndex = String(100 - placed.length);
+      if (lead) {
+        const tx = Math.max(18 - w / 2, Math.min(w / 2 - 18, dx));
+        it.b.style.setProperty('--tx', `${tx.toFixed(1)}px`);
+        it.b.style.setProperty('--tl', `${Math.hypot(dx - tx, dy).toFixed(1)}px`);
+        it.b.style.setProperty('--ta', `${(-Math.atan2(dx - tx, dy)).toFixed(3)}rad`);
+      }
     }
   },
 

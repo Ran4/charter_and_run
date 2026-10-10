@@ -48,7 +48,7 @@ and could not check them either. A timer whose runs nobody can see is a guess.
 
 Sample ids: `p2` Phase 2, `r2g1` r2 gate 1 (`D` default `calibrate`, `F` its flowers run, `C` default `calibflight`), `orc` the orchestrator, `fm` r2 flight-missions, `is` r2 island-staging, `wt` r1 world-town, `if` r1 island-flow, `g1` r1 gate 1, `r1` r1 repair
 1, `g2` r1 gate 2 (`R1`/`R2`: its two default-env `calibrate` runs, `X`: its extra balls run),
-`r2` r1 repair 2.
+`r2` r1 repair 2, `r3ff` r3 flight-flow, `r3fl` r3 flight-look.
 
 ## `friskotekBalls` · §8.7 s1 · six fleeing beach balls · on foot: timer = ceil(1.25 × (p75 + 6 × 0.5))
 
@@ -139,10 +139,11 @@ Current pool: `chase-r1if/d9451f8`: n 83, median 28.38, p75 34.45 → T_ref 34.4
 
 Phase 3 r2 flight-missions moved the turbulence inside the sweep and changed the sweeper
 (`sweeper-r2fm`): a new pool. The shipped **13** comes from `sweeper-r2fm/b69c64e` (36 + 5 runs;
-r2 gate and r3 flight-flow added 5 + 10 on the same stage and sweeper code, and it stays 13).
+r2 gate, r3 flight-flow and r3 flight-look added 5 + 10 + 5 on the same stage and sweeper code, and
+it stays 13).
 The rows above it (timer 11, no turbulence in the sweep) do not pool with it.
 
-Current pool: `sweeper-r2fm/b69c64e`: n 56 (fm1 36, fm2 5, r2g1-C 5, r3ff-C 5, r3ff-R 5), median 7.40, p75 7.60 → T_ref 10.10 → timer ceil(1.25 × 10.10) = **13** (90 % range 13–13).
+Current pool: `sweeper-r2fm/b69c64e`: n 61 (fm1 36, fm2 5, r2g1-C 5, r3ff-C 5, r3ff-R 5, r3fl-C 5), median 7.40, p75 7.60 → T_ref 10.10 → timer ceil(1.25 × 10.10) = **13** (90 % range 13–13).
 
 | sample | date | code | pool | env | n | raw times (s, run order) | excluded (reason) |
 |---|---|---|---|---|---|---|---|
@@ -155,6 +156,7 @@ Current pool: `sweeper-r2fm/b69c64e`: n 56 (fm1 36, fm2 5, r2g1-C 5, r3ff-C 5, r
 | r2g1-C | 2026-10-10 | ca2a3a6 | `sweeper-r2fm/b69c64e` | calibflight default (SPRIT_RUNS=5) | 5 | 7.00 7.60 7.60 7.30 7.70 | none (no panic, bowled 0, falls 0; FLYGRÄDSLA peaks 15.2–16.9) |
 | r3ff-C | 2026-10-10 | 90775a7 + uncommitted: r3 flight-flow (the stage and the sweeper unchanged; FLYGRÄDSLA's idle decay paused in scenes, the `via` guide, retry facing) | `sweeper-r2fm/b69c64e` | calibflight default (SPRIT_RUNS=5) | 5 | 7.22 7.70 7.22 7.30 7.70 | none (no panic, bowled 0, falls 0; FLYGRÄDSLA peaks 15.7–17.0) |
 | r3ff-R | 2026-10-10 | as r3ff-C | `sweeper-r2fm/b69c64e` | calibflight DIALOG_CPS=20 (SPRIT_RUNS=5) | 5 | 7.70 7.10 7.70 7.60 7.00 | none (no panic, bowled 0, falls 0; FLYGRÄDSLA peaks 15.3–17.0) |
+| r3fl-C | 2026-10-10 | ded3575 + uncommitted: r3 flight-look (the stage and the sweeper unchanged; the beacon arrow and beam, the TURBULENS! toast and the hold prompt, the camera turned to the guide after the intro) | `sweeper-r2fm/b69c64e` | calibflight default (SPRIT_RUNS=5) | 5 | 7.60 6.40 6.12 7.62 7.60 | none (no panic, bowled 0, falls 0; FLYGRÄDSLA peaks 13.0–16.7) |
 
 ## `grisfestPlates` · §8.12 s4 · ten of the twelve plate stacks · on foot: timer = ceil(1.25 × (median + 10 × 0.5))
 

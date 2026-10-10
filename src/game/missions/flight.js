@@ -7,7 +7,7 @@
 // the real collision geometry): T_ref = the clean autopilot time on the sensible route (sprinting
 // where sprint fear is small next to the stage's own) + 0.5 s per target (reaction and aim), the
 // 75th percentile for the random bottle sweep; timer = ceil(1.25 × T_ref). Gate dash 3.6 s -> 6,
-// seat 3.1 s from the intro's spot at the door past three stowers -> 7, bottles p75 7.60 s of 56
+// seat 3.1 s from the intro's spot at the door past three stowers -> 7, bottles p75 7.60 s of 61
 // sweeps through the 3-6 s turbulence + 2.5 -> 13 (Phase 3 r2; the pool `sweeper-r2fm/b69c64e`
 // in notes/calibration-samples.md, `node tools/pool.mjs`), round-up 7.6 s -> 12, back to 14B from
 // the far end 3.2 s -> 5.
@@ -200,9 +200,16 @@ export const FLIGHT_MISSIONS = [
         ] }],
         awaitOverhear: true,
       }), ['herrtoaDoor', 'damtoaDoor']),
-      // [7] the Stork joke and the bodega tip (a mandatory beat: it sets up missions 9 and 13)
+      // [7] the Stork joke and the bodega tip (a mandatory beat: it sets up missions 9 and 13). The
+      // three talk in an arc, half turned to an eye-level cut from south-east of the cluster, with the
+      // gate desk and the Storchs behind them; Stig listens side-on at the left of the frame.
+      // Unplaced, he came from the men's room and stood between the side two-shot and the speakers
+      // (Sulan's face behind Stig's head on all four of Sulan's lines), or walked into the middle of
+      // the cluster, and the shot looked away across the security area with the speakers 30 px tall.
       () => scene({
         frame: ['berra', 'sulan'],
+        place: { berra: ['gateLounge', -0.8, 0.6, 2.0], robban: ['gateLounge', 0.3, 1.1, 2.66], sulan: ['gateLounge', 1.4, 0.5, -2.6], stig: ['gateLounge', 2.3, 1.2, -1.77] },
+        cam: { at: 'loungeCam', dist: 0, height: 1.9 },
         lines: [
           ['robban', 'Han måste vara bror med Lennart Swahn.'],                                          // [F](t)
           ['berra', 'Och Karin Falk!'],                                                                  // [F](t)

@@ -654,7 +654,8 @@ export const CAM_CABIN = { pivotH: 1.5, dist: 6.5, pitchMin: 0.72, pitchMax: 1.1
   ≤ 12 m from the camera). The climb whiteout is faked with cloud puffs streaming past the plane
   and the window-pane colour, not with short fog.
 - Markers: the Bang "!" over a seated giver sits at `ch.y + height + 0.9` (seated `ch.y` = cushion
-  0.55); GuideArrow and Beacon are above the invisible ceiling and stay visible. Any marker
+  0.55); GuideArrow and Beacon are above the invisible ceiling and stay visible (the Beacon's
+  arrow is hidden in the flight level, Phase 3 r3 below). Any marker
   shape (the giver's "!", the Beacon's arrow, the GuideArrow) hides while its centre is within 3 m
   of the camera (`main.camNear`): the z-clamped aisle eye is only 2.5 m above the seats, and the
   "!" over Ole in 14A filled a quarter of the frame. (Phase 2, both levels.) The
@@ -667,7 +668,20 @@ export const CAM_CABIN = { pivotH: 1.5, dist: 6.5, pitchMin: 0.72, pitchMax: 1.1
   bob flickered it across the 3 m line. Its **beam** (`Bang.fadeBeam`) fades out between 8 and 4 m
   of horizontal distance from the eye while the giver is inside the cabin (`cabin.inCabin`): that
   near, the 0.16-opacity cylinder lay as a yellow wedge over a third of the frame. Elsewhere the
-  beams stay; in the 37 m tube the minimap "!" and the talk prompt find the giver.
+  beams stay; in the 37 m tube the minimap "!" and the talk prompt find the giver. **Phase 3 r3,
+  the objective's Beacon:** its beam (`Beacon.fadeBeam`, 0.22 opacity, r 1.6 m) fades the same way
+  (8 → 4 m of horizontal eye distance while the target is inside the cabin; main's `nearFade`, one
+  rule for both beams): at ombord's seat-dash start the beam of the first waypoint (`cabinRow1`,
+  3.5 m from the eye) washed ~40 % of the frame yellow, and it stood as a column over 14B in juice
+  (4.6–5.2 m) and over the aisle in landning (6.2 m). Its **arrow is hidden in the whole flight
+  level**: bobbing 4.5 m up (made to be seen over cars and hedges), under the steep eye it was
+  above the frame (beyond ~7 m, measured at every gate and cabin stage start) or, nearer, a yellow
+  block clipped by the top edge over 10–25 % of the frame (90 000–227 000 px² at 1280×720; it was
+  the "guide arrow block" the round-3 critics saw). The floor ring, the beam, the GuideArrow and the
+  minimap star mark the spot. **The GuideArrow stays** (`camNear` 3 m only): it rides 1.5 m over
+  his head, always 3.9–4.8 m from the flight level's eye, at the top centre under the objective
+  card, and it is the only marker that shows the way to a target off screen; a 5.5 m rule would
+  have hidden it everywhere in the flight level.
 
 ### 5.4 Seat map
 
@@ -699,6 +713,7 @@ root placed by hand, `ch.x/y/z` set for bubbles, anim flag `planeSeat` = arms on
 | `statsCam` | 24.0, 6.8 | 0 | cut camera (height 1.9) onto Ole's statistics: Ole on his spot, Stig on the dash start (§8.1) |
 | `gateOle` | 23.0, 11.8 | π | Ole's lounge spot (stats scene); panic home outside the cabin |
 | `gateLounge` | 22.0, 16.0 | 0 | Berra/Robban/Sulan cluster; R-reset outside the cabin |
+| `loungeCam` | 24.4, 13.8 | −0.6 | cut camera (height 1.9) from south-east of the cluster, just north of the middle bench row, looking north-north-west at the three in an arc with the gate desk and the Storchs behind them: the Stork joke and the bodega tip (§8.1 [7]; Phase 3 r3) |
 | `gateDesk` | 18.0, 20.5 | −π/2 | gate desk |
 | `herrtoaGang` | 27.9, 12.2 | 0 | past the east end of the middle bench row, where the corridor to the toilets starts: the gate dash's first guide waypoint (§8.1 [3]) |
 | `herrtoaDoor` | 29.0, 25.2 | π/2 | men's room door (the dash's second guide waypoint; the queue's first, §8.1 [6]) |
@@ -807,7 +822,14 @@ running one and keeps the sign lit through its delay. `cabin.stopTurbulence()` (
 turbulence at once (wobble, drone and belt hold reset); `restoreAmbience()` calls it after a failed
 or aborted flight mission:
 1. Warning: chime (`audio.chime()`), seatbelt sign on, banner `TURBULENS!` (cls `count`, 1.2 s),
-   prompt `<b>Space</b> Håll i dig!` while standing.
+   prompt `<b>Space</b> Håll i dig!` while standing. **While a mission stage runs** (Phase 3 r3)
+   the warning is a toast, `hud.toast('TURBULENS!', 'alert')` (§11.4), not the banner: with the
+   objective card up the banner stood 40 % down, over Stig and the aisle the sprit bottles roll in,
+   for 1.2 s of the 13 s sweep (and over the juice carry and the landning approach); idle turbulence
+   keeps the banner. The hold prompt **wins over the seat and toilet prompts** while the cabin is
+   turbulent and he stands without holding on (only a giver's talk prompt comes first; E still uses
+   the nearest interactable): the "E Sätt dig" of every free seat he passed replaced it in the
+   sprit sweep and the juice carry.
 2. For `secs` (× timeScale): `cam.shake = max(shake, 0.5·strength)` refreshed every 0.3 s;
    `scenery.rotation.z` wobbles ±0.03·strength; rattle `audio.noise(0.3, 0.15, 300)` every 0.4 s;
    drone +30 %; trolley jitters ±0.05 m in x.
@@ -1431,7 +1453,7 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
 |---|---|---|---|---|
 | 8.1 gate [3] toilet dash | gateOle → round the ladies' room → herrtoa (r 1.8), sprint 3.6 s (walk 5.0; Phase 3 r2 from the statistics' placed start (25.0, 11.6): 3.6 / 5.1) | 4.1 (3.6 + 0.5; 1) | **6** (was 10) | 40 % sprint, 16 % walk |
 | 8.2 ombord [0] find 14B | the intro's spot at the front door (1.6, 13.55) → 14B past three stowers (E each), sprint 3.1 s (walk 4.4) | 5.1 (3.1 + 4 × 0.5; 1; Phase 3 r2, the intro places him there; from `cabinDoor`'s approach spot 2.9 → 4.9) | **7** (15) | 56 % sprint, 37 % walk |
-| 8.4 sprit [0] five bottles | sprint after the nearest, wait in the aisle clear of the trolley for the bottles it pushes out, Space while the 3.0–6.0 s turbulence shakes | 10.1 (p75 7.60 of 56 + 2.5; 5.5–7.8 s, median 7.40; pool `sweeper-r2fm/b69c64e` in `notes/calibration-samples.md`: r2 flight-missions' 36 + 5, r2 gate's 5, r3 flight-flow's 10; Phase 3 r2, the turbulence moved inside the sweep. Before it, with none: p75 6.0 of 48 → 11 (r1 repair); the old sweeper that hid in a row was bimodal, 4–12 s or 28–30 s, p75 14.4 → 22, Phase 2 17.1 → 25) | **13** (35) | 42 % at p75 |
+| 8.4 sprit [0] five bottles | sprint after the nearest, wait in the aisle clear of the trolley for the bottles it pushes out, Space while the 3.0–6.0 s turbulence shakes | 10.1 (p75 7.60 of 61 + 2.5; 5.5–7.8 s, median 7.40; pool `sweeper-r2fm/b69c64e` in `notes/calibration-samples.md`: r2 flight-missions' 36 + 5, r2 gate's 5, r3 flight-flow's 10, r3 flight-look's 5; Phase 3 r2, the turbulence moved inside the sweep. Before it, with none: p75 6.0 of 48 → 11 (r1 repair); the old sweeper that hid in a row was bimodal, 4–12 s or 28–30 s, p75 14.4 → 22, Phase 2 17.1 → 25) | **13** (35) | 42 % at p75 |
 | 8.5 landning [0] round-up | row 16 → José → Berra → Herr Storch (walk, sign lit) | 9.1 (7.6 + 1.5; 2 orders) | **12** (20) | 37 % |
 | 8.5 landning [1] back to 14B | from the far end (Berra) | 3.7 (3.2 + 0.5; 2) | **5** (10) | 36 % |
 | 8.6 buss17 s2 | busBay → 7,1 > 3,1 > 3,4 → flamencoDrive, ÅKSJUKA, stop | 45.0 (median of 10 clean in 4 sets, 44.4–47.0) | **54** (60) | 17 % |
@@ -1619,8 +1641,19 @@ No `extra` (the gate cast already stands at its `HOMES.gate` spots; an `extra` w
      wall, and from the door across the back bench row: an arrow-follower stayed pinned in the
      room's corner for 60 s. On the guide it reaches the queue in 5.7–6.5 s from the Berra scene's
      spot and from four spots round the room, its south-west corner among them (5 of 5). Untimed.
-8. [7] `scene({ frame: ['berra', 'sulan'], lines: [...] })` — the Stork joke and **the bodega tip
-   as a mandatory beat** (it sets up missions 9 and 13):
+8. [7] `scene({ frame: ['berra', 'sulan'], place: { berra: ['gateLounge', -0.8, 0.6, 2.0], robban: ['gateLounge', 0.3, 1.1, 2.66], sulan: ['gateLounge', 1.4, 0.5, -2.6], stig: ['gateLounge', 2.3, 1.2, -1.77] }, cam: { at: 'loungeCam', dist: 0, height: 1.9 }, lines: [...] })` — the Stork joke and **the bodega tip
+   as a mandatory beat** (it sets up missions 9 and 13). **Staging** (Phase 3 r3): the three stand in
+   an arc, each turned halfway between the lens and the group's middle, and a fixed eye-level cut
+   from south-east of the cluster (`loungeCam`, §5.5) frames them with the gate desk and Herr and
+   Fru Storch behind; Stig listens side-on at the left of the frame, turned to them. Unplaced, he
+   came from the men's room and the open-floor side two-shot filmed from the north with him between
+   the lens and the speakers (Sulan's face behind his head on all four of Sulan's lines, the flight
+   critic's real play), or an arrow-follower walked into the middle of the cluster and the shot
+   looked away across the security area with the speakers 29–34 px tall at the frame's edges. Now
+   every arrival (the queue's guide, and warps north, south, west and east of the cluster) gives the
+   same shot: Robban 91 px, Berra 86 px, Sulan 126 px tall, facing 0.62–1.0, nothing in front. The
+   boarding guide from Stig's spot still boards (arrow-follower: walk 6.3 s, sprint 4.4 s, never
+   stuck). Lines:
    - robban: "Han måste vara bror med Lennart Swahn."  [F](t)
    - berra: "Och Karin Falk!"  [F](t)
    - robban: "Och Magnus Uggla!"  [F](t)
@@ -1779,8 +1812,9 @@ and the trolley keeps coming.
      mode ever saw it). Re-measured with `FLIGHT=sprit SPRIT_RUNS=36 calibflight`, the sweeper
      holding Space only while it shakes: 36 clean sweeps 5.5–7.8 s, median 7.4, p75 7.6 → T_ref
      10.1 → timer **13** (90 % range 13–13); a careful sweeper's FLYGRÄDSLA peaks at 12–17. The
-     pool (`notes/calibration-samples.md`, `node tools/pool.mjs`) has since grown to 56 sweeps on
-     the same stage and sweeper code (r2's 5 more, the r2 gate's 5, r3 flight-flow's 10): median
+     pool (`notes/calibration-samples.md`, `node tools/pool.mjs`) has since grown to 61 sweeps on
+     the same stage and sweeper code (r2's 5 more, the r2 gate's 5, r3 flight-flow's 10, r3
+     flight-look's 5): median
      7.40, p75 7.60 → still **13** (90 % range 13–13).
 2. `goto({ to: 'galleyFront', radius: 1.6, text: 'Lämna flaskorna i främre byssan' })`
 
@@ -2590,14 +2624,26 @@ Runner changes (Phase 0):
    g.pay(def.cost)` → `startMission(0)`. Stage 0 starts on a clear screen (Phase 3: the 2.8 s
    banner in mid-screen covered 40 % of ombord's 7 s seat dash). A def without an intro gets the
    banner (cls `mission`) after the talk, 1.4 s. Stage timers are not paused or delayed for it.
+   **After a scene, facing the guide** (Phase 3 r3, `runner.faceTimedGuide()`): when a **timed**
+   stage (its objective has a `timer`) starts right after the intro, or right after a stage that
+   played a framed dialogue (`g.inDialog` at any frame of it: a `scene`, interact lines), he and the
+   camera turn to its guide on foot, as on a retry (item 3, the shared `faceGuide()`); in a car, or
+   for an untimed stage, nothing changes. The camera kept its yaw from before the dialogue (`cam.release`
+   resumes the follow camera on it): the first gate dash started 168° off its route (the camera of the
+   walk from the arch), ombord's seat dash 121° (at the stewardess), sprit's sweep and landning's
+   round-up 90°, friskotek's balls 93°, grisfest's flowers 179° and the Tonga drive 160° (at the
+   dancers). Measured after: 0° (10° and 26° where `routeAim` leads along the road, fataga and Tonga).
+   Only the yaws change, never a position, and every autopilot sets the camera itself, so no timer
+   moves (the walk's velocity follows the camera, not his facing; §8 "Timers and difficulty").
 3. **Checkpoints**: entering a stage with `checkpoint: true` records `cpI`; `retry()` restarts
    from `cpI` with a fresh `m`: it first re-applies, in stage order, the **ambient fields** (`sky
    music phase seatbelt outfit trolley blockers`; `phase` always instant) of the `startCue` and
    `doneCue` of every stage before `cpI` (so a grisfest retry is still at night with `vals`), then
    teleports to `stage.retryAt ?? def.at` (its `approachSpot`, facing its yaw, the camera too) and
    starts the stage; on foot he and the camera then turn to the started stage's guide (the arrow's
-   aim: `routeAim` on the island, straight in the flight level), and a stage without a target (a
-   scene) keeps the spot's yaw. Phase 3 r3: the camera kept the yaw it had when the stage failed
+   aim: `routeAim` on the island, straight in the flight level; `runner.faceGuide()`), and a stage
+   without a target (a scene) keeps the spot's yaw (a timed stage after that scene then faces its
+   guide, item 2). Phase 3 r3: the camera kept the yaw it had when the stage failed
    (W walks along the camera), and the spots face their landmark rather than the way to go:
    ombord's seat dash faced the cockpit door, sprit's sweep the rear galley, landning's 14B dash
    row 16's seats and grisfest's Tonga walk away from the car. With the toast `Försök igen!` and
@@ -2822,7 +2868,7 @@ mutes without touching the button, which then said `Ljud: på` while muted).
 | dialogue next | `E ▸` |
 | minimap rim badge | `N` (island) / `FRAM` (flight) |
 | big-map legend | from `game.mapLegend()` (§10.1) |
-| prompts | `<b>E</b> Prata med {name}` · `<b>E</b> Kliv in` · `<b>E</b> Ta bilen` · `<b>E</b> Sätt dig` · `<b>E</b> Res dig` · `<b>E</b> Lås in dig` · `<b>E</b> Ta en juice` · `<b>SPACE</b> Håll i dig!` · `<b>J</b> håll: Jag kan flyga!` (the `<b>` keycap is Luckiest Guy: uppercase) |
+| prompts | `<b>E</b> Prata med {name}` · `<b>E</b> Kliv in` · `<b>E</b> Ta bilen` · `<b>E</b> Sätt dig` · `<b>E</b> Res dig` · `<b>E</b> Lås in dig` · `<b>E</b> Ta en juice` · `<b>SPACE</b> Håll i dig!` · `<b>J</b> håll: Jag kan flyga!` (the `<b>` keycap is Luckiest Guy: uppercase). Order (`updateHud`): talk, then `Håll i dig!` while the cabin is turbulent and he stands without holding on (Phase 3 r3, §5.7), then the car, interactable (seats, toilets…) and stand prompts |
 
 **Toasts, bubbles and the objective card** (Phase 3):
 - **Toasts** (`hud.toast(text, cls = '', secs)`; radio lines are toasts) stay up `secs`, by default
@@ -2838,6 +2884,12 @@ mutes without touching the button, which then said `Ljud: på` while muted).
   width + 12 px), and the column starts at `32 % + --banner-drop` (`40 % + …` with the objective
   card), `transition: top 0.25s`. ¡GUARDIA CIVIL!, UPPDRAG KLART!, KVADDAD!, TURBULENS! and
   SKANDALEN TYSTAD covered the radio toasts' portraits and names (~3 900 px² each at 1280×720).
+  There, **with the speedo up**, only the newest two live toasts show (Phase 3 r3, CSS
+  `:nth-last-child(n+3 of .toast:not(.out))` → `display: none`; the rest come back when the banner
+  goes): at 1280×720 a third toast under UPPDRAG KLART! reached 13–35 px into the speedo for the
+  banner's 2.4 s (measured: three 2–3-line radio toasts end at y 598, the speedo's top is 563).
+  **Cls `alert`** (Phase 3 r3): `TURBULENS!` while a mission stage runs (§5.7 step 1), in Luckiest
+  Guy, red, with a red left edge.
 - **Speech bubbles** wrap at 300 px (they were one line up to 750 px), are kept on screen (8 px
   margin), under the coins / meter row (top ≥ 96 px) and under a shown objective card they would
   overlap; a stacked bubble with no room left above waits hidden until the ones below it end.
@@ -2846,6 +2898,15 @@ mutes without touching the button, which then said `Ljud: på` while muted).
   above it (`BUBBLE_GAP`; tail 11 px). A flung or fallen body keeps the steady `y + height`, and a
   plain anchor `{ x, y, z, height }` gives its own head height. The old standing height + 0.6 m put
   a seated passenger's bubble ~1.5 m (113 px) up over the bins and Stig's 40–55 px above his head.
+  **Tails point at the speaker** (Phase 3 r3): a bubble stacked above another (or held on screen at
+  an edge, `|dx| > 4 px`) gets cls `lead` and a longer, slanted tail (`--tx` its base along the
+  bottom edge, at most 18 px from a corner; `--tl` its length; `--ta` its angle) from its bottom
+  edge to where a plain tail would end over its speaker's head (8 px below an unstacked bubble's
+  bottom edge, `TAIL_H`). Older bubbles are drawn on top (`z-index` 100 − the placing order, kept
+  inside `#bubbles` by `isolation: isolate`, so `#banner`'s `z-index: 2` still wins), so the tail
+  runs behind the bubble below and comes out under it. The plain tail of a stacked bubble pointed
+  at the bubble below: Ole's beside Stig ended 72 px (on foot), 43 px (14A/14B) and 48 px (a sedan)
+  above Ole's head; now 9 px, as an unstacked one.
   `game.say` keeps a line up at least `1 + 0.045 · characters` s (halved in test mode, like the
   kinds' `lineSecs`): chatter of 97 characters went after the fixed 2.6 s.
 - **The objective card** slides up out of view while the letterbox is on (an in-stage talk:
@@ -3590,10 +3651,12 @@ fx.spill(x, y, z, color, n);  fx.wisp(x, y, z)   // A1: trolley juice spill, smo
 
 // WP-H additions (all additive):
 // hud.panic(secs); hud.labelLayout (big-map label layout, cached on labels + crop); body classes
-//   pursuit / panik / in-dialog; banner classes multa (bust) and fear; toast class witness; HUD
+//   pursuit / panik / in-dialog; banner classes multa (bust) and fear; toast classes witness and
+//   alert (Phase 3 r3: TURBULENS! in a stage); HUD
 //   elements #vignette #sirenlights #panik. hud.say: one bubble per speaker (a new line replaces
 //   it; hud.unsay(target) takes it down, Phase 3) and overlapping bubbles stack upwards, the
-//   newer above (Phase 2); wrapped at 300 px, kept on screen and under the top HUD row and a
+//   newer above (Phase 2), with a tail to its speaker behind the older one (cls lead, Phase 3 r3);
+//   wrapped at 300 px, kept on screen and under the top HUD row and a
 //   shown objective card (Phase 3). hud.toast(text, cls,
 //   secs?) (by length, ≤ 3 at once), hud.clearToasts() (runDialog calls it), hideBanner() drops
 //   only `show` (Phase 3, §11.4, §11.7).
@@ -4086,7 +4149,7 @@ saljare souvenir stadare eslov grisbonde varden guardia pax telefonist`. Player 
 climb cruise approach landing landed`. **Palettes**: flight `gate clouds above descent island`;
 island `day night sunset`. **Meters**: `flygradsla skandal`.
 
-**Flight landmarks**: `gateStart gateQueue queueCam gateArch statsCam gateOle gateLounge gateDesk
+**Flight landmarks**: `gateStart gateQueue queueCam gateArch statsCam gateOle gateLounge loungeCam gateDesk
 herrtoaGang herrtoaDoor herrtoa damtoaDoor bridge bridgeMouth bridgeCam cabinDoor doorCam galleyFront galleyCam
 cockpitDoor cabinRow1 cabinRow6 cabinRow10 cabinRow14 cabinRow16 cabinRow22 row22Cam cabinCentre toiletBackL
 toiletBackR galleyBack trolleyPark call14`.
@@ -4959,3 +5022,39 @@ the fixer's group.
   5, this round's 10 on the same stage and sweeper code; p75 7.60 → 13, §8 table, §8.4, flight.js
   header, `notes/calibration-samples.md`), and `calibflight`'s ombord row names its real start, the
   intro's spot at the front door.
+- r3 flight-look: the objective Beacon in the flight level (§5.3; r3flight-7, r3text-1): its beam
+  fades between 8 and 4 m of horizontal eye distance while the target is inside the cabin
+  (`Beacon.fadeBeam`, the giver's rule; main's `nearFade` serves both), and its arrow is hidden in
+  the whole flight level. At ombord's seat-dash start the first waypoint's beam washed ~40 % of the
+  frame yellow and the arrow was a block clipped by the top edge (90 000–227 000 px² at 1280×720;
+  beyond ~7 m it was above the frame at every gate and cabin stage start). The GuideArrow stays: the
+  critics' "guide arrow block" was the Beacon's arrow (their probe hid it for one frame, and
+  `updateMarkers` showed it again before the screenshot), and a 5.5 m rule would have hidden the
+  guide arrow in the whole flight level (it is 3.9–4.8 m from the eye there).
+- r3 flight-look: TURBULENS! during a mission stage is a toast (cls `alert`, §5.7 step 1, §11.4;
+  r3flight-6), not the mid-screen banner that covered Stig and the sprit aisle for 1.2 s of the
+  13 s sweep (round 2 moved the turbulence inside it); and `Håll i dig!` wins over the seat and
+  toilet prompts while the cabin shakes and he stands without holding on (the "E Sätt dig" of every
+  free seat replaced it in the sprit sweep and the juice carry).
+- r3 flight-look: the gate's Stork joke / bodega tip scene [7] is staged (§8.1, §5.5, Appendix A,
+  fixture; r3flight-5): Berra, Robban and Sulan in an arc, Stig side-on at the left, a fixed cut
+  from the new landmark `loungeCam` (24.4, 13.8, yaw −0.6, height 1.9). Unplaced, Stig stood
+  between the open-floor two-shot and the speakers (Sulan's face behind his head on his four
+  lines), or an arrow-follower walked into the cluster and the shot looked across the security area
+  with the speakers 29–34 px tall; now every arrival gives the same shot (86–126 px, facing
+  0.62–1.0, nothing in front). Boarding from Stig's spot: 6.3 s walking, 4.4 s sprinting.
+- r3 flight-look: speech-bubble tails point at the speaker (§11.4; voices-ui-cast follow-up): a
+  stacked bubble (or one held on screen at an edge) gets a longer, slanted tail (cls `lead`, CSS
+  vars `--tx --tl --ta`) that runs behind the older bubble below (`#bubbles` isolated, older
+  bubbles on top). The plain tail of a stacked bubble ended 43–72 px above its speaker's head;
+  now 9 px, as an unstacked one. Under a wide banner with the speedo up only the newest two toasts
+  show: a third reached 13–35 px into the speedo at 1280×720.
+- r3 flight-look: a timed stage that starts after the intro or after a framed dialogue (a scene,
+  interact lines) turns him and the camera to its guide on foot (§9.4 item 2; `runner.faceGuide()`,
+  shared with the retry, item 3; flight-flow follow-up): the camera kept its yaw from before the
+  dialogue, and the first gate dash started 168° off its route, ombord's seat dash 121°, grisfest's
+  flowers 179° and the Tonga drive 160°; now 0° (10–26° where `routeAim` leads along the road).
+  No position changes and the autopilots set the camera themselves: `calibflight` measures the
+  same timers (gate 3.6 → 6, ombord 3.1 → 7, sprit inside 13, landning 7.6 → 12 and 3.2 → 5); its
+  5 sprit sweeps join the pool (n 61, p75 7.60 → still 13; §8 table, §8.4, flight.js header,
+  `notes/calibration-samples.md`).

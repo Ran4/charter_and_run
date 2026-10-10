@@ -1755,6 +1755,10 @@ class Game {
     const ms = this.missions;
     const f = this.focus();
     let target = null;
+    // A beam on a spot inside the cabin fades out between 8 and 4 m (horizontal) from the eye: that
+    // near, the giver's (Phase 3 r2) and the objective's (r3) laid a yellow wedge over a third of the
+    // frame (ombord's seat dash started 3.5 m from its first waypoint's beam).
+    const nearFade = (x, z) => (this.cabin.inCabin(x, z) ? clamp((dist(camera.position.x, camera.position.z, x, z) - 4) / 4, 0, 1) : 1);
     if (ms.state === 'idle' && ms.current && ms.current.level === this.level && this.npcs[ms.current.giver]) {
       const g = this.npcs[ms.current.giver];
       this.bang.show(true);
@@ -1767,9 +1771,7 @@ class Game {
       // player is within 3 m of the giver (the steep cabin eye put it over Stig; the talk prompt
       // names the giver then).
       this.bang.root.children[0].visible = !camNear({ x: g.x, y: by, z: g.z }, 0.88, this.level === 'flight' ? 5.5 : 3) && dist(g.x, g.z, f.x, f.z) > 3;
-      // Its beam fades out between 8 and 4 m (horizontal) from the eye while the giver is in the
-      // cabin: that near, it laid a yellow wedge over a third of the frame.
-      this.bang.fadeBeam(this.cabin.inCabin(g.x, g.z) ? clamp((dist(camera.position.x, camera.position.z, g.x, g.z) - 4) / 4, 0, 1) : 1);
+      this.bang.fadeBeam(nearFade(g.x, g.z));
       if (dist(g.x, g.z, f.x, f.z) > 25) target = { x: g.x, z: g.z };
     } else this.bang.show(false);
     const t = ms.target();
@@ -1777,7 +1779,15 @@ class Game {
       target = t;
       const y = t.follow ? groundAt(t.x, t.z, 0.2, 0.6) + 2.5 : groundAt(t.x, t.z, 0.2, 0.6);
       if (t.follow) this.beacon.hide();
-      else { this.beacon.set(t.x, y, t.z, this.time, t.r || 3.2); this.beacon.arrow.visible = !camNear(this.beacon.root.position, this.beacon.arrow.position.y + 0.5); }
+      else {
+        this.beacon.set(t.x, y, t.z, this.time, t.r || 3.2);
+        // Its arrow bobs 4.5 m up, to be seen over cars and hedges. Under the flight level's steep eye
+        // (4.3 m or more above the pivot, looking 41–63° down) it was above the frame, or within about
+        // 7 m a clipped yellow block over 10–25 % of it at the top edge: hidden there (the ring, the
+        // beam, the guide arrow and the minimap star find the spot).
+        this.beacon.arrow.visible = this.level !== 'flight' && !camNear(this.beacon.root.position, this.beacon.arrow.position.y + 0.5);
+        this.beacon.fadeBeam(nearFade(t.x, t.z));
+      }
     } else this.beacon.hide();
     this.route = null;
     if (target && !this.inDialog) {
@@ -1798,11 +1808,15 @@ class Game {
       const p = this.player;
       if (!this.inDialog && !this.playerCar && (p.state === 'normal' || (p.state === 'seated' && p.seatId)) && !(this.shame.panicT > 0)) {
         const it = this.nearestInteractable();
+        // Standing in turbulence without holding on, `Håll i dig!` wins over the seat and toilet
+        // prompts (Phase 3 r3: the "E Sätt dig" of every free seat he passed in the aisle replaced it
+        // through the sprit sweep's shaking); E still uses the nearest interactable.
+        const hold = this.level === 'flight' && this.cabin.turbulent && p.state === 'normal' && !this.holding;
         if (it?.type === 'talk') prompt = fmt('promptTalk', { name: it.who.def.name });
+        else if (hold) prompt = S.promptHold;
         else if (it?.type === 'car') prompt = it.car.locked ? '' : it.car.driverBust ? S.promptSteal : S.promptGetIn;
         else if (it?.type === 'it') prompt = it.it.prompt || '';
         else if (it?.type === 'stand') prompt = S.promptStand;
-        if (!prompt && this.level === 'flight' && this.cabin.turbulent && p.state === 'normal' && !this.holding) prompt = S.promptHold;
       }
       hud.setPrompt(prompt);
     }
