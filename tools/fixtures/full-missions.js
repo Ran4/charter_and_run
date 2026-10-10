@@ -208,7 +208,7 @@ export const FULL_MISSIONS = [
 
   // ===== §8.6 · 5 · buss17 ===================================================================
   {
-    id: 'buss17', title: 'SunTrips buss nummer 17', level: 'island', giver: 'lasse', at: 'airport', reward: 500,
+    id: 'buss17', title: 'SunTrips buss nummer 17', level: 'island', giver: 'lasse', at: 'airport', reward: 500,   // title [F*]
     extra: [['ole', 2.5, 1.0], ['siv', -3.0, 2.0], ['majsan', -3.8, 2.4], ['jose', 4.5, 3.0], ['mamma', 5.3, 3.0], ['robban', -1.5, 4.0], ['berra', -2.2, 4.4], ['affe', 3.5, -1.0]],
     idleAnim: { berra: 'slump' },   // asleep while the mission waits (§9.4); the intro cue keeps it
     intro: [
@@ -246,7 +246,7 @@ export const FULL_MISSIONS = [
     outroPlace: { lasse: ['flamencoRecepcion', 1.5, 1.5], portier: ['flamencoRecepcion', 0, 0], ole: ['flamencoRecepcion', -1.4, 4.4], stig: ['flamencoRecepcion', 0, 3.0] },
     outro: [
       ['lasse', 'Det har dessvärre uppstått ett litet problem på grund av överbokning.'],                                   // [F](t)
-      ['lasse', 'Olsson, Stig-Helmer… och Bramserud, Ole… Kan ni dela rum?'],                                                // [F](t)
+      ['lasse', 'Olsson, Stig-Helmer… och Bramserud, Ole… Kan ni dela rum?'],                                                // [F*](t)
       ['stig', 'Ja…'],                                                                                                       // [F]
       ['stig', 'Kallar ni det här för havsutsikt?', { cut: { at: 'rum107Cam', dist: 5.5, height: 2.1 }, place: { stig: ['flamencoPatio', 0, -2.4, 0], portier: ['flamencoPatio', 1.3, -1.2, -0.25], ole: ['flamencoPatio', -1.6, -3.6, 0.3] } }],   // [F](t)
       ['portier', 'Momento.', { anim: { who: 'portier', flag: 'mirror', secs: 3 } }],                                         // [F]
@@ -259,7 +259,7 @@ export const FULL_MISSIONS = [
 
   // ===== §8.7 · 6 · friskotek ================================================================
   {
-    id: 'friskotek', title: 'Plocka kulor!', level: 'island', giver: 'lasse', at: 'friskotek', reward: 500,
+    id: 'friskotek', title: 'Plocka kulor!', level: 'island', giver: 'lasse', at: 'friskotek', reward: 500,   // title [F*]
     extra: [['affe', -4, -6], ['gabbe', 4, -6], ['ole', -1.5, 3], ['siv', -3, 4], ['majsan', -4, 4], ['fruStorch', 3, 4], ['herrStorch', 4, 4]],
     intro: [
       ['lasse', 'Välkommen till våran ö, sluta tänk på regn och snö!'],                                                       // [F]
@@ -267,14 +267,14 @@ export const FULL_MISSIONS = [
       ['lasse', 'Jag heter Lasse och har hand om SunTrips friskotek. Friskoteket börjar halv tio varje morgon.'],              // [F]
       ['lasse', 'Sträck upp höger hand, lägg vänster hand på hjärtat och säg efter mig: Jag lovar att bli en sundare och friskare människa under semestern.', { anim: { who: 'stig', flag: 'oath', secs: 4 } }],   // [F]
       ['stig', 'Jag lovar att bli en sundare och…'],                                                                          // [F*]
-      ['siv', 'Gud, vad han är söt!'],                                                                                        // [F]
+      ['siv', 'Gud, vad han är söt!', { cut: { at: 'friskotek', dist: 6, height: 2.4 }, place: { lasse: ['friskotek', 0, 1.5, Math.PI], stig: ['friskotek', -1.0, 2.6, 2.5], siv: ['friskotek', -2.3, 1.3, Math.PI], majsan: ['friskotek', -3.2, 1.6, Math.PI], fruStorch: ['friskotek', 1.7, 2.3, -2.6], herrStorch: ['friskotek', 2.6, 2.5, -2.6], ole: ['friskotek', 3.6, 2.0, -2.6] } }],   // [F]
       ['lasse', 'Finns det en familjen Stork här?'],                                                                          // [F](t)
       ['fruStorch', 'Vi heter faktiskt Storch, inte Stork.'],                                                                 // [F]
-      ['lasse', 'Till brudparet från Rutan och Nisse: Heja på och tappa inte orken, för om nio månader kommer storken.', { applause: 2 }],   // [F]
+      ['lasse', 'Till brudparet från Rutan och Nisse: Heja på och tappa inte orken, för om nio månader kommer storken.', { applause: 2 }],   // [F](t)
       ['lasse', 'Och nu – friskotek! Men vinden har tagit badbollarna!'],                                                     // [N]
     ],
     stages: [
-      () => rabbits({ mesh: 'badboll', count: 6, near: 'friskotek', rMin: 6, rMax: 30, timer: 24, text: 'Plocka kulor! Plocka med höger… plocka med vänster!', barLabel: 'KULOR', gotText: 'Plocka med höger!', failText: 'Bollarna rullade ner till stranden.', radio: [['berra', 'Kolla storken!'], ['robban', 'Att de bara orkar, våra storkar…']] }),
+      () => rabbits({ mesh: 'badboll', count: 6, near: 'friskotek', rMin: 6, rMax: 30, timer: 23, text: 'Plocka kulor! Plocka med höger… plocka med vänster!', barLabel: 'KULOR', gotText: 'Plocka med höger!', failText: 'Bollarna rullade ner till stranden.', radio: [['berra', 'Kolla storken!'], ['robban', 'Att de bara orkar, våra storkar…']] }),
       () => goto({ to: 'friskotek', radius: 5, text: 'Lämna bollarna till Lasse' }),
     ],
     outroPlace: { lasse: ['friskotek', 0, 1.5, Math.PI], angerud: ['friskotek', 1.6, 2.4, -2.4], berra: ['friskotek', -2.4, 1.0, Math.PI], robban: ['friskotek', -3.4, 1.4, Math.PI], ole: ['friskotek', 2.8, 1.0, Math.PI], stig: ['friskotek', -1.0, 2.6, 2.5] },
@@ -298,7 +298,7 @@ export const FULL_MISSIONS = [
 
   // ===== §8.8 · 7 · asnan ====================================================================
   {
-    id: 'asnan', title: 'Caballo folklorístico', level: 'island', giver: 'ole', at: 'flamenco', reward: 600,
+    id: 'asnan', title: 'Caballo folklorístico', level: 'island', giver: 'ole', at: 'flamenco', reward: 600,   // title [F*]
     intro: [
       ['stig', 'Det var julmat – i julklappen. Och väskan är borta.'],   // [F*]
       ['ole', 'Tenk ikke mer på det. Vi fikser en ny julegave.'],       // [F]
@@ -323,7 +323,7 @@ export const FULL_MISSIONS = [
       () => grab({ at: 'asnestand', mesh: 'asna', text: 'Ta åsnan' }),
       () => goto({ to: 'supermercado', radius: 8, inCar: true, passenger: 'ole', text: 'Leta knäckebröd – samma sort som i julklappen' }),
       () => grab({ at: 'supermercado', mesh: 'knacke', text: 'Ta ett SPORT-KNÄCKE-paket', say: ['stig', 'Det är ungefär så här stort.'] }),   // [F](t)
-      () => scene({ frame: ['ole', 'stig'], lines: [['ole', 'Og så maler vi den rød.', { cut: 'ferreteria' }], ['stig', 'Och blommor där.', { cut: null }]], doneCue: { flash: 'rgba(216,50,30,.4)', toast: 'Åsnan är nu en dalahäst. Nästan.' } }),   // [F*](t) · [F](t)
+      () => scene({ frame: ['ole', 'stig'], lines: [['ole', 'Og så maler vi den rød.', { cut: 'ferreteria' }], ['stig', 'Och blommor där.']], doneCue: { flash: 'rgba(216,50,30,.4)', toast: 'Åsnan är nu en dalahäst. Nästan.' } }),   // [F*](t) · [F](t)
       () => goto({ to: 'vikingbar', radius: 7, inCar: true, passenger: 'ole', timer: 19, fragile: { label: 'SKICK', failText: 'Färgen blev förstörd!' }, text: 'Kör försiktigt till Viking Bar – färgen är våt!', checkpoint: true, retryAt: 'supermercado', retryCar: { at: { ...lm('supermercado'), yaw: 0 }, passenger: 'ole' } }),
       () => goto({ to: 'vikingbar', radius: 2.5, onFoot: true, text: 'Lämna paketet i baren' }),
     ],
@@ -341,9 +341,9 @@ export const FULL_MISSIONS = [
 
   // ===== §8.9 · 8 · bodega ===================================================================
   {
-    id: 'bodega', title: 'Pepes Bodega', level: 'island', giver: 'berra', at: 'flamencoBar', reward: 700, unlock: 'grisbil',
+    id: 'bodega', title: 'Pepes Bodega', level: 'island', giver: 'berra', at: 'flamencoBar', reward: 700, unlock: 'grisbil',   // title [F*]
     intro: [
-      ['berra', 'Det är ju fan vad solen tar här nere, Robban.'],                                     // [F]
+      ['berra', 'Det är ju fan vad solen tar här nere, Robban.', { place: { robban: ['flamencoBar', 1.4, -1.0] } }],   // [F]
       ['berra', 'Ska vi ta Pepes Bodega i dag eller ska vi sola?'],                                    // [F]
       ['robban', 'Men va fan, vi kan väl ta det lite lugnt! Vi har ju semester!'],                     // [F]
       ['berra', 'Vi är på södra Gran Canaria och havet är där, va. Då måste bodegan ligga ditåt.'],    // [F]
@@ -355,13 +355,13 @@ export const FULL_MISSIONS = [
       () => goto({ to: 'playa', radius: 14, inCar: true, passenger: 'berra', text: 'Bodegan ligger ditåt – mot havet!', radio: [['robban', 'Fan Berra, ja ä tösstig.'], ['berra', 'Fan Robban, du har ingen karaktär!']], doneCue: { radio: ['berra', 'Ingen bodega här. Då ligger den åt andra hållet.'] } }),
       () => goto({ to: 'vischan', radius: 14, inCar: true, passenger: 'berra', timer: 31, text: 'Leta inåt land', radio: [['berra', 'Det här är ju rena vischan. Vi måste ha kört för långt.'], ['robban', 'Fan, vad jag är törstig.']], overhear: [{ at: 'eslovVag', r: 25, radio: true, lines: [['berra', 'Heja Eslöv!'], ['robban', 'Herre jävlar!']] }] }),
       () => dropoff({ who: 'berra', at: 'vischan', riderOff: true, text: 'Stanna vid tomatfälten' }),
-      () => scene({ frame: ['berra', 'stig'], exitCar: true, lines: [['stig', 'Jag kör inte längre på grusvägen. Jag har anlag för åksjuka.'], ['berra', 'Jag går inte en meter till. Vi liftar.']], doneCue: { toast: 'En grisbil stannar…' } }),   // [N] · [F](t) · [N]
+      () => scene({ place: { stig: ['vischan', 2.0, -4.4, 2.03], berra: ['vischan', -0.2, -4.3, -2.0], robban: ['vischan', -1.7, -5.3, -2.4] }, cam: { at: 'vischanCam', dist: 0, height: 1.9 }, lines: [['stig', 'Jag kör inte längre på grusvägen. Jag har anlag för åksjuka.'], ['berra', 'Jag går inte en meter till. Vi liftar.']], doneCue: { toast: 'En grisbil stannar…' } }),   // [N] · [F](t) · [N]
       () => follow({ type: 'grisbil', carName: 'grisbilFollow', driver: 'grisbonde', riders: ['berra', 'robban'], hideRiders: true, start: { lane: [[0, 2], [1, 2]], t: 12 }, via: [[1, 2], [1, 1], [2, 1]], to: 'grisfestGate', maxDist: 55, cruise: 15, wobble: 0.12, text: 'Följ grisbilen – Berra och Robban har liftat!', radio: [['robban', 'Fan, de luktar.'], ['berra', 'Skit i det. Vi slipper gå.'], ['robban', 'Snacka om grisfest.']] }),
       () => getInCar({ missionCar: 'grisbilFollow', any: false, passenger: 'berra', rider: 'robban', text: 'Grisbonden lånar ut grisbilen – hoppa in!', say: ['grisbonde', 'Ta bilen, señor. Ställ den vid hotellet – jag hämtar den på torsdag.'] }),
       () => destroy({ type: 'guardia', carName: 'guardiaJeep', driver: 'guardia', spawn: { lane: [[3, 1], [3, 2]], t: 25 }, cruise: 20, damageScale: 4, playerDamageScale: 0.5, noExplode: true, timer: 42, lockMeter: true, barLabel: 'JEEPEN', text: 'Guardia Civil såg grisarna – stoppa jeepen innan den hämtar förstärkning!', failText: 'Jeepen hann fram till kasernen.', checkpoint: true, retryAt: 'grisfestGate', retryCar: { at: 'grisfestGate', type: 'grisbil', name: 'grisbilFollow', passenger: 'berra', rider: 'robban' } }),
       () => goto({ to: 'flamencoBack', radius: 10, inCar: true, passenger: 'berra', timer: (g, m) => homeTimer(m.data.wreck), text: 'Kör hem grisarna till hotellet!', failText: 'Ni kom aldrig fram.' }),
     ],
-    outroPlace: { berra: ['bodega', -1.6, -1.0, Math.PI], robban: ['bodega', 1.6, -1.0, Math.PI] },
+    outroPlace: { berra: ['bodega', -1.6, -1.0, Math.PI], robban: ['bodega', 1.6, -1.0, Math.PI], stig: ['bodega', -3.4, -1.4, Math.PI / 2] },
     outro: [
       ['robban', 'Ja, herre jävlar, minns du Benidorm? Snacka om grisfest!', { cut: 'bodega' }],                                                         // [F]
       ['berra', 'Var jag med där? Hade jag kul?'],                                                                                                       // [F]
@@ -382,11 +382,11 @@ export const FULL_MISSIONS = [
 
   // ===== §8.10 · 9 · ropavieja ===============================================================
   {
-    id: 'ropavieja', title: 'Gamla kläder', level: 'island', giver: 'siv', at: 'flamencoPool', reward: 700, extra: ['majsan'],
+    id: 'ropavieja', title: 'Gamla kläder', level: 'island', giver: 'siv', at: 'flamencoPool', reward: 700, extra: ['majsan'],   // title [F*]
     intro: [
-      ['siv', 'Han heter José. Och han jobbar inte på pizzeria.'],             // [F*]
+      ['siv', 'Han heter José. Och han jobbar inte på pizzeria.'],             // [F*](t)
       ['majsan', 'Datatekniker.'],                                            // [F](t)
-      ['siv', 'Äkta spansk restaurang. Klockan sju.'],                         // [F*]
+      ['siv', 'Äkta spansk restaurang. Klockan sju.'],                         // [F*](t)
       ['majsan', 'Ta pepparn. Om han blir närgången.'],                       // [F*]
       ['majsan', 'Stig-Helmer, kan inte du hålla ett öga på dem? Diskret.'],   // [N]
     ],
@@ -407,13 +407,13 @@ export const FULL_MISSIONS = [
       ['siv', 'Jag fick användning för din peppar.', { toast: 'Dagen efter, vid poolen…', place: { siv: ['flamencoPool', 1.2, 0.6, Math.PI / 2], majsan: ['flamencoPool', -1.2, 0.6, -Math.PI / 2] }, cut: 'flamencoPool' }],   // [F]
       ['siv', 'Han kom och hämtade mig. Gissa vem han hade med sig… Morsan!'],                                                                           // [F]
       ['siv', 'Jag ska satsa på Ole nu. Jag har inga fördomar mot norrmän.'],                                                                            // [F]
-      ['majsan', 'Nej, bara de inte går på tur…', { cut: null }],                                                                                        // [F]
+      ['majsan', 'Nej, bara de inte går på tur…', { cut: null }],                                                                                        // [F](t)
     ],
   },
 
   // ===== §8.11 · 10 · fataga (P1, cut first) =================================================
   {
-    id: 'fataga', title: 'En skock får', level: 'island', giver: 'majsan', at: 'flamencoPool', reward: 800, extra: ['siv'],
+    id: 'fataga', title: 'En skock får', level: 'island', giver: 'majsan', at: 'flamencoPool', reward: 800, extra: ['siv'],   // title [F*]
     intro: [
       ['stig', 'Om du köper en brödrost, och det står \'Kontrollerad av G17\', så är det jag.'],   // [F]
       ['majsan', 'Själv brukar jag säga att jag går på gatan.'],                                   // [F*]
@@ -430,7 +430,8 @@ export const FULL_MISSIONS = [
       () => rabbits({ mesh: 'faar', count: 6, near: 'fataga', rMin: 10, rMax: 35, timer: 27, text: 'Fånga fåren åt Josés pappa', barLabel: 'FÅR', gotText: 'Bäää!', failText: 'Fåren sprang hela vägen till Maspalomas.', checkpoint: true, retryAt: { x: -240, z: -208.5, yaw: 0 } }),
       () => goto({ to: 'fatagaFold', radius: 4, text: 'Tillbaka till fårfållan' }),
     ],
-    outroPlace: { pappa: ['fatagaFold', 1.5, 0], mamma: ['fatagaFold', -1.2, 0.6], siv: ['fatagaFold', -2.4, 1.6], majsan: ['fatagaFold', -1.4, 2.0] },
+    outroPlace: { pappa: ['fatagaFold', 1.5, 0], mamma: ['fatagaFold', -0.2, 0.4], majsan: ['fatagaFold', -1.5, 0.9], siv: ['fatagaFold', -2.5, 1.4], stig: ['fatagaFold', 2.6, 1.0, -1.3] },
+    outroCam: { at: 'fatagaFold', dist: -7, height: 2.3 },
     outro: [
       ['pappa', '¡Gracias, señor!'],                                  // [N]
       ['mamma', 'Det är hon som vill ta min Josito ifrån mig.'],      // [F]
@@ -440,7 +441,7 @@ export const FULL_MISSIONS = [
 
   // ===== §8.12 · 11 · grisfest ===============================================================
   {
-    id: 'grisfest', title: 'Grisfesten', level: 'island', giver: 'ole', at: 'flamenco', reward: 1000, cost: 800,
+    id: 'grisfest', title: 'Grisfesten', level: 'island', giver: 'ole', at: 'flamenco', reward: 1000, cost: 800,   // title [F*]
     intro: [
       ['ole', 'Skal du ha B-vitaminer? Bra for leveren. Grisefest, vet du. Ta to.'],                    // [F]
       ['ole', 'Og jeg har C-vitaminer… jerntabletter, ginseng, tannkrem…?'],                            // [F*]
@@ -496,7 +497,7 @@ export const FULL_MISSIONS = [
 
   // ===== §8.13 · 12 · julafton ===============================================================
   {
-    id: 'julafton', title: 'Julafton bland palmerna', level: 'island', giver: 'ole', at: 'flamencoPatio', reward: 2000, cost: 100, unlock: 'bodega',
+    id: 'julafton', title: 'Julafton bland palmerna', level: 'island', giver: 'ole', at: 'flamencoPatio', reward: 2000, cost: 100, unlock: 'bodega',   // title [N]
     intro: [
       ['ole', 'Morn, gutten min!'],                                                                                       // [F](t)
       ['stig', 'Morrn morrn.'],                                                                                           // [F](t)
@@ -508,7 +509,7 @@ export const FULL_MISSIONS = [
       ['stig', 'Ja!', { toast: 'Väskan är tillbaka!' }],                                                                  // [F]
       ['hittegods', 'Hittelön.', { coins: -25 }],                                                                         // [F](t)
       ['stig', 'Tack så mycket.'],                                                                                        // [F](t)
-      ['lasse', 'Alla är välkomna på julfesten. Men man måste ha julmat och en julklapp för 100 pesetas.', { pa: true }],  // [F*]
+      ['lasse', 'Alla är välkomna på julfesten. Men man måste ha julmat och en julklapp för 100 pesetas.', { pa: true }],  // [F*](t)
       ['ole', 'Da tar jeg med sild og Stig-Helmer.'],                                                                     // [F*]
       ['stig', 'Norsk humor.'],                                                                                           // [F](t)
     ],

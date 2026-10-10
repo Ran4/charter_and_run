@@ -68,6 +68,7 @@ export const ISLAND_LANDMARKS = {
   guardia: { b: [5, 3], at: [0, 20], yaw: PI },
   // tomato fields (0,1) and (3,0)
   vischan: { b: [0, 1], at: [6, 24], yaw: PI },
+  vischanCam: { b: [0, 1], at: [5.7, 22.7], yaw: -0.14 },   // cut anchor (Phase 3): on the track north of the vischan scene, looking back at the road
   eslovVag: { b: [0, 1], at: [28, 4], yaw: -PI / 2 },
   packhus: { b: [3, 0], at: [0, 10], yaw: PI },
   // (2,0) the grisfest farm

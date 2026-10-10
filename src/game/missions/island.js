@@ -28,6 +28,26 @@ const FLAMENCO_LOT = { x: -24, z: 16, yaw: -PI / 2 };
 // stop, facing the village (the calibrate start); `fatagaBus` itself is at the kerb of the lane.
 const FATAGA_STOP = { x: -240, z: -208.5, yaw: 0 };
 
+// Stage decorator (staging only, like flight.js's `via`): a scene shot by a fixed camera where the
+// player stops his car (anywhere inside the stage radius) first parks that car on `spot` ([lm, dx,
+// dz, yaw], a place tuple), out of the shot, so the shot never depends on where he stopped. Unnamed
+// parked cars there make room, as the kinds' clearSpot does.
+function parkCar(st, spot) {
+  const init = st.init;
+  st.init = function (g, m) {
+    const c = g.playerCar;
+    if (c) {
+      const [name, dx, dz, yaw] = spot, q = g.lmOffset(name, dx, dz);
+      for (const o of g.cars.slice()) {
+        if (o !== c && !o.name && !o.locked && !o.ai && !o.driver && !o.traffic && Math.hypot(o.x - q.x, o.z - q.z) < 6) g.removeCar(o);
+      }
+      c.place(q.x, q.z, yaw ?? q.yaw);
+    }
+    init.call(this, g, m);
+  };
+  return st;
+}
+
 // Stage timers in seconds (stage timers run on unscaled time). Phase 2 balance pass, measured on
 // the merged world with `calibrate` (DESIGN §8 "Timers and difficulty", table there): T_ref = the
 // median of clean autopilot runs (deterministic drives) or the 75th percentile (random spawns /
@@ -37,7 +57,7 @@ const FATAGA_STOP = { x: -240, z: -208.5, yaw: 0 };
 // come from the fixed walker (`walker-r1r2`: no pacing, A* that reaches round the hotel).
 export const TIMERS = {
   buss17Drive: 54,        // §8.6 s2  busBay -> flamencoDrive, ÅKSJUKA limits, stop     T_ref 45.0 (median of 10 clean)
-  friskotekBalls: 24,     // §8.7 s1  6 fleeing beach balls (on foot)                  T_ref 18.59 (p75 15.59 of 44 + 3; Phase 3 r1 repair 2)
+  friskotekBalls: 23,     // §8.7 s1  6 fleeing beach balls (on foot)                  T_ref 18.29 (p75 15.29 of 36 + 3; Phase 3 r2 island-staging: from the intro's placed spot)
   asnanPaint: 19,         // §8.8 s9  supermercado lot -> vikingbar, SKICK              T_ref 15.5 (median of 3 clean)
   bodegaVischan: 31,      // §8.9 s4  playa -> vischan                                  T_ref 25.8 (median of 8 clean, gate fix)
   bodegaJeep: 42,         // §8.9 s9  wreck the fleeing Guardia jeep                    T_ref 34.45 (p75 of 83 chases; median 28.38; Phase 3 r1 repair 2)
@@ -91,7 +111,7 @@ export const HAGGLE = { zones: [0.30, 0.23, 0.17], speeds: [0.7, 0.95, 1.2] };
 export const ISLAND_MISSIONS = [
   // ===== §8.6 · 5 · buss17 · "SunTrips buss nummer 17" =========================================
   {
-    id: 'buss17', title: 'SunTrips buss nummer 17', level: 'island', giver: 'lasse', at: 'airport', reward: 500,
+    id: 'buss17', title: 'SunTrips buss nummer 17', level: 'island', giver: 'lasse', at: 'airport', reward: 500,   // title [F*]
     extra: [['ole', 2.5, 1.0], ['siv', -3.0, 2.0], ['majsan', -3.8, 2.4], ['jose', 4.5, 3.0], ['mamma', 5.3, 3.0], ['robban', -1.5, 4.0], ['berra', -2.2, 4.4], ['affe', 3.5, -1.0]],
     idleAnim: { berra: 'slump' },   // Berra sleeps it off while the mission waits (§9.4 item 11)
     intro: [
@@ -139,7 +159,7 @@ export const ISLAND_MISSIONS = [
     outroPlace: { lasse: ['flamencoRecepcion', 1.5, 1.5], portier: ['flamencoRecepcion', 0, 0], ole: ['flamencoRecepcion', -1.4, 4.4], stig: ['flamencoRecepcion', 0, 3.0] },
     outro: [
       ['lasse', 'Det har dessvärre uppstått ett litet problem på grund av överbokning.'],          // [F](t)
-      ['lasse', 'Olsson, Stig-Helmer… och Bramserud, Ole… Kan ni dela rum?'],                       // [F](t)
+      ['lasse', 'Olsson, Stig-Helmer… och Bramserud, Ole… Kan ni dela rum?'],                       // [F*](t) shortened: the subtitle opens "Jag undrar om"
       ['stig', 'Ja…'],                                                                              // [F]
       // Room 107 (the cut holds to the end): Stig in the doorway, the porter holds his mirror up to
       // show the sea; Ole sets up his boombox inside, and the porter goes back to the desk.
@@ -154,7 +174,7 @@ export const ISLAND_MISSIONS = [
 
   // ===== §8.7 · 6 · friskotek · "Plocka kulor!" ===============================================
   {
-    id: 'friskotek', title: 'Plocka kulor!', level: 'island', giver: 'lasse', at: 'friskotek', reward: 500,
+    id: 'friskotek', title: 'Plocka kulor!', level: 'island', giver: 'lasse', at: 'friskotek', reward: 500,   // title [F*]
     extra: [['affe', -4, -6], ['gabbe', 4, -6], ['ole', -1.5, 3], ['siv', -3, 4], ['majsan', -4, 4], ['fruStorch', 3, 4], ['herrStorch', 4, 4]],
     intro: [
       ['lasse', 'Välkommen till våran ö, sluta tänk på regn och snö!'],                                           // [F] one spoken line of the song
@@ -162,10 +182,12 @@ export const ISLAND_MISSIONS = [
       ['lasse', 'Jag heter Lasse och har hand om SunTrips friskotek. Friskoteket börjar halv tio varje morgon.'],  // [F]
       ['lasse', 'Sträck upp höger hand, lägg vänster hand på hjärtat och säg efter mig: Jag lovar att bli en sundare och friskare människa under semestern.', { anim: { who: 'stig', flag: 'oath', secs: 4 } }],   // [F]
       ['stig', 'Jag lovar att bli en sundare och…'],                                                              // [F*]
-      ['siv', 'Gud, vad han är söt!'],                                                                            // [F]
+      // From here the outro's group shot, everyone placed for it (held to the end of the intro): the giver
+      // two-shot followed the arrival and left Fru Storch, and Siv from some sides, off screen.
+      ['siv', 'Gud, vad han är söt!', { cut: { at: 'friskotek', dist: 6, height: 2.4 }, place: { lasse: ['friskotek', 0, 1.5, PI], stig: ['friskotek', -1.0, 2.6, 2.5], siv: ['friskotek', -2.3, 1.3, PI], majsan: ['friskotek', -3.2, 1.6, PI], fruStorch: ['friskotek', 1.7, 2.3, -2.6], herrStorch: ['friskotek', 2.6, 2.5, -2.6], ole: ['friskotek', 3.6, 2.0, -2.6] } }],   // [F]
       ['lasse', 'Finns det en familjen Stork här?'],                                                              // [F](t)
       ['fruStorch', 'Vi heter faktiskt Storch, inte Stork.'],                                                     // [F]
-      ['lasse', 'Till brudparet från Rutan och Nisse: Heja på och tappa inte orken, för om nio månader kommer storken.', { applause: 2 }],   // [F]
+      ['lasse', 'Till brudparet från Rutan och Nisse: Heja på och tappa inte orken, för om nio månader kommer storken.', { applause: 2 }],   // [F](t)
       ['lasse', 'Och nu – friskotek! Men vinden har tagit badbollarna!'],                                         // [N]
     ],
     stages: [
@@ -200,7 +222,7 @@ export const ISLAND_MISSIONS = [
 
   // ===== §8.8 · 7 · asnan · "Caballo folklorístico" ===========================================
   {
-    id: 'asnan', title: 'Caballo folklorístico', level: 'island', giver: 'ole', at: 'flamenco', reward: 600,
+    id: 'asnan', title: 'Caballo folklorístico', level: 'island', giver: 'ole', at: 'flamenco', reward: 600,   // title [F*]
     intro: [
       ['stig', 'Det var julmat – i julklappen. Och väskan är borta.'],   // [F*]
       ['ole', 'Tenk ikke mer på det. Vi fikser en ny julegave.'],       // [F]
@@ -230,10 +252,11 @@ export const ISLAND_MISSIONS = [
       () => grab({ at: 'asnestand', mesh: 'asna', text: 'Ta åsnan' }),                                                         // [N]
       () => goto({ to: 'supermercado', radius: 8, inCar: true, passenger: 'ole', text: 'Leta knäckebröd – samma sort som i julklappen' }),   // [N]
       () => grab({ at: 'supermercado', mesh: 'knacke', text: 'Ta ett SPORT-KNÄCKE-paket', say: ['stig', 'Det är ungefär så här stort.'] }),   // [N] · say [F](t)
-      // Painted in the car in the Centro Nórdico lot; the cut shows the FERRETERÍA front.
+      // Painted in the car in the Centro Nórdico lot; both lines play over the FERRETERÍA front (the
+      // seated two-shot framed neither of them: the car body, the roof, a head behind the lens).
       () => scene({ frame: ['ole', 'stig'], lines: [
         ['ole', 'Og så maler vi den rød.', { cut: 'ferreteria' }],   // [F*](t)
-        ['stig', 'Och blommor där.', { cut: null }],                  // [F](t)
+        ['stig', 'Och blommor där.'],                                 // [F](t)
       ], doneCue: { flash: 'rgba(216,50,30,.4)', toast: 'Åsnan är nu en dalahäst. Nästan.' } }),   // toast [N]
       // A checkpoint: a failed paint drive retries from the lot, Ole beside the player, facing the
       // street (the calibrate start), not from the market and a second haggle.
@@ -258,9 +281,11 @@ export const ISLAND_MISSIONS = [
 
   // ===== §8.9 · 8 · bodega · "Pepes Bodega" ===================================================
   {
-    id: 'bodega', title: 'Pepes Bodega', level: 'island', giver: 'berra', at: 'flamencoBar', reward: 700, unlock: 'grisbil',
+    id: 'bodega', title: 'Pepes Bodega', level: 'island', giver: 'berra', at: 'flamencoBar', reward: 700, unlock: 'grisbil',   // title [F*]
     intro: [
-      ['berra', 'Det är ju fan vad solen tar här nere, Robban.'],                                     // [F]
+      // Robban steps back to the counter behind Berra's shoulder: standing beside Berra, the giver
+      // two-shot from the side put him in front of him.
+      ['berra', 'Det är ju fan vad solen tar här nere, Robban.', { place: { robban: ['flamencoBar', 1.4, -1.0] } }],   // [F]
       ['berra', 'Ska vi ta Pepes Bodega i dag eller ska vi sola?'],                                    // [F]
       ['robban', 'Men va fan, vi kan väl ta det lite lugnt! Vi har ju semester!'],                     // [F]
       ['berra', 'Vi är på södra Gran Canaria och havet är där, va. Då måste bodegan ligga ditåt.'],    // [F]
@@ -276,16 +301,23 @@ export const ISLAND_MISSIONS = [
       }),
       () => goto({
         to: 'vischan', radius: 14, inCar: true, passenger: 'berra', timer: TIMERS.bodegaVischan, text: 'Leta inåt land',   // [N]
-        radio: [['berra', 'Det här är ju rena vischan. Vi måste ha kört för långt.'], ['robban', 'Fan, vad jag är törstig.']],   // [F*] the film's "gått", said on foot · [F]
+        radio: [['berra', 'Det här är ju rena vischan. Vi måste ha kört för långt.'], ['robban', 'Fan, vad jag är törstig.']],   // [F*](t) the film's "gått", said on foot · [F](t)
         overhear: [{ at: 'eslovVag', r: 25, radio: true, lines: [['berra', 'Heja Eslöv!'], ['robban', 'Herre jävlar!']] }],     // [F] · [F](t)
       }),
       () => dropoff({ who: 'berra', at: 'vischan', riderOff: true, text: 'Stanna vid tomatfälten' }),   // [N]
-      // Hitch-hike logic: Stig refuses the dirt road (åksjuka), then they hitch the pig truck. He
-      // steps out to say so (seated, the two-shot saw the car roof); the tail starts once he is back in.
-      () => scene({ frame: ['berra', 'stig'], exitCar: true, lines: [
-        ['stig', 'Jag kör inte längre på grusvägen. Jag har anlag för åksjuka.'],   // [N]
-        ['berra', 'Jag går inte en meter till. Vi liftar.'],                        // [F](t)
-      ], doneCue: { toast: 'En grisbil stannar…' } }),                              // [N]
+      // Hitch-hike logic: Stig refuses the dirt road (åksjuka), then they hitch the pig truck. The three
+      // stand on the track by the CAMINO SIN ASFALTAR sign, seen from up the track, looking back at the
+      // road the truck comes along; the car parks behind the camera, nose to the road (the two-shot
+      // followed the stop and put Robban in front of Berra). The tail starts once he is back in.
+      () => parkCar(scene({
+        place: { stig: ['vischan', 2.0, -4.4, 2.03], berra: ['vischan', -0.2, -4.3, -2.0], robban: ['vischan', -1.7, -5.3, -2.4] },
+        cam: { at: 'vischanCam', dist: 0, height: 1.9 },
+        lines: [
+          ['stig', 'Jag kör inte längre på grusvägen. Jag har anlag för åksjuka.'],   // [N]
+          ['berra', 'Jag går inte en meter till. Vi liftar.'],                        // [F](t)
+        ],
+        doneCue: { toast: 'En grisbil stannar…' },                                    // [N]
+      }), ['vischan', 0, 7, 0]),
       () => follow({
         type: 'grisbil', carName: 'grisbilFollow', driver: 'grisbonde', riders: ['berra', 'robban'], hideRiders: true,
         start: { lane: [[0, 2], [1, 2]], t: 12 }, via: [[1, 2], [1, 1], [2, 1]], to: 'grisfestGate',
@@ -306,8 +338,9 @@ export const ISLAND_MISSIONS = [
       }),
       () => goto({ to: 'flamencoBack', radius: 10, inCar: true, passenger: 'berra', timer: (g, m) => homeTimer(m.data.wreck), text: 'Kör hem grisarna till hotellet!', failText: 'Ni kom aldrig fram.' }),   // [N]
     ],
-    // Both face away from the shop: PEPES BODEGA is right behind them and nobody notices.
-    outroPlace: { berra: ['bodega', -1.6, -1.0, PI], robban: ['bodega', 1.6, -1.0, PI] },
+    // Both face away from the shop: PEPES BODEGA is right behind them and nobody notices. Stig stands
+    // beside them, off the cut's line (the 8 m rule put him 2 m in front of Berra, his back to the lens).
+    outroPlace: { berra: ['bodega', -1.6, -1.0, PI], robban: ['bodega', 1.6, -1.0, PI], stig: ['bodega', -3.4, -1.4, PI / 2] },
     outro: [
       ['robban', 'Ja, herre jävlar, minns du Benidorm? Snacka om grisfest!', { cut: 'bodega' }],                                                         // [F]
       ['berra', 'Var jag med där? Hade jag kul?'],                                                                                                       // [F]
@@ -332,11 +365,11 @@ export const ISLAND_MISSIONS = [
 
   // ===== §8.10 · 9 · ropavieja · "Gamla kläder" ===============================================
   {
-    id: 'ropavieja', title: 'Gamla kläder', level: 'island', giver: 'siv', at: 'flamencoPool', reward: 700, extra: ['majsan'],
+    id: 'ropavieja', title: 'Gamla kläder', level: 'island', giver: 'siv', at: 'flamencoPool', reward: 700, extra: ['majsan'],   // title [F*]
     intro: [
-      ['siv', 'Han heter José. Och han jobbar inte på pizzeria.'],             // [F*] a plane line, relocated to the pool
+      ['siv', 'Han heter José. Och han jobbar inte på pizzeria.'],             // [F*](t) a plane line, relocated to the pool
       ['majsan', 'Datatekniker.'],                                            // [F](t)
-      ['siv', 'Äkta spansk restaurang. Klockan sju.'],                         // [F*]
+      ['siv', 'Äkta spansk restaurang. Klockan sju.'],                         // [F*](t)
       ['majsan', 'Ta pepparn. Om han blir närgången.'],                       // [F*]
       ['majsan', 'Stig-Helmer, kan inte du hålla ett öga på dem? Diskret.'],   // [N]
     ],
@@ -364,13 +397,13 @@ export const ISLAND_MISSIONS = [
       ['siv', 'Jag fick användning för din peppar.', { toast: 'Dagen efter, vid poolen…', place: { siv: ['flamencoPool', 1.2, 0.6, PI / 2], majsan: ['flamencoPool', -1.2, 0.6, -PI / 2] }, cut: 'flamencoPool' }],   // [F] · toast [N]
       ['siv', 'Han kom och hämtade mig. Gissa vem han hade med sig… Morsan!'],           // [F]
       ['siv', 'Jag ska satsa på Ole nu. Jag har inga fördomar mot norrmän.'],            // [F]
-      ['majsan', 'Nej, bara de inte går på tur…'],                                       // [F] (the pool cut holds to the end)
+      ['majsan', 'Nej, bara de inte går på tur…'],                                       // [F](t) (the pool cut holds to the end)
     ],
   },
 
   // ===== §8.11 · 10 · fataga · "En skock får" (P1, cut first) =================================
   {
-    id: 'fataga', title: 'En skock får', level: 'island', giver: 'majsan', at: 'flamencoPool', reward: 800, extra: ['siv'],
+    id: 'fataga', title: 'En skock får', level: 'island', giver: 'majsan', at: 'flamencoPool', reward: 800, extra: ['siv'],   // title [F*]
     intro: [
       ['stig', 'Om du köper en brödrost, och det står \'Kontrollerad av G17\', så är det jag.'],   // [F]
       ['majsan', 'Själv brukar jag säga att jag går på gatan.'],                                   // [F*]
@@ -407,7 +440,10 @@ export const ISLAND_MISSIONS = [
       () => rabbits({ mesh: 'faar', count: 6, near: 'fataga', rMin: 10, rMax: 35, timer: TIMERS.fatagaSheep, text: 'Fånga fåren åt Josés pappa', barLabel: 'FÅR', gotText: 'Bäää!', failText: 'Fåren sprang hela vägen till Maspalomas.', checkpoint: true, retryAt: FATAGA_STOP }),   // [N]
       () => goto({ to: 'fatagaFold', radius: 4, text: 'Tillbaka till fårfållan' }),   // [N]
     ],
-    outroPlace: { pappa: ['fatagaFold', 1.5, 0], mamma: ['fatagaFold', -1.2, 0.6], siv: ['fatagaFold', -2.4, 1.6], majsan: ['fatagaFold', -1.4, 2.0] },
+    // A group shot from the fold side, all facing it: the sisters on the left, Stig side-on at the right
+    // (the two-shot followed the arrival and cut Majsan at the frame's edge).
+    outroPlace: { pappa: ['fatagaFold', 1.5, 0], mamma: ['fatagaFold', -0.2, 0.4], majsan: ['fatagaFold', -1.5, 0.9], siv: ['fatagaFold', -2.5, 1.4], stig: ['fatagaFold', 2.6, 1.0, -1.3] },
+    outroCam: { at: 'fatagaFold', dist: -7, height: 2.3 },
     outro: [
       ['pappa', '¡Gracias, señor!'],                                  // [N]
       ['mamma', 'Det är hon som vill ta min Josito ifrån mig.'],      // [F]
@@ -421,7 +457,7 @@ export const ISLAND_MISSIONS = [
   // floor with the car parked at the race finish (TONGA_CAR), 10 in the Flamenco lot; a retry
   // re-applies the earlier stages' sky and `vals`.
   {
-    id: 'grisfest', title: 'Grisfesten', level: 'island', giver: 'ole', at: 'flamenco', reward: 1000, cost: 800,
+    id: 'grisfest', title: 'Grisfesten', level: 'island', giver: 'ole', at: 'flamenco', reward: 1000, cost: 800,   // title [F*]
     intro: [
       ['ole', 'Skal du ha B-vitaminer? Bra for leveren. Grisefest, vet du. Ta to.'],                    // [F]
       ['ole', 'Og jeg har C-vitaminer… jerntabletter, ginseng, tannkrem…?'],                            // [F*]
@@ -465,8 +501,10 @@ export const ISLAND_MISSIONS = [
       }),
       // Its own checkpoint, so a failed drive does not replay the dance.
       () => goto({ to: 'tongatonga', radius: 10, inCar: true, timer: TIMERS.grisfestTonga, text: 'Till Tonga Tonga!', checkpoint: true, retryAt: 'dansgolv', retryCar: TONGA_CAR }),   // [N]
-      () => scene({
+      () => parkCar(scene({
         // In front of the TONGA TONGA sign, shot from the street (a side two-shot stood in the arcade).
+        // The car he came in parks in the lot beside Berra, behind the camera (left where he stopped, a
+        // bus covered the lens).
         place: { ole: ['tongatonga', -2.2, 3.2, 0], majsan: ['tongatonga', 2.0, 3.0, 0], siv: ['tongatonga', 3.0, 3.4, 0], robban: ['tongatonga', -0.8, 1.2, -PI / 2], berra: ['tongaLot', 0, 0], stig: ['tongatonga', 0.8, 1.2, PI / 2] }, anim: { berra: 'slump' },
         cam: { at: 'tongatonga', dist: 6, height: 2.6 },
         lines: [
@@ -474,7 +512,7 @@ export const ISLAND_MISSIONS = [
           ['robban', 'Kan du hjälpa mig bära hem Berra?'],         // [F]
           ['stig', 'Vilket snack! "Bärra hem Berra!"'],            // [F]
         ],
-      }),
+      }), ['tongatonga', -10, -10, 0]),
       () => pickup({ who: 'berra', name: 'Berra', at: 'tongaLot', rider: 'robban', hello: '…zzz' }),                                      // [N]
       () => goto({ to: 'flamencoDrive', radius: 10, inCar: true, passenger: 'berra', text: 'Kör hem till Hotell Flamenco' }),           // [N]
       () => carry({ who: 'berra', to: 'flamencoRecepcion', radius: 2.2, walkSpeed: 3.2, failOn: { fall: true }, text: 'Bärra hem Berra!', failText: 'Berra vaknade och började sjunga.', checkpoint: true, retryAt: FLAMENCO_LOT }),   // [F*] · [N] (P1; P0 fallback: dropoff at flamencoDrive)
@@ -509,7 +547,7 @@ export const ISLAND_MISSIONS = [
   // ===== §8.13 · 12 · julafton · "Julafton bland palmerna" ====================================
   // cost 100 (Ole pays if short); unlock 'bodega'; the end card after the outro.
   {
-    id: 'julafton', title: 'Julafton bland palmerna', level: 'island', giver: 'ole', at: 'flamencoPatio', reward: 2000, cost: 100, unlock: 'bodega',
+    id: 'julafton', title: 'Julafton bland palmerna', level: 'island', giver: 'ole', at: 'flamencoPatio', reward: 2000, cost: 100, unlock: 'bodega',   // title [N]
     intro: [
       ['ole', 'Morn, gutten min!'],                                                                                       // [F](t)
       ['stig', 'Morrn morrn.'],                                                                                           // [F](t)
@@ -523,7 +561,7 @@ export const ISLAND_MISSIONS = [
       ['stig', 'Ja!', { toast: 'Väskan är tillbaka!' }],                                                                  // [F] · toast [N]
       ['hittegods', 'Hittelön.', { coins: -25 }],                                                                         // [F](t)
       ['stig', 'Tack så mycket.'],                                                                                        // [F](t)
-      ['lasse', 'Alla är välkomna på julfesten. Men man måste ha julmat och en julklapp för 100 pesetas.', { pa: true }],  // [F*]
+      ['lasse', 'Alla är välkomna på julfesten. Men man måste ha julmat och en julklapp för 100 pesetas.', { pa: true }],  // [F*](t) an unnamed voice answers Ole in the film; Lasse's PA is ours
       ['ole', 'Da tar jeg med sild og Stig-Helmer.'],                                                                     // [F*]
       ['stig', 'Norsk humor.'],                                                                                           // [F](t)
     ],

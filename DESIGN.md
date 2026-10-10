@@ -132,8 +132,8 @@ Any film line used in a CHATTER / OUCH / GETUP / CARJACK / NPC_KICKED / OLE_STAT
 sign, outside its own film scene is `[F*]` (relocated), never plain `[F]`.
 
 Mission titles (shown on banners and the objective card) carry one too, on the `title:` line:
-`// title [F*]` for a title taken from film dialogue, `// title [N]` for our own (Phase 3 r2: the
-five flight titles; the island titles are film-4's).
+`// title [F*]` for a title taken from film dialogue, `// title [N]` for our own (Phase 3 r2, all
+thirteen: of the island titles only "Julafton bland palmerna" is `[N]`).
 
 ### 1.5 Brands, real people, music
 
@@ -1056,7 +1056,7 @@ standing there faces. `y` (optional) = absolute height for collectible spots on 
 | (3,1) | `kyrka` → `kyrka` (C2, centre.js) | **Templo Ecuménico**: white rationalist church (flat planes, bell slab), palm plaza, crèche, small fountain; sign `ES UNA IGLESIA` / `DET ÄR EN KYRKA.` [F*] (the sisters' language record, relocated; uppercase since Phase 3 r2, §1.3) | `kyrka` (0, 18, π) | — |
 | (4,3) | `bensin` → `bensin` (C2, centre.js) | gas station: canopy, `GASOLINA` (no brand), prices in pesetas, kiosk; `gaspump` props explode | `bensin` (0, 16, π) | — |
 | (5,3) | `guardia` → `cuartel` (C2, centre.js) | ochre barracks, red-yellow-red flag mast beside the path at x 4.6 (Phase 3: off the axis to the `CASA CUARTEL` plaque), `CASA CUARTEL`; two parked green Land Rovers | `guardia` (0, 20, π) | `guardia1`, `guardia2` (type `guardia`, locked) |
-| (1,0), (3,0), (0,1) | `tomat` → `tomatfalt` (D1, nature.js) | rows of low tomato bushes (one merged mesh, walls a car drives through: no solids, or tops ≤ 0.6), packing shed `TOMATES · EXPORTACIÓN` / `EMPAQUETADO`, `tomatlada` props, dirt tracks | on (0,1): `vischan` (6, 24, π) · `eslovVag` (28, 4, −π/2) (road side, rollerskier) — on (3,0): `packhus` (0, 10, π) | — |
+| (1,0), (3,0), (0,1) | `tomat` → `tomatfalt` (D1, nature.js) | rows of low tomato bushes (one merged mesh, walls a car drives through: no solids, or tops ≤ 0.6), packing shed `TOMATES · EXPORTACIÓN` / `EMPAQUETADO`, `tomatlada` props, dirt tracks | on (0,1): `vischan` (6, 24, π) · cut anchor `vischanCam` (5.7, 22.7, −0.14) (on the gravel track north of the vischan scene, looking back south at the road and the `CAMINO SIN ASFALTAR` sign; Phase 3 r2) · `eslovVag` (28, 4, −π/2) (road side, rollerskier) — on (3,0): `packhus` (0, 10, π) | — |
 | (2,0) | `grisfest` → `grisgard` (D1, nature.js) | farm: white barn (roof top ≈ 5), pergola deck with long tables under string lights, spit-roast pig, bandstand, dance-floor platform (deck top 0.4), piglet pen, gate on the **south** road; **12 `tallrikar` prop stacks** on the tables (smash stage; `placeProp(..., baseY = table top)`, §14.7) | `grisfest` (0, 26, π) · `grisfestGate` world (−80, −204, π/2) (on the south road at the farm gate, the `follow` endpoint) · `dansgolv` (0, 0, 0) · `pryl_pung` (−18, −14, 0, 5.4) | — |
 | (0,0) | `fataga` → `fataga` (D1, nature.js) | white village houses, tile roofs, narrow lanes, date palms, small church, embroidered tablecloths on lines (`MANTELES · DUKAR`), sheepfold (fence solids, gap gate) | `fataga` (0, 18, π) · `fatagaBus` world (−240, −204, −π/2) (westbound kerb of the z = −200 road, the `follow` endpoint) · `fatagaFold` (−18, −12, 0) · `fatagaDukar` (8, 4, π) · cut anchor `dukarCam` (8, 4, 0) = `fatagaDukar` turned round (the stall from the square; Phase 3) · `pryl_kniv` (0, 0, 0, 1.2) | — |
 | (4,0) | `golf` → `golf` (D1, nature.js) | fairway, bunkers (sand slabs), **pond** (`water` circle + flat blue), flag 18, small clubhouse `CAMPO DE GOLF` | `golf` (0, 22, π) · `fena_golf` (−10, −6, 0, 0.35) | — |
@@ -1424,7 +1424,7 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
 | 8.5 landning [0] round-up | row 16 → José → Berra → Herr Storch (walk, sign lit) | 9.1 (7.6 + 1.5; 2 orders) | **12** (20) | 37 % |
 | 8.5 landning [1] back to 14B | from the far end (Berra) | 3.7 (3.2 + 0.5; 2) | **5** (10) | 36 % |
 | 8.6 buss17 s2 | busBay → 7,1 > 3,1 > 3,4 → flamencoDrive, ÅKSJUKA, stop | 45.0 (median of 10 clean in 4 sets, 44.4–47.0) | **54** (60) | 17 % |
-| 8.7 friskotek s1 | six fleeing beach balls round the friskotek lawn | 18.6 (p75 15.59 of 44 + 3; median 13.73; Phase 3 r1 repair 2, the fixed walker: no pacing, an A* that reaches round the hotel; pool `walker-r1r2/d9451f8` in `notes/calibration-samples.md`. The old walker: gate 2's 20 runs p75 29.40 → 41, r1 repair's lost 72 runs 23.1 → 33, Phase 2 21.9 of 12 → 32) | **24** (20) | 35 % at p75 |
+| 8.7 friskotek s1 | six fleeing beach balls round the friskotek lawn, from Stig's placed spot in the intro's group shot (−11.0, −69.4) | 18.3 (p75 15.29 of 36 + 3; median 13.59; Phase 3 r2 island-staging, the intro places the cast, a new pool `walker-r1r2/r2-island-staging` in `notes/calibration-samples.md`; before it, from the approach spot: p75 15.59 of 44 + 3 → 24, Phase 3 r1 repair 2, the fixed walker: no pacing, an A* that reaches round the hotel. The old walker: gate 2's 20 runs p75 29.40 → 41, r1 repair's lost 72 runs 23.1 → 33, Phase 2 21.9 of 12 → 32) | **23** (20) | 34 % at p75 |
 | 8.8 asnan s9 | Centro Nórdico lot → 5,3 > 1,3 → vikingbar, SKICK | 15.5 (median of 3 clean; 15.5–15.6) | **19** (20) | 18 % |
 | 8.9 bodega s4 | playa → 4,7 > 4,2 > 0,2 → vischan | 25.8 (median of 8 clean in 3 runs, 25.4–26.8: 25.4 unless traffic held it up 1–1.5 s; Phase 2 gate) | **31** (35) | 17 % |
 | 8.9 bodega s9 jeep | farm gate, road-route chase, rams | 34.45 (p75 of 83 usable chases in 6 samples on the fixed chase autopilot; 4 more lost the truck and 1 wedged, excluded; median 28.38; single samples' p75 29.7–43.0; Phase 3 r1 repair 2, pool `chase-r1if/d9451f8`; the 98 chases behind the earlier 40 (p75 32.5) are lost; island-flow's first 40: 30.6 → 37; Phase 2: 34.4 → 42) | **42** (45) | 18 % at p75 |
@@ -1833,7 +1833,7 @@ off screen and Siv's head in the lens.
 
 **Outro** (`outroPlace: { lasse: ['flamencoRecepcion', 1.5, 1.5], portier: ['flamencoRecepcion', 0, 0], ole: ['flamencoRecepcion', -1.4, 4.4], stig: ['flamencoRecepcion', 0, 3.0] }`; the player ends the drive at `flamencoDrive`, 42 m away, so `stig` moves him to the desk; Ole stands off the camera-to-Stig line, Phase 3):
 - lasse: "Det har dessvärre uppstått ett litet problem på grund av överbokning."  [F](t)
-- lasse: "Olsson, Stig-Helmer… och Bramserud, Ole… Kan ni dela rum?"  [F](t)
+- lasse: "Olsson, Stig-Helmer… och Bramserud, Ole… Kan ni dela rum?"  [F*](t) (shortened: the subtitle opens "Jag undrar om", research-plot §7.3)
 - stig: "Ja…"  [F]
 - stig: "Kallar ni det här för havsutsikt?"  [F](t)  {cut: {at: 'rum107Cam', dist: 5.5, height: 2.1}, place: {stig: ['flamencoPatio', 0, -2.4, 0], portier: ['flamencoPatio', 1.3, -1.2, -0.25], ole: ['flamencoPatio', -1.6, -3.6, 0.3]}}
 - portier: "Momento."  [F]  {anim: {who: 'portier', flag: 'mirror', secs: 3}}
@@ -1863,14 +1863,14 @@ SunTrip lawn and pool while Berra and Robban heckle; ends with "Hä-pååre!".
 - lasse: "Jag heter Lasse och har hand om SunTrips friskotek. Friskoteket börjar halv tio varje morgon."  [F]
 - lasse: "Sträck upp höger hand, lägg vänster hand på hjärtat och säg efter mig: Jag lovar att bli en sundare och friskare människa under semestern."  [F]  {anim: {who: 'stig', flag: 'oath', secs: 4}}
 - stig: "Jag lovar att bli en sundare och…"  [F*]
-- siv: "Gud, vad han är söt!"  [F]
+- siv: "Gud, vad han är söt!"  [F]  {cut: {at: 'friskotek', dist: 6, height: 2.4}, place: {lasse: ['friskotek', 0, 1.5, π], stig: ['friskotek', −1.0, 2.6, 2.5], siv: ['friskotek', −2.3, 1.3, π], majsan: ['friskotek', −3.2, 1.6, π], fruStorch: ['friskotek', 1.7, 2.3, −2.6], herrStorch: ['friskotek', 2.6, 2.5, −2.6], ole: ['friskotek', 3.6, 2.0, −2.6]}} (Phase 3 r2: from here the outro's group shot, everyone who speaks facing it, held to the end of the intro; the giver two-shot followed the arrival, and Fru Storch said her line off screen with her back to the lens, Siv too from some sides. The balls start from Stig's spot here, so the stage was re-measured, §8 table)
 - lasse: "Finns det en familjen Stork här?"  [F](t)
 - fruStorch: "Vi heter faktiskt Storch, inte Stork."  [F]
-- lasse: "Till brudparet från Rutan och Nisse: Heja på och tappa inte orken, för om nio månader kommer storken."  [F]  {applause: 2}
+- lasse: "Till brudparet från Rutan och Nisse: Heja på och tappa inte orken, för om nio månader kommer storken."  [F](t) (research-plot §7.4 names no reader)  {applause: 2}
 - lasse: "Och nu – friskotek! Men vinden har tagit badbollarna!"  [N]
 
 **Stages:**
-1. `rabbits({ mesh: 'badboll', count: 6, near: 'friskotek', rMin: 6, rMax: 30, timer: 24, text: 'Plocka kulor! Plocka med höger… plocka med vänster!', barLabel: 'KULOR', gotText: 'Plocka med höger!', failText: 'Bollarna rullade ner till stranden.', radio: [['berra', 'Kolla storken!'], ['robban', 'Att de bara orkar, våra storkar…']] })`
+1. `rabbits({ mesh: 'badboll', count: 6, near: 'friskotek', rMin: 6, rMax: 30, timer: 23, text: 'Plocka kulor! Plocka med höger… plocka med vänster!', barLabel: 'KULOR', gotText: 'Plocka med höger!', failText: 'Bollarna rullade ner till stranden.', radio: [['berra', 'Kolla storken!'], ['robban', 'Att de bara orkar, våra storkar…']] })`
    text [F]; gotText [F*]; failText [N]; radio [F](t) ×2 (the research does not say who).
 2. `goto({ to: 'friskotek', radius: 5, text: 'Lämna bollarna till Lasse' })`
 
@@ -1918,10 +1918,13 @@ then a nervous drive with a wet-painted donkey on board.
 5. `grab({ at: 'asnestand', mesh: 'asna', text: 'Ta åsnan' })`
 6. `goto({ to: 'supermercado', radius: 8, inCar: true, passenger: 'ole', text: 'Leta knäckebröd – samma sort som i julklappen' })`
 7. `grab({ at: 'supermercado', mesh: 'knacke', text: 'Ta ett SPORT-KNÄCKE-paket', say: ['stig', 'Det är ungefär så här stort.'] })`  [F](t)
-8. `scene({ frame: ['ole', 'stig'], lines: [['ole', 'Og så maler vi den rød.', { cut: 'ferreteria' }], ['stig', 'Och blommor där.', { cut: null }]], doneCue: { flash: 'rgba(216,50,30,.4)', toast: 'Åsnan är nu en dalahäst. Nästan.' } })`  [F*](t) · [F](t) · toast [N]
+8. `scene({ frame: ['ole', 'stig'], lines: [['ole', 'Og så maler vi den rød.', { cut: 'ferreteria' }], ['stig', 'Och blommor där.']], doneCue: { flash: 'rgba(216,50,30,.4)', toast: 'Åsnan är nu en dalahäst. Nästan.' } })`  [F*](t) · [F](t) · toast [N]
    (played in the car in the Centro Nórdico lot right after the knäcke grab: `frame` alone keeps
    both seated, their positions are live, §9.2; the cut shows the FERRETERÍA front, so there is no
-   separate drive 36 m down the mall)
+   separate drive 36 m down the mall. **Both lines play over the shop** (Phase 3 r2): the seated
+   two-shot that "Och blommor där." went back to framed neither speaker, from a drive-in (Stig's
+   head above the frame, Ole off screen), on foot (a 14 m shot of Stig's back) or at all (Ole
+   behind the car body, Stig's head behind the lens). `scene` ends the cut.)
 9. `goto({ to: 'vikingbar', radius: 7, inCar: true, passenger: 'ole', timer: 19, fragile: { label: 'SKICK', failText: 'Färgen blev förstörd!' }, text: 'Kör försiktigt till Viking Bar – färgen är våt!', checkpoint: true, retryAt: 'supermercado', retryCar: { at: { ...lm('supermercado'), yaw: 0 }, passenger: 'ole' } })`  [N]
    (Phase 3: a checkpoint. A failed paint drive retries in the Centro Nórdico lot with Ole beside
    the player, facing the street, the calibrate start; it used to replay the market drive and the
@@ -1952,7 +1955,7 @@ nobody notices.
 Hitch-hike logic (judge fix): Stig refuses the dirt road (åksjuka), drops them, **then** they hitch.
 
 **Intro:**
-- berra: "Det är ju fan vad solen tar här nere, Robban."  [F]
+- berra: "Det är ju fan vad solen tar här nere, Robban."  [F]  {place: {robban: ['flamencoBar', 1.4, −1.0]}} (Phase 3 r2: Robban steps back to the counter behind Berra's shoulder, (17.0, 13.4); beside him at his home spot the giver two-shot from the side put him in front of Berra on all four of Berra's lines. Checked from five arrival sides: neither covers the other)
 - berra: "Ska vi ta Pepes Bodega i dag eller ska vi sola?"  [F]
 - robban: "Men va fan, vi kan väl ta det lite lugnt! Vi har ju semester!"  [F]
 - berra: "Vi är på södra Gran Canaria och havet är där, va. Då måste bodegan ligga ditåt."  [F]
@@ -1962,11 +1965,20 @@ Hitch-hike logic (judge fix): Stig refuses the dirt road (åksjuka), drops them,
 1. `getInCar({ text: 'Hoppa in i en bil' })`
 2. `pickup({ who: 'berra', name: 'Berra', at: 'flamencoBar', rider: 'robban', hello: 'Ditåt!' })`  [N]
 3. `goto({ to: 'playa', radius: 14, inCar: true, passenger: 'berra', text: 'Bodegan ligger ditåt – mot havet!', radio: [['robban', 'Fan Berra, ja ä tösstig.'], ['berra', 'Fan Robban, du har ingen karaktär!']], doneCue: { radio: ['berra', 'Ingen bodega här. Då ligger den åt andra hållet.'] } })`  [F] [F] · doneCue [N]
-4. `goto({ to: 'vischan', radius: 14, inCar: true, passenger: 'berra', timer: 31, text: 'Leta inåt land', radio: [['berra', 'Det här är ju rena vischan. Vi måste ha kört för långt.'], ['robban', 'Fan, vad jag är törstig.']], overhear: [{ at: 'eslovVag', r: 25, radio: true, lines: [['berra', 'Heja Eslöv!'], ['robban', 'Herre jävlar!']] }] })`  [F*] (the film's "gått", said on foot) · [F] · [F] · [F](t)
+4. `goto({ to: 'vischan', radius: 14, inCar: true, passenger: 'berra', timer: 31, text: 'Leta inåt land', radio: [['berra', 'Det här är ju rena vischan. Vi måste ha kört för långt.'], ['robban', 'Fan, vad jag är törstig.']], overhear: [{ at: 'eslovVag', r: 25, radio: true, lines: [['berra', 'Heja Eslöv!'], ['robban', 'Herre jävlar!']] }] })`  [F*](t) (the film's "gått", said on foot) · [F](t) · [F] · [F](t) (research-plot §7.11 leaves the exchange unattributed)
 5. `dropoff({ who: 'berra', at: 'vischan', riderOff: true, text: 'Stanna vid tomatfälten' })`  [N]
-6. `scene({ frame: ['berra', 'stig'], exitCar: true, lines: [['stig', 'Jag kör inte längre på grusvägen. Jag har anlag för åksjuka.'], ['berra', 'Jag går inte en meter till. Vi liftar.']], doneCue: { toast: 'En grisbil stannar…' } })`  [N] · [F](t) · [N]
-   (`exitCar`, Phase 3: Stig steps out to refuse the dirt road; seated, the two-shot saw the car
-   roof. The follow's tail starts once he is back in a car, §9.2.)
+6. `scene({ place: { stig: ['vischan', 2.0, −4.4, 2.03], berra: ['vischan', −0.2, −4.3, −2.0], robban: ['vischan', −1.7, −5.3, −2.4] }, cam: { at: 'vischanCam', dist: 0, height: 1.9 }, lines: [['stig', 'Jag kör inte längre på grusvägen. Jag har anlag för åksjuka.'], ['berra', 'Jag går inte en meter till. Vi liftar.']], doneCue: { toast: 'En grisbil stannar…' } })`  [N] · [F](t) · [N]
+   (Phase 3: Stig steps out to refuse the dirt road; seated, the two-shot saw the car roof. Phase
+   3 r2: the three stand on the track at the field's edge, Stig by the `CAMINO SIN ASFALTAR` sign
+   facing Berra, Robban behind Berra's shoulder, seen from the track to the north looking back at
+   the road the pig truck comes along; the two-shot followed the stop, showed Stig's back and put
+   Robban in front of Berra. **Shipped as a stage decorator** `parkCar(stage, ['vischan', 0, 7,
+   0])` in missions/island.js, not a kind option (the fixture carries the scene literal): at the
+   scene's init the player's car parks on the track at (−234, −143), nose to the road, behind the
+   camera, wherever he stopped it inside the dropoff's 9 m (unnamed parked cars there make room),
+   so the shot never depends on the stop. The follow is untouched: the truck's start is its lane
+   spot, and its tail starts once he is back in a car within 40 m of it, from 42.6 m here (a stop
+   at the far end of the dropoff radius was ≈ 44 m; §9.2); `CAL=follow` checks the band.)
 7. `follow({ type: 'grisbil', carName: 'grisbilFollow', driver: 'grisbonde', riders: ['berra', 'robban'], hideRiders: true, start: { lane: [[0, 2], [1, 2]], t: 12 }, via: [[1, 2], [1, 1], [2, 1]], to: 'grisfestGate', maxDist: 55, cruise: 15, wobble: 0.12, text: 'Följ grisbilen – Berra och Robban har liftat!', radio: [['robban', 'Fan, de luktar.'], ['berra', 'Skit i det. Vi slipper gå.'], ['robban', 'Snacka om grisfest.']] })`  [N] · [F](t) ×3
    (`via` given as `[i, j]` node pairs; `start.lane` = edge from node (0,2) to (1,2), 12 m in; the
    route runs east along z = −200 from node (2,1) and ends at the kerbside `grisfestGate` 40 m
@@ -1984,7 +1996,7 @@ Hitch-hike logic (judge fix): Stig refuses the dirt road (åksjuka), drops them,
      stages from `flamencoBar`.
 10. `goto({ to: 'flamencoBack', radius: 10, inCar: true, passenger: 'berra', timer: (g, m) => homeTimer(m.data.wreck), text: 'Kör hem grisarna till hotellet!', failText: 'Ni kom aldrig fram.' })`  [N] — the stage starts wherever the jeep died: `homeTimer` = ceil(1.2 × (7.9 + d / 34.4)), d = Manhattan distance wreck → `flamencoBack` (17–30 s; 30 without a wreck; §8 "Timers and difficulty").
 
-**Outro** (`outroPlace: { berra: ['bodega', -1.6, -1.0], robban: ['bodega', 1.6, -1.0] }`, both facing **away** from the shop; first line cues the camera on the sign; the answering-machine call is Angerud's panic after opening the package, so it comes before Levander's reaction, in film order):
+**Outro** (`outroPlace: { berra: ['bodega', -1.6, -1.0, π], robban: ['bodega', 1.6, -1.0, π], stig: ['bodega', -3.4, -1.4, π/2] }`, both facing **away** from the shop; first line cues the camera on the sign; Stig beside them, side-on and off the cut's line (Phase 3 r2: the drive ends at `flamencoBack`, 14 m away, and the runner's 8 m rule put him 2 m in front of Berra, his back to the lens and Berra's cap all that showed); the answering-machine call is Angerud's panic after opening the package, so it comes before Levander's reaction, in film order):
 - robban: "Ja, herre jävlar, minns du Benidorm? Snacka om grisfest!"  [F]  {cut: 'bodega'}
 - berra: "Var jag med där? Hade jag kul?"  [F]
 - berra: "Pepes Bodega… Den måste ligga nånstans, Robban."  [N]  {cut: null}
@@ -2012,9 +2024,9 @@ he doesn't see you. The reveal: his mother is sitting in the back seat the whole
 `extra: ['majsan']`.
 
 **Intro:**
-- siv: "Han heter José. Och han jobbar inte på pizzeria."  [F*] (a plane line, relocated to the pool)
+- siv: "Han heter José. Och han jobbar inte på pizzeria."  [F*](t) (a plane line, relocated to the pool; research-plot §6 #9 says only "Systrarna om José")
 - majsan: "Datatekniker."  [F](t)
-- siv: "Äkta spansk restaurang. Klockan sju."  [F*]
+- siv: "Äkta spansk restaurang. Klockan sju."  [F*](t)
 - majsan: "Ta pepparn. Om han blir närgången."  [F*]
 - majsan: "Stig-Helmer, kan inte du hålla ett öga på dem? Diskret."  [N]
 
@@ -2036,7 +2048,7 @@ he doesn't see you. The reveal: his mother is sitting in the back seat the whole
 - siv: "Jag fick användning för din peppar."  [F]  {toast: 'Dagen efter, vid poolen…', place: {siv: ['flamencoPool', 1.2, 0.6, π/2], majsan: ['flamencoPool', -1.2, 0.6, -π/2]}, cut: 'flamencoPool'} (the sisters face each other, side-on to the cut)
 - siv: "Han kom och hämtade mig. Gissa vem han hade med sig… Morsan!"  [F]
 - siv: "Jag ska satsa på Ole nu. Jag har inga fördomar mot norrmän."  [F]
-- majsan: "Nej, bara de inte går på tur…"  [F]  {cut: null}
+- majsan: "Nej, bara de inte går på tur…"  [F](t) (research-plot §7.13.4 names no speaker)  {cut: null}
 
 ---
 
@@ -2072,7 +2084,7 @@ the tourists' pity into a sheep stampede you have to round up.
    tail and the scene.)
 6. `goto({ to: 'fatagaFold', radius: 4, text: 'Tillbaka till fårfållan' })`  [N]
 
-**Outro** (`outroPlace: { pappa: ['fatagaFold', 1.5, 0], mamma: ['fatagaFold', -1.2, 0.6], siv: ['fatagaFold', -2.4, 1.6], majsan: ['fatagaFold', -1.4, 2.0] }`: everyone at the fold, Phase 3):
+**Outro** (`outroPlace: { pappa: ['fatagaFold', 1.5, 0], mamma: ['fatagaFold', -0.2, 0.4], majsan: ['fatagaFold', -1.5, 0.9], siv: ['fatagaFold', -2.5, 1.4], stig: ['fatagaFold', 2.6, 1.0, -1.3] }`, `outroCam: { at: 'fatagaFold', dist: -7, height: 2.3 }`: everyone at the fold, Phase 3; Phase 3 r2: a group shot from the fold side, all facing it, the sisters on the left and Stig side-on at the right; the two-shot followed the arrival, cut Majsan at the frame's edge on her own line and left Siv out):
 - pappa: "¡Gracias, señor!"  [N]
 - mamma: "Det är hon som vill ta min Josito ifrån mig."  [F]
 - majsan: "Ska du inte köpa dukar av svärmor?"  [F](t)
@@ -2142,6 +2154,11 @@ banner).
 6. `goto({ to: 'tongatonga', radius: 10, inCar: true, timer: 19, text: 'Till Tonga Tonga!', checkpoint: true, retryAt: 'dansgolv', retryCar: { at: { x: -86, z: -202.75, yaw: -π/2 }, park: true } })`  [N]
    (Phase 3: its own checkpoint, so a failed drive does not replay the dance.)
 7. `scene({ place: { ole: ['tongatonga', -2.2, 3.2, 0], majsan: ['tongatonga', 2.0, 3.0, 0], siv: ['tongatonga', 3.0, 3.4, 0], robban: ['tongatonga', -0.8, 1.2, -π/2], berra: ['tongaLot', 0, 0], stig: ['tongatonga', 0.8, 1.2, π/2] }, anim: { berra: 'slump' }, cam: { at: 'tongatonga', dist: 6, height: 2.6 }, lines: [['ole', 'Samba er fine greier!', { music: 'samba' }], ['robban', 'Kan du hjälpa mig bära hem Berra?'], ['stig', 'Vilket snack! "Bärra hem Berra!"']] })`  [F] ×3
+   (Phase 3 r2: shipped wrapped in the decorator `parkCar(stage, ['tongatonga', -10, -10, 0])`,
+   §8.9 stage 6: the car he came in parks in the lot at (−136, −52), nose to the street, 4 m east
+   of Berra and behind the camera, which stands in the same lot; parked where he stopped, a bus
+   covered the lens (5 of 5 rays). No timer follows: the
+   pickup, the drive home and the carry are untimed.)
 8. `pickup({ who: 'berra', name: 'Berra', at: 'tongaLot', rider: 'robban', hello: '…zzz' })`  [N]
 9. `goto({ to: 'flamencoDrive', radius: 10, inCar: true, passenger: 'berra', text: 'Kör hem till Hotell Flamenco' })`  [N]
 10. `carry({ who: 'berra', to: 'flamencoRecepcion', radius: 2.2, walkSpeed: 3.2, failOn: { fall: true }, text: 'Bärra hem Berra!', failText: 'Berra vaknade och började sjunga.', checkpoint: true, retryAt: { x: -24, z: 16, yaw: -π/2 } })`  [F*] · [N] — **P1**; P0 fallback:
@@ -2183,7 +2200,7 @@ then every running gag pays off by the pool before the fear-of-flying arc closes
 - stig: "Ja!"  [F]  {toast: 'Väskan är tillbaka!'}
 - hittegods: "Hittelön."  [F](t)  {coins: -25}
 - stig: "Tack så mycket."  [F](t)
-- lasse: "Alla är välkomna på julfesten. Men man måste ha julmat och en julklapp för 100 pesetas."  [F*]  {pa: true}
+- lasse: "Alla är välkomna på julfesten. Men man måste ha julmat och en julklapp för 100 pesetas."  [F*](t) (an unnamed voice answers Ole in the film; Lasse on the PA is ours)  {pa: true}
 - ole: "Da tar jeg med sild og Stig-Helmer."  [F*]
 - stig: "Norsk humor."  [F](t)
 
@@ -2237,7 +2254,7 @@ then every running gag pays off by the pool before the fear-of-flying arc closes
 
 **After the outro** (index 13 = complete): `game.playEndCard()` (P1; §11.7) → Rio card → back to the
 island: `unlock('bodega')` (lit sign, map label "Pepes Bodega", Berra and Robban posted at
-`bodega` in free roam with chatter "Pepes Bodega. Glöm aldrig det, du." [F]), banner
+`bodega` in free roam with chatter "Pepes Bodega. Glöm aldrig det, du." [F*], relocated), banner
 `NUEVA ESTOCOLMO KLARAT!` / `God jul – och tack för resan!` [N]. P0 fallback: skip the card, show
 the banners.
 
@@ -3927,7 +3944,7 @@ vikingbar tongatonga tongaLot cita supermercado ferreteria telefon plaza grillpa
 marknad asnestand kyrka bensin guardia vischan eslovVag packhus grisfest dansgolv fataga fatagaFold
 fatagaDukar golf bungalow bygge dromplan airport hittegods busBay bagageband dyner fyren playa hamn`
 + kerbside `follow` endpoints `grisfestGate fatagaBus grillpacoCurb`
-+ cut anchors `rum107Cam recepcionCam dukarCam` (Phase 3)
++ cut anchors `rum107Cam recepcionCam dukarCam vischanCam` (Phase 3)
 + collectibles `pryl_klocka pryl_poolpen pryl_kalkylator pryl_kniv pryl_kamera pryl_glasogon
 pryl_pung fena_flamenco fena_suntrip fena_plaza fena_golf fena_bungalow fena_hamn fena_hav` + Rio
 `rioBoat rioCam`.
@@ -4645,3 +4662,34 @@ the fixer's group.
   `calibflight` sweeper holds Space only while it shakes, not through the warning (§16.4).
   `FLIGHT=sprit SPRIT_RUNS=36`: 36 clean sweeps 5.5–7.8 s, median 7.4, p75 7.6 → T_ref 10.1 →
   timer **13** (was 11; 90 % range 13–13); FLYGRÄDSLA peaks 12–17 (§8 table, §8.4, fixture).
+- r2 island-staging: asnan's paint scene plays both lines over the FERRETERÍA cut (Stig's `cut:
+  null` dropped; §8.8, fixture): the seated two-shot it returned to framed neither speaker.
+- r2 island-staging: the bodega outro places Stig beside Berra and Robban, side-on and off the
+  `bodega` cut's line (`outroPlace.stig`; §8.9, fixture): the 8 m rule put his back in front of
+  Berra.
+- r2 island-staging: the friskotek intro cuts to the outro's group shot from Siv's line, everyone
+  who speaks placed for it and Ole beside the Storchs, held to the end (§8.7, fixture): Fru Storch
+  spoke off screen with her back to the lens. The balls now start from Stig's placed spot with the
+  cast standing elsewhere: a new pool, `CAL=balls FOOT_RUNS=12` ×3, 36 runs 5.98–20.83 s, median
+  13.59, p75 15.29 → T_ref 18.29 → timer **23** (was 24; 90 % range 22–24; §8 table, §8.7,
+  island.js, fixture, ledger).
+- r2 island-staging: the fataga outro is a fixed group shot from the fold side (`outroCam: { at:
+  'fatagaFold', dist: -7, height: 2.3 }`, Stig placed side-on at the right; §8.11, fixture): Majsan
+  was half out of frame on her own line, and Siv out of the shot.
+- r2 island-staging: the bodega intro steps Robban back to the counter behind Berra's shoulder (a
+  `place` on the first line; §8.9, fixture): beside him, Robban covered Berra on all four of his
+  lines.
+- r2 island-staging: the vischan scene stands Stig, Berra and Robban on the track by the `CAMINO
+  SIN ASFALTAR` sign, shot from the new cut anchor `vischanCam` (§6.3 table, Appendix A) looking
+  back at the road (§8.9 s6, fixture).
+- r2 island-staging: a stage decorator `parkCar(stage, spot)` in missions/island.js (not a kind
+  option; the fixture keeps the scene literals) parks the player's car on a fixed spot at a
+  scene's init, out of its fixed camera, wherever he stopped inside the stage radius. Unnamed
+  parked cars there make room. It is used for the vischan scene, the car on the track behind the
+  camera nose to the road, and for Tonga Tonga, the car in the lot beside Berra behind the camera;
+  a bus parked there had covered the lens (§8.9 s6, §8.12 s7). The follow's start is unchanged
+  (`CAL=follow` in band); nothing after Tonga Tonga is timed.
+- r2 island-staging: tags (§1.4, film-4). "Kan ni dela rum?" is `[F*](t)`. "Till brudparet…", the
+  vischan radio pair, Siv's two José lines, "Nej, bara de inte går på tur…" and the julfest PA
+  line carry `(t)`. The §8.13 bodega chatter is `[F*]`. The eight island titles carry `// title
+  [F*]`; "Julafton bland palmerna" is `// title [N]`.

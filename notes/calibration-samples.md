@@ -46,13 +46,18 @@ and could not check them either. A timer whose runs nobody can see is a guess.
 | `sweeper-r1r1` | The `calibflight` sprit sweeper of Phase 3 r1 repair 1: sprints after the nearest bottle on its side, waits in the aisle 2.4 m from a moving trolley (1.7 m from a stopped one), steps into a row only in turbulence. | `tools/scenarios/calibflight.mjs` at d9451f8 |
 | `sweeper-r2fm` | Phase 3 r2 flight-missions: `sweeper-r1r1`, but it holds Space only while the turbulence shakes (not through its 1.5 s warning); the stage now has its turbulence inside the sweep (warned at 1.5 s, shaking 3–6 s), so this is a new stage and a new pool. | `tools/scenarios/calibflight.mjs` at b69c64e |
 
-Sample ids: `p2` Phase 2, `fm` r2 flight-missions, `wt` r1 world-town, `if` r1 island-flow, `g1` r1 gate 1, `r1` r1 repair
+Sample ids: `p2` Phase 2, `fm` r2 flight-missions, `is` r2 island-staging, `wt` r1 world-town, `if` r1 island-flow, `g1` r1 gate 1, `r1` r1 repair
 1, `g2` r1 gate 2 (`R1`/`R2`: its two default-env `calibrate` runs, `X`: its extra balls run),
 `r2` r1 repair 2.
 
 ## `friskotekBalls` · §8.7 s1 · six fleeing beach balls · on foot: timer = ceil(1.25 × (p75 + 6 × 0.5))
 
-Current pool: `walker-r1r2/d9451f8`: n 44, median 13.73, p75 15.59 → T_ref 18.59 → timer ceil(1.25 × 18.59) = **24** (90 % range 22–25).
+Phase 3 r2 island-staging placed everyone for the intro's group shot (Stig, Lasse, the sisters, the
+Storchs, Ole), so the chase starts from Stig's placed spot (−11.0, −69.4) with the cast standing
+elsewhere: a new stage, a new pool (named after that fixer's commit). The rows above it ran the old
+intro (Stig on the approach spot) and do not pool with it.
+
+Current pool: `walker-r1r2/r2-island-staging`: n 36, median 13.59, p75 15.29 → T_ref 18.29 → timer ceil(1.25 × 18.29) = **23** (90 % range 22–24).
 
 | sample | date | code | pool | env | n | raw times (s, run order) | excluded (reason) |
 |---|---|---|---|---|---|---|---|
@@ -69,6 +74,9 @@ Current pool: `walker-r1r2/d9451f8`: n 44, median 13.73, p75 15.59 → T_ref 18.
 | r2-F3 | 2026-10-09 | d9451f8 + uncommitted: this repair's `calibrate.mjs` (sha1 c38aefef4b7e; tools and docs only, no game file) | `walker-r1r2/d9451f8` | CAL=balls FOOT_RUNS=12 | 12 | 16.30 19.80 9.67 18.50 15.55 12.40 11.48 11.52 15.83 14.03 13.63 14.08 | none (falls 0, wedges 0) |
 | r2-C | 2026-10-09 | d9451f8 + uncommitted: this repair's `calibrate.mjs` (sha1 f671042a7dfe, the committed file; and the timers of this repair in island.js) | `walker-r1r2/d9451f8` | default (FOOT_RUNS=4, JEEP_RUNS=12, PLATE_RUNS=6) | 4 | 10.92 12.08 12.95 16.33 | none (falls 0, wedges 0) |
 | r2-D | 2026-10-09 | d9451f8 + uncommitted: this repair's `calibrate.mjs` (sha1 f671042a7dfe, the committed file) and the final timers (the commit's tree) | `walker-r1r2/d9451f8` | default (FOOT_RUNS=4, JEEP_RUNS=12, PLATE_RUNS=6) | 4 | 14.00 16.62 13.82 12.55 | none (falls 0, wedges 0) |
+| is-1 | 2026-10-10 | 61bbcea + uncommitted: r2 island-staging (the friskotek intro's placements; `calibrate.mjs` sha1 f671042a7dfe, unchanged) | `walker-r1r2/r2-island-staging` | CAL=balls FOOT_RUNS=12 | 12 | 14.60 15.25 9.00 15.88 16.18 12.60 13.55 11.53 15.40 12.10 16.03 13.63 | none (falls 0, wedges 0) |
+| is-2 | 2026-10-10 | 61bbcea + uncommitted: r2 island-staging (the friskotek intro's placements; `calibrate.mjs` sha1 f671042a7dfe, unchanged) | `walker-r1r2/r2-island-staging` | CAL=balls FOOT_RUNS=12 | 12 | 13.07 11.02 13.87 11.48 13.18 15.95 11.18 12.75 9.50 10.22 12.58 15.03 | none (falls 0, wedges 0) |
+| is-3 | 2026-10-10 | 61bbcea + uncommitted: r2 island-staging (the friskotek intro's placements; `calibrate.mjs` sha1 f671042a7dfe, unchanged) | `walker-r1r2/r2-island-staging` | CAL=balls FOOT_RUNS=12 | 12 | 18.63 11.62 15.22 13.87 14.53 10.73 17.20 5.98 14.28 16.08 20.83 11.65 | none (falls 0, wedges 0) |
 
 ## `fatagaSheep` · §8.11 s5 · six fleeing sheep · on foot: timer = ceil(1.25 × (p75 + 6 × 0.5))
 
