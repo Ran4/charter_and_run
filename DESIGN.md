@@ -1433,13 +1433,13 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
 | 8.5 landning [0] round-up | row 16 → José → Berra → Herr Storch (walk, sign lit) | 9.1 (7.6 + 1.5; 2 orders) | **12** (20) | 37 % |
 | 8.5 landning [1] back to 14B | from the far end (Berra) | 3.7 (3.2 + 0.5; 2) | **5** (10) | 36 % |
 | 8.6 buss17 s2 | busBay → 7,1 > 3,1 > 3,4 → flamencoDrive, ÅKSJUKA, stop | 45.0 (median of 10 clean in 4 sets, 44.4–47.0) | **54** (60) | 17 % |
-| 8.7 friskotek s1 | six fleeing beach balls round the friskotek lawn, from Stig's placed spot in the intro's group shot (−11.0, −69.4) | 18.3 (p75 15.29 of 36 + 3; median 13.59; Phase 3 r2 island-staging, the intro places the cast, a new pool `walker-r1r2/r2-island-staging` in `notes/calibration-samples.md`; before it, from the approach spot: p75 15.59 of 44 + 3 → 24, Phase 3 r1 repair 2, the fixed walker: no pacing, an A* that reaches round the hotel. The old walker: gate 2's 20 runs p75 29.40 → 41, r1 repair's lost 72 runs 23.1 → 33, Phase 2 21.9 of 12 → 32) | **23** (20) | 34 % at p75 |
+| 8.7 friskotek s1 | six fleeing beach balls round the friskotek lawn, from Stig's placed spot in the intro's group shot (−11.0, −69.4) | 18.4 (p75 15.41 of 40 + 3; median 13.59; Phase 3 r2 island-staging's 36 runs and r2 gate's 4: the intro places the cast, a new pool `walker-r1r2/r2-island-staging` in `notes/calibration-samples.md`; island-staging's 36 alone: p75 15.29 → 23; before it, from the approach spot: p75 15.59 of 44 + 3 → 24, Phase 3 r1 repair 2, the fixed walker: no pacing, an A* that reaches round the hotel. The old walker: gate 2's 20 runs p75 29.40 → 41, r1 repair's lost 72 runs 23.1 → 33, Phase 2 21.9 of 12 → 32) | **24** (20) | 36 % at p75 |
 | 8.8 asnan s9 | Centro Nórdico lot → 5,3 > 1,3 → vikingbar, SKICK | 15.5 (median of 3 clean; 15.5–15.6) | **19** (20) | 18 % |
 | 8.9 bodega s4 | playa → 4,7 > 4,2 > 0,2 → vischan | 25.8 (median of 8 clean in 3 runs, 25.4–26.8: 25.4 unless traffic held it up 1–1.5 s; Phase 2 gate) | **31** (35) | 17 % |
 | 8.9 bodega s9 jeep | farm gate, road-route chase, rams | 34.45 (p75 of 83 usable chases in 6 samples on the fixed chase autopilot; 4 more lost the truck and 1 wedged, excluded; median 28.38; single samples' p75 29.7–43.0; Phase 3 r1 repair 2, pool `chase-r1if/d9451f8`; the 98 chases behind the earlier 40 (p75 32.5) are lost; island-flow's first 40: 30.6 → 37; Phase 2: 34.4 → 42) | **42** (45) | 18 % at p75 |
 | 8.9 bodega s10 home | wreck → flamencoBack | 7.9 + d/34.4 (fit 4.9 + d/34.4 of 12 clean, 6 spots, + 3 s turn) | **homeTimer**: 17–30 (30 without a wreck) | 17 % of the fit (11–27 % of a spot's own drive) |
 | 8.11 fataga s5 | six fleeing sheep round Fataga | 21.5 (p75 18.53 of 32 + 3; median 15.90; Phase 3 r1 repair 2, the fixed walker, pool `walker-r1r2/d9451f8`; the old walker: 18 runs p75 27.94 → 39, Phase 2 30.3 of 12 → 42) | **27** (25) | 31 % at p75 |
-| 8.12 grisfest s1 | five flowers round Hotel Flamenco (random spawns) | 20.3 (p75 17.79 of 32 + 2.5; median 16.18; Phase 3 r1 repair 2, the fixed walker, pool `walker-r1r2/d9451f8`; the old walker: 8 runs p75 29.51 → 41, Phase 2 31.1 of 12 → 42) | **26** (30) | 32 % at p75 |
+| 8.12 grisfest s1 | five flowers round Hotel Flamenco (random spawns) | 18.2 (p75 15.73 of 28 + 2.5; median 13.32; Phase 3 r2 gate + orchestrator on ca2a3a6, pool `walker-r1r2/46a0938`: the round-2 world (the Flamenco piers solid since 46a0938); before it, r1 repair 2's fixed walker on d9451f8: p75 17.79 of 32 → 26; the old walker: 8 runs p75 29.51 → 41, Phase 2 31.1 of 12 → 42) | **23** (30) | 32 % at p75 |
 | 8.12 grisfest s4 | ten of the twelve plate stacks at the dance floor (kick; a fixed layout, three per table) | 25.8 (median 20.77 of 20 + 5, 20.77–21.03: the same tour every run; Phase 3 r1 repair 2, the fixed walker; a deterministic stage now, it was timed at the p75 of "random spawns"; the old walker: 30.33 (one run 37.95, pacing) → 45) | **33** (35) | 37 % at the median |
 | 8.12 grisfest s6 | dance floor → car at the finish → 3,1 > 2,3 → tongatonga | 15.8 (walk 3.9 + 0.5 + drive 11.4: walk + drive median 15.28 of 12 clean, + 0.5; Phase 3 r1 repair 2, the fixed walker: 33 m in 3.9 s where the old one took 44–45 m and 6.3–6.5 s; was 19.0 → 23) | **19** (30) | 17 % |
 | 8.13 julafton s1 | patio → hire car → Majsan, Fru Storch, Berra, Herr Storch | 67.4 (median of 11 clean runs: 67.0–68.6, and one held up 14.5 s by traffic, 81.7; Phase 3 r1 repair 2, the fixed walker reaches the hire car in 3.5 s (30 m) where the old one took 8.3–8.4 s (50 m); the drives are unchanged; was 72.4, Phase 2 gate) | **81** (80) | 17 % |
@@ -1898,7 +1898,7 @@ SunTrip lawn and pool while Berra and Robban heckle; ends with "Hä-pååre!".
 - lasse: "Och nu – friskotek! Men vinden har tagit badbollarna!"  [N]
 
 **Stages:**
-1. `rabbits({ mesh: 'badboll', count: 6, near: 'friskotek', rMin: 6, rMax: 30, timer: 23, text: 'Plocka kulor! Plocka med höger… plocka med vänster!', barLabel: 'KULOR', gotText: 'Plocka med höger!', failText: 'Bollarna rullade ner till stranden.', radio: [['berra', 'Kolla storken!'], ['robban', 'Att de bara orkar, våra storkar…']] })`
+1. `rabbits({ mesh: 'badboll', count: 6, near: 'friskotek', rMin: 6, rMax: 30, timer: 24, text: 'Plocka kulor! Plocka med höger… plocka med vänster!', barLabel: 'KULOR', gotText: 'Plocka med höger!', failText: 'Bollarna rullade ner till stranden.', radio: [['berra', 'Kolla storken!'], ['robban', 'Att de bara orkar, våra storkar…']] })`
    text [F]; gotText [F*]; failText [N]; radio [F](t) ×2 (the research does not say who).
 2. `goto({ to: 'friskotek', radius: 5, text: 'Lämna bollarna till Lasse' })`
 
@@ -2166,7 +2166,7 @@ banner).
 - ole: "Fikser du ikke damer på grisefesten, da er det slutt. I kveld setter vi inn støtet!"  [F]
 
 **Stages:**
-1. `rabbits({ mesh: 'blomma', flee: false, count: 5, near: 'flamenco', rMin: 8, rMax: 40, timer: 26, text: 'Plocka blomster till Siv och Maj-Britt', barLabel: 'BLOMSTER', gotText: 'Blomster!', failText: 'Blommorna vissnade.', radio: [['ole', 'Man må skifte vannet hver fjerde time og gi dem en hodepinetablett.']] })`  [N] · radio [F*]
+1. `rabbits({ mesh: 'blomma', flee: false, count: 5, near: 'flamenco', rMin: 8, rMax: 40, timer: 23, text: 'Plocka blomster till Siv och Maj-Britt', barLabel: 'BLOMSTER', gotText: 'Blomster!', failText: 'Blommorna vissnade.', radio: [['ole', 'Man må skifte vannet hver fjerde time og gi dem en hodepinetablett.']] })`  [N] · radio [F*]
 2. `getInCar({ car: 'hyrbil', any: false, atHome: true, text: 'Hoppa in i hyrbilen – det börjar skymma', startCue: { sky: 'sunset', music: 'vals' } })`  [N]
    (Phase 3 r2: the hire car, the sedan the race is measured with. Any car used to do: bus 17,
    which stands at the Flamenco drive from mission 6 on in a session played straight through (top
@@ -4866,3 +4866,9 @@ the fixer's group.
   held out standing): Stig's "Ja." in juice (§8.3 cue, fixture) and the trolley stewardess's
   serving stops (§5.8). `cupUp` stays the empty-handed arm of the luggage stowers and the juice
   carry (§14.6, Appendix A; `castsheet` shows `vardinna2 cupHeld`).
+- r2 gate (orchestrator): the gate's raw runs and 12 more flowers runs on ca2a3a6 went into
+  `notes/calibration-samples.md`. friskotek balls **24** (was 23): island-staging's 36 runs plus the
+  gate's 4 give p75 15.41 → ceil(1.25 × 18.41 = 23.01) (§8 table, §8.7, island.js, fixture).
+  grisfest flowers **23** (was 26): the round-2 world (the Flamenco piers solid since 46a0938) starts
+  a new pool `walker-r1r2/46a0938`, 28 runs, median 13.32, p75 15.73 → ceil(1.25 × 18.23) (§8 table,
+  §8.12, island.js, fixture).

@@ -46,7 +46,7 @@ and could not check them either. A timer whose runs nobody can see is a guess.
 | `sweeper-r1r1` | The `calibflight` sprit sweeper of Phase 3 r1 repair 1: sprints after the nearest bottle on its side, waits in the aisle 2.4 m from a moving trolley (1.7 m from a stopped one), steps into a row only in turbulence. | `tools/scenarios/calibflight.mjs` at d9451f8 |
 | `sweeper-r2fm` | Phase 3 r2 flight-missions: `sweeper-r1r1`, but it holds Space only while the turbulence shakes (not through its 1.5 s warning); the stage now has its turbulence inside the sweep (warned at 1.5 s, shaking 3–6 s), so this is a new stage and a new pool. | `tools/scenarios/calibflight.mjs` at b69c64e |
 
-Sample ids: `p2` Phase 2, `fm` r2 flight-missions, `is` r2 island-staging, `wt` r1 world-town, `if` r1 island-flow, `g1` r1 gate 1, `r1` r1 repair
+Sample ids: `p2` Phase 2, `r2g1` r2 gate 1 (`D` default `calibrate`, `F` its flowers run, `C` default `calibflight`), `orc` the orchestrator, `fm` r2 flight-missions, `is` r2 island-staging, `wt` r1 world-town, `if` r1 island-flow, `g1` r1 gate 1, `r1` r1 repair
 1, `g2` r1 gate 2 (`R1`/`R2`: its two default-env `calibrate` runs, `X`: its extra balls run),
 `r2` r1 repair 2.
 
@@ -57,7 +57,7 @@ Storchs, Ole), so the chase starts from Stig's placed spot (−11.0, −69.4) wi
 elsewhere: a new stage, a new pool (named after that fixer's commit). The rows above it ran the old
 intro (Stig on the approach spot) and do not pool with it.
 
-Current pool: `walker-r1r2/r2-island-staging`: n 36, median 13.59, p75 15.29 → T_ref 18.29 → timer ceil(1.25 × 18.29) = **23** (90 % range 22–24).
+Current pool: `walker-r1r2/r2-island-staging`: n 40, median 13.59, p75 15.41 → T_ref 18.41 → timer ceil(1.25 × 18.41) = **24** (90 % range 22–24).
 
 | sample | date | code | pool | env | n | raw times (s, run order) | excluded (reason) |
 |---|---|---|---|---|---|---|---|
@@ -77,6 +77,7 @@ Current pool: `walker-r1r2/r2-island-staging`: n 36, median 13.59, p75 15.29 →
 | is-1 | 2026-10-10 | 61bbcea + uncommitted: r2 island-staging (the friskotek intro's placements; `calibrate.mjs` sha1 f671042a7dfe, unchanged) | `walker-r1r2/r2-island-staging` | CAL=balls FOOT_RUNS=12 | 12 | 14.60 15.25 9.00 15.88 16.18 12.60 13.55 11.53 15.40 12.10 16.03 13.63 | none (falls 0, wedges 0) |
 | is-2 | 2026-10-10 | 61bbcea + uncommitted: r2 island-staging (the friskotek intro's placements; `calibrate.mjs` sha1 f671042a7dfe, unchanged) | `walker-r1r2/r2-island-staging` | CAL=balls FOOT_RUNS=12 | 12 | 13.07 11.02 13.87 11.48 13.18 15.95 11.18 12.75 9.50 10.22 12.58 15.03 | none (falls 0, wedges 0) |
 | is-3 | 2026-10-10 | 61bbcea + uncommitted: r2 island-staging (the friskotek intro's placements; `calibrate.mjs` sha1 f671042a7dfe, unchanged) | `walker-r1r2/r2-island-staging` | CAL=balls FOOT_RUNS=12 | 12 | 18.63 11.62 15.22 13.87 14.53 10.73 17.20 5.98 14.28 16.08 20.83 11.65 | none (falls 0, wedges 0) |
+| r2g1-D | 2026-10-10 | ca2a3a6 | `walker-r1r2/r2-island-staging` | default (FOOT_RUNS=4, JEEP_RUNS=12, PLATE_RUNS=6) | 4 | 15.45 9.82 15.53 12.65 | none (falls 0, wedges 0) |
 
 ## `fatagaSheep` · §8.11 s5 · six fleeing sheep · on foot: timer = ceil(1.25 × (p75 + 6 × 0.5))
 
@@ -94,10 +95,11 @@ Current pool: `walker-r1r2/d9451f8`: n 32, median 15.90, p75 18.53 → T_ref 21.
 | r2-F2 | 2026-10-09 | d9451f8 + uncommitted: this repair's `calibrate.mjs` (sha1 c38aefef4b7e; tools and docs only, no game file) | `walker-r1r2/d9451f8` | CAL=flowers,balls,sheep FOOT_RUNS=12 | 12 | 19.05 9.80 15.48 11.03 14.88 5.92 21.45 18.03 13.60 15.00 11.45 19.78 | none (falls 0, wedges 0) |
 | r2-C | 2026-10-09 | d9451f8 + uncommitted: this repair's `calibrate.mjs` (sha1 f671042a7dfe, the committed file; and the timers of this repair in island.js) | `walker-r1r2/d9451f8` | default (FOOT_RUNS=4, JEEP_RUNS=12, PLATE_RUNS=6) | 4 | 21.33 14.03 16.43 11.27 | none (falls 0, wedges 0) |
 | r2-D | 2026-10-09 | d9451f8 + uncommitted: this repair's `calibrate.mjs` (sha1 f671042a7dfe, the committed file) and the final timers (the commit's tree) | `walker-r1r2/d9451f8` | default (FOOT_RUNS=4, JEEP_RUNS=12, PLATE_RUNS=6) | 4 | 27.77 16.90 15.90 15.90 | none (falls 0, wedges 0) |
+| r2g1-D | 2026-10-10 | ca2a3a6 | `walker-r1r2/d9451f8` | default (FOOT_RUNS=4, JEEP_RUNS=12, PLATE_RUNS=6) | 4 | 18.37 15.00 12.93 15.62 | none (falls 0, wedges 0) |
 
 ## `grisfestFlowers` · §8.12 s1 · five static flowers, random spawns · on foot: timer = ceil(1.25 × (p75 + 5 × 0.5))
 
-Current pool: `walker-r1r2/d9451f8`: n 32, median 16.18, p75 17.79 → T_ref 20.29 → timer ceil(1.25 × 20.29) = **26** (90 % range 25–28).
+Current pool: `walker-r1r2/46a0938`: n 28, median 13.32, p75 15.73 → T_ref 18.23 → timer ceil(1.25 × 18.23) = **23** (90 % range 22–25). The round-2 world (the Hotel Flamenco piers solid since 46a0938, island-camera) starts this pool; `walker-r1r2/d9451f8` below (→ 26) is the round-1 world.
 
 | sample | date | code | pool | env | n | raw times (s, run order) | excluded (reason) |
 |---|---|---|---|---|---|---|---|
@@ -111,6 +113,9 @@ Current pool: `walker-r1r2/d9451f8`: n 32, median 16.18, p75 17.79 → T_ref 20.
 | r2-F2 | 2026-10-09 | d9451f8 + uncommitted: this repair's `calibrate.mjs` (sha1 c38aefef4b7e; tools and docs only, no game file) | `walker-r1r2/d9451f8` | CAL=flowers,balls,sheep FOOT_RUNS=12 | 12 | 19.63 19.23 9.32 19.92 16.50 17.90 15.68 14.33 14.65 16.87 21.25 17.12 | none (falls 0, wedges 0) |
 | r2-C | 2026-10-09 | d9451f8 + uncommitted: this repair's `calibrate.mjs` (sha1 f671042a7dfe, the committed file; and the timers of this repair in island.js) | `walker-r1r2/d9451f8` | default (FOOT_RUNS=4, JEEP_RUNS=12, PLATE_RUNS=6) | 4 | 17.27 15.85 14.30 10.92 | none (falls 0, wedges 0) |
 | r2-D | 2026-10-09 | d9451f8 + uncommitted: this repair's `calibrate.mjs` (sha1 f671042a7dfe, the committed file) and the final timers (the commit's tree) | `walker-r1r2/d9451f8` | default (FOOT_RUNS=4, JEEP_RUNS=12, PLATE_RUNS=6) | 4 | 19.20 15.27 19.83 12.02 | none (falls 0, wedges 0) |
+| r2g1-F | 2026-10-10 | ca2a3a6 | `walker-r1r2/46a0938` | CAL=flowers FOOT_RUNS=12 | 12 | 10.92 13.42 12.28 19.62 13.72 16.48 14.58 12.12 15.28 20.63 21.28 15.28 | none (falls 0, wedges 0) |
+| r2g1-D | 2026-10-10 | ca2a3a6 | `walker-r1r2/46a0938` | default (FOOT_RUNS=4, JEEP_RUNS=12, PLATE_RUNS=6) | 4 | 13.10 17.97 11.53 11.70 | none (falls 0, wedges 0) |
+| orc-F | 2026-10-10 | ca2a3a6 | `walker-r1r2/46a0938` | CAL=flowers FOOT_RUNS=12 | 12 | 12.72 11.73 13.23 11.50 12.63 17.03 15.50 9.65 11.88 10.52 16.42 15.03 | none (falls 0, wedges 0) |
 
 ## `bodegaJeep` · §8.9 s9 · wreck the fleeing Guardia jeep · drive: timer = ceil(1.2 × p75)
 
@@ -128,6 +133,7 @@ Current pool: `chase-r1if/d9451f8`: n 83, median 28.38, p75 34.45 → T_ref 34.4
 | r2-j2 | 2026-10-09 | d9451f8 + uncommitted: this repair's `calibrate.mjs` (sha1 ec3dce2b1f23; tools and docs only, no game file) | `chase-r1if/d9451f8` | CAL=jeep JEEP_RUNS=20 | 19 | 28.02 21.48 73.80 39.72 29.28 25.60 21.17 29.12 25.55 30.12 26.02 28.17 26.40 27.58 17.98 27.80 30.83 20.80 44.13 | run 5: - s, the truck was lost (car lost, 2494 m driven, 3 unsticks) |
 | r2-C | 2026-10-09 | d9451f8 + uncommitted: this repair's `calibrate.mjs` (sha1 f671042a7dfe, the committed file; and the timers of this repair in island.js) | `chase-r1if/d9451f8` | default (FOOT_RUNS=4, JEEP_RUNS=12, PLATE_RUNS=6) | 12 | 25.28 18.13 39.95 54.60 27.95 14.55 33.38 24.72 28.98 29.60 20.02 8.08 | none |
 | r2-D | 2026-10-09 | d9451f8 + uncommitted: this repair's `calibrate.mjs` (sha1 f671042a7dfe, the committed file) and the final timers (the commit's tree) | `chase-r1if/d9451f8` | default (FOOT_RUNS=4, JEEP_RUNS=12, PLATE_RUNS=6) | 11 | 28.82 20.00 31.48 33.62 14.98 17.82 35.17 32.40 44.66 20.25 27.10 | run 3: - s, the truck was lost (car lost, 863 m driven, 2 unsticks) |
+| r2g1-D | 2026-10-10 | ca2a3a6 | `chase-r1if/d9451f8` | default (FOOT_RUNS=4, JEEP_RUNS=12, PLATE_RUNS=6) | 12 | 17.77 28.40 21.60 30.25 49.53 33.55 33.77 21.48 17.98 35.60 35.60 37.25 | none (none wedged, none lost the truck; runs 10 and 11 one unstick each) |
 
 ## `sprit[0]` · §8.4 s0 · five rolling bottles in the cabin · on foot: timer = ceil(1.25 × (p75 + 5 × 0.5))
 
@@ -145,6 +151,7 @@ Current pool: `sweeper-r2fm/b69c64e`: n 41, median 7.40, p75 7.60 → T_ref 10.1
 | g2-c1 | 2026-10-09 | d9451f8 | `sweeper-r1r1/d9451f8` | calibflight default | 5 | 4.30 4.32 4.82 5.82 3.80 | none (bowled 0, falls 0) |
 | fm1 | 2026-10-10 | 5ff11c4 + uncommitted: r2 flight-missions (the shipped stage literal but timer 11; the autopilot disables the timer) | `sweeper-r2fm/b69c64e` | FLIGHT=sprit SPRIT_RUNS=36 | 36 | 7.62 7.62 7.50 6.90 6.70 7.22 7.02 7.40 6.90 7.00 6.90 7.60 7.40 7.80 7.00 7.12 7.00 7.40 7.40 7.00 7.60 7.20 7.50 7.40 7.60 7.60 7.42 7.50 7.60 7.70 7.62 5.50 5.72 7.60 7.60 7.72 | none (no panic, bowled 0, falls 0; FLYGRÄDSLA peaks 12–17) |
 | fm2 | 2026-10-10 | b69c64e | `sweeper-r2fm/b69c64e` | calibflight default | 5 | 7.00 6.50 5.70 7.20 7.20 | none |
+| r2g1-C | 2026-10-10 | ca2a3a6 | `sweeper-r2fm/b69c64e` | calibflight default (SPRIT_RUNS=5) | 5 | 7.00 7.60 7.60 7.30 7.70 | none (no panic, bowled 0, falls 0; FLYGRÄDSLA peaks 15.2–16.9) |
 
 ## `grisfestPlates` · §8.12 s4 · ten of the twelve plate stacks · on foot: timer = ceil(1.25 × (median + 10 × 0.5))
 
@@ -163,6 +170,7 @@ Current pool: `walker-r1r2/d9451f8`: n 20, median 20.77 → T_ref 25.77 → time
 | r2-F1 | 2026-10-09 | d9451f8 + uncommitted: this repair's `calibrate.mjs` (sha1 c38aefef4b7e; tools and docs only, no game file) | `walker-r1r2/d9451f8` | CAL=flowers,plates,balls,sheep FOOT_RUNS=12 PLATE_RUNS=8 | 8 | 20.77 20.77 20.77 20.77 20.77 20.77 20.77 20.77 | none (falls 0, wedges 0) |
 | r2-C | 2026-10-09 | d9451f8 + uncommitted: this repair's `calibrate.mjs` (sha1 f671042a7dfe, the committed file; and the timers of this repair in island.js) | `walker-r1r2/d9451f8` | default (FOOT_RUNS=4, JEEP_RUNS=12, PLATE_RUNS=6) | 6 | 20.78 20.77 20.77 20.77 20.77 20.77 | none (falls 0, wedges 0) |
 | r2-D | 2026-10-09 | d9451f8 + uncommitted: this repair's `calibrate.mjs` (sha1 f671042a7dfe, the committed file) and the final timers (the commit's tree) | `walker-r1r2/d9451f8` | default (FOOT_RUNS=4, JEEP_RUNS=12, PLATE_RUNS=6) | 6 | 21.03 20.77 20.78 20.77 20.77 20.77 | none (falls 0, wedges 0) |
+| r2g1-D | 2026-10-10 | ca2a3a6 | `walker-r1r2/d9451f8` | default (FOOT_RUNS=4, JEEP_RUNS=12, PLATE_RUNS=6) | 6 | 20.77 20.77 20.77 20.77 20.77 20.77 | none (falls 0, wedges 0) |
 
 ## `grisfestTonga` · §8.12 s6 · dance floor on foot to the car, then the drive to Tonga Tonga · drive: timer = ceil(1.2 × (median of walk + drive + 0.5))
 
@@ -178,6 +186,7 @@ Current pool: `walker-r1r2/d9451f8`
 | r2-C | 2026-10-09 | d9451f8 + uncommitted: this repair's `calibrate.mjs` (sha1 f671042a7dfe, the committed file; and the timers of this repair in island.js) | `walker-r1r2/d9451f8` | default (RUNS=3: 2 runs) | 2 | 16.93 15.28 | none (run 0 held by traffic 1 s) |
 | r2-TG | 2026-10-09 | d9451f8 + uncommitted: this repair's `calibrate.mjs` (sha1 f671042a7dfe, the committed file; and the timers of this repair in island.js) | `walker-r1r2/d9451f8` | CAL=tonga,guests RUNS=9 | 8 | 15.28 15.28 15.28 15.28 15.43 15.47 15.28 15.28 | none (all clean) |
 | r2-D | 2026-10-09 | d9451f8 + uncommitted: this repair's `calibrate.mjs` (sha1 f671042a7dfe, the committed file) and the final timers (the commit's tree) | `walker-r1r2/d9451f8` | default (RUNS=3: 2 runs) | 2 | 15.28 15.28 | none |
+| r2g1-D | 2026-10-10 | ca2a3a6 | `walker-r1r2/d9451f8` | default (RUNS=3: 2 runs) | 2 | 15.28 15.28 | none (walk 3.90 + drive 11.38 each, no impact) |
 
 ## `julaftonGuests` · §8.13 s1 · patio on foot to the hire car, then the four guests by car · drive: timer = ceil(1.2 × median)
 
@@ -194,3 +203,4 @@ Current pool: `walker-r1r2/d9451f8`
 | r2-C | 2026-10-09 | d9451f8 + uncommitted: this repair's `calibrate.mjs` (sha1 f671042a7dfe, the committed file; and the timers of this repair in island.js) | `walker-r1r2/d9451f8` | default (RUNS=3: 2 runs) | 2 | 67.1 81.7 | none (run 1 held by traffic 14.5 s on the first leg; clean) |
 | r2-TG | 2026-10-09 | d9451f8 + uncommitted: this repair's `calibrate.mjs` (sha1 f671042a7dfe, the committed file; and the timers of this repair in island.js) | `walker-r1r2/d9451f8` | CAL=tonga,guests RUNS=9 | 7 | 68.6 68.6 67.2 67.4 67.0 67.1 68.4 | run 0: 69.1 s, 2 impacts (not clean) |
 | r2-D | 2026-10-09 | d9451f8 + uncommitted: this repair's `calibrate.mjs` (sha1 f671042a7dfe, the committed file) and the final timers (the commit's tree) | `walker-r1r2/d9451f8` | default (RUNS=3: 2 runs) | 2 | 67.7 67.3 | none |
+| r2g1-D | 2026-10-10 | ca2a3a6 | `walker-r1r2/d9451f8` | default (RUNS=3: 2 runs) | 1 | 67.1 | run 0: 73.2 s, 1 impact (Herr Storch leg held 10.7 s; not clean) |

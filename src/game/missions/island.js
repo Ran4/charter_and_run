@@ -57,13 +57,13 @@ function parkCar(st, spot) {
 // come from the fixed walker (`walker-r1r2`: no pacing, A* that reaches round the hotel).
 export const TIMERS = {
   buss17Drive: 54,        // §8.6 s2  busBay -> flamencoDrive, ÅKSJUKA limits, stop     T_ref 45.0 (median of 10 clean)
-  friskotekBalls: 23,     // §8.7 s1  6 fleeing beach balls (on foot)                  T_ref 18.29 (p75 15.29 of 36 + 3; Phase 3 r2 island-staging: from the intro's placed spot)
+  friskotekBalls: 24,     // §8.7 s1  6 fleeing beach balls (on foot)                  T_ref 18.41 (p75 15.41 of 40 + 3; Phase 3 r2 island-staging + gate: from the intro's placed spot)
   asnanPaint: 19,         // §8.8 s9  supermercado lot -> vikingbar, SKICK              T_ref 15.5 (median of 3 clean)
   bodegaVischan: 31,      // §8.9 s4  playa -> vischan                                  T_ref 25.8 (median of 8 clean, gate fix)
   bodegaJeep: 42,         // §8.9 s9  wreck the fleeing Guardia jeep                    T_ref 34.45 (p75 of 83 chases; median 28.38; Phase 3 r1 repair 2)
   bodegaHome: 30,         // §8.9 s10 fallback only: the stage uses homeTimer(wreck)    T_ref 25.0 at d 587 (far corner)
   fatagaSheep: 27,        // §8.11 s5 6 fleeing sheep (on foot)                         T_ref 21.53 (p75 18.53 of 32 + 3; Phase 3 r1 repair 2)
-  grisfestFlowers: 26,    // §8.12 s1 5 flowers round Flamenco (on foot, random spawns) T_ref 20.29 (p75 17.79 of 32 + 2.5; Phase 3 r1 repair 2)
+  grisfestFlowers: 23,    // §8.12 s1 5 flowers round Flamenco (on foot, random spawns) T_ref 18.23 (p75 15.73 of 28 + 2.5; Phase 3 r2 gate, on the r2 world)
   grisfestPlates: 33,     // §8.12 s4 10 of 12 plate stacks (on foot, kick; fixed)      T_ref 25.77 (median 20.77 of 20 + 5; Phase 3 r1 repair 2)
   grisfestTonga: 19,      // §8.12 s6 dance floor -> car at the gate -> tongatonga      T_ref 15.78 (walk + drive: median 15.28 of 12 clean, + 0.5; Phase 3 r1 repair 2)
   julaftonGuests: 81,     // §8.13 s1 patio -> hire car -> four guests                  T_ref 67.4 (median of 11 clean runs; Phase 3 r1 repair 2)
