@@ -229,18 +229,18 @@ export const FULL_MISSIONS = [
     stages: [
       () => getInCar({ car: 'buss17', atHome: true, any: false, passenger: 'ole', riders: ['majsan', 'siv', 'fruStorch', 'herrStorch'], hideRiders: true, lockMeter: true, text: 'Hoppa in i SunTrips buss nummer 17' }),
       () => goto({ to: 'flamencoDrive', radius: 12, inCar: true, passenger: 'ole', stop: true, timer: 54, failText: 'Gästerna missade välkomstdrinken.', smooth: { label: 'ÅKSJUKA', failText: 'Någon blev åksjuk i bussen!' }, text: 'Kör gruppen till Hotell Flamenco – mjukt!', radio: [
-        ['lasse', 'Hjärtligt välkomna till Nueva Estocolmo och SunTrip!', { gap: 4 }],                     // [F]
-        ['lasse', 'Klockan är tre spansk tid – alltså en timme tidigare än svensk tid.', { gap: 9 }],      // [F]
-        ['lasse', 'Ni bör inte dricka vattnet.', { gap: 8 }],                                              // [F]
-        ['lasse', 'Grisfesten är på torsdag och kostar 800 pesetas. Några frågor?', { gap: 8 }],           // [F]
-        ['fruStorch', 'Finns det svenskt kaffe på hotellet?', { gap: 3 }],                                // [F]
-        ['lasse', 'Ja.', { gap: 2 }],                                                                     // [F]
-        ['ole', 'Norsk, da?', { gap: 2 }],                                                                // [F]
-        ['lasse', 'Ja.', { gap: 2 }],                                                                     // [F]
-        ['siv', 'Majsan, en niopoängare!', { gap: 10 }],                                                  // [F]
-        ['stig', 'Jag har lite anlag för åksjuka.', { gap: 10 }],                                          // [F](t)
-        ['ole', 'Jeg har reisesyketabletter.', { gap: 2.5 }],                                             // [F](t)
-        ['stig', 'Jättefint! Tack. Du kanske vill ha en Argotal av mig. Mot allergi…', { gap: 3 }],       // [F](t)
+        ['lasse', 'Hjärtligt välkomna till Nueva Estocolmo och SunTrip!', { gap: 3 }],                  // [F]
+        ['lasse', 'Klockan är tre spansk tid – alltså en timme tidigare än svensk tid.', { gap: 5 }],   // [F]
+        ['lasse', 'Ni bör inte dricka vattnet.', { gap: 5.5 }],                                         // [F]
+        ['lasse', 'Grisfesten är på torsdag och kostar 800 pesetas. Några frågor?', { gap: 3.5 }],      // [F]
+        ['fruStorch', 'Finns det svenskt kaffe på hotellet?', { gap: 4 }],                              // [F]
+        ['lasse', 'Ja.', { gap: 2 }],                                                                   // [F]
+        ['ole', 'Norsk, da?', { gap: 1.5 }],                                                            // [F]
+        ['lasse', 'Ja.', { gap: 1.5 }],                                                                 // [F]
+        ['siv', 'Majsan, en niopoängare!', { gap: 3 }],                                                 // [F]
+        ['stig', 'Jag har lite anlag för åksjuka.', { gap: 3 }],                                        // [F](t)
+        ['ole', 'Jeg har reisesyketabletter.', { gap: 2.5 }],                                           // [F](t)
+        ['stig', 'Jättefint! Tack. Du kanske vill ha en Argotal av mig. Mot allergi…', { gap: 2.5 }],   // [F](t)
       ] }),
     ],
     outroPlace: { lasse: ['flamencoRecepcion', 1.5, 1.5], portier: ['flamencoRecepcion', 0, 0], ole: ['flamencoRecepcion', -1.4, 4.4], stig: ['flamencoRecepcion', 0, 3.0] },
@@ -310,7 +310,7 @@ export const FULL_MISSIONS = [
       () => getInCar({ text: 'Hoppa in i en bil' }),
       () => pickup({ who: 'ole', name: 'Ole', at: 'flamencoDrive', hello: 'Til markedet!' }),
       () => goto({ to: 'marknad', radius: 9, inCar: true, passenger: 'ole', text: 'Till marknaden' }),
-      () => haggle({ at: 'asnestand', who: 'souvenir', partner: 'ole', start: 500, steps: [400, 300, 200], zones: [0.30, 0.23, 0.17], speeds: [0.7, 0.95, 1.2], maxMiss: 3, pay: 200, text: 'Pruta! Tryck E när markören är i det gröna', barLabel: 'PRIS', failText: 'Säljaren stängde ståndet.', lines: {
+      () => haggle({ at: 'asnestand', who: 'souvenir', partner: 'ole', start: 500, steps: [400, 300, 200], zones: [0.30, 0.23, 0.17], speeds: [0.7, 0.95, 1.2], maxMiss: 3, pay: 200, text: 'Pruta! Tryck E när markören är i det gröna', barLabel: 'PRIS', failText: 'Säljaren stängde ståndet.', checkpoint: true, retryAt: 'asnestand', lines: {
         start: [['souvenir', 'Hallå där!'], ['ole', 'Hvor mye?'], ['souvenir', '500 pesetas.'], ['ole', 'To hundre?']],                                   // [F] · [F*](t) · [F] · [F*](t)
         hit: [
           [['ole', 'Jeg gir deg to hundre. Det er… 18 norske kroner.'], ['souvenir', '400 pesetas. Titta, den är jättelustig.']],                         // [F*] · [F]
@@ -353,10 +353,10 @@ export const FULL_MISSIONS = [
       () => getInCar({ text: 'Hoppa in i en bil' }),
       () => pickup({ who: 'berra', name: 'Berra', at: 'flamencoBar', rider: 'robban', hello: 'Ditåt!' }),
       () => goto({ to: 'playa', radius: 14, inCar: true, passenger: 'berra', text: 'Bodegan ligger ditåt – mot havet!', radio: [['robban', 'Fan Berra, ja ä tösstig.'], ['berra', 'Fan Robban, du har ingen karaktär!']], doneCue: { radio: ['berra', 'Ingen bodega här. Då ligger den åt andra hållet.'] } }),
-      () => goto({ to: 'vischan', radius: 14, inCar: true, passenger: 'berra', timer: 31, text: 'Leta inåt land', radio: [['berra', 'Det här är ju rena vischan. Vi måste ha kört för långt.'], ['robban', 'Fan, vad jag är törstig.']], overhear: [{ at: 'eslovVag', r: 25, radio: true, lines: [['berra', 'Heja Eslöv!'], ['robban', 'Herre jävlar!']] }] }),
+      () => goto({ to: 'vischan', radius: 14, inCar: true, passenger: 'berra', timer: 31, text: 'Leta inåt land', radio: [['berra', 'Det här är ju rena vischan. Vi måste ha kört för långt.'], ['robban', 'Fan, vad jag är törstig.']], overhear: [{ at: 'eslovVag', r: 40, radio: true, lines: [['berra', 'Heja Eslöv!'], ['robban', 'Herre jävlar!']] }], checkpoint: true, retryAt: 'playa', retryCar: { at: { x: 0, z: 236, yaw: 0 }, passenger: 'berra', rider: 'robban' } }),
       () => dropoff({ who: 'berra', at: 'vischan', riderOff: true, text: 'Stanna vid tomatfälten' }),
       () => scene({ place: { stig: ['vischan', 2.0, -4.4, 2.03], berra: ['vischan', -0.2, -4.3, -2.0], robban: ['vischan', -1.7, -5.3, -2.4] }, cam: { at: 'vischanCam', dist: 0, height: 1.9 }, lines: [['stig', 'Jag kör inte längre på grusvägen. Jag har anlag för åksjuka.'], ['berra', 'Jag går inte en meter till. Vi liftar.']], doneCue: { toast: 'En grisbil stannar…' } }),   // [N] · [F](t) · [N]
-      () => follow({ type: 'grisbil', carName: 'grisbilFollow', driver: 'grisbonde', riders: ['berra', 'robban'], hideRiders: true, start: { lane: [[0, 2], [1, 2]], t: 12 }, via: [[1, 2], [1, 1], [2, 1]], to: 'grisfestGate', maxDist: 55, cruise: 15, wobble: 0.12, text: 'Följ grisbilen – Berra och Robban har liftat!', radio: [['robban', 'Fan, de luktar.'], ['berra', 'Skit i det. Vi slipper gå.'], ['robban', 'Snacka om grisfest.']] }),
+      () => follow({ type: 'grisbil', carName: 'grisbilFollow', driver: 'grisbonde', riders: ['berra', 'robban'], hideRiders: true, start: { lane: [[0, 2], [1, 2]], t: 12 }, via: [[1, 2], [1, 1], [2, 1]], to: 'grisfestGate', maxDist: 55, cruise: 15, wobble: 0.12, text: 'Följ grisbilen – Berra och Robban har liftat!', radio: [['robban', 'Fan, de luktar.'], ['berra', 'Skit i det. Vi slipper gå.', { gap: 4.5 }], ['robban', 'Snacka om grisfest.', { gap: 4.5 }]] }),
       () => getInCar({ missionCar: 'grisbilFollow', any: false, passenger: 'berra', rider: 'robban', text: 'Grisbonden lånar ut grisbilen – hoppa in!', say: ['grisbonde', 'Ta bilen, señor. Ställ den vid hotellet – jag hämtar den på torsdag.'] }),
       () => destroy({ type: 'guardia', carName: 'guardiaJeep', driver: 'guardia', spawn: { lane: [[3, 1], [3, 2]], t: 25 }, cruise: 20, damageScale: 4, playerDamageScale: 0.5, noExplode: true, timer: 42, lockMeter: true, barLabel: 'JEEPEN', text: 'Guardia Civil såg grisarna – stoppa jeepen innan den hämtar förstärkning!', failText: 'Jeepen hann fram till kasernen.', checkpoint: true, retryAt: 'grisfestGate', retryCar: { at: 'grisfestGate', type: 'grisbil', name: 'grisbilFollow', passenger: 'berra', rider: 'robban' } }),
       () => goto({ to: 'flamencoBack', radius: 10, inCar: true, passenger: 'berra', timer: (g, m) => homeTimer(m.data.wreck), text: 'Kör hem grisarna till hotellet!', failText: 'Ni kom aldrig fram.' }),
@@ -392,7 +392,7 @@ export const FULL_MISSIONS = [
     ],
     stages: [
       () => getInCar({ text: 'Hoppa in i en bil' }),
-      () => follow({ type: 'hatch', color: 0x2a4fa8, carName: 'joseBil', driver: 'jose', passenger: 'siv', riders: ['mamma'], start: { lane: [[5, 3], [4, 3]], t: 12 }, via: [[4, 4], [3, 4]], to: 'grillpacoCurb', maxDist: 55, minDist: 14, minGrace: 2, minText: 'José såg dig! Håll avståndet.', cruise: 13, text: 'Följ José – men inte för nära!', radio: [['jose', 'Jag ska bjuda dig på ett ställe som inga turister kommer till.'], ['siv', 'Det låter ju trevligt.'], ['jose', 'Äkta spanska maten på en restaurang.']] }),
+      () => follow({ type: 'hatch', color: 0x2a4fa8, carName: 'joseBil', driver: 'jose', passenger: 'siv', riders: ['mamma'], start: { lane: [[5, 3], [4, 3]], t: 12 }, via: [[4, 4], [3, 4]], to: 'grillpacoCurb', maxDist: 55, minDist: 14, minGrace: 2, minText: 'José såg dig! Håll avståndet.', cruise: 13, text: 'Följ José – men inte för nära!', radio: [['jose', 'Jag ska bjuda dig på ett ställe som inga turister kommer till.'], ['siv', 'Det låter ju trevligt.', { gap: 4.5 }], ['jose', 'Äkta spanska maten på en restaurang.', { gap: 4.5 }]] }),
       () => goto({ to: 'plaza', radius: 4, onFoot: true, text: 'Parkera och spana diskret från fontänen' }),
     ],
     outroPlace: { jose: ['grillpaco', 0, 0], siv: ['grillpaco', 1.2, 0], mamma: ['grillpacoMamma', 0, 0, 0] },
@@ -454,8 +454,8 @@ export const FULL_MISSIONS = [
     ],
     stages: [
       () => rabbits({ mesh: 'blomma', flee: false, count: 5, near: 'flamenco', rMin: 8, rMax: 40, timer: 26, text: 'Plocka blomster till Siv och Maj-Britt', barLabel: 'BLOMSTER', gotText: 'Blomster!', failText: 'Blommorna vissnade.', radio: [['ole', 'Man må skifte vannet hver fjerde time og gi dem en hodepinetablett.']] }),
-      () => getInCar({ text: 'Hoppa in i en bil – det börjar skymma', startCue: { sky: 'sunset', music: 'vals' } }),
-      () => race({ who: 'gabbe', type: 'bus', carName: 'nattbuss', cruise: 31, oppSpec: { maxSpeed: 35, accel: 12, steer: 0.9 }, playerPassenger: 'ole', start: { lane: [[3, 3], [4, 3]], t: 14 }, checkpoints: [[4, 3], [4, 2], [4, 1], [3, 1]], finish: { x: -80, z: -200 }, text: 'Bussen till grisfesten går nu – kom först!', radio: [['gabbe', 'Grisfestbussen går nu – sista man bjuder på sangrian!']], checkpoint: true, startCue: { sky: 'night' } }),
+      () => getInCar({ car: 'hyrbil', any: false, atHome: true, text: 'Hoppa in i hyrbilen – det börjar skymma', startCue: { sky: 'sunset', music: 'vals' } }),
+      () => race({ who: 'gabbe', type: 'bus', carName: 'nattbuss', cruise: 31, oppSpec: { maxSpeed: 35, accel: 12, steer: 0.9 }, playerPassenger: 'ole', start: { lane: [[3, 3], [4, 3]], t: 14 }, checkpoints: [[4, 3], [4, 2], [4, 1], [3, 1]], finish: { x: -80, z: -200 }, text: 'Bussen till grisfesten går nu – kom först!', radio: [['gabbe', 'Grisfestbussen går nu – sista man bjuder på sangrian!']], checkpoint: true, retryCar: { at: { lane: [[3, 3], [4, 3]], t: 14 } }, startCue: { sky: 'night' } }),
       () => smash({ type: 'tallrikar', area: { lm: 'dansgolv', r: 22 }, count: 10, timer: 33, lockMeter: true, onFoot: true, text: 'Porslinskross! Sparka sönder tallrikarna (J) medan bandet spelar', barLabel: 'TALLRIKAR', failText: 'Bandet slutade spela.', radio: [['pax', 'Vad skickliga de är!']], checkpoint: true, retryAt: 'dansgolv', retryCar: { at: { x: -86, z: -202.75, yaw: -Math.PI / 2 }, park: true } }),
       () => scene({ place: { majsan: ['dansgolv', 1.2, 1.6, -Math.PI / 2], siv: ['dansgolv', 2.8, 1.9, -Math.PI / 2], ole: ['dansgolv', -1.8, 1.9, Math.PI / 2], stig: ['dansgolv', -0.2, 1.6, Math.PI / 2] }, frame: ['majsan', 'stig'], checkpoint: true, retryAt: 'dansgolv', retryCar: { at: { x: -86, z: -202.75, yaw: -Math.PI / 2 }, park: true }, startCue: { outfit: { who: 'ole', name: 'gris' } }, lines: [
         ['ole', 'Neida, det er bare å spørre: Skal vi danse! Eller kjør litt større: Sånn! … Voulez-vous danse avec moi? Fransk.'],   // [F]

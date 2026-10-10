@@ -200,7 +200,7 @@ const M_FULL = [
     await T.startMission();
     await touchAll(T);
     await untilStage(T, 1);
-    await T.anyCar();
+    await T.enterNamed('hyrbil');
     await untilStage(T, 2);
     await raceCheckpoints(T);
     await untilStage(T, 3);
@@ -363,7 +363,7 @@ export const SCENARIOS = {
     await T.startMission();
     await touchAll(T);
     await untilStage(T, 1);
-    await T.anyCar();
+    await T.enterNamed('hyrbil');
     await untilStage(T, 2);
     await raceCheckpoints(T);
     await untilStage(T, 3);

@@ -115,7 +115,11 @@ export const UNLOCKS = {
   grisbil: { car: { type: 'grisbil', name: 'grisbil', at: 'flamencoDrive', dx: 4, dz: 0 },
     toast: 'Upplåst: <b>Grisbilen</b> – parkerad vid Hotell Flamenco. Den luktar.' },   // [N]
   samba: { tune: 'samba', toast: 'Upplåst: <b>Musik: samba</b> i pausmenyn' },        // [N] P1
-  bodega: { hook: 'bodegaLit', label: ['Pepes Bodega', 'bodega'], home: { berra: ['bodega', -1.5, 0.5], robban: ['bodega', 1.5, 0.5] },
+  // After the end: Berra and Robban posted at the bodega they found, with chatter about having found
+  // it (their CHATTER is about looking for it); Angerud is in hospital (the ambulance in the julafton
+  // scene), so a `null` home hides him (§8.13 "After the outro").
+  bodega: { hook: 'bodegaLit', label: ['Pepes Bodega', 'bodega'], home: { berra: ['bodega', -1.5, 0.5], robban: ['bodega', 1.5, 0.5], angerud: null },
+    chatter: { berra: ['Robban! Jag hittade Pepes Bodega!' /* [F*] */], robban: ['Pepes Bodega. Glöm aldrig det, du.' /* [F*] */] },
     toast: 'Pepes Bodega har öppnat – på baksidan av hotellet.' },                   // [N]
 };
 

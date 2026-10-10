@@ -140,19 +140,21 @@ export const ISLAND_MISSIONS = [
         failText: 'Gästerna missade välkomstdrinken.',                                           // [N]
         smooth: { label: 'ÅKSJUKA', failText: 'Någon blev åksjuk i bussen!' },                  // [N]
         text: 'Kör gruppen till Hotell Flamenco – mjukt!',                                      // [N]
+        // Spaced so the last line comes at 37 s, inside a clean run (T_ref 45 s; a bold one takes ~42):
+        // the radio stops with the stage, and at 63.5 s the åksjuka exchange never played (Phase 3 r2).
         radio: [
-          ['lasse', 'Hjärtligt välkomna till Nueva Estocolmo och SunTrip!', { gap: 4 }],                     // [F]
-          ['lasse', 'Klockan är tre spansk tid – alltså en timme tidigare än svensk tid.', { gap: 9 }],      // [F]
-          ['lasse', 'Ni bör inte dricka vattnet.', { gap: 8 }],                                              // [F]
-          ['lasse', 'Grisfesten är på torsdag och kostar 800 pesetas. Några frågor?', { gap: 8 }],           // [F]
-          ['fruStorch', 'Finns det svenskt kaffe på hotellet?', { gap: 3 }],                                // [F]
-          ['lasse', 'Ja.', { gap: 2 }],                                                                     // [F]
-          ['ole', 'Norsk, da?', { gap: 2 }],                                                                // [F]
-          ['lasse', 'Ja.', { gap: 2 }],                                                                     // [F]
-          ['siv', 'Majsan, en niopoängare!', { gap: 10 }],                                                  // [F]
-          ['stig', 'Jag har lite anlag för åksjuka.', { gap: 10 }],                                          // [F](t) the subtitles leave the speaker open
-          ['ole', 'Jeg har reisesyketabletter.', { gap: 2.5 }],                                             // [F](t)
-          ['stig', 'Jättefint! Tack. Du kanske vill ha en Argotal av mig. Mot allergi…', { gap: 3 }],       // [F](t)
+          ['lasse', 'Hjärtligt välkomna till Nueva Estocolmo och SunTrip!', { gap: 3 }],                  // [F]
+          ['lasse', 'Klockan är tre spansk tid – alltså en timme tidigare än svensk tid.', { gap: 5 }],   // [F]
+          ['lasse', 'Ni bör inte dricka vattnet.', { gap: 5.5 }],                                         // [F]
+          ['lasse', 'Grisfesten är på torsdag och kostar 800 pesetas. Några frågor?', { gap: 3.5 }],      // [F]
+          ['fruStorch', 'Finns det svenskt kaffe på hotellet?', { gap: 4 }],                              // [F]
+          ['lasse', 'Ja.', { gap: 2 }],                                                                   // [F]
+          ['ole', 'Norsk, da?', { gap: 1.5 }],                                                            // [F]
+          ['lasse', 'Ja.', { gap: 1.5 }],                                                                 // [F]
+          ['siv', 'Majsan, en niopoängare!', { gap: 3 }],                                                 // [F]
+          ['stig', 'Jag har lite anlag för åksjuka.', { gap: 3 }],                                        // [F](t) the subtitles leave the speaker open
+          ['ole', 'Jeg har reisesyketabletter.', { gap: 2.5 }],                                           // [F](t)
+          ['stig', 'Jättefint! Tack. Du kanske vill ha en Argotal av mig. Mot allergi…', { gap: 2.5 }],   // [F](t)
         ],
       }),
     ],
@@ -234,9 +236,12 @@ export const ISLAND_MISSIONS = [
       () => getInCar({ text: 'Hoppa in i en bil' }),                                                        // [N]
       () => pickup({ who: 'ole', name: 'Ole', at: 'flamencoDrive', hello: 'Til markedet!' }),              // [N]
       () => goto({ to: 'marknad', radius: 9, inCar: true, passenger: 'ole', text: 'Till marknaden' }),     // [N]
-      // Ole haggles like a smålänning (the timing game is invented, §1.6).
+      // Ole haggles like a smålänning (the timing game is invented, §1.6). A checkpoint: a first go
+      // wins about half the time, and a lost one retries on foot at the stall (the car stays where he
+      // parked it, Ole steps up again), not from the hotel with a new car and the market drive.
       () => haggle({
         at: 'asnestand', who: 'souvenir', partner: 'ole', start: 500, steps: [400, 300, 200], zones: HAGGLE.zones, speeds: HAGGLE.speeds, maxMiss: 3, pay: 200,
+        checkpoint: true, retryAt: 'asnestand',
         text: 'Pruta! Tryck E när markören är i det gröna', barLabel: 'PRIS', failText: 'Säljaren stängde ståndet.',   // [N]
         lines: {
           start: [['souvenir', 'Hallå där!'], ['ole', 'Hvor mye?'], ['souvenir', '500 pesetas.'], ['ole', 'To hundre?']],                    // [F] · [F*](t) · [F] · [F*](t)
@@ -299,10 +304,16 @@ export const ISLAND_MISSIONS = [
         radio: [['robban', 'Fan Berra, ja ä tösstig.'], ['berra', 'Fan Robban, du har ingen karaktär!']],             // [F] · [F]
         doneCue: { radio: ['berra', 'Ingen bodega här. Då ligger den åt andra hållet.'] },                             // [N]
       }),
+      // The rollerskier stands where the Eslöv lane meets the z −120 road the drive comes along; r 40
+      // starts the exchange ≈ 2 s before the stop, so both lines play while the stage runs (Phase 3 r2:
+      // at r 25 mid-lane the measured route never came nearer than 33 m).
+      // A checkpoint: a failed drive retries at the beach with Berra beside the player and Robban in the
+      // back, the car facing the promenade (the calibrate start), not with the pickup and beach drive.
       () => goto({
         to: 'vischan', radius: 14, inCar: true, passenger: 'berra', timer: TIMERS.bodegaVischan, text: 'Leta inåt land',   // [N]
         radio: [['berra', 'Det här är ju rena vischan. Vi måste ha kört för långt.'], ['robban', 'Fan, vad jag är törstig.']],   // [F*](t) the film's "gått", said on foot · [F](t)
-        overhear: [{ at: 'eslovVag', r: 25, radio: true, lines: [['berra', 'Heja Eslöv!'], ['robban', 'Herre jävlar!']] }],     // [F] · [F](t)
+        overhear: [{ at: 'eslovVag', r: 40, radio: true, lines: [['berra', 'Heja Eslöv!'], ['robban', 'Herre jävlar!']] }],     // [F] · [F](t)
+        checkpoint: true, retryAt: 'playa', retryCar: { at: { x: 0, z: 236, yaw: 0 }, passenger: 'berra', rider: 'robban' },
       }),
       () => dropoff({ who: 'berra', at: 'vischan', riderOff: true, text: 'Stanna vid tomatfälten' }),   // [N]
       // Hitch-hike logic: Stig refuses the dirt road (åksjuka), then they hitch the pig truck. The three
@@ -323,7 +334,9 @@ export const ISLAND_MISSIONS = [
         start: { lane: [[0, 2], [1, 2]], t: 12 }, via: [[1, 2], [1, 1], [2, 1]], to: 'grisfestGate',
         maxDist: TUNING.grisbilFollow.maxDist, cruise: TUNING.grisbilFollow.cruise, wobble: 0.12,
         text: 'Följ grisbilen – Berra och Robban har liftat!',                                                         // [N]
-        radio: [['robban', 'Fan, de luktar.'], ['berra', 'Skit i det. Vi slipper gå.'], ['robban', 'Snacka om grisfest.']],   // [F](t) ×3
+        // At 8, 12.5 and 17 s: the tail takes ~21 s, and the follow's default 10 s spacing put the
+        // third line at 28 s, after the radio had stopped.
+        radio: [['robban', 'Fan, de luktar.'], ['berra', 'Skit i det. Vi slipper gå.', { gap: 4.5 }], ['robban', 'Snacka om grisfest.', { gap: 4.5 }]],   // [F](t) ×3
       }),
       () => getInCar({ missionCar: 'grisbilFollow', any: false, passenger: 'berra', rider: 'robban', text: 'Grisbonden lånar ut grisbilen – hoppa in!', say: ['grisbonde', 'Ta bilen, señor. Ställ den vid hotellet – jag hämtar den på torsdag.'] }),   // [N] · [N]
       // Invented (§1.6): the jeep must not reach the barracks; a mission target, so no SKANDAL.
@@ -381,7 +394,8 @@ export const ISLAND_MISSIONS = [
         start: { lane: [[5, 3], [4, 3]], t: 12 }, via: [[4, 4], [3, 4]], to: 'grillpacoCurb',
         maxDist: TUNING.joseFollow.maxDist, minDist: TUNING.joseFollow.minDist, minGrace: 2, cruise: TUNING.joseFollow.cruise,
         minText: 'José såg dig! Håll avståndet.', text: 'Följ José – men inte för nära!',                                  // [N] · [N]
-        radio: [['jose', 'Jag ska bjuda dig på ett ställe som inga turister kommer till.'], ['siv', 'Det låter ju trevligt.'], ['jose', 'Äkta spanska maten på en restaurang.']],   // [F*] · [F] · [F*]
+        // At 8, 12.5 and 17 s, inside the ~21 s tail (as the grisbil's).
+        radio: [['jose', 'Jag ska bjuda dig på ett ställe som inga turister kommer till.'], ['siv', 'Det låter ju trevligt.', { gap: 4.5 }], ['jose', 'Äkta spanska maten på en restaurang.', { gap: 4.5 }]],   // [F*] · [F] · [F*]
       }),
       () => goto({ to: 'plaza', radius: 4, onFoot: true, text: 'Parkera och spana diskret från fontänen' }),   // [N]
     ],
@@ -470,17 +484,22 @@ export const ISLAND_MISSIONS = [
     ],
     stages: [
       () => rabbits({ mesh: 'blomma', flee: false, count: 5, near: 'flamenco', rMin: 8, rMax: 40, timer: TIMERS.grisfestFlowers, text: 'Plocka blomster till Siv och Maj-Britt', barLabel: 'BLOMSTER', gotText: 'Blomster!', failText: 'Blommorna vissnade.', radio: [['ole', 'Man må skifte vannet hver fjerde time og gi dem en hodepinetablett.']] }),   // [N] · radio [F*]
-      () => getInCar({ text: 'Hoppa in i en bil – det börjar skymma', startCue: { sky: 'sunset', music: 'vals' } }),   // [N]
+      // The hire car, the sedan the race was measured with (§8 "Races and chases"): bus 17, still at
+      // the Flamenco drive from mission 6, a van or the ice-cream van cannot win it. `atHome` brings
+      // it back to its bay if he left it elsewhere.
+      () => getInCar({ car: 'hyrbil', any: false, atHome: true, text: 'Hoppa in i hyrbilen – det börjar skymma', startCue: { sky: 'sunset', music: 'vals' } }),   // [N]
       // Start behind Hotel Flamenco (z -40) heading east past Pepes Bodega, Gabbe's bus on the lane
       // beside; left up x 40 past Centro Nórdico, left again along the farm road to the gate: ≈ 355 m,
       // two left turns (a 10.5 m bus cannot take the grid's tight right-turn lanes; route tuning, see
-      // the WP-G report). Fail text: the kind's "Gabbe vann!".
+      // the WP-G report). Fail text: the kind's "Gabbe vann!". A retry races in the hire car again
+      // (retryCar: the car he last drove, repaired; the kind moves it onto the grid), not in the
+      // spare hatch the kind gives a player on foot.
       () => race({
         who: 'gabbe', type: 'bus', carName: 'nattbuss', cruise: TUNING.nattbuss.cruise, oppSpec: TUNING.nattbuss.spec, playerPassenger: 'ole',
         start: { lane: [[3, 3], [4, 3]], t: 14 }, checkpoints: [[4, 3], [4, 2], [4, 1], [3, 1]], finish: { x: -80, z: -200 },
         text: 'Bussen till grisfesten går nu – kom först!',                                   // [N]
         radio: [['gabbe', 'Grisfestbussen går nu – sista man bjuder på sangrian!']],            // [N] (§1.5: the song keeps its one line in mission 7)
-        checkpoint: true, startCue: { sky: 'night' },
+        checkpoint: true, retryCar: { at: { lane: [[3, 3], [4, 3]], t: 14 } }, startCue: { sky: 'night' },
       }),
       () => smash({ type: 'tallrikar', area: { lm: 'dansgolv', r: 22 }, count: 10, timer: TIMERS.grisfestPlates, lockMeter: true, onFoot: true, text: 'Porslinskross! Sparka sönder tallrikarna (J) medan bandet spelar', barLabel: 'TALLRIKAR', failText: 'Bandet slutade spela.', radio: [['pax', 'Vad skickliga de är!']], checkpoint: true, retryAt: 'dansgolv', retryCar: TONGA_CAR }),   // [N] · radio [F](t)
       // Ole's `gris` shirt goes on the stage's startCue, so a checkpoint retry re-applies it (§10.4).

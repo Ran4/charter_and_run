@@ -89,7 +89,7 @@ också: A hopp/handbroms, B spring, X sparka/mantra, Y prata, Start paus, triggr
 | 9 | Pepes Bodega | Berra | Leta bodegan med Berra och Robban, följ grisbilen, låna den, stoppa Guardia-jeepen och kör hem grisarna. |
 | 10 | Gamla kläder | Sivan | Skugga José – men inte för nära – och spana diskret från fontänen. |
 | 11 | En skock får | Majsan | Följ utflyktsbussen till Fataga och fånga Josés pappas får. |
-| 12 | Grisfesten | Ole (kostar 800 pta) | Blommor till Siv och Maj-Britt, kappkörning mot nattbussen, porslinskross, Tonga Tonga – och bärra hem Berra. |
+| 12 | Grisfesten | Ole (kostar 800 pta) | Blommor till Siv och Maj-Britt, kappkörning i hyrbilen mot nattbussen, porslinskross, Tonga Tonga – och bärra hem Berra. |
 | 13 | Julafton bland palmerna | Ole (kostar 100 pta) | Samla gästerna till julfesten vid poolen och visa Majsan övningen. Sedan: Rio? |
 
 Tiderna är **tajta, som i Hit & Run**: en ren körning på en vettig väg har ungefär 15–20 %

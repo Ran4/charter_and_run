@@ -8,13 +8,19 @@ import { untilStage, warpLm, touchAll } from './common.mjs';
 
 const SHOTS = !!process.env.SHOTS;
 
-// Screenshot once a dialogue line containing `text` is on screen (SHOTS only), as in island.mjs.
-function shotWhen(T, name, text, timeout = 60000) {
+// Screenshot once a dialogue line containing `text` is on screen (SHOTS only), as in island.mjs:
+// `before` = the stage index at which the wait gives up, so a missed line never holds the script
+// while a timed stage runs (the seat dash, the bottles, the round-up start right after the intro).
+function shotWhen(T, name, text, { timeout = 60000, before = null } = {}) {
   if (!SHOTS) return Promise.resolve();
-  return T.until((t) => (document.querySelector('#dialog .dlg-text')?.textContent || '').includes(t), timeout, text)
-    .then(() => T.shot(`fl_${name}`), () => T.log('shot skipped (line never shown):', name));
+  return T.until((t, b) => {
+    if ((document.querySelector('#dialog .dlg-text')?.textContent || '').includes(t)) return 'line';
+    const m = __game.missions;
+    return b != null && m.state === 'running' && m.stageI >= b ? 'gone' : false;
+  }, timeout, text, before)
+    .then(async (h) => ((await h.jsonValue()) === 'line' ? T.shot(`fl_${name}`) : T.log(`shot skipped (stage ${before} began first):`, name)), () => T.log('shot skipped (line never shown):', name));
 }
-const shots = (T, list) => Promise.all(list.map(([name, text]) => shotWhen(T, name, text)));
+const shots = (T, list, opts) => Promise.all(list.map(([name, text]) => shotWhen(T, name, text, opts)));
 async function shot(T, name) { if (SHOTS) await T.shot(`fl_${name}`); }
 // SHOTS: slow the dialogue down so a line stays up long enough to be photographed.
 async function slow(T) { if (SHOTS) await T.ev(() => { __game.dialogSpeed = 28; }); }
@@ -35,7 +41,7 @@ export const M_FLIGHT = [
     await T.tap('KeyE');
     await s1;
     await untilStage(T, 1);
-    const s2 = shots(T, [['gate_stats', '50 prosent']]);
+    const s2 = shots(T, [['gate_stats', '50 prosent']], { before: 3 });
     await warpLm(T, 'gateOle');
     await s2;
     await untilStage(T, 3);
@@ -62,7 +68,7 @@ export const M_FLIGHT = [
   // 1 · ombord: find 14B (the timer runs), hold the mantra through the takeoff timeline.
   async (T) => {
     await slow(T);
-    const s0 = shots(T, [['ombord_intro', 'rad tretton']]);
+    const s0 = shots(T, [['ombord_intro', 'rad tretton']], { before: 0 });
     await T.startMission();
     await s0;
     check(await T.ev(() => __game.cabin.seatbelt && __game.cabin.blockers.some((b) => b.active)), 'ombord: seatbelt sign and luggage stowers');
@@ -103,7 +109,7 @@ export const M_FLIGHT = [
   // 3 · sprit: catch the rolling bottles, then to the front galley.
   async (T) => {
     await slow(T);
-    const s0 = shots(T, [['sprit_berra', 'vackert']]);
+    const s0 = shots(T, [['sprit_berra', 'vackert']], { before: 0 });
     await T.startMission();
     await s0;
     check(await T.ev(() => __game.missions.stage.list.length === 5), 'sprit: five bottles');
@@ -117,7 +123,7 @@ export const M_FLIGHT = [
   // 4 · landning: round up the standing passengers, back to 14B, mantra through the approach.
   async (T) => {
     await slow(T);
-    const s0 = shots(T, [['landning_fyra', 'Giraffen']]);
+    const s0 = shots(T, [['landning_fyra', 'Giraffen']], { before: 0 });
     await T.startMission();
     await s0;
     await touchAll(T);

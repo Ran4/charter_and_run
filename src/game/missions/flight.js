@@ -36,12 +36,14 @@ const ROW22 = { at: 'row22Cam', dist: 0, height: 3.6 };
 
 // Guide decorator: the stage's target (the beacon and the guide arrow, which the flight level aims
 // straight, `routeAim: false`) leads through the landmarks `names` in turn, then to the stage's own
-// target. A waypoint is passed once the player is within 1.5 m of it or nearer the next point than
-// it is. The gate dash's straight line from gateOle to the men's room crossed the middle bench row
-// and ran into the toilet block's west wall, pinning an arrow-follower on the door jamb. Only the
-// guide changes: the stage still completes at its own target, which a waypoint carries as `goal`
-// (R in the terminal is judged against it, level.js `resetSpot`).
-function via(st, names) {
+// target. A waypoint is passed once the player is within `pass` m of it or nearer the next point
+// than it is. The gate dash's straight line from gateOle to the men's room crossed the middle bench
+// row and ran into the toilet block's west wall, pinning an arrow-follower on the door jamb; ombord's
+// from the door to 14B ran down the A/B seats and stuck on row 1. Only the guide changes: the stage
+// still completes at its own target, which a waypoint carries as `goal` (R in the terminal is judged
+// against it, level.js `resetSpot`). In the 0.9 m cabin aisle `pass` is small: passed 1.5 m short,
+// the arrow cut the corner into row 1's C seat.
+function via(st, names, pass = 1.5) {
   const target = st.target;
   st.target = function (g) {
     const p = g.player, own = target.call(this, g);
@@ -49,7 +51,7 @@ function via(st, names) {
     this.viaI ??= 0;
     while (this.viaI < pts.length) {
       const w = pts[this.viaI], n = pts[this.viaI + 1] || own;
-      if (dist(p.x, p.z, w.x, w.z) < 1.5 || (n && dist(p.x, p.z, n.x, n.z) < dist(w.x, w.z, n.x, n.z))) this.viaI++;
+      if (dist(p.x, p.z, w.x, w.z) < pass || (n && dist(p.x, p.z, n.x, n.z) < dist(w.x, w.z, n.x, n.z))) this.viaI++;
       else break;
     }
     return this.viaI < pts.length ? { x: pts[this.viaI].x, z: pts[this.viaI].z, r: 1.0, goal: own } : own;
@@ -237,11 +239,13 @@ export const FLIGHT_MISSIONS = [
       ['vardinna', 'Skynda dig – vi ska taxa ut.'],                               // [N]
     ],
     stages: [
-      // [0] find the seat (seatbelt sign lit: standing costs fear; three luggage stowers, E "Ursäkta!")
-      () => sit({
+      // [0] find the seat (seatbelt sign lit: standing costs fear; three luggage stowers, E "Ursäkta!").
+      // The guide follows the measured route: into the aisle at row 1, down it past the stowers to
+      // row 14, then the seat (straight at 14B it ran down the A/B seats into row 1).
+      () => via(sit({
         seat: '14B', timer: 7, text: 'Hitta plats 14B och sätt dig', failText: 'Planet kunde inte taxa ut. Kaptenen väntar på dig!',   // [N] · [N]
         startCue: { phase: ['gate', { instant: true }], seatbelt: true, blockers: true }, doneCue: { blockers: false },
-      }),
+      }), ['cabinRow1', 'cabinRow14'], 0.5),
       // [1] the takeoff (scaled seconds, the cabin phases on the same clock; PANIK fails).
       // Checkpoint: a panicked takeoff is retried from row 14, not from the door. The bar is the
       // takeoff's elapsed time (labelled FLYGRÄDSLA it read as the fear meter).

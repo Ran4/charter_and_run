@@ -9,20 +9,28 @@ const SHOTS = !!process.env.SHOTS;
 
 // Screenshot once a dialogue line containing `text` is on screen (SHOTS only). Returns a promise
 // that callers may start before the action that triggers the line and await afterwards.
-function shotWhen(T, name, text, timeout = 60000) {
+// `before` = a stage index: the wait gives up (shot skipped) once the running mission reaches that
+// stage, so a missed line never holds the script while a timed stage's clock runs (a missed "Heia
+// Norge!" blocked 60 s and ran the 19 s Tonga drive out four times). An intro line passes 0.
+function shotWhen(T, name, text, { timeout = 60000, before = null } = {}) {
   if (!SHOTS) return Promise.resolve();
-  return T.until((t) => (document.querySelector('#dialog .dlg-text')?.textContent || '').includes(t), timeout, text)
-    .then(() => T.shot(`isl_${name}`), () => T.log('shot skipped (line never shown):', name));
+  return T.until((t, b) => {
+    if ((document.querySelector('#dialog .dlg-text')?.textContent || '').includes(t)) return 'line';
+    const m = __game.missions;
+    return b != null && m.state === 'running' && m.stageI >= b ? 'gone' : false;
+  }, timeout, text, before)
+    .then(async (h) => ((await h.jsonValue()) === 'line' ? T.shot(`isl_${name}`) : T.log(`shot skipped (stage ${before} began first):`, name)), () => T.log('shot skipped (line never shown):', name));
 }
 async function shot(T, name) { if (SHOTS) await T.shot(`isl_${name}`); }
-// SHOTS: slow the dialogue down so a line stays up long enough to be photographed.
+// SHOTS: slow the dialogue down so a line stays up long enough to be photographed. Every script
+// calls it: a FROM run reloads the page at its first mission, which resets the speed.
 async function slow(T) { if (SHOTS) await T.ev(() => { __game.dialogSpeed = 28; }); }
 
 export const M_ISLAND = [
   // 5 · buss17: into bus 17 (Ole aboard, four window busts), drive to Hotel Flamenco, stop.
   async (T) => {
     await slow(T);
-    const s1 = shotWhen(T, 'buss17_intro', 'Josito');
+    const s1 = shotWhen(T, 'buss17_intro', 'Josito', { before: 0 });
     await T.startMission();
     await s1;
     const hidden = await T.ev(() => ['fruStorch', 'herrStorch', 'majsan', 'siv'].every((k) => __game.npc(k).state === 'hidden'));
@@ -42,7 +50,8 @@ export const M_ISLAND = [
   },
   // 6 · friskotek: catch the six beach balls, back to Lasse.
   async (T) => {
-    const s1 = shotWhen(T, 'friskotek_oath', 'Jag lovar att bli');
+    await slow(T);
+    const s1 = shotWhen(T, 'friskotek_oath', 'Jag lovar att bli', { before: 0 });
     await T.startMission();
     await s1;
     await shot(T, 'friskotek_balls');
@@ -56,6 +65,7 @@ export const M_ISLAND = [
   // 7 · asnan: a car, pick Ole up, Ole haggles on foot, the donkey, the knäckebröd, the paint
   // scene in the car, the wet-paint drive to Viking Bar, the package on foot.
   async (T) => {
+    await slow(T);
     await T.startMission();
     await T.anyCar();
     await untilStage(T, 1);
@@ -91,6 +101,7 @@ export const M_ISLAND = [
   // 8 · bodega: Berra (+ Robban as a bust) to the beach, then inland; the dropoff and the hitch;
   // tail the pig truck, take it over, wreck the Guardia jeep, drive the pigs home.
   async (T) => {
+    await slow(T);
     await T.startMission();
     await T.anyCar();
     await untilStage(T, 1);
@@ -121,6 +132,7 @@ export const M_ISLAND = [
   },
   // 9 · ropavieja: tail José at 20 m (never closer than minDist), then spy from the plaza on foot.
   async (T) => {
+    await slow(T);
     await T.startMission();
     await T.anyCar();
     await untilStage(T, 1);
@@ -134,6 +146,7 @@ export const M_ISLAND = [
   },
   // 10 · fataga: Majsan (+ Siv), tail the excursion bus, the scene, round up the sheep.
   async (T) => {
+    await slow(T);
     await T.startMission();
     await T.anyCar();
     await untilStage(T, 1);
@@ -148,15 +161,17 @@ export const M_ISLAND = [
     await warpLm(T, 'fatagaFold');
     await T.waitIdle(11);
   },
-  // 11 · grisfest (Ole pays the 800 if short): flowers, a car at dusk, the night race, the plates,
-  // the dance, Tonga Tonga, "Bärra hem Berra" on the shoulders, the porter.
+  // 11 · grisfest (Ole pays the 800 if short): flowers, the hire car at dusk, the night race, the
+  // plates, the dance, Tonga Tonga, "Bärra hem Berra" on the shoulders, the porter.
   async (T) => {
+    await slow(T);
     await T.startMission();
     await touchAll(T);
     await untilStage(T, 1);
-    await T.anyCar();
+    await T.enterNamed('hyrbil');
     await untilStage(T, 2);
     check(await T.ev(() => __game.sky === 'night'), 'grisfest: night sky after stage 2 startCue');
+    check(await T.ev(() => __game.playerCar?.name === 'hyrbil'), 'grisfest: the race in the hire car');
     await T.until(() => __game.missions.stage?.countdown <= 0, 20000);
     await shot(T, 'grisfest_race');
     await raceCheckpoints(T);
@@ -164,7 +179,7 @@ export const M_ISLAND = [
     await footAt(T, 'dansgolv');
     await shot(T, 'grisfest_plates');
     await breakAll(T);
-    const s1 = shotWhen(T, 'grisfest_dance', 'Heia Norge');
+    const s1 = shotWhen(T, 'grisfest_dance', 'Heia Norge', { before: 5 });
     await untilStage(T, 4);
     check(await T.ev(() => __game.npc('ole').outfit === 'gris'), 'grisfest: Ole in his gris shirt for the dance');
     await s1;
@@ -194,7 +209,8 @@ export const M_ISLAND = [
   },
   // 12 · julafton: the suitcase, round up the guests, the pool party, room 113, the mantra duet.
   async (T) => {
-    const s0 = shotWhen(T, 'julafton_hammarby', 'Hammarby');
+    await slow(T);
+    const s0 = shotWhen(T, 'julafton_hammarby', 'Hammarby', { before: 0 });
     await T.startMission();
     await s0;
     await T.ev(() => { if (__game.playerCar) __game.exitCar(true); });

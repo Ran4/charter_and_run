@@ -82,6 +82,7 @@ class Game {
     this.collected = { prylar: new Set(), fenor: new Set() };
     this.unlocked = new Set();
     this.homeOverrides = {};
+    this.chatterOverrides = {};   // UNLOCKS[name].chatter: free-roam chatter that replaces CHATTER[key] (island)
     this.interactables = [];
     this.holding = false;
     this.mantraOn = false;
@@ -786,7 +787,8 @@ class Game {
       const n = this.npcs[key];
       if (!force && (n.busy || n.car)) continue;
       let home = set[key] ?? null;
-      if (this.level === 'island' && this.homeOverrides[key]) home = this.homeOverrides[key];
+      // An unlock's home override; `null` hides the NPC (Angerud after the end, UNLOCKS.bodega).
+      if (this.level === 'island' && key in this.homeOverrides) home = this.homeOverrides[key];
       let needed = false;
       if (cur) {
         if (cur.giver === key) { needed = true; if (!(home && home.seat)) home = [cur.at, 0, 0]; }
@@ -1140,6 +1142,7 @@ class Game {
     }
     if (u.hook) worldHooks[u.hook]?.(true);
     if (u.home) Object.assign(this.homeOverrides, u.home);
+    if (u.chatter) Object.assign(this.chatterOverrides, u.chatter);
     // u.tune: offered by the pause-menu Musik button once unlocked (cycleMusic); never auto-played.
   }
   // The Rio end card (§11.7; set built by rio.js at x = -3000, landmarks rioBoat/rioCam): a white
@@ -1636,9 +1639,10 @@ class Game {
       n.anim.wave = giver && !posed && near < 9 && !this.inDialog && n.state === 'normal';
       if (n.state === 'normal' && !posed && near < 10 && !this.inDialog) n.yaw += Math.atan2(Math.sin(yawTo(this.player.x - n.x, this.player.z - n.z) - n.yaw), Math.cos(yawTo(this.player.x - n.x, this.player.z - n.z) - n.yaw)) * Math.min(1, dt * 3);
       // Free play only: not in the gap before an outro (bubbles stacked over its first line).
-      if (near < 9 && n.state === 'normal' && !posed && !this.inDialog && ms.state === 'idle' && chatter[k]) {
+      const lines = (this.level === 'island' && this.chatterOverrides[k]) || chatter[k];
+      if (near < 9 && n.state === 'normal' && !posed && !this.inDialog && ms.state === 'idle' && lines) {
         n.chatT = (n.chatT ?? 2 + Math.random() * 3) - dt;
-        if (n.chatT <= 0) { n.chatT = 7 + Math.random() * 6; this.say(n, pick(chatter[k]), 2.6); }
+        if (n.chatT <= 0) { n.chatT = 7 + Math.random() * 6; this.say(n, pick(lines), 2.6); }
       }
       n.sync(dt);
     }

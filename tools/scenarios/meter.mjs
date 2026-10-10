@@ -186,15 +186,24 @@ export const SCENARIOS = {
     await park();
     await T.ev(() => __game.exitCar(true));
     await T.frames(10);
-    // 1. He walks at the player and never stands inside a wall.
-    r = await T.ev(() => { const g = __game, o = g.shame.officer, p = g.player; return { vis: !!o && o.state !== 'hidden', d: Math.hypot(o.x - p.x, o.z - p.z) }; });
+    // 1. He walks at the player and never stands inside a wall. Polled for up to 10 s: when his random
+    // 22–32 m spawn has a building in between he first walks out to a block corner (planOfficer), and
+    // the straight-line distance barely drops in the first 1.5 s (the old window failed ~1 run in 3)
+    // or grows: from inside the market block he closed 3 m only after 5.3–6.7 s and reached the
+    // player at 8–9 s (Phase 3 r2). He must close 3 m by walking (no stuck teleport).
+    r = await T.ev(() => { const g = __game, o = g.shame.officer, p = g.player; g.shame.teleports = 0; return { vis: !!o && o.state !== 'hidden', d: Math.hypot(o.x - p.x, o.z - p.z) }; });
     check(r.vis, 'officer appears when the player is on foot');
     const d0 = r.d;
     let inWall = 0;
-    for (let k = 0; k < 10; k++) { await T.sleep(150); if (await insideSolid(T)) inWall++; await T.ev(() => { __game.shame.caughtT = 99; }); }
-    r = await T.ev(() => { const g = __game, o = g.shame.officer, p = g.player; return { d: Math.hypot(o.x - p.x, o.z - p.z), mode: g.shame.steer.mode }; });
-    T.log('officer walk', d0.toFixed(1), '->', r.d.toFixed(1), r.mode, 'inWall', inWall);
-    check(inWall === 0 && r.d < d0 - 3, 'the officer closes in and never stands inside a solid');
+    const t0 = Date.now();
+    for (let k = 0; k < 66; k++) {
+      await T.sleep(150);
+      if (await insideSolid(T)) inWall++;
+      r = await T.ev(() => { const g = __game, s = g.shame, o = s.officer, p = g.player; s.caughtT = 99; return { d: Math.hypot(o.x - p.x, o.z - p.z), mode: s.steer.mode, tp: s.teleports }; });
+      if (r.d < d0 - 3 && k >= 9) break;   // at least the old 1.5 s of inside-a-solid samples
+    }
+    T.log('officer walk', d0.toFixed(1), '->', r.d.toFixed(1), r.mode, `after ${((Date.now() - t0) / 1000).toFixed(1)} s`, 'inWall', inWall, 'teleports', r.tp);
+    check(inWall === 0 && r.d < d0 - 3 && !r.tp, 'the officer closes in and never stands inside a solid');
     await T.shot('skandal_officer');
     // 2. A building between them: he routes round it (or the stuck rule moves him).
     r = await T.ev(async () => {
