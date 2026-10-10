@@ -42,7 +42,10 @@ export const box = (minX, minZ, maxX, maxZ, top, kind = 'solid', ref = null) =>
 export const circle = (x, z, r, top, kind = 'solid', ref = null) => addBlock({ shape: CIRCLE, x, z, r, top, kind, ref });
 // Overhead ceilings the chase camera keeps under: pergolas and low canopies a person walks under.
 // Not solids (nothing collides with them): an axis-aligned footprint, the height of the lowest
-// underside and of the top. The camera reads them through ceilingOver(); see CamRig.update.
+// underside and of the top. The camera reads them through ceilingHit(); see CamRig.update.
+// Optional fields (r3): `underOnly` = it counts only with the player under it or the eye in it (the
+// beach parasols, in rows); `block` = the collision block of the prop that carries it (a smashed
+// prop's canopy is gone).
 export const ceilings = [];
 export function ceiling(minX, minZ, maxX, maxZ, under, top) {
   const c = { minX: Math.min(minX, maxX), maxX: Math.max(minX, maxX), minZ: Math.min(minZ, maxZ), maxZ: Math.max(minZ, maxZ), under, top };
@@ -53,7 +56,7 @@ export function ceiling(minX, minZ, maxX, maxZ, under, top) {
 export function ceilingOver(x, z, y, margin = 0) {
   let best = null;
   for (const c of ceilings) {
-    if (c.under <= y || x < c.minX - margin || x > c.maxX + margin || z < c.minZ - margin || z > c.maxZ + margin) continue;
+    if (c.under <= y || x < c.minX - margin || x > c.maxX + margin || z < c.minZ - margin || z > c.maxZ + margin || c.block?.dead) continue;
     if (!best || c.under < best.under) best = c;
   }
   return best;
@@ -61,10 +64,12 @@ export function ceilingOver(x, z, y, margin = 0) {
 
 // The ceilings the 3D segment a→b passes through, each taken as a box: its footprint grown by
 // `grow`, from `below` under its underside up to its top. Ceilings whose underside is at or under
-// minUnder are skipped (a roof the player stands above). Fills out.first (the nearest along the
-// segment) with out.t (0..1) and out.low (the one with the lowest underside); returns out.first or
-// null. The chase camera keeps its eye out of them (§14.5).
+// minUnder are skipped (a roof the player stands above); an `underOnly` one counts only when a is
+// under it or b inside its box. Fills out.first (the nearest along the segment) with out.t (0..1)
+// and out.low (the one with the lowest underside); returns out.first or null. The chase camera
+// keeps its eye out of them (§14.5).
 let _t0 = 0, _t1 = 1;
+const inFoot = (c, x, z, g) => x > c.minX - g && x < c.maxX + g && z > c.minZ - g && z < c.maxZ + g;
 function clipSlab(a, d, lo, hi) {   // narrows [_t0, _t1] to where a + d·t is in [lo, hi]
   if (Math.abs(d) < 1e-9) { if (a < lo || a > hi) _t0 = 2; return; }
   let ta = (lo - a) / d, tb = (hi - a) / d;
@@ -77,7 +82,10 @@ export function ceilingHit(ax, ay, az, bx, by, bz, minUnder, out, grow = 0.3, be
   const dx = bx - ax, dy = by - ay, dz = bz - az;
   const x0 = Math.min(ax, bx) - grow, x1 = Math.max(ax, bx) + grow, z0 = Math.min(az, bz) - grow, z1 = Math.max(az, bz) + grow;
   for (const c of ceilings) {
-    if (c.under <= minUnder || c.maxX < x0 || c.minX > x1 || c.maxZ < z0 || c.minZ > z1) continue;
+    if (c.under <= minUnder || c.maxX < x0 || c.minX > x1 || c.maxZ < z0 || c.minZ > z1 || c.block?.dead) continue;
+    // A beach parasol counts only with a under it, or b inside it: one the sight line merely passes
+    // through (he walks past a row of them) would pump the eye down and up every few metres.
+    if (c.underOnly && !(inFoot(c, ax, az, grow) || (inFoot(c, bx, bz, grow) && by > c.under - below && by < c.top))) continue;
     _t0 = 0; _t1 = 1;
     clipSlab(ax, dx, c.minX - grow, c.maxX + grow);
     if (_t0 <= _t1) clipSlab(az, dz, c.minZ - grow, c.maxZ + grow);

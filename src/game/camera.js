@@ -5,16 +5,18 @@
 //               clampPitch? (max pitch while z-clamped; beyond it the camera looks further ahead) }
 
 import { THREE } from '../gfx.js';
-import { segmentBlocked, ceilingHit, discPush } from '../world/collision.js';
+import { segmentBlocked, ceilingHit, ceilingOver, discPush } from '../world/collision.js';
 import { clamp, damp, dampAngle } from '../util.js';
 
 // The chase eye's nearest distance to the pivot when a solid pulls it in (Bigmouth's 1.6 m floor),
 // and the steepest it climbs. A longer arm lifts the eye above awnings without a camera ceiling.
 const ARM = 1.6, CAP = 1.25;
-// The eye stays EYE_R off every solid's face. When a low ceiling caps the climb (the eye nearer the
-// pivot than ARM), it slides sideways to SIDE from the pivot, at most 0.6 m above it, instead of
-// sitting just over his head.
-const EYE_R = 0.45, SIDE = 2.6;
+// The eye stays EYE_R off every solid's face. Under a low ceiling with less than SIDE of room behind
+// him (a capped climb, or a capped eye 1.6–2.6 m out), it slides sideways to SIDE from the pivot, at
+// most 0.6 m above it, instead of sitting just over his head or against his back. The slide eases
+// out at SLIDE_K per second and in at SLIDE_IN (faster: the eye starts out close over his head); the
+// other side has to offer SLIDE_HYST more room to swap.
+const EYE_R = 0.45, SIDE = 2.6, SLIDE_K = 6, SLIDE_IN = 12, SLIDE_HYST = 0.5;
 const _ch = {}, _dp = {};
 
 // A dialogue eye d m from (x, z) along (nx, nz), at height y: that side if its sight line is clear,
@@ -43,6 +45,7 @@ export class CamRig {
     this.fov = 62;
     this.cine = null; // { pos, look } for dialogue framing and cutaways
     this.snapNext = true;
+    this.slide = 0;           // the side slide's lateral offset (m, + = his right; §14.5)
     this.profile = null;
     this.clampActive = false; // set each frame by main: flight level && cabin.inCabin(focus)
     this.openFloor = false;   // set each frame by main: the gate lounge, where dialogue is framed
@@ -166,27 +169,51 @@ export class CamRig {
         capped = true;
       }
       // His back to a wall under a low ceiling: the climb is capped there, and the eye would sit just
-      // over his head (a close top-down view of his shoulders). Slide it along the wall instead, to
-      // look past his shoulder from the side with more room (the side it is on, when both have room).
-      const eh = Math.hypot(want.x - px, want.z - pz), ys = Math.min(want.y, py + 0.6), ey = ys - py;
-      if (!focus.car && capped && hit >= 0 && (want.y - py) ** 2 + eh * eh < (ARM - 0.05) ** 2) {
-        const L = Math.sqrt(Math.max(0, SIDE * SIDE - ey * ey - eh * eh)), y = Math.min(py, ys) + 0.3;
-        const cur = (this.pos.x - px) * -fz + (this.pos.z - pz) * fx;
-        let best = 0, bs = 0;
-        for (const s of [1, -1]) {
-          const sx = -fz * s, sz = fx * s;
-          const t = segmentBlocked(want.x, want.z, want.x + sx * (L + EYE_R), want.z + sz * (L + EYE_R), y, 'prop', 0.25);
-          const room = t < 0 ? L : Math.max(0, t * (L + EYE_R) - EYE_R);
-          if (room > best + 0.05 || (Math.abs(room - best) <= 0.05 && cur * s > 0)) { best = room; bs = s; }
-        }
-        // Down to `ys` only as far as the slide keeps the eye no nearer the pivot than it was.
+      // over his head (a close top-down view of his shoulders) or, a little further out, against his
+      // back. Slide it along the wall instead, to look past his shoulder from the side with more room
+      // (the side it is on, unless the other has SLIDE_HYST more). The slide is a lateral offset that
+      // eases towards its target (SIDE from the pivot when he is backed up, nothing from SIDE out or
+      // away from the ceiling) and is cut to the room each side has this frame: until r3 it was all
+      // or nothing, and walking out from under a porch the eye jumped 2.2–2.7 m in one frame.
+      if (!focus.car && !pf) {
+        const eh = Math.hypot(want.x - px, want.z - pz), ys = Math.min(want.y, py + 0.6), ey = ys - py;
         const d0 = (want.y - py) ** 2 + eh * eh;
-        if (best > 0.3) {
-          want.x += -fz * bs * best; want.z += fx * bs * best;
-          want.y = Math.min(want.y, Math.max(ys, py + Math.sqrt(Math.max(0, d0 - best * best - eh * eh))));
+        let near = false;
+        if (d0 < SIDE * SIDE) {
+          const c = capped ? null : ceilingOver(want.x, want.z, want.y, 0.3);
+          near = capped || (!!c && c.under - want.y < 0.5);
+        }
+        if (this.snapNext) this.slide = 0;
+        if (near || this.slide !== 0) {
+          const y = Math.min(py, ys) + 0.3, reach = SIDE + EYE_R;
+          const roomOn = (s) => {
+            const t = segmentBlocked(want.x, want.z, want.x - fz * s * reach, want.z + fx * s * reach, y, 'prop', 0.25);
+            return t < 0 ? SIDE : Math.max(0, t * reach - EYE_R);
+          };
+          const right = roomOn(1), left = roomOn(-1);
+          let target = 0;
+          if (near) {
+            const L = Math.sqrt(Math.max(0, SIDE * SIDE - ey * ey - eh * eh));
+            const r = Math.min(L, right), l = Math.min(L, left);
+            let s;
+            if (this.slide !== 0) s = Math.sign(this.slide) * ((this.slide > 0 ? l - r : r - l) > SLIDE_HYST ? -1 : 1);
+            else if (Math.abs(r - l) > 0.05) s = r > l ? 1 : -1;
+            else s = (this.pos.x - px) * -fz + (this.pos.z - pz) * fx < 0 ? -1 : 1;
+            const room = s > 0 ? r : l;
+            if (room > 0.3) target = s * room;
+          }
+          const grow = target * this.slide >= 0 && Math.abs(target) > Math.abs(this.slide);
+          this.slide = this.snapNext ? target : damp(this.slide, target, grow ? SLIDE_IN : SLIDE_K, dt);
+          this.slide = clamp(this.slide, -left, right);
+          if (Math.abs(this.slide) < 0.01 && target === 0) this.slide = 0;
+          const sl = this.slide;
+          want.x += -fz * sl; want.z += fx * sl;
+          // Down to `ys` only as far as the slide keeps the eye no nearer the pivot than it was.
+          want.y = Math.min(want.y, Math.max(ys, py + Math.sqrt(Math.max(0, d0 - sl * sl - eh * eh))));
         }
       }
     }
+    if (focus.car || pf) this.slide = 0;
     // Keep the eye EYE_R off every solid's face, not only along the sight line: met at a slant, the
     // 0.45 m stand-off along the line left it 0.05–0.3 m from the wall, inside the façade relief
     // (piers, bands, window boxes). Push it out; if a solid then stands between it and the pivot (a
@@ -209,8 +236,9 @@ export class CamRig {
       this.pos.x = damp(this.pos.x, want.x, k, dt);
       this.pos.y = damp(this.pos.y, want.y, k * 0.7, dt);
       this.pos.z = damp(this.pos.z, want.z, k, dt);
-      // Never lag so far behind that a wall slips between us.
-      if (snap) this.pos.copy(want);
+      // Never lag so far behind that a wall slips between us. Only down, in height: a ceiling that
+      // stops capping (he walks out from under it, his back to a wall) lets the eye rise smoothly.
+      if (snap) { this.pos.x = want.x; this.pos.z = want.z; if (want.y < this.pos.y) this.pos.y = want.y; }
     }
     this.look.set(px + fx * lead, py - 0.2 + (focus.car ? 0 : 0.1), pz + fz * lead);
     // Never sit inside another car: ride up over its roof instead.

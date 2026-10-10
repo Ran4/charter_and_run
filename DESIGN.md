@@ -1076,17 +1076,17 @@ standing there faces. `y` (optional) = absolute height for collectible spots on 
 | block (i,j) | type → builder (owner, file) | content | landmarks: `id` (lx, lz, yaw[, y]) | named / parked cars |
 |---|---|---|---|---|
 | (3,3) | `flamenco` → `hotelFlamenco` (C1, hotels.js) | 7-storey white slab x [−26, 26], z [−27, −14] with balcony rows, terracotta accents, `HOTEL FLAMENCO` roof sign; open reception porch (canopy, desk, plastic Christmas tree `julgran` prop, `RECEPCIÓN`; Phase 3 r2: `HOTEL FLAMENCO · RECEPCIÓN` stands on a terracotta panel above the pergola's fascia, where it no longer fills the top of the chase frame, and the garland runs across the fascia's face) at the slab's south face; ground-floor room patios along the south face (Stig & Ole's room west, room 113 east) with a visible 1st-floor balcony above 113; terracotta piers at the bay lines, solid (Phase 3 r2); pool deck south with a **walkable shallow pool** (flat blue slab at CURB+0.02 + `box(..., CURB, 'water')`, sign "TRE METER DJUPT I ENA ÄNDEN, / EN METER I DEN ANDRA. / BARNVÄNLIG!" (three lines) [F*] (the bungalow seller's line, relocated)); poolbar with straw parasols (`BAR PISCINA · SVENSKT KAFFE`); the julafton party `julgran` on the pool deck at (2.2, 16), in the party and sunset-duet shots (Phase 3); room numbers: a closed room's centred above its own glass door, an open room's (107, 113) on its right-hand pier (Phase 3); parking lot on the west; the parking signs here and at SunTrip's lot are a blue `P` plate over a name strip (`HOTEL FLAMENCO`, `SUNTRIP`) on a post that stops under them (Phase 3 r2: one two-line plate had shrunk the P to the name's size, and the post ran through both faces); **PEPES BODEGA**: small whitewashed annex x [4, 12], z [−31, −27] on the north side with a green door, barrels, sign `PEPES BODEGA · VINOS · RON` facing north (`worldHooks.bodegaLit(on)` lights it after julafton) | `flamenco` (−4, −8, π) (faces the hotel, so the views/cutaway camera stands on the pool deck; Phase 2) · `flamencoRecepcion` (2, −10, 0) · `flamencoPatio` (−18, −11, 0) · `rum113` (18, −11, 0) · `flamencoBalcony` (18, −8, π) · `flamencoPool` (−3, 18, π) · cut anchors (Phase 3; a cut stands `dist` m behind one, looking the way it faces): `rum107Cam` (−18, −11, π) = `flamencoPatio` turned round (looks into room 107), `recepcionCam` (2, −10, π) = `flamencoRecepcion` turned round (the desk from the porch front) · `flamencoDeck` (−4, −2.5, 0) (the island spawn: approachSpot puts the player on the pool deck at (−4, −1) facing the hotel, the chase camera over the pool rather than under the pergola slats; Phase 2) · `flamencoBar` (16, 12, −π/2) · `flamencoDrive` (−26, 22, π) · `flamencoBack` (−6, −33.5, 0) · `bodega` (8, −33.5, 0) · `fena_flamenco` (−3, 7, 0, 0.35) | `hyrbil` (sedan `0xf4f4f0`) at `flamencoDrive` — default `getInCar` car and test car |
-| (3,2) | `suntrip` → `hotelSunTrip` (C1, hotels.js) | lower U-shaped hotel on red rock; welcome **stage** with SunTrip sun backdrop (red text on yellow sun), accordion/conga props; pool; **friskotek lawn**; SunTrip office porch on the south side facing Flamenco's back; posters `GRISFEST TORSDAG · 800 PTA`, `FRISKOTEKET 9.30` | `suntrip` (−14, 24, π) (faces the office porch; Phase 2) · `scen` (0, −14, 0) · `friskotek` (−10, 8, 0) · `suntripPool` (14, 4, π) · `suntripLot` (24, 22, π) · `fena_suntrip` (14, 8, 0, 0.35) | — |
+| (3,2) | `suntrip` → `hotelSunTrip` (C1, hotels.js) | lower U-shaped hotel on red rock; welcome **stage** with SunTrip sun backdrop (red text on yellow sun), accordion/conga props; pool; **friskotek lawn**; SunTrip office porch on the south side facing Flamenco's back; posters `GRISFEST TORSDAG · 800 PTA`, `FRISKOTEKET 9.30`; the free-standing `FRISKOTEKET / VARJE MORGON 9.30` board on the lawn's west edge is solid (Phase 3 r3: only its posts were, so he walked through it and the chase eye stood behind it) | `suntrip` (−14, 24, π) (faces the office porch; Phase 2) · `scen` (0, −14, 0) · `friskotek` (−10, 8, 0) · `suntripPool` (14, 4, π) · `suntripLot` (24, 22, π) · `fena_suntrip` (14, 8, 0, 0.35) | — |
 | (1,2) | `kasbah` → `kasbah` (C2, centre.js) | **Centro La Medina** (fictional; internal id `kasbah`): two-level nightlife courtyard centre: arcade, stairs (ramp) to a roof terrace (top ≈ 6.0) with a balustrade above the bottom three steps and a sloped wall collider along it (Phase 3: the way on is over those three steps), neon signs `CENTRO LA MEDINA`, `VIKING BAR` (horned helmet), `TONGA TONGA` (mirror ball), `BAR SVENSKA · SMÖRGÅSAR` | `kasbah` (0, 22, π) · `vikingbar` (−16, 18, π) · `tongatonga` (14, 18, π) · `tongaLot` (20, 27, π) · `tongaSlump` (16.3, 17.4, 0.5) (where Berra slumps after Tonga Tonga and is picked up, at the right of the group in the street shot; Phase 3 r3) · `pryl_poolpen` (8, −6, 0, 7.2) | — |
 | (4,2) | `cita` → `cita` (C2, centre.js) | **Centro Nórdico** (fictional; internal id `cita`) strip mall, sign `CENTRO NÓRDICO`: `SUPERMERCADO`, `FERRETERÍA`, `FARMACIA`, `ESTANCO`, `TELÉFONOS · HYTT 1·2·3`, `SOUVENIRS`, `SVENSKT KAFFE`, `CAMBIO · 1 KR = 17 PTA` (Phase 3: the north shop row and its canopy fit the courtyard between the wings, x ±11; `SOUVENIRS · REGALOS` and `FARMACIA` with its green cross sit on the wings' courtyard faces) | `cita` (0, 22, π) · `supermercado` (−18, 18, π) · `ferreteria` (18, 18, π) · `telefon` (0, 8, π) | — |
-| (2,3) | `plaza` → `plaza` (C2, centre.js) | palms, fountain (shallow walkable pool), restaurant terraces; the north row's arcade (12 arches), shops `CAFETERÍA EL SOL` · `HELADERÍA LA PALMERA` · `CORREOS · TELÉGRAFOS` · `BANCO · CAMBIO` · `PELUQUERÍA` (each sign centred in an arch) and the arcade café tables keep to x [−19, 29], clear of the west row (x [−29, −19]) that stands on the north row's west end (Phase 3 r2: two arches, the café sign and two tables were inside it); **CASA LOLA** (`CASA LOLA · COMIDA CANARIA`, fictional; internal id `grillpaco`) terrace on the SE corner (Phase 3 r2: the bougainvillea along its eave sits above the pergola's camera cap, west of the name board) | `plaza` (0, 6.8, π) (south of the fountain rim, facing it: the fountain column stands at (0, 0); Phase 2) · `grillpaco` (20, 22, π) · `grillpacoMamma` (25, 24, π) · `grillpacoCurb` world (−60, 36, −π/2) (westbound kerb of the z = 40 road, the `follow` endpoint) · `fena_plaza` (0, 0, 0, 0.35) | — |
-| (2,1) | `marknad` → `marknad` (C2, centre.js) | rows of striped stall awnings (some `bounce` awnings as climb pads), souvenir stand with painted donkeys `BURROS 500 PTA`, postcard racks, plastic giraffes | `marknad` (0, 22, π) · `asnestand` (6, 2, π) · `pryl_kalkylator` (−12, −8, 0, 3.4) (on an awning roof) | — |
+| (2,3) | `plaza` → `plaza` (C2, centre.js) | palms, fountain (shallow walkable pool), restaurant terraces; the north row's arcade (12 arches), shops `CAFETERÍA EL SOL` · `HELADERÍA LA PALMERA` · `CORREOS · TELÉGRAFOS` · `BANCO · CAMBIO` · `PELUQUERÍA` (Phase 3 r3: each name on a 3.5 × 0.8 m board on the arcade's front above its arch's crown (4.09), y 4.1–4.9, two lines where needed; on the shop wall at 3.62 the 5.6–6.6 m signs hung behind the 3.93 m arches, which showed only their middle third) and the arcade café tables keep to x [−19, 29], clear of the west row (x [−29, −19]) that stands on the north row's west end (Phase 3 r2: two arches, the café sign and two tables were inside it); **CASA LOLA** (`CASA LOLA · COMIDA CANARIA`, fictional; internal id `grillpaco`) terrace on the SE corner (Phase 3 r2: the bougainvillea along its eave sits above the pergola's camera cap, west of the name board; Phase 3 r3: the string lights hang from the cross beams' underside (3.08) with a 0.15 sag, the lowest bulb at 2.72, and the pergola's camera ceiling is under 2.72: capped at 2.6 under lights sagging to 2.44, a bulb sat over his head) | `plaza` (0, 6.8, π) (south of the fountain rim, facing it: the fountain column stands at (0, 0); Phase 2) · `grillpaco` (20, 22, π) · `grillpacoMamma` (25, 24, π) · `grillpacoCurb` world (−60, 36, −π/2) (westbound kerb of the z = 40 road, the `follow` endpoint) · `fena_plaza` (0, 0, 0, 0.35) | — |
+| (2,1) | `marknad` → `marknad` (C2, centre.js) | rows of striped stall awnings (some `bounce` awnings as climb pads), souvenir stand with painted donkeys `BURROS 500 PTA`, postcard racks, plastic giraffes; the `MERCADILLO · MARKNAD` board on two legs over the south path hangs at 3.85–4.95, above the chase eye (Phase 3 r3: at 2.35–3.45 it covered him walking in from the south road) | `marknad` (0, 22, π) · `asnestand` (6, 2, π) · `pryl_kalkylator` (−12, −8, 0, 3.4) (on an awning roof) | — |
 | (3,1) | `kyrka` → `kyrka` (C2, centre.js) | **Templo Ecuménico**: white rationalist church (flat planes, bell slab), palm plaza, crèche, small fountain; sign `ES UNA IGLESIA` / `DET ÄR EN KYRKA.` [F*] (the sisters' language record, relocated; uppercase since Phase 3 r2, §1.3) | `kyrka` (0, 18, π) | — |
 | (4,3) | `bensin` → `bensin` (C2, centre.js) | gas station: canopy, `GASOLINA` (no brand), prices in pesetas, kiosk; `gaspump` props explode | `bensin` (0, 16, π) | — |
 | (5,3) | `guardia` → `cuartel` (C2, centre.js) | ochre barracks, red-yellow-red flag mast beside the path at x 4.6 (Phase 3: off the axis to the `CASA CUARTEL` plaque), `CASA CUARTEL`; two parked green Land Rovers | `guardia` (0, 20, π) | `guardia1`, `guardia2` (type `guardia`, locked) |
 | (1,0), (3,0), (0,1) | `tomat` → `tomatfalt` (D1, nature.js) | rows of low tomato bushes (one merged mesh, walls a car drives through: no solids, or tops ≤ 0.6), packing shed `TOMATES · EXPORTACIÓN` / `EMPAQUETADO`, `tomatlada` props, dirt tracks | on (0,1): `vischan` (6, 24, π) · cut anchor `vischanCam` (5.7, 22.7, −0.14) (on the gravel track north of the vischan scene, looking back south at the road and the `CAMINO SIN ASFALTAR` sign; Phase 3 r2) · `eslovVag` (27.5, 24, 0) (the rollerskier on the Eslöv lane, 6 m up from the z −120 road and facing it; Phase 3 r2, was (28, 4, −π/2) mid-lane, 33 m off the vischan drive) — on (3,0): `packhus` (0, 10, π) | — |
 | (2,0) | `grisfest` → `grisgard` (D1, nature.js) | farm: white barn (roof top ≈ 5), pergola deck with long tables under string lights, spit-roast pig, bandstand, dance-floor platform (deck top 0.4), piglet pen, gate on the **south** road; **12 `tallrikar` prop stacks** on the tables (smash stage; `placeProp(..., baseY = table top)`, §14.7) | `grisfest` (0, 26, π) · `grisfestGate` world (−80, −204, π/2) (on the south road at the farm gate, the `follow` endpoint) · `dansgolv` (0, 0, 0) · `pryl_pung` (−18, −14, 0, 5.4) | — |
-| (0,0) | `fataga` → `fataga` (D1, nature.js) | white village houses, tile roofs, narrow lanes, date palms, small church, embroidered tablecloths on lines (`MANTELES · DUKAR`), sheepfold (fence solids, gap gate) | `fataga` (0, 18, π) · `fatagaBus` world (−240, −204, −π/2) (westbound kerb of the z = −200 road, the `follow` endpoint) · `fatagaFold` (−18, −12, 0) · `fatagaDukar` (8, 4, π) · cut anchor `dukarCam` (8, 4, 0) = `fatagaDukar` turned round (the stall from the square; Phase 3) · `pryl_kniv` (0, 0, 0, 1.2) | — |
+| (0,0) | `fataga` → `fataga` (D1, nature.js) | white village houses, tile roofs, narrow lanes, date palms, small church, embroidered tablecloths on lines (`MANTELES · DUKAR`), sheepfold (fence solids, gap gate); six ochre crags along the north edge, solid along their length (Phase 3 r3: rock()'s 1 m circle plus a box 0.85·sx × 0.53·sz on the long axis, the mesh's widest section; the circle alone let the player and the chase eye 2–3 m into the rock, also in the fold's back under the shelter) | `fataga` (0, 18, π) · `fatagaBus` world (−240, −204, −π/2) (westbound kerb of the z = −200 road, the `follow` endpoint) · `fatagaFold` (−18, −12, 0) · `fatagaDukar` (8, 4, π) · cut anchor `dukarCam` (8, 4, 0) = `fatagaDukar` turned round (the stall from the square; Phase 3) · `pryl_kniv` (0, 0, 0, 1.2) | — |
 | (4,0) | `golf` → `golf` (D1, nature.js) | fairway, bunkers (sand slabs), **pond** (`water` circle + flat blue), flag 18, small clubhouse `CAMPO DE GOLF` | `golf` (0, 22, π) · `fena_golf` (−10, −6, 0, 0.35) | — |
 | (5,0) | `bungalow` → `bungalowTomt` (D1, nature.js) | Angerud's show bungalow: one-storey white cube, pool, plot fence, `SE VENDE · BUNGALOW · 4 RUM OCH KÖK` | `bungalow` (0, 22, π) · `fena_bungalow` (6, −4, 0, 0.35) | — |
 | (5,1) | `bygge` → `bygge` (D1, nature.js) | half-built hotel frame, crane, girder deck with ramp (Bigmouth construction reworked), `PRÓXIMAMENTE · HOTEL NUEVA ESTOCOLMO II`, cones/barrels; the storeys under the 2nd- and 3rd-floor slabs are closed (dark core, brick infill on the faces the floor below walks along), since their colliders are solid from the ground (Phase 3) | `bygge` (0, 22, π) · `pryl_klocka` (6, −6, 0, 7.6) | — |
@@ -1222,7 +1222,7 @@ Coins = number of 25-pta coins burst. `shame` = SKANDAL added (× 1.2 in a car, 
 | `correos` | mailbox | r 0.32 | 1.3 | 2 | 1 | 3 | yellow Correos box | B, C; **`smash` test target** |
 | `vykort` | newsbox | r 0.35 | 1.6 | 2 | 1 | 3 | postcard rack, paper debris | B, C |
 | `dusch` | hydrant | r 0.25 | 2.2 | 3 | 2 | 6 | beach shower, `splash` | D playa, B |
-| `parasoll` | flamingo | r 0.25 | 2.2 | 1 | 1 | 3 | striped canopy | C, D |
+| `parasoll` | flamingo | r 0.25 | 2.55 | 1 | 1 | 3 | striped canopy, its rim at 2.07 (Phase 3 r3: 1.72 cut through his head); `canopy: [1.15, 2.07, 2.6]` = a camera ceiling (§14.7) while it stands (Phase 3 r3) | C, D |
 | `solstol` | tombstone | 0.7 × 1.9 | 0.8 | 1 | 1 | 3 | sunbed with towel | C, D |
 | `palmkruka` | gnome | r 0.4 | 1.4 | 1 | 1 | 4 | potted palm | B, C |
 | `mur` | woodfence | 2.5 × 0.3 | 1.1 | 0 | 1 | 2 | white garden wall, `debris: 9` | B |
@@ -1328,7 +1328,13 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
   exit run: clean 3 of 3 escaped after 38–39 s; with one crash 1 of 3 escaped, 2 were busted.
 - **The officer on foot** (`pursuerPhysics: 'walk'`, judge trap fixed): a solid `Character(CHARS
   .guardia)` that **walks with collision**: each fixed step `wish = normalize(routeAim(officer →
-  player) − officer) · onFootSpeed`, then `step()`. Wall-slide comes from `collideWalls`. **Stuck
+  player) − officer) · onFootSpeed`, then `step()`. Wall-slide comes from `collideWalls`. The aim
+  (shame.js `planOfficer`, four times a second): straight at the player when nothing solid is in
+  between; else, when the first solid in between is a box (a house), round its corners 0.8 m out
+  (one or two of them, along its faces, the shortest path whose legs are all clear; Phase 3 r3);
+  else along the streets to the kerb point nearest the player, moved up to 16 m along the street to
+  the nearest one that sees him (Phase 3 r3: with Fataga's crags solid he stood at the kerb behind
+  one, and round a village house the street route took 10 s). **Stuck
   rule**: if he moved < 0.6 m in the last 3 s, or is > 60 m away, and is outside the camera frustum
   or > 25 m from the camera, teleport him to `freeSpot(player, 22, 32)` behind the player (opposite
   the camera yaw). He is created once per pursuit (reuse the Character; don't rebuild meshes).
@@ -1457,12 +1463,12 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
 | 8.5 landning [0] round-up | row 16 → José → Berra → Herr Storch (walk, sign lit) | 9.1 (7.6 + 1.5; 2 orders) | **12** (20) | 37 % |
 | 8.5 landning [1] back to 14B | from the far end (Berra) | 3.7 (3.2 + 0.5; 2) | **5** (10) | 36 % |
 | 8.6 buss17 s2 | busBay → 7,1 > 3,1 > 3,4 → flamencoDrive, ÅKSJUKA, stop | 45.0 (median of 10 clean in 4 sets, 44.4–47.0) | **54** (60) | 17 % |
-| 8.7 friskotek s1 | six fleeing beach balls round the friskotek lawn, from Stig's placed spot in the intro's group shot (−11.0, −69.4) | 18.4 (p75 15.41 of 40 + 3; median 13.59; Phase 3 r2 island-staging's 36 runs and r2 gate's 4: the intro places the cast, a new pool `walker-r1r2/r2-island-staging` in `notes/calibration-samples.md`; island-staging's 36 alone: p75 15.29 → 23; before it, from the approach spot: p75 15.59 of 44 + 3 → 24, Phase 3 r1 repair 2, the fixed walker: no pacing, an A* that reaches round the hotel. The old walker: gate 2's 20 runs p75 29.40 → 41, r1 repair's lost 72 runs 23.1 → 33, Phase 2 21.9 of 12 → 32) | **24** (20) | 36 % at p75 |
+| 8.7 friskotek s1 | six fleeing beach balls round the friskotek lawn, from Stig's placed spot in the intro's group shot (−11.0, −69.4) | 18.6 (p75 15.56 of 36 + 3; median 13.40; Phase 3 r3 island-camera's 36 runs, pool `walker-r1r2/r3-island-camera`: the notice board on the lawn's west edge is solid. Before it: 18.4 (p75 15.41 of 40 + 3; median 13.59; Phase 3 r2 island-staging's 36 runs and r2 gate's 4: the intro places the cast, a new pool `walker-r1r2/r2-island-staging` in `notes/calibration-samples.md`; island-staging's 36 alone: p75 15.29 → 23; before it, from the approach spot: p75 15.59 of 44 + 3 → 24, Phase 3 r1 repair 2, the fixed walker: no pacing, an A* that reaches round the hotel. The old walker: gate 2's 20 runs p75 29.40 → 41, r1 repair's lost 72 runs 23.1 → 33, Phase 2 21.9 of 12 → 32) | **24** (20) | 35 % at p75 |
 | 8.8 asnan s9 | Centro Nórdico lot → 5,3 > 1,3 → vikingbar, SKICK | 15.5 (median of 3 clean; 15.5–15.6) | **19** (20) | 18 % |
 | 8.9 bodega s4 | playa → 4,7 > 4,2 > 0,2 → vischan | 25.8 (median of 8 clean in 3 runs, 25.4–26.8: 25.4 unless traffic held it up 1–1.5 s; Phase 2 gate) | **31** (35) | 17 % |
 | 8.9 bodega s9 jeep | farm gate, road-route chase, rams | 34.45 (p75 of 83 usable chases in 6 samples on the fixed chase autopilot; 4 more lost the truck and 1 wedged, excluded; median 28.38; single samples' p75 29.7–43.0; Phase 3 r1 repair 2, pool `chase-r1if/d9451f8`; the 98 chases behind the earlier 40 (p75 32.5) are lost; island-flow's first 40: 30.6 → 37; Phase 2: 34.4 → 42) | **42** (45) | 18 % at p75 |
 | 8.9 bodega s10 home | wreck → flamencoBack | 7.9 + d/34.4 (fit 4.9 + d/34.4 of 12 clean, 6 spots, + 3 s turn) | **homeTimer**: 17–30 (30 without a wreck) | 17 % of the fit (11–27 % of a spot's own drive) |
-| 8.11 fataga s5 | six fleeing sheep round Fataga | 21.5 (p75 18.53 of 32 + 3; median 15.90; Phase 3 r1 repair 2, the fixed walker, pool `walker-r1r2/d9451f8`; the old walker: 18 runs p75 27.94 → 39, Phase 2 30.3 of 12 → 42) | **27** (25) | 31 % at p75 |
+| 8.11 fataga s5 | six fleeing sheep round Fataga | 21.8 (p75 18.80 of 36 + 3; median 15.82; Phase 3 r3 island-camera's 36 runs, pool `walker-r1r2/r3-island-camera`: the north crags got colliders that match the rock. Before it: 21.5 (p75 18.53 of 32 + 3, later 18.36 of 36 → still 27; median 15.90; Phase 3 r1 repair 2, the fixed walker, pool `walker-r1r2/d9451f8`); the old walker: 18 runs p75 27.94 → 39, Phase 2 30.3 of 12 → 42) | **28** (25) | 33 % at p75 |
 | 8.12 grisfest s1 | five flowers round Hotel Flamenco (random spawns) | 18.2 (p75 15.73 of 28 + 2.5; median 13.32; Phase 3 r2 gate + orchestrator on ca2a3a6, pool `walker-r1r2/46a0938`: the round-2 world (the Flamenco piers solid since 46a0938); before it, r1 repair 2's fixed walker on d9451f8: p75 17.79 of 32 → 26; the old walker: 8 runs p75 29.51 → 41, Phase 2 31.1 of 12 → 42) | **23** (30) | 32 % at p75 |
 | 8.12 grisfest s4 | ten of the twelve plate stacks at the dance floor (kick; a fixed layout, three per table) | 25.8 (median 20.77 of 20 + 5, 20.77–21.03: the same tour every run; Phase 3 r1 repair 2, the fixed walker; a deterministic stage now, it was timed at the p75 of "random spawns"; the old walker: 30.33 (one run 37.95, pacing) → 45) | **33** (35) | 37 % at the median |
 | 8.12 grisfest s6 | dance floor → car at the finish → 3,1 > 2,3 → tongatonga | 15.8 (walk 3.9 + 0.5 + drive 11.4: walk + drive median 15.28 of 12 clean, + 0.5; Phase 3 r1 repair 2, the fixed walker: 33 m in 3.9 s where the old one took 44–45 m and 6.3–6.5 s; was 19.0 → 23) | **19** (30) | 17 % |
@@ -2205,7 +2211,7 @@ the tourists' pity into a sheep stampede you have to round up.
    round), Mamma facing the camera and the tourists either side of her, half turned to her. With
    the tourists at `fataga`, 13 m away, the two-shot stood 24 m out inside a village house, and a
    two-shot at the stall put the sisters in front of Mamma from one side.)
-5. `rabbits({ mesh: 'faar', count: 6, near: 'fataga', rMin: 10, rMax: 35, timer: 27, text: 'Fånga fåren åt Josés pappa', barLabel: 'FÅR', gotText: 'Bäää!', failText: 'Fåren sprang hela vägen till Maspalomas.', checkpoint: true, retryAt: { x: -240, z: -208.5, yaw: 0 } })`  [N]
+5. `rabbits({ mesh: 'faar', count: 6, near: 'fataga', rMin: 10, rMax: 35, timer: 28, text: 'Fånga fåren åt Josés pappa', barLabel: 'FÅR', gotText: 'Bäää!', failText: 'Fåren sprang hela vägen till Maspalomas.', checkpoint: true, retryAt: { x: -240, z: -208.5, yaw: 0 } })`  [N]
    (Phase 3: a checkpoint. The retry is on foot by the bus stop: `approachSpot` puts the player on
    the pavement at (−240, −207) facing the village (Phase 3 r3: then turned to the nearest sheep,
    the retry's guide, §9.4 item 3), where the calibrate starts the chase
@@ -3431,13 +3437,23 @@ sight line: met at a slant the line's 0.45 m left it 0.05–0.3 m from the wall,
 (Flamenco's piers 0.31 m, the band 0.21 m, window boxes 0.42 m). It is pushed out; if a solid then
 stands between it and the pivot (a corner), it is pulled in along the sight line until the disc is
 clear. **Camera ceilings** (§14.7) keep the eye out of registered overhangs, on foot and (Phase 3
-r2) in cars. **Side slide** (Phase 3 r2, on foot): his back to a wall under a low ceiling, the
-capped climb left the eye 0.35–0.6 m over his head (a top-down view of his shoulders); when a
-ceiling has capped the pulled-in eye nearer the pivot than `ARM` − 0.05, it slides along the wall
-(the side with more room, or the side it is on; tested at 0.25 m with the 0.45 m stand-off) to
-`SIDE` 2.6 m from the pivot, and down to 0.6 m above the pivot only as far as that keeps it no
-nearer than before: a three-quarter view of him with the way ahead (at 1.5–1.9 m he filled the
-frame). Every pull-in, push or slide snaps the eye (no damping lag into the wall). **Dialogue framing** (`frame`, `frameOne` without a profile): the side whose sight line is
+r2) in cars. **Side slide** (Phase 3 r2, on foot; continuous since r3): his back to a wall under a
+low ceiling, the capped climb left the eye 0.35–0.6 m over his head (a top-down view of his
+shoulders), and a capped eye 1.6–2.6 m out sat against his back with his head cut off. When a
+ceiling caps the eye or hangs within 0.5 m above it (`ceilingOver`, grown 0.3 m) and the eye is
+nearer the pivot than `SIDE` 2.6 m, the eye's target is a slide along the wall to `SIDE` from the
+pivot (the side it is on, unless the other side has `SLIDE_HYST` 0.5 m more room; tested at 0.25 m
+with the 0.45 m stand-off; no slide with less than 0.3 m of room), and down to 0.6 m above the pivot
+only as far as that keeps it no nearer than before: a three-quarter view of him with the way ahead
+(at 1.5–1.9 m he filled the frame). The slide is a lateral offset kept in the rig (`cam.slide`, + =
+his right), eased towards its target, out at `SLIDE_K` 6/s (towards 0 once no ceiling is near or the
+eye is `SIDE` out) and in at `SLIDE_IN` 12/s (the eye starts out close over his head), and cut each
+frame to the room each side has; it is 0 in cars, with a profile and
+after a snap. Until r3 it was all or nothing (only nearer than `ARM` − 0.05) and every frame with a
+wall behind snapped the eye: walking out from under a porch, the eye jumped 2.2–2.7 m in one frame
+(141 of 606 real-input walks under the island's ceilings). Every pull-in or push snaps the eye (no
+damping lag into the wall) — in height only downwards: a ceiling that stops capping lets the eye
+rise at the damped rate (9.8/s). **Dialogue framing** (`frame`, `frameOne` without a profile): the side whose sight line is
 clear; when both are blocked, the side with more room, the eye 0.45 m short of the solid (≥ 1.6 m
 out) instead of inside a house (fataga's 13 m two-shot).
 
@@ -3570,6 +3586,10 @@ ceiling(minX, minZ, maxX, maxZ, under, top);  ceilingOver(x, z, y, margin = 0) -
 ceilingHit(ax, ay, az, bx, by, bz, minUnder, out, grow = 0.3, below = 0.3) -> out.first (nearest along a→b, out.t 0..1)
 //   or null; out.low = the hit with the lowest underside. Each ceiling is a box: footprint grown by
 //   `grow`, from under − `below` up to top; ceilings with under ≤ minUnder are skipped (Phase 3 r2)
+//   Phase 3 r3: a ceiling may carry `underOnly: true` (it counts only when a is under its grown footprint or b inside its box:
+//   the `parasoll` props, which stand in rows on the beach, where the sight-line rule would pump the
+//   eye down and up every few metres) and `block` (the prop's collision block: skipped while the prop
+//   is smashed, `block.dead`); ceilingOver skips dead ones too.
 discPush(x, z, r, y, out, ignoreKind = 'prop') -> bool; out.x/out.z = the push that takes a disc of radius r
 //   out of every solid with top ≥ y (two passes, for corners) (Phase 3 r2)
 //   Frame.ceiling(lx, lz, w, d, under, top) registers one from a local rectangle. CamRig.update
@@ -3587,13 +3607,19 @@ discPush(x, z, r, y, out, ignoreKind = 'prop') -> bool; out.x/out.z = the push t
 //   (x 16.7–20, under C + 2.15 = the sign board's bottom), the SunTrip office awning (under
 //   C + 2.45 = the valance); every centre.js `arcade()` (La Medina's two, the plaza's north row:
 //   under = the roof slab), Centro Nórdico's canopy (x ±11, under 3.5), the Casa Lola pergola
-//   (under 2.9), the church portico (4.0), Gasolina's pump canopy (5.0), shop canopy (3.4) and
+//   (under 2.72 = the lowest bulb, Phase 3 r3; was 2.9 with the lights sagging to 2.44), the church
+//   portico (4.0), Gasolina's pump canopy (5.0), shop canopy (3.4) and
 //   workshop bays (4.0). Phase 3 r2: the whole pool-bar thatch (x 16.7–25.3, z 6.9–17.1, under
 //   C + 2.45 = the fringe); Flamenco's south strip from the open rooms' back wall to the balcony
 //   edge (x ±26.15, z −21.5…−12.65: rooms 107/113, the patios' piers and band, the balcony row;
 //   under C + 3.45 = the band, top = the roof), the north access galleries (z −28.25…−27, under
 //   Y1 − 0.2 = C + 3.6, top the roof) and the back door's canopy (C + 2.45); every straw parasol
 //   (2.8 m square, under C + 2.14 = the fringe, top C + 3.2: Flamenco's deck, SunTrip's terrace);
+//   Phase 3 r3: every café parasol (`cafeTable` with `parasol`, 2.9 m square, under
+//   its floor + 2.34 = the rim, top + 3.0: La Medina's courtyard, Bar Svenska and upper terrace,
+//   the plaza's El Patio) and every standing `parasoll` prop (2.3 m square, under its foot +
+//   2.07, top + 2.6; `canopy` in props.js, §6.8: the plaza's arcade tables, Flamenco's deck, the
+//   beach rows; `underOnly`);
 //   SunTrip's four courtyard balcony rows (1.25 m deep, under Y1 − 0.2 = C + 3.0, top the roof);
 //   Centro Nórdico's SUPERMERCADO and FERRETERÍA awnings (x −28.7…−11.3 and 11.3…28.7, z 12–13.4,
 //   under 2.74 = the valance); every `lagenhet` slab's entrance canopy (under C + 2.65), first
@@ -5130,3 +5156,52 @@ the fixer's group.
   bungalow seller) with `OUCH_STAFF` (`Aj!`, `Hoppsan!`, `Det ingår inte i mina åtaganden!` [F*])
   for `ouch` (§14.10; r3text-3): run over, the platschef threatened to talk to the platschef, and
   SunTrip's own staff swore off SunTrip and the fuel surcharge.
+- r3 island-camera: the side slide is continuous (§14.5; r3island-1, a regression of r2 islandA-4 a):
+  it triggers when a ceiling caps the eye or hangs within 0.5 m above it and the eye is nearer the
+  pivot than `SIDE` (was: capped and nearer than `ARM` − 0.05, so a capped eye 1.6–2.6 m out sat
+  against his back); the lateral offset lives in the rig (`cam.slide`), eases in at `SLIDE_IN` 12/s
+  and out at `SLIDE_K` 6/s, keeps its side unless the other has `SLIDE_HYST` 0.5 m more room, and is
+  cut each frame to the room each side has; a snap moves the eye's height only down. Real-input walks
+  (ts 1) under every island ceiling, out of them and along them (the r3 island critic's `jitter`):
+  one-frame eye jumps over 1 m in 140 of 604 walks → 1 (a 1.03 m drop under the SUPERMERCADO awning,
+  the same before: the cap snaps the eye down when a pole pulls it in at once), sideways jumps over
+  0.5 m in 139 walks → 0, the largest move otherwise 0.67 m; on ordinary sidewalks none before or
+  after (96 walks); frames with the eye within 1.5 m of the head 532 in 68 walks → 406 in 17 (the 242
+  walks run on both). The chase-camera sweep (16 blocks):
+  eye in a collider 0 → 0, eye inside a mesh 94 → 78, player hidden 1004 → 805; cars 0 → 0, 34 → 34,
+  456 → 426.
+- r3 island-camera: camera ceilings over every café parasol (`cafeTable` with `parasol`) and every
+  standing `parasoll` prop (§14.7, §6.8; r3island-5): the El Patio, La Medina and Viking Bar terrace
+  tables hid a player at them from the 3.47 m eye. The props' ceilings are `underOnly` (they count
+  only with him under one or the eye in one: walking past a beach row the sight-line rule would pump
+  the eye down and up) and carry the prop's `block` (gone while it is smashed); `ceilingHit` and
+  `ceilingOver` skip a dead one. The `parasoll` canopy is raised from a 1.72 to a 2.07 m rim (top
+  2.2 → 2.55): at 1.72 it cut through his head from either side of it. No collider, route or timer
+  changes (the pole stays r 0.25).
+- r3 island-camera: Fataga's six north crags get the mesh's widest section as a collider, a box
+  0.85·sx × 0.53·sz along the long axis besides `rock()`'s circle (§6.3; r3island-2): the 1 m circle
+  let the player 2–3 m into the 4–7 m rocks (2.8–5.5 m² of rock taller than 1 m per crag outside any
+  solid → 0.6–1.3 m² of slivers at most 0.3 m deep), and under the fold's shelter the chase eye ended
+  inside the rock (the sweep's Fataga eye-inside 17 → 3, hidden 172 → 82). The sheep run there: a new
+  pool, `CAL=balls,sheep FOOT_RUNS=12` ×3, 36 runs 10.22–29.52 s, median 15.82, p75 18.80 → fataga
+  sheep **28** (was 27; range 25–29; §8 table, §8.11 s5, island.js, fixture,
+  `notes/calibration-samples.md`).
+- r3 island-camera: the plaza north row's shop names stand on 3.5 × 0.8 m boards on the arcade's front
+  above each arch's crown, two lines where needed (§6.3; r3island-3): the 5.6–6.6 m signs on the shop
+  wall at 3.62 hung behind 3.93 m arches and read "CAF…", "…MERA", "…CAMBIO".
+- r3 island-camera: the friskotek notice board is solid along its 2.2 m (§6.3; r3island-4): with only
+  its posts solid he walked through it and the eye, capped under the wing's balconies, stood behind it
+  with the board filling the frame. The balls lawn's edge: a new pool, 36 runs 7.20–20.93 s, median
+  13.40, p75 15.56 → friskotek balls **24** (unchanged; range 22–25).
+- r3 island-camera: the `MERCADILLO · MARKNAD` entrance board hangs at 3.85–4.95 (was 2.35–3.45, at
+  the chase eye's height; §6.3; r3island-6); its legs and their colliders stay where they were.
+- r3 island-camera: Casa Lola's string lights hang from the cross beams' underside (3.08) with a 0.15
+  sag, the lowest bulb at 2.72, and the pergola's camera ceiling is under 2.72 (cap 2.42; was 2.9 /
+  2.6 under lights sagging to 2.44, a bulb over his head; §6.3, §14.7; r3island-7).
+- r3 island-camera: the SKANDAL officer's route (§7.2; shame.js `planOfficer`, a consequence of the
+  solid crags): one box between him and the player is rounded by its corners (`cornerDetour`), and
+  the street route's kerb point moves along the street to one that sees the player. With the crags
+  solid, `skandal`'s "behind a building" check failed (deterministically: he went out to the north
+  kerb, where the crag stood between him and the player, and needed about 10 s; on 302d4c2 he took
+  about 7 s by walking through the rock); now he rounds the house in 4 s. `skandal`, `CAL=pursuit`
+  (the car escape: clean 2 of 3 escaped, one crash 0 of 3) pass.

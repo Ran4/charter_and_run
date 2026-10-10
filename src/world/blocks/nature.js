@@ -738,8 +738,15 @@ function fataga(f, W, ctx) {
   for (const [x, z] of [[-9.6, -13], [9.6, -23], [30, -30], [-30, -30.5], [-30, -13]]) tunera(f, x, z, 1, rnd);
   for (const [x, z] of [[-4.6, 17.5], [4.2, 27.4], [16.4, -2.6], [-8.9, -4.2], [17.4, -17.6]]) boug(f, x, z, 0.8);
   agave(f, 11, -9); agave(f, -10.4, 13);
-  // Ochre crags behind the village (north edge), clear of the sidewalk ped loop at -32.6.
-  for (let k = 0; k < 6; k++) rock(f, -28 + k * 11 + rnd() * 3, -29.5 + rnd(), 5 + rnd() * 3, 3 + rnd() * 2.5, 2.4, k % 2 ? ROJO2 : OCHRE, rnd() * 3);
+  // Ochre crags behind the village (north edge), clear of the sidewalk ped loop at -32.6. Each is
+  // 0.85·sx long: besides rock()'s 1 m circle (the waist) it gets the mesh's widest section, a box
+  // 0.85·sx × 0.53·sz along its long axis (r3: the circle alone let the player walk 2–3 m into the
+  // rock, and under the fold shelter the chase eye ended inside it).
+  for (let k = 0; k < 6; k++) {
+    const x = -28 + k * 11 + rnd() * 3, z = -29.5 + rnd(), sx = 5 + rnd() * 3, sy = 3 + rnd() * 2.5, ry = rnd() * 3;
+    rock(f, x, z, sx, sy, 2.4, k % 2 ? ROJO2 : OCHRE, ry);
+    ramp(f.wx(x, z), f.wz(x, z), ry + PI / 2, 2.4 * 0.526, sx * 0.85, CURB + sy * 0.75, CURB + sy * 0.75, 'rock');
+  }
   // Village sign at the entry, a bench, wall lanterns.
   postSign(f, 'FATAGA', 5.2, 29.4, 3.2, 0.8, 1.4, 0, { bg: '#f4efe6', fg: '#1d1426' });
   f.prop('bank', -3.6, 3.4, PI / 2);

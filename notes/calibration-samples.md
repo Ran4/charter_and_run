@@ -48,7 +48,7 @@ and could not check them either. A timer whose runs nobody can see is a guess.
 
 Sample ids: `p2` Phase 2, `r2g1` r2 gate 1 (`D` default `calibrate`, `F` its flowers run, `C` default `calibflight`), `orc` the orchestrator, `fm` r2 flight-missions, `is` r2 island-staging, `wt` r1 world-town, `if` r1 island-flow, `g1` r1 gate 1, `r1` r1 repair
 1, `g2` r1 gate 2 (`R1`/`R2`: its two default-env `calibrate` runs, `X`: its extra balls run),
-`r2` r1 repair 2, `r3ff` r3 flight-flow, `r3fl` r3 flight-look.
+`r2` r1 repair 2, `r3ff` r3 flight-flow, `r3fl` r3 flight-look, `r3ic` r3 island-camera.
 
 ## `friskotekBalls` · §8.7 s1 · six fleeing beach balls · on foot: timer = ceil(1.25 × (p75 + 6 × 0.5))
 
@@ -57,7 +57,10 @@ Storchs, Ole), so the chase starts from Stig's placed spot (−11.0, −69.4) wi
 elsewhere: a new stage, a new pool (named after that fixer's commit). The rows above it ran the old
 intro (Stig on the approach spot) and do not pool with it.
 
-Current pool: `walker-r1r2/r2-island-staging`: n 40, median 13.59, p75 15.41 → T_ref 18.41 → timer ceil(1.25 × 18.41) = **24** (90 % range 22–24).
+Phase 3 r3 island-camera made the notice board on the lawn's west edge solid (x −21.66…−21.54,
+z 2.9…5.1 in the block; only its posts were): the lawn's world changed, a new pool.
+
+Current pool: `walker-r1r2/r3-island-camera`: n 36, median 13.40, p75 15.56 → T_ref 18.56 → timer ceil(1.25 × 18.56) = **24** (90 % range 22–25).
 
 | sample | date | code | pool | env | n | raw times (s, run order) | excluded (reason) |
 |---|---|---|---|---|---|---|---|
@@ -78,10 +81,17 @@ Current pool: `walker-r1r2/r2-island-staging`: n 40, median 13.59, p75 15.41 →
 | is-2 | 2026-10-10 | 61bbcea + uncommitted: r2 island-staging (the friskotek intro's placements; `calibrate.mjs` sha1 f671042a7dfe, unchanged) | `walker-r1r2/r2-island-staging` | CAL=balls FOOT_RUNS=12 | 12 | 13.07 11.02 13.87 11.48 13.18 15.95 11.18 12.75 9.50 10.22 12.58 15.03 | none (falls 0, wedges 0) |
 | is-3 | 2026-10-10 | 61bbcea + uncommitted: r2 island-staging (the friskotek intro's placements; `calibrate.mjs` sha1 f671042a7dfe, unchanged) | `walker-r1r2/r2-island-staging` | CAL=balls FOOT_RUNS=12 | 12 | 18.63 11.62 15.22 13.87 14.53 10.73 17.20 5.98 14.28 16.08 20.83 11.65 | none (falls 0, wedges 0) |
 | r2g1-D | 2026-10-10 | ca2a3a6 | `walker-r1r2/r2-island-staging` | default (FOOT_RUNS=4, JEEP_RUNS=12, PLATE_RUNS=6) | 4 | 15.45 9.82 15.53 12.65 | none (falls 0, wedges 0) |
+| r3ic-1 | 2026-10-10 | 302d4c2 + uncommitted: r3 island-camera (the Fataga crags' box colliders and the friskotek notice board's solid; `calibrate.mjs` sha1 f671042a7dfe, unchanged) | `walker-r1r2/r3-island-camera` | CAL=balls,sheep FOOT_RUNS=12 | 12 | 9.68 17.58 15.82 10.70 7.20 13.33 19.73 12.40 12.93 11.77 15.30 15.47 | none (falls 0, wedges 0) |
+| r3ic-2 | 2026-10-10 | 302d4c2 + uncommitted: r3 island-camera (the Fataga crags' box colliders and the friskotek notice board's solid; `calibrate.mjs` sha1 f671042a7dfe, unchanged) | `walker-r1r2/r3-island-camera` | CAL=balls,sheep FOOT_RUNS=12 | 12 | 20.93 17.07 12.97 13.15 16.60 13.23 16.37 11.17 9.58 14.52 14.68 16.23 | none (falls 0, wedges 0) |
+| r3ic-3 | 2026-10-10 | 302d4c2 + uncommitted: r3 island-camera (the Fataga crags' box colliders and the friskotek notice board's solid; `calibrate.mjs` sha1 f671042a7dfe, unchanged) | `walker-r1r2/r3-island-camera` | CAL=balls,sheep FOOT_RUNS=12 | 12 | 11.68 12.43 15.05 13.22 16.75 10.50 13.73 14.78 12.40 13.47 14.57 12.50 | none (falls 0, wedges 0) |
 
 ## `fatagaSheep` · §8.11 s5 · six fleeing sheep · on foot: timer = ceil(1.25 × (p75 + 6 × 0.5))
 
-Current pool: `walker-r1r2/d9451f8`: n 32, median 15.90, p75 18.53 → T_ref 21.53 → timer ceil(1.25 × 21.53) = **27** (90 % range 25–31).
+Phase 3 r3 island-camera gave Fataga's six north crags box colliders along their long axis (the
+1 m circle let the player 2–3 m into the rock; the sheep run there): the village's world changed, a
+new pool. The previous one, `walker-r1r2/d9451f8`, ended at n 36 (p75 18.36 → 27).
+
+Current pool: `walker-r1r2/r3-island-camera`: n 36, median 15.82, p75 18.80 → T_ref 21.80 → timer ceil(1.25 × 21.80) = **28** (90 % range 25–29).
 
 | sample | date | code | pool | env | n | raw times (s, run order) | excluded (reason) |
 |---|---|---|---|---|---|---|---|
@@ -96,6 +106,9 @@ Current pool: `walker-r1r2/d9451f8`: n 32, median 15.90, p75 18.53 → T_ref 21.
 | r2-C | 2026-10-09 | d9451f8 + uncommitted: this repair's `calibrate.mjs` (sha1 f671042a7dfe, the committed file; and the timers of this repair in island.js) | `walker-r1r2/d9451f8` | default (FOOT_RUNS=4, JEEP_RUNS=12, PLATE_RUNS=6) | 4 | 21.33 14.03 16.43 11.27 | none (falls 0, wedges 0) |
 | r2-D | 2026-10-09 | d9451f8 + uncommitted: this repair's `calibrate.mjs` (sha1 f671042a7dfe, the committed file) and the final timers (the commit's tree) | `walker-r1r2/d9451f8` | default (FOOT_RUNS=4, JEEP_RUNS=12, PLATE_RUNS=6) | 4 | 27.77 16.90 15.90 15.90 | none (falls 0, wedges 0) |
 | r2g1-D | 2026-10-10 | ca2a3a6 | `walker-r1r2/d9451f8` | default (FOOT_RUNS=4, JEEP_RUNS=12, PLATE_RUNS=6) | 4 | 18.37 15.00 12.93 15.62 | none (falls 0, wedges 0) |
+| r3ic-1 | 2026-10-10 | 302d4c2 + uncommitted: r3 island-camera (the Fataga crags' box colliders and the friskotek notice board's solid; `calibrate.mjs` sha1 f671042a7dfe, unchanged) | `walker-r1r2/r3-island-camera` | CAL=balls,sheep FOOT_RUNS=12 | 12 | 12.43 16.17 13.38 14.08 17.17 12.68 15.80 15.55 15.53 17.52 15.78 18.75 | none (falls 0, wedges 0) |
+| r3ic-2 | 2026-10-10 | 302d4c2 + uncommitted: r3 island-camera (the Fataga crags' box colliders and the friskotek notice board's solid; `calibrate.mjs` sha1 f671042a7dfe, unchanged) | `walker-r1r2/r3-island-camera` | CAL=balls,sheep FOOT_RUNS=12 | 12 | 16.67 20.20 15.25 13.58 19.53 15.83 14.27 22.95 20.88 16.47 14.18 19.60 | none (falls 0, wedges 0) |
+| r3ic-3 | 2026-10-10 | 302d4c2 + uncommitted: r3 island-camera (the Fataga crags' box colliders and the friskotek notice board's solid; `calibrate.mjs` sha1 f671042a7dfe, unchanged) | `walker-r1r2/r3-island-camera` | CAL=balls,sheep FOOT_RUNS=12 | 12 | 12.60 18.97 12.98 17.57 14.53 16.90 29.52 23.87 10.22 13.18 11.22 27.07 | none (falls 0, wedges 0) |
 
 ## `grisfestFlowers` · §8.12 s1 · five static flowers, random spawns · on foot: timer = ceil(1.25 × (p75 + 5 × 0.5))
 

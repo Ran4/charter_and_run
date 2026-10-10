@@ -5,7 +5,7 @@
 //   Every car-smashable prop has top > 0.75 (cars ride over anything with top <= y + 0.6).
 
 import { THREE, GeoBuilder, MAT, PRIM, outlineGeometry, outlineMat, mat } from '../gfx.js';
-import { box, circle } from './collision.js';
+import { box, circle, ceiling } from './collision.js';
 
 const CURB = 0.15;
 
@@ -89,14 +89,16 @@ const SPEC = {
       g.box(0x1c7fb8, 0, 0.95, 0.07, 0.07, 0.07, 0.1);
     },
   },
-  // Beach parasol: orange-and-cream striped canopy on a pole with a concrete foot.
+  // Beach parasol: orange-and-cream striped canopy on a pole with a concrete foot. The canopy's rim
+  // is at 2.07, over his head (Phase 3 r3: at 1.72 it cut through his head whichever side the eye
+  // was on), and a camera ceiling while the parasol stands (`canopy`: half-width, underside, top).
   parasoll: {
-    r: 0.25, top: 2.2, coins: 1, shame: 1, minSpeed: 3, color: BUTANO,
+    r: 0.25, top: 2.55, coins: 1, shame: 1, minSpeed: 3, color: BUTANO, canopy: [1.15, 2.07, 2.6],
     build(g) {
       g.cyl(0xb8b4aa, 0, 0.06, 0, 0.24, 0.12, 10);
-      g.cyl(0xe8e4da, 0, 1.0, 0, 0.035, 1.9, 6);
-      for (let k = 0; k < 8; k++) g.add(sliceGeo(k, 8), k % 2 ? 0xfaf3e2 : BUTANO, mat(0, 1.96, 0, 0, 0, 0, 2.3, 0.48, 2.3));
-      ball(g, 0xfaf3e2, 0, 2.21, 0, 0.09);
+      g.cyl(0xe8e4da, 0, 1.175, 0, 0.035, 2.25, 6);
+      for (let k = 0; k < 8; k++) g.add(sliceGeo(k, 8), k % 2 ? 0xfaf3e2 : BUTANO, mat(0, 2.31, 0, 0, 0, 0, 2.3, 0.48, 2.3));
+      ball(g, 0xfaf3e2, 0, 2.56, 0, 0.09);
     },
   },
   // Sunbed with a backrest and a SunTrip-yellow towel (the Swedes reserve them early).
@@ -356,6 +358,10 @@ export function finalizeProps(scene) {
       const turned = Math.abs(Math.sin(p.yaw)) > 0.7;
       const hw = (turned ? def.d : def.w) / 2, hd = (turned ? def.w : def.d) / 2;
       prop.block = box(p.x - hw, p.z - hd, p.x + hw, p.z + hd, top, 'prop', prop);
+    }
+    if (def.canopy) {
+      const [h, u, t] = def.canopy, c = ceiling(p.x - h, p.z - h, p.x + h, p.z + h, p.baseY + u, p.baseY + t);
+      c.underOnly = true; c.block = prop.block;
     }
     props.push(prop);
     setMatrix(prop, true);

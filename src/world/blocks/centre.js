@@ -307,6 +307,7 @@ function cafeTable(f, x, z, o = {}) {
     f.cyl(STEEL, x, y0 + 1.3, z, 0.04, 2.6, 6);
     cone(f, o.parasol, x, y0 + 2.62, z, 1.45, 0.55, 8);
     cone(f, WHITE2, x, y0 + 2.92, z, 0.2, 0.2, 8);
+    f.ceiling(x, z, 2.9, 2.9, y0 + 2.34, y0 + 3.0);   // the chase camera stays under the canopy
   }
   f.circ(x, z, 0.56, y0 + 0.8, 'table');
 }
@@ -940,11 +941,14 @@ function plaza(f) {
   for (let k = 0; k <= 12; k++) us.push(-18.6 + k * (47.2 / 12));
   arcade(nr, us, 2.4, { top: 4.4, spring: 2.25, al: 0, capC: OCHRE, band: OCHRE });
   rflat(f, CREAM, -19, -17, 29, -14.6, CURB + 0.025);
-  const mid = (k) => (us[k] + us[k + 1]) / 2;   // each shop's sign centred in an arch
-  const shopsN = [[mid(1), 8, 'CAFETERÍA EL SOL', '#f07a1e', '#fff8e6'], [mid(3), 7.6, 'HELADERÍA LA PALMERA', '#f4d0e0', '#c2307a'], [mid(5), 7.4, 'CORREOS · TELÉGRAFOS', '#f7c31b', '#1d1426'], [mid(7), 7.4, 'BANCO · CAMBIO', '#2f5a9a', '#ffffff'], [mid(10), 7, 'PELUQUERÍA', '#1e9aa0', '#ffffff']]; // [N]
+  // Each shop's name board stands on the arcade's front above its arch's crown (4.09), one bay wide
+  // (Phase 3 r3: on the shop wall at 3.62 the 5.6–6.6 m boards hung behind the arches, which showed
+  // only their middle third).
+  const mid = (k) => (us[k] + us[k + 1]) / 2;
+  const shopsN = [[mid(1), 8, 'CAFETERÍA\nEL SOL', '#f07a1e', '#fff8e6'], [mid(3), 7.6, 'HELADERÍA\nLA PALMERA', '#f4d0e0', '#c2307a'], [mid(5), 7.4, 'CORREOS\nTELÉGRAFOS', '#f7c31b', '#1d1426'], [mid(7), 7.4, 'BANCO\nCAMBIO', '#2f5a9a', '#ffffff'], [mid(10), 7, 'PELUQUERÍA', '#1e9aa0', '#ffffff']]; // [N]
   for (const [u, w, name, bg, fg] of shopsN) {
     shopGlass(nr, u, w, { h: 3.0, glass: GLASS });
-    nr.sign(name, u, 3.62, 0.12, w - 1.4, 0.55, 0, { bg, fg, border: null, scale: 0.78 });
+    board(nr, name, u, 4.5, 3.5, 0.8, { bg, fg, scale: 0.84, z: 2.52, backC: OCHRE });
   }
   for (const fl of [5.9, 8.4]) for (let k = 0; k < 12; k++) {
     const u = mid(k);
@@ -995,7 +999,7 @@ function plaza(f) {
   door(cl, -1, 1.5, 2.4, GREEN, { split: true });
   for (const u of [-5.5, 3, 6.5]) win(cl, u, 1.75, 1.3, 1.4, { shutters: GREEN, flowers: true });
   board(cl, 'CASA LOLA · COMIDA CANARIA', -1, 3.22, 7.8, 0.72, { bg: '#fff8e6', fg: '#c0623a', scale: 0.66, backC: GREEN, border: '#2f8a4a' }); // [N] stands in for Grill Paco (§1.5)
-  // Bougainvillea along the eave, above the pergola's camera cap (2.6), short of the name board.
+  // Bougainvillea along the eave, above the pergola's camera cap (2.42), short of the name board.
   for (let k = 0; k < 9; k++) f.ico(BOUG, 13.3 + k * 0.3, 3.45 + Math.sin(k) * 0.12, 14.1, 0.6 + (k % 3) * 0.15);
   for (let k = 0; k < 5; k++) f.ico(BOUG, 28.9, CURB + 1.6 + k * 0.45, 5.0 + k * 1.6, 0.8);
   {
@@ -1004,9 +1008,11 @@ function plaza(f) {
     for (const x of [12.2, 16.6, 21.0, 25.4, 29.6]) {
       rbox(f, WOOD, x - 0.08, 14.6, x + 0.08, 29.8, 3.08, 0.14);
       for (let k = 0; k < 7; k++) sph(f, k % 2 ? PALM : PALM2, x + R(-0.25, 0.25), 3.22, 15.8 + k * 2.2, 0.7, 0.32, 1.1);
-      stringLights(f, [x, 3.0, 15.0], [x, 3.0, 29.4], 10, 0.35);
+      stringLights(f, [x, 3.08, 15.0], [x, 3.08, 29.4], 10, 0.15);   // under the beam, the lowest bulb at 2.72
     }
-    f.ceiling(20.9, 22.2, 17.6, 15.2, 2.9, 3.6);   // the chase camera stays under the beams
+    // The chase camera stays under the beams and the bulbs, its eye at 2.42 (Phase 3 r3: capped at
+    // 2.6 with the lights sagging to 2.44, a bulb sat over his head).
+    f.ceiling(20.9, 22.2, 17.6, 15.2, 2.72, 3.6);
     for (const [x, z] of [[15.0, 19.0], [22.8, 18.2], [27.4, 20.2], [15.0, 25.6], [22.4, 27.0], [27.6, 27.2]]) cafeTable(f, x, z, { check: true, chairs: 4, chairC: 0x8a5a2a });
     for (const x of [12.25, 14.75, 17.25, 23.25, 25.75, 28.25]) f.prop('mur', x, 30.3, 0);
     for (const z of [16.25, 18.75, 26.25, 28.75]) f.prop('mur', 11.3, z, HP);
@@ -1118,7 +1124,9 @@ function marknad(f) {
     bunting(f, [s * 6.6, 5.2, 29.2], [s * 3.6, 4.55, -14.6], 60, 0.9);
   }
   bunting(f, [-6.6, 6.5, 29.2], [6.6, 6.5, 29.2], 18, 0.9);
-  standSign(f, 'MERCADILLO · MARKNAD', -12.5, 29.6, 2.9, 6.2, 1.1, 0, { bg: '#d8321e', fg: '#fff8e6', border: '#f7c31b', scale: 0.62, backC: WOOD_D }); // [N]
+  // The entrance board spans the path above the chase eye (3.85–4.95; Phase 3 r3: at 2.35–3.45 it
+  // covered the player walking in from the south road).
+  standSign(f, 'MERCADILLO · MARKNAD', -12.5, 29.6, 4.4, 6.2, 1.1, 0, { bg: '#d8321e', fg: '#fff8e6', border: '#f7c31b', scale: 0.62, backC: WOOD_D }); // [N]
   standSign(f, 'LUNES A SÁBADO · 9–14', 12.5, 29.6, 1.6, 3.0, 0.6, 0, { bg: '#fff8e6', fg: '#1d1426', scale: 0.62 }); // [N]
   for (const z of [20, 4, -12]) bunting(f, [-4.6, 4.6, z], [4.6, 4.6, z], 12, 0.5);
   f.car('van', -26.2, 23.0, PI, { color: 0xe8e0c8 });

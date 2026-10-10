@@ -14,7 +14,7 @@ import { AIDriver } from '../actors/drivers.js';
 import { Character } from '../actors/character.js';
 import { CHARS } from '../actors/models.js';
 import { nodeX, nodeZ, nodeI, nodeJ, nodeId, NN, N, P, HALF, LANE, neighbors, nearestNode, cellCorners, landmarks } from '../world/layout.js';
-import { segmentBlocked } from '../world/collision.js';
+import { segmentBlocked, queryBlocks, contains, BOX } from '../world/collision.js';
 import { audio } from '../audio.js';
 import { hud } from './hud.js';
 import { fx } from './fx.js';
@@ -23,6 +23,34 @@ import { S, pta } from '../strings.js';
 
 const STEER_REPLAN = 0.25;   // s between officer route plans
 const rc = (i) => i * P - HALF;
+const _qb = [];
+
+// The officer's way round one building (Phase 3 r3): when the first solid between (ax, az) and the
+// player is a box, its corners 0.8 m out, one or two of them along its faces, when every leg is
+// clear. Returns the furthest corner of the shortest such path he can see (on the first corner he
+// heads for the second), or null.
+function cornerDetour(ax, az, px, pz, y) {
+  const t = segmentBlocked(ax, az, px, pz, y);
+  const hx = ax + (px - ax) * t, hz = az + (pz - az) * t;
+  const b = queryBlocks(hx - 0.1, hz - 0.1, hx + 0.1, hz + 0.1, _qb).find((q) => q.shape === BOX && q.kind !== 'prop' && q.top >= y && contains(q, hx, hz));
+  if (!b) return null;
+  const m = 0.8, cs = [[b.minX - m, b.minZ - m], [b.maxX + m, b.minZ - m], [b.maxX + m, b.maxZ + m], [b.minX - m, b.maxZ + m]];
+  const clear = (x0, z0, x1, z1) => segmentBlocked(x0, z0, x1, z1, y) < 0;
+  let best = null, bd = Infinity;
+  for (let i = 0; i < 4; i++) {
+    const [x1, z1] = cs[i];
+    if (!clear(ax, az, x1, z1)) continue;
+    const d1 = Math.hypot(x1 - ax, z1 - az);
+    if (clear(x1, z1, px, pz)) { const d = d1 + Math.hypot(px - x1, pz - z1); if (d < bd) { bd = d; best = cs[i]; } continue; }
+    for (const j of [(i + 1) % 4, (i + 3) % 4]) {
+      const [x2, z2] = cs[j];
+      if (!clear(x1, z1, x2, z2) || !clear(x2, z2, px, pz)) continue;
+      const d = d1 + Math.hypot(x2 - x1, z2 - z1) + Math.hypot(px - x2, pz - z2);
+      if (d < bd) { bd = d; best = d1 < 1.5 || clear(ax, az, x2, z2) ? cs[j] : cs[i]; }
+    }
+  }
+  return best && { x: best[0], z: best[1] };
+}
 
 export class Shame {
   constructor(game) {
@@ -318,14 +346,30 @@ export class Shame {
     st.mode = 'direct'; st.x = p.x; st.z = p.z;
     if (!this.game.levelDef.routeAim) return;
     if (segmentBlocked(o.x, o.z, p.x, p.z, y) < 0) return;
+    // One building between them: round its corners (the street route below goes out to the kerb and
+    // back in; with Fataga's crags solid it took 10 s round a village house: Phase 3 r3).
+    const c = cornerDetour(o.x, o.z, p.x, p.z, y);
+    if (c) { st.mode = 'route'; st.x = c.x; st.z = c.z; return; }
     // The kerb point nearest the player: the closest point on the four streets around his block.
     const ci = clamp(Math.floor((p.x + HALF) / P), 0, N - 1), cj = clamp(Math.floor((p.z + HALF) / P), 0, N - 1);
     const x0 = rc(ci), x1 = rc(ci + 1), z0 = rc(cj), z1 = rc(cj + 1);
-    let kx = p.x, kz = z0, kd = Math.abs(p.z - z0);
+    let kx = p.x, kz = z0, kd = Math.abs(p.z - z0), alongX = true;
     if (Math.abs(p.z - z1) < kd) { kd = Math.abs(p.z - z1); kz = z1; }
-    if (Math.abs(p.x - x0) < kd) { kd = Math.abs(p.x - x0); kx = x0; kz = p.z; }
-    if (Math.abs(p.x - x1) < kd) { kd = Math.abs(p.x - x1); kx = x1; kz = p.z; }
+    if (Math.abs(p.x - x0) < kd) { kd = Math.abs(p.x - x0); kx = x0; kz = p.z; alongX = false; }
+    if (Math.abs(p.x - x1) < kd) { kd = Math.abs(p.x - x1); kx = x1; kz = p.z; alongX = false; }
     kx = clamp(kx, rc(0), rc(N)); kz = clamp(kz, rc(0), rc(N));
+    // A kerb point with something solid between it and the player (a house, Fataga's crags: Phase 3
+    // r3) only brings him to stand at the kerb: move it along the street, up to 16 m either way, to
+    // the nearest point that sees the player.
+    if (segmentBlocked(kx, kz, p.x, p.z, y) >= 0) {
+      for (let s = 2; s <= 16; s += 2) {
+        const hit = [s, -s].find((v) => {
+          const qx = alongX ? clamp(kx + v, rc(0), rc(N)) : kx, qz = alongX ? kz : clamp(kz + v, rc(0), rc(N));
+          return segmentBlocked(qx, qz, p.x, p.z, y) < 0;
+        });
+        if (hit !== undefined) { if (alongX) kx = clamp(kx + hit, rc(0), rc(N)); else kz = clamp(kz + hit, rc(0), rc(N)); break; }
+      }
+    }
     const end = nearestNode(kx, kz);
     // Start at the corner of his own cell that is visible and cheapest overall.
     let start = end, bc = Infinity;

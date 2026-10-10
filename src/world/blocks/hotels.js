@@ -990,8 +990,11 @@ function suntripLawn(f, rnd, glow) {
   let k = 0;
   for (const x of [-19, -16.4, -13.8, -6.2, -3.6, -1]) f.flat(mats[k++ % mats.length], x, 11.2, 1.0, 1.9, Y_DEEP);
   // Notice board (Lasse: "Friskoteket börjar halv tio varje morgon", relocated as a sign).
+  // The board is solid too (Phase 3 r3: with only its posts solid he walked through it, and the
+  // chase eye stood behind it with the board filling the frame).
   for (const z of [3.1, 4.9]) { f.box(WOOD, -21.6, C, z, 0.12, 2.6, 0.12); f.circ(-21.6, z, 0.1, 99, 'pole'); }
   f.sign('FRISKOTEKET\nVARJE MORGON 9.30', -21.5, C + 1.95, 4, 2.2, 1.0, PI / 2, { bg: '#1e9aa0', fg: '#fff8e6', border: '#f7c31b', scale: 0.55, double: true });   // [F*]
+  f.solid(-21.6, 4, 0.12, 2.2, C + 2.45, 'sign');
   // Benches and planters along the lawn edge, palms on the lawn.
   for (const [x, z, y] of [[-20.6, -12, PI / 2], [-20.6, -4, PI / 2], [8.4, -12, -PI / 2]]) f.prop('bank', x, z, y);   // the east one clear of the stage (x ≤ 7)
   for (const [x, z, s, t] of [[-19.5, -19.5, 1.3, false], [-19.8, 9.5, 1.2, true], [5.5, -20, 1.25, false], [3.8, 9.8, 1.15, false]]) palm(f, x, z, s, t);
