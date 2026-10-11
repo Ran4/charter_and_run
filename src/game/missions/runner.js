@@ -291,6 +291,11 @@ export class MissionRunner {
     audio.jingle('fail');
     hud.showBanner(S.failed, reason, 'bad', 0);
     this.cleanupMission();
+    // The checkpoint stage's startCue hides hold through the fail screen, as on the retry that
+    // re-applies them; Q's placement sends them home. Phase 3 r3: the forced placement showed them at
+    // home at once, and Angerud popped in at his Viking Bar door when asnan's paint drive failed in
+    // sight of the bar.
+    for (const k of def.stages[this.cpI]().startCue?.hide || []) g.hideNpc(k);
     g.shame.clear();
     def.onEnd?.(g, 'fail');
     g.restoreAmbience();

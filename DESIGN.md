@@ -2106,9 +2106,11 @@ then a nervous drive with a wet-painted donkey on board.
    `startCue: { hide: ['angerud'] }` (Phase 3 r3 repair): his home is the bar door
    (`['vikingbar', 2.0, 1.0]`, 1.1 m from Stig's outro spot), so he stood there in plain view as the
    car pulled up and through the walk-up to the door, spoiling the outro's gag. He is hidden from the
-   lot, three blocks from the bar, and a retry from this checkpoint hides him again (`fail()` puts
-   everyone home). He stands 2.2 m from `vikingbar` and the drive ends at 7 m, so the car can never
-   reach him: the timer stands (§8 table).
+   lot, three blocks from the bar, and a retry from this checkpoint hides him again. The fail screen
+   keeps him hidden too (Phase 3 r3 repair2, §9.4 item 3: `fail()`'s placement put him back at the
+   door, in view under "Tiden är ute!" when the timer ran out or the SKICK bar emptied on the last
+   stretch); Q (give up) sends him home. He stands 2.2 m from `vikingbar` and the drive ends at 7 m,
+   so the car can never reach him: the timer stands (§8 table).
 10. `goto({ to: 'vikingbar', radius: 2.5, onFoot: true, text: 'Lämna paketet i baren' })`
 
 **Outro** (`outroPlace: { carmencita: ['vikingbar', -0.8, 1.6, 0], stig: ['vikingbar', 0.9, 1.3, 1.75] }`, `outroHide: ['angerud']`, `outroCam: { at: 'vikingbar', dist: 6.5, height: 3.4 }`: one shot of the bar front from the street, high enough to see over a car parked at the door, held to the end; Carmencita faces it (Phase 3, she showed her back) and Stig stands side-on to her on the spot where Angerud stands later. Phase 3 r3: Angerud, placed there by `outroPlace`, stood between Stig and Carmencita while Stig handed the package in, before "Senare samma dag…", and Stig said his line three-quarters from behind; now the two never meet. Do not only drop Angerud from `outroPlace`: the giver two-shot then loses the VIKING BAR sign and the old `cut: null` went back to it with Angerud over Carmencita. Phase 3 r3 repair: the first line's `hide` came too late, since `complete()`'s placement put him back at his bar door, beside Stig and Carmencita, through the 1.6 s UPPDRAG KLART! wait; `outroHide` (§9.4 item 5) keeps him hidden from there, and stage 9's `startCue` before it):
@@ -2751,7 +2753,12 @@ Runner changes (Phase 0):
    exempt).
    **The fail screen** (`updateFailed`): after 0.8 s, **E** retries and **Q** gives up; there is
    no time-out (Phase 3: a silent 15 s give-up lost the checkpoint and a restart pays `cost`
-   again).
+   again). The keys in the checkpoint stage's `startCue.hide` (stage `cpI`, resolved from its
+   factory as `retry()` does) stay hidden on it: `fail()` hides them again (`hideNpc`) right after
+   `cleanupMission()`'s `placeNpcs(true)`, in the same frame; the retry's `startStage` re-applies the
+   cue, and Q's `placeNpcs(true)` puts them home. (Phase 3 r3 repair2: the placement showed them at
+   home at once, and Angerud popped in at his Viking Bar door, under "Tiden är ute!", when asnan's
+   paint drive failed in sight of the bar, §8.8 stage 9; that is the only such stage.)
    **`retryCar`** (Phase 3; common option on the checkpoint stage, `kinds/core.js retryCar`): a
    retry otherwise leaves the player on foot at `retryAt` with his car wherever the mission failed
    and the mission cars gone, so a checkpoint before a timed drive could not be won. With
@@ -5495,3 +5502,14 @@ the fixer's group.
   the `calibflight` autopilots walk their own waypoints): on the final code gate 3.6 s → 6 (walk
   5.12, the dawdler's PANIK at 5.2 s, retry 70.4 for 70.1), ombord 3.1 / 4.42 s → 7, landning 7.6 /
   6.9 s → 12 and 1.3 / 3.22 s → 5.
+- r3 repair2-island-staging: the **fail screen keeps the checkpoint stage's `startCue.hide`** (§9.4
+  item 3, §8.8 stage 9; runner.js `fail()`; verifier 2's regression r3v2-staging-1 of r3
+  repair-island-staging): `fail()` hides those keys again right after `cleanupMission()`'s
+  `placeNpcs(true)`, in the same frame, so the fail screen shows what the retry will; Q's
+  `placeNpcs(true)` puts them home. asnan's paint drive is the only checkpoint stage with a `hide`:
+  with its timer run out 17 m from the bar (ts 1, the real drive and route), Angerud was `normal` at
+  his door 23 m from the lens beside Carmencita under "Tiden är ute!" from the fail on; now he stays
+  `hidden` through the fail screen (+0/150/600/1200 ms), is hidden on E's retry (the drive done again,
+  14.9 s, hidden out of the car and through the banner; his outro lines unchanged), and Q puts him
+  back at the door (`normal`, (−178, −63), not busy). A SKICK fail takes the same path. The fail
+  screen only: no timer moves.
