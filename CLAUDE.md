@@ -107,8 +107,8 @@ opens with a summary of the rounds and the timer changes.
   (`game/missions/kinds/*`) were frozen. That is why some features are reached through options
   and hooks (`worldHooks`, kind options, `addInteractable`) instead of edits to those files. The
   freeze is over: since Phase 2 any file may change, but the DESIGN contract changes with it.
-- **Worktrees.** The Phase 1 branches `p1-<WP>` have worktrees in
-  `../.wt/charter-<WP>` (A1 A2 B C1 C2 D1 D2 E F G H). They are merged history: leave them
-  alone, don't edit or delete them, and don't run the game from them. Tags: `phase0a`,
+- **Branches and tags.** Only `main`. The Phase 1 branches `p1-<WP>` and their worktrees in
+  `../.wt/charter-<WP>` were merged in Phase 2 and removed on 2026-10-12 at the user's request (their
+  commits are in main's history; `../.wt/saab_work` belongs to another project). Tags: `phase0a`,
   `phase0`, `phase2-merged`, `phase2-contracts`, `phase2-balance`, `phase2-docs`, `phase2`,
   `phase3-r1`, `phase3-r2`, `phase3`. Commits are local only (no remote, never push).

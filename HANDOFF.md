@@ -29,8 +29,8 @@ Earlier hand-offs are in git history: the Phase 2 → 3 hand-off (this file at `
   `notes/calibration-samples.md`; `node tools/pool.mjs` re-derives every one. Phase 3's sampling
   closed on 2026-10-11 with every run pooled; the balls, sheep and flowers pools sit on a rounding
   boundary, so the next default `calibrate` run may move one of them by a second, by the rule.
-- **Two questions for the user are open** (§6): may the Phase 1 worktrees and `p1-*` branches go,
-  and will the user listen to the music and play a level by hand?
+- **Open with the user** (§6): will they listen to the music and play a level by hand? (The Phase 1
+  worktrees and `p1-*` branches were removed on 2026-10-12, at the user's yes.)
 - Commits on `main` are allowed. Never push; there is no remote.
 
 ---
@@ -57,12 +57,12 @@ It is its own local git repo, on branch `main`, with no remote.
 
 `git log --oneline phase3-r2..phase3` lists round 3's commits; `git log --oneline` the full history.
 
-**Phase 1 worktrees and branches.**
-- The branches `p1-A1 … p1-H` are merged. Their worktrees are in
-  `/home/ran/src/html/everything_and_run/.wt/charter-<WP>`.
-- Leave them alone. Don't run the game from them.
-- The final report asks the user whether to remove them (§6).
-- `.git/info/exclude` lists `node_modules`, because each worktree holds an untracked symlink.
+**Phase 1 worktrees and branches: removed.**
+- The branches `p1-A1 … p1-H` were merged in Phase 2 (`phase2-merged`). On 2026-10-12, with the
+  user's yes, their worktrees in `/home/ran/src/html/everything_and_run/.wt/charter-<WP>` were
+  removed (`git worktree remove`) and the branches deleted (`git branch -d`); their commits stay in
+  main's history. `main` is the only branch. `../.wt/saab_work` belongs to another project.
+- `.git/info/exclude` lists `node_modules` (the worktrees held an untracked symlink to it).
 - Round 1's repair 2 ran on a branch `p3-r1-repair2` (merged as 61bbcea, branch since deleted);
   every other Phase 3 step committed straight to `main`.
 
@@ -536,6 +536,7 @@ this file in step with the code; the orchestrator's three green `story` runs com
 - known issues (§4)
 - the commits, tags and branches created
 - two questions:
-  - May the Phase 1 worktrees (`../.wt/charter-*`) and the `p1-*` branches be removed?
+  - May the Phase 1 worktrees (`../.wt/charter-*`) and the `p1-*` branches be removed? (Answered
+    yes on 2026-10-12; removed.)
   - Will the user listen to the music and the trad melodies, and play one level by hand, to check
     the feel? Headless runs can't judge either.
