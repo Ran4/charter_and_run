@@ -324,13 +324,14 @@ export const FULL_MISSIONS = [
       () => goto({ to: 'supermercado', radius: 8, inCar: true, passenger: 'ole', text: 'Leta knäckebröd – samma sort som i julklappen' }),
       () => grab({ at: 'supermercado', mesh: 'knacke', text: 'Ta ett SPORT-KNÄCKE-paket', say: ['stig', 'Det är ungefär så här stort.'] }),   // [F](t)
       () => scene({ frame: ['ole', 'stig'], lines: [['ole', 'Og så maler vi den rød.', { cut: 'ferreteria' }], ['stig', 'Och blommor där.']], doneCue: { flash: 'rgba(216,50,30,.4)', toast: 'Åsnan är nu en dalahäst. Nästan.' } }),   // [F*](t) · [F](t)
-      () => goto({ to: 'vikingbar', radius: 7, inCar: true, passenger: 'ole', timer: 19, fragile: { label: 'SKICK', failText: 'Färgen blev förstörd!' }, text: 'Kör försiktigt till Viking Bar – färgen är våt!', checkpoint: true, retryAt: 'supermercado', retryCar: { at: { ...lm('supermercado'), yaw: 0 }, passenger: 'ole' } }),
+      () => goto({ to: 'vikingbar', radius: 7, inCar: true, passenger: 'ole', timer: 19, fragile: { label: 'SKICK', failText: 'Färgen blev förstörd!' }, text: 'Kör försiktigt till Viking Bar – färgen är våt!', checkpoint: true, retryAt: 'supermercado', retryCar: { at: { ...lm('supermercado'), yaw: 0 }, passenger: 'ole' }, startCue: { hide: ['angerud'] } }),
       () => goto({ to: 'vikingbar', radius: 2.5, onFoot: true, text: 'Lämna paketet i baren' }),
     ],
     outroPlace: { carmencita: ['vikingbar', -0.8, 1.6, 0], stig: ['vikingbar', 0.9, 1.3, 1.75] },
+    outroHide: ['angerud'],
     outroCam: { at: 'vikingbar', dist: 6.5, height: 3.4 },
     outro: [
-      ['stig', 'Ett paket till Viking Bar. Det är till en moster.', { hide: ['angerud'] }],   // [N]
+      ['stig', 'Ett paket till Viking Bar. Det är till en moster.'],   // [N]
       ['carmencita', 'Jag lägger det bakom disken.', { toast: 'Senare samma dag…' }],      // [N]
       ['angerud', 'Buenas dias, lilla vikingen. Har paketet kommit?', { place: { stig: ['vikingbar', 4, -9, 0], angerud: ['vikingbar', 0.9, 1.3, 0] } }],   // [F]
       ['angerud', 'God jul, moster.'],                                                   // [F]
@@ -522,7 +523,7 @@ export const FULL_MISSIONS = [
         majsan: [['majsan', 'Titta inte! Det är en hemlighet.']],                                                     // [N]
       } }),
       () => goto({ to: 'flamencoPool', radius: 8, text: 'Till julfesten vid poolen!', startCue: { music: 'jul', outfit: { who: 'lasse', name: 'jul' } } }),
-      () => scene({ place: { lasse: ['flamencoPool', 0, 3], ole: ['flamencoPool', -1.5, 1], herrStorch: ['flamencoPool', 3, 2], fruStorch: ['flamencoPool', 4, 2], majsan: ['flamencoPool', -2.5, 0.5], siv: ['flamencoPool', -3.5, 1], berra: ['flamencoPool', 5, -1], robban: ['flamencoPool', 6, -1], portier: ['flamencoPool', -7, 0.5, -Math.PI / 4] }, lines: [
+      () => scene({ place: { lasse: ['flamencoPool', 0, 3], ole: ['flamencoPool', -1.5, 1], herrStorch: ['flamencoPool', 3, 2], fruStorch: ['flamencoPool', 4, 2], majsan: ['flamencoPool', -2.5, 0.5], siv: ['flamencoPool', -3.5, 1], berra: ['flamencoPool', 5, -1], robban: ['flamencoPool', 6, -1], portier: ['flamencoPool', -6, 0.5, -Math.PI / 4] }, lines: [
         ['lasse', 'Hej tomtegubbar, slå i glasen… Skål och god jul!', { music: 'hejTomtegubbar', applause: 2 }],      // [F](t)
         ['ole', 'Ta av lokket! Objektivlokket. Må ta av det, vet du.'],                                              // [F]
         ['ole', 'Har du filmet sånn lenge?'],                                                                       // [F]

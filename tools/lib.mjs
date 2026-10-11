@@ -185,6 +185,7 @@ export async function missionDataProblems(_unused, fixtureUrl) {
     lm(d.at, 'at');
     for (const e of d.extra || []) npc(Array.isArray(e) ? e[0] : e, 'extra');
     places(d.outroPlace, 'outroPlace');
+    for (const k of d.outroHide || []) npc(k, 'outroHide');
     if (Array.isArray(d.outroCam)) d.outroCam.forEach((k) => npc(k, 'outroCam')); else if (d.outroCam && d.outroCam !== 'player') lm(d.outroCam, 'outroCam');
     lines(d.intro, 'intro');
     lines(d.outro, 'outro');

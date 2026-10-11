@@ -275,21 +275,26 @@ export const ISLAND_MISSIONS = [
         ['stig', 'Och blommor där.'],                                 // [F](t)
       ], doneCue: { flash: 'rgba(216,50,30,.4)', toast: 'Åsnan är nu en dalahäst. Nästan.' } }),   // toast [N]
       // A checkpoint: a failed paint drive retries from the lot, Ole beside the player, facing the
-      // street (the calibrate start), not from the market and a second haggle.
+      // street (the calibrate start), not from the market and a second haggle. Angerud (whose home is
+      // the bar door) is hidden from here, far from the bar, so neither the drive's arrival nor the
+      // walk-up shows him there before his own outro line; a retry hides him again.
       () => goto({
         to: 'vikingbar', radius: 7, inCar: true, passenger: 'ole', timer: TIMERS.asnanPaint, fragile: { label: 'SKICK', failText: 'Färgen blev förstörd!' }, text: 'Kör försiktigt till Viking Bar – färgen är våt!',   // [N]
         checkpoint: true, retryAt: 'supermercado', retryCar: { at: { ...lm('supermercado'), yaw: 0 }, passenger: 'ole' },
+        startCue: { hide: ['angerud'] },
       }),
       () => goto({ to: 'vikingbar', radius: 2.5, onFoot: true, text: 'Lämna paketet i baren' }),   // [N]
     ],
     // One shot of the bar front from the street (high enough to see over a car parked at the door).
     // Stig hands the package in side-on to Carmencita, on the spot where Angerud stands later; Angerud
     // (whose home is the bar) is out of the shot until "Senare samma dag…" has passed and Stig has
-    // left, so the two never meet (Phase 3 r3: he stood between them from the first line).
+    // left, so the two never meet (Phase 3 r3: he stood between them from the first line). The
+    // complete() placement puts him back at the bar door for the UPPDRAG KLART! wait: `outroHide`.
     outroPlace: { carmencita: ['vikingbar', -0.8, 1.6, 0], stig: ['vikingbar', 0.9, 1.3, 1.75] },
+    outroHide: ['angerud'],
     outroCam: { at: 'vikingbar', dist: 6.5, height: 3.4 },
     outro: [
-      ['stig', 'Ett paket till Viking Bar. Det är till en moster.', { hide: ['angerud'] }],   // [N]
+      ['stig', 'Ett paket till Viking Bar. Det är till en moster.'],   // [N]
       ['carmencita', 'Jag lägger det bakom disken.', { toast: 'Senare samma dag…' }],      // [N]
       ['angerud', 'Buenas dias, lilla vikingen. Har paketet kommit?', { place: { stig: ['vikingbar', 4, -9, 0], angerud: ['vikingbar', 0.9, 1.3, 0] } }],   // [F]
       ['angerud', 'God jul, moster.'],                                                   // [F] he reads the card
@@ -628,9 +633,10 @@ export const ISLAND_MISSIONS = [
       () => goto({ to: 'flamencoPool', radius: 8, text: 'Till julfesten vid poolen!', startCue: { music: 'jul', outfit: { who: 'lasse', name: 'jul' } } }),   // [N]
       // The party payoffs: one group shot from the pool deck (everyone faces it, yaw 0), Stig among
       // the guests, the porter watching from the side; the bodega cutaway returns to the group shot.
+      // The porter stands left of the parasol (at dx −7 the raised canopy edge crossed his face).
       () => scene({
         cam: PARTY_CAM,
-        place: { lasse: ['flamencoPool', 0, 3, 0], ole: ['flamencoPool', -1.5, 1, 0], herrStorch: ['flamencoPool', 3, 2, 0], fruStorch: ['flamencoPool', 4, 2, 0], majsan: ['flamencoPool', -2.5, 0.5, 0], siv: ['flamencoPool', -3.5, 1, 0], berra: ['flamencoPool', 5, -1, 0], robban: ['flamencoPool', 6, -1, 0], stig: ['flamencoPool', 1.0, 1.0, 0], portier: ['flamencoPool', -7, 0.5, -PI / 4] },
+        place: { lasse: ['flamencoPool', 0, 3, 0], ole: ['flamencoPool', -1.5, 1, 0], herrStorch: ['flamencoPool', 3, 2, 0], fruStorch: ['flamencoPool', 4, 2, 0], majsan: ['flamencoPool', -2.5, 0.5, 0], siv: ['flamencoPool', -3.5, 1, 0], berra: ['flamencoPool', 5, -1, 0], robban: ['flamencoPool', 6, -1, 0], stig: ['flamencoPool', 1.0, 1.0, 0], portier: ['flamencoPool', -6, 0.5, -PI / 4] },
         lines: [
           ['lasse', 'Hej tomtegubbar, slå i glasen… Skål och god jul!', { music: 'hejTomtegubbar', applause: 2 }],      // [F](t)
           ['ole', 'Ta av lokket! Objektivlokket. Må ta av det, vet du.'],                                              // [F]

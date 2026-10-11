@@ -2,6 +2,7 @@
 //   { id, title, level, giver, at, reward, cost?, extra?, unlock?, bustFails?, panicFails?,
 //     intro: [[who, text, cue?]], stages: [() => stage], outro: [[who, text, cue?]],
 //     outroPlace?: { key: [lm, dx, dz, yaw?] }, outroCam?: 'player' | [a, b] | { at, dist, height },
+//     outroHide?: [key],   // hidden from the UPPDRAG KLART! wait until an outro cue shows them
 //     idleAnim?: { key: flag | [flags] },   // held on the giver/extras while idle at `at`
 //     onEnd?(g, reason) }   // reason: 'complete' | 'fail' | 'abort'
 // States: idle | intro | running | outro | failed. Frozen after Phase 0 (owner none).
@@ -211,6 +212,9 @@ export class MissionRunner {
     audio.jingle('complete');
     g.addCoins(def.reward);
     g.placeNpcs(true);
+    // The forced placement shows everyone with a home again; `outroHide` keeps the ones an outro
+    // reveals later out of the banner wait (Phase 3 r3: Angerud at his bar door through asnan's).
+    for (const k of def.outroHide || []) g.hideNpc(k);
     await g.wait(1.6);
     // The outro: exit the car, place people, pick the speaker and the camera.
     if (g.playerCar) g.exitCar(true);

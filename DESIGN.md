@@ -2074,14 +2074,20 @@ then a nervous drive with a wet-painted donkey on board.
    two-shot that "Och blommor där." went back to framed neither speaker, from a drive-in (Stig's
    head above the frame, Ole off screen), on foot (a 14 m shot of Stig's back) or at all (Ole
    behind the car body, Stig's head behind the lens). `scene` ends the cut.)
-9. `goto({ to: 'vikingbar', radius: 7, inCar: true, passenger: 'ole', timer: 19, fragile: { label: 'SKICK', failText: 'Färgen blev förstörd!' }, text: 'Kör försiktigt till Viking Bar – färgen är våt!', checkpoint: true, retryAt: 'supermercado', retryCar: { at: { ...lm('supermercado'), yaw: 0 }, passenger: 'ole' } })`  [N]
+9. `goto({ to: 'vikingbar', radius: 7, inCar: true, passenger: 'ole', timer: 19, fragile: { label: 'SKICK', failText: 'Färgen blev förstörd!' }, text: 'Kör försiktigt till Viking Bar – färgen är våt!', checkpoint: true, retryAt: 'supermercado', retryCar: { at: { ...lm('supermercado'), yaw: 0 }, passenger: 'ole' }, startCue: { hide: ['angerud'] } })`  [N]
    (Phase 3: a checkpoint. A failed paint drive retries in the Centro Nórdico lot with Ole beside
    the player, facing the street, the calibrate start; it used to replay the market drive and the
    haggle, which pays the 200 again.)
+   `startCue: { hide: ['angerud'] }` (Phase 3 r3 repair): his home is the bar door
+   (`['vikingbar', 2.0, 1.0]`, 1.1 m from Stig's outro spot), so he stood there in plain view as the
+   car pulled up and through the walk-up to the door, spoiling the outro's gag. He is hidden from the
+   lot, three blocks from the bar, and a retry from this checkpoint hides him again (`fail()` puts
+   everyone home). He stands 2.2 m from `vikingbar` and the drive ends at 7 m, so the car can never
+   reach him: the timer stands (§8 table).
 10. `goto({ to: 'vikingbar', radius: 2.5, onFoot: true, text: 'Lämna paketet i baren' })`
 
-**Outro** (`outroPlace: { carmencita: ['vikingbar', -0.8, 1.6, 0], stig: ['vikingbar', 0.9, 1.3, 1.75] }`, `outroCam: { at: 'vikingbar', dist: 6.5, height: 3.4 }`: one shot of the bar front from the street, high enough to see over a car parked at the door, held to the end; Carmencita faces it (Phase 3, she showed her back) and Stig stands side-on to her on the spot where Angerud stands later. Phase 3 r3: Angerud, placed there by `outroPlace`, stood between Stig and Carmencita while Stig handed the package in, before "Senare samma dag…", and Stig said his line three-quarters from behind; now the two never meet. Do not only drop Angerud from `outroPlace`: the giver two-shot then loses the VIKING BAR sign and the old `cut: null` went back to it with Angerud over Carmencita):
-- stig: "Ett paket till Viking Bar. Det är till en moster."  [N]  {hide: ['angerud']} (his home is the bar)
+**Outro** (`outroPlace: { carmencita: ['vikingbar', -0.8, 1.6, 0], stig: ['vikingbar', 0.9, 1.3, 1.75] }`, `outroHide: ['angerud']`, `outroCam: { at: 'vikingbar', dist: 6.5, height: 3.4 }`: one shot of the bar front from the street, high enough to see over a car parked at the door, held to the end; Carmencita faces it (Phase 3, she showed her back) and Stig stands side-on to her on the spot where Angerud stands later. Phase 3 r3: Angerud, placed there by `outroPlace`, stood between Stig and Carmencita while Stig handed the package in, before "Senare samma dag…", and Stig said his line three-quarters from behind; now the two never meet. Do not only drop Angerud from `outroPlace`: the giver two-shot then loses the VIKING BAR sign and the old `cut: null` went back to it with Angerud over Carmencita. Phase 3 r3 repair: the first line's `hide` came too late, since `complete()`'s placement put him back at his bar door, beside Stig and Carmencita, through the 1.6 s UPPDRAG KLART! wait; `outroHide` (§9.4 item 5) keeps him hidden from there, and stage 9's `startCue` before it):
+- stig: "Ett paket till Viking Bar. Det är till en moster."  [N] (Angerud, whose home is the bar, hidden by `outroHide`)
 - carmencita: "Jag lägger det bakom disken."  [N]  {toast: 'Senare samma dag…'}
 - angerud: "Buenas dias, lilla vikingen. Har paketet kommit?"  [F]  {place: {stig: ['vikingbar', 4, -9, 0], angerud: ['vikingbar', 0.9, 1.3, 0]}} (Stig, who has left, out of the shot; Angerud where Stig stood, facing the street)
 - angerud: "God jul, moster."  [F] (he reads the card)
@@ -2398,7 +2404,7 @@ then every running gag pays off by the pool before the fear-of-flying arc closes
    - berra (behind the hotel, staring at nothing in particular): stig "Berra! Julfesten!" [N] · berra "Jag kommer, jag ska bara kolla en grej." [N]
    - majsan (at the market, hiding something): majsan "Titta inte! Det är en hemlighet." [N]
 2. `goto({ to: 'flamencoPool', radius: 8, text: 'Till julfesten vid poolen!', startCue: { music: 'jul', outfit: { who: 'lasse', name: 'jul' } } })`  [N]
-3. `scene({ place: { lasse: ['flamencoPool', 0, 3], ole: ['flamencoPool', -1.5, 1], herrStorch: ['flamencoPool', 3, 2], fruStorch: ['flamencoPool', 4, 2], majsan: ['flamencoPool', -2.5, 0.5], siv: ['flamencoPool', -3.5, 1], berra: ['flamencoPool', 5, -1], robban: ['flamencoPool', 6, -1], portier: ['flamencoPool', -7, 0.5, -π/4] }, lines: [...] })` — the party payoffs (the porter watches from the side, by the pool-deck Christmas tree):
+3. `scene({ place: { lasse: ['flamencoPool', 0, 3], ole: ['flamencoPool', -1.5, 1], herrStorch: ['flamencoPool', 3, 2], fruStorch: ['flamencoPool', 4, 2], majsan: ['flamencoPool', -2.5, 0.5], siv: ['flamencoPool', -3.5, 1], berra: ['flamencoPool', 5, -1], robban: ['flamencoPool', 6, -1], portier: ['flamencoPool', -6, 0.5, -π/4] }, lines: [...] })` — the party payoffs (the porter watches from the side, by the pool-deck Christmas tree; Phase 3 r3 repair: at dx −7 the edge of a parasol canopy between him and the lens, raised to 2.07 m for the on-foot camera (island-camera), crossed his face on his line, 3 of 5 rays; at −6 he stands left of the parasol, face clear, 35 px, facing 0.95; an untimed scene, no timer moves):
    - lasse: "Hej tomtegubbar, slå i glasen… Skål och god jul!"  [F](t)  {music: 'hejTomtegubbar', applause: 2}
    - ole: "Ta av lokket! Objektivlokket. Må ta av det, vet du."  [F]
    - ole: "Har du filmet sånn lenge?"  [F]
@@ -2669,6 +2675,7 @@ def = { id, title, level: 'flight' | 'island', giver, at, reward,
                                // yaw = optional absolute world yaw (else the landmark's yaw)
   idleAnim?: { key: flag | [flags] },  // anim flags held on the giver/extras while idle (Polish)
   outroCam?: 'player' | [a, b] | { at, dist, height },
+  outroHide?: [key],           // hidden through the UPPDRAG KLART! wait until an outro cue shows them
   onEnd?(g, reason),           // 'complete' | 'fail' | 'abort'
 };
 ```
@@ -2759,6 +2766,12 @@ Runner changes (Phase 0):
    `outroCam` is given the player is not moved, e.g. ropavieja's spying shot.) The `UPPDRAG
    KLART!` banner (`+{reward} pesetas`, `pta()`), shown when the last stage is done, is hidden when
    the outro dialogue starts 1.6 s later (Phase 3: it sat over the framed faces of the first line).
+   **`outroHide`** (Phase 3 r3 repair): `complete()` runs `cleanupMission()` and `placeNpcs(true)`
+   before that 1.6 s wait, which shows every NPC with a home again, so a hide cue from a stage or the
+   first outro line could not keep someone out of the wait. The keys in `outroHide` are hidden
+   (`hideNpc`) right after that placement, in the same frame; an outro `place`/`show` cue shows them
+   again, and the idle `placeNpcs(true)` after the outro puts them home (asnan: Angerud, whose home is
+   the Viking Bar's door, §8.8). The `missions` data checks resolve its keys.
 6. **Ambience**: `fail()` and `abort()` call `def.onEnd?.(g, reason)` and `g.restoreAmbience()`
    (level tune, `mantraMode = false`; island: level palette; flight: the cabin goes back to the
    level's ambient state for the current index: `cabin.stopTurbulence()` (Phase 2), then
@@ -4184,7 +4197,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 
 | scenario | asserts / shots |
 |---|---|
-| `missions` [Phase 0] | for N = 0..12: `fresh('&mission=N')`: `level === levelFor(N)`, giver visible within 40 m of `at`, no errors; at `&mission=1`: `cabin.seatOf(npc('ole')) === '14A'` and Majsan seated in 16E (cast seated from the start of ombord); **data checks**: every key used in any `place`/`extra`/`outroPlace`/`who`/`findAt`/`standAt`/`sendTo`/`frame`/`duet` resolves via `game.npc(key)`; every `checkpoint: true` stage acting > 60 m from `def.at` has `retryAt` (§9.4) |
+| `missions` [Phase 0] | for N = 0..12: `fresh('&mission=N')`: `level === levelFor(N)`, giver visible within 40 m of `at`, no errors; at `&mission=1`: `cabin.seatOf(npc('ole')) === '14A'` and Majsan seated in 16E (cast seated from the start of ombord); **data checks**: every key used in any `place`/`extra`/`outroPlace`/`outroHide`/`who`/`findAt`/`standAt`/`sendTo`/`frame`/`duet` resolves via `game.npc(key)`; every `checkpoint: true` stage acting > 60 m from `def.at` has `retryAt` (§9.4) |
 | `gate` [A1] | mission 0 loaded: shots of arch, lounge, toilet, bridge; walking into every gate wall for 2 s keeps `cabin.inside()` true; the arch is the only way out of the landside pocket; `kontrollant` and the `gateQueue` warp spot are not inside a solid |
 | `cabin` [A1] | `setPhase(p, {instant})` for every phase → shot each; walk into each cabin wall 2 s → still inside; `camera.position.y > 4`; seated heads clear of the overhead (a 9 × 9 ray grid per head: no rack, rail or service unit in front of any sample, from the row-14 aisle view and the 14A/14B and 16E/16F two-shots; Phase 3, §5.3); row-number strip shot; after `?mission=2` boots and after `setNpcOutfit('ole', 'flyg')`, Ole's root world position is within 0.5 m of seat 14A; player at `galleyBack` and `toiletBackL` with camera yaw toward the nose → shot + raycast: no airframe mesh between camera and player; juice [0] running: from the aisle at row 14 (x −0.3, −0.2 and 0.25, four facings) the seat prompt is 14B, and E from x −0.3 seats him in 14B (Phase 3 r3 repair, §5.10) |
 | `trolley` [A1] | `startTrolley`; stand in the aisle ahead for 40 s: `stats.bowled ≥ 1`, fear rose, no NaN; stepping into a free row avoids it; an NPC standing in the aisle makes the trolley wait (not shoved); Phase 3 r3: landning started with the auto trolley aft of row 16 has it parked at `trolleyPark` (`stop`) in the round-up, and a stage-1 checkpoint retry keeps it there (§5.8, §9.4 item 3) |
@@ -5299,3 +5312,21 @@ the fixer's group.
 - r3 repair-flight: a full `calibflight` run's 5 sprit sweeps join the pool (same stage and sweeper
   code): n 76, 5.40–7.80 s, median 7.36, p75 7.60 → still **13** (90 % range 13–13; §8 table, §8.4,
   flight.js header, `notes/calibration-samples.md` r3rf-C).
+- r3 repair-island-staging: asnan's Viking Bar gag no longer spoiled in play (§8.8, §9.4 item 5;
+  island.js, runner.js, fixture; RS-1, r3staging-2's residual): Angerud's home is the bar door,
+  1.1 m from Stig's outro spot, so he stood there while the car pulled up, through the walk-up to the
+  door and, re-placed by `complete()`'s `placeNpcs(true)`, beside Stig through the 1.6 s UPPDRAG
+  KLART! wait. The paint drive (stage 9, the checkpoint) hides him in its `startCue`, three blocks
+  from the bar (a retry hides him again), and the new def field **`outroHide: ['angerud']`** keeps
+  him hidden after `complete()`'s placement until his own line places him; the first outro line's
+  `hide` is gone (the field does its job). Measured at ts 1, two parking spots, one with a failed and
+  retried paint drive: hidden at the drive's start, through the walk-up and the banner, shown again
+  on the fail screen and hidden on the retry; the outro lines unchanged (Stig 58 px, facing −0.06;
+  Angerud 51 px, 0.99). The drive ends 7 m from `vikingbar` and he stood 2.2 m from it, so the car
+  could never reach him: the timer stands (checked: `CAL=asnan RUNS=3 calibrate` 15.5 / 18.2 /
+  15.5 s, T_ref 15.5 → 19 as shipped). The `missions` data checks resolve `outroHide`.
+- r3 repair-island-staging: julafton's party: the porter at `['flamencoPool', -6, 0.5, -π/4]` (was
+  −7; §8.13 stage 3, island.js, fixture; RS-2, a regression from island-camera's 2.07 m parasol
+  canopy): on "De där svenskarna är heltokiga!" the canopy's edge crossed his face (3 of 5 rays);
+  now he stands left of the parasol, face clear (line audit: 35 px, facing 0.95, no occluder; no
+  line of missions 7–12 worse). An untimed scene: no timer moves.
