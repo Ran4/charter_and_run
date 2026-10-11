@@ -3506,23 +3506,37 @@ low ceiling, the capped climb left the eye 0.35–0.6 m over his head (a top-dow
 shoulders), and a capped eye 1.6–2.6 m out sat against his back with his head cut off. When a
 ceiling caps the eye or hangs within 0.5 m above it (`ceilingOver`, grown 0.3 m) and the eye is
 nearer the pivot than `SIDE` 2.6 m, the eye's target is a slide along the wall to `SIDE` from the
-pivot (the side it is on, unless the other side has `SLIDE_HYST` 0.5 m more room, or more room than
-this side once this side has collapsed: 0.3 m or less, or `SLIDE_CUT` 0.5 m less than the slide this
-frame; tested at 0.25 m with the 0.45 m stand-off; no slide with less than 0.3 m of room), and down
-to 0.6 m above the pivot only as far as that keeps it no nearer than before: a three-quarter view of
-him with the way ahead (at 1.5–1.9 m he filled the frame). The slide is a lateral offset kept in the
-rig (`cam.slide`, + = his right), eased towards its target within one side, out at `SLIDE_K` 6/s
-(towards 0 once no ceiling is near or the eye is `SIDE` out) and in at `SLIDE_IN` 12/s (the eye
-starts out close over his head), and cut each frame to the room each side has; it is 0 in cars, with
-a profile and after a snap. Three cases are cuts (the slide goes straight to its target and the eye
-snaps with it): a **swap of sides** (eased through 0, the eye passed through his head as the camera
-turned under a low ceiling with a wall near: r3 repair); a slide that **starts as the eye is cut
-in** by more than 1 m relative to him (`cam.lpx/lpy/lpz`, last frame's pivot; a pole pulls it in as
-the camera turns, or a canopy starts to cap it and drops it: the eye jumps anyway, and eased in it
-sat over his head for a frame or two); and a **wedged** eye: 0.1 m or more behind the pivot with so
-little room to either side that the slid eye would stay nearer than `ARM` (his back in a corner: the
-back of the fold between its wall and crag 1's end), when a slide measured from the pivot itself
-(beside him) takes it further out, to the side with more room. Until r3 it was all or nothing (only
+pivot (the side it is on; tested at 0.25 m with the 0.45 m stand-off; no slide with less than 0.3 m
+of room), and down to 0.6 m above the pivot only as far as that keeps it no nearer than before: a
+three-quarter view of him with the way ahead (at 1.5–1.9 m he filled the frame). **The side** is kept
+`SLIDE_HOLD` 0.3 s (`cam.slideT`, from when the slide took it) before the other side may take over
+with `SLIDE_HYST` 0.5 m more room; sooner only when this side has collapsed and the other has more
+room: 0.3 m or less, or cut this frame by more than `SLIDE_CUT` 0.2 m (a room sample) so far that the
+slid eye would come within `NEAR` 1.2 m (level) of the pivot, with `SLIDE_HYST`/2 more room on the
+other side (r3 repair2: without the hold the eye cut from shoulder to shoulder 4 frames apart in the
+1.3 m slot by the friskotek's notice board; on any cut by 0.5 m it cut 3 m to the other shoulder for
+0.1 m more room). The slide is a lateral offset kept in the rig (`cam.slide`, + = his right), eased
+towards its target within one side, out at `SLIDE_K` 6/s (towards 0 once no ceiling is near or the
+eye is `SIDE` out) and in at `SLIDE_IN` 12/s (the eye starts out close over his head), and cut each
+frame to the room each side has; it is 0 in cars, with a profile and after a snap. Four cases are
+cuts (the slide goes straight to its target and the eye snaps with it): a **swap of sides** (eased
+through 0, the eye passed through his head as the camera turned under a low ceiling with a wall
+near: r3 repair); a slide that **starts** (under 0.3 m) **as the eye is cut in** by more than 1 m
+relative to him (`cam.lpx/lpy/lpz`, last frame's pivot; a pole pulls it in as the camera turns, or a
+canopy starts to cap it and drops it: the eye jumps anyway, and eased in it sat over his head for a
+frame or two); a slide that, eased, **would hold the eye within `CLOSE`** 1.0 m of the pivot where
+its target would not (r3 repair2: strafing under the bungalow awning the cap dropped the eye 0.95 m
+and the eased slide held it 0.72 m from his head; not at `NEAR`: walking under a balcony row with the
+eye 1.1–1.2 m over his head that turned the ease into a 2.6 m sideways cut); and a **wedged** eye:
+0.1 m or more behind the pivot with so little room to either side that the slid eye would stay
+nearer than `ARM` (his back in a corner: the back of the fold between its wall and crag 1's end),
+when a slide measured from the pivot itself (beside him) takes it further out, to the side with more
+room. Once wedged (`cam.wedged`, `cam.wedgeT`) it stays so for `SLIDE_HOLD` and then until the slid
+eye would be `ARM` + 0.3 m out, and keeps its side unless the other has `SLIDE_HYST` more room or this
+one 0.3 m or less (r3 repair2: the room is sampled every 0.25 m, and the bare test toggled as the
+camera turned under the fold's shelter, 3–4 cuts out to the side view and back per turn; a 0.3 m
+band alone still let a slow turn in and out twice, as the pull-in's 0.25 m steps moved the eye's
+base). Until r3 it was all or nothing (only
 nearer than `ARM` − 0.05) and every frame with a wall behind snapped the eye: walking out from under
 a porch, the eye jumped 2.2–2.7 m in one frame (141 of 606 real-input walks under the island's
 ceilings). Every pull-in or push snaps the eye (no
@@ -5397,3 +5411,46 @@ the fixer's group.
   24), plates n 38 (33), Tonga 18 clean runs (19), julafton 15 clean runs, median 67.3 (81), sprit
   n 86, median 7.31 (13), in the §8 table, the island.js TIMERS comments, the flight.js header and
   the ledger's Current-pool lines (Tonga's and julafton's now carry their numbers).
+- r3 repair2-island-camera: the side slide **holds its side** `SLIDE_HOLD` 0.3 s (`cam.slideT`) before
+  the other side may take over with `SLIDE_HYST` more room; sooner only once this side has collapsed:
+  0.3 m or less, or cut this frame by more than `SLIDE_CUT` (now 0.2 m, a room sample; was 0.5) so
+  far that the slid eye would come within new `NEAR` 1.2 m (level) of the pivot, with `SLIDE_HYST`/2
+  more room on the other side (§14.5; camera.js; verifier 2's regression 2 and review 2's R2). In the
+  1.3 m slot between the friskotek and its notice board (block 3,2, local (−22.2, 4)) the collapse
+  rule fired both ways and the eye cut from shoulder to shoulder 4 frames apart (3.8–5.0 m); on any
+  cut by 0.5 m it also cut 3 m to the other shoulder for 0.1 m more room. Rapid swaps (two within 15
+  frames) in the verifier's 114 named-spot turns 7 → **0** (302d4c2 has no slide state); out-and-back
+  flicks there 61 → 41 (302d4c2 33); one turn at all 507 ceiling spots (456 shared with 302d4c2):
+  one-frame jumps over 1 m 1876 → **1867** (302d4c2 2666), flicks 42 → **33** (37), rapid 0, frames
+  with the eye within 1.0 m of his head 15 at 1 spot → 15 at 1 (the fold's NW pocket, unchanged).
+- r3 repair2-island-camera: the **wedged** eye stays wedged `SLIDE_HOLD` and then until the slid eye
+  would be `ARM` + 0.3 m out, and keeps its side unless the other has `SLIDE_HYST` more room or this
+  one 0.3 m or less (`cam.wedged`, `cam.wedgeT`; §14.5; verifier 2's regression 1). Under the fold's
+  shelter (local (−20, −26.7)) the bare test toggled frame to frame as the camera turned (the room is
+  sampled every 0.25 m): 3–4 cuts out to the side view and back per turn, 18 in 6 turns. Now 1 in 6
+  (at 16 px/frame: the cut out to the side view and, 8 frames later, the swap to the other shoulder,
+  not back), 0 in the slow, steep turns (3 before); a distance band alone left a slow turn going in
+  and out twice, as the pull-in's 0.25 m steps moved the eye's base.
+- r3 repair2-island-camera: a slide that starts under 0.3 m (was: exactly 0) as the eye is cut in
+  starts at its target, and a growing slide whose eased eye would come within new `CLOSE` 1.0 m of
+  the pivot where its target's would not goes straight to its target (§14.5; verifier 2's regression
+  3, the strafe residual of r3 island-camera). Strafing along the island's canopies (184 walks) the
+  eye came within 1.0 m of his head 6 frames at 5 walks (lagenhet canopies x −266.2 / −25.9, La
+  Medina's arcade, the bungalow awning (160, −248): a slide of 0.01 / −0.16 missed the cut-in test, and
+  the awning's cap dropped the eye 0.95 m and the slide eased in) → **0** (min 0.72 → 1.11 m;
+  302d4c2 0, 1.37). At `NEAR` the same rule turned the eased slide into 2.6 m sideways cuts walking
+  under the SunTrip balcony rows and out from under the porch roof at (−64, −239), with the eye
+  1.1–1.2 m over his head.
+- r3 repair2-island-camera: kept, on the final code: the walk fix (the `jitter` walks under every
+  island ceiling, 672: 1 jump over 1 m, the SUPERMERCADO drop, as before; 0 sideways jumps), the 68
+  walk-ins (identical; the arcade café's `arcadecafe_y90` 1.47 m) and the 16 café-table walk-ins,
+  walk + turn (376 walks: eye within 1.0 m 0 frames, as before; flicks 127 → 124), the reverse turn
+  (253 spots: 0 frames within 1.0 m; flicks 15 → 14) and the slow, steep one (67 spots: flicks 13 →
+  10). No collider, route or autopilot changed and the camera offset does not steer the walker: no
+  timer moves. Known issues: the fold's NW pocket as before (15 frames within 1 m per fast turn, 39 per
+  slow one); at the notice board the eye still goes in and out as the sight line crosses the board's
+  posts (flicks 18 in 6 turns there, 302d4c2 8), and with the hold the right shoulder is kept at
+  1.16–1.26 m from his head where it used to cut across behind the board; on a slow turn the other
+  way (6 px/frame, not in the verifier's set) the eye can still take the other side (cut in from far
+  out, or at the hold's end) 8–11 frames before that side collapses: two cuts (HEAD none there; 2
+  rapid pairs in 38 slow turns, 0 in the verifier's 114).

@@ -14,10 +14,12 @@ const ARM = 1.6, CAP = 1.25;
 // The eye stays EYE_R off every solid's face. Under a low ceiling with less than SIDE of room behind
 // him (a capped climb, or a capped eye 1.6–2.6 m out), it slides sideways to SIDE from the pivot, at
 // most 0.6 m above it, instead of sitting just over his head or against his back. The slide eases
-// out at SLIDE_K per second and in at SLIDE_IN (faster: the eye starts out close over his head); the
-// other side has to offer SLIDE_HYST more room to swap, or more room than this side once this side
-// has collapsed (0.3 m or less, or SLIDE_CUT less than the slide). A swap is a cut.
-const EYE_R = 0.45, SIDE = 2.6, SLIDE_K = 6, SLIDE_IN = 12, SLIDE_HYST = 0.5, SLIDE_CUT = 0.5;
+// out at SLIDE_K per second and in at SLIDE_IN (faster: the eye starts out close over his head), but
+// never eases the eye in through CLOSE of the pivot. A side is kept SLIDE_HOLD s before the other may
+// take over with SLIDE_HYST more room; sooner only once this side has collapsed (0.3 m or less, or
+// cut by more than SLIDE_CUT this frame with the eye within NEAR of the pivot). A swap is a cut.
+const EYE_R = 0.45, SIDE = 2.6, SLIDE_K = 6, SLIDE_IN = 12, SLIDE_HYST = 0.5, SLIDE_CUT = 0.2, SLIDE_HOLD = 0.3;
+const NEAR = 1.2, CLOSE = 1.0;
 const _ch = {}, _dp = {};
 
 // A dialogue eye d m from (x, z) along (nx, nz), at height y: that side if its sight line is clear,
@@ -47,6 +49,9 @@ export class CamRig {
     this.cine = null; // { pos, look } for dialogue framing and cutaways
     this.snapNext = true;
     this.slide = 0;           // the side slide's lateral offset (m, + = his right; §14.5)
+    this.slideT = 0;          // seconds since the slide took its side
+    this.wedged = false;      // last frame's slide was measured from beside him (§14.5)
+    this.wedgeT = 0;          // seconds since it was
     this.lpx = this.lpy = this.lpz = null;   // last frame's pivot (the slide's cut-in test)
     this.profile = null;
     this.clampActive = false; // set each frame by main: flight level && cabin.inCabin(focus)
@@ -176,11 +181,11 @@ export class CamRig {
       // His back to a wall under a low ceiling: the climb is capped there, and the eye would sit just
       // over his head (a close top-down view of his shoulders) or, a little further out, against his
       // back. Slide it along the wall instead, to look past his shoulder from the side with more room
-      // (the side it is on, unless the other has SLIDE_HYST more or this one collapses). The slide is
-      // a lateral offset that eases towards its target within one side (SIDE from the pivot when he
-      // is backed up, nothing from SIDE out or away from the ceiling), swaps sides in a cut and is cut
-      // to the room each side has this frame: until r3 it was all or nothing, and walking out from
-      // under a porch the eye jumped 2.2–2.7 m in one frame.
+      // (the side it is on, unless the other has SLIDE_HYST more after SLIDE_HOLD, or this one
+      // collapses). The slide is a lateral offset that eases towards its target within one side (SIDE
+      // from the pivot when he is backed up, nothing from SIDE out or away from the ceiling), swaps
+      // sides in a cut and is cut to the room each side has this frame: until r3 it was all or
+      // nothing, and walking out from under a porch the eye jumped 2.2–2.7 m in one frame.
       if (!focus.car && !pf) {
         let eh = Math.hypot(want.x - px, want.z - pz);
         const ys = Math.min(want.y, py + 0.6), ey = ys - py, d0 = (want.y - py) ** 2 + eh * eh;
@@ -189,7 +194,8 @@ export class CamRig {
           const c = capped ? null : ceilingOver(want.x, want.z, want.y, 0.3);
           near = capped || (!!c && c.under - want.y < 0.5);
         }
-        if (this.snapNext) this.slide = 0;
+        if (this.snapNext) { this.slide = 0; this.wedged = false; }
+        this.slideT += dt;
         if (near || this.slide !== 0) {
           const y = Math.min(py, ys) + 0.3, reach = SIDE + EYE_R;
           const roomOn = (x, z, s) => {
@@ -201,48 +207,76 @@ export class CamRig {
           if (near && eh > 0.1) {
             // Wedged: little room behind him and little to either side of the eye (his back in a
             // corner, as at the back of the fold between its wall and a crag's end), so the slid eye
-            // would stay nearer than ARM. Slide from beside him instead when that takes it further,
-            // straight to the side with more room.
+            // would stay nearer than ARM. Slide from beside him instead when that takes it further.
+            // Once wedged it stays so for SLIDE_HOLD and then until the slid eye would be 0.3 m past
+            // ARM, and keeps its side unless the other has SLIDE_HYST more room or this one 0.3 m or
+            // less: the room is sampled every 0.25 m, and the bare test toggled as the camera turned
+            // (r3: 3–4 cuts out to the side view and back in one turn under the fold's shelter).
             const L = Math.sqrt(Math.max(0, SIDE * SIDE - ey * ey - eh * eh)), best = Math.min(L, Math.max(right, left));
-            if (eh * eh + best * best < ARM * ARM) {
+            const lim = !this.wedged ? ARM : this.wedgeT < SLIDE_HOLD ? Infinity : ARM + 0.3;
+            if (eh * eh + best * best < lim * lim) {
               const L0 = Math.sqrt(Math.max(0, SIDE * SIDE - ey * ey));
               const r0 = Math.min(L0, roomOn(px, pz, 1)), l0 = Math.min(L0, roomOn(px, pz, -1)), b0 = Math.max(r0, l0);
               if (b0 > 0.3 && b0 * b0 > eh * eh + best * best) {
                 want.x = px; want.z = pz; eh = 0; right = r0; left = l0; wedged = true;
-                target = r0 >= l0 ? r0 : -l0;
+                let s = r0 >= l0 ? 1 : -1;
+                if (this.slide !== 0) {
+                  const s0 = Math.sign(this.slide), k0 = s0 > 0 ? r0 : l0, o0 = s0 > 0 ? l0 : r0;
+                  s = o0 - k0 > SLIDE_HYST || k0 <= 0.3 ? -s0 : s0;
+                }
+                target = s > 0 ? r0 : -l0;
               }
             }
           }
+          this.wedgeT = wedged && !this.wedged ? 0 : this.wedgeT + dt;
+          this.wedged = wedged;
           if (near && !wedged) {
             const L = Math.sqrt(Math.max(0, SIDE * SIDE - ey * ey - eh * eh));
             const r = Math.min(L, right), l = Math.min(L, left);
             let s;
             if (this.slide !== 0) {
-              // Keep the side unless the other has SLIDE_HYST more room, or more than this side once
-              // this side has collapsed: a post or the turn into the wall cut it to 0.3 m or less, or
-              // by more than SLIDE_CUT this frame (the clamp below would drop the eye towards his head).
+              // Keep the side for SLIDE_HOLD, then unless the other has SLIDE_HYST more room. Sooner
+              // only when this side has collapsed: a post or the turn into the wall cut it to 0.3 m or
+              // less, or cut it this frame (by more than SLIDE_CUT, a room sample) so far that the eye
+              // would come within NEAR of the pivot, with SLIDE_HYST / 2 more room on the other side.
+              // Without the hold, two cuts 4 frames apart in the 1.3 m slot by the friskotek's notice
+              // board; with any cut by 0.5 m, a 3 m cut to the other shoulder for 0.1 m more room.
               s = Math.sign(this.slide);
               const keep = s > 0 ? r : l, other = s > 0 ? l : r, cut = Math.abs(this.slide) - (s > 0 ? right : left);
-              if (other - keep > SLIDE_HYST || (other > keep && (keep <= 0.3 || cut > SLIDE_CUT))) s = -s;
+              const collapsed = keep <= 0.3 || (cut > SLIDE_CUT && eh * eh + keep * keep < NEAR * NEAR && other - keep > SLIDE_HYST / 2);
+              if (other > keep && (collapsed || (this.slideT >= SLIDE_HOLD && other - keep > SLIDE_HYST))) s = -s;
             } else if (Math.abs(r - l) > 0.05) s = r > l ? 1 : -1;
             else s = (this.pos.x - px) * -fz + (this.pos.z - pz) * fx < 0 ? -1 : 1;
             const room = s > 0 ? r : l;
             if (room > 0.3) target = s * room;
           }
+          const was = Math.sign(this.slide);
           if (wedged || target * this.slide < 0) {
             // A swap of sides is a cut, eye and all: eased, the offset passed through 0 and the eye
             // through his head (r3: 1212 frames under 1 m in one camera turn at 456 spots, from 1).
             this.slide = target;
             snap = true;
           } else {
-            // A slide that starts as the eye is cut in by more than 1 m relative to him (a pole pulls
-            // it in as the camera turns, or a canopy starts to cap it and drops it) starts at its
-            // target: the eye jumps anyway, and eased in, it sat over his head for a frame or two.
+            // A slide that starts (under 0.3 m: exactly 0 missed 0.01 and -0.16 on strafes) as the eye
+            // is cut in by more than 1 m relative to him (a pole pulls it in as the camera turns, or a
+            // canopy starts to cap it and drops it) starts at its target: the eye jumps anyway, and
+            // eased in, it sat over his head for a frame or two.
+            // So does one that, eased, would hold the eye within CLOSE of the pivot where its target
+            // would not (a strafe under an awning dropped the eye 0.95 m, and the slide eased in with
+            // the eye 0.72 m from his head). Not NEAR: walking under a balcony row with the eye just
+            // over his head 1.1–1.2 m out, that turned the ease into a 2.6 m sideways cut.
             const jx = this.pos.x - lpx - (want.x - px), jz = this.pos.z - lpz - (want.z - pz);
-            const cutIn = this.slide === 0 && snap && jx * jx + Math.max(0, this.pos.y - lpy - (want.y - py)) ** 2 + jz * jz > 1;
+            const cutIn = Math.abs(this.slide) < 0.3 && snap && jx * jx + Math.max(0, this.pos.y - lpy - (want.y - py)) ** 2 + jz * jz > 1;
             const grow = Math.abs(target) > Math.abs(this.slide);
-            this.slide = this.snapNext || cutIn ? target : damp(this.slide, target, grow ? SLIDE_IN : SLIDE_K, dt);
+            let next = this.snapNext || cutIn ? target : damp(this.slide, target, grow ? SLIDE_IN : SLIDE_K, dt);
+            if (grow && next !== target) {
+              // The eye's distance from the pivot with slide `v` (the height rule below).
+              const dist = (v) => { const hh = eh * eh + v * v; return Math.hypot(Math.sqrt(hh), Math.min(want.y, Math.max(ys, py + Math.sqrt(Math.max(0, d0 - hh)))) - py); };
+              if (dist(next) < CLOSE && dist(target) >= CLOSE) next = target;
+            }
+            this.slide = next;
           }
+          if (this.slide !== 0 && Math.sign(this.slide) !== was) this.slideT = 0;
           this.slide = clamp(this.slide, -left, right);
           if (Math.abs(this.slide) < 0.01 && target === 0) this.slide = 0;
           const sl = this.slide;
