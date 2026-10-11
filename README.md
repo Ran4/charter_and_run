@@ -49,12 +49,18 @@ Samma tangenter i båda nivåerna; nivån bestämmer vad de gör.
 | B | | titta bakåt | |
 | M / Tab | stor karta | stor karta | plan över gaten/kabinen |
 | N | ljud av | ljud av | ljud av |
-| R | fast? tillbaka till vägen | fast? tillbaka till vägen | tillbaka ut i gången på samma rad (i terminalen: loungen, men under rusningen till toaletten aldrig närmare den) |
+| R | fast? tillbaka till vägen | fast? tillbaka till vägen | fast? tillbaka ut i gången på samma rad (i terminalen: loungen; under rusningen till toaletten loungen eller Oles plats, aldrig närmare toaletten – annars "Inte härifrån!") |
 | Esc / P | paus | paus | paus |
 
 Sitter Stig-Helmer ner i planet rör han sig inte; E reser honom upp (eller trycker på knappen
 ovanför stolen), J håller mantrat. På julafton blir J mantrat även på ön. Handkontroll fungerar
 också: A hopp/handbroms, B spring, X sparka/mantra, Y prata, Start paus, triggrarna kör.
+
+Vägen visas av den gula pilen över Stig-Helmers huvud, ljuskäglan och ringen vid målet och
+stjärnan på kartan. På Arlanda och i planet går pilen runt bänkar, väggar och stolsrader i
+stället för rakt över dem, och när ett tidsatt moment börjar vänds Stig-Helmer och kameran åt
+rätt håll. Skakar planet medan han står upp visas **TURBULENS!**, och prompten **Håll i dig!**
+(Space) går före "Sätt dig" och toaletten.
 
 ## Rollista
 
@@ -72,7 +78,7 @@ också: A hopp/handbroms, B spring, X sparka/mantra, Y prata, Start paus, triggr
 | **Flygvärdinnan**, **Kaptenen**, **Högtalaren** | besättningen i Sol-Viking. |
 | **Portiern** | Hotell Flamencos reception. "Momento." |
 | **Städerskan** | ett kort besök på julafton. |
-| och fler | Kontrollanten, Sulan, Killen från flygplatsen, Bungalowförsäljaren, Souvenirförsäljaren, Rullskidåkaren, Grisbonden, Grisfestvärden, Guardia Civil |
+| och fler | Kontrollanten, Sulan, Killen från flygplatsen, Bungalowförsäljaren, Souvenirförsäljaren, Rullskidåkaren, Grisbonden, Grisfestvärden, Telefonisten (bara rösten: "Hytt två!"), Guardia Civil |
 
 ## Uppdragen (13)
 
@@ -93,8 +99,11 @@ också: A hopp/handbroms, B spring, X sparka/mantra, Y prata, Start paus, triggr
 | 13 | Julafton bland palmerna | Ole (kostar 100 pta) | Samla gästerna till julfesten vid poolen och visa Majsan övningen. Sedan: Rio? |
 
 Tiderna är **tajta, som i Hit & Run**: en ren körning på en vettig väg har ungefär 15–20 %
-kvar, en krasch eller en felsväng kostar uppdraget. Misslyckas du börjar du om från senaste
-kontrollpunkten. Bilen du kör går ×1,2 mot trafikens bilar, inte mer.
+kvar, en krasch eller en felsväng kostar uppdraget. Varje tid är uppmätt med en autopilot på den
+riktiga banan (DESIGN §8), aldrig gissad; till fots får du en halv sekund extra per mål för att
+reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste kontrollpunkten
+("Försök igen!"), **Q** ger upp – då tar du uppdraget igen hos den som gav det. Bilen du kör går
+×1,2 mot trafikens bilar, inte mer.
 
 ## Samla, betala, låsa upp
 
@@ -213,13 +222,17 @@ src/game/missions/              runner.js (MissionRunner), kinds/ (the stage kin
 src/game/shame.js               the meter: FLYGRÄDSLA/PANIK and SKANDAL/Guardia pursuit, fines, hideouts
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
-tools/shot.mjs, tools/lib.mjs   headless test driver and the T API
+tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
 tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, meter, kinds, perf,
                                 calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
+tools/pool.mjs                  re-derives every random stage's timer from the ledger
 DESIGN.md                       design bible and module contracts (the source of truth)
-notes/                          film research (Swedish) and engine maps
+HANDOFF.md                      the state at `phase3`, known issues, workflow lessons, gotchas
+notes/calibration-samples.md    the raw-sample ledger: every calibration run, pooled by stage and code
+notes/build-reports/            every agent's report, Phase 0 to Phase 3
+notes/                          also film research (Swedish) and engine maps
 ```
 
 ## Headless tests

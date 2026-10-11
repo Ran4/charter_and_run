@@ -16,13 +16,16 @@
 // missions 1, 2 and 5), measured by `calibflight` (careful vs careless autopilots):
 //   gate     the toilet dash starts at ~70 (the statistics; at any reading pace since Phase 3 r3,
 //            when the idle decay stopped running in scenes); fearRate 5 (Phase 1: 3), so a sprint
-//            (3.6 s) arrives at ~96 and a walk (5.1 s) at ~99.4, while a dawdler panics at ~5.2 s,
-//            just inside the 6 s timer.
+//            (3.6 s) arrives at ~96 and a walk (5.1 s) at ~99.3-99.6, while a dawdler panics at
+//            ~5.2 s, just inside the 6 s timer. A retry starts at the first attempt's ~70
+//            (`retryFear` on the statistics checkpoint, Phase 3 r3 repair).
 //   ombord   DUNS fear 20 (§8.2: 15) and "Annars…?!" 8 (5): a never-J player panics in the takeoff
-//            even after a perfect seat run (measured: PANIK at t 21.5); holding J at 70 peaks ~75.
-//   sprit    standing with the sign lit and three held jolts: a careful sweeper peaks 12-17.
+//            even after a perfect seat run (measured: PANIK at t 21.7); holding J at 70 peaks ~75.
+//   sprit    standing with the sign lit and three held jolts: a careful sweeper peaks 12-17
+//            (13.7-17.2 in Phase 3 r3's last gate).
 //   landning approach turbulence [0.75, 14] (§8.5: [0.7, 10]): no J while it shakes -> PANIK even
-//            after a perfect round-up; holding J peaks ~18-20.
+//            after a perfect round-up (t ~24); holding J peaks ~18-20 at the default 55 chars/s,
+//            ~25-27 for a reader at 20 chars/s (the lit sign's standing fear in the longer intro).
 // Retries stay short (§8 "Timers and difficulty"): checkpoints on the gate statistics, the takeoff
 // and the seat stage before the approach.
 

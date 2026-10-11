@@ -1,7 +1,8 @@
 # CHARTER & RUN — Design bible and module contracts
 
 *Fan-made Simpsons: Hit & Run-style three.js game based on* Sällskapsresan *(1980). Folder:
-`charter_and_run__sallskapsresan/`, built on a copy of Bigmouth & Run (`src/`, unchanged so far).*
+`charter_and_run__sallskapsresan/`, built on a copy of the Bigmouth & Run engine (`src/`, reworked
+since Phase 0: the changelogs at the end list every change).*
 
 **Every agent reads this file first.** It is the single source of truth for names, keys, numbers,
 file ownership and APIs. Where this file and a `notes/*.md` file disagree, this file wins. Where
@@ -1545,22 +1546,25 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
     97 % at σ 25 ms (practised), 81 % at 40 ms, 53 % at 60 ms (a first go). The Phase 1 values
     (0.30/0.22/0.15 at 0.8/1.1/1.4) left a 34 ms window in round 3: 66 % at 40 ms, 39 % at 60 ms.
 - **FLYGRÄDSLA** (binding: a careful player never panics; a careless one does in missions 1, 2
-  and 5), `calibflight` careful vs careless autopilots: gate — a sprinter arrives at the men's room
+  and 5), `calibflight` careful vs careless autopilots. The current numbers are Phase 3 r3's,
+  below. **Phase 2 balance pass** (superseded): gate — a sprinter arrives at the men's room
   at ≈ 94, a walker at ≈ 98, a dawdler (2 s idle, then walking) panics at 5.5 s (`fearRate` 5,
   timer 6); ombord — holding J at 70 peaks at ≈ 75, never holding J panics at t 21.5 of the
   takeoff; landning — J from the start of the approach peaks at ≈ 20, J only after the shaking
   panics at t 24. Missions 3 and 4 never came near 70 for a careful player (sprit peaks 12–17 over
   36 sweeps through the turbulence, Phase 3 r2; ≈ 5 with none; ≈ 20–35 while the old sweeper stood
   in a row for up to 18 s).
-  **Phase 3 r3**: with the idle decay paused in scenes (§5.9) the meter no longer drains while a
-  line waits for E, so the gate dash no longer depends on how fast the player reads.
+  **Phase 3 r3** (current): with the idle decay paused in scenes (§5.9) the meter no longer drains
+  while a line waits for E, so the gate dash no longer depends on how fast the player reads.
   `calibflight` at the default 55 chars/s and at `DIALOG_CPS=20`: gate — the dash starts at
   70.1 / 70.3, a sprinter arrives at 95.6 / 95.8, a walker at 99.4 / 99.4 (0.6 under PANIK: the
-  objective says "fort!"), a dawdler panics at 5.2 s; ombord — J at 70 peaks at 75.7 / 75.6, no J panics at t 21.7; landning
-  — J from the start peaks at 17.9–19.7 / 25.3–27.1 (the lit sign's standing fear during the longer
-  intro), J only after the shaking panics at t 24.2 / 23.3; sprit peaks 15.3–17.0. Both runs PASS.
-  (Before, a reader at 20 chars/s started the dash at 57, a sprinter arrived at 85 and a dawdler
-  never panicked; at 12 chars/s it started at 25.)
+  objective says "fort!"), a dawdler panics at 5.2 s; ombord — J at 70 peaks at 75.7 / 75.6, no J
+  panics at t 21.7; landning — J from the start peaks at 17.9–19.7 / 25.3–27.1 (the lit sign's
+  standing fear during the longer intro), J only after the shaking panics at t 24.2 / 23.3; sprit
+  peaks 15.3–17.0. Both runs PASS. (Before, a reader at 20 chars/s started the dash at 57, a
+  sprinter arrived at 85 and a dawdler never panicked; at 12 chars/s it started at 25.) Since r3
+  repair a retried dash starts at the first attempt's ≈ 70 (`retryFear`, §8.1 [2]; 70.0–70.5 for
+  70.1–70.2), and the r3 gates' walkers arrived at 99.3–99.6.
 
 ### Mission summary
 
@@ -4162,6 +4166,16 @@ concatenate it. With the kinds frozen, G is data-only, so the default is no spli
   re-runs its self-check plus the full story (serially, one fixer at a time on the shared tree,
   or in worktrees then merged by the integrator).
 - At most three rounds; the final round ends with three green story runs.
+- **Outcome** (2026-10-08 to 10-11): three rounds, the fixers serial on `main` (round 1's repair 2
+  on a branch, merged as 61bbcea). Each round's critics (flight, island, cast, HUD, staging, film,
+  playtest) reported ranked findings; fixers by owner group verified, fixed or rejected each with a
+  reason and committed once; an independent gate ran every scenario, `calibrate`, `calibflight`
+  and contact sheets, a read-only diff review read every hunk, and repairs closed what they found.
+  Round 3 added an adversarial verifier per fixer and per repair. Since round 1 the raw-sample ledger
+  (`notes/calibration-samples.md`) is the only source of a random stage's timer. Tags `phase3-r1`
+  (45eaead), `phase3-r2` (90775a7), `phase3`. The rounds and the timer changes are summarised at
+  the top of "Changelog (Phase 3)"; the fixers' reports are
+  `notes/build-reports/phase3-r{1,2,3}-*.md`; the open known issues are in HANDOFF.md §4.
 
 ### 15.5 Priority / cut list
 
@@ -4644,6 +4658,64 @@ Integration on `main` (§15.3). Entries name the step they belong to.
 
 The QA loop (§15.4): critics, triage, serial fixers on `main`. Lines are prefixed with the round and
 the fixer's group.
+
+**Summary** (written at the tag `phase3`; the open known issues are in HANDOFF.md §4):
+- **Round 1** (tag `phase3-r1`, 45eaead; nine fixer groups, then repairs after gates 1 and 2):
+  checkpoint retries that put a car at the spot (`retryCar`) and a fail screen that waits for E or
+  Q; a chase eye that stops short of walls, and camera ceilings under the centre's arcades and
+  canopies; world fixes (Centro Nórdico's courtyard, La Medina's balustrade, Flamenco's room numbers,
+  signs, night glow); bus occupants and the cast's looks from the research; the cabin's overhead
+  clear of seated faces and the trolley frozen in scenes; readable toasts and bubbles, uppercase
+  Luckiest Guy; staged intros and outros for the island missions, checkpoints where a failure
+  replayed a whole mission, source tags. Repair 1: `unsay` and the car-vs-person rule. Repair 2: the
+  raw-sample ledger `notes/calibration-samples.md` with `tools/pool.mjs`, and the fixed `calibrate`
+  walker (`walker-r1r2`), from whose pools the on-foot timers were re-set.
+- **Round 2** (tag `phase3-r2`, 90775a7; eight fixer groups, 64 findings, gate PASS, review clean): a
+  frozen car that holds, R in the flight level, the retry toast; camera ceilings counted by the sight
+  line and in cars, the 0.45 m eye disc, the first side slide, solid Flamenco piers; the plaza's
+  north row, parking signs, big dunes; hanging cabin signs that face the camera, palette blends;
+  eye-level cuts for the flight scenes and the first `via` guides (the gate dash, ombord's seat
+  dash); staging in asnan, bodega, friskotek, fataga and the vischan scene; radio inside the drives,
+  checkpoints on the haggle and the vischan drive, the night race in the hire car; barks by speaker,
+  bubbles at the real head top, the objective timer rounding up.
+- **Round 3** (tag `phase3`; 26 critic findings and the user's own hand-play bug; five fixer groups,
+  flight-trolley among them; two post-gate repair rounds, each followed by verifiers; two ledger
+  steps; this docs step): `via` guides on every gate and cabin stage whose straight line crosses
+  furniture (re-derived each frame, the over-the-furniture pass, the leg point), R in the terminal,
+  FLYGRÄDSLA's idle decay paused in scenes and `retryFear`, the stage's seat for E; the objective
+  Beacon's beam faded and its arrow hidden in the flight level, TURBULENS! as a toast, the Stork
+  scene staged, timed stages and retries turned to their guide (`faceGuide`); fixed giver-intro
+  shots, the Viking Bar outro (`outroHide`, and the fail screen keeps the hide), the end card without
+  toasts or poses, staff barks; the continuous side slide (hold, swap as a cut, wedge), solid Fataga
+  crags and friskotek notice board, café parasol ceilings; landning's trolley parked in the front
+  galley (`trolley: 'park'`); every gate's raw runs in the ledger, the pool text re-synced, and
+  Phase 3's sampling closed (2026-10-11).
+- **Timers over Phase 3** (at `phase2` → at `phase3`; each change measured and backed by the ledger,
+  none padded):
+  - sprit 25 → **13**: the trolley frozen in scenes (r1 cabin-flight, 22), the sweeper waiting in the
+    aisle instead of hiding in a row behind three serve stops (r1 repair, 11), the turbulence moved
+    inside the sweep (r2 flight-missions, 13; pool n 101 since).
+  - bodega jeep 42 → **41**: the chase autopilot's unstick fix (r1 island-flow, 37; r1 repair, 40, on
+    chases whose logs were lost), the rule on 83 raw chases (r1 repair 2, 42), then on 119 and 130
+    (r3 ledger and ledger2, 41).
+  - friskotek balls 32 → **23**: r1 repair's 33 (the walker round parked cars, 72 runs whose logs
+    were lost), the fixed walker (r1 repair 2, 24), the intro placing the cast (r2 island-staging,
+    23; r2 gate, 24), the solid notice board, a new pool (r3 island-camera, 24; r3 ledger2, 23 with
+    r3 gate 2's runs).
+  - fataga sheep 42 → **28**: the fixed walker (r1 repair 2, 27); the solid crags, a new pool (r3
+    island-camera, 28), then 27 (r3 ledger) and 28 (r3 ledger2) as default runs joined a pool on a
+    rounding boundary.
+  - grisfest flowers 42 → **26**: the fixed walker (r1 repair 2, 26); the solid Flamenco piers, a new
+    pool (r2 gate, 23); the r3 porch intro placing Ole beside the start, a new pool (r3 ledger, 26).
+  - grisfest plates 45 → **33**: timed as a deterministic tour, the median of a fixed layout (r1
+    repair 2).
+  - grisfest Tonga 23 → **19** and julafton guests 87 → **81**: the fixed walker's shorter on-foot
+    legs (r1 repair 2).
+  - Unchanged: gate dash 6, ombord 7 (re-measured from the intro's spot in r2), landning 12 / 5,
+    buss17 54, asnan 19, vischan 31, `homeTimer` 17–30.
+  - The balls, sheep and flowers pools sit on a rounding boundary: one more default run can move
+    one of them by a second, by the rule.
+
 - r1 spine: `retryCar` common option (§9.1, §9.4 item 3): a checkpoint retry puts a car at the spot
   (the last car repaired, a spare hatch, or a typed named mission car; passenger, rider; `park`),
   before the stage's init (`runner.startMission(from, before)`, `runner.lastCar`); data checks
@@ -5543,3 +5615,23 @@ the fixer's group.
   the ledger says so above its stage tables. The balls and sheep pools sit on a rounding boundary and
   flip with an n 4 sample, so no further default run feeds them before the tag. The pools stay open:
   every future run goes in, and a timer follows its pool.
+- r3 docs: the summary at the top of this changelog (the three rounds, every Phase 3 timer change
+  with its reason) and §15.4's outcome paragraph (rounds, how they ran, the tags, where the reports
+  and the known issues are).
+- r3 docs: stale text against the code (the r3 completeness critic's doc gaps, checked at 9b4044d;
+  its pool-count gaps 5 and 6 were already fixed by r3 ledger and ledger2): the header line no longer
+  calls `src/` an unchanged Bigmouth copy; the §8 "FLYGRÄDSLA" paragraph labels its Phase 2 numbers
+  as superseded by the Phase 3 r3 ones and adds `retryFear`'s retried start (70.0–70.5 for
+  70.1–70.2) and the r3 gates' walkers (99.3–99.6); the missions/flight.js FLYGRÄDSLA header comment
+  (comment only) says ombord's careless PANIK at t 21.7 (was 21.5), landning's held-J peaks by
+  reading pace (~18–20 at 55 chars/s, ~25–27 at 20), the walker's 99.3–99.6 and the retry.
+- r3 docs: CLAUDE.md (build status Phases 0–3 at `phase3`, the Phase 3 reports, the tags
+  `phase2-docs`, `phase3-r1`, `phase3-r2`, `phase3`; Phase 3's conventions: camera ceilings by sight
+  line and the side slide, the ledger's pool rule and boundary pools, `via` guides and `faceGuide`,
+  `trolley: 'park'`, `retryFear` / `outroHide` / the fail screen's re-hide, the disk check);
+  HANDOFF.md rewritten as the post-Phase-3 hand-off (state and tags, where to read, Phase 3's
+  workflow lessons, §4 the deduplicated known issues with where and severity, the marker rules that
+  replaced "`main.camNear` hides markers within 3 m", §6 met at `phase3`); README (R in the terminal:
+  the lounge or Ole's spot during the dash, else "Inte härifrån!"; E/Q after a fail; the guide
+  markers and the turbulence prompt; measured timers; the telephonist; the code map's ledger, pool
+  tool, HANDOFF and build reports). No code, timer, fixture or ledger change.

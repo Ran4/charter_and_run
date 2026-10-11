@@ -1,31 +1,37 @@
-# Charter & Run: hand-off to the next orchestrator (Phase 3, QA)
+# Charter & Run: hand-off after Phase 3 (QA done)
 
-Written 2026-10-08, after Phase 2. You are taking over an **orchestrator** role: you plan and
-run the QA loop with multi-agent workflows, verify the results yourself, and report to the
-user. You do not hand-write the game yourself; small orchestration fixes (a config line, a note)
-are fine.
+Written 2026-10-11, at the end of Phase 3 (tag `phase3`). For whoever continues: an orchestrator
+planning more work with multi-agent workflows, or an agent fixing one of the known issues in §4.
+An orchestrator plans, runs and verifies agents and reports to the user; it does not hand-write
+the game (small orchestration fixes, a config line or a note, are fine).
 
 The user writes in Swedish; answer in Swedish. Specs, code and comments stay in English; every
 player-facing string is Swedish, and Ole speaks Norwegian bokmål.
 
-This file replaces the Phase 0–3 hand-off of 2026-10-04 (it is in git history at `8f96395`).
+Earlier hand-offs are in git history: the Phase 2 → 3 hand-off (this file at `phase3-r2`, written
+2026-10-08 in `5322f34`) and the Phase 0–3 plan of 2026-10-04 (`8f96395`).
 
 ---
 
 ## 0. TL;DR
 
-- **The game is built, integrated and green.** All 13 missions play through:
-  - The headless story ends at `[t] done -> #13 idle`, `no errors`, `RESULT: PASS`.
-  - The Phase 2 gate saw 3 green runs in a row, every scenario passed, and `perf` held 60 fps
-    everywhere.
-- **Your job: Phase 3, the QA loop** (DESIGN §15.4):
-  - Screenshot critics and a film critic report problems ranked by severity and owner area.
-  - Fixers apply the fixes serially on `main`.
-  - At most three rounds. The last one ends with three green `story` runs.
-  - Then write the final Swedish report to the user (§6).
-- **The backlog to start from** is §4 below. Every item in it is known; do not rediscover it.
-- **Nothing needs asking before you start.** The user has already decided everything relevant
-  (§2). Commits on `main` are allowed. Never push; there is no remote.
+- **The game is built, QA'd and green.** Both levels and all 13 missions play through; the headless
+  story ends at `[t] done -> #13 idle`, `no errors`, `RESULT: PASS`. Phase 3's last full gate passed
+  every scenario plus `calibrate` and `calibflight`, and the tag `phase3` follows three green
+  `story` runs in a row (§1.2, §6).
+- **Phase 3 ran three QA rounds** (r1, r2, r3) of critics → serial fixers → gate, with adversarial
+  verifiers and two repair rounds in r3. DESIGN's "Changelog (Phase 3)" opens with a summary of
+  every round and of every timer change; the fixers' reports are in `notes/build-reports/`.
+- **Read first, in this order:** §2 (the user's binding decisions: they still hold), §4 (the known
+  issues: none blocks a mission; know them before you "discover" them), §5 (gotchas), then
+  `CLAUDE.md` and the DESIGN sections for your area.
+- **Timers come from the ledger.** A random stage's timer is the rule applied to its pool in
+  `notes/calibration-samples.md`; `node tools/pool.mjs` re-derives every one. Phase 3's sampling
+  closed on 2026-10-11 with every run pooled; the balls, sheep and flowers pools sit on a rounding
+  boundary, so the next default `calibrate` run may move one of them by a second, by the rule.
+- **Two questions for the user are open** (§6): may the Phase 1 worktrees and `p1-*` branches go,
+  and will the user listen to the music and play a level by hand?
+- Commits on `main` are allowed. Never push; there is no remote.
 
 ---
 
@@ -38,15 +44,18 @@ It is its own local git repo, on branch `main`, with no remote.
 
 | tag | commit | what |
 |---|---|---|
-| `phase0a`, `phase0` | 35e9e40 | the spine: level system, Game API, 18 stage kinds, runner, harness |
+| `phase0a` | f4fa9c0 | Phase 0a: player boost ×1.2, the `api` smoke scenario, contract notes |
+| `phase0` | 35e9e40 | the spine: level system, Game API, 18 stage kinds, runner, harness |
 | `phase2-merged` | 175b26c | the 11 Phase-1 branches merged (E B C1 C2 D1 D2 A2 A1 H F G) |
 | `phase2-contracts` | 98b5a67 | all Phase-1 contract changes applied, Rio end card wired |
 | `phase2-balance` | 9be5dc5 | timers re-measured on the merged world; race, pursuit, haggle and fear tuned |
 | `phase2-docs` | 295477d | README, CLAUDE.md, Makefile and package.json |
 | `phase2` | c30b0ff | gate fix 1: closed race course, calibrate race outcome, jeep and home timers |
+| `phase3-r1` | 45eaead | QA round 1: 9 fixer groups, repair 1, repair 2 (the ledger, the fixed walker) |
+| `phase3-r2` | 90775a7 | QA round 2: 8 fixer groups (64 findings), gate PASS, review clean |
+| `phase3` | the commit the orchestrator tags after this docs step | QA round 3: 5 fixer groups, 2 repair rounds, 2 ledger steps, docs |
 
-The commit after `phase2` adds this file, `notes/build-reports/` and a pointer in
-`CLAUDE.md`. Use `git log --oneline` for the full history.
+`git log --oneline phase3-r2..phase3` lists round 3's commits; `git log --oneline` the full history.
 
 **Phase 1 worktrees and branches.**
 - The branches `p1-A1 … p1-H` are merged. Their worktrees are in
@@ -54,48 +63,55 @@ The commit after `phase2` adds this file, `notes/build-reports/` and a pointer i
 - Leave them alone. Don't run the game from them.
 - The final report asks the user whether to remove them (§6).
 - `.git/info/exclude` lists `node_modules`, because each worktree holds an untracked symlink.
+- Round 1's repair 2 ran on a branch `p3-r1-repair2` (merged as 61bbcea, branch since deleted);
+  every other Phase 3 step committed straight to `main`.
 
-### 1.2 Verified at hand-off
+### 1.2 Verified at the end of Phase 3
 
-- `PORT=8870 node tools/shot.mjs story`, run by the orchestrator:
-  - output: `[t] done -> #12 idle …`, then `[t] done -> #13 idle stage 5 coins 7775`, then
-    `no errors`, then `RESULT: PASS`
-  - about 190 s
-- Contact sheet, reviewed by eye. All of these render correctly, with HUD, minimap and Swedish
-  text:
-  - the gate (security arch)
-  - the cabin while climbing and with the trolley serving, cut away with the wings outside
-  - Hotel Flamenco
-  - the airport (AEROPUERTO DE GANDO)
-  - Viking Bar
-  - the grisfest gate
-  - the Rio end card
-- The Phase 2 gate (independent agent):
-  - All 11 branches are merged and the tree is clean. `node --check` passes on all 61 files.
-  - 3 × story PASS.
-  - Every scenario passes: `start walk aerial drive traffic title talk missions gate cabin
-    trolley turbulence panic phases views smash foot castsheet cars ui skandal transition api
-    levels fullstory kinds calibrate` plus `endcard islandtour`.
-  - `PLAYER_BOOST` is 1.2.
-  - Island drive timers are 1.19–1.23 × the measured clean T_ref.
-  - Docs are updated, including the `../CLAUDE.md` pointer.
+- **Phase 3 r3 gate 2** (an independent read-only agent, on 4887ede, port 8878): **GATE PASS** on
+  the first run of everything.
+  - `node --check` on all 62 source and tool files.
+  - `SHOTS=1 story` (581 s) and a plain `story` (189 s): `[t] done -> #13 idle`, no `scenario
+    failed`, `no errors`, `RESULT: PASS`.
+  - Every scenario in CLAUDE.md passed, `perf` at 59.5 fps or better in every row.
+  - `calibflight` (406 s) and `calibrate` (1989 s) PASS; every shipped timer matched its pool in the
+    code, the DESIGN §8 table, the §8.x literal and the fixture.
+  - Contact sheets by eye: the cabin in every flight phase, every island landmark (24 `view_*`), the
+    night grisfest, the sunset mantra, the end card, the HUD and dialogue with å ä ö æ ø.
+- **After gate 2** the last repair steps (b014460, bf50e87, cd39361, 9b4044d) each re-ran their
+  scenarios and a full `story` (PASS). Verifier 3 re-ran the camera and flight repairs on snapshots
+  (`walk drive aerial views islandtour smash foot skandal perf`, `gate cabin trolley panic
+  flightshots kinds missions`, `calibflight`, `story`: all PASS). The orchestrator runs `story` three
+  times in a row on the final commit before it tags `phase3`.
 
 ### 1.3 Where to read
 
 - **`CLAUDE.md`** (project): how to run and check, every scenario name, and the conventions that
-  bite. Read it first.
-- **`DESIGN.md`**: the design bible and module contracts, about 250 KB. Phase 3 critics and fixers
-  read the sections for their area. Its changelogs at the end list every deviation from Phases
-  0–2. It wins over `notes/`.
-- **`README.md`**: the player-facing overview in Swedish, the code map and the test commands.
-- **`notes/build-reports/`**: every agent's hand-off from Phases 0–2.
-  - `phase0a.md`, `phase0b.md` and `phase0-polish*.md`.
-  - `p1-<WP>.md`, one per package.
-  - `phase1-integration-input.md`: all contract changes and reviewer gaps, collected.
-  - `phase2-{merge,contracts,balance,stability,docs}.md`.
-  - The **balance report** holds the full timer table and how it was measured.
-- **`notes/research-*.md`**: film research in Swedish, sourced and marked "(osäkert)" where
-  unsure. This is the film critic's reference.
+  bite, Phase 3's included. Read it first.
+- **`DESIGN.md`**: the design bible and module contracts, about 500 KB; read the sections for your
+  area, not the whole file. It wins over `notes/`. Its changelogs at the end list every change
+  since the first design; "Changelog (Phase 3)" starts with a summary of the three rounds and every
+  timer change, then one line per change, prefixed with its round and group.
+- **`README.md`**: the player-facing overview in Swedish, the controls, the code map and the test
+  commands.
+- **`notes/calibration-samples.md`**: the raw-sample ledger. Its Rules say what pools with what; its
+  tables hold every calibration run Phase 3 made, gates' and verifiers' included.
+- **`notes/build-reports/`**: every agent's report.
+  - Phases 0–2: `phase0a.md`, `phase0b.md`, `phase0-polish*.md`, `p1-<WP>.md` (one per package),
+    `phase1-integration-input.md`, `phase2-{merge,contracts,balance,stability,docs}.md`.
+  - Phase 3: `phase3-r1-<group>.md` (spine, world-town, world-outskirts, cast-vehicles,
+    cabin-flight, audio-ui-meters, flight-missions, island-staging, island-flow, repair1, repair2),
+    `phase3-r2-<group>.md` (spine, island-camera, world, cabin-flight, flight-missions,
+    island-staging, island-flow, voices-ui-cast), `phase3-r3-<group>.md` (flight-flow, flight-look,
+    island-staging, island-camera, flight-trolley, repair-flight, repair-island-staging,
+    repair-island-camera, ledger, repair2-island-camera, repair2-flight, repair2-island-staging,
+    ledger2, docs). Each has one entry per item (verdict, how, evidence), its checks and its
+    follow-ups.
+  - The critics', gates', reviewers' and verifiers' reports and their probe scripts lived in the
+    Phase 3 session's scratchpad under /tmp, which is not kept. Everything still open from them is
+    in §4.
+- **`notes/research-*.md`**: film research in Swedish, sourced and marked "(osäkert)" where unsure.
+  This is the film critic's reference.
 - **`notes/engine-*.md`**: maps of the Bigmouth engine from before Phase 0. Trust the code over
   them.
 
@@ -124,9 +140,9 @@ The commit after `phase2` adds this file, `notes/build-reports/` and a pointer i
 
 ---
 
-## 3. How to run Phase 3
+## 3. How the work is run
 
-### 3.1 Workflow rules (learned in Phases 0–2)
+### 3.1 Workflow rules (learned in Phases 0–3)
 
 - **Point agents at files. Don't paste file contents into prompts.** Give paths in the main tree
   by absolute path, for example "read DESIGN.md §6.3 in full".
@@ -135,9 +151,10 @@ The commit after `phase2` adds this file, `notes/build-reports/` and a pointer i
   `<scratchpad>/reports/p3-<critic>.md` as well as returning the structured list.
 - **Verify, don't trust.** After each round, run one `story` yourself (`RESULT:` line) and look at
   a contact sheet before you start the next round.
-- **Independent checker agents work.** Every phase so far had a read-only checker or reviewer
-  that re-ran the exit criteria. They caught real bugs: the gate's first run found a calibrate
-  race-outcome bug and a jeep timer measured on too few runs.
+- **Independent checker agents work.** Every phase had a read-only checker or reviewer that re-ran
+  the exit criteria and read every hunk. They caught real bugs: Phase 2's gate found a calibrate
+  race-outcome bug and a jeep timer measured on too few runs; Phase 3's gates and reviews found
+  stale literals, a lost-log timer and docs drift.
 - **Usage limits.** A weekly usage limit stopped Phase 2 mid-step on 2026-10-05, and the work
   resumed on 2026-10-07.
   - Resume with `Workflow({scriptPath, resumeFromRunId})`. Completed agents come back from
@@ -146,173 +163,281 @@ The commit after `phase2` adds this file, `notes/build-reports/` and a pointer i
   - Restart that step as a **continuation**: put a note in its prompt saying what is already
     committed. Don't restart it from scratch.
 - **Timing.** Phase 0 took 2 h 40 min. Phase 1 took 5 h, with 11 packages in a pool of 8.
-  Phase 2 took about 16 h wall time (4 h before the limit, 12 h after), mostly in
-  measurement-heavy balance and stability runs. Plan for each QA round to take 3–5 h. Don't
-  poll; wait for the workflow notification.
+  Phase 2 took about 16 h wall time (4 h before the limit, 12 h after). Phase 3 took about three
+  and a half days of wall time (2026-10-08 to 10-11): round 1's fixers and repairs about a day (its
+  repair 2 ran beside round 2), round 3 with its two repair rounds about 29 h. Measurement
+  (`calibrate` about 35 min by default, calibration batches, sweep probes) dominates; plan for it.
+  Don't poll; wait for the workflow notification.
 
-### 3.2 Round structure (DESIGN §15.4)
+**Added in Phase 3:**
+- **Serial fixers on `main`, one brief each.** Each fixer got a common brief (verify first, measure
+  timers, checks before the commit, one commit, a report) and a group brief (its items with the
+  critics' evidence, its files, its scenarios, a port and an OUT dir). They ran one at a time on the
+  shared tree: no merge work, and each could rely on a clean tree. Worktrees were not worth it
+  (round 1's repair 2 ran on a branch beside round 2 and needed a merge commit).
+- **Adversarial verifiers.** In round 3 every fixer and every repair got an independent read-only
+  verifier that re-measured its claims on `git archive` snapshots (the commit, its parent, the
+  round's base) and looked for regressions nearby, at speeds, pitches and spots the fixer had not
+  tried. They found a real regression after most steps (the furniture pass stalling ombord's
+  seat dash, the side slide passing the eye through his head, Angerud popping in on the fail
+  screen), which is why round 3 needed two repair rounds. Budget a repair round per gate.
+- **Gates and diff reviews.** A gate runs every scenario, `calibrate`, `calibflight` and the contact
+  sheets on a clean tree; a reviewer reads every hunk. Both keep catching stale prose: pool counts,
+  medians and "unchanged" claims that a later commit made false.
+- **The ledger.** Every raw calibration time goes into `notes/calibration-samples.md` with its
+  commit, autopilot version and exclusions: the fixers', the gates' and the verifiers' runs. Pools
+  join only runs on the same stage, world, actors and autopilot code, so a placement that moves a
+  stage's start starts a new pool. `node tools/pool.mjs` re-derives every timer; a gate checks that
+  it matches the code, the §8 table, the §8.x literal and the fixture. Logs in a scratchpad are lost:
+  round 1's repair shipped a timer from 72 runs whose logs were gone, and the next gate could not
+  check it. Ask verifiers to list their calibration runs under "Raw runs for the ledger" too.
+- **Boundary pools flip.** A pool whose p75 sits near a rounding boundary moves by a second with each
+  small default sample: the sheep went 28 → 27 → 28 and the balls 24 → 23 over round 3's last two
+  default runs. Each flip is the rule, not padding. Close sampling before a tag and say so in the
+  ledger (done on 2026-10-11).
+- **RAM, GPU and disk are shared.** The user's Firefox and another project's headless runs share
+  the machine. One harness run at a time per agent, `free -g` first (wait under 4 GB available),
+  `df -h /` first (it holds /tmp). A real-time-bounded check (`calibflight`'s 90 s wait for the
+  careless landning PANIK) fails under starvation: re-run that part alone before calling it a
+  regression. On 2026-10-11 the root disk filled up for hours: headless Chrome then logged WebGL
+  shader-validation errors, `ERR_INSUFFICIENT_RESOURCES` or `ENOSPC`, and a story failed on console
+  errors. `TMPDIR=/dev/shm` with an OUT under /dev/shm (copied back) and
+  `__GL_SHADER_DISK_CACHE=0` worked round it.
+- **Probes are the evidence.** Critics and fixers wrote measuring probes (arrow-followers for the
+  guides, the staging line audit, the chase-camera sweeps and rotation/strafe/jitter walks,
+  real-input retry and fail probes). They made "fixed" checkable, and verifiers re-used them. They
+  are not in the repo (§4.8); copy them into the agent's OUT dir and name them in its report.
+- **The `rtk` hook** rewrites Bash (§5 item 1). Every brief repeats it.
 
-1. **Critics.** They are read-only and run in parallel. Each has its own port, 8871–8879, and its
-   own `OUT=<scratchpad>/out-p3-<critic>`.
-   - Each one builds contact sheets of its area (`montage … -tile 3x3 -geometry 640x360+4+4`),
-     looks at them with the Read tool, and reads the relevant code and DESIGN sections.
+### 3.2 Round structure (as Phase 3 ran it; DESIGN §15.4)
+
+1. **Critics.** Read-only, in parallel, each on its own port (8871–8879) with its own
+   `OUT=<scratchpad>/out-p3-<critic>`.
+   - Each builds contact sheets of its area (`montage … -tile 3x3 -geometry 640x360+4+4`), looks at
+     them with the Read tool, reads the relevant code and DESIGN sections, and measures where it can
+     (a probe beats a screenshot).
    - Each returns a ranked list through a schema:
      `{severity: bug|ugly|off-brand|factual, area/owner, file, what, evidence, fix}`.
-   - Suggested critics:
-     - **flight**: title; the gate (arch, lounge, toilets, desk, jet bridge); the cabin in every
-       phase (seated cast visible, the row-13 gag, windows, wings, clouds); trolley and
-       turbulence; PANIK. Scenarios: `gate cabin flightshots flightseq phases panic turbulence
-       trolley`.
-     - **island A** (hotels and centre): `VIEWS=… views`, `islandtour`, `smash foot`.
-     - **island B** (nature and coast): the same scenarios, other landmarks. Include the night
-       grisfest (`?mission=11`) and the sunset mantra (julafton).
-     - **cast and cars**: `castsheet cars heads`, plus in-scene sizes, clipping and outfits per
-       mission.
-     - **HUD and UI**: `ui skandal title`, meters, prompts, banners with å ä ö æ ø, the pause
-       card, the big map, the end card (`endcard riocard`).
-     - **dialogue staging**: every scene's camera framing, with `SHOTS=1 node tools/shot.mjs
-       story` for key-scene shots; who is visible, and the portrait rings.
-     - **film critic**: reads every scripted line in `src/content/*.js` and
-       `src/game/missions/*.js` against `notes/research-*.md` and DESIGN §1.3–§1.6. It checks
-       wording, speaker, the `[F]/[F*]/[N]/(t)` tags, that Ole speaks Norwegian, no real brands,
-       and the factual traps in §5.4.
-     - **playtest / difficulty** (optional): reads every mission flow for clarity: objective
-       texts, markers, fail texts, whether a first-time player knows where to go. Checks the
-       difficulty against §2 with `calibrate` / `calibflight` (both are slow; run them once).
-   - Keep RAM in mind: run at most 3–4 Chrome-heavy critics at once (§5.2).
-2. **Dedupe and triage.** You do this in plain workflow code, or yourself. Merge duplicate
-   findings, drop anything that contradicts DESIGN or a user decision, and group the rest by
-   owner area.
-3. **Fixers.** One per owner area, **serially on `main`**.
-   - Owner areas, with the files from DESIGN §14.1: cabin/camera/fx; flight scenery; island
-     base; hotels; centre; nature; coast; cast/vehicles; flight missions; island missions;
-     audio/UI/meters; spine.
-   - Each fixer verifies every finding first and rejects the wrong ones with a reason. It then
-     fixes the rest, re-runs its area's scenarios and the full `story`, updates DESIGN when a
-     contract or literal changes, and commits.
-   - Parallel fixers in worktrees are possible but not worth the merge work for QA-sized fixes.
-4. **Gate.** An independent read-only checker runs the full `story` and every scenario. Each run
-   must end with `RESULT: PASS`. Tag the round `phase3-r<N>`.
-5. At most three rounds. **The last round ends with three green `story` runs in a row**, then the
+   - Phase 3's critics: **flight** (title, gate, cabin in every phase, trolley, turbulence, PANIK);
+     **island A/B** (`views`, `islandtour`, `smash foot`, the night grisfest, the sunset mantra);
+     **cast and cars**; **HUD and UI**; **dialogue staging** (`SHOTS=1 story`, the line audit);
+     **film/text** (every scripted line against `notes/research-*.md` and DESIGN §1.3–§1.6);
+     **playtest / difficulty** (mission flow, and a human model against the on-foot timers).
+   - Run at most 3–4 Chrome-heavy critics at once (§3.1 RAM).
+2. **Dedupe and triage.** Merge duplicates, drop anything that contradicts DESIGN or a user
+   decision, group the rest by owner area, and write one brief per group.
+3. **Fixers**, serially on `main` (§3.1). Each verifies every item first, rejects the wrong ones with
+   a reason, fixes the rest, re-runs its scenarios and the full `story`, updates DESIGN (contract,
+   literals, §8 table, changelog line `r<N> <group>:`) and the fixture, writes its report and commits
+   once.
+4. **Verifiers** (round 3), one per fixer, read-only on snapshots (§3.1).
+5. **Gate and review.** An independent read-only checker runs the full `story` and every scenario,
+   `calibrate` and `calibflight`; each run must end with `RESULT: PASS`. A reviewer reads the diff.
+   Repairs close their findings; a ledger step pools every raw run the round made.
+6. Tag the round `phase3-r<N>`. The last round ends with three green `story` runs in a row, then the
    tag `phase3`.
 
 ### 3.3 Ports
 
-- Game: 8840. Harness default: 8841.
-- Phase 3: 8871–8879 for critics, 8870 for fixers. The Phase 2 gate used 8872.
-- Sibling projects use 8790/8791 and 8810/8811. Don't touch them (§5.3).
+- Game: 8840 (the user's). Harness default: 8841.
+- Phase 3: 8870 for fixers and repairs; 8871–8879 for critics, gates, reviews and verifiers (e.g.
+  r3 gate 2 on 8878, review 2 on 8876, the last verifiers on 8877 and 8879).
+- Sibling projects use 8790/8791 and 8810/8811. Don't touch them (§5 item 3).
 
 ---
 
-## 4. Known-issue backlog (start Phase 3 from here)
+## 4. Known issues at `phase3`
 
-Collected from the Phase 1 reviewers, the Phase 2 steps and the Phase 2 gate. None of these
-blocks play; all are QA material. Owner areas follow DESIGN §14.1.
+Deduplicated from every Phase 3 report (fixers, gates, reviews, verifiers, the round-3 critics and
+playtest) and checked against the code at the tag. None blocks a mission; "unsure" marks what
+could not be settled from the code. Severity: **low** (a player can meet it, it costs little),
+**minor** (rare, off-route or cosmetic), **info** (balance or design information, not a defect).
+Where: file or DESIGN section; numbers are from the named report.
 
-### 4.1 Timers and difficulty
+### 4.1 Unsure
 
-- **Jeep chase (bodega stage 9).** The timer leans loose. Single-run p75 values ranged 27.7–49.7 s,
-  and DESIGN's p75 over 35 chases is 34.4 s. The gate measured p75 27.4–31.0 s over 11–17 chases,
-  so the shipped timer is 1.35–1.53 × those. The jeep autopilot wedges on a house in about 1 chase
-  in 4 (those runs are excluded). Fix the autopilot, re-measure with `CAL=jeep JEEP_RUNS=20`, and
-  decide.
-- **Bodega home timer (`homeTimer`).** At the far corner (d 587 m) it is 1.12 × the drive + 3 s,
-  which errs hard. That deviation is documented in §8.
-- **On-foot slack.** On-foot stages keep more than 20 % slack by design (the 0.5 s per target and
-  the 1.25 factor). The flight's short stages lose precision to 1 s rounding.
-- **SKANDAL with one crash.** It is only somewhat harder than a clean run, because the injected
-  crash at 250 m comes before the Land Rovers close in.
-- **buss17.** The bus autopilot corners gently (3.5 of the 6 m/s² ÅKSJUKA limit), so a bold human
-  gets a bit more slack.
-- **asnan comment.** The comment in `island.js` TIMERS says "T_ref 15.5 (9 clean)" while DESIGN §8
-  says "3 clean". Make them match.
+- **low, unsure** · kinds/core.js `getInCar` (`atHome`) — places the car on its bay without clearing
+  it, so a car the player parked exactly there is overlapped (grisfest's hire car, buss17's bus).
+  Nobody has checked whether the two can jam (r2 island-flow).
+- **low, unsure** · missions/flight.js `via`, gate [3] — the dash restarted from Ole's spot (after a
+  PANIK, or R from the start or the lounge). The aim from there is right (`herrtoaGang`, checked by
+  the r3 verifiers), but no arrow-follower has walked the dash from Ole's spot since r2, when one
+  stuck at the men's-room basins 2.2 m from `herrtoa`.
 
-### 4.2 Staging and cameras (missions, scenes)
+### 4.2 Gameplay and balance
 
-- In the julafton intro, `hittegods` is hidden behind Stig.
-- The camera sits behind the heads for "Hä-pååre", the haggle "Hvor mye?" and the grisfest porter
-  outro.
-- "Momento." does not show the balcony.
-- The "Heia Norge!" dancers are small in frame.
-- In the cabin cutaway, four chatter bubbles can stack at once. In the takeoff shots, the
-  mantra auto-bubble and Ole's bark overlap the scripted lines.
-- The `ui_hud` shot shows a flight toast on the island and a toast stack over the mission card.
-  This is test state, but check the real toast/objective overlap at 1280×720.
-- `skandal_multa` and `smash_0` put a bush or a palm trunk across the camera, because the
-  camera's wall check ignores props.
+- **info** · on-foot timers against a human (r3 playtest, a modelled player on 90775a7 against balls
+  24, sheep 27, flowers 23): the "competent" model (0.3 s reactions, 300°/s turns, W only, sprinting)
+  made 101 of 102; its one miss was a sheep chase whose fifth sheep took 12.7 s. The "slow" model
+  (0.35–0.55 s, 150°/s, about a gamepad stick) made 8 of 10 balls, 9 of 10 sheep and 6 of 10 flowers
+  runs: the fail → retry loop DESIGN §8 intends. The 0.5 s per target held (the models needed
+  0.45–0.65 / 0.7–1.2 s more per target than the walker). Since then: balls **23**, sheep **28**,
+  flowers **26** (new pools), so the balls are a second tighter and the flowers 3 s looser than
+  what the models faced. The first sheep attempt starts where the bus tail ends, up to 30–38 m east
+  of the measured start (about 0.9 s at the median; a retry starts at the measured spot).
+- **info** · DESIGN §8 table, ledger — the balls (23, 90 % range 22–25), sheep (28, 26–30) and
+  flowers (26, 25–27) pools sit on a rounding boundary; one n 4 default run can flip one by a
+  second. Sampling closed on 2026-10-11; a later flip is the rule working, not a regression.
+- **info** · gate [3], DESIGN §8 "FLYGRÄDSLA" — a careful player who walks the dash arrives at
+  99.3–99.6, 0.4–0.7 under PANIK (by design the careful player sprints: the objective says
+  "fort!"). R in the dash after about 1.5 s sends him back to the lounge, about 14 m, and the dash's
+  fear then PANIKs at about 4.5 s (r3 verify3-flight).
+- **minor** · runner, §9.4 item 2 — an untimed stage that starts after a scene keeps the camera from
+  before the scene (the gate queue after Berra's scene, boarding after the Stork scene); only timed
+  stages turn to the guide. The guide arrow shows the way.
+- **minor** · bodega, §8.9 stage 7 — first attempt, after the vischan scene, on foot: the arrow
+  points at the pig truck, not at his parked car 11.6 m ahead in view. An on-foot `altTarget` for
+  `follow` would change the kind for every follow.
+- **minor** · shame.js `planOfficer` — the SKANDAL officer's `cornerDetour` rounds one building
+  only; with two in a row he goes by the streets. His spawn has no line-of-sight preference: from
+  behind a block he took 5–9 s to close in (`skandal` polls 10 s).
+- **info** · §7.2 "Balance" — pursuit: the last three default `calibrate` runs had 7 of 9 clean
+  escapes (one clean run busted at 15.5 s, one at 27.8 s); with one crash 3 of 3 (r3 ledger) and
+  1 of 3 (r3 gate 2). Only "a clean escape is possible" is checked.
+- **info** · §8 "Timers and difficulty" — `homeTimer` at the far corner (d ≈ 587 m) is 1.12 × the
+  drive + 3 s: a line in d cannot follow every route (documented).
+- **minor** · drivers.js (traffic) — traffic can jam a road. One `calibrate` buss17 run was held
+  171.6 s (counted clean: no impact), a home drive 75.8 s on the z ≈ 282 road; deterministic drives
+  swing 1–15 s with traffic. Worth a look in the traffic code; not timer data.
+- **info** · §6.6, drivers.js — AI buses cannot turn right (turn radius 8.25 m), so mission bus routes
+  turn left only, and a traffic guagua can clip a corner on a right turn.
+- **info** · `calibrate` buss17 — the bus autopilot corners gently (3.5 of the 6 m/s² ÅKSJUKA limit),
+  so a bold human gets a little more slack than the rule assumes.
+- **info** · sprit, §5.8 — the moving trolley can hold him at the rear galley for up to about 12 s
+  behind an aisle walker it waits for: bounded, a designed obstacle (r3 flight-trolley).
 
-### 4.3 World (B, C1, C2, D1, D2, A2)
+### 4.3 Flight guides and markers
 
-- **B.**
-  - `dusch` and `tomatlada` are never placed.
-  - Street palms stand 0.95 m from the kerb, so the chase camera can end up inside a trunk, and
-    a palm fills `view_suntrip`.
-  - The concrete columns on the half-built frames have no colliders.
-  - The west entrance stub doesn't join the road.
-  - Check the tallrikar stacks' look.
-  - Old Bigmouth prop aliases remain in `props.js`; delete them.
-- **C1.**
-  - A closed room's number sits beside the next room's doorway (105 shows next to the 107
-    opening).
-  - About 50 sign meshes, i.e. draw calls.
-  - With the eye under the Flamenco fascia, the "HOTEL FLAMENCO" band fills the top quarter of
-    the frame.
-- **C2.**
-  - In the guardia view the flag mast hides the CASA CUARTEL plaque.
-  - The La Medina roof solstol props may still be placeholders.
-  - The English and German sign words are already gone.
-- **D1.**
-  - The dunes read small (1.4–2.6 m against "large sand dunes").
-  - No Christmas or charter-Sweden dressing (§6.9).
-  - The golf mowing bands are hidden under the fairway.
-  - Fataga crags overhang the sidewalk.
-  - Some invented signs lack an `[N]` tag.
-  - The inner water discs sit only 1 mm above the sea disc.
-- **D2.**
-  - Towels lie on the sand beside the sunbeds instead of on them.
-  - The airport canopy pops in and out, with no hysteresis.
-  - The coast blocks are the heaviest static geometry.
-- **A2.**
-  - The drift lumps stay still during the takeoff roll.
-  - Debug cameras inside a cloud see a solid blue outline (`sceneryPeek peek_approach_2_out`).
-  - Visuals snap at phase boundaries.
-- **AI buses** can't make right turns (radius 8.25 m), so mission bus routes turn left only. A
-  traffic guagua can clip a corner on a right turn.
+- **minor** · gate [6] queue, §8.1 [6] — where he is on his way to no chain point (the lounge's north
+  end z ≥ 23–25, its south end z ≤ 9, the window column x 15) the arrow aims at the men's door, a
+  detour that still ends at the lounge (57 of 60 arrow-followers arrive, 3 pin on the north wall at
+  (23.6, 28)). Untimed. A cheap "look over low obstacles" rule pinned 12 of 60: a better guide needs
+  route knowledge.
+- **minor** · gate [3] — arrow-followers from (17–18, 13.5), south-west of the middle bench, take
+  7.1 s (aim `herrtoaGang`); off the dash's route (r3 verify3-flight).
+- **minor** · ombord [0] — in a seat row's legroom the ring (r 1.0) sits 0.9–1.6 m away at the
+  aisle and overlaps Stig, and the minimap star sits on him for 0.5–0.7 s until he steps out
+  (cosmetic; the arrow points into the aisle).
+- **minor** · markers, §5.3 — in the flight level the GuideArrow sits at the top centre, partly under
+  the objective card; kept, as the only off-screen direction cue there. The objective Beacon's beam
+  in the gate lounge stays at full opacity (its fade is cabin-only); no critic reported a wedge.
 
-### 4.4 Cabin, cast, UI, audio (A1, E, H)
+### 4.4 Island chase camera (§14.5; no further camera round)
 
-- **A1.**
-  - Jolts while the player stands never interrupt a held mantra (§5.9 says every jolt does).
-  - The trolley's "Juice, whisky?" bubble plays at only about 60 % of stops.
-  - `cabin.stopTurbulence()` exists (Phase 2), and `restoreAmbience` calls it.
-- **E.**
-  - The giraffe prop is cut off in `cast_flags_2`.
-  - In the `flyg` outfit, Majsan's and Siv's dress-print dots render as pearl blobs on the
-    cardigan.
-  - Lasse has no shirt print.
-  - Small look inventions are unlabelled: Lasse's jul shorts, Robban's sol dots, Fru Storch's
-    white dress, Stig's arlanda scarf, Ole's arlanda coat.
-  - Cabin busts are about 3.2k triangles each. Perf is fine at 60 fps, so this is only worth
-    doing if cheap.
-- **H.**
-  - Mixed-case text shows Luckiest Guy's odd lowercase glyphs.
-  - Nobody has listened to the trad melodies (Små grodorna, Hej tomtegubbar, Helan går) or the
-    tunes. Headless runs can't judge music: **ask the user to listen** in the final report.
-  - Lasse's bust radio line plays even after a bust has failed a mission.
-  - The meter gradients have an extra colour stop compared with §13.4.
-- **Storch witness toast.** It fired during the room-113 cutscene in Phase 1. `shame.js` now
-  skips it while `inScene`; confirm it in the dialogue-staging pass.
-- **Rio end card.** Check that the orchestra busts on the wheelhouse roof are visible after the
-  Phase 2 banner move.
+- **low** · Fataga, the fold's NW pocket (block-local (−20, −27.94): the back wall 0.36 m north, crag
+  1's west end 0.9 m east) — looking SW over about 30° of yaw, every spot behind or beside him is
+  within 0.5 m of a solid, so the eye sits 0.34–0.97 m from his head (15 frames within 1 m per fast
+  turn, 39 per slow one); walking in and then turning reaches 0.44 m (0.69 before b014460's wedge
+  hold). A fix needs a new rule (fade or hide the player mesh near the eye). On 302d4c2 the eye stood
+  inside the rock.
+- **low** · friskotek, the 1.3 m slot between the notice board and the SunTrip wing (block 3,2,
+  local (−22.2, 4)) — at turn speeds and pitches outside the tested set the eye still cuts from
+  shoulder to shoulder within 15 frames (9 of 18 default-pitch turns, 6 of 16 walk-in turns; the
+  wedge's side choice has no hold); at pitch 0 it pulls in to 0.57–0.64 m (his shirt; also before);
+  it goes in and out as the sight line crosses the board's posts. A side spot 12 m from the balls'
+  mat, not a route.
+- **minor** · camera.js side hold — the eye now stays 1.1–1.3 m behind his shoulder more often (the
+  notice gap; the bungalow awning in fast level turns, min 1.08 m; a lagenhet entrance, min 1.18 m).
+  On a fast reverse turn at fold_mid it cuts out to the side view and then to the other shoulder 8–10
+  frames later.
+- **minor** · camera.js — the close band outside the slide's trigger: the generic 1.6 m `ARM` with
+  his back to a wall (`tonga_arcade`, 1.72 m under La Medina's 3.6 m arcade).
+- **minor** · the SUPERMERCADO awning — the eye drops 1.03 m in one frame when a pole pulls it in
+  under the cap. Turning the camera under ceilings cuts shoulder to shoulder where r3's first slide
+  eased through his head: one-frame jumps over 1 m in the rotation sweep 1863 (08c1104 1571,
+  302d4c2 2666).
+- **minor** · the r3 island-camera sweep (16 blocks, on 08c1104) — the player hidden in 805 on-foot
+  and 426 car samples, the eye inside a mesh in 78; the La Medina and plaza arcade arches hang below
+  the arcade ceiling's underside near the front; with his back flush to a wall under the plaza
+  arcade's 4.4 m roof the eye climbs to just over his head; one Casa Lola corner sample at 0.98 m;
+  in the SunTrip balcony row's corner (`st_row`) the eye is straight over his head on the climb.
+- **minor** · bus 17 — near-side palm fronds brush the eye a frame before it passes under a road
+  banner.
+- **minor** · asnan, the Viking Bar door — during the UPPDRAG KLART! wait, with the camera turned to
+  the street, the eye can sit inside the bar's arcade, framed by a pillar and a lamp (r3 verify2 of
+  repair-island-staging).
 
-### 4.5 Film and text (F, G)
+### 4.5 Other visual
 
-- Already fixed: the sprit PA tag (now `[F]`) and Robban's early "Glöm aldrig det" gate chatter.
-- Still to check: some lines lack `(t)` where the research says the speaker is uncertain. These
-  are the takeoff explanation at t 11.5 and t 14, and the Concorde outro.
+- **minor** · centre.js `standSign` — small stand signs have pole colliders only, so he walks through
+  the board (the market's `LUNES A SÁBADO`, 1.3–1.9 m).
+- **minor** · hotels.js `flamencoPorch` — the reception porch's west post (≈ −9.45, −6.45) has no
+  collider; he walks through it. `frame`'s side check sees only colliders, and characters are not
+  obstacles.
+- **minor** · julafton end — the held bodega unlock toast shows under the 5 s completion banner, in
+  the wide-banner toast column at 1280×720.
+- **minor** · main.js title orbit — still emits `fx.snow`, not culled over the cabin (title only).
+- **minor** · nature.js dunes — the walkable dunes read small (1.4–2.6 m); taller ones need longer
+  ridges or another car collider. Visual-only big dunes stand beyond the west bound.
+- **minor** · line audit — framing kept by design: asnan's paint lines over the FERRETERÍA cut (Ole
+  34 m away), Lasse's PA line (no body), the bodega cutaway in the party scene; the mantra
+  auto-bubble shows over "Hur mår du?" for about 1 s.
+- **minor** · bodega handover — when it fails within about 1 s, the grisbonde's "Ta bilen, señor…"
+  bubble can still be up over the retry (seen in a probe only).
+- **minor, latent** · main.js `anim` cues — an `anim` cue's off-timer clears the flag
+  unconditionally, so a second cue on the same flag is cut short. No shipped overlap shows it.
+- **unsure, never re-checked**: the tallrikar stacks' look; whether Fataga's crags overhang the
+  sidewalk (they have box colliders now); the inner water discs only 1 mm above the sea disc; the
+  pinkish tint in the climb (`seq_a05–a07`), which r2 says is not palette blending.
+- **info** · perf (60 fps everywhere) — about 50 sign meshes (draw calls), the coast blocks as the
+  heaviest static geometry, cabin busts of about 3.2k triangles each.
 
-No full film pass has been done on the merged game. The film critic should check every line
-against the research, including the whole of §5.4 below.
+### 4.6 Text
+
+- **info** · the drift check (code vs fixture vs DESIGN §8) has two accepted differences: the knäcke
+  line's two tags, and the `rowSixComplaint` bubbles, in §8.3 but not in the fixture.
+- **info** · DESIGN §8 "Races and chases" — the jeep paragraph's unstick split ("54 with no unstick
+  … the 8 with two or more 47.0 s") is an older analysis of a subset; not every ledger row records
+  unsticks, so `pool.mjs` cannot re-derive it.
+
+### 4.7 Needs the user
+
+- Nobody has listened to the music or the trad melodies (Små grodorna, Hej tomtegubbar, Helan går);
+  headless runs cannot judge them.
+- Play by hand: the on-foot timers (only modelled so far, §4.2), the gate dash's fear, and the feel
+  of the side-sliding chase camera under porches and balconies.
+
+### 4.8 Tooling
+
+- **minor** · the evidence for round 3's fixes came from scratchpad probes that are not in the repo:
+  the arrow-followers for the guides, the retry and scene facing, the side-slide rotation, strafe
+  and jitter walks, the staging line audit, `realend` (the real `complete()` → unlock → end-card
+  path), `grisfollow` (the bodega follow retry), the fail-screen probes. The repo gained checks in
+  `trolley` (park and retry), `cabin` (14B from the aisle), `calibflight` (`DIALOG_CPS`, the trolley
+  log, the dawdler's retry) and the `missions` data check (`outroHide`). `endcard` calls
+  `playEndCard()` without the unlock.
+- **minor** · `calibflight` waits 90 s of real time for the careless landning PANIK; starved of RAM,
+  game time stretches past that and the check fails.
+- **info** · the default `calibrate` takes medians of 2–3 runs, which traffic can sway, so `CAL
+  CHECK` prints "(tighter than measured)" as noise (Tonga, asnan, julafton held by traffic); small
+  default samples sit at the top of their ranges.
+- **info** · the story harness warps onto scene landmarks, so its key-scene shots are closer than a
+  real arrival; the bubbles "Til markedet!" and "Ditåt!" under a first line appear only in the
+  harness. The `views` shot of `hittegods` stands behind the booth (a harness yaw). `flightseq`
+  starts from cruise and blends into `gate` in its first frames.
+- **unsure** · a story run once hit a "detached Frame" at the start of ropavieja with 6 GB free
+  (r2); not seen since.
+- **info** · a marker's `visible` set from outside is overwritten by `updateMarkers` on the next
+  frame: probes must hide a marker every frame.
+
+### 4.9 Fixed or answered in Phase 3 (for reference)
+
+- **The Phase 2 → 3 backlog** (this file's old §4) is done: the jeep autopilot and timer, the asnan
+  comment; all of the staging list (julafton's `hittegods`, "Hä-pååre", the haggle, the porter
+  outro, "Momento.", "Heia Norge!", cabin bubble stacking, the `ui_hud` toasts, props across the
+  camera); the world lists B, C1, C2, D1, D2 and A2 (placed `dusch` and `tomatlada`, frame-column
+  colliders, the west stub, prop aliases, room numbers, the fascia, the flag mast, `solstol`,
+  Christmas dressing, mowing bands, sign tags, towels, the canopy pop, drift lumps, phase snaps);
+  A1, E and H (jolts interrupt the mantra, "Juice, whisky?" at every stop, uppercase text, the bust
+  radio only in free roam, the meter gradients); the Storch witness toast, the Rio busts, the `(t)`
+  tags.
+- **The user's hand-play bug** (the trolley walling off landning's round-up) is fixed (r3
+  flight-trolley: `trolley: 'park'`).
+- **Rejected or done differently, with a reason:** the samba unlock toast stays in sentence case
+  (the Nunito house style); Fataga's crags were not moved behind the fold wall (that put them on the
+  sidewalk loop); the side slide targets the full `SIDE` distance; the GuideArrow is not hidden in the
+  flight level (the "clipped block" was the Beacon's arrow); the bodega follow retries at the wheel,
+  not parked; on-foot slack above 20 % is by design (the 0.5 s per target and × 1.25).
 
 ---
 
@@ -325,14 +450,15 @@ against the research, including the whole of §5.4 below.
      agents the same.
 2. **Never open a window or browser for the user, and never run `make run` or `npm start`.**
    - Use only headless `node tools/shot.mjs`, with `PORT` and `OUT` set per agent.
-   - **RAM is the bottleneck.** The user's Firefox often uses about 14 GB, leaving 3–9 GB free.
-     With about 2 GB free, headless Chrome timed out. Check `free -g` before heavy runs.
+   - **RAM and disk are the bottleneck** (§3.1). The user's Firefox often uses about 14 GB, leaving
+     3–9 GB free; with about 2 GB free headless Chrome timed out. Check `free -g` and `df -h /`
+     before heavy runs.
 3. **Sibling projects** (`../nothing_and_run__seinfeld`, `../saab_and_run__en_man_som_heter_ove`,
    `../bigmouth_and_run`) belong to other sessions. Don't touch them.
 4. **`../CLAUDE.md` is shared with other sessions and is not in any git repo.**
-   - Its "latest created game" pointer now says `charter_and_run__sallskapsresan/`.
+   - Its "latest created game" pointer says `charter_and_run__sallskapsresan/`.
    - Re-read it before any edit, and keep other sessions' changes.
-5. **Film traps** (already right in DESIGN; don't let fixers reintroduce them):
+5. **Film traps** (right in DESIGN; don't let fixers reintroduce them):
    - José goes *home* and Siv goes *away*.
    - "Momento." is the porter's line.
    - "Finns det svenskt kaffe?" is Fru Storch's line.
@@ -346,12 +472,21 @@ against the research, including the whole of §5.4 below.
      (§1.6).
    - The title and end-card quote "Svenskarna reser inte till någonting… dom reser från
      någonting." is the film's opening card, `[F]` (`notes/research-plot.md:45`).
-6. **Engine traps added in Phases 0–2.** CLAUDE.md lists them; the ones that bite first:
+6. **Engine traps.** CLAUDE.md lists them; the ones that bite first:
    - The level system puts the cabin at x = 3000, so town helpers must not be called there.
    - `flightScenery.js` is the only writer of the airframe pitch.
-   - Camera ceilings (`collision.ceiling`, `Frame.ceiling`) keep the eye under pergolas.
-   - `main.camNear` hides markers within 3 m of the camera.
-   - `goto.timer` may be a function.
+   - Camera ceilings (`collision.ceiling`, `Frame.ceiling`) keep the chase eye under pergolas and
+     canopies; they count by the sight line, and prop ceilings are `underOnly` (DESIGN §14.7).
+   - Markers near the camera (DESIGN §5.3): `main.camNear` hides a marker shape within 3 m of the
+     camera; in the flight level the giver's "!" hides within 5.5 m and the objective Beacon's
+     arrow is hidden in the whole level, and in the cabin the giver's and the objective's beams fade
+     out from 8 to 4 m of eye distance (`nearFade`). The giver's "!" also hides within 3 m of the
+     player. The GuideArrow hides only within 3 m of the camera.
+   - A marker's `visible` set from outside is overwritten by `updateMarkers` the next frame.
+   - `goto.timer` may be a function (`homeTimer`).
+   - The flight level aims markers straight (`routeAim: false`): a stage that crosses furniture
+     needs a `via` guide, and a guide is checked with an arrow-follower.
+   - No stage uses `trolley: false`; use `trolley: 'park'`.
    - Keep the fixture `tools/fixtures/full-missions.js` in step with the §8 literals, so that
      `fullstory` stays a contract test.
    - `story` prints `no errors` even after `scenario failed`; only the `RESULT:` line counts.
@@ -380,11 +515,15 @@ against the research, including the whole of §5.4 below.
 - DESIGN, README and CLAUDE.md match the code. There is a "Changelog (Phase 3)" in DESIGN.
 - The tag `phase3` exists.
 
+**Met at `phase3`** (2026-10-11): r3 gate 2 passed every scenario, `calibrate`, `calibflight` and
+the contact sheets (§1.2); the docs step (`phase3-r3-docs.md`) brought DESIGN, README, CLAUDE.md and
+this file in step with the code; the orchestrator's three green `story` runs come before the tag.
+
 **Final report to the user, in Swedish.** Cover:
 - what is in the game, and what was cut or left as P1/P2 (DESIGN §15.5)
 - how to play: `make run`, then http://127.0.0.1:8840, which the user starts themselves; controls
   are in README
-- known issues
+- known issues (§4)
 - the commits, tags and branches created
 - two questions:
   - May the Phase 1 worktrees (`../.wt/charter-*`) and the `p1-*` branches be removed?
