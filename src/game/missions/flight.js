@@ -7,7 +7,7 @@
 // the real collision geometry): T_ref = the clean autopilot time on the sensible route (sprinting
 // where sprint fear is small next to the stage's own) + 0.5 s per target (reaction and aim), the
 // 75th percentile for the random bottle sweep; timer = ceil(1.25 × T_ref). Gate dash 3.6 s -> 6,
-// seat 3.1 s from the intro's spot at the door past three stowers -> 7, bottles p75 7.60 s of 76
+// seat 3.1 s from the intro's spot at the door past three stowers -> 7, bottles p75 7.60 s of 86
 // sweeps through the 3-6 s turbulence + 2.5 -> 13 (Phase 3 r2; the pool `sweeper-r2fm/b69c64e`
 // in notes/calibration-samples.md, `node tools/pool.mjs`), round-up 7.6 s -> 12, back to 14B from
 // the far end 3.2 s -> 5.
