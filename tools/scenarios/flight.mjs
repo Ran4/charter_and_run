@@ -3,7 +3,7 @@
 //               only way out of the landside pocket, the kontrollant and gateQueue spots are free
 //   cabin       one shot per phase, walls hold, camera above the walls, seated heads clear of the
 //               overhead (aisle view and two-shots), row strip, Ole in 14A after ?mission=2 and an
-//               outfit swap, the camera at the cabin ends
+//               outfit swap, the camera at the cabin ends, juice's 14B offered across the aisle
 //   trolley     bowling, dodging into a row, waiting for an NPC, manual modes fall back to auto,
 //               an excused stower takes his seat, landning parks it in the front galley (a
 //               checkpoint retry too)
@@ -226,6 +226,25 @@ export const SCENARIOS = {
       check(r.camY > 4 && r.camZ >= -19.3, `camera inside the cabin and above the walls at ${lm}`);
       await T.shot('cabin_end_' + lm);
     }
+    // The stage's seat across its row (§5.10): juice [0] names 14B, and from the D half of the aisle
+    // (14B 1.7-1.8 m off) E offers 14B, not 14D (Phase 3 r3: "Res dig" from 14D put him back where E
+    // offered 14D again, while the objective said "Sätt dig på 14B!").
+    await T.fresh('&mission=2');
+    await T.startMission();
+    await T.until(() => __game.missions.state === 'running' && !__game.inDialog, 60000);
+    for (const [lx, yaw] of [[-0.3, Math.PI / 2], [-0.3, -Math.PI / 2], [-0.2, Math.PI], [0.25, Math.PI / 2]]) {
+      await T.ev((x, yaw) => __game.debugWarp(x, -2.1, yaw), X(lx), yaw);
+      await T.frames(3);
+      const r = await T.ev(() => { const g = __game, it = g.nearestInteractable(); return { best: g.cabin.bestSeat(g)?.id ?? null, it: it?.it?.id ?? null }; });
+      T.log('juice seat prompt', lx, yaw.toFixed(2), JSON.stringify(r));
+      check(r.best === '14B' && r.it === 'seat:14B', `juice [0]: E offers 14B from the aisle at x ${lx} (got ${r.it})`);
+    }
+    await T.ev((x) => __game.debugWarp(x, -2.1, Math.PI / 2), X(-0.3));
+    await T.frames(3);
+    await T.tap('KeyE');
+    await T.frames(6);
+    const sat = await T.ev(() => __game.player.seatId);
+    check(sat === '14B', `juice [0]: E from the D half of the aisle seats him in 14B (got ${sat})`);
   },
 
   // ---------------------------------------------------------------------------------------------

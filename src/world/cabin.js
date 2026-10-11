@@ -898,7 +898,9 @@ export function buildCabin(scene, game) {
         if (Math.abs(seat.z - p.z) > 1 || Math.abs(seat.x - p.x) > 2.5) continue;
         if (seat.taken) continue;
         const d = Math.hypot(seat.x - p.x, seat.z - p.z);
-        if (d > 0.8 && !(seat.id === wantId && d < 1.6)) continue;
+        // The stage's seat reaches 1.6 m, and 2.0 m level with its row: from the D half of the aisle
+        // 14B is 1.7 m off, E offered 14D, and "Res dig" put him back where it did again.
+        if (d > 0.8 && !(seat.id === wantId && d < (Math.abs(seat.z - p.z) < 0.6 ? 2.0 : 1.6))) continue;
         const dot = d > 0.01 ? (fx * (seat.x - p.x) + fz * (seat.z - p.z)) / d : 1;
         const score = dot - d * 0.5 + (seat.id === wantId ? 10 : 0);
         if (score > bs) { bs = score; best = seat; }
@@ -1489,8 +1491,9 @@ export function buildCabin(scene, game) {
   trolley.ai = { update: (h, g) => cabin.stepTrolley(h, g) };
 
   // ---- interactables (§5.10) ----------------------------------------------------------------
+  // r: the widest reach bestSeat allows (the stage's seat level with its row); it limits each seat.
   const seatIt = {
-    id: 'seat', x: 0, z: 0, y: 0.55, r: 1.6, prompt: S.promptSit, priority: 0,
+    id: 'seat', x: 0, z: 0, y: 0.55, r: 2.0, prompt: S.promptSit, priority: 0,
     _seat: null,
     pos(g) { const s = cabin.bestSeat(g); this._seat = s; if (s) this.id = `seat:${s.id}`; return s ? { x: s.x, z: s.z, y: 0.55 } : { x: 1e9, z: 1e9 }; },
     enabled() { return !!this._seat; },

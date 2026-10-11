@@ -29,7 +29,7 @@ export const FULL_MISSIONS = [
         ['berra', 'Kolla terroristen!'],                                                                                             // [F](t)
       ] }),
       () => goto({ to: 'gateOle', radius: 2.5, text: 'Gå till Ole vid gate 8', startCue: { place: { ole: ['gateOle', 0, 0] } } }),
-      () => scene({ checkpoint: true, retryAt: 'gateOle', frame: ['ole', 'stig'], place: { stig: ['gateOle', -2.0, 0.2, -1.47] }, cam: { at: 'statsCam', dist: 0, height: 1.9 }, lines: [
+      () => scene({ checkpoint: true, retryAt: 'gateOle', retryFear: true, frame: ['ole', 'stig'], place: { stig: ['gateOle', -2.0, 0.2, -1.47] }, cam: { at: 'statsCam', dist: 0, height: 1.9 }, lines: [
         ['ole', 'Du vet vel at det er 50 prosent sjanse å overleve en flyulykke.', { fear: 8 }],   // [F]
         ['ole', 'Det er farligere å kjøre bil enn å fly.', { fear: 8 }],                          // [F]
         ['ole', 'Man regner mellom to og fem millioner flytimer pr. kræsj.', { fear: 8 }],        // [F]

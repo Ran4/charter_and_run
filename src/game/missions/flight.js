@@ -7,7 +7,7 @@
 // the real collision geometry): T_ref = the clean autopilot time on the sensible route (sprinting
 // where sprint fear is small next to the stage's own) + 0.5 s per target (reaction and aim), the
 // 75th percentile for the random bottle sweep; timer = ceil(1.25 × T_ref). Gate dash 3.6 s -> 6,
-// seat 3.1 s from the intro's spot at the door past three stowers -> 7, bottles p75 7.60 s of 71
+// seat 3.1 s from the intro's spot at the door past three stowers -> 7, bottles p75 7.60 s of 76
 // sweeps through the 3-6 s turbulence + 2.5 -> 13 (Phase 3 r2; the pool `sweeper-r2fm/b69c64e`
 // in notes/calibration-samples.md, `node tools/pool.mjs`), round-up 7.6 s -> 12, back to 14B from
 // the far end 3.2 s -> 5.
@@ -49,19 +49,31 @@ const ROW22 = { at: 'row22Cam', dist: 0, height: 3.6 };
 // small: passed 1.5 m short, the arrow cut the corner into row 1's C seat. Phase 3 r3: re-derived
 // every frame (a stored index only stepped forward, so after a PANIK sent Stig back to Ole mid-dash
 // the arrow aimed at the men's door through the benches), and the clear line keeps a door from being
-// skipped from a room's far corner (the queue's arrow aimed through the men's room wall).
+// skipped from a room's far corner (the queue's arrow aimed through the men's room wall). When none
+// of the points he is on his way to is in clear sight, the arrow looks over the furniture (only what
+// stands above head height blocks it: walls, doors, the toilet blocks) at the furthest one he is
+// nearer than the point before it is (`pass` is for rounding a waypoint, whose corner is the
+// obstacle: over the middle bench's end it sent the dash's arrow-follower into the bench). On his
+// way to none (at Ole's after a PANIK) it aims at the first point. Without that pass (r3 repair) a
+// player who stepped into a seat row's legroom in ombord's 7 s seat dash (row 3's or row 12's to
+// pass a stower, row 15's one row too far) got the arrow at row 1, and north of the back bench row
+// the queue's arrow turned back to the men's door.
 function via(st, names, pass = 1.5) {
   const target = st.target;
   st.target = function (g) {
     const p = g.player, own = target.call(this, g);
     const pts = names.map((n) => g.lmOffset(n));
     if (own) pts.push(own);
-    let k = pts.length - 1;
-    for (; k > 0; k--) {
-      const a = pts[k - 1], b = pts[k];
-      const on = dist(p.x, p.z, a.x, a.z) < pass || dist(p.x, p.z, b.x, b.z) < dist(a.x, a.z, b.x, b.z);
-      if (on && segmentBlocked(p.x, p.z, b.x, b.z, p.y + 0.5, 'prop', 0.1) < 0) break;
-    }
+    const furthest = (y, r) => {
+      let k = pts.length - 1;
+      for (; k > 0; k--) {
+        const a = pts[k - 1], b = pts[k];
+        const on = dist(p.x, p.z, a.x, a.z) < r || dist(p.x, p.z, b.x, b.z) < dist(a.x, a.z, b.x, b.z);
+        if (on && segmentBlocked(p.x, p.z, b.x, b.z, y, 'prop', 0.1) < 0) break;
+      }
+      return k;
+    };
+    const k = furthest(p.y + 0.5, pass) || furthest(p.y + 2.0, 0);
     return own && k === pts.length - 1 ? own : { x: pts[k].x, z: pts[k].z, r: 1.0, goal: own };
   };
   return st;
@@ -141,11 +153,13 @@ export const FLIGHT_MISSIONS = [
       // [1] to Ole by gate 8 (not "Sätt dig": that is the seat prompt, and there is nothing to sit on)
       () => goto({ to: 'gateOle', radius: 2.5, text: 'Gå till Ole vid gate 8', startCue: { place: { ole: ['gateOle', 0, 0] } } }),   // [N]
       // [2] Ole's statistics. Only Ole's six statistics lines carry fear. Checkpoint: a failed
-      // dash replays the statistics (which rebuild the fear the dash needs), not the arch. Stig
-      // stands on the measured dash start, beside Ole, and a fixed cut from the south frames both
-      // (the side two-shot followed the arrival: from the arch it put José's head in the frame).
+      // dash replays the statistics, not the arch; `retryFear` gives back the meter the first
+      // attempt had here ("Bomber" and the arch), so the replay rebuilds the ≈ 70 the dash needs
+      // (the fail empties it: the retried dash started at 48, with no heartbeat). Stig stands on
+      // the measured dash start, beside Ole, and a fixed cut from the south frames both (the side
+      // two-shot followed the arrival: from the arch it put José's head in the frame).
       () => scene({
-        checkpoint: true, retryAt: 'gateOle', frame: ['ole', 'stig'],
+        checkpoint: true, retryAt: 'gateOle', retryFear: true, frame: ['ole', 'stig'],
         place: { stig: ['gateOle', -2.0, 0.2, -1.47] }, cam: { at: 'statsCam', dist: 0, height: 1.9 },
         lines: [
           ['ole', 'Du vet vel at det er 50 prosent sjanse å overleve en flyulykke.', { fear: 8 }],   // [F]

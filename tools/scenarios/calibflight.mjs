@@ -14,7 +14,8 @@
 // Each timed stage reports its clean time; T_ref = clean time + 0.5 s per target (a human's
 // reaction and aim, which the autopilot does not have), timer = T_ref × 1.25 rounded up to a whole
 // second (§8). The FLYGRÄDSLA cases check the binding rule: a careful player
-// never panics, a careless one does in missions 1, 2 and 5.
+// never panics, a careless one does in missions 1, 2 and 5; and the gate dawdler's retry starts the
+// dash from the first attempt's fear.
 import { check, pct, timerRange } from '../lib.mjs';
 
 const FLIGHT = process.env.FLIGHT ? process.env.FLIGHT.split(',') : null;
@@ -125,6 +126,16 @@ async function gate(T, variant) {
     const s2 = await apState(T);
     T.log(`gate/${variant}: through the mantra and Berra's scene: stage ${s2.si} ${s2.st}; panics ${s2.panics}; max fear after the dash ${s2.maxV}`);
     return { dash: d.secs, failed: s1.st === 'failed', panics: s2.panics, startFear: s0.v, endFear: s1.v, timer, done: s2.st === 'running' && s2.si >= 6 };
+  }
+  // The failed dash's retry replays the statistics (the checkpoint) and must start the dash from the
+  // first attempt's fear (§8.1 [2] `retryFear`; Phase 3 r3: the fail emptied the meter and the
+  // replay rebuilt only its own +48, so the retried dash started at 48 with no heartbeat).
+  if (s1.st === 'failed') {
+    await T.ev(() => { window.__fap.pts = []; __game.missions.retry(); });
+    await stageAt(T, 3);
+    const s2 = await apState(T);
+    T.log(`gate/${variant}: retried from the statistics: the dash starts at fear ${s2.v} (first attempt ${s0.v})`);
+    return { dash: d.secs, failed: true, panics: s1.panics, startFear: s0.v, endFear: s1.v, timer, retryFear: s2.v };
   }
   return { dash: d.secs, failed: s1.st === 'failed', panics: s1.panics, startFear: s0.v, endFear: s1.v, timer };
 }
@@ -298,6 +309,10 @@ export const SCENARIOS = {
       if (g.done !== undefined) check(g.done, 'gate: the careful player gets through the mantra stage');
     }
     if (res.gateDawdle) check(res.gateDawdle.panics > 0, 'gate: the careless (dawdling) player panics in the dash');
+    if (res.gateDawdle?.retryFear !== undefined) {
+      const g = res.gateDawdle;
+      check(Math.abs(g.retryFear - g.startFear) < 2, `gate: a retry from the statistics starts the dash at the first attempt's fear (${g.retryFear} vs ${g.startFear})`);
+    }
     if (res.ombordCareful) {
       const o = res.ombordCareful;
       // Targets: the three stowers (E each) and the seat.

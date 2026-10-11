@@ -5,8 +5,8 @@
 //     idleAnim?: { key: flag | [flags] },   // held on the giver/extras while idle at `at`
 //     onEnd?(g, reason) }   // reason: 'complete' | 'fail' | 'abort'
 // States: idle | intro | running | outro | failed. Frozen after Phase 0 (owner none).
-// A checkpoint stage may carry `retryAt` (where a retry starts) and `retryCar` (the car waiting
-// there; kinds/core.js retryCar).
+// A checkpoint stage may carry `retryAt` (where a retry starts), `retryCar` (the car waiting
+// there; kinds/core.js retryCar) and `retryFear` (a retry gives back the meter it first started at).
 
 import { MISSIONS } from './index.js';
 import { retryCar } from './kinds/core.js';
@@ -32,6 +32,7 @@ export class MissionRunner {
     this.stageT = 0;         // scaled seconds in the current stage
     this.posed = [];         // [key, flag] pairs set by syncIdleAnim
     this.lastCar = null;     // the car the player last drove in this mission (retryCar)
+    this.cpFear = {};        // meter at a `retryFear` checkpoint's first start, by stage index
   }
 
   get current() { return MISSIONS[this.index] || null; }
@@ -62,6 +63,7 @@ export class MissionRunner {
     if (!intro.length) { hud.showBanner(def.title, sub, 'mission', 1400); audio.jingle('start'); }
     this.cpI = 0;
     this.lastCar = null;
+    this.cpFear = {};
     this.startMission(0);
     if (intro.length) this.faceTimedGuide();
   }
@@ -105,6 +107,7 @@ export class MissionRunner {
     this.stage?.cleanup?.(g, this.m);
     const st = (this.stage = this.m.def.stages[this.stageI]());
     if (st.checkpoint) this.cpI = this.stageI;
+    if (st.retryFear) this.cpFear[this.stageI] ??= g.shame.v;   // the first start only (retry())
     g.shame.locked = g.shame.mode === 'pursuit' && !!st.lockMeter;
     g.shame.forced = !!st.shame;
     this.stageT = 0;
@@ -338,7 +341,15 @@ export class MissionRunner {
     // `retryCar`: the car waits at its spot (the player at the wheel unless `park`) before the
     // checkpoint stage's init, which may read g.playerCar (destroy.playerDamageScale). It becomes
     // `lastCar`, so a second failure on foot (grisfest's plates again) finds the car parked for him.
-    this.startMission(this.cpI, (m) => { ambient(); if (cp.retryCar) this.lastCar = retryCar(g, m, cp.retryCar, prev); });
+    // `retryFear`: the meter (emptied by the fail) gets back what it had when the checkpoint first
+    // started, so a retry starts from the same fear as the first attempt (Phase 3 r3: the gate's
+    // statistics rebuilt only their own +48 and the retried dash started at 48, not ≈ 70).
+    const fear = cp.retryFear ? this.cpFear[this.cpI] : 0;
+    this.startMission(this.cpI, (m) => {
+      ambient();
+      if (fear > 0) g.shame.add(fear);
+      if (cp.retryCar) this.lastCar = retryCar(g, m, cp.retryCar, prev);
+    });
     // On foot he and the camera face the retried stage's guide; a stage without a target (a scene)
     // keeps the spot's yaw. Phase 3 r3: the camera kept the yaw it had when the stage failed, and the
     // spots face their landmark, not the way to go: ombord's seat dash looked at the cockpit door,

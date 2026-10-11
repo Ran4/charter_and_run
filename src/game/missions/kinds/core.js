@@ -23,7 +23,7 @@ import { dist, yawTo } from '../../../util.js';
 // ---------------------------------------------------------------------------------------------
 // Shared helpers
 
-export const COMMON = ['checkpoint', 'panicFails', 'lockMeter', 'shame', 'oleBarks', 'timedCues', 'startCue', 'doneCue', 'retryAt', 'retryCar'];
+export const COMMON = ['checkpoint', 'panicFails', 'lockMeter', 'shame', 'oleBarks', 'timedCues', 'startCue', 'doneCue', 'retryAt', 'retryCar', 'retryFear'];
 export function common(o, stage) {
   for (const k of COMMON) if (o[k] !== undefined) stage[k] = o[k];
   stage.o = o;
