@@ -53,7 +53,7 @@ It is its own local git repo, on branch `main`, with no remote.
 | `phase2` | c30b0ff | gate fix 1: closed race course, calibrate race outcome, jeep and home timers |
 | `phase3-r1` | 45eaead | QA round 1: 9 fixer groups, repair 1, repair 2 (the ledger, the fixed walker) |
 | `phase3-r2` | 90775a7 | QA round 2: 8 fixer groups (64 findings), gate PASS, review clean |
-| `phase3` | the commit the orchestrator tags after this docs step | QA round 3: 5 fixer groups, 2 repair rounds, 2 ledger steps, docs |
+| `phase3` | the final docs commit | QA round 3: 5 fixer groups, 2 repair rounds, 2 ledger steps, docs; gate 3 PASS, review 3 clean, `story` ×3 |
 
 `git log --oneline phase3-r2..phase3` lists round 3's commits; `git log --oneline` the full history.
 
@@ -81,8 +81,14 @@ It is its own local git repo, on branch `main`, with no remote.
 - **After gate 2** the last repair steps (b014460, bf50e87, cd39361, 9b4044d) each re-ran their
   scenarios and a full `story` (PASS). Verifier 3 re-ran the camera and flight repairs on snapshots
   (`walk drive aerial views islandtour smash foot skandal perf`, `gate cabin trolley panic
-  flightshots kinds missions`, `calibflight`, `story`: all PASS). The orchestrator runs `story` three
-  times in a row on the final commit before it tags `phase3`.
+  flightshots kinds missions`, `calibflight`, `story`: all PASS).
+- **Phase 3 r3 gate 3** (on 5e972ab, after the docs step, port 8878): **GATE PASS**, and diff
+  review 3 **CLEAN**. Every scenario in CLAUDE.md, `calibrate` and `calibflight` on their
+  deterministic subsets (sampling closed; no commit after 4887ede touches a pooled stage),
+  `node tools/pool.mjs` against every shipped timer, the visual list, and the docs against the code.
+- **The orchestrator** ran `PORT=8870 story` three times in a row on 5e972ab (2026-10-11, about
+  190 s each): `[t] done -> #13 idle`, no `scenario failed`, `no errors`, `RESULT: PASS` all three.
+  The tag `phase3` is on the docs-only commit after it (review 3's wording nits, these lines).
 
 ### 1.3 Where to read
 
@@ -96,7 +102,8 @@ It is its own local git repo, on branch `main`, with no remote.
   commands.
 - **`notes/calibration-samples.md`**: the raw-sample ledger. Its Rules say what pools with what; its
   tables hold every calibration run Phase 3 made, gates' and verifiers' included.
-- **`notes/build-reports/`**: every agent's report.
+- **`notes/build-reports/`**: every fixer's and repair step's report (the critics', gates',
+  reviewers' and verifiers' findings are folded into §4).
   - Phases 0–2: `phase0a.md`, `phase0b.md`, `phase0-polish*.md`, `p1-<WP>.md` (one per package),
     `phase1-integration-input.md`, `phase2-{merge,contracts,balance,stability,docs}.md`.
   - Phase 3: `phase3-r1-<group>.md` (spine, world-town, world-outskirts, cast-vehicles,
@@ -266,15 +273,18 @@ Where: file or DESIGN section; numbers are from the named report.
 
 ### 4.2 Gameplay and balance
 
-- **info** · on-foot timers against a human (r3 playtest, a modelled player on 90775a7 against balls
-  24, sheep 27, flowers 23): the "competent" model (0.3 s reactions, 300°/s turns, W only, sprinting)
-  made 101 of 102; its one miss was a sheep chase whose fifth sheep took 12.7 s. The "slow" model
-  (0.35–0.55 s, 150°/s, about a gamepad stick) made 8 of 10 balls, 9 of 10 sheep and 6 of 10 flowers
-  runs: the fail → retry loop DESIGN §8 intends. The 0.5 s per target held (the models needed
-  0.45–0.65 / 0.7–1.2 s more per target than the walker). Since then: balls **23**, sheep **28**,
-  flowers **26** (new pools), so the balls are a second tighter and the flowers 3 s looser than
-  what the models faced. The first sheep attempt starts where the bus tail ends, up to 30–38 m east
-  of the measured start (about 0.9 s at the median; a retry starts at the measured spot).
+- **info** · on-foot timers against a human (a modelled player: calibrate's walker with a player's
+  limits; the r3 playtest on 90775a7, re-run by the orchestrator on 9b4044d with the shipped timers
+  balls 23, sheep 28, flowers 26, plates 33, sprit 13). The "competent" model (0.3 s reactions,
+  300°/s turns, W only, sprinting) made **160 of 162** (round 3: 101 of 102); its two misses were
+  over by 1.2 s (flowers) and 0.5 s (sheep) on layouts where the walker itself needed 24.7 / 25.4 s.
+  Slack at its p75: balls 23 %, sheep 30 %, flowers 24 %, plates 31 %, sprit 39 %. The "slow" model
+  (0.35–0.55 s, 150°/s, about a gamepad stick) made flowers 18 of 22 (p75 7 % slack: still the
+  hardest), balls 20 of 22, sheep 21 of 22 (10 of 10 with the real start camera); round 3 had 6/10,
+  8/10, 9/10. The balls improved despite 24 → 23 because timed stages now start facing their guide
+  (69f4f33), worth about 3 s to a slow player. The 0.5 s per target holds (paired overhead
+  competent +1.6–2.6 s, slow +3.6–4.8 s per stage). The first sheep attempt starts where the bus tail
+  ends, up to 30–38 m east of the measured start (a retry starts at the measured spot).
 - **info** · DESIGN §8 table, ledger — the balls (23, 90 % range 22–25), sheep (28, 26–30) and
   flowers (26, 25–27) pools sit on a rounding boundary; one n 4 default run can flip one by a
   second. Sampling closed on 2026-10-11; a later flip is the rule working, not a regression.

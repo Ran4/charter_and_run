@@ -59,8 +59,8 @@ också: A hopp/handbroms, B spring, X sparka/mantra, Y prata, Start paus, triggr
 Vägen visas av den gula pilen över Stig-Helmers huvud, ljuskäglan och ringen vid målet och
 stjärnan på kartan. På Arlanda och i planet går pilen runt bänkar, väggar och stolsrader i
 stället för rakt över dem, och när ett tidsatt moment börjar vänds Stig-Helmer och kameran åt
-rätt håll. Skakar planet medan han står upp visas **TURBULENS!**, och prompten **Håll i dig!**
-(Space) går före "Sätt dig" och toaletten.
+rätt håll. När planet börjar skaka visas **TURBULENS!**, och står han upp går prompten **Håll i dig!**
+(Space) före "Sätt dig" och toaletten.
 
 ## Rollista
 
@@ -231,7 +231,7 @@ tools/pool.mjs                  re-derives every random stage's timer from the l
 DESIGN.md                       design bible and module contracts (the source of truth)
 HANDOFF.md                      the state at `phase3`, known issues, workflow lessons, gotchas
 notes/calibration-samples.md    the raw-sample ledger: every calibration run, pooled by stage and code
-notes/build-reports/            every agent's report, Phase 0 to Phase 3
+notes/build-reports/            every fixer's report, Phase 0 to Phase 3
 notes/                          also film research (Swedish) and engine maps
 ```
 

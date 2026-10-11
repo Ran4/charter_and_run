@@ -10,7 +10,7 @@ and the code map.
 critics, serial fixers, gates and (round 3) adversarial verifiers and repairs (tags `phase3-r1`,
 `phase3-r2`, `phase3`). `HANDOFF.md` is the hand-off for whoever continues: the state at `phase3`,
 the binding user decisions (player car ×1.2, tight measured timers), the workflow lessons, the
-**known issues** (§4) and the gotchas. Read it before changing anything. Every agent's report is in
+**known issues** (§4) and the gotchas. Read it before changing anything. Every fixer's report is in
 `notes/build-reports/` (Phase 3: `phase3-r{1,2,3}-<group>.md`); DESIGN's "Changelog (Phase 3)"
 opens with a summary of the rounds and the timer changes.
 
