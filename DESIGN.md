@@ -1642,12 +1642,31 @@ No `extra` (the gate cast already stands at its `HOMES.gate` spots; an `extra` w
    dash a player in a seat row's legroom (row 3's or row 12's past a stower, row 15's one row too
    far; 111 of the verifier's cabin grid cells) got the arrow at row 1 with 1–2 s left, and north of
    the back bench row the queue's arrow turned back to the men's door. After, the grids: ombord aims
-   at row 1 only forward of it (12 cells), at `cabinRow14` from the rows (98 cells) and at 14B from
-   row 15 behind it (where E reaches 14B); the queue aims at the lounge from 56 more cells (north of
-   the back bench row and south of the middle one); the dash at the men's door from 31 cells between
-   the middle and back bench rows (it sent him back past the middle bench's end, the r2 aim); boarding
-   is unchanged. The arrow-followers keep their times (dash 3.6 s, seat dash 3.1 s, queue 5.7–6.5 s,
-   boarding 3.9–4.9 s, landning's 14B 0.4–2.2 s). The waypoint target carries the
+   at row 1 only forward of it (12 cells), at `cabinRow14` from the rows (98 cells; r3 repair2: the
+   aisle beside him first, below) and at 14B from row 15 behind it (where E reaches 14B); the queue
+   aims at the lounge from 56 more cells (north of the back bench row and south of the middle one);
+   the dash at the men's door from 31 cells between the middle and back bench rows (it sent him back
+   past the middle bench's end, the r2 aim; r3 repair2: the corridor beside him first, below);
+   boarding is unchanged. The arrow-followers keep their times (dash 3.6 s, seat dash 3.1 s, queue
+   5.7–6.5 s, boarding 3.9–4.9 s, landning's 14B 0.4–2.2 s). **Onto the route first** (Phase 3 r3
+   repair2): when that look over the furniture picks a waypoint (not the stage's own target), the
+   arrow first aims at the nearest point of the leg into it (the segment from the point before it),
+   if that point is more than 0.3 m off and in clear sight from his hip: in a seat row's legroom the
+   aisle beside him, between the middle and back bench rows the corridor east of them at his own z
+   (x ≈ 28.0–28.4). Aimed over the seat backs straight at row 14, an arrow-follower in the forward
+   rows' A/B legroom slid along the seat back ahead and stalled on its aisle end (6 of the verifier's
+   32 cells, 3.9–6.3 s); aimed over the back bench at the men's door, one from (23, 17) wedged on the
+   bench's east end, 7.1 s for the 6 s dash (R in the dash puts him at (22, 17.5), in that strip).
+   Grids (terminal 0.5 m, cabin 0.2 × 0.25 m): the dash's 116 cells between the bench rows (x 18–26.5,
+   z 14–18.5) and ombord's 528 legroom cells of rows 1–12 (both sides) change; the queue, boarding,
+   landning [1], the rest of ombord (the aisle, row 15 behind 14B, forward of row 1) and the PANIK
+   aim (`herrtoaGang`) do not. Arrow-followers (ts 1, E on every "Ursäkta!"): ombord's legroom, one
+   cell per side and seat column in rows 1–12 (72), stalls of 1 s or more 13 → 0, mean 3.05 → 1.74 s
+   (max 7.43, row 1's door corner → 3.08), none slower; the verifier's 44 cells, 9 stalls → 0 (mean
+   2.41 / 2.28 → 1.58 / 1.45 s); the dash's 31 cells mean 3.83 → 3.13 s (max 7.08 → 3.85), every one
+   faster than with r3's rule too (3.66 s), (22, 17.5) 3.93 → 3.13 s. The followers from the stage
+   starts keep their times (dash 3.62 s, seat dash 3.1 s, queue 5.7–6.5 s, boarding 3.9–4.9 s,
+   landning's 14B 0.4–2.2 s). The waypoint target carries the
    stage's own as `goal`, which R's terminal rule uses (§3). The flight level aims straight
    (`routeAim: false`), and the straight line from the dash start crossed the middle bench row
    and the toilet block's west wall: an arrow-follower was pinned on the men's door jamb and failed
@@ -1752,11 +1771,14 @@ The cast is already seated (`HOMES.flight` from index 1 on, §4.2) although the 
      for the whole 7 s, 2 of 2. On the guide it sits down in 3.1 s, 2 of 2. The aisle waypoint is
      passed within 0.5 m: at the default 1.5 m it was passed 1.5 m short and the arrow cut the corner
      into row 1's C seat. No timer change (`FLIGHT=ombord calibflight`: sprint 3.1 s, walk 4.4 s).
-     From a seat row's legroom (stepping into row 3 or 12 past a stower, or into row 15 one row too
-     far) the arrow looks over the seat backs at row 14, or at 14B from row 15 behind it (§8.1 [3]
-     furniture pass, Phase 3 r3 repair: it aimed at row 1 there). In row 1's legroom by the door (a
-     diagonal from the door, z < 12.6) the player is already nearer row 14 than row 1 is, so the
-     arrow points aft over row 1's C seat, as the r2 guide's index did there.
+     From a seat row's legroom in rows 1–12 (stepping into row 3 or 12 past a stower, or into row 1's
+     by the door on a diagonal from it) the arrow points into the aisle beside him, then down it to
+     row 14; from row 15 behind 14B it points at 14B, where E reaches 14B (§8.1 [3]: Phase 3 r3 it
+     aimed at row 1 from the legroom; r3 repair looked over the seat backs at row 14, and an
+     arrow-follower slid along the seat back ahead and stalled on its aisle end, 13 of 72 legroom cells,
+     up to 7.4 s from row 1's door corner, where the arrow pointed aft over row 1's C seat; r3 repair2
+     leads onto the aisle first: 0 stalls, every cell faster). Beside a stower (rows 3, 8, 12) the
+     aisle point is where he stands, and "Ursäkta!" is offered there.
 2. `timeline({ checkpoint: true, retryAt: 'cabinRow14', seat: '14B', lockSeat: true, panicFails: true, oleBarks: true, secs: 27, text: 'Starten! Håll J om det blir för mycket', barLabel: 'STARTEN', events: [...] })`
    (times in scaled seconds; the cabin phases run on the same clock; `lockSeat` hides "Res dig"
    and ignores R for the stage, so time never pauses while the phases run on)
@@ -5454,3 +5476,22 @@ the fixer's group.
   way (6 px/frame, not in the verifier's set) the eye can still take the other side (cut in from far
   out, or at the hold's end) 8–11 frames before that side collapses: two cuts (HEAD none there; 2
   rapid pairs in 38 slow turns, 0 in the verifier's 114).
+- r3 repair2-flight: `via` leads **onto the route first** (§8.1 [3], §8.2 [0]; missions/flight.js;
+  verifier 2's regressions 1 and 2 of r3 repair-flight): when the over-the-furniture pass picks a
+  waypoint (not the stage's own target), the arrow first aims at the nearest point of the leg into it,
+  if that is more than 0.3 m off and in clear sight from his hip (in a seat row's legroom the aisle
+  beside him; between the middle and back bench rows the corridor at his own z), then along the chain.
+  Over the seat backs at row 14, an arrow-follower in the forward rows' A/B legroom slid along the
+  seat back ahead and stalled on its aisle end; over the back bench at the men's door, one wedged on
+  the bench's east end (7.08 s for the 6 s dash, from (23, 17)). Measured (ts 1): ombord's 72
+  legroom cells (rows 1–12, both sides, three seat columns) stalls of 1 s or more 13 → 0, mean 3.05 →
+  1.74 s, max 7.43 → 3.08 s, none slower; the verifier's 44 cells 9 → 0; the dash's 31 cells mean
+  3.83 → 3.13 s, (23, 17) 7.08 → 2.98 s, every cell faster than r3's rule too. The queue, boarding
+  and landning [1] grids, the PANIK aim and the followers from the stage starts are unchanged (dash
+  3.62 s, seat dash 3.1 s, queue 5.7–6.5 s, boarding 3.9–4.9 s, landning's 14B 0.4–2.2 s). Row 1's
+  door corner (a known issue of r3 repair) is gone: the arrow points into the aisle there. The
+  verifier's proposal, (0.25, his z) in the cabin when |x| > 0.45, is the same aim in the cabin; the
+  leg point is its general form and also covers the terminal. No timer moves (the arrow is a guide;
+  the `calibflight` autopilots walk their own waypoints): on the final code gate 3.6 s → 6 (walk
+  5.12, the dawdler's PANIK at 5.2 s, retry 70.4 for 70.1), ombord 3.1 / 4.42 s → 7, landning 7.6 /
+  6.9 s → 12 and 1.3 / 3.22 s → 5.

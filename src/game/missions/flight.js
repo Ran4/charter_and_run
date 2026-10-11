@@ -29,7 +29,7 @@
 import { goto, scene, interact, mantra, sit, timeline, carry, collect } from './kinds/index.js';
 import { rowZ } from '../../world/cabin.js';
 import { segmentBlocked } from '../../world/collision.js';
-import { dist } from '../../util.js';
+import { dist, clamp } from '../../util.js';
 
 const PI = Math.PI;
 
@@ -57,7 +57,14 @@ const ROW22 = { at: 'row22Cam', dist: 0, height: 3.6 };
 // way to none (at Ole's after a PANIK) it aims at the first point. Without that pass (r3 repair) a
 // player who stepped into a seat row's legroom in ombord's 7 s seat dash (row 3's or row 12's to
 // pass a stower, row 15's one row too far) got the arrow at row 1, and north of the back bench row
-// the queue's arrow turned back to the men's door.
+// the queue's arrow turned back to the men's door. When that look over the furniture picks a
+// waypoint (not the stage's own target), the arrow first leads onto the route: to the nearest point
+// of the leg into that waypoint, when it is more than 0.3 m off and in clear sight from the hip (in
+// a seat row's legroom, the aisle beside him; between the bench rows, the corridor east of them).
+// Aimed over the seat backs straight at row 14, an arrow-follower in the forward rows' A/B legroom
+// slid along the seat back ahead and stalled on its aisle end (r3 repair2: 13 of 72 legroom cells,
+// 1.0-2.5 s), and over the back bench at the men's door one wedged on the bench's east end (7.1 s for
+// the 6 s dash).
 function via(st, names, pass = 1.5) {
   const target = st.target;
   st.target = function (g) {
@@ -73,7 +80,13 @@ function via(st, names, pass = 1.5) {
       }
       return k;
     };
-    const k = furthest(p.y + 0.5, pass) || furthest(p.y + 2.0, 0);
+    const k0 = furthest(p.y + 0.5, pass), k = k0 || furthest(p.y + 2.0, 0);
+    if (!k0 && k > 0 && k < names.length) {
+      const a = pts[k - 1], b = pts[k], dx = b.x - a.x, dz = b.z - a.z;
+      const s = clamp(((p.x - a.x) * dx + (p.z - a.z) * dz) / (dx * dx + dz * dz), 0, 1);
+      const qx = a.x + dx * s, qz = a.z + dz * s;
+      if (dist(p.x, p.z, qx, qz) > 0.3 && segmentBlocked(p.x, p.z, qx, qz, p.y + 0.5, 'prop', 0.1) < 0) return { x: qx, z: qz, r: 1.0, goal: own };
+    }
     return own && k === pts.length - 1 ? own : { x: pts[k].x, z: pts[k].z, r: 1.0, goal: own };
   };
   return st;
