@@ -3503,16 +3503,26 @@ low ceiling, the capped climb left the eye 0.35–0.6 m over his head (a top-dow
 shoulders), and a capped eye 1.6–2.6 m out sat against his back with his head cut off. When a
 ceiling caps the eye or hangs within 0.5 m above it (`ceilingOver`, grown 0.3 m) and the eye is
 nearer the pivot than `SIDE` 2.6 m, the eye's target is a slide along the wall to `SIDE` from the
-pivot (the side it is on, unless the other side has `SLIDE_HYST` 0.5 m more room; tested at 0.25 m
-with the 0.45 m stand-off; no slide with less than 0.3 m of room), and down to 0.6 m above the pivot
-only as far as that keeps it no nearer than before: a three-quarter view of him with the way ahead
-(at 1.5–1.9 m he filled the frame). The slide is a lateral offset kept in the rig (`cam.slide`, + =
-his right), eased towards its target, out at `SLIDE_K` 6/s (towards 0 once no ceiling is near or the
-eye is `SIDE` out) and in at `SLIDE_IN` 12/s (the eye starts out close over his head), and cut each
-frame to the room each side has; it is 0 in cars, with a profile and
-after a snap. Until r3 it was all or nothing (only nearer than `ARM` − 0.05) and every frame with a
-wall behind snapped the eye: walking out from under a porch, the eye jumped 2.2–2.7 m in one frame
-(141 of 606 real-input walks under the island's ceilings). Every pull-in or push snaps the eye (no
+pivot (the side it is on, unless the other side has `SLIDE_HYST` 0.5 m more room, or more room than
+this side once this side has collapsed: 0.3 m or less, or `SLIDE_CUT` 0.5 m less than the slide this
+frame; tested at 0.25 m with the 0.45 m stand-off; no slide with less than 0.3 m of room), and down
+to 0.6 m above the pivot only as far as that keeps it no nearer than before: a three-quarter view of
+him with the way ahead (at 1.5–1.9 m he filled the frame). The slide is a lateral offset kept in the
+rig (`cam.slide`, + = his right), eased towards its target within one side, out at `SLIDE_K` 6/s
+(towards 0 once no ceiling is near or the eye is `SIDE` out) and in at `SLIDE_IN` 12/s (the eye
+starts out close over his head), and cut each frame to the room each side has; it is 0 in cars, with
+a profile and after a snap. Three cases are cuts (the slide goes straight to its target and the eye
+snaps with it): a **swap of sides** (eased through 0, the eye passed through his head as the camera
+turned under a low ceiling with a wall near: r3 repair); a slide that **starts as the eye is cut
+in** by more than 1 m relative to him (`cam.lpx/lpy/lpz`, last frame's pivot; a pole pulls it in as
+the camera turns, or a canopy starts to cap it and drops it: the eye jumps anyway, and eased in it
+sat over his head for a frame or two); and a **wedged** eye: 0.1 m or more behind the pivot with so
+little room to either side that the slid eye would stay nearer than `ARM` (his back in a corner: the
+back of the fold between its wall and crag 1's end), when a slide measured from the pivot itself
+(beside him) takes it further out, to the side with more room. Until r3 it was all or nothing (only
+nearer than `ARM` − 0.05) and every frame with a wall behind snapped the eye: walking out from under
+a porch, the eye jumped 2.2–2.7 m in one frame (141 of 606 real-input walks under the island's
+ceilings). Every pull-in or push snaps the eye (no
 damping lag into the wall) — in height only downwards: a ceiling that stops capping lets the eye
 rise at the damped rate (9.8/s). **Dialogue framing** (`frame`, `frameOne` without a profile): the side whose sight line is
 clear; when both are blocked, the side with more room, the eye 0.45 m short of the solid (≥ 1.6 m
@@ -5330,3 +5340,32 @@ the fixer's group.
   canopy): on "De där svenskarna är heltokiga!" the canopy's edge crossed his face (3 of 5 rays);
   now he stands left of the parasol, face clear (line audit: 35 px, facing 0.95, no occluder; no
   line of missions 7–12 worse). An untimed scene: no timer moves.
+- r3 repair-island-camera: the side slide **swaps sides in a cut** and eases only within one side
+  (§14.5; camera.js; RC-1, the island-camera verifier's regression: the eased offset passed through 0,
+  so turning the camera under a low ceiling with a wall near put the eye through his head). The side
+  is kept unless the other has `SLIDE_HYST` 0.5 m more room, or more room than this side once this
+  side has collapsed (0.3 m or less, or new `SLIDE_CUT` 0.5 m less than the slide this frame: the
+  clamp would drop the eye towards his head); a swap sets the slide straight to the other side's
+  target and snaps the eye. A **wedged** eye (0.1 m or more behind the pivot, the slid eye nearer
+  than `ARM`: the back of the fold between its wall and crag 1's west end) slides from the pivot
+  instead when that takes it further out. One camera turn (16 px/frame, the verifier's `rotsweep`)
+  at 456 ceiling spots: frames with the eye within 1.0 m of his head 1 (302d4c2) → 1212 at 291 spots
+  (08c1104) → **15 at 1 spot** (the fold's NW pocket, below); spots under 0.7 m 0 → 185 → 1; within
+  1.5 m 2463 → 4265 → 1686; one-frame jumps over 1 m 2669 → 1571 → 1871. The walk fix stands: the
+  `jitter` walks under every island ceiling (672) keep 1 jump over 1 m (the SUPERMERCADO drop, as
+  before) and 0 sideways jumps; streets (96) unchanged; the 68 walk-ins and 292 walk-outs unchanged
+  but for the café walk below. No collider or route changes: no timer moves.
+- r3 repair-island-camera: a slide that **starts as the eye is cut in** by more than 1 m relative to
+  him (new `cam.lpx/lpy/lpz`, last frame's pivot) starts at its target (§14.5; RC-2): walking east
+  under the plaza arcade, a `parasoll` canopy started to cap the eye as he walked under it and the
+  eased-in slide held the eye 0.52 m from his head for 2 frames (now 1.47 m, the climb he starts in;
+  302d4c2 1.40); turning at a straw parasol's edge as its pole pulled the eye in left one frame at
+  0.75 m (18 spots; now none). Measured relative to him: on an absolute test a collision push that
+  moved him 1 m in a frame cut the eye in at the SunTrip balcony rows (4 new sideways jumps).
+- r3 repair-island-camera: known issue: in the fold's NW pocket (local (−20, −27.94), the back wall
+  0.36 m north, crag 1's west end 0.9 m east) with the camera looking SW, every spot behind or beside
+  him is within 0.5 m of a solid, so the eye sits 0.37–0.97 m from his head over about 30° of yaw (on
+  302d4c2 it stood inside the rock). The close band outside the slide's trigger (r3island-1's second
+  half: `tonga_arcade` 1.72 m, the eye on the 1.6 m `ARM` under La Medina's 3.6 m arcade; the
+  `sweepnear` low eyes within 1.8 m, 58 / 129 / 61 / 10 / 89 / 63 in six blocks, 0–1 under a ceiling
+  within 0.5 m) is Bigmouth's arm, not a low ceiling: unchanged.
