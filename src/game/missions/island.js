@@ -68,16 +68,16 @@ function parkCar(st, spot) {
 // come from the fixed walker (`walker-r1r2`: no pacing, A* that reaches round the hotel).
 export const TIMERS = {
   buss17Drive: 54,        // §8.6 s2  busBay -> flamencoDrive, ÅKSJUKA limits, stop     T_ref 45.0 (median of 10 clean)
-  friskotekBalls: 24,     // §8.7 s1  6 fleeing beach balls (on foot)                  T_ref 18.56 (p75 15.56 of 44 + 3; Phase 3 r3 island-camera: the notice board solid)
+  friskotekBalls: 23,     // §8.7 s1  6 fleeing beach balls (on foot)                  T_ref 18.34 (p75 15.34 of 48 + 3; Phase 3 r3 island-camera: the notice board solid)
   asnanPaint: 19,         // §8.8 s9  supermercado lot -> vikingbar, SKICK              T_ref 15.5 (median of 3 clean)
   bodegaVischan: 31,      // §8.9 s4  playa -> vischan                                  T_ref 25.8 (median of 8 clean, gate fix)
-  bodegaJeep: 41,         // §8.9 s9  wreck the fleeing Guardia jeep                    T_ref 34.05 (p75 of 119 chases; median 27.98; the pool since Phase 3 r1 repair 2)
+  bodegaJeep: 41,         // §8.9 s9  wreck the fleeing Guardia jeep                    T_ref 34.05 (p75 of 130 chases; median 28.00; the pool since Phase 3 r1 repair 2)
   bodegaHome: 30,         // §8.9 s10 fallback only: the stage uses homeTimer(wreck)    T_ref 25.0 at d 587 (far corner)
-  fatagaSheep: 27,        // §8.11 s5 6 fleeing sheep (on foot)                         T_ref 21.40 (p75 18.40 of 44 + 3; Phase 3 r3 island-camera: the crags' colliders)
-  grisfestFlowers: 26,    // §8.12 s1 5 flowers round Flamenco (on foot, random spawns) T_ref 20.74 (p75 18.24 of 44 + 2.5; Phase 3 r3: the intro places Ole beside him)
-  grisfestPlates: 33,     // §8.12 s4 10 of 12 plate stacks (on foot, kick; fixed)      T_ref 25.77 (median 20.77 of 38 + 5; Phase 3 r1 repair 2)
-  grisfestTonga: 19,      // §8.12 s6 dance floor -> car at the gate -> tongatonga      T_ref 15.78 (walk + drive: median 15.28 of 18 clean, + 0.5; Phase 3 r1 repair 2)
-  julaftonGuests: 81,     // §8.13 s1 patio -> hire car -> four guests                  T_ref 67.3 (median of 15 clean runs; Phase 3 r1 repair 2)
+  fatagaSheep: 28,        // §8.11 s5 6 fleeing sheep (on foot)                         T_ref 21.80 (p75 18.80 of 48 + 3; Phase 3 r3 island-camera: the crags' colliders)
+  grisfestFlowers: 26,    // §8.12 s1 5 flowers round Flamenco (on foot, random spawns) T_ref 20.74 (p75 18.24 of 48 + 2.5; Phase 3 r3: the intro places Ole beside him)
+  grisfestPlates: 33,     // §8.12 s4 10 of 12 plate stacks (on foot, kick; fixed)      T_ref 25.77 (median 20.77 of 44 + 5; Phase 3 r1 repair 2)
+  grisfestTonga: 19,      // §8.12 s6 dance floor -> car at the gate -> tongatonga      T_ref 15.78 (walk + drive: median 15.28 of 20 clean, + 0.5; Phase 3 r1 repair 2)
+  julaftonGuests: 81,     // §8.13 s1 patio -> hire car -> four guests                  T_ref 67.4 (median of 17 clean runs; Phase 3 r1 repair 2)
 };
 
 // Opponent / quarry tuning (race, destroy, follow; DESIGN §8 "Races and chases").

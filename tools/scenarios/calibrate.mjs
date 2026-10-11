@@ -1006,7 +1006,8 @@ export const SCENARIOS = {
         await T.ev(() => window.__ap.chase(() => { const c = __game.missions.stage?.car; return c && !c.dead ? c : null; }));
         const r = await waitDone(T, 150000);
         const wreck = await T.ev(() => { const c = __game.playerCar; return c ? { x: +c.x.toFixed(0), z: +c.z.toFixed(0), hp: Math.round(c.hp) } : null; });
-        if (!wreck) { T.log('jeep run', k, 'the truck was lost', JSON.stringify(r)); jeep.push({ t: null, wreck: null, cruise, wedged: true }); continue; }
+        // A lost truck is excluded like a wedged chase, and the table says which it was.
+        if (!wreck) { T.log('jeep run', k, 'the truck was lost', JSON.stringify(r)); jeep.push({ t: null, wreck: null, cruise, wedged: true, lost: true }); continue; }
         T.log('jeep run', k, 'cruise', cruise, JSON.stringify(r), 'wreck at', JSON.stringify(wreck));
         // A run averaging under 6 m/s means the autopilot wedged itself on a house while the jeep
         // drove round the block (an autopilot artefact, not the chase): reported, not used.
@@ -1019,7 +1020,7 @@ export const SCENARIOS = {
       const tRef = pct(ok, 0.75);
       out.bodegaJeep = tRef; kind.bodegaJeep = 'drive'; sample.bodegaJeep = { ts: ok, extra: 0 };
       out.__jeepWrecks = jeep.filter((j) => !j.wedged).map((j) => j.wreck);
-      row('jeep', `bodega s9 wreck the Guardia jeep (cruise/damageScale ${jeep[0].cruise}, ${runs} runs)`, 'gate (-84,-199) in the grisbil, road-route chase', tRef.toFixed(1), roundTimer(tRef * 1.2), `p75 of ${ok.length} chases (the flee route is random): ${jeep.map((j) => `${f1(j.t)}${j.wedged ? ' (wedged, excluded)' : ''}`).join(' / ')} s; median ${f1(median(ok))}`);
+      row('jeep', `bodega s9 wreck the Guardia jeep (cruise/damageScale ${jeep[0].cruise}, ${runs} runs)`, 'gate (-84,-199) in the grisbil, road-route chase', tRef.toFixed(1), roundTimer(tRef * 1.2), `p75 of ${ok.length} chases (the flee route is random): ${jeep.map((j) => `${f1(j.t)}${j.lost ? ' (truck lost, excluded)' : j.wedged ? ' (wedged, excluded)' : ''}`).join(' / ')} s; median ${f1(median(ok))}`);
     }
     // Stage 10 starts wherever the jeep died, so its timer follows the distance (missions/island.js
     // homeTimer): T_ref(d) = HOME_C + d / HOME_V with d the Manhattan distance to flamencoBack.

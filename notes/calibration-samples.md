@@ -41,8 +41,8 @@ and could not check them either. A timer whose runs nobody can see is a guess.
 | `walker-r1r1` | The on-foot A* walker of Phase 3 r1 repair 1: plans round static solids and stopped cars (< 1.5 m/s, within 30 m); progress = the straight-line distance to the target (12 s without 1 m of it: stuck; 2 s without it and no re-plan for 2 s: re-plan with an `avoid` on the next route cell, jumps off); re-plans every 0.6 s while the target moves, a new target included; target = the nearest by the straight line. | `tools/scenarios/calibrate.mjs` at d9451f8 |
 | `walker-r1r2a` | Phase 3 r1 repair 2, first version (superseded, not the shipping pool): as `walker-r1r1`, but it tracks its place on the route (k moves on to the nearest of the next cells it can walk straight to: the old walker paced back and forth for 2–3 s at a time when it passed a cell further than 0.7 m off, ~40 % of a sheep chase in 12 traced runs); progress is measured along the route (12 s without 1 m of net progress: stuck; 30 s without getting 1 m closer to the target along the route: stuck; 2 s without route progress: the stall re-plan, at most once per 2 s); re-plans at once on a new target; keeps its target until another is 1 m nearer. Two flowers runs in 24 got stuck against Hotel Flamenco (in room 107; in a corner behind the hotel), both from the A* defect fixed in `walker-r1r2`. | `tools/scenarios/calibrate.mjs` sha1 ec3dce2b1f23 (uncommitted) |
 | `walker-r1r2b` | Phase 3 r1 repair 2, second version (superseded after 3 runs): `walker-r1r2a` + when A* returned no route it backed out to the last spot where it stood with 0.4 m clearance. Its first run got stuck in a corner behind Hotel Flamenco (the A* defect again) and the batch was stopped. | `tools/scenarios/calibrate.mjs` sha1 a2227eec2596 (uncommitted) |
-| `walker-r1r2` | Phase 3 r1 repair 2, final: `walker-r1r2a` with a working A* round large obstacles (`footPath` kept its costs in a Float32Array and compared float64 sums with them, so equal grid paths "bettered" each other by rounding and every cell was expanded 3–4 times; round the 52 m hotel 160000 expansions ran out before the pool deck and the part path led into the hotel's back wall; now float64 costs, a real improvement only, exact √2 diagonals, a jump ordered by its full cost, stale heap entries not counted: north side → pool deck in 4057 expansions), and when no cell next to the start can be entered it backs out along its own trail to a point the grid can plan from (`wedges` in the walk result). | `tools/scenarios/calibrate.mjs` sha1 c38aefef4b7e (measured); committed in "Phase 3 r1 repair 2" as sha1 f671042a7dfe, which differs from it only in comments |
-| `chase-r1if` | The jeep chase autopilot of Phase 3 r1 island-flow: the unstick state lives in the chase, a repeat within 6 s backs up longer with the wheel the other way, 2.5 s of road after backing out. A chase averaging < 6 m/s is wedged (excluded); a run without the truck at the end lost it (excluded). | `tools/scenarios/calibrate.mjs` since 03db6b6 (unchanged at d9451f8) |
+| `walker-r1r2` | Phase 3 r1 repair 2, final: `walker-r1r2a` with a working A* round large obstacles (`footPath` kept its costs in a Float32Array and compared float64 sums with them, so equal grid paths "bettered" each other by rounding and every cell was expanded 3–4 times; round the 52 m hotel 160000 expansions ran out before the pool deck and the part path led into the hotel's back wall; now float64 costs, a real improvement only, exact √2 diagonals, a jump ordered by its full cost, stale heap entries not counted: north side → pool deck in 4057 expansions), and when no cell next to the start can be entered it backs out along its own trail to a point the grid can plan from (`wedges` in the walk result). | `tools/scenarios/calibrate.mjs` sha1 c38aefef4b7e (measured); committed in "Phase 3 r1 repair 2" as sha1 f671042a7dfe, which differs from it only in comments; r3 ledger2 changed only the `CAL TABLE` label of a lost truck (no autopilot code) |
+| `chase-r1if` | The jeep chase autopilot of Phase 3 r1 island-flow: the unstick state lives in the chase, a repeat within 6 s backs up longer with the wheel the other way, 2.5 s of road after backing out. A chase averaging < 6 m/s is wedged (excluded); a run without the truck at the end lost it (excluded). | `tools/scenarios/calibrate.mjs` since 03db6b6 (unchanged at d9451f8; r3 ledger2 changed only the `CAL TABLE` label of a lost truck, "truck lost" where it said "wedged") |
 | `sweeper-r1r1` | The `calibflight` sprit sweeper of Phase 3 r1 repair 1: sprints after the nearest bottle on its side, waits in the aisle 2.4 m from a moving trolley (1.7 m from a stopped one), steps into a row only in turbulence. | `tools/scenarios/calibflight.mjs` at d9451f8 |
 | `sweeper-r2fm` | Phase 3 r2 flight-missions: `sweeper-r1r1`, but it holds Space only while the turbulence shakes (not through its 1.5 s warning); the stage now has its turbulence inside the sweep (warned at 1.5 s, shaking 3–6 s), so this is a new stage and a new pool. | `tools/scenarios/calibflight.mjs` at b69c64e |
 
@@ -50,7 +50,9 @@ Sample ids: `p2` Phase 2, `r2g1` r2 gate 1 (`D` default `calibrate`, `F` its flo
 1, `g2` r1 gate 2 (`R1`/`R2`: its two default-env `calibrate` runs, `X`: its extra balls run),
 `r2` r1 repair 2, `r3ff` r3 flight-flow, `r3fl` r3 flight-look, `r3ic` r3 island-camera, `r3ft` r3 flight-trolley, `r3rf` r3 repair-flight,
 `r3g1` r3 gate 1 (`D` default `calibrate`, `C` default `calibflight`), `r3l` r3 ledger (`F1`–`F3` its
-flowers batches, `D` and `C` its default runs on the final code).
+flowers batches, `D` and `C` its default runs on the final code), `r3g2` r3 gate 2 (`D`, `C` as for
+`r3g1`), `r3v2` the r3 verify2 of repair-flight (`C` its default `calibflight`), `r3rf2` r3
+repair2-flight (`C`).
 
 r3 gate 1 ran on ea6c96a. The three repair commits after it (e458d7e, 5b996be, 6d5b919) change
 none of these stages' code, world, actors or autopilots: the flight's `via` guides (gate, ombord,
@@ -59,6 +61,24 @@ gate's `retryFear`; asnan's Angerud hidden from its paint drive (a fixed drive, 
 julafton's party porter (the scene after the guests stage); the camera's side slide (the autopilots
 set the camera's yaw themselves, and the slide moves only the eye). So each of its rows joins the
 pool its stage was in on ea6c96a; for the flowers that is a new one (below).
+
+r3 gate 2 and the verify2 of repair-flight ran on 4887ede (clean), which differs from 6d5b919 only in
+timer literals and docs (`calibrate` raises every timer it measures). The three commits after it
+change none of these stages' code, world, actors or autopilots: b014460 is camera.js only (the side
+slide's hold and cut rules; `cam.yaw` is untouched, and the walker sets it itself, calibrate.mjs:856);
+bf50e87 is `via` in missions/flight.js (the arrow's leg point on the gate, queue, boarding, ombord and
+landning [1] guides; the sprit sweep has no `via`, and the sweeper follows no guide); cd39361 is
+runner.js `fail()` re-hiding the checkpoint stage's `startCue` hides on the fail screen (asnan stage 9
+only; no pooled stage has a hide, and a calibration run with its timer raised does not fail). So each
+row of r3 gate 2 (`r3g2-D`, `r3g2-C`), of the verifier (`r3v2-C`) and of repair2-flight (`r3rf2-C`,
+on bf50e87's tree) joins the pool its stage is in now. r3 ledger2 changed only the `CAL TABLE`
+label of a lost truck in `calibrate.mjs` (no autopilot code).
+
+**Phase 3's sampling closed on 2026-10-11 (r3 ledger2).** Every raw run made up to here is in the
+tables below, pooled by the rules above, and every shipped timer is its current pool's rule. The
+sheep and balls pools sit on a rounding boundary (sheep 28 → 27 → 28 with two default runs of
+n 4), so the orchestrator stopped adding default runs before the tag rather than let the last one
+decide. The pools stay open: every future run goes in, and a timer follows its pool.
 
 ## `friskotekBalls` · §8.7 s1 · six fleeing beach balls · on foot: timer = ceil(1.25 × (p75 + 6 × 0.5))
 
@@ -70,7 +90,7 @@ intro (Stig on the approach spot) and do not pool with it.
 Phase 3 r3 island-camera made the notice board on the lawn's west edge solid (x −21.66…−21.54,
 z 2.9…5.1 in the block; only its posts were): the lawn's world changed, a new pool.
 
-Current pool: `walker-r1r2/r3-island-camera`: n 44, median 13.60, p75 15.56 → T_ref 18.56 → timer ceil(1.25 × 18.56) = **24** (90 % range 22–25).
+Current pool: `walker-r1r2/r3-island-camera`: n 48, median 13.32, p75 15.34 → T_ref 18.34 → timer ceil(1.25 × 18.34) = **23** (90 % range 22–25). At n 44 (through r3 ledger's default run) p75 15.56 → T_ref 18.56 → 24; r3 gate 2's default run (10.05 12.32 11.67 9.78) took it to 23.
 
 | sample | date | code | pool | env | n | raw times (s, run order) | excluded (reason) |
 |---|---|---|---|---|---|---|---|
@@ -96,6 +116,7 @@ Current pool: `walker-r1r2/r3-island-camera`: n 44, median 13.60, p75 15.56 → 
 | r3ic-3 | 2026-10-10 | 302d4c2 + uncommitted: r3 island-camera (the Fataga crags' box colliders and the friskotek notice board's solid; `calibrate.mjs` sha1 f671042a7dfe, unchanged) | `walker-r1r2/r3-island-camera` | CAL=balls,sheep FOOT_RUNS=12 | 12 | 11.68 12.43 15.05 13.22 16.75 10.50 13.73 14.78 12.40 13.47 14.57 12.50 | none (falls 0, wedges 0) |
 | r3g1-D | 2026-10-10 | ea6c96a | `walker-r1r2/r3-island-camera` | default (FOOT_RUNS=4, JEEP_RUNS=12, PLATE_RUNS=6) | 4 | 14.48 12.85 16.78 13.95 | none (falls 0, wedges 0) |
 | r3l-D | 2026-10-11 | 6d5b919 + uncommitted: this step's flowers timer 27 (island.js, the fixture) and docs; no stage or autopilot change | `walker-r1r2/r3-island-camera` | default (FOOT_RUNS=4, JEEP_RUNS=12, PLATE_RUNS=6) | 4 | 16.57 13.73 13.32 12.68 | none (falls 0, wedges 0) |
+| r3g2-D | 2026-10-11 | 4887ede | `walker-r1r2/r3-island-camera` | default (FOOT_RUNS=4, JEEP_RUNS=12, PLATE_RUNS=6) | 4 | 10.05 12.32 11.67 9.78 | none (falls 0, wedges 0) |
 
 ## `fatagaSheep` · §8.11 s5 · six fleeing sheep · on foot: timer = ceil(1.25 × (p75 + 6 × 0.5))
 
@@ -103,7 +124,7 @@ Phase 3 r3 island-camera gave Fataga's six north crags box colliders along their
 1 m circle let the player 2–3 m into the rock; the sheep run there): the village's world changed, a
 new pool. The previous one, `walker-r1r2/d9451f8`, ended at n 36 (p75 18.36 → 27).
 
-Current pool: `walker-r1r2/r3-island-camera`: n 44, median 16.00, p75 18.40 → T_ref 21.40 → timer ceil(1.25 × 21.40) = **27** (90 % range 26–29). Island-camera's 36 alone and with r3 gate 1's 4 gave p75 18.80 → 28; r3 ledger's default run took it to 27.
+Current pool: `walker-r1r2/r3-island-camera`: n 48, median 16.32, p75 18.80 → T_ref 21.80 → timer ceil(1.25 × 21.80) = **28** (90 % range 26–30). Island-camera's 36 alone and with r3 gate 1's 4 gave p75 18.80 → 28; r3 ledger's default run took it to 27 (n 44, p75 18.40), r3 gate 2's back to 28.
 
 | sample | date | code | pool | env | n | raw times (s, run order) | excluded (reason) |
 |---|---|---|---|---|---|---|---|
@@ -123,6 +144,7 @@ Current pool: `walker-r1r2/r3-island-camera`: n 44, median 16.00, p75 18.40 → 
 | r3ic-3 | 2026-10-10 | 302d4c2 + uncommitted: r3 island-camera (the Fataga crags' box colliders and the friskotek notice board's solid; `calibrate.mjs` sha1 f671042a7dfe, unchanged) | `walker-r1r2/r3-island-camera` | CAL=balls,sheep FOOT_RUNS=12 | 12 | 12.60 18.97 12.98 17.57 14.53 16.90 29.52 23.87 10.22 13.18 11.22 27.07 | none (falls 0, wedges 0) |
 | r3g1-D | 2026-10-10 | ea6c96a | `walker-r1r2/r3-island-camera` | default (FOOT_RUNS=4, JEEP_RUNS=12, PLATE_RUNS=6) | 4 | 25.22 18.28 14.27 18.28 | none (falls 0, wedges 0) |
 | r3l-D | 2026-10-11 | 6d5b919 + uncommitted: this step's flowers timer 27 (island.js, the fixture) and docs; no stage or autopilot change | `walker-r1r2/r3-island-camera` | default (FOOT_RUNS=4, JEEP_RUNS=12, PLATE_RUNS=6) | 4 | 13.42 17.80 17.25 14.43 | none (falls 0, wedges 0) |
+| r3g2-D | 2026-10-11 | 4887ede | `walker-r1r2/r3-island-camera` | default (FOOT_RUNS=4, JEEP_RUNS=12, PLATE_RUNS=6) | 4 | 23.10 15.90 23.12 18.07 | none (falls 0, wedges 0) |
 
 ## `grisfestFlowers` · §8.12 s1 · five static flowers, random spawns · on foot: timer = ceil(1.25 × (p75 + 5 × 0.5))
 
@@ -142,7 +164,7 @@ walker's speed is the same in all three (8.1–8.7 m/s over the walked distance,
 plans a run, no wedge), so they differ in the layouts' tour lengths, and the 46a0938 pool's 28 runs were the short
 side of them. The rows of `walker-r1r2/46a0938` and before ran the old intro.
 
-Current pool: `walker-r1r2/r3-island-staging`: n 44, median 16.22, p75 18.24 → T_ref 20.74 → timer ceil(1.25 × 20.74) = **26** (90 % range 25–27). At n 40 (before r3 ledger's default run) p75 18.305 → T_ref 20.805 → 27.
+Current pool: `walker-r1r2/r3-island-staging`: n 48, median 16.22, p75 18.24 → T_ref 20.74 → timer ceil(1.25 × 20.74) = **26** (90 % range 25–27). At n 40 (before r3 ledger's default run) p75 18.305 → T_ref 20.805 → 27; at n 44 as now.
 
 | sample | date | code | pool | env | n | raw times (s, run order) | excluded (reason) |
 |---|---|---|---|---|---|---|---|
@@ -164,10 +186,11 @@ Current pool: `walker-r1r2/r3-island-staging`: n 44, median 16.22, p75 18.24 →
 | r3l-F2 | 2026-10-11 | 6d5b919 (the tree dirty only in this ledger) | `walker-r1r2/r3-island-staging` | CAL=flowers FOOT_RUNS=12 | 12 | 13.03 17.90 15.55 18.40 17.85 21.23 9.87 17.02 18.23 16.27 12.65 14.35 | none (falls 0, wedges 0) |
 | r3l-F3 | 2026-10-11 | 6d5b919 (the tree dirty only in this ledger) | `walker-r1r2/r3-island-staging` | CAL=flowers FOOT_RUNS=12 | 12 | 19.45 15.63 8.35 13.98 16.35 19.88 16.53 12.17 23.85 18.17 7.85 16.63 | none (falls 0, wedges 0) |
 | r3l-D | 2026-10-11 | 6d5b919 + uncommitted: this step's flowers timer 27 (island.js, the fixture) and docs; no stage or autopilot change | `walker-r1r2/r3-island-staging` | default (FOOT_RUNS=4, JEEP_RUNS=12, PLATE_RUNS=6) | 4 | 14.87 12.97 10.08 17.62 | none (falls 0, wedges 0) |
+| r3g2-D | 2026-10-11 | 4887ede | `walker-r1r2/r3-island-staging` | default (FOOT_RUNS=4, JEEP_RUNS=12, PLATE_RUNS=6) | 4 | 16.97 19.33 11.27 12.90 | none (falls 0, wedges 0) |
 
 ## `bodegaJeep` · §8.9 s9 · wreck the fleeing Guardia jeep · drive: timer = ceil(1.2 × p75)
 
-Current pool: `chase-r1if/d9451f8`: n 119, median 27.98, p75 34.05 → T_ref 34.05 → timer ceil(1.2 × 34.05) = **41** (90 % range 37–44). At n 83 (r1 repair 2) and n 107 (with r3 gate 1) it gave 42.
+Current pool: `chase-r1if/d9451f8`: n 130, median 28.00, p75 34.05 → T_ref 34.05 → timer ceil(1.2 × 34.05) = **41** (90 % range 38–43). At n 83 (r1 repair 2) and n 107 (with r3 gate 1) it gave 42, at n 119 (r3 ledger) 41.
 
 | sample | date | code | pool | env | n | raw times (s, run order) | excluded (reason) |
 |---|---|---|---|---|---|---|---|
@@ -184,16 +207,18 @@ Current pool: `chase-r1if/d9451f8`: n 119, median 27.98, p75 34.05 → T_ref 34.
 | r2g1-D | 2026-10-10 | ca2a3a6 | `chase-r1if/d9451f8` | default (FOOT_RUNS=4, JEEP_RUNS=12, PLATE_RUNS=6) | 12 | 17.77 28.40 21.60 30.25 49.53 33.55 33.77 21.48 17.98 35.60 35.60 37.25 | none (none wedged, none lost the truck; runs 10 and 11 one unstick each) |
 | r3g1-D | 2026-10-10 | ea6c96a | `chase-r1if/d9451f8` | default (FOOT_RUNS=4, JEEP_RUNS=12, PLATE_RUNS=6) | 12 | 14.05 35.60 10.07 24.68 27.37 25.95 45.55 22.33 8.48 33.98 36.72 8.83 | none (none wedged, none lost the truck; runs 1 and 9 one unstick each, runs 6 and 10 two) |
 | r3l-D | 2026-10-11 | 6d5b919 + uncommitted: this step's flowers timer 27 (island.js, the fixture) and docs; no stage or autopilot change | `chase-r1if/d9451f8` | default (FOOT_RUNS=4, JEEP_RUNS=12, PLATE_RUNS=6) | 12 | 30.15 23.93 27.02 17.18 27.98 35.57 20.12 18.13 16.60 21.82 30.17 20.67 | none (none wedged, none lost the truck; run 5 one unstick) |
+| r3g2-D | 2026-10-11 | 4887ede | `chase-r1if/d9451f8` | default (FOOT_RUNS=4, JEEP_RUNS=12, PLATE_RUNS=6) | 11 | 39.15 20.60 38.88 31.73 14.92 14.98 27.35 34.08 30.35 14.18 30.57 | run 5: the truck was lost (at 48.71 s, 823 m driven, 3 unsticks; its `CAL TABLE` said "wedged", a label r3 ledger2 fixed); none wedged; runs 0, 9 and 11 one unstick each |
 
 ## `sprit[0]` · §8.4 s0 · five rolling bottles in the cabin · on foot: timer = ceil(1.25 × (p75 + 5 × 0.5))
 
 Phase 3 r2 flight-missions moved the turbulence inside the sweep and changed the sweeper
 (`sweeper-r2fm`): a new pool. The shipped **13** comes from `sweeper-r2fm/b69c64e` (36 + 5 runs;
-r2 gate, r3 flight-flow, r3 flight-look, r3 flight-trolley, r3 repair-flight, r3 gate 1 and r3 ledger
-added 5 + 10 + 5 + 10 + 5 + 5 + 5 on the same stage and sweeper code, and it stays 13).
+r2 gate, r3 flight-flow, r3 flight-look, r3 flight-trolley, r3 repair-flight, r3 gate 1, r3 ledger,
+r3 gate 2, the verify2 of r3 repair-flight and r3 repair2-flight added 5 + 10 + 5 + 10 + 5 + 5 + 5
++ 5 + 5 + 5 on the same stage and sweeper code, and it stays 13).
 The rows above it (timer 11, no turbulence in the sweep) do not pool with it.
 
-Current pool: `sweeper-r2fm/b69c64e`: n 86 (fm1 36, fm2 5, r2g1-C 5, r3ff-C 5, r3ff-R 5, r3fl-C 5, r3ft-C1 5, r3ft-C2 5, r3rf-C 5, r3g1-C 5, r3l-C 5), median 7.31, p75 7.60 → T_ref 10.10 → timer ceil(1.25 × 10.10) = **13** (90 % range 13–13).
+Current pool: `sweeper-r2fm/b69c64e`: n 101 (fm1 36, fm2 5, r2g1-C 5, r3ff-C 5, r3ff-R 5, r3fl-C 5, r3ft-C1 5, r3ft-C2 5, r3rf-C 5, r3g1-C 5, r3l-C 5, r3g2-C 5, r3v2-C 5, r3rf2-C 5), median 7.32, p75 7.60 → T_ref 10.10 → timer ceil(1.25 × 10.10) = **13** (90 % range 13–13).
 
 | sample | date | code | pool | env | n | raw times (s, run order) | excluded (reason) |
 |---|---|---|---|---|---|---|---|
@@ -212,6 +237,9 @@ Current pool: `sweeper-r2fm/b69c64e`: n 86 (fm1 36, fm2 5, r2g1-C 5, r3ff-C 5, r
 | r3rf-C | 2026-10-11 | ea6c96a + uncommitted: r3 repair-flight (the stage and the sweeper unchanged; the `via` guide's over-the-furniture pass, the stage seat's reach across its row, the gate statistics' `retryFear`) | `sweeper-r2fm/b69c64e` | calibflight default (SPRIT_RUNS=5) | 5 | 7.40 6.70 6.90 6.93 6.80 | none (no panic, bowled 0, falls 0; FLYGRÄDSLA peaks 14.4–16.2) |
 | r3g1-C | 2026-10-11 | ea6c96a | `sweeper-r2fm/b69c64e` | calibflight default (SPRIT_RUNS=5) | 5 | 6.90 6.62 7.52 7.10 5.40 | none (no panic, bowled 0, falls 0; FLYGRÄDSLA peaks 11.8–16.4) |
 | r3l-C | 2026-10-11 | 6d5b919 + uncommitted: this step's island timers (jeep 41, sheep 27, flowers 26: island.js, the fixture) and docs; the stage and the sweeper unchanged | `sweeper-r2fm/b69c64e` | calibflight default (SPRIT_RUNS=5) | 5 | 7.22 7.60 7.40 7.20 7.32 | none (no panic, bowled 0, falls 0; FLYGRÄDSLA peaks 15.7–16.7) |
+| r3g2-C | 2026-10-11 | 4887ede | `sweeper-r2fm/b69c64e` | calibflight default (SPRIT_RUNS=5) | 5 | 7.82 7.32 6.42 6.70 7.50 | none (no panic, bowled 0, falls 0; FLYGRÄDSLA peaks 13.7–17.2) |
+| r3v2-C | 2026-10-11 | 4887ede (the verify2 of r3 repair-flight, read-only) | `sweeper-r2fm/b69c64e` | calibflight default (SPRIT_RUNS=5) | 5 | 6.80 7.20 7.72 7.40 6.90 | none (no panic, bowled 0, falls 0; FLYGRÄDSLA peaks 14.7–16.9) |
+| r3rf2-C | 2026-10-11 | b014460 + uncommitted: r3 repair2-flight (bf50e87's tree; the stage and the sweeper unchanged; the `via` guide's leg point) | `sweeper-r2fm/b69c64e` | calibflight default (SPRIT_RUNS=5) | 5 | 7.40 7.40 7.12 7.00 7.60 | none (no panic, bowled 0, falls 0; FLYGRÄDSLA peaks 15.2–16.7) |
 
 ## `grisfestPlates` · §8.12 s4 · ten of the twelve plate stacks · on foot: timer = ceil(1.25 × (median + 10 × 0.5))
 
@@ -219,7 +247,7 @@ A deterministic stage (the stacks are a fixed layout, three per table under the 
 `world/blocks/nature.js`); runs differ only in the walker's tour order, so the rule is the median.
 Kept here because it is measured over several runs.
 
-Current pool: `walker-r1r2/d9451f8`: n 38, median 20.77 → T_ref 25.77 → timer ceil(1.25 × 25.77) = **33** (90 % range 33–33).
+Current pool: `walker-r1r2/d9451f8`: n 44, median 20.77 → T_ref 25.77 → timer ceil(1.25 × 25.77) = **33** (90 % range 33–33).
 
 | sample | date | code | pool | env | n | raw times (s, run order) | excluded (reason) |
 |---|---|---|---|---|---|---|---|
@@ -233,13 +261,14 @@ Current pool: `walker-r1r2/d9451f8`: n 38, median 20.77 → T_ref 25.77 → time
 | r2g1-D | 2026-10-10 | ca2a3a6 | `walker-r1r2/d9451f8` | default (FOOT_RUNS=4, JEEP_RUNS=12, PLATE_RUNS=6) | 6 | 20.77 20.77 20.77 20.77 20.77 20.77 | none (falls 0, wedges 0) |
 | r3g1-D | 2026-10-10 | ea6c96a | `walker-r1r2/d9451f8` | default (FOOT_RUNS=4, JEEP_RUNS=12, PLATE_RUNS=6) | 6 | 20.78 21.03 20.77 20.85 21.02 20.78 | none (falls 0, wedges 0) |
 | r3l-D | 2026-10-11 | 6d5b919 + uncommitted: this step's flowers timer 27 (island.js, the fixture) and docs; no stage or autopilot change | `walker-r1r2/d9451f8` | default (FOOT_RUNS=4, JEEP_RUNS=12, PLATE_RUNS=6) | 6 | 20.78 20.77 20.77 20.77 20.78 20.77 | none (falls 0, wedges 0) |
+| r3g2-D | 2026-10-11 | 4887ede | `walker-r1r2/d9451f8` | default (FOOT_RUNS=4, JEEP_RUNS=12, PLATE_RUNS=6) | 6 | 20.77 20.77 21.03 20.87 20.77 20.77 | none (falls 0, wedges 0) |
 
 ## `grisfestTonga` · §8.12 s6 · dance floor on foot to the car, then the drive to Tonga Tonga · drive: timer = ceil(1.2 × (median of walk + drive + 0.5))
 
 A deterministic stage, re-measured over several runs because the fixed walker shortened its walk
 (33 m in 3.9 s, the old walker 44–45 m in 6.3–6.5 s). Times are the walk + the drive of clean runs.
 
-Current pool: `walker-r1r2/d9451f8`: n 18, median 15.28 → T_ref 15.78 → timer ceil(1.2 × 15.78) = **19** (90 % range 19–19).
+Current pool: `walker-r1r2/d9451f8`: n 20, median 15.28 → T_ref 15.78 → timer ceil(1.2 × 15.78) = **19** (90 % range 19–19).
 
 | sample | date | code | pool | env | n | raw times (s, run order) | excluded (reason) |
 |---|---|---|---|---|---|---|---|
@@ -251,6 +280,7 @@ Current pool: `walker-r1r2/d9451f8`: n 18, median 15.28 → T_ref 15.78 → time
 | r2g1-D | 2026-10-10 | ca2a3a6 | `walker-r1r2/d9451f8` | default (RUNS=3: 2 runs) | 2 | 15.28 15.28 | none (walk 3.90 + drive 11.38 each, no impact) |
 | r3g1-D | 2026-10-10 | ea6c96a | `walker-r1r2/d9451f8` | default (RUNS=3: 2 runs) | 2 | 15.33 15.30 | none (walk 3.95 + drive 11.38, walk 3.90 + drive 11.40; no impact) |
 | r3l-D | 2026-10-11 | 6d5b919 + uncommitted: this step's flowers timer 27 (island.js, the fixture) and docs; no stage or autopilot change | `walker-r1r2/d9451f8` | default (RUNS=3: 2 runs) | 2 | 15.28 15.28 | none (walk 3.90 + drive 11.38 each, no impact) |
+| r3g2-D | 2026-10-11 | 4887ede | `walker-r1r2/d9451f8` | default (RUNS=3: 2 runs) | 2 | 15.30 18.03 | none (walk 3.90 + drive 11.40, held 1.0 s by traffic; walk 3.90 + drive 14.13, held 5.5 s by traffic; no impact) |
 
 ## `julaftonGuests` · §8.13 s1 · patio on foot to the hire car, then the four guests by car · drive: timer = ceil(1.2 × median)
 
@@ -258,7 +288,7 @@ A deterministic stage, re-measured because the fixed walker shortened its walk t
 in 3.5 s, the old walker 50 m in 8.3–8.4 s; the drive legs are unchanged). Times as logged (one
 decimal), clean runs only (no impact).
 
-Current pool: `walker-r1r2/d9451f8`: n 15, median 67.30 → T_ref 67.30 → timer ceil(1.2 × 67.30) = **81** (90 % range 81–82).
+Current pool: `walker-r1r2/d9451f8`: n 17, median 67.40 → T_ref 67.40 → timer ceil(1.2 × 67.40) = **81** (90 % range 81–82).
 
 | sample | date | code | pool | env | n | raw times (s, run order) | excluded (reason) |
 |---|---|---|---|---|---|---|---|
@@ -270,3 +300,4 @@ Current pool: `walker-r1r2/d9451f8`: n 15, median 67.30 → T_ref 67.30 → time
 | r2g1-D | 2026-10-10 | ca2a3a6 | `walker-r1r2/d9451f8` | default (RUNS=3: 2 runs) | 1 | 67.1 | run 0: 73.2 s, 1 impact (Herr Storch leg held 10.7 s; not clean) |
 | r3g1-D | 2026-10-10 | ea6c96a | `walker-r1r2/d9451f8` | default (RUNS=3: 2 runs) | 1 | 67.0 | run 0: 71.2 s, 1 impact (the Herr Storch leg, 21.2 s, held 1.8 s; not clean) |
 | r3l-D | 2026-10-11 | 6d5b919 + uncommitted: this step's flowers timer 27 (island.js, the fixture) and docs; no stage or autopilot change | `walker-r1r2/d9451f8` | default (RUNS=3: 2 runs) | 2 | 67.1 67.4 | none (no impact) |
+| r3g2-D | 2026-10-11 | 4887ede | `walker-r1r2/d9451f8` | default (RUNS=3: 2 runs) | 2 | 67.9 68.5 | none (no impact; run 1's Majsan leg held 1.4 s) |

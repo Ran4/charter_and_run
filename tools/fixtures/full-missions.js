@@ -274,7 +274,7 @@ export const FULL_MISSIONS = [
       ['lasse', 'Och nu – friskotek! Men vinden har tagit badbollarna!'],                                                     // [N]
     ],
     stages: [
-      () => rabbits({ mesh: 'badboll', count: 6, near: 'friskotek', rMin: 6, rMax: 30, timer: 24, text: 'Plocka kulor! Plocka med höger… plocka med vänster!', barLabel: 'KULOR', gotText: 'Plocka med höger!', failText: 'Bollarna rullade ner till stranden.', radio: [['berra', 'Kolla storken!'], ['robban', 'Att de bara orkar, våra storkar…']] }),
+      () => rabbits({ mesh: 'badboll', count: 6, near: 'friskotek', rMin: 6, rMax: 30, timer: 23, text: 'Plocka kulor! Plocka med höger… plocka med vänster!', barLabel: 'KULOR', gotText: 'Plocka med höger!', failText: 'Bollarna rullade ner till stranden.', radio: [['berra', 'Kolla storken!'], ['robban', 'Att de bara orkar, våra storkar…']] }),
       () => goto({ to: 'friskotek', radius: 5, text: 'Lämna bollarna till Lasse' }),
     ],
     outroPlace: { lasse: ['friskotek', 0, 1.5, Math.PI], angerud: ['friskotek', 1.6, 2.4, -2.4], berra: ['friskotek', -2.4, 1.0, Math.PI], robban: ['friskotek', -3.4, 1.4, Math.PI], ole: ['friskotek', 2.8, 1.0, Math.PI], stig: ['friskotek', -1.0, 2.6, 2.5] },
@@ -429,7 +429,7 @@ export const FULL_MISSIONS = [
       () => pickup({ who: 'majsan', name: 'Majsan', at: 'flamencoDrive', rider: 'siv', hello: 'Kör!' }),
       () => follow({ type: 'bus', carName: 'utflyktsbuss', driver: 'affe', start: { lane: [[3, 2], [3, 1]], t: 14 }, via: [[3, 1], [2, 1], [1, 1]], to: 'fatagaBus', maxDist: 55, cruise: 14, text: 'Följ utflyktsbussen till Fataga', radio: [['lasse', 'Fataga är en av de få ursprungliga byar som finns kvar på Gran Canaria.'], ['lasse', 'Om ni vill köpa deras broderade dukar, så pruta inte. Prutning och sånt kan ni hålla på med på marknaden.']] }),
       () => scene({ place: { mamma: ['fatagaDukar', 0, 0], fruStorch: ['fatagaDukar', -1.8, 2.2, Math.PI + 0.5], siv: ['fatagaDukar', 1.5, 2.4, Math.PI - 0.5], majsan: ['fatagaDukar', 2.9, 1.8, Math.PI - 0.8] }, cam: { at: 'dukarCam', dist: 7.5, height: 2.1 }, lines: [['fruStorch', 'Stackars människor som lever så här.'], ['mamma', 'Stackars människor. Släpas runt på dagarna som en skock får…!'], ['mamma', '¡Las ovejas!', { sfx: 'baa' }]] }),
-      () => rabbits({ mesh: 'faar', count: 6, near: 'fataga', rMin: 10, rMax: 35, timer: 27, text: 'Fånga fåren åt Josés pappa', barLabel: 'FÅR', gotText: 'Bäää!', failText: 'Fåren sprang hela vägen till Maspalomas.', checkpoint: true, retryAt: { x: -240, z: -208.5, yaw: 0 } }),
+      () => rabbits({ mesh: 'faar', count: 6, near: 'fataga', rMin: 10, rMax: 35, timer: 28, text: 'Fånga fåren åt Josés pappa', barLabel: 'FÅR', gotText: 'Bäää!', failText: 'Fåren sprang hela vägen till Maspalomas.', checkpoint: true, retryAt: { x: -240, z: -208.5, yaw: 0 } }),
       () => goto({ to: 'fatagaFold', radius: 4, text: 'Tillbaka till fårfållan' }),
     ],
     outroPlace: { pappa: ['fatagaFold', 1.5, 0], mamma: ['fatagaFold', -0.2, 0.4], majsan: ['fatagaFold', -1.5, 0.9], siv: ['fatagaFold', -2.5, 1.4], stig: ['fatagaFold', 2.6, 1.0, -1.3] },

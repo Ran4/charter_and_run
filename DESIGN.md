@@ -1467,20 +1467,20 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
 |---|---|---|---|---|
 | 8.1 gate [3] toilet dash | gateOle → round the ladies' room → herrtoa (r 1.8), sprint 3.6 s (walk 5.0; Phase 3 r2 from the statistics' placed start (25.0, 11.6): 3.6 / 5.1) | 4.1 (3.6 + 0.5; 1) | **6** (was 10) | 40 % sprint, 16 % walk |
 | 8.2 ombord [0] find 14B | the intro's spot at the front door (1.6, 13.55) → 14B past three stowers (E each), sprint 3.1 s (walk 4.4) | 5.1 (3.1 + 4 × 0.5; 1; Phase 3 r2, the intro places him there; from `cabinDoor`'s approach spot 2.9 → 4.9) | **7** (15) | 56 % sprint, 37 % walk |
-| 8.4 sprit [0] five bottles | sprint after the nearest, wait in the aisle clear of the trolley for the bottles it pushes out, Space while the 3.0–6.0 s turbulence shakes | 10.1 (p75 7.60 of 86 + 2.5; 5.4–7.8 s, median 7.31; pool `sweeper-r2fm/b69c64e` in `notes/calibration-samples.md`: r2 flight-missions' 36 + 5, r2 gate's 5, r3 flight-flow's 10, r3 flight-look's 5, r3 flight-trolley's 10, r3 repair-flight's 5, r3 gate 1's 5, r3 ledger's 5; Phase 3 r2, the turbulence moved inside the sweep. Before it, with none: p75 6.0 of 48 → 11 (r1 repair); the old sweeper that hid in a row was bimodal, 4–12 s or 28–30 s, p75 14.4 → 22, Phase 2 17.1 → 25) | **13** (35) | 42 % at p75 |
+| 8.4 sprit [0] five bottles | sprint after the nearest, wait in the aisle clear of the trolley for the bottles it pushes out, Space while the 3.0–6.0 s turbulence shakes | 10.1 (p75 7.60 of 101 + 2.5; 5.4–7.8 s, median 7.32; pool `sweeper-r2fm/b69c64e` in `notes/calibration-samples.md`: r2 flight-missions' 36 + 5, r2 gate's 5, r3 flight-flow's 10, r3 flight-look's 5, r3 flight-trolley's 10, r3 repair-flight's 5, r3 gate 1's 5, r3 ledger's 5, r3 gate 2's 5, the verify2 of r3 repair-flight's 5, r3 repair2-flight's 5; Phase 3 r2, the turbulence moved inside the sweep. Before it, with none: p75 6.0 of 48 → 11 (r1 repair); the old sweeper that hid in a row was bimodal, 4–12 s or 28–30 s, p75 14.4 → 22, Phase 2 17.1 → 25) | **13** (35) | 42 % at p75 |
 | 8.5 landning [0] round-up | row 16 → José → Berra → Herr Storch (walk, sign lit) | 9.1 (7.6 + 1.5; 2 orders) | **12** (20) | 37 % |
 | 8.5 landning [1] back to 14B | from the far end (Berra) | 3.7 (3.2 + 0.5; 2) | **5** (10) | 36 % |
 | 8.6 buss17 s2 | busBay → 7,1 > 3,1 > 3,4 → flamencoDrive, ÅKSJUKA, stop | 45.0 (median of 10 clean in 4 sets, 44.4–47.0) | **54** (60) | 17 % |
-| 8.7 friskotek s1 | six fleeing beach balls round the friskotek lawn, from Stig's placed spot in the intro's group shot (−11.0, −69.4) | 18.6 (p75 15.56 of 44 + 3; median 13.60; Phase 3 r3 island-camera's 36 runs and the r3 gate's and r3 ledger's default runs (4 + 4), pool `walker-r1r2/r3-island-camera`: the notice board on the lawn's west edge is solid. Before it: 18.4 (p75 15.41 of 40 + 3; median 13.59; Phase 3 r2 island-staging's 36 runs and r2 gate's 4: the intro places the cast, a new pool `walker-r1r2/r2-island-staging` in `notes/calibration-samples.md`; island-staging's 36 alone: p75 15.29 → 23; before it, from the approach spot: p75 15.59 of 44 + 3 → 24, Phase 3 r1 repair 2, the fixed walker: no pacing, an A* that reaches round the hotel. The old walker: gate 2's 20 runs p75 29.40 → 41, r1 repair's lost 72 runs 23.1 → 33, Phase 2 21.9 of 12 → 32) | **24** (20) | 35 % at p75 |
+| 8.7 friskotek s1 | six fleeing beach balls round the friskotek lawn, from Stig's placed spot in the intro's group shot (−11.0, −69.4) | 18.3 (p75 15.34 of 48 + 3; median 13.32; Phase 3 r3 island-camera's 36 runs and the default runs of r3 gate 1, r3 ledger and r3 gate 2 (4 + 4 + 4), pool `walker-r1r2/r3-island-camera`: the notice board on the lawn's west edge is solid; at 44 runs p75 15.56 → 24. Before it: 18.4 (p75 15.41 of 40 + 3; median 13.59; Phase 3 r2 island-staging's 36 runs and r2 gate's 4: the intro places the cast, a new pool `walker-r1r2/r2-island-staging` in `notes/calibration-samples.md`; island-staging's 36 alone: p75 15.29 → 23; before it, from the approach spot: p75 15.59 of 44 + 3 → 24, Phase 3 r1 repair 2, the fixed walker: no pacing, an A* that reaches round the hotel. The old walker: gate 2's 20 runs p75 29.40 → 41, r1 repair's lost 72 runs 23.1 → 33, Phase 2 21.9 of 12 → 32) | **23** (20) | 33 % at p75 |
 | 8.8 asnan s9 | Centro Nórdico lot → 5,3 > 1,3 → vikingbar, SKICK | 15.5 (median of 3 clean; 15.5–15.6) | **19** (20) | 18 % |
 | 8.9 bodega s4 | playa → 4,7 > 4,2 > 0,2 → vischan | 25.8 (median of 8 clean in 3 runs, 25.4–26.8: 25.4 unless traffic held it up 1–1.5 s; Phase 2 gate) | **31** (35) | 17 % |
-| 8.9 bodega s9 jeep | farm gate, road-route chase, rams | 34.05 (p75 of 119 usable chases in 9 samples on the fixed chase autopilot: Phase 3 r1 repair 2's 83 and the r2 gate's, r3 gate's and r3 ledger's default runs, 12 each; 4 more lost the truck and 1 wedged, excluded; median 27.98; single samples' p75 28.5–43.0; pool `chase-r1if/d9451f8` since r1 repair 2, whose 83 gave p75 34.45 → 42 (and 107 34.97 → 42); the 98 chases behind the earlier 40 (p75 32.5) are lost; island-flow's first 40: 30.6 → 37; Phase 2: 34.4 → 42) | **41** (45) | 17 % at p75 |
+| 8.9 bodega s9 jeep | farm gate, road-route chase, rams | 34.05 (p75 of 130 usable chases in 10 samples on the fixed chase autopilot: Phase 3 r1 repair 2's 83, the r2 gate's, r3 gate 1's and r3 ledger's default runs, 12 each, and r3 gate 2's 11; 5 more lost the truck and 1 wedged, excluded; median 28.00; single samples' p75 28.5–43.0; pool `chase-r1if/d9451f8` since r1 repair 2, whose 83 gave p75 34.45 → 42 (and 107 34.97 → 42, 119 34.05 → 41); the 98 chases behind the earlier 40 (p75 32.5) are lost; island-flow's first 40: 30.6 → 37; Phase 2: 34.4 → 42) | **41** (45) | 17 % at p75 |
 | 8.9 bodega s10 home | wreck → flamencoBack | 7.9 + d/34.4 (fit 4.9 + d/34.4 of 12 clean, 6 spots, + 3 s turn) | **homeTimer**: 17–30 (30 without a wreck) | 17 % of the fit (11–27 % of a spot's own drive) |
-| 8.11 fataga s5 | six fleeing sheep round Fataga | 21.4 (p75 18.40 of 44 + 3; median 16.00; Phase 3 r3 island-camera's 36 runs and the r3 gate's and r3 ledger's default runs (4 + 4), pool `walker-r1r2/r3-island-camera`: the north crags got colliders that match the rock; the 36 alone: p75 18.80 → 28. Before it: 21.5 (p75 18.53 of 32 + 3, later 18.36 of 36 → still 27; median 15.90; Phase 3 r1 repair 2, the fixed walker, pool `walker-r1r2/d9451f8`); the old walker: 18 runs p75 27.94 → 39, Phase 2 30.3 of 12 → 42) | **27** (25) | 32 % at p75 |
-| 8.12 grisfest s1 | five flowers round Hotel Flamenco (random spawns) | 20.7 (p75 18.24 of 44 + 2.5; median 16.22; Phase 3 r3 ledger: the r3 intro places Ole 1.6 m beside Stig's start, a new pool `walker-r1r2/r3-island-staging`: the r3 gate's 4 runs, three batches of 12 and a default run's 4 on the final code. The world, the start spot and the spawns are those of the round-2 pool `walker-r1r2/46a0938` (Phase 3 r2 gate + orchestrator on ca2a3a6, the Flamenco piers solid since 46a0938: p75 15.73 of 28 → 23), whose 28 runs were the short side: this pool's times match the round-1 world's; before it, r1 repair 2's fixed walker on d9451f8: p75 17.79 of 32 → 26; the old walker: 8 runs p75 29.51 → 41, Phase 2 31.1 of 12 → 42) | **26** (30) | 30 % at p75 |
-| 8.12 grisfest s4 | ten of the twelve plate stacks at the dance floor (kick; a fixed layout, three per table) | 25.8 (median 20.77 of 38 + 5, 20.77–21.03: the same tour every run; Phase 3 r1 repair 2, the fixed walker; a deterministic stage now, it was timed at the p75 of "random spawns"; the old walker: 30.33 (one run 37.95, pacing) → 45) | **33** (35) | 37 % at the median |
-| 8.12 grisfest s6 | dance floor → car at the finish → 3,1 > 2,3 → tongatonga | 15.8 (walk 3.9 + 0.5 + drive 11.4: walk + drive median 15.28 of 18 clean, + 0.5; Phase 3 r1 repair 2, the fixed walker: 33 m in 3.9 s where the old one took 44–45 m and 6.3–6.5 s; was 19.0 → 23) | **19** (30) | 17 % |
-| 8.13 julafton s1 | patio → hire car → Majsan, Fru Storch, Berra, Herr Storch | 67.3 (median of 15 clean runs: 67.0–68.6, and one held up 14.5 s by traffic, 81.7; Phase 3 r1 repair 2, the fixed walker reaches the hire car in 3.5 s (30 m) where the old one took 8.3–8.4 s (50 m); the drives are unchanged; was 72.4, Phase 2 gate) | **81** (80) | 17 % |
+| 8.11 fataga s5 | six fleeing sheep round Fataga | 21.8 (p75 18.80 of 48 + 3; median 16.32; Phase 3 r3 island-camera's 36 runs and the default runs of r3 gate 1, r3 ledger and r3 gate 2 (4 + 4 + 4), pool `walker-r1r2/r3-island-camera`: the north crags got colliders that match the rock; the 36 alone: p75 18.80 → 28, at 44 runs 18.40 → 27. Before it: 21.5 (p75 18.53 of 32 + 3, later 18.36 of 36 → still 27; median 15.90; Phase 3 r1 repair 2, the fixed walker, pool `walker-r1r2/d9451f8`); the old walker: 18 runs p75 27.94 → 39, Phase 2 30.3 of 12 → 42) | **28** (25) | 33 % at p75 |
+| 8.12 grisfest s1 | five flowers round Hotel Flamenco (random spawns) | 20.7 (p75 18.24 of 48 + 2.5; median 16.22; Phase 3 r3 ledger: the r3 intro places Ole 1.6 m beside Stig's start, a new pool `walker-r1r2/r3-island-staging`: r3 gate 1's 4 runs, three batches of 12 and a default run's 4 on the final code, and r3 gate 2's 4. The world, the start spot and the spawns are those of the round-2 pool `walker-r1r2/46a0938` (Phase 3 r2 gate + orchestrator on ca2a3a6, the Flamenco piers solid since 46a0938: p75 15.73 of 28 → 23), whose 28 runs were the short side: this pool's times match the round-1 world's; before it, r1 repair 2's fixed walker on d9451f8: p75 17.79 of 32 → 26; the old walker: 8 runs p75 29.51 → 41, Phase 2 31.1 of 12 → 42) | **26** (30) | 30 % at p75 |
+| 8.12 grisfest s4 | ten of the twelve plate stacks at the dance floor (kick; a fixed layout, three per table) | 25.8 (median 20.77 of 44 + 5, 20.77–21.03: the same tour every run; Phase 3 r1 repair 2, the fixed walker; a deterministic stage now, it was timed at the p75 of "random spawns"; the old walker: 30.33 (one run 37.95, pacing) → 45) | **33** (35) | 37 % at the median |
+| 8.12 grisfest s6 | dance floor → car at the finish → 3,1 > 2,3 → tongatonga | 15.8 (walk 3.9 + 0.5 + drive 11.4: walk + drive median 15.28 of 20 clean, + 0.5; Phase 3 r1 repair 2, the fixed walker: 33 m in 3.9 s where the old one took 44–45 m and 6.3–6.5 s; was 19.0 → 23) | **19** (30) | 17 % |
+| 8.13 julafton s1 | patio → hire car → Majsan, Fru Storch, Berra, Herr Storch | 67.4 (median of 17 clean runs, 67.0–81.7: all within 67.0–68.6 but one held up 14.5 s by traffic, 81.7; Phase 3 r1 repair 2, the fixed walker reaches the hire car in 3.5 s (30 m) where the old one took 8.3–8.4 s (50 m); the drives are unchanged; was 72.4, Phase 2 gate) | **81** (80) | 17 % |
 
   On foot the slack is larger than 20 % by design: the 0.5 s per target is a human's reaction,
   not slack, and × 1.25 is the on-foot rule. The flight's short stages keep more for a sprinter
@@ -1525,10 +1525,11 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
     `JEEP_RUNS=20` and the repair's two default `calibrate` runs, all on the same chase code; 4 lost
     the truck and 1 wedged, excluded): 8–90 s, median 28.38, **p75 34.45 s** → ceil(1.2 × 34.45 =
     41.34) = **42** (90 % range 37–48). The r2 gate's, r3 gate 1's and r3 ledger's default runs added
-    12 chases each on the same chase code (none wedged or lost): 119 usable chases, median 27.98,
-    **p75 34.05 s** → ceil(1.2 × 34.05 = 40.86) = **41** (90 % range 37–44; Phase 3 r3 ledger; at 107
-    chases still 42). The p75 is noisy: the nine samples of 11–19 alone gave 28.5–43.0, and the pool
-    gave 45 at 60 chases, 43 at 72, 42 at 83–107 and 41 at 119. The tail is the chases where the
+    12 chases each on the same chase code (none wedged or lost), and r3 gate 2's 11 more (its twelfth
+    lost the truck, excluded): 130 usable chases, median 28.00, **p75 34.05 s** → ceil(1.2 × 34.05 =
+    40.86) = **41** (90 % range 38–43; Phase 3 r3 ledger, at 119 chases, and r3 ledger2; at 107
+    chases still 42). The p75 is noisy: the ten samples of 11–19 alone gave 28.5–43.0, and the pool
+    gave 45 at 60 chases, 43 at 72, 42 at 83–107 and 41 at 119–130. The tail is the chases where the
     truck had to back out: 54 with no unstick have a median of 26.0 s, the 8 with two or more
     47.0 s (max 89.5).
     Phase 2 gate (old autopilot): 35 usable chases of 6–124 s (p75 34.4 → 42) and 15 wedges
@@ -1878,10 +1879,11 @@ and the trolley keeps coming.
      mode ever saw it). Re-measured with `FLIGHT=sprit SPRIT_RUNS=36 calibflight`, the sweeper
      holding Space only while it shakes: 36 clean sweeps 5.5–7.8 s, median 7.4, p75 7.6 → T_ref
      10.1 → timer **13** (90 % range 13–13); a careful sweeper's FLYGRÄDSLA peaks at 12–17. The
-     pool (`notes/calibration-samples.md`, `node tools/pool.mjs`) has since grown to 76 sweeps on
+     pool (`notes/calibration-samples.md`, `node tools/pool.mjs`) has since grown to 101 sweeps on
      the same stage and sweeper code (r2's 5 more, the r2 gate's 5, r3 flight-flow's 10, r3
-     flight-look's 5, r3 flight-trolley's 10, r3 repair-flight's 5): median
-     7.36, p75 7.60 → still **13** (90 % range 13–13).
+     flight-look's 5, r3 flight-trolley's 10, r3 repair-flight's 5, r3 gate 1's 5, r3 ledger's 5,
+     r3 gate 2's 5, the verify2 of r3 repair-flight's 5, r3 repair2-flight's 5): 5.4–7.8 s, median
+     7.32, p75 7.60 → still **13** (90 % range 13–13).
 2. `goto({ to: 'galleyFront', radius: 1.6, text: 'Lämna flaskorna i främre byssan' })`
 
 **Outro** (`outroPlace: { stig: ['cabinRow14', 0, 0] }`, `outroCam: ['ole', 'stig']`; Berra at row 22, then back at row 14, where Ole has his boombox on his lap: outfit `flygRadio`, §2.2; the next mission's home set gives him `flyg` again):
@@ -2039,7 +2041,7 @@ SunTrip lawn and pool while Berra and Robban heckle; ends with "Hä-pååre!".
 - lasse: "Och nu – friskotek! Men vinden har tagit badbollarna!"  [N]
 
 **Stages:**
-1. `rabbits({ mesh: 'badboll', count: 6, near: 'friskotek', rMin: 6, rMax: 30, timer: 24, text: 'Plocka kulor! Plocka med höger… plocka med vänster!', barLabel: 'KULOR', gotText: 'Plocka med höger!', failText: 'Bollarna rullade ner till stranden.', radio: [['berra', 'Kolla storken!'], ['robban', 'Att de bara orkar, våra storkar…']] })`
+1. `rabbits({ mesh: 'badboll', count: 6, near: 'friskotek', rMin: 6, rMax: 30, timer: 23, text: 'Plocka kulor! Plocka med höger… plocka med vänster!', barLabel: 'KULOR', gotText: 'Plocka med höger!', failText: 'Bollarna rullade ner till stranden.', radio: [['berra', 'Kolla storken!'], ['robban', 'Att de bara orkar, våra storkar…']] })`
    text [F]; gotText [F*]; failText [N]; radio [F](t) ×2 (the research does not say who).
 2. `goto({ to: 'friskotek', radius: 5, text: 'Lämna bollarna till Lasse' })`
 
@@ -2279,7 +2281,7 @@ the tourists' pity into a sheep stampede you have to round up.
    round), Mamma facing the camera and the tourists either side of her, half turned to her. With
    the tourists at `fataga`, 13 m away, the two-shot stood 24 m out inside a village house, and a
    two-shot at the stall put the sisters in front of Mamma from one side.)
-5. `rabbits({ mesh: 'faar', count: 6, near: 'fataga', rMin: 10, rMax: 35, timer: 27, text: 'Fånga fåren åt Josés pappa', barLabel: 'FÅR', gotText: 'Bäää!', failText: 'Fåren sprang hela vägen till Maspalomas.', checkpoint: true, retryAt: { x: -240, z: -208.5, yaw: 0 } })`  [N]
+5. `rabbits({ mesh: 'faar', count: 6, near: 'fataga', rMin: 10, rMax: 35, timer: 28, text: 'Fånga fåren åt Josés pappa', barLabel: 'FÅR', gotText: 'Bäää!', failText: 'Fåren sprang hela vägen till Maspalomas.', checkpoint: true, retryAt: { x: -240, z: -208.5, yaw: 0 } })`  [N]
    (Phase 3: a checkpoint. The retry is on foot by the bus stop: `approachSpot` puts the player on
    the pavement at (−240, −207) facing the village (Phase 3 r3: then turned to the nearest sheep,
    the retry's guide, §9.4 item 3), where the calibrate starts the chase
@@ -5513,3 +5515,31 @@ the fixer's group.
   14.9 s, hidden out of the car and through the banner; his outro lines unchanged), and Q puts him
   back at the door (`normal`, (−178, −63), not busy). A SKICK fail takes the same path. The fail
   screen only: no timer moves.
+- r3 ledger2: r3 gate 2's raw runs (on 4887ede: `r3g2-D`, its default `calibrate`; `r3g2-C`, its
+  default `calibflight`), the default `calibflight` of the verify2 of r3 repair-flight (4887ede,
+  `r3v2-C`) and r3 repair2-flight's (`r3rf2-C`) are in `notes/calibration-samples.md`, every time in
+  run order; gate 2's jeep run 5 is excluded as a lost truck (48.71 s, 823 m driven, 3 unsticks), not
+  a wedge. Pool decisions: none of b014460 (camera.js, the side slide; `cam.yaw` untouched), bf50e87
+  (flight.js `via`'s leg point; the sprit sweep has no `via`) and cd39361 (runner.js `fail()`
+  re-hides a checkpoint stage's `startCue` hides; asnan stage 9 only) changes a pooled stage's code,
+  world, actors or autopilot, so every row joins its stage's current pool. No new calibration run.
+- r3 ledger2: by the rule on the current pools (gate 2 N1), friskotek balls **23** (was 24;
+  `walker-r1r2/r3-island-camera` n 48, median 13.32, p75 15.34 → ceil(1.25 × 18.34) = 23, range
+  22–25) and fataga sheep **28** (was 27; its pool `walker-r1r2/r3-island-camera` n 48, median 16.32,
+  p75 18.80 → ceil(1.25 × 21.80) = 28, range 26–30) (§8 table, §8.7 s1, §8.11 s5, island.js TIMERS,
+  fixture, ledger). Gate 2's n 4 sample moved both (balls 10.05 12.32 11.67 9.78, sheep 23.10 15.90
+  23.12 18.07); the sheep pool has gone 28 → 27 → 28 over the last two default runs. The other pools
+  keep their timers: flowers 26 (n 48), jeep 41 (n 130, median 28.00, range 38–43), sprit 13 (n 101,
+  median 7.32), plates 33 (n 44), Tonga 19 (n 20), julafton 81 (n 17, median 67.40).
+- r3 ledger2: stale pool text re-synced with `node tools/pool.mjs` (gate 2 N2, review 2 R1): §8.4's
+  sprit paragraph (it said 76 sweeps, median 7.36: now 101, 7.32, every sample named), the julafton
+  row ("15 clean runs … and one held up 14.5 s by traffic, 81.7" read as 16: now "17 clean runs,
+  67.0–81.7", the held-up run one of them), the §8 table's n and medians, the jeep paragraph of
+  "Races and chases", the island.js TIMERS comments and the flight.js header (101 sweeps).
+- r3 ledger2: `calibrate`'s `CAL TABLE` jeep row labels a lost truck "(truck lost, excluded)" where it
+  said "(wedged, excluded)" (gate 2 N5; tools/scenarios/calibrate.mjs): still excluded as before;
+  nothing measured or pooled changes, and the walker and chase code are untouched.
+- r3 ledger2: **Phase 3's sampling is closed** (2026-10-11): every run made up to here is pooled, and
+  the ledger says so above its stage tables. The balls and sheep pools sit on a rounding boundary and
+  flip with an n 4 sample, so no further default run feeds them before the tag. The pools stay open:
+  every future run goes in, and a timer follows its pool.
