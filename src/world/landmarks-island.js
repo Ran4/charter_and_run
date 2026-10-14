@@ -39,6 +39,9 @@ export const ISLAND_LANDMARKS = {
   suntripPool: { b: [3, 2], at: [14, 4], yaw: PI },
   suntripLot: { b: [3, 2], at: [24, 22], yaw: PI },
   fena_suntrip: { b: [3, 2], at: [14, 8], yaw: 0, y: 0.35 },
+  // Bärra hem Berra (free roam, §10.6): the sun lounger by the SunTrip pool where Berra naps (its
+  // `solstol` prop; yaw = the prop's facing, the backrest end).
+  berraSolstol: { b: [3, 2], at: [17.4, 2.2], yaw: 0 },
   // (1,2) Centro La Medina
   kasbah: { b: [1, 2], at: [0, 22], yaw: PI },
   vikingbar: { b: [1, 2], at: [-16, 18], yaw: PI },
@@ -59,6 +62,9 @@ export const ISLAND_LANDMARKS = {
   grillpacoMamma: { b: [2, 3], at: [25, 24], yaw: PI },
   grillpacoCurb: { world: [-60, 36], yaw: -PI / 2 },
   fena_plaza: { b: [2, 3], at: [0, 0], yaw: 0, y: 0.35 },
+  // Bärra hem Berra (free roam, §10.6): the bench south of the fountain where Berra naps (its `bank`
+  // prop; yaw = the way the seat faces, away from the fountain).
+  berraBank: { b: [2, 3], at: [0, 8.6], yaw: 0 },
   // (2,1) market
   marknad: { b: [2, 1], at: [0, 22], yaw: PI },
   asnestand: { b: [2, 1], at: [6, 2], yaw: PI },

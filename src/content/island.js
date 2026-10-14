@@ -158,6 +158,43 @@ export const UNLOCKS = {
     toast: 'Pepes Bodega har öppnat – på baksidan av hotellet.' },                   // [N]
 };
 
+// Bärra hem Berra – igen (free roam after the grisfest, DESIGN §10.6; game/berraJob.js). Berra naps
+// at one of `spots` (a landmark on its prop: `seat` = his hips, block-local [dx, dz, y], his yaw and
+// lean; `robban` = Robban's [dx, dz, yaw] beside him; `sleep` = the bubbles he snores, in turn).
+// Robban asks, Stig carries him over the shoulders at `walkSpeed` to `to`; sprinting for
+// `sprintSecs`, a fall, a bust or R drops him (E lifts him again); at the desk Robban pays `pay`, less
+// `perDrop` a drop (never under `minPay`). `napSecs` later he naps at the next spot, never placed or
+// taken away within `clearR` m of the player (as placeNpcs). Invented (§1.6): the job, the drops, the pay.
+export const BERRA_JOB = {
+  fromIndex: 12,   // after the grisfest (mission 12, index 11)
+  spots: [
+    { at: 'berraBank', prop: 'bank', seat: [0, -0.05, 0.72], yaw: 0, lean: 0, robban: [1.5, 0.5, -1.6],
+      sleep: ['…zzz' /* [N] */] },
+    { at: 'berraSolstol', prop: 'solstol', seat: [0, 0.2, 0.7], yaw: Math.PI, lean: -0.75, robban: [-1.05, -0.4, Math.PI / 2],
+      sleep: ['…zzz' /* [N] */, 'Det är ju fan vad solen tar här nere, Robban.' /* [F*] said in his sleep, relocated */, '…zzz' /* [N] */] },
+  ],
+  to: 'flamencoRecepcion', radius: 2.2, walkSpeed: 3.2, sprintSecs: 0.25,
+  // The desk (the grisfest outro's shot from the porch front): Berra and Robban face Stig, the
+  // porter behind them; [dx, dz, yaw] from `to`.
+  scene: { berra: [-0.4, 3.0, 1.0], robban: [-1.7, 1.9, 1.0], stig: [1.6, 2.6, -Math.PI / 2], cam: { at: 'recepcionCam', dist: 7.5, height: 2.0 } },
+  napSecs: 150, clearR: 50, snoreR: 35,
+  pay: 100, perDrop: 25, minPay: 25,
+  snore: '…zzz',                                                                  // [N] carried or dropped
+  title: 'Bärra hem Berra',                                                       // [F*] Stig's line
+  carryText: 'Bär Berra till receptionen på Hotell Flamenco – gå, spring inte!',  // [N]
+  liftText: 'Du tappade Berra! Lyft upp honom igen.',                             // [N]
+  liftPrompt: '<b>E</b> Lyft upp Berra',                                          // [N]
+  ask: [
+    ['robban', 'Kan du hjälpa mig bära hem Berra?'],                              // [F*] relocated from Tonga Tonga
+    ['stig', 'Vilket snack! "Bärra hem Berra!"'],                                 // [F*]
+  ],
+  drop: ['robban', 'Nej, skärpning nu, Berra, annars får vi ena jävla problem här.'],   // [F*] relocated from the plane
+  home: ['berra', 'Var jag med där? Hade jag kul?'],                                    // [F*] relocated from the bodega outro
+  thanks: 'Tack ska du ha. Här är en hundring.',                                        // [N]
+  thanksDocked: 'Här är {n} pesetas. Avdrag för tappningarna.',                         // [N]
+  paidToast: 'Robban betalade {n} pta.',                                                // [N]
+};
+
 // Speedo names for named and mission cars (§11.4); unnamed cars show their type's Swedish name.
 export const NAMED_CARS = {
   buss17: 'SunTrips buss 17', hyrbil: 'Hyrbilen', grisbil: 'Grisbilen', nattbuss: 'Nattbussen', joseBil: 'Josés bil', guardiaJeep: 'Guardia-jeepen',

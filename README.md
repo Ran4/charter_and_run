@@ -126,6 +126,12 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   nära Herr Storch: ingen fara, linsskyddet sitter på.
 - **Upplåsningar**: grisbilen (parkerad vid Hotell Flamenco efter uppdrag 9), samba-musik (alla
   prylar) och Pepes Bodega på hotellets baksida (efter julafton).
+- **Bärra hem Berra**: efter grisfesten somnar Berra då och då, på bänken vid fontänen på plazan
+  eller på en solstol vid SunTrips pool, och Robban står bredvid och vinkar. Prata med Robban, så
+  lyfter Stig upp Berra på axlarna och bär honom till receptionen på Hotell Flamenco. Gå, spring
+  inte: springer du, ramlar, blir påkörd eller trycker R tappar du honom, och då får du lyfta upp
+  honom igen (E). Vid receptionen vaknar Berra, och Robban betalar en hundring, 25 pta mindre för
+  varje gång du tappade honom. En stund senare sover Berra igen, på det andra stället.
 
 ## Vad är påhittat?
 
@@ -144,6 +150,8 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
 - Guardia Civil-jakten, ¡MULTA! och portiermutan som gömställe
 - målarverkstaden vid Gasolina, där en dalahästmålad bil lurar Guardia Civil (i filmen är det
   åsnan som Ole och Stig målar röd med blommor)
+- att Berra somnar på stan efter grisfesten och att Stig bär hem honom om och om igen, mot betalt
+  (i filmen bär Robban och Stig-Helmer hem honom tillsammans, en enda gång, efter Tonga Tonga)
 - att grisbilen lånas ut till Stig-Helmer, att man följer Josés bil och grisbilen, och
   jeepjakten
 - fårrusningen i Fataga, kappkörningen mot nattbussen och porslinskrosset på tid
@@ -228,11 +236,12 @@ src/game/missions/              runner.js (MissionRunner), kinds/ (the stage kin
                                 flight.js (missions 1–5), island.js (missions 6–13), index.js
 src/game/shame.js               the meter: FLYGRÄDSLA/PANIK and SKANDAL/Guardia pursuit, fines, hideouts
 src/game/paintshop.js           the free-roam paint shop at Gasolina: the dalahäst paint job, wet paint, drive-by
+src/game/berraJob.js            Bärra hem Berra in free roam: Berra's naps, Robban's ask, the carry, drops and pay
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
 tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, meter, kinds, perf,
-                                calibrate, calibflight)
+                                paintshop, berra, calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
 tools/pool.mjs                  re-derives every random stage's timer from the ledger
@@ -260,6 +269,7 @@ node tools/shot.mjs phases sceneryPeek flightseq dc8                         # f
 node tools/shot.mjs smash foot propsheet riocard endcard islandstats islandtour
 node tools/shot.mjs castsheet cars heads ui skandal perf
 node tools/shot.mjs pintura dalasheet    # the free-roam paint shop and the dalahäst dress on every body
+node tools/shot.mjs berra                # Bärra hem Berra in free roam: naps, the carry home, drops, the pay
 node tools/shot.mjs fullstory kinds      # the literal §8 missions and the stage-kind checks
 node tools/shot.mjs calibrate calibflight  # timer and FLYGRÄDSLA calibration (slow; see DESIGN §8, §16.4)
 node tools/pool.mjs                      # random-stage timers from the raw runs in notes/calibration-samples.md

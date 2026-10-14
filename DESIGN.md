@@ -169,7 +169,10 @@ after wind-blown beach balls; the Fataga sheep stampede and round-up; the night-
 smashing as a timed game; following José's car and the pig truck; the Guardia jeep chase; Ole's
 gadgets scattered over the island; Majsan saying the mantra together with Stig-Helmer; the paint
 shop at Gasolina, where a car painted like a dalahäst gets past Guardia Civil (free roam, §7.2;
-the film's dalahäst is the donkey Ole and Stig paint red with flowers).
+the film's dalahäst is the donkey Ole and Stig paint red with flowers); Berra napping round town
+after the grisfest, Stig carrying him home to the Flamenco reception again and again, the drops and
+Robban's pay (free roam, §10.6; in the film Robban and Stig-Helmer carry him home together, once,
+after Tonga Tonga).
 The film's flight has **no turbulence** and **no in-flight toilet scene**: both toilet scenes are
 at Arlanda (we keep them there). The plane's toilets are only an invented hideout.
 
@@ -284,6 +287,9 @@ and fur hat).
   places it. A key that is `null`/absent in the current home set is created hidden. (So `stadare`,
   null everywhere, exists for the julafton room-113 scene.)
 - Mission `extra` lists and stage `place` cues move NPCs for scenes (§9).
+- Free roam from index 12 (after the grisfest): the Berra job (§10.6) borrows `berra` and `robban`
+  (`busy`) for a nap on the plaza bench or a SunTrip lounger and the carry home; a mission start
+  sends both home at once.
 
 ---
 
@@ -1087,10 +1093,10 @@ standing there faces. `y` (optional) = absolute height for collectible spots on 
 | block (i,j) | type → builder (owner, file) | content | landmarks: `id` (lx, lz, yaw[, y]) | named / parked cars |
 |---|---|---|---|---|
 | (3,3) | `flamenco` → `hotelFlamenco` (C1, hotels.js) | 7-storey white slab x [−26, 26], z [−27, −14] with balcony rows, terracotta accents, `HOTEL FLAMENCO` roof sign; open reception porch (canopy, desk, plastic Christmas tree `julgran` prop, `RECEPCIÓN`; Phase 3 r2: `HOTEL FLAMENCO · RECEPCIÓN` stands on a terracotta panel above the pergola's fascia, where it no longer fills the top of the chase frame, and the garland runs across the fascia's face) at the slab's south face; ground-floor room patios along the south face (Stig & Ole's room west, room 113 east) with a visible 1st-floor balcony above 113; terracotta piers at the bay lines, solid (Phase 3 r2); pool deck south with a **walkable shallow pool** (flat blue slab at CURB+0.02 + `box(..., CURB, 'water')`, sign "TRE METER DJUPT I ENA ÄNDEN, / EN METER I DEN ANDRA. / BARNVÄNLIG!" (three lines) [F*] (the bungalow seller's line, relocated)); poolbar with straw parasols (`BAR PISCINA · SVENSKT KAFFE`); the julafton party `julgran` on the pool deck at (2.2, 16), in the party and sunset-duet shots (Phase 3); room numbers: a closed room's centred above its own glass door, an open room's (107, 113) on its right-hand pier (Phase 3); parking lot on the west; the parking signs here and at SunTrip's lot are a blue `P` plate over a name strip (`HOTEL FLAMENCO`, `SUNTRIP`) on a post that stops under them (Phase 3 r2: one two-line plate had shrunk the P to the name's size, and the post ran through both faces); **PEPES BODEGA**: small whitewashed annex x [4, 12], z [−31, −27] on the north side with a green door, barrels, sign `PEPES BODEGA · VINOS · RON` facing north (`worldHooks.bodegaLit(on)` lights it after julafton) | `flamenco` (−4, −8, π) (faces the hotel, so the views/cutaway camera stands on the pool deck; Phase 2) · `flamencoRecepcion` (2, −10, 0) · `flamencoPatio` (−18, −11, 0) · `rum113` (18, −11, 0) · `flamencoBalcony` (18, −8, π) · `flamencoPool` (−3, 18, π) · cut anchors (Phase 3; a cut stands `dist` m behind one, looking the way it faces): `rum107Cam` (−18, −11, π) = `flamencoPatio` turned round (looks into room 107), `recepcionCam` (2, −10, π) = `flamencoRecepcion` turned round (the desk from the porch front) · `flamencoDeck` (−4, −2.5, 0) (the island spawn: approachSpot puts the player on the pool deck at (−4, −1) facing the hotel, the chase camera over the pool rather than under the pergola slats; Phase 2) · `flamencoBar` (16, 12, −π/2) · `flamencoDrive` (−26, 22, π) · `flamencoBack` (−6, −33.5, 0) · `bodega` (8, −33.5, 0) · `fena_flamenco` (−3, 7, 0, 0.35) | `hyrbil` (sedan `0xf4f4f0`) at `flamencoDrive` — default `getInCar` car and test car |
-| (3,2) | `suntrip` → `hotelSunTrip` (C1, hotels.js) | lower U-shaped hotel on red rock; welcome **stage** with SunTrip sun backdrop (red text on yellow sun), accordion/conga props; pool; **friskotek lawn**; SunTrip office porch on the south side facing Flamenco's back; posters `GRISFEST TORSDAG · 800 PTA`, `FRISKOTEKET 9.30`; the free-standing `FRISKOTEKET / VARJE MORGON 9.30` board on the lawn's west edge is solid (Phase 3 r3: only its posts were, so he walked through it and the chase eye stood behind it) | `suntrip` (−14, 24, π) (faces the office porch; Phase 2) · `scen` (0, −14, 0) · `friskotek` (−10, 8, 0) · `suntripPool` (14, 4, π) · `suntripLot` (24, 22, π) · `fena_suntrip` (14, 8, 0, 0.35) | — |
+| (3,2) | `suntrip` → `hotelSunTrip` (C1, hotels.js) | lower U-shaped hotel on red rock; welcome **stage** with SunTrip sun backdrop (red text on yellow sun), accordion/conga props; pool; **friskotek lawn**; SunTrip office porch on the south side facing Flamenco's back; posters `GRISFEST TORSDAG · 800 PTA`, `FRISKOTEKET 9.30`; the free-standing `FRISKOTEKET / VARJE MORGON 9.30` board on the lawn's west edge is solid (Phase 3 r3: only its posts were, so he walked through it and the chase eye stood behind it) | `suntrip` (−14, 24, π) (faces the office porch; Phase 2) · `scen` (0, −14, 0) · `friskotek` (−10, 8, 0) · `suntripPool` (14, 4, π) · `suntripLot` (24, 22, π) · `fena_suntrip` (14, 8, 0, 0.35) · `berraSolstol` (17.4, 2.2, 0) (the pool lounger Berra naps on, on its prop, facing its backrest end; §10.6) | — |
 | (1,2) | `kasbah` → `kasbah` (C2, centre.js) | **Centro La Medina** (fictional; internal id `kasbah`): two-level nightlife courtyard centre: arcade, stairs (ramp) to a roof terrace (top ≈ 6.0) with a balustrade above the bottom three steps and a sloped wall collider along it (Phase 3: the way on is over those three steps), neon signs `CENTRO LA MEDINA`, `VIKING BAR` (horned helmet), `TONGA TONGA` (mirror ball), `BAR SVENSKA · SMÖRGÅSAR` | `kasbah` (0, 22, π) · `vikingbar` (−16, 18, π) · `tongatonga` (14, 18, π) · `tongaLot` (20, 27, π) · `tongaSlump` (16.3, 17.4, 0.5) (where Berra slumps after Tonga Tonga and is picked up, at the right of the group in the street shot; Phase 3 r3) · `pryl_poolpen` (8, −6, 0, 7.2) | — |
 | (4,2) | `cita` → `cita` (C2, centre.js) | **Centro Nórdico** (fictional; internal id `cita`) strip mall, sign `CENTRO NÓRDICO`: `SUPERMERCADO`, `FERRETERÍA`, `FARMACIA`, `ESTANCO`, `TELÉFONOS · HYTT 1·2·3`, `SOUVENIRS`, `SVENSKT KAFFE`, `CAMBIO · 1 KR = 17 PTA` (Phase 3: the north shop row and its canopy fit the courtyard between the wings, x ±11; `SOUVENIRS · REGALOS` and `FARMACIA` with its green cross sit on the wings' courtyard faces) | `cita` (0, 22, π) · `supermercado` (−18, 18, π) · `ferreteria` (18, 18, π) · `telefon` (0, 8, π) | — |
-| (2,3) | `plaza` → `plaza` (C2, centre.js) | palms, fountain (shallow walkable pool), restaurant terraces; the north row's arcade (12 arches), shops `CAFETERÍA EL SOL` · `HELADERÍA LA PALMERA` · `CORREOS · TELÉGRAFOS` · `BANCO · CAMBIO` · `PELUQUERÍA` (Phase 3 r3: each name on a 3.5 × 0.8 m board on the arcade's front above its arch's crown (4.09), y 4.1–4.9, two lines where needed; on the shop wall at 3.62 the 5.6–6.6 m signs hung behind the 3.93 m arches, which showed only their middle third) and the arcade café tables keep to x [−19, 29], clear of the west row (x [−29, −19]) that stands on the north row's west end (Phase 3 r2: two arches, the café sign and two tables were inside it); **CASA LOLA** (`CASA LOLA · COMIDA CANARIA`, fictional; internal id `grillpaco`) terrace on the SE corner (Phase 3 r2: the bougainvillea along its eave sits above the pergola's camera cap, west of the name board; Phase 3 r3: the string lights hang from the cross beams' underside (3.08) with a 0.15 sag, the lowest bulb at 2.72, and the pergola's camera ceiling is under 2.72: capped at 2.6 under lights sagging to 2.44, a bulb sat over his head) | `plaza` (0, 6.8, π) (south of the fountain rim, facing it: the fountain column stands at (0, 0); Phase 2) · `grillpaco` (20, 22, π) · `grillpacoMamma` (25, 24, π) · `grillpacoCurb` world (−60, 36, −π/2) (westbound kerb of the z = 40 road, the `follow` endpoint) · `fena_plaza` (0, 0, 0, 0.35) | — |
+| (2,3) | `plaza` → `plaza` (C2, centre.js) | palms, fountain (shallow walkable pool), restaurant terraces; the north row's arcade (12 arches), shops `CAFETERÍA EL SOL` · `HELADERÍA LA PALMERA` · `CORREOS · TELÉGRAFOS` · `BANCO · CAMBIO` · `PELUQUERÍA` (Phase 3 r3: each name on a 3.5 × 0.8 m board on the arcade's front above its arch's crown (4.09), y 4.1–4.9, two lines where needed; on the shop wall at 3.62 the 5.6–6.6 m signs hung behind the 3.93 m arches, which showed only their middle third) and the arcade café tables keep to x [−19, 29], clear of the west row (x [−29, −19]) that stands on the north row's west end (Phase 3 r2: two arches, the café sign and two tables were inside it); **CASA LOLA** (`CASA LOLA · COMIDA CANARIA`, fictional; internal id `grillpaco`) terrace on the SE corner (Phase 3 r2: the bougainvillea along its eave sits above the pergola's camera cap, west of the name board; Phase 3 r3: the string lights hang from the cross beams' underside (3.08) with a 0.15 sag, the lowest bulb at 2.72, and the pergola's camera ceiling is under 2.72: capped at 2.6 under lights sagging to 2.44, a bulb sat over his head) | `plaza` (0, 6.8, π) (south of the fountain rim, facing it: the fountain column stands at (0, 0); Phase 2) · `grillpaco` (20, 22, π) · `grillpacoMamma` (25, 24, π) · `grillpacoCurb` world (−60, 36, −π/2) (westbound kerb of the z = 40 road, the `follow` endpoint) · `fena_plaza` (0, 0, 0, 0.35) · `berraBank` (0, 8.6, 0) (the bench south of the fountain Berra naps on, on its prop, facing away from the fountain; §10.6) | — |
 | (2,1) | `marknad` → `marknad` (C2, centre.js) | rows of striped stall awnings (some `bounce` awnings as climb pads), souvenir stand with painted donkeys `BURROS 500 PTA`, postcard racks, plastic giraffes; the `MERCADILLO · MARKNAD` board on two legs over the south path hangs at 3.85–4.95, above the chase eye (Phase 3 r3: at 2.35–3.45 it covered him walking in from the south road) | `marknad` (0, 22, π) · `asnestand` (6, 2, π) · `pryl_kalkylator` (−12, −8, 0, 3.4) (on an awning roof) | — |
 | (3,1) | `kyrka` → `kyrka` (C2, centre.js) | **Templo Ecuménico**: white rationalist church (flat planes, bell slab), palm plaza, crèche, small fountain; sign `ES UNA IGLESIA` / `DET ÄR EN KYRKA.` [F*] (the sisters' language record, relocated; uppercase since Phase 3 r2, §1.3) | `kyrka` (0, 18, π) | — |
 | (4,3) | `bensin` → `bensin` (C2, centre.js) | gas station: canopy, `GASOLINA` (no brand), prices in pesetas, kiosk; `gaspump` props explode; the workshop's two open bays (`TALLER · NEUMÁTICOS · LAVADO`) are the free-roam paint shop (§7.2): `PINTURA` on the pillar between them, paint tins and a brush by the left bay, a yellow 4 × 7 m box in front of it, the cone moved to the pillar and the parked yellow hatch to the east gable (29.5, −20), out of the painted car's way to the road | `bensin` (0, 16, π) · `pintura` (11.25, −8, 0) (the paint zone in front of the left bay, facing out of it) · cut anchor `pinturaCam` (11.25, −9.6, π) (the bay seen from the forecourt) | — |
@@ -2944,6 +2950,7 @@ COLLECTIBLES = {
 - **No soft locks** — `game.pay(n)`: if `coins ≥ n` deduct; else Ole pays (radio `ole`
   "Jeg spanderer!" [N] + toast `Ole betalade ${n} pta.` [N]) and nothing is deducted. Fines and
   the panic fee are **not** paid by Ole (they just floor at 0).
+- **Free-roam pay**: Robban pays 25–100 pta for each Berra carried home (§10.6).
 - Big-map flavour sign at Centro Nórdico (`cita`): `CAMBIO · 1 KR = 17 PTA`.
 
 ### 10.3 Unlocks (`UNLOCKS`, content/island.js; generic `game.unlock(name)`, Phase 0)
@@ -2989,7 +2996,71 @@ Key **`charter-and-run-v1`** (localStorage):
 ```
 
 `load()` clamps `mission ≤ MISSIONS.length`; `?mission=N` overrides; `?fresh` skips loading.
-Saved on mission complete, collectible pickup, level transition, and every 30 s.
+Saved on mission complete, collectible pickup, level transition, and every 30 s. The free-roam
+Berra job (§10.6) is not saved.
+
+### 10.6 Bärra hem Berra (free roam; feature 2, 2026-10-14)
+
+`game/berraJob.js` (`BerraJob`, owned by Game as `berraJob`), config `BERRA_JOB` in
+content/island.js. The film's "Bärra hem Berra" as a repeatable side job: Berra naps somewhere in
+town, Robban asks, Stig carries him home to the Flamenco reception on foot.
+
+- **When.** On the island with `missions.state === 'idle'` and `missions.index >= fromIndex` (12:
+  after the grisfest). Otherwise nothing, and any other state (a mission's intro, run, fail screen
+  or outro) sends Berra and Robban home at once (`placeNpc` to their HOMES or `homeOverrides` spot,
+  `busy = false`, un-posed); a carry or a drop is called off and the nap waits at the same spot. No
+  mission, stage kind, timer, fixture or calibration pool changes.
+- **The nap.** `spots` in turn, the bench first: `berraBank` (its `bank` prop, south of the plaza
+  fountain, 84 m from the desk) and `berraSolstol` (a `solstol` by the SunTrip pool, about 70 m).
+  The first nap as soon as it is allowed, the next `napSecs` = 150 s after a delivery. Nobody sees
+  it happen: the spot and both men's current places are each more than `clearR` = 50 m from the
+  player (placeNpcs' rule), or more than 15 m off and outside the camera's frustum. The prop is
+  revived; Robban is `placeNpc`d at `spot.robban` [dx, dz, yaw]; Berra goes `seated` with `slump`
+  (the passed-out pose), his hips at `spot.seat` [dx, dz, y], turned `spot.yaw` from the landmark
+  and leaning back `spot.lean` about the hips (root rotation order `YXZ`; the lounger −0.75, along
+  its backrest), re-applied every frame. Both are `busy`. A smashed bench or lounger: he slides off
+  (`fling`) and sleeps on in the sand (`down`, its timer held). Within `snoreR` = 35 m he says his
+  `sleep` lines in turn every 4.5 s: "…zzz" [N], and on the lounger "Det är ju fan vad solen tar
+  här nere, Robban." [F*] in his sleep. Robban waves Stig over (`berraJob.waving`, main.js keeps
+  the giver's 9 m rule) and turns to him; Berra is posed (`berraJob.posed`: no wave, turn or
+  chatter, as a mission's `idleAnim`). Minimap: a `friend` dot on Berra (not edge-clamped). A
+  forced `placeNpcs` by someone else un-poses them, and the nap starts over when unseen.
+- **The ask.** An interactable at Robban (r 2.6, `promptTalk`): `cinematic(robban, stig)`,
+  `dialog(ask)`: robban "Kan du hjälpa mig bära hem Berra?" [F*], stig "Vilket snack! "Bärra hem
+  Berra!"" [F*] (both relocated from Tonga Tonga). Then the lift, and Stig and the camera turn to
+  the guide (`routeAim` to the desk), as a timed stage does after a dialogue.
+- **The carry**, as the grisfest's (kinds/flight.js `carry`): Berra `seated` across the shoulders,
+  `player.anim.carryOver`, `game.carrying = { who: 'berra', job: 'berra' }`, `game.speedCap =
+  walkSpeed` = 3.2 (no sprint). Objective card `title` "Bärra hem Berra" [F*] / `carryText` "Bär
+  Berra till receptionen på Hotell Flamenco – gå, spring inte!" [N]; target `to` =
+  `flamencoRecepcion` (beacon, guide arrow, minimap star); `snore` "…zzz" [N] every 6 s. Untimed:
+  about 26 s from the bench on calibrate's walker (never sprinting). Robban walks Stig's trail (a
+  point every 0.5 m, the way a body got through): main.js `fixedStep` takes an NPC's wish from
+  `npc.steer(h)` (m/s; his is up to 4.6); he stops 3 m short and turns to Stig, and more than 24 m
+  behind he is put 4 m back on the trail. **No mission talk while carrying** (main.js
+  `nearestInteractable`: the giver's talk needs `!game.carrying`): julafton's Ole stands 20 m from
+  the desk, and `runner.begin()` resets neither `carrying` nor `speedCap` (the carry would follow
+  Stig into the mission and keep him out of its car).
+- **Drops** (no fail, no fee of their own): sprint held while moving for `sprintSecs` = 0.25 s; R
+  (`bumpedT`); Stig flung or down (a car, a fall); a bust (`frozenT`). The carry state goes, Berra
+  `fling`s off the shoulders (forwards when Stig ran, with Stig's velocity when he was hit) and lies
+  `down`, its timer held (he never gets up by himself); `drops++`; Robban says "Nej, skärpning nu,
+  Berra, annars får vi ena jävla problem här." [F*] (relocated from the plane) and walks to 1.3 m
+  from him. Card `liftText` "Du tappade Berra! Lyft upp honom igen." [N]; the target is Berra as a
+  `follow` target (arrow and minimap dot, no beacon: 2 m from Stig it stood in the chase eye). E at
+  Berra (r 1.9, `liftPrompt` "<b>E</b> Lyft upp Berra" [N]) lifts him again.
+- **The desk.** On foot within `radius` = 2.2 m of `to`: the carry state goes, Berra wakes (`slump`
+  off); `placeNpc` Berra, Robban and Stig at `scene` ([dx, dz, yaw] from `to`) and
+  `cutTo(scene.cam)`, the grisfest outro's shot of the desk (`recepcionCam`, 7.5 m, 2.0 m), with the
+  porter behind them; `dialog`: berra "Var jag med där? Hade jag kul?" [F*] (relocated from the
+  bodega outro), robban `thanks` "Tack ska du ha. Här är en hundring." [N] or, after a drop,
+  `thanksDocked` "Här är {n} pesetas. Avdrag för tappningarna." [N], the line's cue `{ coins: pay,
+  sfx: 'coin' }` with pay = max(`minPay` 25, `pay` 100 − `perDrop` 25 × drops); then the toast
+  `paidToast` "Robban betalade {n} pta." [N]. Both go free (`busy = false`, awake, chattering):
+  `placeNpcs` takes them home once the player is 50 m away (after the end Berra's home is the
+  bodega, 25 m off). The next spot `napSecs` later.
+- Session state only (not saved): a reload starts with the bench. Lines, numbers and spots live in
+  `BERRA_JOB`; scenario `berra` (§16.4).
 
 ---
 
@@ -3347,6 +3418,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/missions.js` | **deleted** | — | |
 | `src/game/shame.js` | edit | **H** | configure/panic/pursuit/walker/hideouts |
 | `src/game/paintshop.js` | new (feature 1, 2026-10-14) | — | `PaintShop` (`shame.paint`): the free-roam paint shop at Gasolina, its scene, wet paint, drive-by and tip (§7.2); `DRIVE_BY` route |
+| `src/game/berraJob.js` | new (feature 2, 2026-10-14) | — | `BerraJob` (`game.berraJob`): Bärra hem Berra in free roam: the naps, Robban's ask, the carry, the drops, the desk and the pay (§10.6) |
 | `src/game/hud.js` | edit | **H** | map sources, meter, strings, legend, ring, blips, zone bar, markers; `renderPortrait` restores the model transform (§14.8) |
 | `src/game/camera.js` | edit | **A1** | profile, frameOne, cutTo, `clampZ` |
 | `src/game/fx.js` | edit | **A1** | `snow`, `steam`, `meterPuff` (rename of `shame`) |
@@ -3387,6 +3459,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `tools/scenarios/cast.mjs` | new | **E** | castsheet, cars |
 | `tools/scenarios/meter.mjs` | new | **H** | skandal, ui |
 | `tools/scenarios/paintshop.mjs` | new (feature 1) | — | pintura, dalasheet |
+| `tools/scenarios/berra.mjs` | new (feature 2) | — | berra |
 | `tools/story/flight.mjs` | new | **F** | `M_FLIGHT` (M[0..4]) |
 | `tools/story/island.mjs` | new | **G** | `M_ISLAND` (M[5..12]) |
 
@@ -3405,7 +3478,7 @@ Init: `initGfx` → `input.init` → `hud.init` → `fx.init` → fonts (Luckies
 → peds (34) → NPC `Character`s (one per `CHARS` key except `stig`, the radio-only keys `levander
 kapten pa guardia pax telefonist` and the cabin-owned `vardinna2`; `key` field; hidden until placed, §2.3) →
 player `Character(CHARS.stig)` (`key = 'stig'`) → collectibles (`COLLECTIBLES`) → markers → `Shame`
-→ `MissionRunner` → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
+→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
 `placeNpcs(true)` → spawn the player → portraits for every key in `CAST` (`renderPortrait`
 restores each model's parent and transform, so seated cast members stay in their seats) →
 `applySaveToWorld()` →
@@ -3415,7 +3488,7 @@ Frame (`update`): hooks → one-shots (incl. E/J/R while seated) → fixed steps
 mantra/hold, AI, cars, people — traffic/peds skipped when `!levelDef.sim.*`) → `syncAll` (also
 writes `ch.x/y/z` from `car.seatWorld(ch.seatSide)` for every car-seated character, player
 included, so framing, bubbles and distance checks see where they really are) → `missions.update` →
-`missions.updateFailed` → `shame.update` → `cabin.tick(dt·timeScale, t, game)` (flight only) →
+`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
 pickups/collectibles → props → `fx.tick` → `tickTown` → markers → camera → sun/sky → HUD → audio →
 traffic recycling (island) → autosave.
 
@@ -3431,7 +3504,7 @@ game.collected = { prylar: Set, fenor: Set };  game.unlocked: Set;
 game.holding;      // bool: Space held in flight (set in fixedStep)
 game.mantraOn;     // bool: mantra currently held (after wind-up)
 game.mantraMode;   // bool: island J = mantra (mantra stage)
-game.carrying;     // null | { item } | { who }
+game.carrying;     // null | { item } | { who } (the free-roam Berra job's { who: 'berra', job }, §10.6)
 game.bumpedT;      // > 0 for 0.4 s after a trolley bowl / turbulence fall
 game.inDialog;  game.autoDialog;  game.dialogSpeed (55, TEST 220);
 game.closure;      // null | a race's closed course { nodes: Set<nodeId>, update(), closed(nodeId) }
@@ -3473,6 +3546,8 @@ game.unsay(target)                        // takes target's bubble down now (hud
                                           // false, sayEnd back to the bubbles still up (Phase 3)
 game.bark(ch, kind) -> text               // kind ouch | getUp | kicked | carjack: a line from the
                                           // speaker's table (Ole / local / Swedish; §14.10, r2)
+npc.steer?(h) -> { x, z } | null          // feature 2: a free-roam module walking an NPC; fixedStep
+                                          // sets the NPC's wish (m/s) from it, else 0 (§10.6)
 
 // ---- flight seats ----
 game.sitPlayer(seatId) -> bool            // via cabin.seatCharacter; sets player.seatId
@@ -3483,7 +3558,7 @@ game.addInteractable({ id, x, z, y = 0.15, pos?(g) -> { x, z, y? }, r = 1.2, pro
                        whileSeated = false, enabled?(g), use(g) }) -> remove()
 // pos (if given) is evaluated every frame and overrides x/z/y (moving anchors such as the trolley).
 // nearestInteractable order, standing: interactables with priority ≥ 100 (haggle bid) > mission
-// giver talk (idle, < 3.4 m) > other interactables (enabled, in range) by priority then distance >
+// giver talk (idle, < 3.4 m, not while game.carrying: feature 2, §10.6) > other interactables (enabled, in range) by priority then distance >
 // cars (if verbs.enterCars and !car.noEnter and !locked shown as prompt).
 // Seated: whileSeated interactables by priority then distance > 'stand' (unless the stage has
 // lockSeat). Giver talk is never offered while seated (stand up first).
@@ -3879,6 +3954,12 @@ shame.onRam(car, impact);  shame.pursuers;  shame.officer;  shame.v / pursuit / 
 shame.paint (PaintShop, §7.2): configure(cfg) from configure(); onPursuit() from startPursuit();
   update(dt) from update(); clear() from clear(); objective() (the wet-paint card or null, read by
   main.updateHud when no mission runs); markers() (read by main.mapMarkers); busy; wet; blocker(car)
+
+// berraJob.js (feature 2, §10.6): game.berraJob = new BerraJob(game) after the runner; update(dt)
+//   from Game.update after shame.update; posed(key) / waving(key) read by syncAll (no wave, turn or
+//   chatter / Robban's wave); target() after missions.target() in updateMarkers and mapMarkers;
+//   objective() after shame.paint's in updateHud; markers() in mapMarkers; phase nap | asleep |
+//   carry | dropped; shown; busy (a scene); drops; release() (sends Berra and Robban home)
 
 // fx.js
 fx.snow(x, y, z);  fx.steam(x, y, z);  fx.meterPuff(x, y, z, color, n)   // (fx.shame removed)
@@ -4347,6 +4428,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `ui` [H] | long Swedish strings in toasts/banners/objective; glyph check shot; dialogue with Norwegian line |
 | `skandal` [H] | `addCoins(2000)`, `shame.add(100)`: 2 `guardia` cars spawn; exit car → officer walks at the player (closes 3 m within 10 s without a stuck teleport, round a block corner if a building stands between them; Phase 3 r2, was 1.5 s) and never stands inside a solid; block him behind a building → teleported within 6 s; get busted → coins −400 (20 %), ¡MULTA!, player frozen ~3 s; an offence within 20 m of Herr Storch adds 0; the porter bribe: his line shows before the `PORTIERN TITTADE BORT` banner (Phase 3) |
 | `pintura` [feature 1] | the paint shop (§7.2): the drive-by route clear of props and solids, the moved parked hatch free; no paint without a pursuit; Ole's tip once; no paint with a Land Rover 20 m off; `stop` while rolling in; the paint job (−1000 pta, pursuit over, cooldown ≥ 50 s, a cutaway scene with both lines and the car in the bay, then red with the dress, repaired, rolled out with Stig at the wheel, Ole back, the banner and the wet card); the drive-by bubble; dry; known next time; busy in the cooldown; poor at 500 pta; a second job; ruined wet paint → a new pursuit; a bus refused; nothing while a mission runs |
+| `berra` [feature 2] | Bärra hem Berra (§10.6): no job at index 11; at 12 the nap never pops into view (10 m off, 30 m off in view: no; 30 m behind the camera: yes); Berra seated asleep on the bench, still, Robban beside him waving, "…zzz", the minimap dot, the talk prompt; the ask (both lines) and the lift (carry, cap 3.2, card, target); the walk home on calibrate's walker without sprint (15–60 s; 26 s measured), Robban within 6 m at the end, no drop, the desk (100 pta, toast), awake and free, the next nap at the lounger; the sun line in his sleep; a smashed lounger leaves him down and the ask still works; no talk to Ole while carrying; the sprint, R and fall drops (card, prompt, he stays down, E lifts him); 25 pta after three drops; a mission start sends both home and hides the job; the bench again after it |
 | `dalasheet` [feature 1] | the dalahäst dress on sedan, hatch, wagon, van and pickup: side, left, front and top shots |
 | `talk` [Phase 0] | `autoDialog = false`, walk to Ole at `gateQueue`, E, Space twice |
 | `fullstory` [Phase 0b] | swaps the literal §8 missions (`tools/fixtures/full-missions.js`) into `MISSIONS` and plays all 13 per §16.3 (`FROM`/`TO` as `story`); must end `#13 idle`, `RESULT: PASS` |
@@ -4420,6 +4502,7 @@ fatagaDukar golf bungalow bygge dromplan airport hittegods busBay bagageband dyn
 + kerbside `follow` endpoints `grisfestGate fatagaBus grillpacoCurb`
 + cut anchors `rum107Cam recepcionCam dukarCam vischanCam` (Phase 3)
 + the paint shop `pintura` and its cut anchor `pinturaCam` (feature 1, §7.2)
++ Berra's naps `berraBank berraSolstol` (feature 2, §10.6)
 + collectibles `pryl_klocka pryl_poolpen pryl_kalkylator pryl_kniv pryl_kamera pryl_glasogon
 pryl_pung fena_flamenco fena_suntrip fena_plaza fena_golf fena_bungalow fena_hamn fena_hav` + Rio
 `rioBoat rioCam`.
@@ -5722,3 +5805,17 @@ the fixer's group.
   paint tins, the yellow box; the bay's cone moved to the pillar (14.75, −10.9) and the parked
   yellow hatch from the forecourt (24.5, −7) to the east gable (29.5, −20). Scenarios `pintura`,
   `dalasheet` (§16.4). Free roam only: no mission, stage kind, timer or fixture changed.
+- Feature 2, "Bärra hem Berra – igen" (`features/implemented/barra_hem_berra_igen.md`, 2026-10-14):
+  the free-roam Berra job (§10.6; new `src/game/berraJob.js`, `BERRA_JOB` in content/island.js;
+  §1.6, §2.3, §10.2). From index 12, with no mission running, Berra naps on the plaza bench or a
+  SunTrip lounger (never placed in view), Robban beside him waving; Robban's ask and Stig's answer
+  (the Tonga Tonga lines, [F*]), then the grisfest's shoulder carry at 3.2 m/s to the Flamenco
+  reception, Robban walking Stig's trail. Sprinting, R, a fall or a bust drops him (Robban's
+  "skärpning" line, E lifts him again); at the desk "Hade jag kul?" and Robban's 100 pta, 25 less a
+  drop (at least 25); 150 s later the other spot. main.js: `berraJob` ticked after `shame.update`;
+  `syncAll` reads `posed`/`waving`; `fixedStep` takes an NPC's wish from `npc.steer(h)`; no giver
+  talk while `game.carrying` (julafton's Ole, 20 m from the desk); `updateMarkers`/`mapMarkers` use
+  `berraJob.target()` after the runner's, `mapMarkers` adds `berraJob.markers()`, `updateHud` its
+  `objective()` after the paint shop's (§14.3, §14.8). World (§6.3): landmarks `berraBank`,
+  `berraSolstol`. Scenario `berra` (§16.4). Free roam only: no mission, stage kind, timer or fixture
+  changed.

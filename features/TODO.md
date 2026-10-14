@@ -1,6 +1,5 @@
 # Gör dessa grejer (flytta filen till features/implemented/ och uppdatera den när du är klar, och
 # flytta den till "färdiga features"-sektionen nedan)
-- features/barra_hem_berra_igen.md – 2. Bärra hem Berra – igen [M]
 - features/jag_kan_flyga_glidflykt.md – 3. Jag kan flyga – glidflykt efter julafton [M]
 - features/systrarna_satter_poang.md – 4. Siv och Majsan sätter poäng på simhoppen [M]
 - features/tutan_som_folk_reagerar_pa.md – 5. Tutan som folk reagerar på [S]
@@ -68,3 +67,4 @@
 
 # Färdiga features
 - features/implemented/dalahastbilen.md – 1. Coche folcloristico nativo – bilen målas som en dalahäst [M]
+- features/implemented/barra_hem_berra_igen.md – 2. Bärra hem Berra – igen [M]

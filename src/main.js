@@ -22,6 +22,7 @@ import { fx } from './game/fx.js';
 import { hud, renderPortrait } from './game/hud.js';
 import { CamRig } from './game/camera.js';
 import { Shame } from './game/shame.js';
+import { BerraJob } from './game/berraJob.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
 import { LEVELS, ISLAND_PALETTES } from './level.js';
@@ -152,6 +153,7 @@ class Game {
     this.arrow = new GuideArrow(scene);
     this.shame = new Shame(this);
     this.missions = new MissionRunner(this);
+    this.berraJob = new BerraJob(this);   // free roam after the grisfest (§10.6)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -1251,7 +1253,8 @@ class Game {
     if (p.state !== 'normal') return null;
     const top = this.bestInteractable((i) => !i.whileSeated && (i.priority || 0) >= 100);
     if (top) return { type: 'it', it: top };
-    if (ms.state === 'idle' && ms.current && ms.current.level === this.level) {
+    // Not with Berra on his shoulders (§10.6): the carry would follow him into the mission.
+    if (ms.state === 'idle' && ms.current && ms.current.level === this.level && !this.carrying) {
       const g = this.npcs[ms.current.giver];
       if (g && g.state !== 'hidden' && dist(g.x, g.z, p.x, p.z) < 3.4 && Math.abs(g.y - p.y) < 2) return { type: 'talk', who: g };
     }
@@ -1367,6 +1370,7 @@ class Game {
     this.missions.updateFailed(dt);
     this.missions.syncIdleAnim();
     this.shame.update(dt);
+    this.berraJob.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);
@@ -1539,7 +1543,9 @@ class Game {
     for (const k in this.npcs) {
       const n = this.npcs[k];
       if (n.state === 'seated' || n.state === 'hidden') continue;
-      n.wishX = n.wishZ = 0;
+      // A free-roam module may walk an NPC: `n.steer(h)` -> { x, z } m/s (berraJob: Robban follows).
+      const w = n.steer?.(h);
+      n.wishX = w ? w.x : 0; n.wishZ = w ? w.z : 0;
       n.step(h, this);
     }
     this.carsVsPeople();
@@ -1654,8 +1660,10 @@ class Game {
       const near = dist(n.x, n.z, this.player.x, this.player.z);
       n.anim.talk = talker === k;
       const giver = ms.state === 'idle' && ms.current?.giver === k && ms.current.level === this.level;
-      const posed = !!ms.idlePose(k);   // §9.4 idleAnim (e.g. Berra asleep): no wave, turn or chatter
-      n.anim.wave = giver && !posed && near < 9 && !this.inDialog && n.state === 'normal';
+      // §9.4 idleAnim (e.g. Berra asleep), or held by the free-roam Berra job (§10.6): no wave, turn
+      // or chatter; Robban waves Stig over to the sleeping Berra as a giver does.
+      const posed = !!ms.idlePose(k) || this.berraJob.posed(k);
+      n.anim.wave = (giver || this.berraJob.waving(k)) && !posed && near < 9 && !this.inDialog && n.state === 'normal';
       if (n.state === 'normal' && !posed && near < 10 && !this.inDialog) n.yaw += Math.atan2(Math.sin(yawTo(this.player.x - n.x, this.player.z - n.z) - n.yaw), Math.cos(yawTo(this.player.x - n.x, this.player.z - n.z) - n.yaw)) * Math.min(1, dt * 3);
       // Free play only: not in the gap before an outro (bubbles stacked over its first line).
       const lines = (this.level === 'island' && this.chatterOverrides[k]) || chatter[k];
@@ -1726,12 +1734,13 @@ class Game {
       const g = this.npcs[ms.current.giver];
       if (g) out.push({ type: 'mission', x: g.x, z: g.z, edge: true });
     }
-    const t = ms.target();
+    const t = ms.target() || this.berraJob.target();
     if (t && !t.follow) out.push({ type: 'objective', x: t.x, z: t.z, edge: true });
     if (t && t.follow) out.push({ type: ms.stage?.car?.isTarget ? 'enemy' : 'friend', x: t.x, z: t.z, edge: true });
     out.push(...ms.markers());
     for (const h of this.shame.pursuers) if (!h.dead) out.push({ type: 'enemy', x: h.x, z: h.z, edge: true });
     out.push(...this.shame.paint.markers());
+    out.push(...this.berraJob.markers());
     const o = this.shame.officer;
     if (o && o.state !== 'hidden' && this.shame.pursuit) out.push({ type: 'enemy', x: o.x, z: o.z, edge: true });
     if (!all) {
@@ -1784,7 +1793,7 @@ class Game {
       this.bang.fadeBeam(nearFade(g.x, g.z));
       if (dist(g.x, g.z, f.x, f.z) > 25) target = { x: g.x, z: g.z };
     } else this.bang.show(false);
-    const t = ms.target();
+    const t = ms.target() || this.berraJob.target();   // or the free-roam Berra job's (§10.6)
     if (t) {
       target = t;
       const y = t.follow ? groundAt(t.x, t.z, 0.2, 0.6) + 2.5 : groundAt(t.x, t.z, 0.2, 0.6);
@@ -1811,8 +1820,8 @@ class Game {
   }
 
   updateHud() {
-    // No mission running: the paint shop's wet-paint card, if any (§7.2).
-    hud.setObjective(this.missions.objective() || this.shame.paint.objective());
+    // No mission running: the paint shop's wet-paint card (§7.2) or the Berra job's (§10.6), if any.
+    hud.setObjective(this.missions.objective() || this.shame.paint.objective() || this.berraJob.objective());
     hud.setSpeedo(this.playerCar);
     if (this.missions.state !== 'failed') {
       let prompt = '';
