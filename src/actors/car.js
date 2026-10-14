@@ -365,6 +365,56 @@ function icecreamDress(ctx) {
   decal(ctx, 'HELADOS', 1.3, 0.24, 'front', top + 0.06, L / 2 - 0.45, { fg: '#d8321e', bg: '#fff6c0', border: '#d8321e' });
 }
 
+// The dalahäst dress (the free-roam paint shop, DESIGN §7.2): white flowers with yellow eyes and
+// green leaves on the doors and the bonnet, and the horse's harness (white, green and blue stripes
+// with a saddle on the rear door) along the sides. Ordinary bodies only (carBody, vanBody); built
+// as its own mesh with no outline, so it reads as paint, and a wreck hides it with the liveries.
+const DALA = { petal: 0xfaf6ea, eye: 0xf7c31b, leaf: 0x2f8a4a, blue: 0x2f6ad8 };
+// One flower of size k: on a side (sx = ±1, in the y–z plane) or flat on the bonnet (sx = 0).
+function dalaFlower(g, sx, x, y, z, k) {
+  const cyl = PRIM.cyl(10);
+  const put = (c, d, a, len, wid, lift) => {
+    const ca = Math.cos(a) * d, sa = Math.sin(a) * d;
+    if (sx) g.add(cyl, c, mat(x + sx * lift, y + ca, z + sa, a, 0, Math.PI / 2, len, 0.01, wid));
+    else g.add(cyl, c, mat(x + ca, y + lift, z - sa, 0, a, 0, len, 0.01, wid));
+  };
+  for (const a of [Math.PI - 0.75, Math.PI + 0.75]) put(DALA.leaf, 0.17 * k, a, 0.2 * k, 0.08 * k, 0);
+  for (let i = 0; i < 6; i++) put(DALA.petal, 0.085 * k, (i * Math.PI) / 3, 0.15 * k, 0.085 * k, 0.003);
+  put(DALA.eye, 0, 0, 0.085 * k, 0.085 * k, 0.006);
+}
+function dalaDress(s) {
+  const g = new GeoBuilder();
+  const L = s.len, W = s.wid, y0 = s.wheelR * 0.95, top = y0 + s.bodyH;
+  for (const sx of [-1, 1]) {
+    const x = sx * (W / 2 + 0.014);
+    // The harness: three stripes from nose to tail, under the waist on a van.
+    const band = s.tall ? y0 + 0.62 : top - 0.05;
+    [DALA.petal, DALA.leaf, DALA.blue].forEach((c, k) => g.box(c, x, band - k * 0.045, 0, 0.01, 0.045, L - 0.24));
+    if (s.tall) {
+      dalaFlower(g, sx, x, y0 + 0.3, L / 2 - 2.1 - 0.9, 1.25);
+      dalaFlower(g, sx, x, y0 + 0.3, L / 2 - 1.55, 0.8);
+      continue;
+    }
+    // The saddle: a white panel with a blue rim, hanging from the harness.
+    const sz = -L * 0.16, sb = y0 + 0.1, st = band - 0.115;
+    g.box(DALA.blue, x - sx * 0.002, (sb + st) / 2, sz, 0.01, st - sb + 0.06, 0.46);
+    g.box(DALA.petal, x + sx * 0.002, (sb + st) / 2, sz, 0.01, st - sb, 0.36);
+    dalaFlower(g, sx, x + sx * 0.004, (sb + st) / 2, sz, 0.55);
+    // Flowers on the front door.
+    const fy = y0 + s.bodyH * 0.36;
+    dalaFlower(g, sx, x, fy, L * 0.09, 1.0);
+    dalaFlower(g, sx, x, fy + 0.06, L * 0.09 + 0.36, 0.55);
+    dalaFlower(g, sx, x, fy + 0.06, L * 0.09 - 0.36, 0.55);
+  }
+  if (!s.tall) {
+    // A big flower and two small ones on the bonnet lid (top at top + 0.03, centred at L·0.3).
+    const by = top + 0.035, bz = L * 0.3;
+    dalaFlower(g, 0, 0, by, bz, 1.5);
+    for (const sx of [-1, 1]) dalaFlower(g, 0, sx * W * 0.28, by, bz - L * 0.08, 0.7);
+  }
+  return g.build();
+}
+
 function buildCarModel(s, color) {
   if (s.build) return s.build(s, color);
   const g = new GeoBuilder(), glass = new GeoBuilder(), extras = [];
@@ -652,6 +702,27 @@ export class Car {
     this.burn = 0;
     this.body.material = MAT.toon;
     for (const e of this.decals) e.visible = true;
+  }
+
+  // A new coat of paint (the free-roam paint shop, DESIGN §7.2). The colour is baked into the body's
+  // vertex colours, so the body and its outline are rebuilt; `dala` adds the dalahäst dress as a
+  // decal (once). Glass, wheels, liveries and occupants stay.
+  repaint(color, { dala = false } = {}) {
+    const old = this.body;
+    const { geo, glass } = buildCarModel(this.spec, color);
+    glass?.dispose();
+    this.color = color;
+    this.body = toonMesh(geo, { outline: 0.035 });
+    this.body.material = old.material;
+    this.tilt.add(this.body);
+    this.tilt.remove(old);
+    old.geometry.dispose();
+    for (const o of old.children) o.geometry?.dispose();
+    if (dala && !this.dala && !this.spec.build) {
+      this.dala = new THREE.Mesh(dalaDress(this.spec), MAT.toon);
+      this.decals.push(this.dala);
+      this.tilt.add(this.dala);
+    }
   }
 
   // Sync the visual model with the physics state.

@@ -1334,9 +1334,20 @@ function bensin(f) {
   };
   tires(10.0, -15.9, 4); tires(12.8, -16.0, 3); tires(24.0, -10.8, 5); tires(25.1, -10.4, 2);
   for (const [x, z] of [[16.6, -15.9], [19.8, -16.0], [17.6, -15.9]]) { f.cyl(0x2f5a9a, x, CURB + 0.45, z, 0.32, 0.9, 10); f.circ(x, z, 0.33, CURB + 0.9, 'crate'); }
-  f.car('hatch', 24.5, -7.0, HP, { color: 0xc8a03a });
+  f.car('hatch', 29.5, -20.0, 0, { color: 0xc8a03a });   // by the east gable, clear of the paint shop's way out
   f.prop('kon', 7.4, -10.4);
-  f.prop('kon', 13.8, -10.6);
+  f.prop('kon', 14.75, -10.9);
+  // The paint shop (free roam, §7.2; landmark `pintura`): PINTURA on the pillar between the bays,
+  // paint tins and a brush by the left bay, and the yellow box in front of it to stop in.
+  board(face(f, 'S', 14.75, -12), 'PINTURA', 0, 2.45, 1.25, 0.42, { bg: '#b8202a', fg: '#fbf7ef', border: '#fbf7ef', scale: 0.7, back: false, z: 0.08 }); // [N]
+  for (const [x, z, c] of [[7.55, -11.45, 0xb8202a], [8.1, -11.6, 0xfaf6ea], [7.95, -11.1, SUN]]) {
+    f.cyl(0xc8ccd2, x, CURB + 0.16, z, 0.15, 0.32, 10);
+    f.cyl(c, x, CURB + 0.16, z, 0.152, 0.12, 10);
+    f.cyl(c, x, CURB + 0.33, z, 0.13, 0.02, 10);
+  }
+  f.box(WOOD, 7.62, CURB + 0.34, -11.3, 0.035, 0.03, 0.34, 0.5);
+  f.box(0xb8202a, 7.71, CURB + 0.33, -11.15, 0.07, 0.04, 0.08, 0.5);
+  for (const [x, z, w, d] of [[9.25, -8, 0.14, 7], [13.25, -8, 0.14, 7], [11.25, -4.5, 4.14, 0.14], [11.25, -11.5, 4.14, 0.14]]) f.flat(SUN, x, z, w, d, CURB + 0.026);
 
   // The price totem by the road.
   f.box(STEEL, 26.5, CURB, 26, 0.45, 3.1, 0.45);

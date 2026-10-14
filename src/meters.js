@@ -1,7 +1,8 @@
 // The two meter configurations (DESIGN §5.9, §7.1), consumed by shame.configure(). Owner: WP-H.
 //   flygradsla: mode 'panic' (flight). At 100: PANIK, never a pursuit.
 //   skandal: mode 'pursuit' (island). At 100: the Guardia Civil. hideouts (the porter bribe),
-//   witnessToast (Herr Storch) and bustRadio are P1 polish read by shame.js.
+//   witnessToast (Herr Storch) and bustRadio are P1 polish read by shame.js; paintshop (the
+//   free-roam paint shop at Gasolina) is read by game/paintshop.js.
 
 export const METERS = {
   flygradsla: {
@@ -40,5 +41,30 @@ export const METERS = {
     }],
     witnessToast: { who: 'herrStorch', r: 20, text: 'Ingen fara: linsskyddet sitter på.', cooldown: 60, // [N] P1; offence adds 0
       say: 'Lite film.' },                                                                         // [F*] Herr Storch's bubble while he "films"
+    // The paint shop at Gasolina's workshop (free roam only; game/paintshop.js, §7.2). Stop a car
+    // for holdSecs in the zone (r m round `at`) with no Land Rover within clearR m: it is painted
+    // like a dalahäst and repaired for `cost` (the purse must hold it), and Guardia Civil does not
+    // know it. The cooldown is the porter's (shame.hideoutT). Wet paint for wetSecs: SKICK at 0 and
+    // they know it again. One coat per car. Ordinary bodies only (`types`).
+    paintshop: {
+      at: 'pintura', r: 4, holdSecs: 1, clearR: 35, cost: 1000, cooldown: 60, wetSecs: 12,
+      types: ['sedan', 'hatch', 'wagon', 'van', 'pickup'], color: 0xb8202a,
+      cam: { at: 'pinturaCam', dist: 7.5, height: 2.6 },
+      rollOut: { yaw: Math.PI / 2, camYaw: Math.PI },   // the painted car faces the road; the eye starts on its flank, swings behind
+      tip: ['ole', 'Kjør til verkstedet ved Gasolina! For tusen pesetas maler vi bilen.'],         // [N] the first free-roam pursuit
+      lines: [['ole', 'Og så maler vi den rød.'],                                                   // [F*](t) relocated from asnan's paint scene
+        ['stig', 'Och blommor där.']],                                                              // [F*](t) relocated from asnan's paint scene
+      banner: ['COCHE FOLCLORISTICO NATIVO', 'Guardia Civil känner inte igen bilen'],               // [F*] "Caballo folcloristico nativo." with a car · [N]
+      driveBy: { line: 'En målad bil…?', speed: 6, delay: 1.5 },                                    // [N] echoes Levander's "En målad åsna…?" [F]
+      wet: { title: 'Våt färg', text: 'Kör försiktigt – färgen torkar ({n} s)', label: 'SKICK' },   // [N]
+      wetFail: 'Färgen blev förstörd – Guardia Civil känner igen bilen!',                           // [N]
+      dry: 'Färgen har torkat.',                                                                     // [N]
+      known: 'Guardia Civil känner igen dalahästen. Skaffa en ny bil!',                             // [N]
+      noFit: 'Den bilen kan inte målas här.',                                                        // [N]
+      seen: 'Guardia Civil ser dig! Skaka av dem först.',                                            // [N]
+      stop: 'Stanna i den gula rutan – ny färg för {n} pta.',                                        // [N]
+      busy: 'Verkstaden är upptagen en stund till.',                                                 // [N] the hideout cooldown
+      poor: 'Målningen kostar {n} pta.',                                                             // [N]
+    },
   },
 };

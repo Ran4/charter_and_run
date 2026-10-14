@@ -167,7 +167,9 @@ yourself to juice in the galleys (`toilet:L/R`, `juice:front/back`, §5.10); Sti
 driving SunTrip bus 17 (in the film Lasse ends up taking the transfer); "Plocka kulor" as a chase
 after wind-blown beach balls; the Fataga sheep stampede and round-up; the night-bus race; porcelain
 smashing as a timed game; following José's car and the pig truck; the Guardia jeep chase; Ole's
-gadgets scattered over the island; Majsan saying the mantra together with Stig-Helmer.
+gadgets scattered over the island; Majsan saying the mantra together with Stig-Helmer; the paint
+shop at Gasolina, where a car painted like a dalahäst gets past Guardia Civil (free roam, §7.2;
+the film's dalahäst is the donkey Ole and Stig paint red with flowers).
 The film's flight has **no turbulence** and **no in-flight toilet scene**: both toilet scenes are
 at Arlanda (we keep them there). The plane's toilets are only an invented hideout.
 
@@ -1091,7 +1093,7 @@ standing there faces. `y` (optional) = absolute height for collectible spots on 
 | (2,3) | `plaza` → `plaza` (C2, centre.js) | palms, fountain (shallow walkable pool), restaurant terraces; the north row's arcade (12 arches), shops `CAFETERÍA EL SOL` · `HELADERÍA LA PALMERA` · `CORREOS · TELÉGRAFOS` · `BANCO · CAMBIO` · `PELUQUERÍA` (Phase 3 r3: each name on a 3.5 × 0.8 m board on the arcade's front above its arch's crown (4.09), y 4.1–4.9, two lines where needed; on the shop wall at 3.62 the 5.6–6.6 m signs hung behind the 3.93 m arches, which showed only their middle third) and the arcade café tables keep to x [−19, 29], clear of the west row (x [−29, −19]) that stands on the north row's west end (Phase 3 r2: two arches, the café sign and two tables were inside it); **CASA LOLA** (`CASA LOLA · COMIDA CANARIA`, fictional; internal id `grillpaco`) terrace on the SE corner (Phase 3 r2: the bougainvillea along its eave sits above the pergola's camera cap, west of the name board; Phase 3 r3: the string lights hang from the cross beams' underside (3.08) with a 0.15 sag, the lowest bulb at 2.72, and the pergola's camera ceiling is under 2.72: capped at 2.6 under lights sagging to 2.44, a bulb sat over his head) | `plaza` (0, 6.8, π) (south of the fountain rim, facing it: the fountain column stands at (0, 0); Phase 2) · `grillpaco` (20, 22, π) · `grillpacoMamma` (25, 24, π) · `grillpacoCurb` world (−60, 36, −π/2) (westbound kerb of the z = 40 road, the `follow` endpoint) · `fena_plaza` (0, 0, 0, 0.35) | — |
 | (2,1) | `marknad` → `marknad` (C2, centre.js) | rows of striped stall awnings (some `bounce` awnings as climb pads), souvenir stand with painted donkeys `BURROS 500 PTA`, postcard racks, plastic giraffes; the `MERCADILLO · MARKNAD` board on two legs over the south path hangs at 3.85–4.95, above the chase eye (Phase 3 r3: at 2.35–3.45 it covered him walking in from the south road) | `marknad` (0, 22, π) · `asnestand` (6, 2, π) · `pryl_kalkylator` (−12, −8, 0, 3.4) (on an awning roof) | — |
 | (3,1) | `kyrka` → `kyrka` (C2, centre.js) | **Templo Ecuménico**: white rationalist church (flat planes, bell slab), palm plaza, crèche, small fountain; sign `ES UNA IGLESIA` / `DET ÄR EN KYRKA.` [F*] (the sisters' language record, relocated; uppercase since Phase 3 r2, §1.3) | `kyrka` (0, 18, π) | — |
-| (4,3) | `bensin` → `bensin` (C2, centre.js) | gas station: canopy, `GASOLINA` (no brand), prices in pesetas, kiosk; `gaspump` props explode | `bensin` (0, 16, π) | — |
+| (4,3) | `bensin` → `bensin` (C2, centre.js) | gas station: canopy, `GASOLINA` (no brand), prices in pesetas, kiosk; `gaspump` props explode; the workshop's two open bays (`TALLER · NEUMÁTICOS · LAVADO`) are the free-roam paint shop (§7.2): `PINTURA` on the pillar between them, paint tins and a brush by the left bay, a yellow 4 × 7 m box in front of it, the cone moved to the pillar and the parked yellow hatch to the east gable (29.5, −20), out of the painted car's way to the road | `bensin` (0, 16, π) · `pintura` (11.25, −8, 0) (the paint zone in front of the left bay, facing out of it) · cut anchor `pinturaCam` (11.25, −9.6, π) (the bay seen from the forecourt) | — |
 | (5,3) | `guardia` → `cuartel` (C2, centre.js) | ochre barracks, red-yellow-red flag mast beside the path at x 4.6 (Phase 3: off the axis to the `CASA CUARTEL` plaque), `CASA CUARTEL`; two parked green Land Rovers | `guardia` (0, 20, π) | `guardia1`, `guardia2` (type `guardia`, locked) |
 | (1,0), (3,0), (0,1) | `tomat` → `tomatfalt` (D1, nature.js) | rows of low tomato bushes (one merged mesh, walls a car drives through: no solids, or tops ≤ 0.6), packing shed `TOMATES · EXPORTACIÓN` / `EMPAQUETADO`, `tomatlada` props, dirt tracks | on (0,1): `vischan` (6, 24, π) · cut anchor `vischanCam` (5.7, 22.7, −0.14) (on the gravel track north of the vischan scene, looking back south at the road and the `CAMINO SIN ASFALTAR` sign; Phase 3 r2) · `eslovVag` (27.5, 24, 0) (the rollerskier on the Eslöv lane, 6 m up from the z −120 road and facing it; Phase 3 r2, was (28, 4, −π/2) mid-lane, 33 m off the vischan drive) — on (3,0): `packhus` (0, 10, π) | — |
 | (2,0) | `grisfest` → `grisgard` (D1, nature.js) | farm: white barn (roof top ≈ 5), pergola deck with long tables under string lights, spit-roast pig, bandstand, dance-floor platform (deck top 0.4), piglet pen, gate on the **south** road; **12 `tallrikar` prop stacks** on the tables (smash stage; `placeProp(..., baseY = table top)`, §14.7) | `grisfest` (0, 26, π) · `grisfestGate` world (−80, −204, π/2) (on the south road at the farm gate, the `follow` endpoint) · `dansgolv` (0, 0, 0) · `pryl_pung` (−18, −14, 0, 5.4) | — |
@@ -1306,6 +1308,21 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
     say: 'Lite film.' },                             // [F*] (WP-H); toast + filming never during a scene/cutaway (Phase 2)
   bustRadio: ['lasse', 'Friskotek i morgon bitti, Olsson!'],   // [N] (WP-H) after a free-roam bust only (Phase 2)
   bustLine: '¡Documentación!',                     // [N] the officer's bubble at a bust (Phase 0a)
+  paintshop: {                                     // free roam (feature 1, 2026-10-14; game/paintshop.js)
+    at: 'pintura', r: 4, holdSecs: 1, clearR: 35, cost: 1000, cooldown: 60, wetSecs: 12,
+    types: ['sedan', 'hatch', 'wagon', 'van', 'pickup'], color: 0xb8202a,
+    cam: { at: 'pinturaCam', dist: 7.5, height: 2.6 },
+    rollOut: { yaw: π/2, camYaw: π },              // the painted car faces the road; the eye starts on its flank
+    tip: ['ole', 'Kjør til verkstedet ved Gasolina! For tusen pesetas maler vi bilen.'],   // [N]
+    lines: [['ole', 'Og så maler vi den rød.'], ['stig', 'Och blommor där.']],              // [F*](t) ×2, from asnan's paint scene
+    banner: ['COCHE FOLCLORISTICO NATIVO', 'Guardia Civil känner inte igen bilen'],         // [F*] the subtitle "Caballo folcloristico nativo." · [N]
+    driveBy: { line: 'En målad bil…?', speed: 6, delay: 1.5 },                              // [N] echoes Levander's "En målad åsna…?"
+    wet: { title: 'Våt färg', text: 'Kör försiktigt – färgen torkar ({n} s)', label: 'SKICK' },   // [N]
+    wetFail: 'Färgen blev förstörd – Guardia Civil känner igen bilen!',  dry: 'Färgen har torkat.',   // [N]
+    known: 'Guardia Civil känner igen dalahästen. Skaffa en ny bil!',  noFit: 'Den bilen kan inte målas här.',   // [N]
+    seen: 'Guardia Civil ser dig! Skaka av dem först.',  stop: 'Stanna i den gula rutan – ny färg för {n} pta.',   // [N]
+    busy: 'Verkstaden är upptagen en stund till.',  poor: 'Målningen kostar {n} pta.',     // [N]
+  },
 };
 ```
 
@@ -1365,6 +1382,40 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
   the meter, ends the pursuit; the porter says his `line` first (bubble, 1 s + 0.045 s a character,
   halved in test mode; a radio toast if he is not there) and the hideout banner, flash and jingle
   follow when it ends (Phase 3: the banner, drawn over bubbles, hid the [F*] line). 60 s cooldown.
+- **Paint shop** (free roam; feature 1 "Coche folcloristico nativo", 2026-10-14; `game/paintshop.js`,
+  owned by Shame as `shame.paint`, config `paintshop`). Open only on the island with no mission
+  running (`missions.state === 'idle'`, as `bustRadio`): a mission's chase or wreck (the bodega
+  jeep chase's pig truck) is never fixed here, and no timer changes. During a pursuit, a car in the
+  zone (within `r` = 4 m of `pintura`, the yellow box in front of Gasolina's left bay) gets one
+  toast per reason and visit: `noFit` (not one of `types`: no bus, guagua, pig truck, ice-cream van,
+  taxi or Land Rover), `known` (painted before: one coat per car), `busy` (the hideout cooldown,
+  `shame.hideoutT`, shared with the porter), `poor` (the purse holds less than `cost` = 1 000 pta:
+  **Ole does not pay** here, so the price is real; the tip names it), `seen` (a Land Rover within
+  `clearR` = 35 m), else `stop` while it still rolls (≥ 1 m/s). Stopped for `holdSecs` = 1 s with
+  none of those: `game.pay(cost)`, `v = 0`, `hideoutT = max(hideoutT, 60)`, `endPursuit(true)` (no
+  escape banner), all before the scene, so a Land Rover ramming the parked car is no bust; then the
+  scene: a white flash, the car in the left bay nose out (its tail at block z −15.3, clear of the
+  tyre stacks), Stig and Ole in front of it, `cinematic(ole, stig)` + `cutTo(cam)`,
+  `dialog(lines)`; a white flash, `car.repaint(color, { dala: true })` + `car.repair()`, the car
+  placed at `pintura` facing `rollOut.yaw` (east, to the road), Ole back exactly where he stood
+  (home or a giver's spot; hidden if he was), Stig at the wheel, the chase eye at `rollOut.camYaw`
+  (the car's flank and the bay) swinging in behind as usual, the banner (`good`, 3.2 s), a red
+  flash, the `complete` jingle. **Wet paint**: `wetSecs` = 12 s of asnan's `RideMeter('fragile')`
+  read on that car only, shown as the objective card (`Våt färg`, the seconds left, the SKICK bar;
+  `main.updateHud` uses `shame.paint.objective()` when no mission runs); SKICK at 0 → toast
+  `wetFail` and `add(100, { force: true })` (they know the car: a new pursuit); dry → toast `dry`.
+  A mission start, a new pursuit or the car's loss ends the wet phase. **Drive-by**: `driveBy.delay`
+  s later (after the banner, which is drawn over bubbles) a locked `guardia` Land Rover with a bust
+  enters from the x = 120 road's kerb and crosses the forecourt west at `driveBy.speed` (half within
+  14 m of the player), 5 m in front of the car's box, over the west kerb clear of its postcard stand
+  and onto the x = 40 road's −z lane, then drives on as traffic (in `shame.leaving`, 45 s); within
+  10 m of the player it bubbles "En målad bil…?". It is no pursuer: ramming it adds no SKANDAL.
+  **Ole's tip**: the first free-roam pursuit of the session, 3 s after it starts, radio `tip`.
+  **Minimap**: a `friend` marker at `pintura` (edge-clamped) during a free-roam pursuit while the
+  player's car could be painted there (`shame.paint.markers()`; not for `noFit`, `known`, `busy`,
+  `poor`). Balance: the escape still has to come first (35 m clear of both Land Rovers), it costs
+  twice the porter, the cooldown is shared, a knock in the first 12 s undoes it, and a painted car
+  is known for good.
 - **Witness rule** (P1): an offence within 20 m of `herrStorch` adds **0** SKANDAL (no evidence:
   the lens cap is on) and shows the toast `Ingen fara: linsskyddet sitter på.` (≤ once per 60 s;
   offences inside the cooldown still add 0).
@@ -3295,6 +3346,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/missions/island.js` | new | **G** | `ISLAND_MISSIONS` (indices 5–12) |
 | `src/game/missions.js` | **deleted** | — | |
 | `src/game/shame.js` | edit | **H** | configure/panic/pursuit/walker/hideouts |
+| `src/game/paintshop.js` | new (feature 1, 2026-10-14) | — | `PaintShop` (`shame.paint`): the free-roam paint shop at Gasolina, its scene, wet paint, drive-by and tip (§7.2); `DRIVE_BY` route |
 | `src/game/hud.js` | edit | **H** | map sources, meter, strings, legend, ring, blips, zone bar, markers; `renderPortrait` restores the model transform (§14.8) |
 | `src/game/camera.js` | edit | **A1** | profile, frameOne, cutTo, `clampZ` |
 | `src/game/fx.js` | edit | **A1** | `snow`, `steam`, `meterPuff` (rename of `shame`) |
@@ -3334,6 +3386,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `tools/scenarios/island.mjs` | new | **B** | smash, foot |
 | `tools/scenarios/cast.mjs` | new | **E** | castsheet, cars |
 | `tools/scenarios/meter.mjs` | new | **H** | skandal, ui |
+| `tools/scenarios/paintshop.mjs` | new (feature 1) | — | pintura, dalasheet |
 | `tools/story/flight.mjs` | new | **F** | `M_FLIGHT` (M[0..4]) |
 | `tools/story/island.mjs` | new | **G** | `M_ISLAND` (M[5..12]) |
 
@@ -3646,6 +3699,11 @@ export function registerCarType(key, spec)            // used by cabin.js for 't
 // ('suntrip'|'guagua'), guardia, taxi, pigs, hatch, wagon, colors (random colour palette).
 // car fields: noEnter (never offered to the player), noExplode (damage → dead + fx.steam, no fire,
 // no burn), isPursuer, riders[], decals[].
+// car.repaint(color, { dala = false }) (feature 1, §7.2): rebuilds the body and its outline in
+// `color` (the colour is baked into vertex colours), keeps glass, wheels, liveries and occupants;
+// `dala` adds the dalahäst dress once (white flowers with yellow eyes and green leaves on the doors
+// and bonnet, the white-green-blue harness and a saddle; vans: two flowers and the harness) as an
+// unoutlined decal mesh `car.dala` in decals[] (a burn hides it). car.painted: set by the paint shop.
 // Occupants (Phase 2, §6.6): car.seatY() (bust base / hips − 0.12, car-local), car.roofY() (roof
 // underside − 0.08; buses too), car.fitScale(h, base = seatY()) = clamp((roofY − base) / h,
 // 0.72, 1). main.addBust / addRider (not 'bed') / seat use them, so no head pokes through a roof.
@@ -3818,6 +3876,9 @@ hud.renderPortrait(renderer, model)   // Phase 0 fix: saves root.parent/position
 shame.configure(cfg);  shame.cfg;  shame.add(n, { force } = {});  shame.relieve(n);  shame.update(dt);
 shame.panic();  shame.startPursuit();  shame.endPursuit(caught);  shame.busted();  shame.clear();
 shame.onRam(car, impact);  shame.pursuers;  shame.officer;  shame.v / pursuit / forced / locked
+shame.paint (PaintShop, §7.2): configure(cfg) from configure(); onPursuit() from startPursuit();
+  update(dt) from update(); clear() from clear(); objective() (the wet-paint card or null, read by
+  main.updateHud when no mission runs); markers() (read by main.mapMarkers); busy; wet; blocker(car)
 
 // fx.js
 fx.snow(x, y, z);  fx.steam(x, y, z);  fx.meterPuff(x, y, z, color, n)   // (fx.shame removed)
@@ -4285,6 +4346,8 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `castsheet`, `cars` [E] | lineups; no errors |
 | `ui` [H] | long Swedish strings in toasts/banners/objective; glyph check shot; dialogue with Norwegian line |
 | `skandal` [H] | `addCoins(2000)`, `shame.add(100)`: 2 `guardia` cars spawn; exit car → officer walks at the player (closes 3 m within 10 s without a stuck teleport, round a block corner if a building stands between them; Phase 3 r2, was 1.5 s) and never stands inside a solid; block him behind a building → teleported within 6 s; get busted → coins −400 (20 %), ¡MULTA!, player frozen ~3 s; an offence within 20 m of Herr Storch adds 0; the porter bribe: his line shows before the `PORTIERN TITTADE BORT` banner (Phase 3) |
+| `pintura` [feature 1] | the paint shop (§7.2): the drive-by route clear of props and solids, the moved parked hatch free; no paint without a pursuit; Ole's tip once; no paint with a Land Rover 20 m off; `stop` while rolling in; the paint job (−1000 pta, pursuit over, cooldown ≥ 50 s, a cutaway scene with both lines and the car in the bay, then red with the dress, repaired, rolled out with Stig at the wheel, Ole back, the banner and the wet card); the drive-by bubble; dry; known next time; busy in the cooldown; poor at 500 pta; a second job; ruined wet paint → a new pursuit; a bus refused; nothing while a mission runs |
+| `dalasheet` [feature 1] | the dalahäst dress on sedan, hatch, wagon, van and pickup: side, left, front and top shots |
 | `talk` [Phase 0] | `autoDialog = false`, walk to Ole at `gateQueue`, E, Space twice |
 | `fullstory` [Phase 0b] | swaps the literal §8 missions (`tools/fixtures/full-missions.js`) into `MISSIONS` and plays all 13 per §16.3 (`FROM`/`TO` as `story`); must end `#13 idle`, `RESULT: PASS` |
 | `kinds` [Phase 0b] | fixture data checks; haggle misses fail; follow `minDist` fails; smooth/fragile bars (teleports never count); carry spill; checkpoint retry re-applies night + `vals` and revives plates at `dansgolv`; destroy default spawn; grab at the wreck; scene `exitCar`; Phase 3: follow shows no bar before the start and a head-on quarry does not fail it, `retryCar` (the last car reused, a typed named car, `park`), getInCar `atHome` and a wrecked `missionCar` failing, a frame-only scene stopping the car dead, a scene cutting a `collect` guest's bubbles (3 frames in: no bubble over the guest or Stig, no empty one) and keeping his placement |
@@ -4356,6 +4419,7 @@ marknad asnestand kyrka bensin guardia vischan eslovVag packhus grisfest dansgol
 fatagaDukar golf bungalow bygge dromplan airport hittegods busBay bagageband dyner fyren playa hamn`
 + kerbside `follow` endpoints `grisfestGate fatagaBus grillpacoCurb`
 + cut anchors `rum107Cam recepcionCam dukarCam vischanCam` (Phase 3)
++ the paint shop `pintura` and its cut anchor `pinturaCam` (feature 1, §7.2)
 + collectibles `pryl_klocka pryl_poolpen pryl_kalkylator pryl_kniv pryl_kamera pryl_glasogon
 pryl_pung fena_flamenco fena_suntrip fena_plaza fena_golf fena_bungalow fena_hamn fena_hav` + Rio
 `rioBoat rioCam`.
@@ -5641,3 +5705,20 @@ the fixer's group.
 
 - The repo has a remote: `origin` = `git@github.com:Ran4/charter_and_run.git` (SSH; it was the
   HTTPS URL). Push only when the user asks. Supersedes 2026-10-04's "never push".
+
+## Changelog (free-roam features)
+
+- Feature 1, "Coche folcloristico nativo" (`features/implemented/dalahastbilen.md`, 2026-10-14): the
+  free-roam paint shop at Gasolina's workshop (§7.2 "Paint shop"; new `src/game/paintshop.js`,
+  `METERS.skandal.paintshop` in §7.1; §1.6). A car stopped in the yellow box during a free-roam
+  pursuit, with no Land Rover within 35 m, is painted like a dalahäst and repaired for 1 000 pta
+  (the purse must hold it; Ole does not pay), the pursuit ends, a scene with Ole's and Stig's lines
+  from asnan's paint scene plays, then the `COCHE FOLCLORISTICO NATIVO` banner, a Land Rover's
+  "En målad bil…?" and 12 s of wet paint (asnan's SKICK bar; at 0 a new pursuit). One coat per car;
+  the porter's 60 s cooldown is shared. Ole's radio tip on the session's first free-roam pursuit; a
+  minimap marker during pursuits. New `Car.repaint(color, { dala })` and the dalahäst dress (§14.6);
+  `main.updateHud` shows `shame.paint.objective()` when no mission runs, `main.mapMarkers` adds
+  `shame.paint.markers()` (§14.8). World (§6.3): landmarks `pintura`, `pinturaCam`; `PINTURA` sign,
+  paint tins, the yellow box; the bay's cone moved to the pillar (14.75, −10.9) and the parked
+  yellow hatch from the forecourt (24.5, −7) to the east gable (29.5, −20). Scenarios `pintura`,
+  `dalasheet` (§16.4). Free roam only: no mission, stage kind, timer or fixture changed.

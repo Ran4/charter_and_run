@@ -7,7 +7,8 @@
 //     when a building is in the way. Busted = ¡MULTA! (20 % of the purse, 250–1500) and a 3 s
 //     freeze. Escape by getting far away until the meter drains, or bribe the porter at Hotel
 //     Flamenco's reception (hideout, 500 pta, 60 s cooldown). Offences near Herr Storch add nothing
-//     (the witness rule: his lens cap is on).
+//     (the witness rule: his lens cap is on). In free roam a car can also be painted like a dalahäst
+//     at Gasolina's workshop (paintshop.js, `this.paint`; the same cooldown).
 
 import { Car } from '../actors/car.js';
 import { AIDriver } from '../actors/drivers.js';
@@ -20,6 +21,7 @@ import { hud } from './hud.js';
 import { fx } from './fx.js';
 import { yawTo, pick, clamp, dist } from '../util.js';
 import { S, pta } from '../strings.js';
+import { PaintShop } from './paintshop.js';
 
 const STEER_REPLAN = 0.25;   // s between officer route plans
 const rc = (i) => i * P - HALF;
@@ -74,6 +76,7 @@ export class Shame {
     this._hideoutRm = [];
     // Officer steering state (reused; no per-frame allocation).
     this.steer = { t: 0, x: 0, z: 0, mode: 'direct', path: [], chkT: 0, chkX: 0, chkZ: 0, sideT: 0, side: 1 };
+    this.paint = new PaintShop(this);
   }
 
   get mode() { return this.cfg.mode; }
@@ -92,6 +95,7 @@ export class Shame {
     hud.setFear(0);
     hud.setMeter(0, false, false);
     this.setupHideouts(cfg);
+    this.paint.configure(cfg.mode === 'pursuit' ? cfg.paintshop : null);
   }
 
   add(amount, { force = false } = {}) {
@@ -209,6 +213,7 @@ export class Shame {
       g.addCar(car);
       this.pursuers.push(car);
     }
+    this.paint.onPursuit();
   }
 
   endPursuit(caught) {
@@ -528,6 +533,7 @@ export class Shame {
         }
       }
     }
+    this.paint.update(dt);
     hud.setMeter(this.v, this.v >= (c.hot ?? 70), this.pursuit);
   }
 
@@ -547,5 +553,6 @@ export class Shame {
     this.deferred = false;
     if (this.panicT > 0) { this.panicT = 0; g.player && (g.player.anim.flail = false); hud.panic(0); }
     if (this.filmWho) { this.filmWho.anim.film = false; this.filmWho = null; this.filmT = 0; }
+    this.paint.clear();
   }
 }

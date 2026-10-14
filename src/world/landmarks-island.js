@@ -67,6 +67,11 @@ export const ISLAND_LANDMARKS = {
   kyrka: { b: [3, 1], at: [0, 18], yaw: PI },
   // (4,3) gas station
   bensin: { b: [4, 3], at: [0, 16], yaw: PI },
+  // The paint shop (free roam, §7.2): the zone in front of the workshop's left bay, facing out of it
+  // (paintshop.js places the scene and the drive-by by offsets from it), and its cut anchor, the bay
+  // seen from the forecourt.
+  pintura: { b: [4, 3], at: [11.25, -8], yaw: 0 },
+  pinturaCam: { b: [4, 3], at: [11.25, -9.6], yaw: PI },
   // (5,3) Guardia Civil barracks
   guardia: { b: [5, 3], at: [0, 20], yaw: PI },
   // tomato fields (0,1) and (3,0)

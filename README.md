@@ -114,11 +114,16 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   havet. Spring i och sparka (eller kör igenom).
 - **Pesetas**: mynten i gatorna, i trasiga prylar och i vrak är värda 25 pta styck. De går åt
   till grisfesten (800), julafton (100), åsnan, hittelön, böter (¡MULTA!: 20 % av kassan,
-  250–1500), PANIK (−50) och portiern (500). Har du inte råd betalar Ole – men inte böter eller PANIK-avgiften.
+  250–1500), PANIK (−50), portiern (500) och målarverkstaden (1 000). Har du inte råd betalar Ole – men inte
+  böter, PANIK-avgiften eller målningen.
 - **SKANDAL**: kör på folk, kvadda bilar, sno bilar och slå sönder saker så stiger mätaren. Full
   mätare = två Guardia Civil-jeepar och en polis till fots. Håll dig mer än 70 m bort så lägger
   sig skandalen; blir du tagen åker du på böter. Under jakten kan du **muta portiern** på Hotell
-  Flamenco (500 pta). Och gör du något dumt nära Herr Storch: ingen fara, linsskyddet sitter på.
+  Flamenco (500 pta). Sitter du i en vanlig bil kan du i stället köra till **verkstaden vid
+  Gasolina** och stanna i den gula rutan när ingen jeep är nära: för 1 000 pta målar Ole och Stig
+  bilen röd med blommor som en dalahäst, och Guardia Civil känner inte igen den. Men bara en gång
+  per bil, och krockar du innan färgen har torkat känner de igen den igen. Och gör du något dumt
+  nära Herr Storch: ingen fara, linsskyddet sitter på.
 - **Upplåsningar**: grisbilen (parkerad vid Hotell Flamenco efter uppdrag 9), samba-musik (alla
   prylar) och Pepes Bodega på hotellets baksida (efter julafton).
 
@@ -137,6 +142,8 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
 - "Plocka kulor" som jakt efter vindblåsta badbollar
 - prutning som tajmingspel, SKICK-mätaren för den våta färgen och ÅKSJUKA-mätaren
 - Guardia Civil-jakten, ¡MULTA! och portiermutan som gömställe
+- målarverkstaden vid Gasolina, där en dalahästmålad bil lurar Guardia Civil (i filmen är det
+  åsnan som Ole och Stig målar röd med blommor)
 - att grisbilen lånas ut till Stig-Helmer, att man följer Josés bil och grisbilen, och
   jeepjakten
 - fårrusningen i Fataga, kappkörningen mot nattbussen och porslinskrosset på tid
@@ -220,6 +227,7 @@ src/actors/peds.js, pickups.js  pedestrians; coins (pesetas), collectibles, rabb
 src/game/missions/              runner.js (MissionRunner), kinds/ (the stage kinds: core, flight, island),
                                 flight.js (missions 1–5), island.js (missions 6–13), index.js
 src/game/shame.js               the meter: FLYGRÄDSLA/PANIK and SKANDAL/Guardia pursuit, fines, hideouts
+src/game/paintshop.js           the free-roam paint shop at Gasolina: the dalahäst paint job, wet paint, drive-by
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
@@ -251,6 +259,7 @@ node tools/shot.mjs gate cabin trolley turbulence panic flightshots          # t
 node tools/shot.mjs phases sceneryPeek flightseq dc8                         # flight scenery
 node tools/shot.mjs smash foot propsheet riocard endcard islandstats islandtour
 node tools/shot.mjs castsheet cars heads ui skandal perf
+node tools/shot.mjs pintura dalasheet    # the free-roam paint shop and the dalahäst dress on every body
 node tools/shot.mjs fullstory kinds      # the literal §8 missions and the stage-kind checks
 node tools/shot.mjs calibrate calibflight  # timer and FLYGRÄDSLA calibration (slow; see DESIGN §8, §16.4)
 node tools/pool.mjs                      # random-stage timers from the raw runs in notes/calibration-samples.md

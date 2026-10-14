@@ -1731,6 +1731,7 @@ class Game {
     if (t && t.follow) out.push({ type: ms.stage?.car?.isTarget ? 'enemy' : 'friend', x: t.x, z: t.z, edge: true });
     out.push(...ms.markers());
     for (const h of this.shame.pursuers) if (!h.dead) out.push({ type: 'enemy', x: h.x, z: h.z, edge: true });
+    out.push(...this.shame.paint.markers());
     const o = this.shame.officer;
     if (o && o.state !== 'hidden' && this.shame.pursuit) out.push({ type: 'enemy', x: o.x, z: o.z, edge: true });
     if (!all) {
@@ -1810,7 +1811,8 @@ class Game {
   }
 
   updateHud() {
-    hud.setObjective(this.missions.objective());
+    // No mission running: the paint shop's wet-paint card, if any (§7.2).
+    hud.setObjective(this.missions.objective() || this.shame.paint.objective());
     hud.setSpeedo(this.playerCar);
     if (this.missions.state !== 'failed') {
       let prompt = '';
