@@ -4,8 +4,10 @@
 //     cinematic or a cutaway camera is up; it fires when the scene ends if v is still >= 95.
 //   mode 'pursuit' (SKANDAL, island): at 100 the Guardia Civil come: two Land Rovers and, on foot,
 //     an officer who walks at you with collision, steering along the streets (routeAim's road graph)
-//     when a building is in the way. Busted = ¡MULTA! (20 % of the purse, 250–1500) and a 3 s
-//     freeze. Escape by getting far away until the meter drains, or bribe the porter at Hotel
+//     when a building is in the way. Offences add `gain` × their amount. Busted = ¡MULTA! (20 % of
+//     the purse, 250–1500) and a 3 s freeze: on foot when the officer reaches you; in a car when
+//     you crawl or stand near a Land Rover for 4 s, or are rammed twice within 14 s (`carBust`).
+//     Escape by getting far away until the meter drains, or bribe the porter at Hotel
 //     Flamenco's reception (hideout, 500 pta, 60 s cooldown). Offences near Herr Storch add nothing
 //     (the witness rule: his lens cap is on). In free roam a car can also be painted like a dalahäst
 //     at Gasolina's workshop (paintshop.js, `this.paint`; the same cooldown).
@@ -67,6 +69,7 @@ export class Shame {
     this.forced = false;     // missions can force a pursuit
     this.tauntT = 3;
     this.caughtT = 0;
+    this.resetCarBust();
     this.leaving = [];
     this.panicT = 0;         // > 0 while Stig-Helmer flails
     this.deferred = false;   // PANIK waiting for the dialogue/cinematic/cutaway to end
@@ -129,7 +132,7 @@ export class Shame {
         return;
       }
     }
-    this.v = Math.min(100, this.v + amount);
+    this.v = Math.min(100, this.v + amount * (this.cfg.gain ?? 1));
     this.sinceOffense = 0;
     if (this.v >= 100 && !this.pursuit) this.startPursuit();
   }
@@ -167,6 +170,7 @@ export class Shame {
     if (c.mode !== 'pursuit') return;
     this.pursuit = true;
     this.v = 100;
+    this.resetCarBust();
     const [main, sub] = c.bannerStart || ['', ''];
     hud.showBanner(main, sub, 'skandal', 2600);
     hud.flashColor('rgba(60,110,70,0.45)');
@@ -220,6 +224,7 @@ export class Shame {
     const g = this.game;
     this.pursuit = false;
     this.forced = false;
+    this.resetCarBust();
     for (const h of this.pursuers) {
       if (h.dead) { this.leaving.push({ car: h, t: 12 }); continue; }
       h.ai = new AIDriver(h, { mode: 'traffic', cruise: 14 });
@@ -531,15 +536,46 @@ export class Shame {
           const src = (this.officer && this.officer.state !== 'hidden' && this.officer) || this.pursuers.find((h) => !h.dead);
           if (src) g.say(src.bust ? { x: src.x, y: src.y, z: src.z, height: 2.6 } : src, pick(c.taunts), 2.2);
         }
+        if (this.pursuit) this.carBustTick(dt);
       }
     }
     this.paint.update(dt);
     hud.setMeter(this.v, this.v >= (c.hot ?? 70), this.pursuit);
   }
 
-  // A pursuer car rammed the player's car.
+  // ---- busted in a car (`carBust`; the user's balance change, feature SKANDAL) -----------------
+  // Until then the first touch of a Land Rover was a bust. Now it takes standing or crawling next
+  // to one (stopT) or a second ram while the first one's invisible clock runs (ramT).
+  resetCarBust() {
+    this.stopT = 0;          // s crawling with a Land Rover close
+    this.ramT = 0;           // > 0: the ram clock is running; a new ram now is a bust
+    this.sinceRam = 99;      // s since the last pursuer contact
+  }
+
+  // Pursuit mode, every frame of a pursuit (update).
+  carBustTick(dt) {
+    const g = this.game, b = this.cfg.carBust, car = g.playerCar;
+    this.ramT = Math.max(0, this.ramT - dt);
+    this.sinceRam += dt;
+    if (!b || !car) { this.stopT = 0; return; }
+    // A scene, the bust's own freeze: the clock holds.
+    if (this.caughtT > 0 || g.frozenT > 0 || this.inScene) return;
+    const close = car.speed < b.speed && this.pursuers.some((h) => !h.dead && dist(h.x, h.z, car.x, car.z) < b.r);
+    this.stopT = close ? this.stopT + dt : 0;
+    if (this.stopT >= b.secs) this.busted();
+  }
+
+  // A pursuer car rammed the player's car (main.onCarImpact). Contacts closer than `ramGap` s to the
+  // last one are the same ram. The first ram starts the clock; a second before it runs out busts.
   onRam(car, impact) {
-    if (this.pursuit && car.isPursuer && impact > 1.5 && this.caughtT <= 0) this.busted();
+    if (!this.pursuit || !car.isPursuer || impact <= 1.5 || this.caughtT > 0) return;
+    const b = this.cfg.carBust;
+    if (!b) { this.busted(); return; }
+    const same = this.sinceRam < b.ramGap;
+    this.sinceRam = 0;
+    if (same) return;
+    if (this.ramT > 0) this.busted();
+    else this.ramT = b.ramWindow;
   }
 
   clear() {
@@ -550,6 +586,7 @@ export class Shame {
     this.hideOfficer();
     if (this.pursuit) audio.siren(false);
     this.pursuit = false; this.forced = false; this.v = 0;
+    this.resetCarBust();
     this.deferred = false;
     if (this.panicT > 0) { this.panicT = 0; g.player && (g.player.anim.flail = false); hud.panic(0); }
     if (this.filmWho) { this.filmWho.anim.film = false; this.filmWho = null; this.filmT = 0; }

@@ -116,9 +116,12 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   till grisfesten (800), julafton (100), åsnan, hittelön, böter (¡MULTA!: 20 % av kassan,
   250–1500), PANIK (−50), portiern (500) och målarverkstaden (1 000). Har du inte råd betalar Ole – men inte
   böter, PANIK-avgiften eller målningen.
-- **SKANDAL**: kör på folk, kvadda bilar, sno bilar och slå sönder saker så stiger mätaren. Full
-  mätare = två Guardia Civil-jeepar och en polis till fots. Håll dig mer än 70 m bort så lägger
-  sig skandalen; blir du tagen åker du på böter. Under jakten kan du **muta portiern** på Hotell
+- **SKANDAL**: kör på folk, kvadda bilar, sno bilar och slå sönder saker så stiger mätaren – fort,
+  och den står still i tio sekunder innan den börjar sjunka. Full mätare = två Guardia
+  Civil-jeepar och en polis till fots. Håll dig mer än 70 m bort så lägger sig skandalen. Till fots
+  tar polisen dig när han hinner ikapp; i bil blir du tagen om du står still eller kryper fram
+  nära en jeep i fyra sekunder, eller om jeeparna prejar dig två gånger inom fjorton sekunder (en
+  gång går bra). Blir du tagen åker du på böter. Under jakten kan du **muta portiern** på Hotell
   Flamenco (500 pta). Sitter du i en vanlig bil kan du i stället köra till **verkstaden vid
   Gasolina** och stanna i den gula rutan när ingen jeep är nära: för 1 000 pta målar Ole och Stig
   bilen röd med blommor som en dalahäst, och Guardia Civil känner inte igen den. Men bara en gång
@@ -267,7 +270,7 @@ node tools/shot.mjs start walk aerial drive traffic title talk missions views tr
 node tools/shot.mjs gate cabin trolley turbulence panic flightshots          # the flight level
 node tools/shot.mjs phases sceneryPeek flightseq dc8                         # flight scenery
 node tools/shot.mjs smash foot propsheet riocard endcard islandstats islandtour
-node tools/shot.mjs castsheet cars heads ui skandal perf
+node tools/shot.mjs castsheet cars heads ui skandal carbust perf
 node tools/shot.mjs pintura dalasheet    # the free-roam paint shop and the dalahäst dress on every body
 node tools/shot.mjs berra                # Bärra hem Berra in free roam: naps, the carry home, drops, the pay
 node tools/shot.mjs fullstory kinds      # the literal §8 missions and the stage-kind checks

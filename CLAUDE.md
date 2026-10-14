@@ -36,7 +36,8 @@ opens with a summary of the rounds and the timer changes.
   - flight [cabin]: `gate cabin trolley turbulence panic flightshots`
   - scenery: `phases sceneryPeek flightseq dc8`
   - island: `smash foot propsheet riocard endcard islandstats islandtour`
-  - cast: `castsheet cars heads` · meter/UI: `ui skandal` · `perf` (fails below 45 fps)
+  - cast: `castsheet cars heads` · meter/UI: `ui skandal carbust` (`carbust`: SKANDAL's gain and
+    delay and the in-car bust rules, DESIGN §7.2) · `perf` (fails below 45 fps)
   - free roam: `pintura dalasheet` (the paint shop at Gasolina, DESIGN §7.2), `berra` (Bärra hem
     Berra after the grisfest, DESIGN §10.6)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and

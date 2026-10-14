@@ -68,3 +68,4 @@
 # Färdiga features
 - features/implemented/dalahastbilen.md – 1. Coche folcloristico nativo – bilen målas som en dalahäst [M]
 - features/implemented/barra_hem_berra_igen.md – 2. Bärra hem Berra – igen [M]
+- features/implemented/skandalforandringar.md – SKANDAL-förändringar: mätaren ×3 och 10 s innan den sjunker, i bil tagen efter 4 s nära en jeep eller två prejningar inom 14 s

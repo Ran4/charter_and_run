@@ -6,6 +6,12 @@
 //   skandal: two guardia cars; the officer walks (never inside a wall), routes round a building,
 //            the stuck rule teleports him; a bust fines 20 % with ¡MULTA! and a 3 s freeze; the
 //            Herr Storch witness rule; the porter bribe (hideout); PANIK deferred during a cutaway.
+//   carbust: the user's SKANDAL balance (feature SKANDAL, DESIGN §7.2): an offence adds 3×, the
+//            meter holds 10 s before it sinks; in a car real rams by a launched Land Rover: one
+//            is no bust (a shove's several impacts are one ram), the invisible clock runs out after
+//            14 s, a ram after that only restarts it, a second ram inside it busts; standing with a
+//            Land Rover 15 m off is no bust, 6 m off busts after 4 s; in the paint shop's box with
+//            one 20 m off no bust (and no paint), 6 m off a bust after 4 s.
 import { check } from '../lib.mjs';
 
 const ISLAND = '&mission=6';
@@ -311,5 +317,145 @@ export const SCENARIOS = {
     T.log('PANIK fired after the cutaway');
     await T.shot('skandal_deferred_panik');
     await T.until(() => __game.shame.panicT <= 0, 10000);
+  },
+
+  async carbust(T) {
+    await T.fresh(ISLAND);
+    await T.ev(async () => { window.__Car = (await import('/src/actors/car.js')).Car; });
+    // 1. Gain and the idle delay, on foot on the z = 40 road's pavement, away from Herr Storch.
+    let r = await T.ev(() => {
+      const g = __game, s = g.shame, n = g.npc('herrStorch');
+      g.addCoins(5000 - g.coins);
+      g.debugWarp(-40, 47, Math.PI / 2);
+      s.v = 0; s.add(9);
+      return { v: s.v, storch: Math.round(Math.hypot(n.x + 40, n.z - 47)), cfg: { gain: s.cfg.gain, idleDelay: s.cfg.idleDelay, carBust: s.cfg.carBust } };
+    });
+    T.log('gain', JSON.stringify(r));
+    check(r.v === 27 && r.storch > 25, 'an offence adds 3 × its amount (a kicked pedestrian, 9 → 27)');
+    let t0 = Date.now(), held = null;
+    while (Date.now() - t0 < 13000) {
+      await T.sleep(100);
+      const v = await T.ev(() => __game.shame.v);
+      if (v < 27) { held = (Date.now() - t0) / 1000; break; }
+    }
+    T.log('the meter held', held, 's before it sank');
+    check(held !== null && held > 9.5 && held < 11, 'the meter waits 10 s before it sinks');
+    await T.ev(() => { __game.shame.v = 0; });
+
+    // A pursuit in a new hatch with both Land Rovers parked out of the way (no decay: forced).
+    const stand = (x, z, yaw) => T.ev((x, z, yaw) => {
+      const g = __game, c = window.__pc;
+      c.place(x, z, yaw); c.vx = c.vz = 0; c.w = 0;
+      if (g.playerCar !== c) g.enterCar(c);
+    }, x, z, yaw);
+    const pursue = async (x, z, yaw) => {
+      await T.until(() => !(__game.frozenT > 0), 8000);
+      await T.ev((x, z) => {
+        const g = __game, c = new window.__Car('hatch', { color: 0x8fb3c9 });
+        if (window.__pc) g.removeCar(window.__pc);
+        c.place(x, z, 0); g.addCar(c); window.__pc = c;
+      }, x, z);
+      await stand(x, z, yaw);
+      await T.frames(5);
+      await T.ev(() => {
+        const s = __game.shame;
+        s.add(100);
+        s.forced = true;
+        s.pursuers.forEach((c, k) => { c.ai = null; c.place(-250 + k * 12, -250, 0); c.vx = c.vz = 0; });
+        window.__rams = 0;
+        if (!s.__onRam) { s.__onRam = s.onRam; s.onRam = (car, imp) => { window.__rams++; s.__onRam(car, imp); }; }
+        // When the bust came, in page time (screenshots and polling add latency on the Node side).
+        if (!s.__busted) { s.__busted = s.busted; s.busted = () => { window.__bustAt = performance.now(); s.__busted(); }; }
+      });
+      await T.frames(5);
+    };
+    // A real ram: Land Rover 0 launched at 14 m/s at the stopped car's tail from 8 m behind.
+    const ram = async () => {
+      await stand(-40, 42.75, Math.PI / 2);
+      const n0 = await T.ev(() => window.__rams);
+      await T.ev(() => { const h = __game.shame.pursuers[0]; h.place(-48, 42.75, Math.PI / 2); h.vx = 14; h.vz = 0; h.w = 0; });
+      await T.until((n) => window.__rams > n || !__game.shame.pursuit, 4000, n0);
+      await T.sleep(500);
+      return T.ev(() => {
+        const g = __game, s = g.shame, h = s.pursuers[0];
+        const out = { pursuit: s.pursuit, ramT: +s.ramT.toFixed(1), impacts: window.__rams, coins: g.coins, inCar: !!g.playerCar };
+        if (h) { h.place(-250, -250, 0); h.vx = h.vz = 0; }
+        return out;
+      });
+    };
+
+    // 2. Rams: one is no bust, the clock runs out after 14 s, a ram after that only restarts it, a
+    // second ram inside it busts.
+    await pursue(-40, 42.75, Math.PI / 2);
+    r = await ram();
+    T.log('ram 1', JSON.stringify(r));
+    check(r.pursuit && r.inCar && r.ramT > 12 && r.coins === 5000, 'one ram: no bust, the invisible 14 s clock starts');
+    await T.shot('carbust_ram1');
+    t0 = Date.now();
+    await T.until(() => __game.shame.ramT <= 0, 17000);
+    const clock = (Date.now() - t0) / 1000 + 0.5;
+    T.log('ram clock ran out after', clock.toFixed(1), 's');
+    check(clock > 13 && clock < 15.5, 'the ram clock runs out after 14 s');
+    r = await ram();
+    T.log('ram 2 (after the clock)', JSON.stringify(r));
+    check(r.pursuit && r.inCar && r.ramT > 12, 'a ram after the clock ran out only restarts it');
+    await T.sleep(2500);
+    r = await ram();
+    T.log('ram 3 (inside the clock)', JSON.stringify(r));
+    check(!r.pursuit && !r.inCar && r.coins === 4000, 'a second ram within 14 s: busted (out of the car, −20 %)');
+    await T.shot('carbust_ram2_multa');
+
+    // A shove reports an impact on several steps: contacts less than 1 s apart are one ram.
+    await pursue(-40, 42.75, Math.PI / 2);
+    r = await T.ev(() => { const s = __game.shame, h = s.pursuers[0]; s.onRam(h, 5); s.onRam(h, 4); s.onRam(h, 3); const out = { pursuit: s.pursuit, ramT: s.ramT }; s.resetCarBust(); return out; });
+    T.log('one shove, three impacts', JSON.stringify(r));
+    check(r.pursuit && r.ramT === 14, 'three impacts in one shove are one ram');
+
+    // 3. Standing still: a Land Rover 15 m off is no bust; 6 m off, a bust after 4 s.
+    await T.ev(() => { const h = __game.shame.pursuers[0]; h.place(-55, 42.75, Math.PI / 2); h.vx = h.vz = 0; });
+    await T.sleep(5500);
+    r = await T.ev(() => { const s = __game.shame; return { pursuit: s.pursuit, stopT: s.stopT, inCar: !!__game.playerCar }; });
+    T.log('Land Rover 15 m off', JSON.stringify(r));
+    check(r.pursuit && r.inCar && r.stopT === 0, 'standing with a Land Rover 15 m off: no bust');
+    await T.ev(() => { const h = __game.shame.pursuers[0]; h.place(-46, 42.75, Math.PI / 2); h.vx = h.vz = 0; window.__placedAt = performance.now(); });
+    await T.sleep(3000);
+    const early = await T.ev(() => __game.shame.pursuit);
+    await T.shot('carbust_stand');
+    await T.until(() => !__game.shame.pursuit, 4000);
+    const standT = await T.ev(() => (window.__bustAt - window.__placedAt) / 1000);
+    r = await T.ev(() => ({ coins: __game.coins, inCar: !!__game.playerCar, main: document.querySelector('.banner-main').textContent }));
+    T.log('Land Rover 6 m off: busted after', standT.toFixed(1), 's', JSON.stringify(r));
+    check(early && standT > 3.9 && standT < 4.6 && !r.inCar && r.main === '¡MULTA!', 'standing with a Land Rover 6 m off: busted after 4 s');
+    await T.frames(6);
+    await T.shot('carbust_stand_multa');
+
+    // 4. The paint shop's box: a Land Rover 20 m off (the `seen` toast) is no bust and no paint;
+    // 6 m off, a bust after 4 s and still no paint.
+    // The pursuit starts outside the box (pintura's own approach spot); then the Land Rover and
+    // the car go in place in one frame, so the shop never sees the box clear.
+    const out = await T.ev(() => __game.lmOffset('pintura', 6.75, 14));
+    await pursue(out.x, out.z, Math.PI);
+    await T.ev(() => {
+      const g = __game, z = window.__lm('pintura'), h = g.shame.pursuers[0], c = window.__pc;
+      g.addCoins(3000 - g.coins);
+      h.place(z.x + 20, z.z, 0); h.vx = h.vz = 0;
+      c.place(z.x, z.z, Math.PI); c.vx = c.vz = 0; c.w = 0;
+    });
+    await T.sleep(1500);
+    const toasts = await T.ev(() => [...document.querySelectorAll('.toast')].map((t) => t.textContent).join(' | '));
+    await T.sleep(4000);
+    r = await T.ev(() => { const g = __game, s = g.shame; return { pursuit: s.pursuit, inCar: !!g.playerCar, busy: s.paint.busy, painted: !!window.__pc.painted, stopT: s.stopT }; });
+    T.log('paint box, Land Rover 20 m off', JSON.stringify(r), toasts);
+    check(r.pursuit && r.inCar && !r.busy && !r.painted && r.stopT === 0 && toasts.includes('Guardia Civil ser dig'), 'stopped in the paint box with a Land Rover 20 m off: no bust, no paint');
+    await T.shot('carbust_paint_seen');
+    // 6 m in front of the box, on the drive-by's forecourt line (clear of props and solids).
+    await T.ev(() => { const q = __game.lmOffset('pintura', 0.75, 6), h = __game.shame.pursuers[0]; h.place(q.x, q.z, Math.PI / 2); h.vx = h.vz = 0; window.__placedAt = performance.now(); });
+    await T.until(() => !__game.shame.pursuit, 6000);
+    const paintT = await T.ev(() => (window.__bustAt - window.__placedAt) / 1000);
+    r = await T.ev(() => { const g = __game; return { coins: g.coins, inCar: !!g.playerCar, busy: g.shame.paint.busy, painted: !!window.__pc.painted }; });
+    T.log('paint box, Land Rover 6 m off: busted after', paintT.toFixed(1), 's', JSON.stringify(r));
+    check(paintT > 3.9 && paintT < 4.6 && !r.inCar && !r.busy && !r.painted && r.coins === 2400, 'stopped in the paint box with a Land Rover 6 m off: busted after 4 s, no paint');
+    await T.frames(6);
+    await T.shot('carbust_paint_multa');
   },
 };

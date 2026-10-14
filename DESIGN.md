@@ -1298,7 +1298,9 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
   pursuerPhysics: 'walk', onFootSpeed: 7.0,          // sprint 8.8 outruns him, walking does not
   penalty: { share: 0.2, min: 250, max: 1500 },   // fine = clamp(round25(0.2·coins), 250, 1500), floored at coins
   bustFreeze: 3,                                   // s frozen beside the officer after a bust
-  decayIdle: 5, idleDelay: 4, bands: [[70, 3], [35, 1]], allDeadDecay: 12,   // Phase 2 (was [[42, 9], [22, 3]])
+  gain: 3,                                         // offences add 3 × their amount (feature SKANDAL, 2026-10-14)
+  decayIdle: 5, idleDelay: 10, bands: [[70, 3], [35, 1]], allDeadDecay: 12,  // bands Phase 2 (was [[42, 9], [22, 3]]); idleDelay 10 feature SKANDAL (was 4)
+  carBust: { secs: 4, r: 10, speed: 4, ramWindow: 14, ramGap: 1 },   // busted in a car (feature SKANDAL; was: the first ram)
   siren: true,
   taunts: ['¡Alto! ¡Guardia Civil!', '¡Documentación, por favor!', '¡Usted! ¡El de la camisa!',
            '¡Turistas!', 'De där svenskarna är heltokiga!'],   // [N] ×4, last [F*] (Spaniards at the julfest)
@@ -1334,13 +1336,17 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
 
 ### 7.2 Mechanics (shame.js, Phase 0 engine + WP-H polish)
 
-- **Offences** (main.js amounts kept): carjack +8; prop break `def.shame` ×1.2 car / ×0.7 foot;
-  ramming a non-target unlocked car `min(9, impact·0.55)`; wrecking traffic/unnamed parked car +12;
-  running over a named NPC +14 / pedestrian +18; kicking a ped +9; kicking a traffic car +2.
-- **Decay**: after `idleDelay` s clean, −`decayIdle`/s. In pursuit (`bands`): −3/s beyond 70 m
-  from the nearest pursuer, −1/s at 35–70 m, 0 closer (so an escape is ≈ 33 s of staying more than
-  70 m away); −12/s extra when all pursuer cars are wrecked and the officer is gone. `forced`
-  (stage `shame: true`) → no decay.
+- **Offences** (main.js amounts kept; `add()` multiplies each by `gain` = 3 in pursuit mode, the
+  user's balance change of 2026-10-14, feature SKANDAL): carjack +8; prop break `def.shame` ×1.2
+  car / ×0.7 foot; ramming a non-target unlocked car `min(9, impact·0.55)`; wrecking
+  traffic/unnamed parked car +12; running over a named NPC +14 / pedestrian +18; kicking a ped +9;
+  kicking a traffic car +2. So a pedestrian run over is +54 and two make a pursuit (it took six), a
+  kick +27 (four), a wrecked car +36. FLYGRÄDSLA (`panic` mode) has no `gain`.
+- **Decay**: after `idleDelay` = 10 s clean (4 until feature SKANDAL), −`decayIdle`/s. In
+  pursuit (`bands`, unchanged by feature SKANDAL): −3/s beyond 70 m from the nearest pursuer,
+  −1/s at 35–70 m, 0 closer (so an escape is ≈ 33 s of staying more than 70 m away); −12/s extra
+  when all pursuer cars are wrecked and the officer is gone. `forced` (stage `shame: true`) → no
+  decay.
 - **At 100**: `startPursuit()`: banner, siren (two-tone 650/500 Hz square, alternating 0.45 s, while
   pursuit), music → `skandal`, flash `rgba(60,110,70,.45)`. Two `guardia` Land Rovers spawn on the
   streets `spawnDist` (40–80 m) away: on any block edge, 12 m past a junction or mid-block, in the
@@ -1358,6 +1364,14 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
   every escape took 11.1 s and no Land Rover ever came within 75 m, even for a driver at 80 % of
   top speed. (Spawning only at junctions, as at first, often gave a one-car pursuit.) The final
   exit run: clean 3 of 3 escaped after 38–39 s; with one crash 1 of 3 escaped, 2 were busted.
+  **Feature SKANDAL** (2026-10-14, `carBust` instead of the bust at the first ram; the spawn, the
+  Land Rovers and the `bands` unchanged; `CAL=pursuit PURSUIT_RUNS=6`): clean driving escaped
+  6 of 6 after 37.3–60.1 s (median 44.2; nearest Land Rover 13–59 m); with one crash 5 of 6
+  escaped after 36.3–47.9 s, one was busted at 15.6 s, and one escape had a Land Rover within
+  4.7 m (a touch that was a bust until now). Phase 3's last default runs had clean 7 of 9 and one
+  crash 4 of 6. So a single touch no longer ends a chase; staying slow beside a Land Rover or
+  being rammed again within 14 s does. The meter fills three times as fast, so the Guardia come
+  far more often. "A clean escape is possible" holds; this is no timer and has no ledger pool.
 - **The officer on foot** (`pursuerPhysics: 'walk'`, judge trap fixed): a solid `Character(CHARS
   .guardia)` that **walks with collision**: each fixed step `wish = normalize(routeAim(officer →
   player) − officer) · onFootSpeed`, then `step()`. Wall-slide comes from `collideWalls`. The aim
@@ -1371,7 +1385,15 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
   or > 25 m from the camera, teleport him to `freeSpot(player, 22, 32)` behind the player (opposite
   the camera yaw). He is created once per pursuit (reuse the Character; don't rebuild meshes).
   Removed when the player enters a car; re-spawned 30 m away when the player leaves it.
-- **Busted** (officer within 1.4 m, or a pursuer car rams the player's car with impact > 1.5):
+- **Busted** on foot when the officer is within 1.4 m. **In a car** (`carBust`, feature SKANDAL,
+  2026-10-14; until then the first pursuer ram with impact > 1.5 was a bust): (a) crawling or
+  stopped, `car.speed` < `speed` = 4 m/s, with a living Land Rover within `r` = 10 m (centre to
+  centre) for `secs` = 4 s in a row (`shame.stopT`; it resets when either stops being true, and
+  holds during a scene, the bust freeze and `caughtT`); or (b) rammed twice: a pursuer contact
+  (`main.onCarImpact` → `shame.onRam`, impact > 1.5) starts an invisible `ramWindow` = 14 s clock
+  (`shame.ramT`), and a second ram before it runs out busts; when it runs out it resets. Contacts
+  less than `ramGap` = 1 s after the last one are the same ram (a shove reports an impact on
+  several steps). Both reset when a pursuit starts or ends (`resetCarBust`). Then:
   fine `n = min(coins, clamp(round25(0.2·coins), 250, 1500))`, `coins −= n`, banner ¡MULTA!
   (`Guardia Civil tog {n} pesetas i böter`, `{n}` with thin-space thousands, `pta()`; 1.8 s), flash;
   the player is **pulled out of the car** (if in one) and frozen `bustFreeze` = 3 s beside the
@@ -1399,7 +1421,10 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
   **Ole does not pay** here, so the price is real; the tip names it), `seen` (a Land Rover within
   `clearR` = 35 m), else `stop` while it still rolls (≥ 1 m/s). Stopped for `holdSecs` = 1 s with
   none of those: `game.pay(cost)`, `v = 0`, `hideoutT = max(hideoutT, 60)`, `endPursuit(true)` (no
-  escape banner), all before the scene, so a Land Rover ramming the parked car is no bust; then the
+  escape banner), all before the scene, so a Land Rover ramming the parked car is no bust. The
+  `carBust` standstill rule and the box agree: painting needs every Land Rover beyond 35 m, the
+  standstill bust one within 10 m, so a stop in the box is a bust only when a Land Rover has come
+  within 10 m for 4 s (`seen` the whole time; scenario `carbust`); then the
   scene: a white flash, the car in the left bay nose out (its tail at block z −15.3, clear of the
   tyre stacks), Stig and Ole in front of it, `cinematic(ole, stig)` + `cutTo(cam)`,
   `dialog(lines)`; a white flash, `car.repaint(color, { dala: true })` + `car.repair()`, the car
@@ -3951,6 +3976,8 @@ hud.renderPortrait(renderer, model)   // Phase 0 fix: saves root.parent/position
 shame.configure(cfg);  shame.cfg;  shame.add(n, { force } = {});  shame.relieve(n);  shame.update(dt);
 shame.panic();  shame.startPursuit();  shame.endPursuit(caught);  shame.busted();  shame.clear();
 shame.onRam(car, impact);  shame.pursuers;  shame.officer;  shame.v / pursuit / forced / locked
+shame.carBustTick(dt) (from update() in a pursuit);  shame.resetCarBust();  shame.stopT / ramT / sinceRam
+  (feature SKANDAL: onRam starts or closes the ram clock instead of busting at once; §7.2)
 shame.paint (PaintShop, §7.2): configure(cfg) from configure(); onPursuit() from startPursuit();
   update(dt) from update(); clear() from clear(); objective() (the wet-paint card or null, read by
   main.updateHud when no mission runs); markers() (read by main.mapMarkers); busy; wet; blocker(car)
@@ -4427,6 +4454,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `castsheet`, `cars` [E] | lineups; no errors |
 | `ui` [H] | long Swedish strings in toasts/banners/objective; glyph check shot; dialogue with Norwegian line |
 | `skandal` [H] | `addCoins(2000)`, `shame.add(100)`: 2 `guardia` cars spawn; exit car → officer walks at the player (closes 3 m within 10 s without a stuck teleport, round a block corner if a building stands between them; Phase 3 r2, was 1.5 s) and never stands inside a solid; block him behind a building → teleported within 6 s; get busted → coins −400 (20 %), ¡MULTA!, player frozen ~3 s; an offence within 20 m of Herr Storch adds 0; the porter bribe: his line shows before the `PORTIERN TITTADE BORT` banner (Phase 3) |
+| `carbust` [feature SKANDAL] | the user's SKANDAL balance (§7.2, 2026-10-14): a kicked-pedestrian offence (9) adds 27; the meter holds 10 s before it sinks; in a hatch on the z = 40 road with both Land Rovers parked away (`forced`), real rams by a Land Rover launched at 14 m/s from 8 m behind: one is no bust and starts the 14 s clock, which runs out after 14 s, a ram after that only restarts it, a second ram 2.5 s later busts (−20 %, out of the car); three impacts in one shove are one ram; standing with a Land Rover 15 m off for 5.5 s is no bust, 6 m off a bust after 4.0 s (page time) with ¡MULTA!; stopped in the paint shop's box with one 20 m off: the `seen` toast, no bust, no paint for 5.5 s; 6 m off: a bust after 4.0 s, no paint |
 | `pintura` [feature 1] | the paint shop (§7.2): the drive-by route clear of props and solids, the moved parked hatch free; no paint without a pursuit; Ole's tip once; no paint with a Land Rover 20 m off; `stop` while rolling in; the paint job (−1000 pta, pursuit over, cooldown ≥ 50 s, a cutaway scene with both lines and the car in the bay, then red with the dress, repaired, rolled out with Stig at the wheel, Ole back, the banner and the wet card); the drive-by bubble; dry; known next time; busy in the cooldown; poor at 500 pta; a second job; ruined wet paint → a new pursuit; a bus refused; nothing while a mission runs |
 | `berra` [feature 2] | Bärra hem Berra (§10.6): no job at index 11; at 12 the nap never pops into view (10 m off, 30 m off in view: no; 30 m behind the camera: yes); Berra seated asleep on the bench, still, Robban beside him waving, "…zzz", the minimap dot, the talk prompt; the ask (both lines) and the lift (carry, cap 3.2, card, target); the walk home on calibrate's walker without sprint (15–60 s; 26 s measured), Robban within 6 m at the end, no drop, the desk (100 pta, toast), awake and free, the next nap at the lounger; the sun line in his sleep; a smashed lounger leaves him down and the ask still works; no talk to Ole while carrying; the sprint, R and fall drops (card, prompt, he stays down, E lifts him); 25 pta after three drops; a mission start sends both home and hides the job; the bench again after it |
 | `dalasheet` [feature 1] | the dalahäst dress on sedan, hatch, wagon, van and pickup: side, left, front and top shots |
@@ -5819,3 +5847,21 @@ the fixer's group.
   `objective()` after the paint shop's (§14.3, §14.8). World (§6.3): landmarks `berraBank`,
   `berraSolstol`. Scenario `berra` (§16.4). Free roam only: no mission, stage kind, timer or fixture
   changed.
+- Feature SKANDAL, the user's balance change (`features/implemented/skandalforandringar.md`,
+  2026-10-14; not an idea file and not free-roam-only: SKANDAL everywhere, missions included).
+  `METERS.skandal` (§7.1): `gain: 3` (`shame.add` multiplies every offence by it in pursuit mode;
+  FLYGRÄDSLA unchanged), `idleDelay` 4 → 10 s, and `carBust: { secs: 4, r: 10, speed: 4,
+  ramWindow: 14, ramGap: 1 }`. In a car the first pursuer ram is no longer a bust (§7.2 "Busted"):
+  4 s below 4 m/s with a living Land Rover within 10 m is (`shame.carBustTick`, `stopT`), and so
+  is a second ram while the first ram's invisible 14 s clock runs (`shame.onRam`, `ramT`; contacts
+  under 1 s apart are one ram); both reset when a pursuit starts or ends (§14.8). The officer on
+  foot, the spawn, the `bands` and the fine are unchanged. The paint shop needs every Land Rover
+  beyond 35 m and the standstill bust one within 10 m, so they never contradict. Missions: no
+  island stage forces a pursuit (`shame: true`) or fails on a bust (`bustFails`); the bodega jeep
+  chase, the plates and the buss17 boarding lock the meter (`lockMeter`) and the jeep is a target,
+  not a pursuer, so its pool is untouched; every other timer was measured on clean runs, which
+  stay far below 100 (probes on this code: a full `story` never above 0, no pursuit; `calibrate`'s
+  buss17, asnan and vischan drives, 3 each, at most 13.2, the one run with an impact 27, no
+  pursuit, every `CAL CHECK` OK), so no timer, fixture or ledger row changed (a sloppy driver now
+  meets the Guardia three times as soon). The pursuit balance was re-run (§7.2 "Balance": clean 6 of 6, one crash 5
+  of 6 escaped). New scenario `carbust` (§16.4); README's SKANDAL paragraph.

@@ -1,6 +1,7 @@
 // The two meter configurations (DESIGN §5.9, §7.1), consumed by shame.configure(). Owner: WP-H.
 //   flygradsla: mode 'panic' (flight). At 100: PANIK, never a pursuit.
-//   skandal: mode 'pursuit' (island). At 100: the Guardia Civil. hideouts (the porter bribe),
+//   skandal: mode 'pursuit' (island). At 100: the Guardia Civil. gain and carBust are the user's
+//   balance change (feature SKANDAL), read by shame.js. hideouts (the porter bribe),
 //   witnessToast (Herr Storch) and bustRadio are P1 polish read by shame.js; paintshop (the
 //   free-roam paint shop at Gasolina) is read by game/paintshop.js.
 
@@ -21,7 +22,15 @@ export const METERS = {
     pursuerPhysics: 'walk', onFootSpeed: 7.0,          // sprint 8.8 outruns him, walking does not
     penalty: { share: 0.2, min: 250, max: 1500 },      // fine = clamp(round25(0.2·coins), 250, 1500), floored at coins
     bustFreeze: 3,                                      // s frozen beside the officer after a bust
-    decayIdle: 5, idleDelay: 4, bands: [[70, 3], [35, 1]], allDeadDecay: 12,
+    // The user's balance change (feature SKANDAL, 2026-10-14): every offence adds `gain` × its
+    // main.js amount, and the meter waits `idleDelay` s (was 4) before it sinks.
+    gain: 3,
+    decayIdle: 5, idleDelay: 10, bands: [[70, 3], [35, 1]], allDeadDecay: 12,
+    // Busted in a car (feature SKANDAL; the first touch no longer is): crawling or stopped (below
+    // `speed` m/s) with a Land Rover within `r` m for `secs` s, or rammed by Land Rovers twice inside
+    // `ramWindow` s (an invisible clock from the first ram; a contact less than `ramGap` s after the
+    // last one is the same ram: a shove reports an impact on several steps).
+    carBust: { secs: 4, r: 10, speed: 4, ramWindow: 14, ramGap: 1 },
     siren: true,
     taunts: ['¡Alto! ¡Guardia Civil!', '¡Documentación, por favor!', '¡Usted! ¡El de la camisa!',   // [N]
       '¡Turistas!',                                                                                // [N]

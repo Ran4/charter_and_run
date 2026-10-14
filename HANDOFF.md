@@ -306,7 +306,9 @@ Where: file or DESIGN section; numbers are from the named report.
   behind a block he took 5–9 s to close in (`skandal` polls 10 s).
 - **info** · §7.2 "Balance" — pursuit: the last three default `calibrate` runs had 7 of 9 clean
   escapes (one clean run busted at 15.5 s, one at 27.8 s); with one crash 3 of 3 (r3 ledger) and
-  1 of 3 (r3 gate 2). Only "a clean escape is possible" is checked.
+  1 of 3 (r3 gate 2). Only "a clean escape is possible" is checked. Since feature SKANDAL
+  (2026-10-14) a ram is no longer a bust by itself (DESIGN §7.2 `carBust`): clean 6 of 6, one
+  crash 5 of 6.
 - **info** · §8 "Timers and difficulty" — `homeTimer` at the far corner (d ≈ 587 m) is 1.12 × the
   drive + 3 s: a line in d cannot follow every route (documented).
 - **minor** · drivers.js (traffic) — traffic can jam a road. One `calibrate` buss17 run was held
