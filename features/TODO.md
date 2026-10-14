@@ -6,6 +6,8 @@
 - features/systrarna_satter_poang.md – 4. Siv och Majsan sätter poäng på simhoppen [M]
 - features/tutan_som_folk_reagerar_pa.md – 5. Tutan som folk reagerar på [S]
 - features/storch_super8.md – 6. Lite film. – herr Storchs semesterfilm [M]
+
+# Vänta med dessa tills spelaren säger till
 - features/heja_eslov.md – 7. Heja Eslöv! – rullskidåkaren tränar på riktigt [M]
 - features/sma_grodorna_runt_poolen.md – 8. Små grodorna i poolen [M]
 - features/artiga_stig.md – 11. Förlåt, förlåt! – Stig-Helmer ber om ursäkt [S]
@@ -64,7 +66,5 @@
 - features/bungalowen_ar_sald.md – 138. Bungalowen är såld [S]
 - features/kvarteren_tands.md – 140. Kvarteren tänds – adventsstjärnor och tända fönster [S]
 - features/butaneron.md – 143. Butaneron och gasolbilen [M]
-
-# Vänta med dessa tills spelaren säger till
 
 # Färdiga features
