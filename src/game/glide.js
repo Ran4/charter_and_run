@@ -11,7 +11,7 @@
 
 import { GLIDE } from '../content/index.js';
 import { GRAV } from '../actors/character.js';
-import { groundAt, queryBlocks, contains, topAt } from '../world/collision.js';
+import { groundAt, waterAt } from '../world/collision.js';
 import { input } from '../input.js';
 import { audio } from '../audio.js';
 import { S } from '../strings.js';
@@ -20,15 +20,6 @@ import { hud } from './hud.js';
 import { dist, yawTo } from '../util.js';
 
 const AIR_ACCEL = 14;   // Character.step's acceleration in the air (m/s²)
-const _blocks = [];
-// The water floor he stands in at (x, z, y), or null. Pools and ponds lie at CURB, level with the
-// ground, so groundAt (which wants a floor above the ground) never names them.
-function waterAt(x, z, y) {
-  for (const b of queryBlocks(x, z, x, z, _blocks)) {
-    if (b.kind === 'water' && !b.dead && contains(b, x, z) && Math.abs(topAt(b, x, z) - y) < 0.05) return b;
-  }
-  return null;
-}
 // (vx, vz) moved towards (wx, wz) by at most a.
 function approach(vx, vz, wx, wz, a) {
   const dx = wx - vx, dz = wz - vz, l = Math.hypot(dx, dz);

@@ -174,7 +174,9 @@ after the grisfest, Stig carrying him home to the Flamenco reception again and a
 Robban's pay (free roam, §10.6; in the film Robban and Stig-Helmer carry him home together, once,
 after Tonga Tonga); Stig-Helmer gliding with his arms out after julafton, the forward roll he lands
 in, Lasse's pool line on the radio and Ole's shout about it (free roam, §10.7; in the film's dream
-he only stands with his arms out before a propeller plane, and he never flies).
+he only stands with his arms out before a propeller plane, and he never flies); Siv and Majsan
+judging his dives at Flamenco's pool, their score cards, Majsan's tens and the belly flop (free
+roam, §10.8; the film's points scene is on the plane, and it judges the men, not their dives).
 The film's flight has **no turbulence** and **no in-flight toilet scene**: both toilet scenes are
 at Arlanda (we keep them there). The plane's toilets are only an invented hideout.
 
@@ -316,6 +318,8 @@ Physical keys are unchanged from Bigmouth. The level config turns verbs on and o
   is the stomp) and held past `tap` = 0.18 s spreads his arms and glides; released sooner, it
   stomps on the release. On the ground J is the kick, as before; before julafton J in the air
   stomps at once.
+- **Dives** (free roam, §10.8): off Flamenco's diving board into the pool, a stomp in the air is a
+  belly flop and a double jump a somersault for Siv and Majsan's cards; a plain hop is a swan dive.
 - **Seated** (flight): movement input is ignored; E uses a `whileSeated` interactable if one is in
   range, else stands up (giver talk is **not** offered while seated: stand up first, §14.3); J
   mantra still works; Space does nothing. Phase 0: `handleOneShots` handles E, J and R when
@@ -1098,7 +1102,7 @@ standing there faces. `y` (optional) = absolute height for collectible spots on 
 
 | block (i,j) | type → builder (owner, file) | content | landmarks: `id` (lx, lz, yaw[, y]) | named / parked cars |
 |---|---|---|---|---|
-| (3,3) | `flamenco` → `hotelFlamenco` (C1, hotels.js) | 7-storey white slab x [−26, 26], z [−27, −14] with balcony rows, terracotta accents, `HOTEL FLAMENCO` roof sign; open reception porch (canopy, desk, plastic Christmas tree `julgran` prop, `RECEPCIÓN`; Phase 3 r2: `HOTEL FLAMENCO · RECEPCIÓN` stands on a terracotta panel above the pergola's fascia, where it no longer fills the top of the chase frame, and the garland runs across the fascia's face) at the slab's south face; ground-floor room patios along the south face (Stig & Ole's room west, room 113 east) with a visible 1st-floor balcony above 113; terracotta piers at the bay lines, solid (Phase 3 r2); pool deck south with a **walkable shallow pool** (flat blue slab at CURB+0.02 + `box(..., CURB, 'water')`, sign "TRE METER DJUPT I ENA ÄNDEN, / EN METER I DEN ANDRA. / BARNVÄNLIG!" (three lines) [F*] (the bungalow seller's line, relocated)); poolbar with straw parasols (`BAR PISCINA · SVENSKT KAFFE`); the julafton party `julgran` on the pool deck at (2.2, 16), in the party and sunset-duet shots (Phase 3); room numbers: a closed room's centred above its own glass door, an open room's (107, 113) on its right-hand pier (Phase 3); parking lot on the west; the parking signs here and at SunTrip's lot are a blue `P` plate over a name strip (`HOTEL FLAMENCO`, `SUNTRIP`) on a post that stops under them (Phase 3 r2: one two-line plate had shrunk the P to the name's size, and the post ran through both faces); **PEPES BODEGA**: small whitewashed annex x [4, 12], z [−31, −27] on the north side with a green door, barrels, sign `PEPES BODEGA · VINOS · RON` facing north (`worldHooks.bodegaLit(on)` lights it after julafton) | `flamenco` (−4, −8, π) (faces the hotel, so the views/cutaway camera stands on the pool deck; Phase 2) · `flamencoRecepcion` (2, −10, 0) · `flamencoPatio` (−18, −11, 0) · `rum113` (18, −11, 0) · `flamencoBalcony` (18, −8, π) · `flamencoPool` (−3, 18, π) · cut anchors (Phase 3; a cut stands `dist` m behind one, looking the way it faces): `rum107Cam` (−18, −11, π) = `flamencoPatio` turned round (looks into room 107), `recepcionCam` (2, −10, π) = `flamencoRecepcion` turned round (the desk from the porch front) · `flamencoDeck` (−4, −2.5, 0) (the island spawn: approachSpot puts the player on the pool deck at (−4, −1) facing the hotel, the chase camera over the pool rather than under the pergola slats; Phase 2) · `flamencoBar` (16, 12, −π/2) · `flamencoDrive` (−26, 22, π) · `flamencoBack` (−6, −33.5, 0) · `bodega` (8, −33.5, 0) · `fena_flamenco` (−3, 7, 0, 0.35) | `hyrbil` (sedan `0xf4f4f0`) at `flamencoDrive` — default `getInCar` car and test car |
+| (3,3) | `flamenco` → `hotelFlamenco` (C1, hotels.js) | 7-storey white slab x [−26, 26], z [−27, −14] with balcony rows, terracotta accents, `HOTEL FLAMENCO` roof sign; open reception porch (canopy, desk, plastic Christmas tree `julgran` prop, `RECEPCIÓN`; Phase 3 r2: `HOTEL FLAMENCO · RECEPCIÓN` stands on a terracotta panel above the pergola's fascia, where it no longer fills the top of the chase frame, and the garland runs across the fascia's face) at the slab's south face; ground-floor room patios along the south face (Stig & Ole's room west, room 113 east) with a visible 1st-floor balcony above 113; terracotta piers at the bay lines, solid (Phase 3 r2); pool deck south with a **walkable shallow pool** (flat blue slab at CURB+0.02 + `box(..., CURB, 'water')`, sign "TRE METER DJUPT I ENA ÄNDEN, / EN METER I DEN ANDRA. / BARNVÄNLIG!" (three lines) [F*] (the bungalow seller's line, relocated)); poolbar with straw parasols (`BAR PISCINA · SVENSKT KAFFE`); the julafton party `julgran` on the pool deck at (2.2, 16), in the party and sunset-duet shots (Phase 3); room numbers: a closed room's centred above its own glass door, an open room's (107, 113) on its right-hand pier (Phase 3); parking lot on the west; the parking signs here and at SunTrip's lot are a blue `P` plate over a name strip (`HOTEL FLAMENCO`, `SUNTRIP`) on a post that stops under them (Phase 3 r2: one two-line plate had shrunk the P to the name's size, and the post ran through both faces); **PEPES BODEGA**: small whitewashed annex x [4, 12], z [−31, −27] on the north side with a green door, barrels, sign `PEPES BODEGA · VINOS · RON` facing north (`worldHooks.bodegaLit(on)` lights it after julafton) | `flamenco` (−4, −8, π) (faces the hotel, so the views/cutaway camera stands on the pool deck; Phase 2) · `flamencoRecepcion` (2, −10, 0) · `flamencoPatio` (−18, −11, 0) · `rum113` (18, −11, 0) · `flamencoBalcony` (18, −8, π) · `flamencoPool` (−3, 18, π) · cut anchors (Phase 3; a cut stands `dist` m behind one, looking the way it faces): `rum107Cam` (−18, −11, π) = `flamencoPatio` turned round (looks into room 107), `recepcionCam` (2, −10, π) = `flamencoRecepcion` turned round (the desk from the porch front) · `flamencoDeck` (−4, −2.5, 0) (the island spawn: approachSpot puts the player on the pool deck at (−4, −1) facing the hotel, the chase camera over the pool rather than under the pergola slats; Phase 2) · `flamencoBar` (16, 12, −π/2) · `flamencoDrive` (−26, 22, π) · `flamencoBack` (−6, −33.5, 0) · `bodega` (8, −33.5, 0) · `fena_flamenco` (−3, 7, 0, 0.35) · `flamencoBoard` (−14.1, 7, π/2) (the middle of the diving board's bounce pad, facing out over the deep end: the judged board and the anchor of the sisters' spots at the pool's edge; not a standing spot; §10.8) | `hyrbil` (sedan `0xf4f4f0`) at `flamencoDrive` — default `getInCar` car and test car |
 | (3,2) | `suntrip` → `hotelSunTrip` (C1, hotels.js) | lower U-shaped hotel on red rock; welcome **stage** with SunTrip sun backdrop (red text on yellow sun), accordion/conga props; pool; **friskotek lawn**; SunTrip office porch on the south side facing Flamenco's back; posters `GRISFEST TORSDAG · 800 PTA`, `FRISKOTEKET 9.30`; the free-standing `FRISKOTEKET / VARJE MORGON 9.30` board on the lawn's west edge is solid (Phase 3 r3: only its posts were, so he walked through it and the chase eye stood behind it) | `suntrip` (−14, 24, π) (faces the office porch; Phase 2) · `scen` (0, −14, 0) · `friskotek` (−10, 8, 0) · `suntripPool` (14, 4, π) · `suntripLot` (24, 22, π) · `fena_suntrip` (14, 8, 0, 0.35) · `berraSolstol` (17.4, 2.2, 0) (the pool lounger Berra naps on, on its prop, facing its backrest end; §10.6) | — |
 | (1,2) | `kasbah` → `kasbah` (C2, centre.js) | **Centro La Medina** (fictional; internal id `kasbah`): two-level nightlife courtyard centre: arcade, stairs (ramp) to a roof terrace (top ≈ 6.0) with a balustrade above the bottom three steps and a sloped wall collider along it (Phase 3: the way on is over those three steps), neon signs `CENTRO LA MEDINA`, `VIKING BAR` (horned helmet), `TONGA TONGA` (mirror ball), `BAR SVENSKA · SMÖRGÅSAR` | `kasbah` (0, 22, π) · `vikingbar` (−16, 18, π) · `tongatonga` (14, 18, π) · `tongaLot` (20, 27, π) · `tongaSlump` (16.3, 17.4, 0.5) (where Berra slumps after Tonga Tonga and is picked up, at the right of the group in the street shot; Phase 3 r3) · `pryl_poolpen` (8, −6, 0, 7.2) | — |
 | (4,2) | `cita` → `cita` (C2, centre.js) | **Centro Nórdico** (fictional; internal id `cita`) strip mall, sign `CENTRO NÓRDICO`: `SUPERMERCADO`, `FERRETERÍA`, `FARMACIA`, `ESTANCO`, `TELÉFONOS · HYTT 1·2·3`, `SOUVENIRS`, `SVENSKT KAFFE`, `CAMBIO · 1 KR = 17 PTA` (Phase 3: the north shop row and its canopy fit the courtyard between the wings, x ±11; `SOUVENIRS · REGALOS` and `FARMACIA` with its green cross sit on the wings' courtyard faces) | `cita` (0, 22, π) · `supermercado` (−18, 18, π) · `ferreteria` (18, 18, π) · `telefon` (0, 8, π) | — |
@@ -1161,7 +1165,8 @@ Copacabana beach with palms, a small orchestra of busts (five on the wheelhouse 
   lot pools (`pool()` in hotels.js and town.js) set `pool = true` on their water block (feature 3:
   Lasse's line when the glide lands in one, §10.7); fountains, ponds and the marina basin do not.
   A `water` floor lies level with the ground (CURB), so `groundAt` never names it (`h > g`): look
-  it up with `queryBlocks` + `contains`.
+  it up with `collision.waterAt(x, z, y)` (feature 4 moved it there from glide.js; the glide's and
+  the diving judges' landings, §10.7–10.8).
 
 ### 6.5 Residential blocks (WP-B)
 
@@ -3032,13 +3037,16 @@ Key **`charter-and-run-v1`** (localStorage):
 
 ```js
 { v: 1, mission: index, coins, collected: { prylar: [ids], fenor: [ids] },
-  unlocked: ['grisbil', ...], outfit: 'kostym' | 'hawaii', tune: 'sol' | 'samba' }
+  unlocked: ['grisbil', ...], outfit: 'kostym' | 'hawaii', tune: 'sol' | 'samba',
+  records: { simhopp: n } }
 ```
 
 `load()` clamps `mission ≤ MISSIONS.length`; `?mission=N` overrides; `?fresh` skips loading.
 Saved on mission complete, collectible pickup, level transition, and every 30 s. The free-roam
 Berra job (§10.6) is not saved. `unlocked` also holds the glide's `glid` (its toast shown) and the
-marker `glidPlask` (Lasse's pool line said; saved at once), §10.7.
+marker `glidPlask` (Lasse's pool line said; saved at once), §10.7. `records` holds the free-roam
+bests (`game.records`; a missing key is no record yet): `simhopp`, the diving judges' best total,
+saved at once when beaten (feature 4, §10.8).
 
 ### 10.6 Bärra hem Berra (free roam; feature 2, 2026-10-14)
 
@@ -3172,6 +3180,86 @@ the end on the pool deck are the film's.
   `pool`) is for tests. Session state only, but `glid` and `glidPlask` are saved unlocks.
   Lines and numbers live in `GLIDE`; scenario `glide` (§16.4).
 
+### 10.8 Siv och Majsan sätter poäng – the diving judges (free roam; feature 4, 2026-10-15)
+
+`game/poolJudges.js` (`PoolJudges`, owned by Game as `judges`), config `POOL_JUDGES` in
+content/island.js. The plane's points scene as a game at Flamenco's pool: Stig bounces off the
+diving board, and every hop that ends in the pool gets a card from Siv and one from Majsan. The
+scene is the reward, and the best total is a saved record. The judging, the cards and Majsan's tens
+are [N] (§1.6); the lines are the film's.
+
+- **When.** On the island with `missions.state === 'idle'`. A hop starts and is judged only when
+  `canHop()`: also no dialogue, on foot, not carrying, no bust freeze or PANIK, `player.state ===
+  'normal'`. Any other mission state (an intro, a run, the fail screen, an outro) or level ends it
+  all at once (`reset`): a sister who is still ours (`npc.spot === 'poolJudges'`) is `placeNpc`d at
+  her HOMES spot (or her `homeOverrides` one), `busy = false`; the cards, the laugh, the lines not
+  yet said, the hop and the result line go. One placed meanwhile by anyone else (a cue's
+  `placeNpc`, a forced `placeNpcs`) stays where she was put. No mission, stage kind, timer, fixture
+  or calibration pool changes.
+- **The board.** The bounce pad under the landmark `flamencoBoard` (block (3,3) local (−14.1, 7),
+  yaw π/2: along the board out over the deep end; the pad's top 0.97, hotels.js). Character.step
+  hands its block to `game.onBounce(ch, b)` (§14.3): the boing as before, then `judges.onBounce(b)`.
+  Other trampolines change nothing, and the bounce itself (vy 15.5) is unchanged.
+- **The call.** A bounce on the board while `canHop()`, with both sisters `here`, starts a hop.
+  `here`: standing, shown, not held by a mission's `idleAnim` or the Berra job, not `busy` unless
+  ours, and within `judgeR` = 22 m of the board (as buss17's and friskotek's extras they wait at the
+  airport and on the friskotek lawn, and the board is only a trampoline). The first hop of a visit
+  calls them. Stig says `call` "Mina ögon tål inte klor." [F*] (his line on the morning he would not
+  go to the pool, research-plot.md:281), at most every `callAgain` = 120 s. Each sister walks
+  (`npc.steer`, at most `walk` = 1.6 m/s, easing in) to her spot at the pool's edge: `spots` [dx, dz]
+  from `flamencoBoard`, Siv (−6.9, 8.3) → (−5.8, 13.9) and Majsan (−6.9, 10.3) → (−3.8, 13.9). The
+  spots are on the deck 0.6 m south of the coping, 4.1 and 4.8 m from their homes (−5, 18) and
+  (−1, 18), in the frame from the board and from the deep end.
+  - While she walks there, and while she stands there, she is ours: `busy`, `spot = 'poolJudges'`
+    (her own spot id is kept for the way back), and `judges.posed(key)`, so main.js `syncAll` gives
+    her no wave, no 10 m turn and no chatter. Standing, she turns to Stig (`dampAngle`, 5/s).
+  - **Pinned:** a sister who is the idle mission's giver or extra at the pool (ropavieja: Siv gives,
+    Majsan is the extra; fataga: the other way round; both at `flamencoPool`) does not walk, since
+    placeNpcs keeps her at `at`. She judges from there and turns to him while the visit lasts.
+- **The hop.** The bounce gives the double jump back (`game.jumps` at most 1), so every hop can
+  be a somersault. On the way down, a plain hop shows `player.anim.swan` (§14.6: arms out and back,
+  chin up, legs together, the body tipped 0.5 forward). Plain means no double jump and no stomp,
+  with `vy < 0` and the board no longer under him. The pose is only a look: his wish and air control
+  are untouched (`wings` would zero the wish and drop him back onto the board). A glide (§10.7)
+  takes the hop over, unjudged. So does landing anywhere but the water (the board again, the step,
+  the deck) or any change of state.
+- **The verdict.** `game.onLand(ch, v, y)` (a fall over 6 m/s; Character.step now passes the floor
+  height `y`) calls `judges.onLand(y)` before the stomp's own landing.
+  - A hop that lands on a `water` floor (`collision.waterAt(x, z, y)`, not on a car roof) is judged
+    and splashes: `fx.splash` 28 drops at 4.5 m/s (the belly flop 44 at 5.5), `audio.splash()`. The
+    stomp keeps its crash, shake and `areaHit`, but not its dust.
+  - The kind: `game.stomping` → `magplask`, and Stig `flop(flopSecs = 1.4)`s (face down along his
+    facing, then up); `game.jumps === 2` → `volt`; else `svanhopp`.
+  - The sisters judge it when both are `free` and within `judgeR` of him:
+
+  | kind | Siv | Majsan | sum | lines ([delay s] who: text) |
+  |---|---|---|---|---|
+  | `svanhopp` | 4 | 10 | 14 | [0.4] siv "Giraffen, då? Fyra." [F*](t) · [1.9] majsan "Mindre än pizza-racern?" [F*](t) · [3.3] majsan "Tio!" [N] |
+  | `volt` | 9 | 10 | 19 | [0.4] siv "Majsan, en niopoängare!" [F*] (her line on the transfer bus, research-plot.md:245; buss17's radio keeps it as [F]) · [2.0] majsan "Tio!" [N] |
+  | `magplask` | −1 | 10 | 9 | [0.4] siv "Han är så bortkommen. Det blir minuspoäng." [F*](t) · [2.8] stig "…Minuspoäng?" [N]; Majsan `laugh`s while the cards are up |
+
+  - Siv never gives more than nine. The plane's points lines (research-plot.md:197; landning's intro
+    speaks them as [F*](t), flight.js:432–435, ending in Stig's "…Fyra?") are relocated here.
+  - The cards: `anim.card` = '4', '9' or '–1' (an en dash, which Luckiest Guy has) on Siv and '10'
+    on Majsan, for `cardSecs` = 3.4 s. They use the models.js `scoreCard` prop (§14.6), held out at
+    shoulder height to her right, under her speech bubble.
+  - The result line, `hud.showScore` (§11.4), for 4.5 s: `result` "{kind} {a} + {b} = {sum} P" [N],
+    with the `title` SVANHOPP! / VOLT! / MAGPLASK! [N], over `newRecord` "NYTT REKORD!" [N] (teal)
+    or `record` "REKORD {n} P" [N].
+- **Lines.** Each line goes through `game.say`, at most once every `again` = 20 s, so a quick second
+  dive shows the cards and the result line without the same lines again. A new verdict drops the old
+  one's lines not yet said; during a dialogue they wait, and they are dropped when 2 s late. Siv's
+  `tease`, "Så att du vågar stöta på giraffen." [F*] (from the balcony, research-plot.md:256), comes
+  1.6 s after the verdict lines of Majsan's `teaseAfter` = 3rd ten in a visit, once a visit.
+- **The visit ends** `stayOut` = 25 s after the last bounce, when Stig is more than `leaveR` = 30 m
+  from the board, or when a sister is no longer free (knocked over, placed by someone else). The
+  ones out walk home. There (within 0.3 m) they are free again with their spot id back, and
+  placeNpcs leaves them.
+- **The record.** `game.records.simhopp` is the best total, saved at once when it is beaten (§10.5);
+  the first verdict ever is a record. `judges.last` ({ kind, siv, majsan, sum, record, best }) is
+  for tests. The rest is session state. Lines and numbers live in `POOL_JUDGES`; scenario `simhopp`
+  (§16.4).
+
 ---
 
 ## 11. HUD / UI strings (Swedish; `src/strings.js` owned by WP-H, created by Phase 0)
@@ -3224,6 +3312,11 @@ mutes without touching the button, which then said `Ljud: på` while muted).
 | minimap rim badge | `N` (island) / `FRAM` (flight) |
 | big-map legend | from `game.mapLegend()` (§10.1) |
 | prompts | `<b>E</b> Prata med {name}` · `<b>E</b> Kliv in` · `<b>E</b> Ta bilen` · `<b>E</b> Sätt dig` · `<b>E</b> Res dig` · `<b>E</b> Lås in dig` · `<b>E</b> Ta en juice` · `<b>SPACE</b> Håll i dig!` · `<b>J</b> håll: Jag kan flyga!` (the `<b>` keycap is Luckiest Guy: uppercase). Order (`updateHud`): talk, then `Håll i dig!` while the cabin is turbulent and he stands without holding on (Phase 3 r3, §5.7), then the car, interactable (seats, toilets…) and stand prompts |
+
+**The result line** (feature 4, §10.8): `#score`, low in the middle (bottom 92 px, under the
+prompt at 178 px), a cream card with the dive and its sum in Luckiest Guy over the record line
+(terracotta, teal for `NYTT REKORD!`). `hud.showScore(main, sub, record, secs = 4.5)` pops it in
+(uppercased, §1.3); `hud.hideScore()` takes it down (the judges' `reset`).
 
 **Toasts, bubbles and the objective card** (Phase 3):
 - **Toasts** (`hud.toast(text, cls = '', secs)`; radio lines are toasts) stay up `secs`, by default
@@ -3531,6 +3624,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/paintshop.js` | new (feature 1, 2026-10-14) | — | `PaintShop` (`shame.paint`): the free-roam paint shop at Gasolina, its scene, wet paint, drive-by and tip (§7.2); `DRIVE_BY` route |
 | `src/game/berraJob.js` | new (feature 2, 2026-10-14) | — | `BerraJob` (`game.berraJob`): Bärra hem Berra in free roam: the naps, Robban's ask, the carry, the drops, the desk and the pay (§10.6) |
 | `src/game/glide.js` | new (feature 3, 2026-10-14) | — | `Glide` (`game.glide`): Jag kan flyga in free roam after julafton: the tap-or-hold J in the air, the glide, walls, the landing roll, the lines (§10.7) |
+| `src/game/poolJudges.js` | new (feature 4, 2026-10-15) | — | `PoolJudges` (`game.judges`): Siv och Majsan sätter poäng in free roam: the board's hops, the call and the walk to the edge, the verdicts, cards, lines, result line and record (§10.8) |
 | `src/game/hud.js` | edit | **H** | map sources, meter, strings, legend, ring, blips, zone bar, markers; `renderPortrait` restores the model transform (§14.8) |
 | `src/game/camera.js` | edit | **A1** | profile, frameOne, cutTo, `clampZ` |
 | `src/game/fx.js` | edit | **A1** | `snow`, `steam`, `meterPuff` (rename of `shame`) |
@@ -3591,7 +3685,7 @@ Init: `initGfx` → `input.init` → `hud.init` → `fx.init` → fonts (Luckies
 → peds (34) → NPC `Character`s (one per `CHARS` key except `stig`, the radio-only keys `levander
 kapten pa guardia pax telefonist` and the cabin-owned `vardinna2`; `key` field; hidden until placed, §2.3) →
 player `Character(CHARS.stig)` (`key = 'stig'`) → collectibles (`COLLECTIBLES`) → markers → `Shame`
-→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
+→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
 `placeNpcs(true)` → spawn the player → portraits for every key in `CAST` (`renderPortrait`
 restores each model's parent and transform, so seated cast members stay in their seats) →
 `applySaveToWorld()` →
@@ -3602,7 +3696,7 @@ mantra/hold, AI, cars, people (`glide.step` → the player's step → `glide.aft
 traffic/peds skipped when `!levelDef.sim.*`) → `syncAll` (also
 writes `ch.x/y/z` from `car.seatWorld(ch.seatSide)` for every car-seated character, player
 included, so framing, bubbles and distance checks see where they really are) → `missions.update` →
-`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
+`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
 pickups/collectibles → props → `fx.tick` → `tickTown` → markers → camera → sun/sky → HUD → audio →
 traffic recycling (island) → autosave.
 
@@ -3621,6 +3715,10 @@ game.mantraMode;   // bool: island J = mantra (mantra stage)
 game.carrying;     // null | { item } | { who } (the free-roam Berra job's { who: 'berra', job }, §10.6)
 game.stomping;     // bool: a stomp is on its way down (onLand slams); the glide clears it (§10.7)
 game.glide;        // Glide (feature 3, §10.7): the free-roam glide after julafton
+game.judges;       // PoolJudges (feature 4, §10.8): the sisters judge his dives at Flamenco's pool
+game.records;      // { simhopp?: n } free-roam bests, saved (§10.5)
+game.onBounce(ch, b);   // Character.step: ch bounced on trampoline block b (the boing; the judges, §10.8)
+game.onLand(ch, v, y);  // Character.step: ch landed at v m/s (> 6) on floor height y (the stomp; the judges)
 game.bumpedT;      // > 0 for 0.4 s after a trolley bowl / turbulence fall
 game.inDialog;  game.autoDialog;  game.dialogSpeed (55, TEST 220);
 game.closure;      // null | a race's closed course { nodes: Set<nodeId>, update(), closed(nodeId) }
@@ -3870,7 +3968,13 @@ Phase 0; the luggage stowers' arm at the rack and the carried juice, which is it
 chest — Phase 0), `dance` (Phase 0: cheer variant), `laugh`, `slump`, `shoeOff`, `mirror`, `film`,
 `giraffe`, `butterKnife`, `carryOver` (WP-E), `glide` (feature 3, §10.7: legs together, the
 body tipped 0.28 forward and rocking, leaning by the numeric `anim.bank` (+ = his right); with
-`wings` for the arms). `anim.look` (radians added to the neck's yaw) is the glide's dazed shake.
+`wings` for the arms), `swan` (feature 4, §10.8: a swan dive's arms out and a little back, chin
+up, legs together, the body tipped 0.5 forward; a look only, unlike `wings` it leaves the wish
+alone). `anim.look` (radians added to the neck's yaw) is the glide's dazed shake. `anim.card`
+(feature 4, not a boolean flag: a string, or null/undefined for none) holds the `scoreCard` prop
+(a stick and a 0.6 × 0.42 board, its number a face plane on each side drawn once per string by
+`textCanvas`) out in the right hand at shoulder to eye height, off to her right (right arm
+(−1.15, 0, −0.45)); posed after `laugh`, so a laughing judge keeps her other hand on her belly.
 
 **character.js**: `ch.setDef(def)` (rebuild model under the same parent; keep x/y/z/yaw/state;
 `height` updated); state `'hidden'` (step no-op, `root.visible = false`, skipped by
@@ -3881,6 +3985,9 @@ hand at hip height, `x/y/z` set for bubbles); `ch.standAt(x, z, yaw)` (state `no
 middle, lifted so nothing goes under the floor) onto his back, then lying on his back along his
 own heading; his vx/vz carry the roll on (decaying at 6/s, walls collide, never onto a floor more
 than 0.3 m off); at the end order `XYZ`, `onGetUp`. `fling` cancels it. `GRAV` (24) is exported.
+`ch.flop(secs)` (feature 4, §10.8; only from `normal`): state `down` for `secs`, face down along his
+own heading, head first (root order `YXZ`, x = π/2, lifted 0.25 as any `down`), then order `XYZ`,
+`onGetUp`; `fling` cancels it. The `down` pose spreads his arms and legs: the belly flop.
 
 **main.js `carsVsPeople`** (Phase 3 r1 repair): a car knocks a `normal` character over (`fling`,
 `onCharHit`) only when its **own** speed into him (`car.v · n`, n from the car to him) is over
@@ -4094,11 +4201,22 @@ shame.paint (PaintShop, §7.2): configure(cfg) from configure(); onPursuit() fro
 //   berraJob.update (the unlock toast, the mantra bubble, Ole's shout, the daze); on; yaw; pendT;
 //   blocked; headway; last { x0, z0, y0, yMax, x1, z1, y1, secs, dist, landed, water, pool }
 
+// poolJudges.js (feature 4, §10.8): game.judges = new PoolJudges(game) after the glide;
+//   onBounce(b) from game.onBounce (the player on trampoline block b); onLand(y) from game.onLand
+//   before the stomp's landing (true: a judged hop splashed, so no dust); posed(key) read by syncAll;
+//   update(dt) after glide.update (the hop's swan pose, the cards, the lines, the visit, the walk);
+//   canHop(); isBoard(b); here(key); free(key); pinned(key); visit; hop; out { key: { goal, x, z,
+//   spot } }; lines; last { kind, siv, majsan, sum, record, best }; reset() (a mission start)
+
+// collision.js: waterAt(x, z, y) -> the `water` block he stands in at that height, or null
+//   (feature 4; moved from glide.js)
+
 // fx.js
 fx.snow(x, y, z);  fx.steam(x, y, z);  fx.meterPuff(x, y, z, color, n)   // (fx.shame removed)
 fx.spill(x, y, z, color, n);  fx.wisp(x, y, z)   // A1: trolley juice spill, smokers' wisp
 fx.splash(x, z, n = 16, sp = 3)   // n drops thrown out at sp m/s; the fin's default, the glide's
-                                  // pool landing 28 at 4.5 (feature 3)
+                                  // pool landing 28 at 4.5 (feature 3), a judged dive 28 at 4.5
+                                  // and a belly flop 44 at 5.5 (feature 4)
 
 // WP-H additions (all additive):
 // hud.panic(secs); hud.labelLayout (big-map label layout, cached on labels + crop); body classes
@@ -4110,7 +4228,8 @@ fx.splash(x, z, n = 16, sp = 3)   // n drops thrown out at sp m/s; the fin's def
 //   wrapped at 300 px, kept on screen and under the top HUD row and a
 //   shown objective card (Phase 3). hud.toast(text, cls,
 //   secs?) (by length, ≤ 3 at once), hud.clearToasts() (runDialog calls it), hideBanner() drops
-//   only `show` (Phase 3, §11.4, §11.7).
+//   only `show` (Phase 3, §11.4, §11.7). hud.showScore(main, sub, record, secs = 4.5) /
+//   hud.hideScore(): the diving judges' result line #score (feature 4, §10.8).
 // shame.inScene (getter: inDialog || inCutaway); shame.hideoutT; steer state; a teleports debug
 //   counter; hideout interactable id 'hideout:<landmark>' (registered in configure());
 //   shame.tuneBefore (a mission tune to restore after the pursuit, else null; Phase 3, §7.2).
@@ -4567,6 +4686,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `berra` [feature 2] | Bärra hem Berra (§10.6): no job at index 11; at 12 the nap never pops into view (10 m off, 30 m off in view: no; 30 m behind the camera: yes); Berra seated asleep on the bench, still, Robban beside him waving, "…zzz", the minimap dot, the talk prompt; the ask (both lines) and the lift (carry, cap 3.2, card, target); the walk home on calibrate's walker without sprint (15–60 s; 26 s measured), Robban within 6 m at the end, no drop, the desk (100 pta, toast), awake and free, the next nap at the lounger; the sun line in his sleep; a smashed lounger leaves him down and the ask still works; no talk to Ole while carrying; the sprint, R and fall drops (card, prompt, he stays down, E lifts him); 25 pta after three drops; a mission start sends both home and hides the job; the bench again after it |
 | `dalasheet` [feature 1] | the dalahäst dress on sedan, hatch, wagon, van and pickup: side, left, front and top shots |
 | `glide` [feature 3] | Jag kan flyga (§10.7), at index 13: before `bodega` J in the air stomps at once, held or not, no glide, no toast; after it the toast waits for the first jump and shows once; a quick J in the air stomps (on the release); the dream plane's wing (jump, double jump, J): peak 5.4–6.2 m, wings and `glide` on, sinking at 2.4 m/s, the mantra bubble, 10–15 m, the roll (`down`), up and dazed; off the wingtip at the palm: under 1 s within 1 m of the trunk and landing past it; the hangar's side head-on from 10 m up: he lets go above 3 m, not landed; Flamenco's diving board (bounce, double jump): peak over 6.6 m, over 13 m, down in the pool's shallow end (`water`, `pool`), Lasse's line on the radio and `glidPlask`, Ole's shout when he stands within 16 m; again: no second radio line; D during a glide turns it right without spinning him round; not while carrying, not in a car, not in a running mission (julafton started with `bodega` added) |
+| `simhopp` [feature 4] | Siv och Majsan sätter poäng (§10.8), at index 13: the first bounce on `flamencoBoard` brings Stig's call line and both sisters walk to their spots at the edge (busy, `poolJudges`); a plain hop with W held lands in the deep end (x ≈ −8.5) as a swan dive (`swan` on the way down, off in the water): cards 4 and 10, `SVANHOPP! 4 + 10 = 14 P`, `NYTT REKORD!`, the three lines in order, the record 14; bouncing in place: no `swan` over the board, no verdict, no second call; a double jump: `VOLT! 9 + 10 = 19 P`, a new record, saved in localStorage, the nine line ("Tio!" held back by its 20 s); a stomp: `MAGPLASK! –1 + 10 = 9 P`, `REKORD 19 P`, Stig `down` and `flopped`, Majsan laughing, Siv's line and "…Minuspoäng?", then Siv's tease after the third ten, and he gets up; two swan dives in a row: both judged, no line twice, no second tease; idle, both walk home and are free with their spot ids back; a glide off the board into the pool is not judged; at ropavieja's idle (index 9) giver and extra judge from their places and turn to him; at grisfest's (index 11) a mission start with them at the edge sends them home and ends the visit, and in the running mission the board is only a trampoline; at buss17's (index 5) they are at the airport: no call, no verdict |
 | `talk` [Phase 0] | `autoDialog = false`, walk to Ole at `gateQueue`, E, Space twice |
 | `fullstory` [Phase 0b] | swaps the literal §8 missions (`tools/fixtures/full-missions.js`) into `MISSIONS` and plays all 13 per §16.3 (`FROM`/`TO` as `story`); must end `#13 idle`, `RESULT: PASS` |
 | `kinds` [Phase 0b] | fixture data checks; haggle misses fail; follow `minDist` fails; smooth/fragile bars (teleports never count); carry spill; checkpoint retry re-applies night + `vals` and revives plates at `dansgolv`; destroy default spawn; grab at the wreck; scene `exitCar`; Phase 3: follow shows no bar before the start and a head-on quarry does not fail it, `retryCar` (the last car reused, a typed named car, `park`), getInCar `atHome` and a wrecked `missionCar` failing, a frame-only scene stopping the car dead, a scene cutting a `collect` guest's bubbles (3 frames in: no bubble over the guest or Stig, no empty one) and keeping his placement |
@@ -4640,6 +4760,7 @@ fatagaDukar golf bungalow bygge dromplan airport hittegods busBay bagageband dyn
 + cut anchors `rum107Cam recepcionCam dukarCam vischanCam` (Phase 3)
 + the paint shop `pintura` and its cut anchor `pinturaCam` (feature 1, §7.2)
 + Berra's naps `berraBank berraSolstol` (feature 2, §10.6)
++ the diving board `flamencoBoard` (feature 4, §10.8)
 + collectibles `pryl_klocka pryl_poolpen pryl_kalkylator pryl_kniv pryl_kamera pryl_glasogon
 pryl_pung fena_flamenco fena_suntrip fena_plaza fena_golf fena_bungalow fena_hamn fena_hav` + Rio
 `rioBoat rioCam`.
@@ -5995,3 +6116,22 @@ the fixer's group.
   and `anim.bank`; `fx.splash(x, z, n, sp)`; `audio.glide()` (§12.3); the hotel and lot pools'
   water blocks carry `pool` (§6.4). Scenario `glide` (§16.4). Free roam only: no mission, stage
   kind, timer or fixture changed.
+- Feature 4, "Siv och Majsan sätter poäng på simhoppen" (`features/implemented/systrarna_satter_poang.md`,
+  2026-10-15): the free-roam diving judges at Flamenco's pool (§10.8; new `src/game/poolJudges.js`,
+  `POOL_JUDGES` in content/island.js; §1.6, §3, §10.5, §11.4). With no mission running, the first
+  bounce on the diving board (landmark `flamencoBoard`, §6.3) brings Stig's "Mina ögon tål inte
+  klor." [F*] and Siv and Majsan walk 4–5 m to the pool's edge (as ropavieja's and fataga's giver
+  and extra they judge from their place, only turning). A hop off the board into the pool is judged:
+  a stomp in the air is a belly flop (Siv −1, Stig face down 1.4 s, "…Minuspoäng?" [N], Majsan
+  laughing), a double jump a somersault (Siv's "Majsan, en niopoängare!" [F*], nine), any other a
+  swan dive with his arms out (the plane's "Giraffen, då? Fyra." / "Mindre än pizza-racern?",
+  [F*](t)); Majsan's card is always a ten ("Tio!" [N]) and after the third in a visit Siv's
+  "Så att du vågar stöta på giraffen." [F*]. Cards on sticks, a splash, the result line
+  `SVANHOPP! 4 + 10 = 14 P` and the saved record (`game.records.simhopp`); each line at most every
+  20 s; 25 s without a hop and they walk home. A board bounce gives the double jump back; a glide is
+  not judged. main.js: `onBounce(ch, b)`, `onLand(ch, v, y)` (Character.step passes the block and
+  the floor height), `judges.update` after `glide.update`, `judges.posed` in `syncAll`, `records`
+  in the save (§14.2, §14.3, §10.5). character.js: `flop(secs)`, the `swan` anim flag (§14.6);
+  models.js: the `swan` pose, `anim.card` and the `scoreCard` prop; hud.js: `#score`,
+  `showScore`/`hideScore`; `collision.waterAt` (moved from glide.js, §6.4). Scenario `simhopp`
+  (§16.4). Free roam only: no mission, stage kind, timer or fixture changed.

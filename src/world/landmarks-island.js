@@ -32,6 +32,10 @@ export const ISLAND_LANDMARKS = {
   flamencoBack: { b: [3, 3], at: [-6, -33.5], yaw: 0 },
   bodega: { b: [3, 3], at: [8, -33.5], yaw: 0 },
   fena_flamenco: { b: [3, 3], at: [-3, 7], yaw: 0, y: 0.35 },
+  // Siv och Majsan sätter poäng (free roam, §10.8): the middle of the diving board's bounce pad (top
+  // 0.97, hotels.js), facing along it out over the deep end. Not a standing spot: the sisters' places
+  // at the pool's edge are offsets from it (POOL_JUDGES.spots), and its block is the judged board.
+  flamencoBoard: { b: [3, 3], at: [-14.1, 7], yaw: PI / 2 },
   // (3,2) Hotel SunTrip
   suntrip: { b: [3, 2], at: [-14, 24], yaw: PI },     // faces the office porch (C1)
   scen: { b: [3, 2], at: [0, -14], yaw: 0 },

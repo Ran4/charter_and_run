@@ -2,13 +2,14 @@
 // trampolines, getting flung by cars and lying there for a bit. States: normal | flung | down |
 // seated (in a car via game.seat, or in a plane seat via seatAt) | hidden (no step, invisible).
 // `tumble(secs, roll)`: a forward roll onto his back, then down (the glide's landing, game/glide.js).
+// `flop(secs)`: flat on his belly, then up (the belly flop into the pool, game/poolJudges.js).
 
 import { buildCharacter, animateCharacter } from './models.js';
 import { queryBlocks, circleVsBlock, groundAt, groundInfo, topAt, RAMP } from '../world/collision.js';
 import { dampAngle, yawTo } from '../util.js';
 
 export const STEP = 0.45;
-export const ANIM_FLAGS = ['wings', 'cupUp', 'cupHeld', 'push', 'planeSeat', 'hold', 'flail', 'oath', 'dance', 'laugh', 'slump', 'shoeOff', 'mirror', 'film', 'giraffe', 'butterKnife', 'carryOver', 'glide'];
+export const ANIM_FLAGS = ['wings', 'cupUp', 'cupHeld', 'push', 'planeSeat', 'hold', 'flail', 'oath', 'dance', 'laugh', 'slump', 'shoeOff', 'mirror', 'film', 'giraffe', 'butterKnife', 'carryOver', 'glide', 'swan'];
 export const GRAV = 24;
 const _blocks = [], _hit = {};
 
@@ -31,6 +32,7 @@ export class Character {
     this.car = null;
     this.spin = 0; this.spinRate = 0;
     this.tumbleT = null; this.tumbleRoll = 0;
+    this.flopped = false;
     this.height = this.model.height;
     this.floats = def.kind === 'wizard' || def.kind === 'ghost';
     this.solid = true;
@@ -96,7 +98,7 @@ export class Character {
   fling(vx, vy, vz) {
     if (this.state === 'seated' || this.state === 'hidden' || this.invulnerable) return false;
     this.state = 'flung';
-    if (this.tumbleT != null) { this.tumbleT = null; this.root.rotation.order = 'XYZ'; }
+    if (this.tumbleT != null || this.flopped) { this.tumbleT = null; this.flopped = false; this.root.rotation.order = 'XYZ'; }
     this.vx = vx; this.vy = vy; this.vz = vz;
     this.onGround = false;
     this.spinRate = (Math.random() < 0.5 ? -1 : 1) * (8 + Math.random() * 8);
@@ -116,6 +118,16 @@ export class Character {
     return true;
   }
 
+  // Flat on his belly where he landed for `secs`, then up as from any fall (onGetUp).
+  flop(secs) {
+    if (this.state !== 'normal') return false;
+    this.state = 'down';
+    this.timer = secs;
+    this.flopped = true;
+    this.vx = this.vz = this.vy = 0;
+    return true;
+  }
+
   step(dt, game) {
     if (this.state === 'seated' || this.state === 'hidden') return;
     if (this.state === 'down') {
@@ -130,6 +142,7 @@ export class Character {
       }
       if (this.timer <= 0) {
         this.state = 'normal'; this.spin = 0;
+        if (this.flopped) { this.flopped = false; this.root.rotation.order = 'XYZ'; }
         if (this.tumbleT != null) { this.tumbleT = null; this.vx = this.vz = 0; this.root.rotation.order = 'XYZ'; }
         game?.onGetUp(this);
       }
@@ -168,14 +181,14 @@ export class Character {
       if (roof && roof.top > gh) { gh = roof.top; gb = null; this.standingOn = roof.car; } else this.standingOn = null;
     }
     if (this.y <= gh) {
-      if (!this.onGround && this.vy < -6) { this.model.squash = 0.5; game?.onLand(this, -this.vy); }
+      if (!this.onGround && this.vy < -6) { this.model.squash = 0.5; game?.onLand(this, -this.vy, gh); }
       this.y = gh;
       this.vy = 0;
       this.onGround = true;
       if (gb && gb.kind === 'bounce') {
         this.vy = 15.5; this.onGround = false;
         this.model.squash = 0.6;
-        game?.onBounce(this);
+        game?.onBounce(this, gb);
       }
     } else if (this.onGround && this.y - gh < 0.3 && this.vy <= 0) {
       this.y = gh; this.vy = 0;
@@ -234,6 +247,12 @@ export class Character {
       this.root.rotation.set(th, this.yaw, 0);
       this.root.position.y += c * Math.abs(Math.cos(th)) + 0.22 * Math.abs(Math.sin(th));
       this.model.body.position.y = -c;
+    } else if (this.state === 'down' && this.flopped) {
+      // Face down along his facing, head first (about his own right axis: YXZ, as the tumble).
+      this.root.rotation.order = 'YXZ';
+      this.root.rotation.set(Math.PI / 2, this.yaw, 0);
+      this.root.position.y += 0.25;
+      this.model.body.position.y = 0;
     } else if (this.state === 'down') {
       this.root.rotation.x = -Math.PI / 2;
       this.root.position.y += 0.25;

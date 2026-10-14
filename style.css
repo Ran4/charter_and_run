@@ -123,6 +123,13 @@ body.panik #app canvas { filter: saturate(1.5) contrast(1.08); }
 /* ---------------------------------------------------------------- prompts, toasts, banners */
 #prompt { position: absolute; left: 50%; bottom: 178px; transform: translateX(-50%) scale(0.8); opacity: 0; background: var(--ink); color: var(--cream); font: 800 18px var(--body); padding: 8px 18px; border-radius: 999px; transition: 0.15s; white-space: nowrap; border: 2px solid var(--cream); box-shadow: 3px 4px 0 rgba(29, 20, 38, 0.4); }
 #prompt.show { opacity: 1; transform: translateX(-50%) scale(1); }
+/* The diving judges' result line (§10.8): low in the middle, under the prompt (bottom 178 px). */
+#score { position: absolute; left: 50%; bottom: 92px; transform: translate(-50%, 24px) scale(0.6); opacity: 0; pointer-events: none; text-align: center; white-space: nowrap; background: var(--cream); border: 3px solid var(--ink); border-radius: 18px; padding: 6px 22px 8px; box-shadow: 4px 5px 0 var(--ink); transition: 0.3s cubic-bezier(.3, 1.6, .5, 1); }
+#score.show { opacity: 1; transform: translate(-50%, 0) scale(1); }
+.score-main { font: 34px/1.05 var(--display); letter-spacing: 1px; color: var(--ink); }
+.score-sub { font: 16px var(--display); letter-spacing: 1.5px; color: var(--terracotta); margin-top: 2px; }
+.score-sub:empty { display: none; }
+#score.record .score-sub { color: var(--teal); }
 #prompt b { background: var(--sun); color: var(--ink); border-radius: 6px; padding: 0 7px; margin-right: 4px; font-family: var(--display); font-weight: 400; box-shadow: 0 2px 0 #b8860b; }
 #toasts { position: absolute; right: 24px; top: 104px; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; max-width: min(430px, 40vw); }
 /* Below a shown objective card (with timer, bar and two text lines it reaches about 170 px down),

@@ -142,6 +142,12 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   slutar i en kullerbytta, och landar han i en pool blir det plask (och Lasse ringer, en gång).
   Prova från drömplanets vinge eller hopptornets trampolin vid Flamencos pool. Står Ole i närheten
   ropar han "Det er flyging!".
+- **Siv och Majsan sätter poäng**: studsa på trampolinen vid Flamencos pool. Första gången säger
+  Stig "Mina ögon tål inte klor.", och systrarna går fram till poolkanten. Varje hopp som slutar i
+  vattnet får poäng: ett vanligt hopp blir ett svanhopp (Siv ger fyra, "Giraffen, då?"), ett
+  dubbelhopp en volt (Siv ger nio, mer blir det aldrig) och stampar du i luften (J) blir det ett
+  magplask och minuspoäng. Majsan håller alltid upp en tia. Resultatet visas längst ned, och ditt
+  bästa hopp sparas som rekord.
 
 ## Vad är påhittat?
 
@@ -165,6 +171,8 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
 - glidflygningen efter julafton, kullerbyttan han landar i, Lasses poolreplik och Oles rop (i
   filmens drömsyn står Stig-Helmer bara med utsträckta armar framför ett propellerplan, och han
   flyger aldrig)
+- att Siv och Majsan sätter poäng på Stigs simhopp vid poolen, poänglapparna, Majsans tior och
+  magplasket (i filmen sätter systrarna poäng på männen på planet)
 - att grisbilen lånas ut till Stig-Helmer, att man följer Josés bil och grisbilen, och
   jeepjakten
 - fårrusningen i Fataga, kappkörningen mot nattbussen och porslinskrosset på tid
@@ -251,11 +259,12 @@ src/game/shame.js               the meter: FLYGRÄDSLA/PANIK and SKANDAL/Guardia
 src/game/paintshop.js           the free-roam paint shop at Gasolina: the dalahäst paint job, wet paint, drive-by
 src/game/berraJob.js            Bärra hem Berra in free roam: Berra's naps, Robban's ask, the carry, drops and pay
 src/game/glide.js               Jag kan flyga in free roam after julafton: J held in the air glides, the landing roll
+src/game/poolJudges.js          Siv och Majsan sätter poäng in free roam: dives off Flamenco's board, cards, record
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
 tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, meter, kinds, perf,
-                                paintshop, berra, glide, calibrate, calibflight)
+                                paintshop, berra, glide, simhopp, calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
 tools/pool.mjs                  re-derives every random stage's timer from the ledger
@@ -285,6 +294,7 @@ node tools/shot.mjs castsheet cars heads ui skandal carbust perf
 node tools/shot.mjs pintura dalasheet    # the free-roam paint shop and the dalahäst dress on every body
 node tools/shot.mjs berra                # Bärra hem Berra in free roam: naps, the carry home, drops, the pay
 node tools/shot.mjs glide                # the glide after julafton: the wing, the palm, a wall, the diving board, the lines
+node tools/shot.mjs simhopp              # the sisters judge his dives: swan dive, somersault, belly flop, record, walk
 node tools/shot.mjs fullstory kinds      # the literal §8 missions and the stage-kind checks
 node tools/shot.mjs calibrate calibflight  # timer and FLYGRÄDSLA calibration (slow; see DESIGN §8, §16.4)
 node tools/pool.mjs                      # random-stage timers from the raw runs in notes/calibration-samples.md

@@ -19,7 +19,7 @@
 //   'butterKnife'|'knacke'|'handbag').
 // Outfits are shallow-merged over the base def (outfitDef); an outfit clears a base field with null.
 
-import { THREE, GeoBuilder, toonMesh, MAT, mat, PRIM, outlineGeometry, outlineMat } from '../gfx.js';
+import { THREE, GeoBuilder, toonMesh, MAT, mat, PRIM, outlineGeometry, outlineMat, textCanvas } from '../gfx.js';
 import { mulberry32, pick } from '../util.js';
 
 const SV = 0xf2c9a8, ES = 0xc99a6e;   // default skins: Swedish tourist, Spanish local
@@ -639,8 +639,37 @@ const PROP_GEO = {
     g.sphere(0xb8b4a8, 0, 0, 0, 0.19, 0.15, 0.33);
     g.cyl(0xb8b4a8, 0, 0.1, -0.05, 0.08, 0.2, 8);
   },
+  scoreCard(g) {   // the sisters' score card on a stick (anim.card; the number is a face, cardFace)
+    g.cyl(0x8a5a32, 0, 0.06, 0, 0.018, 0.22, 6);
+    g.box(0xf4f0e6, 0, 0.36, 0, 0.6, 0.42, 0.03);
+  },
 };
 const _propCache = {};
+// The number on a score card (`anim.card`, a string such as '10' or '–1'): a plane on each side of
+// the board, its texture drawn once per number.
+const _cardTex = {};
+function cardFace(p, text) {
+  let f = p.userData.face;
+  if (!f) {
+    f = p.userData.face = new THREE.Mesh(new THREE.PlaneGeometry(0.56, 0.38), new THREE.MeshBasicMaterial());
+    f.position.set(0, 0.36, 0.0165);
+    const back = new THREE.Mesh(f.geometry, f.material);
+    back.rotation.y = Math.PI;
+    back.position.z = -0.033;
+    f.add(back);
+    p.add(f);
+  }
+  if (f.userData.text !== text) {
+    f.userData.text = text;
+    let t = _cardTex[text];
+    if (!t) {
+      t = _cardTex[text] = new THREE.CanvasTexture(textCanvas(text, 0.56, 0.38, { bg: '#fffdf4', fg: '#1d1426', border: '#1d1426', scale: 0.86, ppm: 400 }));
+      t.colorSpace = THREE.SRGBColorSpace;
+    }
+    f.material.map = t;
+    f.material.needsUpdate = true;
+  }
+}
 function propMesh(name) {
   let c = _propCache[name];
   if (!c) {
@@ -1045,6 +1074,14 @@ function poseFlags(m, st, t) {
     m.body.rotation.x = 0.28;
     m.body.rotation.z = Math.sin(t * 2.3) * 0.07 + (st.bank || 0);
   }
+  if (st.swan) {
+    // A swan dive off the diving board (game/poolJudges.js): arms straight out and a little back,
+    // chin up, legs together, tipped forward towards the water. Only a look: it steers nothing.
+    R.rotation.set(0.3, 0, -1.5); L.rotation.set(0.3, 0, 1.5);
+    legs[0].rotation.set(0.12, 0, -0.03); legs[1].rotation.set(0.12, 0, 0.03);
+    m.body.rotation.x = 0.5;
+    m.neck.rotation.x = -0.35;
+  }
   if (st.flail) {
     R.rotation.set(Math.sin(t * 14) * 0.8, 0, -1.9 - Math.sin(t * 11) * 0.5);
     L.rotation.set(-Math.sin(t * 13) * 0.8, 0, 1.9 + Math.sin(t * 12) * 0.5);
@@ -1075,6 +1112,15 @@ function poseFlags(m, st, t) {
     m.hips.rotation.x -= 0.16;
     m.neck.rotation.x = -0.32;
     m.body.position.y += Math.abs(Math.sin(t * 16)) * 0.035 * s;
+  }
+  if (st.card != null) {
+    // A score card held out in the right hand, from shoulder to eye height and off to her right, under
+    // her speech bubble (the sisters judging his dives, game/poolJudges.js); after `laugh`, which keeps
+    // the other hand on the belly.
+    R.rotation.set(-1.15, 0, -0.45);
+    const p = prop(m, 'scoreCard');
+    inHand(m, p, 0, 0, 0.02, 0);
+    cardFace(p, st.card);
   }
   if (st.slump) {
     if (st.seated) {

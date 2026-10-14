@@ -1,7 +1,8 @@
 // Level 2 content (DESIGN §2.3, §10, §11.6, §14.9, §14.10): homes on the island, map labels, chatter
 // and bark tables, collectibles, unlocks, named-car names, outfits. Owner: WP-G. Source tags per
 // DESIGN §1.4 (bark tables are [F*]: every film line is relocated there). Invented (§1.6): Oles
-// prylar and hajfenor as collectibles, the grisbil unlock, the glide after julafton.
+// prylar and hajfenor as collectibles, the grisbil unlock, the glide after julafton, the sisters
+// judging his dives at Flamenco's pool.
 
 export const HOMES_ISLAND = {
   ole: ['flamenco', 2.0, 1.0, 0],     // yaw 0: under the pergola, facing the pool (flamenco faces π)
@@ -218,6 +219,45 @@ export const BERRA_JOB = {
   thanks: 'Tack ska du ha. Här är en hundring.',                                        // [N]
   thanksDocked: 'Här är {n} pesetas. Avdrag för tappningarna.',                         // [N]
   paidToast: 'Robban betalade {n} pta.',                                                // [N]
+};
+
+// Siv och Majsan sätter poäng – the sisters judge his dives (free roam, DESIGN §10.8;
+// game/poolJudges.js). A bounce on Flamenco's diving board (the `board` landmark's bounce block)
+// calls them: Stig's `call` line (at most every `callAgain` s), and they walk at `walk` m/s to
+// `spots` ([dx, dz] from `board`) at the pool's edge, unless one waits at the pool as a mission's
+// giver or extra (then she only turns to him); both must be within `judgeR` m of the board (not
+// away as an extra at the airport or friskotek). A hop off the board that ends in the water within
+// `judgeR` m of them is judged: a stomp in the air is a `magplask` (he lies face down for
+// `flopSecs`), the double jump's spin a `volt`, any other a `svanhopp` (arms out on the way down).
+// Per kind: Siv's and Majsan's cards (held up `cardSecs`), the result line and the `lines`
+// ([delay s, who, text]; each said at most every `again` s, and a new hop drops the ones not yet
+// said). The best total is the saved record. After `teaseAfter` tens from Majsan in one visit,
+// Siv's `tease`, once a visit. `stayOut` s without a hop, or Stig more than `leaveR` m from the
+// board, and they walk home. Invented (§1.6): the judging at the pool, Majsan's tens and the cards;
+// the film's points scene is on the plane.
+export const POOL_JUDGES = {
+  board: 'flamencoBoard',
+  spots: { siv: [-6.9, 8.3], majsan: [-6.9, 10.3] },
+  walk: 1.6, judgeR: 22, leaveR: 30, stayOut: 25, again: 20, callAgain: 120, cardSecs: 3.4, flopSecs: 1.4, teaseAfter: 3,
+  call: ['stig', 'Mina ögon tål inte klor.'],                                     // [F*] relocated: the morning he would not go to the pool
+  kinds: {
+    svanhopp: { title: 'SVANHOPP!', siv: 4, majsan: 10, lines: [
+      [0.4, 'siv', 'Giraffen, då? Fyra.'],                                         // [F*](t) the points scene on the plane
+      [1.9, 'majsan', 'Mindre än pizza-racern?'],                                  // [F*](t)
+      [3.3, 'majsan', 'Tio!'],                                                     // [N]
+    ] },
+    volt: { title: 'VOLT!', siv: 9, majsan: 10, lines: [
+      [0.4, 'siv', 'Majsan, en niopoängare!'],                                     // [F*] relocated from the transfer bus
+      [2.0, 'majsan', 'Tio!'],                                                     // [N]
+    ] },
+    magplask: { title: 'MAGPLASK!', siv: -1, majsan: 10, laugh: 'majsan', lines: [
+      [0.4, 'siv', 'Han är så bortkommen. Det blir minuspoäng.'],                 // [F*](t) the points scene on the plane
+      [2.8, 'stig', '…Minuspoäng?'],                                               // [N]
+    ] },
+  },
+  tease: ['siv', 'Så att du vågar stöta på giraffen.'],                           // [F*] relocated from the balcony
+  result: '{kind} {a} + {b} = {sum} P',                                           // [N]
+  record: 'REKORD {n} P', newRecord: 'NYTT REKORD!',                              // [N]
 };
 
 // Speedo names for named and mission cars (§11.4); unnamed cars show their type's Swedish name.

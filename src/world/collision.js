@@ -135,6 +135,17 @@ export function topAt(b, x, z) {
   return b.h0 + (b.h1 - b.h0) * t;
 }
 
+// The water floor someone stands in at (x, z, y), or null. Pools and ponds lie at CURB, level with
+// the ground, so groundAt (which wants a floor above the ground) never names them (the glide's and
+// the diving judges' landings, §10.7–10.8).
+const _water = [];
+export function waterAt(x, z, y) {
+  for (const b of queryBlocks(x, z, x, z, _water)) {
+    if (b.kind === 'water' && !b.dead && contains(b, x, z) && Math.abs(topAt(b, x, z) - y) < 0.05) return b;
+  }
+  return null;
+}
+
 // Highest floor under (x,z) that someone at height y with the given step could stand on.
 // groundInfo.block is left pointing at the block providing it (null for bare ground).
 export const groundInfo = { block: null };

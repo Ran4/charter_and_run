@@ -47,6 +47,7 @@ export const hud = {
       <div id="minimap-wrap"><canvas id="minimap" width="220" height="220"></canvas><div class="mm-n">N</div></div>
       <div id="speedo"><div class="sp-num">0</div><div class="sp-unit">${S.speedUnit}</div><div class="sp-hp"><div class="sp-hp-fill"></div></div><div class="sp-name"></div></div>
       <div id="prompt"></div>
+      <div id="score"><div class="score-main"></div><div class="score-sub"></div></div>
       <div id="toasts"></div>
       <div id="banner"><div class="banner-main"></div><div class="banner-sub"></div></div>
       <div id="bubbles"></div>
@@ -77,6 +78,7 @@ export const hud = {
     this.bubbles = $('bubbles');
     this.dialog = $('dialog');
     this.collectEl = $('collect');
+    this.scoreEl = $('score');
     this.flash = $('flash');
     this.bigmap = $('bigmap');
   },
@@ -291,6 +293,19 @@ export const hud = {
     clearTimeout(this._collectT);
     this._collectT = setTimeout(() => this.collectEl.classList.remove('show'), 3500);
   },
+
+  // The diving judges' result line (game/poolJudges.js, §10.8), low in the middle for `secs` s:
+  // `main` (the dive and its sum) over `sub` (the record); `record` colours the sub.
+  showScore(main, sub = '', record = false, secs = 4.5) {
+    const e = this.scoreEl;
+    e.querySelector('.score-main').textContent = upper(main);
+    e.querySelector('.score-sub').textContent = upper(sub);
+    e.classList.toggle('record', record);
+    e.classList.remove('show'); void e.offsetWidth; e.classList.add('show');
+    clearTimeout(this._scoreT);
+    this._scoreT = setTimeout(() => e.classList.remove('show'), secs * 1000);
+  },
+  hideScore() { clearTimeout(this._scoreT); this.scoreEl.classList.remove('show'); },
 
   letterbox(on) { $('letterbox').classList.toggle('on', on); },
 

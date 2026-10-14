@@ -24,6 +24,7 @@ import { CamRig } from './game/camera.js';
 import { Shame } from './game/shame.js';
 import { BerraJob } from './game/berraJob.js';
 import { Glide } from './game/glide.js';
+import { PoolJudges } from './game/poolJudges.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
 import { LEVELS, ISLAND_PALETTES } from './level.js';
@@ -83,6 +84,7 @@ class Game {
     this.levelDef = null;
     this.collected = { prylar: new Set(), fenor: new Set() };
     this.unlocked = new Set();
+    this.records = {};            // free-roam bests, saved: `simhopp` (the diving judges' best total, §10.8)
     this.homeOverrides = {};
     this.chatterOverrides = {};   // UNLOCKS[name].chatter: free-roam chatter that replaces CHATTER[key] (island)
     this.interactables = [];
@@ -156,6 +158,7 @@ class Game {
     this.missions = new MissionRunner(this);
     this.berraJob = new BerraJob(this);   // free roam after the grisfest (§10.6)
     this.glide = new Glide(this);         // free roam after julafton (§10.7)
+    this.judges = new PoolJudges(this);   // free roam: the sisters judge his dives (§10.8)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -942,18 +945,26 @@ class Game {
     return pick((ch.key === 'ole' && t.ole) || ((ch.def?.local || LOCAL_CAST.includes(ch.key)) && t.local) || (STAFF_CAST.includes(ch.key) && t.staff) || t.sv);
   }
   onBodyBounce(ch) { if (dist(ch.x, ch.z, this.focus().x, this.focus().z) < 40) audio.thud(); }
-  onBounce(ch) { if (ch === this.player) audio.boing(); }
+  // A trampoline under the player (b: its block): the boing, and Flamenco's board to the judges (§10.8).
+  onBounce(ch, b) {
+    if (ch !== this.player) return;
+    audio.boing();
+    this.judges.onBounce(b);
+  }
   // J in the air (§3): slam down; the landing (onLand) breaks props, bowls people over, dents cars.
   stomp() { this.player.vy = -18; this.stomping = true; audio.kick(); }
-  onLand(ch, v) {
+  // y: the floor he lands on. A hop off Flamenco's board into the pool is judged and splashes
+  // instead of the dust (§10.8); it reads `stomping` (the belly flop) before it is cleared.
+  onLand(ch, v, y) {
     if (ch !== this.player) return;
+    const wet = this.judges.onLand(y);
     if (this.stomping) {
       this.stomping = false;
       audio.crash(0.4);
       this.cam.shake = 0.6;
-      fx.dust(ch.x, ch.z, 12, ch.y + 0.2);
+      if (!wet) fx.dust(ch.x, ch.z, 12, ch.y + 0.2);
       this.areaHit(ch.x, ch.z, ch.y, 2.6, 0, 0, true);
-    } else fx.dust(ch.x, ch.z, 3, ch.y + 0.1);
+    } else if (!wet) fx.dust(ch.x, ch.z, 3, ch.y + 0.1);
   }
   onHonk(car) {
     const f = this.focus();
@@ -1295,7 +1306,7 @@ class Game {
       localStorage.setItem(SAVE_KEY, JSON.stringify({
         v: 1, mission: this.missions.index, coins: this.coins,
         collected: { prylar: [...this.collected.prylar], fenor: [...this.collected.fenor] },
-        unlocked: [...this.unlocked], outfit: this.islandOutfit, tune: this.islandTune,
+        unlocked: [...this.unlocked], outfit: this.islandOutfit, tune: this.islandTune, records: this.records,
       }));
     } catch (e) { /* private mode: progress just won't persist */ }
   }
@@ -1309,6 +1320,7 @@ class Game {
           this.collected.prylar = new Set(s.collected?.prylar || []);
           this.collected.fenor = new Set(s.collected?.fenor || []);
           this.unlocked = new Set(s.unlocked || []);
+          this.records = { ...s.records };
           this.islandOutfit = s.outfit || 'kostym';
           this.islandTune = s.tune === 'samba' && this.unlocked.has('samba') ? 'samba' : 'sol';
         }
@@ -1376,6 +1388,7 @@ class Game {
     this.shame.update(dt);
     this.berraJob.update(dt);
     this.glide.update(dt);
+    this.judges.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);
@@ -1668,9 +1681,10 @@ class Game {
       const near = dist(n.x, n.z, this.player.x, this.player.z);
       n.anim.talk = talker === k;
       const giver = ms.state === 'idle' && ms.current?.giver === k && ms.current.level === this.level;
-      // §9.4 idleAnim (e.g. Berra asleep), or held by the free-roam Berra job (§10.6): no wave, turn
-      // or chatter; Robban waves Stig over to the sleeping Berra as a giver does.
-      const posed = !!ms.idlePose(k) || this.berraJob.posed(k);
+      // §9.4 idleAnim (e.g. Berra asleep), or held by the free-roam Berra job (§10.6) or the diving
+      // judges at the pool's edge (§10.8): no wave, turn or chatter; Robban waves Stig over to the
+      // sleeping Berra as a giver does.
+      const posed = !!ms.idlePose(k) || this.berraJob.posed(k) || this.judges.posed(k);
       n.anim.wave = (giver || this.berraJob.waving(k)) && !posed && near < 9 && !this.inDialog && n.state === 'normal';
       if (n.state === 'normal' && !posed && near < 10 && !this.inDialog) n.yaw += Math.atan2(Math.sin(yawTo(this.player.x - n.x, this.player.z - n.z) - n.yaw), Math.cos(yawTo(this.player.x - n.x, this.player.z - n.z) - n.yaw)) * Math.min(1, dt * 3);
       // Free play only: not in the gap before an outro (bubbles stacked over its first line).
