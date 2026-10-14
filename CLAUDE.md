@@ -39,7 +39,8 @@ opens with a summary of the rounds and the timer changes.
   - cast: `castsheet cars heads` · meter/UI: `ui skandal carbust` (`carbust`: SKANDAL's gain and
     delay and the in-car bust rules, DESIGN §7.2) · `perf` (fails below 45 fps)
   - free roam: `pintura dalasheet` (the paint shop at Gasolina, DESIGN §7.2), `berra` (Bärra hem
-    Berra after the grisfest, DESIGN §10.6)
+    Berra after the grisfest, DESIGN §10.6), `glide` (Jag kan flyga, the glide after julafton,
+    DESIGN §10.7)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

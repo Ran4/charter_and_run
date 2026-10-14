@@ -43,7 +43,7 @@ Samma tangenter i båda nivåerna; nivån bestämmer vad de gör.
 | Mus | titta | titta (svänger tillbaka bakom bilen) | titta |
 | Shift | spring | | skynda – men det ökar rädslan |
 | Space | hoppa, i luften igen för dubbelhopp | handbroms (sladd!) | **håll i dig**: ta tag i närmaste stolsrygg vid turbulens |
-| J / klick | sparka, i luften: stampa | | **håll in**: "Jag kan flyga, jag är inte rädd" – sänker FLYGRÄDSLA |
+| J / klick | sparka, i luften: stampa (efter julafton: **håll in i luften** för att glidflyga) | | **håll in**: "Jag kan flyga, jag är inte rädd" – sänker FLYGRÄDSLA |
 | E | prata, kliv in, sno en bil | kliv ur (i fart: rulla ur) | prata, **sätt dig / res dig**, lås in dig på toaletten, anropsknappen, serveringsvagnen |
 | H | | tuta | |
 | B | | titta bakåt | |
@@ -53,7 +53,8 @@ Samma tangenter i båda nivåerna; nivån bestämmer vad de gör.
 | Esc / P | paus | paus | paus |
 
 Sitter Stig-Helmer ner i planet rör han sig inte; E reser honom upp (eller trycker på knappen
-ovanför stolen), J håller mantrat. På julafton blir J mantrat även på ön. Handkontroll fungerar
+ovanför stolen), J håller mantrat. På julafton blir J mantrat även på ön, och efter julafton kan
+Stig-Helmer glidflyga: tryck J i luften och håll in (ett kort tryck stampar som förut). Handkontroll fungerar
 också: A hopp/handbroms, B spring, X sparka/mantra, Y prata, Start paus, triggrarna kör.
 
 Vägen visas av den gula pilen över Stig-Helmers huvud, ljuskäglan och ringen vid målet och
@@ -135,6 +136,12 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   inte: springer du, ramlar, blir påkörd eller trycker R tappar du honom, och då får du lyfta upp
   honom igen (E). Vid receptionen vaknar Berra, och Robban betalar en hundring, 25 pta mindre för
   varje gång du tappade honom. En stund senare sover Berra igen, på det andra stället.
+- **Jag kan flyga**: efter julafton kan Stig-Helmer glidflyga. Hoppa, dubbelhoppa och håll in J i
+  luften: han sträcker ut armarna som hos Levander, säger mantrat och singlar stelt nedåt och
+  framåt, och W A S D svänger honom lite. Ett kort tryck på J stampar som förut. Varje landning
+  slutar i en kullerbytta, och landar han i en pool blir det plask (och Lasse ringer, en gång).
+  Prova från drömplanets vinge eller hopptornets trampolin vid Flamencos pool. Står Ole i närheten
+  ropar han "Det er flyging!".
 
 ## Vad är påhittat?
 
@@ -155,6 +162,9 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
   åsnan som Ole och Stig målar röd med blommor)
 - att Berra somnar på stan efter grisfesten och att Stig bär hem honom om och om igen, mot betalt
   (i filmen bär Robban och Stig-Helmer hem honom tillsammans, en enda gång, efter Tonga Tonga)
+- glidflygningen efter julafton, kullerbyttan han landar i, Lasses poolreplik och Oles rop (i
+  filmens drömsyn står Stig-Helmer bara med utsträckta armar framför ett propellerplan, och han
+  flyger aldrig)
 - att grisbilen lånas ut till Stig-Helmer, att man följer Josés bil och grisbilen, och
   jeepjakten
 - fårrusningen i Fataga, kappkörningen mot nattbussen och porslinskrosset på tid
@@ -231,7 +241,7 @@ src/world/collision.js, frame.js  static solids, ground height, camera ceilings;
 src/world/props.js              breakable street furniture (§6.8 types)
 src/world/rio.js                the Rio end-card set
 src/actors/models.js            CHARS (the cast), outfits, procedural characters and car busts
-src/actors/character.js         on-foot physics, seating, flinging
+src/actors/character.js         on-foot physics, seating, flinging, the landing roll (tumble)
 src/actors/car.js               car types (sedan, SunTrip bus, guagua, grisbil, guardia…), physics, PLAYER_BOOST 1.2
 src/actors/drivers.js           lane paths and AI drivers (traffic, route, chase, flee)
 src/actors/peds.js, pickups.js  pedestrians; coins (pesetas), collectibles, rabbits (balls, sheep, flowers)
@@ -240,11 +250,12 @@ src/game/missions/              runner.js (MissionRunner), kinds/ (the stage kin
 src/game/shame.js               the meter: FLYGRÄDSLA/PANIK and SKANDAL/Guardia pursuit, fines, hideouts
 src/game/paintshop.js           the free-roam paint shop at Gasolina: the dalahäst paint job, wet paint, drive-by
 src/game/berraJob.js            Bärra hem Berra in free roam: Berra's naps, Robban's ask, the carry, drops and pay
+src/game/glide.js               Jag kan flyga in free roam after julafton: J held in the air glides, the landing roll
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
 tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, meter, kinds, perf,
-                                paintshop, berra, calibrate, calibflight)
+                                paintshop, berra, glide, calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
 tools/pool.mjs                  re-derives every random stage's timer from the ledger
@@ -273,6 +284,7 @@ node tools/shot.mjs smash foot propsheet riocard endcard islandstats islandtour
 node tools/shot.mjs castsheet cars heads ui skandal carbust perf
 node tools/shot.mjs pintura dalasheet    # the free-roam paint shop and the dalahäst dress on every body
 node tools/shot.mjs berra                # Bärra hem Berra in free roam: naps, the carry home, drops, the pay
+node tools/shot.mjs glide                # the glide after julafton: the wing, the palm, a wall, the diving board, the lines
 node tools/shot.mjs fullstory kinds      # the literal §8 missions and the stage-kind checks
 node tools/shot.mjs calibrate calibflight  # timer and FLYGRÄDSLA calibration (slow; see DESIGN §8, §16.4)
 node tools/pool.mjs                      # random-stage timers from the raw runs in notes/calibration-samples.md

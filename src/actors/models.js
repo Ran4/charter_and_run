@@ -1037,6 +1037,14 @@ function poseFlags(m, st, t) {
     m.neck.rotation.x = -0.15;
     if (!st.seated && st.speed < 0.3) m.body.rotation.z = Math.sin(t * 1.6) * 0.04;
   }
+  if (st.glide) {
+    // Gliding (game/glide.js; `wings` holds the arms): stiff as a plank, legs together, tipped a
+    // little forward, rocking like a falling leaf and leaning into a turn (`bank`, + = his right).
+    legs[0].rotation.set(0.06 + Math.sin(t * 7) * 0.04, 0, -0.03);
+    legs[1].rotation.set(0.06 - Math.sin(t * 7) * 0.04, 0, 0.03);
+    m.body.rotation.x = 0.28;
+    m.body.rotation.z = Math.sin(t * 2.3) * 0.07 + (st.bank || 0);
+  }
   if (st.flail) {
     R.rotation.set(Math.sin(t * 14) * 0.8, 0, -1.9 - Math.sin(t * 11) * 0.5);
     L.rotation.set(-Math.sin(t * 13) * 0.8, 0, 1.9 + Math.sin(t * 12) * 0.5);

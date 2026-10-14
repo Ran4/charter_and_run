@@ -23,6 +23,7 @@ import { hud, renderPortrait } from './game/hud.js';
 import { CamRig } from './game/camera.js';
 import { Shame } from './game/shame.js';
 import { BerraJob } from './game/berraJob.js';
+import { Glide } from './game/glide.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
 import { LEVELS, ISLAND_PALETTES } from './level.js';
@@ -154,6 +155,7 @@ class Game {
     this.shame = new Shame(this);
     this.missions = new MissionRunner(this);
     this.berraJob = new BerraJob(this);   // free roam after the grisfest (§10.6)
+    this.glide = new Glide(this);         // free roam after julafton (§10.7)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -941,6 +943,8 @@ class Game {
   }
   onBodyBounce(ch) { if (dist(ch.x, ch.z, this.focus().x, this.focus().z) < 40) audio.thud(); }
   onBounce(ch) { if (ch === this.player) audio.boing(); }
+  // J in the air (§3): slam down; the landing (onLand) breaks props, bowls people over, dents cars.
+  stomp() { this.player.vy = -18; this.stomping = true; audio.kick(); }
   onLand(ch, v) {
     if (ch !== this.player) return;
     if (this.stomping) {
@@ -1371,6 +1375,7 @@ class Game {
     this.missions.syncIdleAnim();
     this.shame.update(dt);
     this.berraJob.update(dt);
+    this.glide.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);
@@ -1435,7 +1440,8 @@ class Game {
       } else if (verbs.hold && !this.spaceToastShown) { this.spaceToastShown = true; hud.toast(S.spaceFirst); }
     }
     if (input.pressed('attack') && verbs.kick && !this.mantraMode && this.kickT <= 0) {
-      if (!p.onGround && p.y > groundAt(p.x, p.z, p.y, 0.45) + 0.8) { p.vy = -18; this.stomping = true; audio.kick(); }
+      // After julafton the glide takes the air press: a quick release still stomps (§10.7).
+      if (!p.onGround && p.y > groundAt(p.x, p.z, p.y, 0.45) + 0.8) { if (!this.glide.press()) this.stomp(); }
       else { p.anim.kick = 1; this.kickT = 0.38; this.kickHitT = 0.11; audio.kick(); }
     }
     if (input.pressed('interact')) this.interact();
@@ -1537,8 +1543,10 @@ class Game {
     for (const c of this.cars) if (simTraffic || !c.traffic) c.step(h, this);
     const cars = this.cars;
     for (let i = 0; i < cars.length; i++) for (let j = i + 1; j < cars.length; j++) collideCars(cars[i], cars[j], this);
-    // People.
+    // People. The glide (§10.7) steers and eases his fall around his step.
+    this.glide.step(h);
     if (!this.playerCar) p.step(h, this);
+    this.glide.after(h);
     if (def.sim.peds) for (const ped of this.peds) { ped.update(h, this); ped.char.step(h, this); }
     for (const k in this.npcs) {
       const n = this.npcs[k];

@@ -172,7 +172,9 @@ shop at Gasolina, where a car painted like a dalahäst gets past Guardia Civil (
 the film's dalahäst is the donkey Ole and Stig paint red with flowers); Berra napping round town
 after the grisfest, Stig carrying him home to the Flamenco reception again and again, the drops and
 Robban's pay (free roam, §10.6; in the film Robban and Stig-Helmer carry him home together, once,
-after Tonga Tonga).
+after Tonga Tonga); Stig-Helmer gliding with his arms out after julafton, the forward roll he lands
+in, Lasse's pool line on the radio and Ole's shout about it (free roam, §10.7; in the film's dream
+he only stands with his arms out before a propeller plane, and he never flies).
 The film's flight has **no turbulence** and **no in-flight toilet scene**: both toilet scenes are
 at Arlanda (we keep them there). The plane's toilets are only an invented hideout.
 
@@ -302,7 +304,7 @@ Physical keys are unchanged from Bigmouth. The level config turns verbs on and o
 | move | WASD / arrows / left stick | walk 5.4, Shift sprint 8.8 / drive | walk **3.6**, Shift **5.2** (sprinting adds fear) |
 | look | mouse / right stick | free camera | camera with pitch clamp (§5.3) |
 | `jump` | Space / A | jump, double jump; handbrake in car | **HÅLL I DIG** (hold): grab the nearest seat back, you stop moving; protects against turbulence. First press shows toast "Space: håll i dig (vid turbulens)" |
-| `attack` | J / left click / X | kick, stomp in the air | **hold = mantra** "Jag kan flyga, jag är inte rädd": `wings` pose, cannot move, fear −25/s after 0.3 s wind-up, bubble every 2.5 s |
+| `attack` | J / left click / X | kick, stomp in the air; after julafton **held in the air = the glide** (§10.7), a press released within 0.18 s still the stomp | **hold = mantra** "Jag kan flyga, jag är inte rädd": `wings` pose, cannot move, fear −25/s after 0.3 s wind-up, bubble every 2.5 s |
 | `interact` | E / F / Enter / Y | talk, enter/exit car, steal car, interactables | talk, **sit/stand** ("E Sätt dig" / "E Res dig"), toilets ("E Lås in dig"), call button, trolley |
 | `map` | M / Tab | big map | cabin/gate plan |
 | `reset` | R | unstick (back to the road) | `resetSpot(g)` (§4.3): inside the cabin, back into the **aisle at the same row** (the free spot on the centre line nearest his z, within 2 m; never along the tube); in the terminal, `gateLounge`; on a **timed** stage (the toilet dash) the lounge's approach spot, or else `gateOle`'s (the PANIK home, behind the dash start), whichever is not nearer the stage's target than he is, and when both are, **R does nothing** and toasts `Inte härifrån!` (a guide waypoint's own `goal` counts, not the waypoint: §8.1 [3]). Phase 3 r2: R to `cabinRow14` was a free 14B for ombord's 7 s and landning's 5 s seat dashes, and a jump over the sprit sweep. Phase 3 r3: R did nothing, silently, whenever the lounge was nearer the target, on the untimed stages too (the queue, boarding, to Ole), where it is the only way out of a wedge (the flight level has no jump); an untimed stage has nothing to gain from it. Seated: `standPlayer()` first; ignored while a `timeline` locks the seat; both levels: ignored while `frozenT > 0` or during PANIK; a reset while `carrying` sets `bumpedT = 0.4` (spills/fails the carry: R is never a free teleport to a carry goal) |
@@ -310,6 +312,10 @@ Physical keys are unchanged from Bigmouth. The level config turns verbs on and o
 
 - **Mantra on the island**: J is kick. A `mantra` stage sets `game.mantraMode = true` so J holds
   the mantra instead (julafton duet).
+- **The glide** (free roam after julafton, §10.7): J pressed in the air more than 0.8 m up (where it
+  is the stomp) and held past `tap` = 0.18 s spreads his arms and glides; released sooner, it
+  stomps on the release. On the ground J is the kick, as before; before julafton J in the air
+  stomps at once.
 - **Seated** (flight): movement input is ignored; E uses a `whileSeated` interactable if one is in
   range, else stands up (giver talk is **not** offered while seated: stand up first, §14.3); J
   mantra still works; Space does nothing. Phase 0: `handleOneShots` handles E, J and R when
@@ -1151,7 +1157,11 @@ Copacabana beach with palms, a small orchestra of busts (five on the wheelhouse 
   - Road banners `GOD JUL · FELIZ NAVIDAD` over 3 roads (the banner at 7.8–9.2 m, Phase 3 r2: at
     5.6–7.1 m the bus chase eye, ≈ 7 m, passed through it); tinsel spirals on some palm trunks.
 - Shallow pools everywhere are flat blue slabs + `box(..., CURB, 'water')` (a floor). Sunken pools
-  are impossible (no holes in collision). `hud.buildBaseMap` draws BOX `water` blue.
+  are impossible (no holes in collision). `hud.buildBaseMap` draws BOX `water` blue. The hotel and
+  lot pools (`pool()` in hotels.js and town.js) set `pool = true` on their water block (feature 3:
+  Lasse's line when the glide lands in one, §10.7); fountains, ponds and the marina basin do not.
+  A `water` floor lies level with the ground (CURB), so `groundAt` never names it (`h > g`): look
+  it up with `queryBlocks` + `contains`.
 
 ### 6.5 Residential blocks (WP-B)
 
@@ -2988,8 +2998,13 @@ UNLOCKS = {
   bodega:  { hook: 'bodegaLit', label: ['Pepes Bodega', 'bodega'], home: { berra: ['bodega', -1.5, 0.5], robban: ['bodega', 1.5, 0.5], angerud: null },
              chatter: { berra: ['Robban! Jag hittade Pepes Bodega!' /* [F*] */], robban: ['Pepes Bodega. Glöm aldrig det, du.' /* [F*] */] },
              toast: 'Pepes Bodega har öppnat – på baksidan av hotellet.' },                        // [N]
+  glid:    { toast: 'Upplåst: <b>Jag kan flyga</b> – håll J i luften' },                          // [N] feature 3
 };
 ```
+`glid` (feature 3, §10.7) carries only the toast: the glide comes with `bodega`, and `game.glide`
+unlocks `glid` the first time he is in the air in free roam after it, so the toast shows then, once.
+A name not in `UNLOCKS` is only added to `game.unlocked` (saved with it): the glide keeps its
+once-ever marker `glidPlask` (Lasse's pool line has been said) there.
 `home` overrides the island HOMES entry (main.js `homeOverrides`); a `null` home hides the NPC
 (`key in homeOverrides`, Phase 3 r2: a falsy override used to be ignored). `chatter` (Phase 3 r2,
 main.js `chatterOverrides`) replaces that NPC's free-roam CHATTER on the island. Both are applied
@@ -3022,7 +3037,8 @@ Key **`charter-and-run-v1`** (localStorage):
 
 `load()` clamps `mission ≤ MISSIONS.length`; `?mission=N` overrides; `?fresh` skips loading.
 Saved on mission complete, collectible pickup, level transition, and every 30 s. The free-roam
-Berra job (§10.6) is not saved.
+Berra job (§10.6) is not saved. `unlocked` also holds the glide's `glid` (its toast shown) and the
+marker `glidPlask` (Lasse's pool line said; saved at once), §10.7.
 
 ### 10.6 Bärra hem Berra (free roam; feature 2, 2026-10-14)
 
@@ -3086,6 +3102,75 @@ town, Robban asks, Stig carries him home to the Flamenco reception on foot.
   bodega, 25 m off). The next spot `napSecs` later.
 - Session state only (not saved): a reload starts with the bench. Lines, numbers and spots live in
   `BERRA_JOB`; scenario `berra` (§16.4).
+
+### 10.7 Jag kan flyga – the glide (free roam; feature 3, 2026-10-14)
+
+`game/glide.js` (`Glide`, owned by Game as `glide`), config `GLIDE` in content/island.js. Levander's
+exercise as a move: Stig holds J in the air, spreads his arms and drifts down, stiff and slow, the
+mantra in his bubble. The reward for the fear-of-flying arc; [N] (§1.6), the dream (`dromplan`) and
+the end on the pool deck are the film's.
+
+- **When.** `glide.allowed()`: on the island with `game.unlocked.has('bodega')` (only julafton gives
+  it), `missions.state === 'idle'`, on foot (`!playerCar`), `!carrying` (the Berra job), not in a
+  dialogue, a bust freeze (`frozenT`) or a PANIK, no `mantraMode`, `player.state === 'normal'`.
+  Every fixed step re-checks it: a glide stops (arms down, a plain fall) when it goes false (a
+  giver's talk in the air, a car, a bust). No mission, stage kind, timer, fixture or calibration
+  pool changes: story and calibrate run with `?fresh`, and the unlock comes at the story's end.
+- **The press** (main.js `handleOneShots`): J pressed in the air more than `minAir` = 0.8 m above
+  the floor (the stomp's rule) goes to `glide.press()`; when allowed it opens the tap window and the
+  stomp waits, else `game.stomp()` at once (unchanged before the unlock, in missions, in a car).
+  In `glide.step` (fixedStep, before the player's step): J released within `tap` = 0.18 s of real
+  time → `game.stomp()` on the release (the old stomp, `vy = −18`, `stomping`); held past it → the
+  glide; a landing first → nothing. Only an air press starts the window: J held from the ground (a
+  kick) does not glide.
+- **The glide**, while J is held and in the air. Heading `yaw` = his facing at the start; with a
+  movement key held it turns towards the camera-relative direction (on foot's mapping) at up to
+  `turn` = 1.4 rad/s, none held: straight on. His wish is the heading × `speed` = 5 m/s; `accel` =
+  20 m/s² is added towards it before his step (on top of the step's own 14 m/s² air control:
+  from rest to 5 m/s in about 0.15 s). The fall: before the step `vy` is raised to at least
+  `GRAV·h − sink` (the step's gravity then leaves exactly −`sink` = −2.4 m/s), at most `GRAV + brake`
+  (`brake` = 30 m/s²) a second past gravity, so a late glide eases in. Rising (a jump, a double
+  jump, a trampoline) is untouched: a double jump stays available and the glide rides it up.
+  `player.anim.wings` + `glide` (arms out, legs together, tipped 0.28 forward, a leaf's rock) and
+  `anim.bank` (leans up to 0.22 into a turn); `game.stomping` is cleared; `audio.glide()`. The
+  mantra auto-bubble `S.mantraLine` [F] every `sayEvery` = 2.5 s while no other bubble is up (as
+  the mantra's). Measured (scenario `glide`): from the dream plane's left wing (top 3.0) jump +
+  double jump peak at 5.7 m and glide 11.8–11.9 m in 2.4 s; from Flamenco's diving board (the bounce
+  pad) bounce + double jump peak at 7.1 m and glide 14.6 m in 3.0 s, over the pool into the
+  shallow end (x ≈ 0). A toy, not a way to travel.
+- **Walls in the way** (after the step): a hit is his speed after the step under 0.6 × what it would
+  have been (`blocked`; no steering then). The heading holds, so he slides round a palm trunk
+  and on; dead head-on (under 0.3 m/s left) a `deflect` = 1.5 m/s nudge sideways, on the side he was
+  already slipping to. His headway along the heading, averaged over `stuckSecs` = 0.6 s, under
+  `headway` = 0.3 × `speed` after the first 0.6 s (a wall, a corner): he lets go and drops (a plain
+  fall). The dream plane's wingtip palm (coast.js, local (−24, −2)), straight ahead off the
+  wingtip: round the trunk in about 0.1 s of contact, on past it. The hangar's flat side head-on:
+  about 0.6 s against it, then he drops. Palm fronds, as ever, are not solid.
+- **The landing** (after the step, `onGround` while gliding; `onLand` is only for falls over 6
+  m/s): arms down; on a `water` floor (looked up directly, §6.4) `fx.splash(x, z, 28, 4.5)` and
+  `audio.splash()`, else `fx.dust` (9) and `audio.thud()`; then `player.tumble(1.0, 0.45)`
+  (§14.6): a forward roll over his head onto his back in 0.45 s, carried on about 0.8 m by his
+  momentum (never off an edge), lying until 1.0 s, then up (state `down` meanwhile: no input, no
+  talk). Up again, a dazed shake of the head for `dazeSecs` = 0.9 s (`anim.look`). No fall damage,
+  no text about falling (§1.2); a trampoline under him bounces him instead (no landing).
+- **Lines.** The unlock's toast `UNLOCKS.glid` "Upplåst: <b>Jag kan flyga</b> – håll J i luften"
+  [N] the first time he is in the air in free roam (more than `minAir` up) after julafton; once
+  ever (§10.3). Landing in a `pool` (the hotel and lot pools, §6.4) the first time ever: Lasse on
+  the radio, "Från fjärde våningen? Ner i poolen? Ring kliniken." [F*] (his phone call in the film,
+  research-plot.md:292; only "ring kliniken" was used before, island.js:231 and the fins' first
+  line, so this is its third and only once: the marker `glidPlask` in the saved unlocks). Ole
+  within `oleR` = 18 m after `oleAfter` = 0.5 s of a glide, at most once a glide and every
+  `oleEvery` = 30 s: "Det er flyging!" [F*] (his Concorde dream on the plane, flight.js:321) as a
+  bubble. His home under the Flamenco pergola is 16 m from the diving board's glide.
+- **Where.** Anywhere he can get up; the player finds the spots. Oles prylar already lead to the
+  island's heights (the dream plane's wing up the crate stairs, the building site's second floor at
+  6.95 m, the farm's roof terrace at 5 m), and the diving board at Flamenco's pool throws him
+  highest; scenario `glide` checks the wing and the board. Hotel roofs, the bell tower and the
+  crane are walls topped at 99 m, so they are no launch spots (making them real roofs is another
+  feature).
+- `game.glide.last` (the last glide: start, peak, end, seconds, distance, `landed`, `water`,
+  `pool`) is for tests. Session state only, but `glid` and `glidPlask` are saved unlocks.
+  Lines and numbers live in `GLIDE`; scenario `glide` (§16.4).
 
 ---
 
@@ -3343,6 +3428,7 @@ Scheduler fixes (Phase 0): catch-up guard `if (next < ctx.currentTime) next = ct
 | `baa()` | tone slide 420 → 300 Hz with vibrato |
 | `oink()` | P2 grisbil horn |
 | `thud()`, `crash()`, `coin()`, `pickup()`, `splash()` | existing |
+| `glide()` | feature 3 (§10.7), arms out: two soft band-passed noise sweeps up, 450 → 1500 Hz (0.7 s) and 900 → 2400 Hz (0.5 s, +0.15 s) |
 | `jingle(kind)` | `start`, `complete`, `fail`, `pryl` (replaces `record`) |
 | `trad(name)` | §12.1 |
 
@@ -3444,6 +3530,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/shame.js` | edit | **H** | configure/panic/pursuit/walker/hideouts |
 | `src/game/paintshop.js` | new (feature 1, 2026-10-14) | — | `PaintShop` (`shame.paint`): the free-roam paint shop at Gasolina, its scene, wet paint, drive-by and tip (§7.2); `DRIVE_BY` route |
 | `src/game/berraJob.js` | new (feature 2, 2026-10-14) | — | `BerraJob` (`game.berraJob`): Bärra hem Berra in free roam: the naps, Robban's ask, the carry, the drops, the desk and the pay (§10.6) |
+| `src/game/glide.js` | new (feature 3, 2026-10-14) | — | `Glide` (`game.glide`): Jag kan flyga in free roam after julafton: the tap-or-hold J in the air, the glide, walls, the landing roll, the lines (§10.7) |
 | `src/game/hud.js` | edit | **H** | map sources, meter, strings, legend, ring, blips, zone bar, markers; `renderPortrait` restores the model transform (§14.8) |
 | `src/game/camera.js` | edit | **A1** | profile, frameOne, cutTo, `clampZ` |
 | `src/game/fx.js` | edit | **A1** | `snow`, `steam`, `meterPuff` (rename of `shame`) |
@@ -3485,6 +3572,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `tools/scenarios/meter.mjs` | new | **H** | skandal, ui |
 | `tools/scenarios/paintshop.mjs` | new (feature 1) | — | pintura, dalasheet |
 | `tools/scenarios/berra.mjs` | new (feature 2) | — | berra |
+| `tools/scenarios/glide.mjs` | new (feature 3) | — | glide |
 | `tools/story/flight.mjs` | new | **F** | `M_FLIGHT` (M[0..4]) |
 | `tools/story/island.mjs` | new | **G** | `M_ISLAND` (M[5..12]) |
 
@@ -3503,17 +3591,18 @@ Init: `initGfx` → `input.init` → `hud.init` → `fx.init` → fonts (Luckies
 → peds (34) → NPC `Character`s (one per `CHARS` key except `stig`, the radio-only keys `levander
 kapten pa guardia pax telefonist` and the cabin-owned `vardinna2`; `key` field; hidden until placed, §2.3) →
 player `Character(CHARS.stig)` (`key = 'stig'`) → collectibles (`COLLECTIBLES`) → markers → `Shame`
-→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
+→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
 `placeNpcs(true)` → spawn the player → portraits for every key in `CAST` (`renderPortrait`
 restores each model's parent and transform, so seated cast members stay in their seats) →
 `applySaveToWorld()` →
 loop → `window.__ready = true` → `start()` in test mode.
 
 Frame (`update`): hooks → one-shots (incl. E/J/R while seated) → fixed steps (player intent incl.
-mantra/hold, AI, cars, people — traffic/peds skipped when `!levelDef.sim.*`) → `syncAll` (also
+mantra/hold, AI, cars, people (`glide.step` → the player's step → `glide.after`, feature 3) —
+traffic/peds skipped when `!levelDef.sim.*`) → `syncAll` (also
 writes `ch.x/y/z` from `car.seatWorld(ch.seatSide)` for every car-seated character, player
 included, so framing, bubbles and distance checks see where they really are) → `missions.update` →
-`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
+`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
 pickups/collectibles → props → `fx.tick` → `tickTown` → markers → camera → sun/sky → HUD → audio →
 traffic recycling (island) → autosave.
 
@@ -3530,6 +3619,8 @@ game.holding;      // bool: Space held in flight (set in fixedStep)
 game.mantraOn;     // bool: mantra currently held (after wind-up)
 game.mantraMode;   // bool: island J = mantra (mantra stage)
 game.carrying;     // null | { item } | { who } (the free-roam Berra job's { who: 'berra', job }, §10.6)
+game.stomping;     // bool: a stomp is on its way down (onLand slams); the glide clears it (§10.7)
+game.glide;        // Glide (feature 3, §10.7): the free-roam glide after julafton
 game.bumpedT;      // > 0 for 0.4 s after a trolley bowl / turbulence fall
 game.inDialog;  game.autoDialog;  game.dialogSpeed (55, TEST 220);
 game.closure;      // null | a race's closed course { nodes: Set<nodeId>, update(), closed(nodeId) }
@@ -3564,6 +3655,7 @@ game.hideNpc(key);  game.showNpc(key)     // hideNpc unseats first too
 game.placeNpcs(force = false)             // §4.5; force also re-applies levelDef.outfits(g)
                                           // (applyOutfits) except during an outro (§10.4)
 game.setNpcOutfit(key, name);  game.setPlayerOutfit(name)   // re-render portraits
+game.stomp()       // feature 3: J in the air (vy −18, stomping, the kick sound); the glide's tap calls it
 game.say(target, text, secs = 2);  game.radio(who, text)   // say: at least 1 + 0.045 s a character
                                           // (halved in test mode; Phase 3, §11.4); an empty text or
                                           // secs <= 0 is an unsay
@@ -3776,12 +3868,19 @@ Phase 0; the luggage stowers' arm at the rack and the carried juice, which is it
 `push` (both arms forward at waist — Phase 0), `planeSeat` (seated, arms on armrests — Phase 0),
 `hold` (arms out to the sides low — Phase 0), `flail` (Phase 0), `oath` (right hand up, left on
 chest — Phase 0), `dance` (Phase 0: cheer variant), `laugh`, `slump`, `shoeOff`, `mirror`, `film`,
-`giraffe`, `butterKnife`, `carryOver` (WP-E).
+`giraffe`, `butterKnife`, `carryOver` (WP-E), `glide` (feature 3, §10.7: legs together, the
+body tipped 0.28 forward and rocking, leaning by the numeric `anim.bank` (+ = his right); with
+`wings` for the arms). `anim.look` (radians added to the neck's yaw) is the glide's dazed shake.
 
 **character.js**: `ch.setDef(def)` (rebuild model under the same parent; keep x/y/z/yaw/state;
 `height` updated); state `'hidden'` (step no-op, `root.visible = false`, skipped by
 `carsVsPeople`); `ch.seatAt({ x, y, z, yaw })` (state `seated`, `anim.planeSeat`, root placed by
 hand at hip height, `x/y/z` set for bubbles); `ch.standAt(x, z, yaw)` (state `normal`, teleport).
+`ch.tumble(secs, roll)` (feature 3, §10.7; only from `normal`): state `down` for `secs`, the first
+`roll` s a forward roll about his own right axis (root rotation order `YXZ`, turning about his
+middle, lifted so nothing goes under the floor) onto his back, then lying on his back along his
+own heading; his vx/vz carry the roll on (decaying at 6/s, walls collide, never onto a floor more
+than 0.3 m off); at the end order `XYZ`, `onGetUp`. `fling` cancels it. `GRAV` (24) is exported.
 
 **main.js `carsVsPeople`** (Phase 3 r1 repair): a car knocks a `normal` character over (`fling`,
 `onCharHit`) only when its **own** speed into him (`car.v · n`, n from the car to him) is over
@@ -3988,9 +4087,18 @@ shame.paint (PaintShop, §7.2): configure(cfg) from configure(); onPursuit() fro
 //   objective() after shame.paint's in updateHud; markers() in mapMarkers; phase nap | asleep |
 //   carry | dropped; shown; busy (a scene); drops; release() (sends Berra and Robban home)
 
+// glide.js (feature 3, §10.7): game.glide = new Glide(game) after the Berra job; allowed();
+//   press() from handleOneShots for J in the air over minAir (true: the tap window is open, the
+//   stomp waits; false: game.stomp() now); step(h) / after(h) around the player's step in
+//   fixedStep (the window, steering, wish, eased fall / landing, knocks, walls); update(dt) after
+//   berraJob.update (the unlock toast, the mantra bubble, Ole's shout, the daze); on; yaw; pendT;
+//   blocked; headway; last { x0, z0, y0, yMax, x1, z1, y1, secs, dist, landed, water, pool }
+
 // fx.js
 fx.snow(x, y, z);  fx.steam(x, y, z);  fx.meterPuff(x, y, z, color, n)   // (fx.shame removed)
 fx.spill(x, y, z, color, n);  fx.wisp(x, y, z)   // A1: trolley juice spill, smokers' wisp
+fx.splash(x, z, n = 16, sp = 3)   // n drops thrown out at sp m/s; the fin's default, the glide's
+                                  // pool landing 28 at 4.5 (feature 3)
 
 // WP-H additions (all additive):
 // hud.panic(secs); hud.labelLayout (big-map label layout, cached on labels + crop); body classes
@@ -4458,6 +4566,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `pintura` [feature 1] | the paint shop (§7.2): the drive-by route clear of props and solids, the moved parked hatch free; no paint without a pursuit; Ole's tip once; no paint with a Land Rover 20 m off; `stop` while rolling in; the paint job (−1000 pta, pursuit over, cooldown ≥ 50 s, a cutaway scene with both lines and the car in the bay, then red with the dress, repaired, rolled out with Stig at the wheel, Ole back, the banner and the wet card); the drive-by bubble; dry; known next time; busy in the cooldown; poor at 500 pta; a second job; ruined wet paint → a new pursuit; a bus refused; nothing while a mission runs |
 | `berra` [feature 2] | Bärra hem Berra (§10.6): no job at index 11; at 12 the nap never pops into view (10 m off, 30 m off in view: no; 30 m behind the camera: yes); Berra seated asleep on the bench, still, Robban beside him waving, "…zzz", the minimap dot, the talk prompt; the ask (both lines) and the lift (carry, cap 3.2, card, target); the walk home on calibrate's walker without sprint (15–60 s; 26 s measured), Robban within 6 m at the end, no drop, the desk (100 pta, toast), awake and free, the next nap at the lounger; the sun line in his sleep; a smashed lounger leaves him down and the ask still works; no talk to Ole while carrying; the sprint, R and fall drops (card, prompt, he stays down, E lifts him); 25 pta after three drops; a mission start sends both home and hides the job; the bench again after it |
 | `dalasheet` [feature 1] | the dalahäst dress on sedan, hatch, wagon, van and pickup: side, left, front and top shots |
+| `glide` [feature 3] | Jag kan flyga (§10.7), at index 13: before `bodega` J in the air stomps at once, held or not, no glide, no toast; after it the toast waits for the first jump and shows once; a quick J in the air stomps (on the release); the dream plane's wing (jump, double jump, J): peak 5.4–6.2 m, wings and `glide` on, sinking at 2.4 m/s, the mantra bubble, 10–15 m, the roll (`down`), up and dazed; off the wingtip at the palm: under 1 s within 1 m of the trunk and landing past it; the hangar's side head-on from 10 m up: he lets go above 3 m, not landed; Flamenco's diving board (bounce, double jump): peak over 6.6 m, over 13 m, down in the pool's shallow end (`water`, `pool`), Lasse's line on the radio and `glidPlask`, Ole's shout when he stands within 16 m; again: no second radio line; D during a glide turns it right without spinning him round; not while carrying, not in a car, not in a running mission (julafton started with `bodega` added) |
 | `talk` [Phase 0] | `autoDialog = false`, walk to Ole at `gateQueue`, E, Space twice |
 | `fullstory` [Phase 0b] | swaps the literal §8 missions (`tools/fixtures/full-missions.js`) into `MISSIONS` and plays all 13 per §16.3 (`FROM`/`TO` as `story`); must end `#13 idle`, `RESULT: PASS` |
 | `kinds` [Phase 0b] | fixture data checks; haggle misses fail; follow `minDist` fails; smooth/fragile bars (teleports never count); carry spill; checkpoint retry re-applies night + `vals` and revives plates at `dansgolv`; destroy default spawn; grab at the wreck; scene `exitCar`; Phase 3: follow shows no bar before the start and a head-on quarry does not fail it, `retryCar` (the last car reused, a typed named car, `park`), getInCar `atHome` and a wrecked `missionCar` failing, a frame-only scene stopping the car dead, a scene cutting a `collect` guest's bubbles (3 frames in: no bubble over the guest or Stig, no empty one) and keeping his placement |
@@ -4547,17 +4656,19 @@ fataga golf bungalow bygge dromplan flygplats dyner fyren playa hamn bungalowR l
 kon bagagevagn automat gaspump butano julgran tallrikar resvaska glasskylt`.
 
 **Collect kinds**: `pryl fena flaska juice knacke asna vaska giraff`. **Rabbit meshes**: `badboll
-faar blomma gris`. **Collectible sets**: `prylar fenor`. **Unlocks**: `grisbil samba bodega`.
+faar blomma gris`. **Collectible sets**: `prylar fenor`. **Unlocks**: `grisbil samba bodega glid`
+(+ the saved marker `glidPlask`, feature 3, §10.3).
 
 **Stage kinds**: `getInCar goto pickup dropoff follow rabbits race destroy grab collect sit interact
 carry mantra timeline scene haggle smash`.
 
 **Anim flags**: `wings cupUp cupHeld push planeSeat hold flail oath dance laugh slump shoeOff mirror film
-giraffe butterKnife carryOver` (+ existing `kick talk wave cheer sprint spin look`).
+giraffe butterKnife carryOver glide` (+ existing `kick talk wave cheer sprint spin look`, and the
+glide's numeric `bank`, feature 3).
 
 **Tunes**: `muzak sol skandal vals jul samba`; trad cues `smaGrodorna hejTomtegubbar helanGar`.
 **SFX**: `chime pling dingdong beep applause heartbeat rattle flush squeak siren laugh knock slap
-doorSlam ambulance baa oink thud crash coin pickup splash` + `jingle(start|complete|fail|pryl)`.
+doorSlam ambulance baa oink thud crash coin pickup splash glide` + `jingle(start|complete|fail|pryl)`.
 
 **Cue fields**: `say radio pa sfx fear relieve shake applause phase seatbelt turbulence trolley blockers
 outfit music sky place hide show anim coins pay flash banner toast cut unlock sparkle endCard`.
@@ -5865,3 +5976,22 @@ the fixer's group.
   pursuit, every `CAL CHECK` OK), so no timer, fixture or ledger row changed (a sloppy driver now
   meets the Guardia three times as soon). The pursuit balance was re-run (§7.2 "Balance": clean 6 of 6, one crash 5
   of 6 escaped). New scenario `carbust` (§16.4); README's SKANDAL paragraph.
+- Feature 3, "Jag kan flyga – glidflykt efter julafton" (`features/implemented/jag_kan_flyga_glidflykt.md`,
+  2026-10-14): the free-roam glide (§10.7; new `src/game/glide.js`, `GLIDE` and `UNLOCKS.glid` in
+  content/island.js; §1.6, §3, §10.3, §10.5). With julafton's `bodega` unlock, on foot and with no
+  mission running, J pressed in the air over 0.8 m up and held past 0.18 s spreads his arms: the
+  mantra bubble, the fall eased to 2.4 m/s, 5 m/s on along a heading the movement keys turn at up to
+  1.4 rad/s; a press released sooner stomps on the release (before the unlock, in missions and in a
+  car J in the air stomps at once, as before). A palm trunk is slid round (head-on, a 1.5 m/s nudge
+  aside); no headway for 0.6 s (a wall) and he drops. Every landing a forward roll onto his back
+  (dust, or a splash on water) and a dazed shake of the head; the first pool landing ever brings
+  Lasse's "Från fjärde våningen? Ner i poolen? Ring kliniken." [F*] on the radio (marker
+  `glidPlask`), and Ole within 18 m shouts "Det er flyging!" [F*]; the toast "Upplåst: Jag kan
+  flyga – håll J i luften" [N] the first time he is in the air after julafton. Measured: the dream
+  plane's wing 5.7 m up, 11.8–11.9 m; Flamenco's diving board 7.1 m up, 14.6–14.8 m into the shallow end.
+  main.js: `game.stomp()`, `glide.press()` in `handleOneShots`, `glide.step`/`after` round the
+  player's step, `glide.update` after `berraJob.update` (§14.2, §14.3, §14.8). character.js:
+  `tumble(secs, roll)`, the `glide` anim flag, `GRAV` exported (§14.6); models.js: the `glide` pose
+  and `anim.bank`; `fx.splash(x, z, n, sp)`; `audio.glide()` (§12.3); the hotel and lot pools'
+  water blocks carry `pool` (§6.4). Scenario `glide` (§16.4). Free roam only: no mission, stage
+  kind, timer or fixture changed.

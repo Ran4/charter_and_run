@@ -1,11 +1,9 @@
 # Gör dessa grejer (flytta filen till features/implemented/ och uppdatera den när du är klar, och
 # flytta den till "färdiga features"-sektionen nedan)
-- features/jag_kan_flyga_glidflykt.md – 3. Jag kan flyga – glidflykt efter julafton [M]
 - features/systrarna_satter_poang.md – 4. Siv och Majsan sätter poäng på simhoppen [M]
 - features/tutan_som_folk_reagerar_pa.md – 5. Tutan som folk reagerar på [S]
+- features/dygnet_runt.md – 30. Dygnet runt – kväll på ön och en tupplur i rum 107 [M]
 - features/storch_super8.md – 6. Lite film. – herr Storchs semesterfilm [M]
-
-# Vänta med dessa tills spelaren säger till
 - features/heja_eslov.md – 7. Heja Eslöv! – rullskidåkaren tränar på riktigt [M]
 - features/sma_grodorna_runt_poolen.md – 8. Små grodorna i poolen [M]
 - features/artiga_stig.md – 11. Förlåt, förlåt! – Stig-Helmer ber om ursäkt [S]
@@ -13,9 +11,10 @@
 - features/lapplisan_majsan.md – 20. Lapplisan Majsan – ”Ursäkta, är det din bil?” [M]
 - features/grisfest_pa_torsdag.md – 21. Grisfest varje torsdag – 800 pesetas [M]
 - features/fran_fjarde_vaningen.md – 24. Från fjärde våningen – hopptornet vid Flamencopoolen [M]
+
+# Vänta med dessa tills spelaren säger till
 - features/aka_bagageband.md – 25. Åk bagageband [S]
 - features/fruktstandet.md – 28. Rakt genom fruktståndet [M]
-- features/dygnet_runt.md – 30. Dygnet runt – kväll på ön och en tupplur i rum 107 [M]
 - features/fin_hund.md – 31. Fin hund… – vakthundarna som jagar Stig [M]
 - features/badgaster_pa_solstolarna.md – 32. Badgäster på solstolarna – och stekta Berra och Robban [M]
 - features/g17_brodrostar.md – 33. Kontrollerad av G17 – öns brödrostar [M]
@@ -69,3 +68,4 @@
 - features/implemented/dalahastbilen.md – 1. Coche folcloristico nativo – bilen målas som en dalahäst [M]
 - features/implemented/barra_hem_berra_igen.md – 2. Bärra hem Berra – igen [M]
 - features/implemented/skandalforandringar.md – SKANDAL-förändringar: mätaren ×3 och 10 s innan den sjunker, i bil tagen efter 4 s nära en jeep eller två prejningar inom 14 s
+- features/implemented/jag_kan_flyga_glidflykt.md – 3. Jag kan flyga – glidflykt efter julafton [M]

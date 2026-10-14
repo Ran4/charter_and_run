@@ -204,7 +204,7 @@ function lamp(G, x, z, yaw, star) {
 // Pieces in a lot frame (street at local z = 0, the lot runs back to +z).
 
 // A walkable shallow pool: tiled rim strips around the water (no overlapping slabs), the water a
-// floor at CURB (kind 'water', blue on the minimap).
+// floor at CURB (kind 'water', blue on the minimap, flagged `pool`: the glide's landing, §10.7).
 function pool(f, lx, lz, w, d, rimC = 0xeae6dc) {
   const rim = 0.9;
   const y = CURB + 0.03;
@@ -216,7 +216,7 @@ function pool(f, lx, lz, w, d, rimC = 0xeae6dc) {
   const x = f.wx(lx, lz), z = f.wz(lx, lz);
   const turned = Math.abs(Math.sin(f.yaw)) > 0.7;
   const hw = (turned ? d : w) / 2, hd = (turned ? w : d) / 2;
-  box(x - hw, z - hd, x + hw, z + hd, CURB, 'water');
+  box(x - hw, z - hd, x + hw, z + hd, CURB, 'water').pool = true;
   f.box(0xd8dde2, lx + w / 2 - 0.6, CURB, lz - d / 2 - 0.15, 0.06, 0.9, 0.06);
   f.box(0xd8dde2, lx + w / 2 - 1.1, CURB, lz - d / 2 - 0.15, 0.06, 0.9, 0.06);
 }

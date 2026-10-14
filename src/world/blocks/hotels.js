@@ -64,7 +64,8 @@ function prim(f, geo, color, lx, y, lz, sx, sy, sz, rx = 0, ry = 0, rz = 0) {
 }
 
 // A walkable shallow pool (DESIGN §6.4): coping, flat water, a darker deep end, a few glints, and
-// a `water` floor at CURB (blue on the minimap; the fins circle on it).
+// a `water` floor at CURB (blue on the minimap; the fins circle on it), flagged `pool` (the glide's
+// landing, §10.7).
 function pool(f, x0, z0, x1, z1, { coping = 0.8, deep = null, glints = 6, rnd = Math.random } = {}) {
   const w = x1 - x0, d = z1 - z0, cx = (x0 + x1) / 2, cz = (z0 + z1) / 2;
   f.flat(TRIM, cx, cz, w + 2 * coping, d + 2 * coping, Y_LINE);
@@ -79,7 +80,7 @@ function pool(f, x0, z0, x1, z1, { coping = 0.8, deep = null, glints = 6, rnd = 
     const gx = x0 + 1 + rnd() * (w - 2), gz = z0 + 0.8 + rnd() * (d - 1.6);
     f.flat(POOL_L, gx, gz, 0.6 + rnd() * 1.2, 0.12, Y_GLINT, rnd() * 0.6 - 0.3);
   }
-  box(f.wx(x0, z0), f.wz(x0, z0), f.wx(x1, z1), f.wz(x1, z1), C, 'water');
+  box(f.wx(x0, z0), f.wz(x0, z0), f.wx(x1, z1), f.wz(x1, z1), C, 'water').pool = true;
 }
 
 // A pool ladder: two chrome hoops over the coping edge (lz = the coping line, dir = into the pool).

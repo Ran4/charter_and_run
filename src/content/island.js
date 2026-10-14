@@ -1,7 +1,7 @@
 // Level 2 content (DESIGN §2.3, §10, §11.6, §14.9, §14.10): homes on the island, map labels, chatter
 // and bark tables, collectibles, unlocks, named-car names, outfits. Owner: WP-G. Source tags per
 // DESIGN §1.4 (bark tables are [F*]: every film line is relocated there). Invented (§1.6): Oles
-// prylar and hajfenor as collectibles, the grisbil unlock.
+// prylar and hajfenor as collectibles, the grisbil unlock, the glide after julafton.
 
 export const HOMES_ISLAND = {
   ole: ['flamenco', 2.0, 1.0, 0],     // yaw 0: under the pergola, facing the pool (flamenco faces π)
@@ -156,6 +156,31 @@ export const UNLOCKS = {
   bodega: { hook: 'bodegaLit', label: ['Pepes Bodega', 'bodega'], home: { berra: ['bodega', -1.5, 0.5], robban: ['bodega', 1.5, 0.5], angerud: null },
     chatter: { berra: ['Robban! Jag hittade Pepes Bodega!' /* [F*] */], robban: ['Pepes Bodega. Glöm aldrig det, du.' /* [F*] */] },
     toast: 'Pepes Bodega har öppnat – på baksidan av hotellet.' },                   // [N]
+  // Jag kan flyga (§10.7): the glide comes with `bodega` (julafton); this unlock only carries its
+  // toast, shown the first time he is in the air in free roam after the end card (game/glide.js).
+  glid: { toast: 'Upplåst: <b>Jag kan flyga</b> – håll J i luften' },             // [N]
+};
+
+// Jag kan flyga – the glide (free roam after julafton, DESIGN §10.7; game/glide.js). J pressed in
+// the air (more than `minAir` m up, as the stomp) and held past `tap` s spreads his arms; released
+// sooner it is the stomp. The fall eases to `sink` m/s (braked at `brake` m/s² past gravity) and he
+// drifts on at `speed` m/s (reached at `accel` m/s² on top of the step's air control), turning
+// towards the held direction at up to `turn` rad/s. A wall or a trunk across his way is slid along
+// (head-on, a `deflect` m/s nudge aside); with his headway over `stuckSecs` under `headway` ×
+// `speed` (a wall) he lets go and drops. Every landing is a forward roll onto his back (`tumble`:
+// `roll` s of the `secs` down) and a dazed shake of the head (`dazeSecs`); on water a splash. The
+// mantra bubble every `sayEvery` s. Lasse's line the first time he lands in a pool (once ever: the
+// `onceKey` marker in the saved unlocks); Ole's shout within `oleR` m after `oleAfter` s of gliding,
+// at most every `oleEvery` s. Invented (§1.6): in the film's dream he stands still.
+export const GLIDE = {
+  tap: 0.18, minAir: 0.8, sink: 2.4, brake: 30, speed: 5, accel: 20, turn: 1.4,
+  deflect: 1.5, stuckSecs: 0.6, headway: 0.3,
+  tumble: { secs: 1.0, roll: 0.45 }, dazeSecs: 0.9,
+  sayEvery: 2.5,
+  poolRadio: ['lasse', 'Från fjärde våningen? Ner i poolen? Ring kliniken.'],   // [F*] Lasse's phone call in the film, relocated
+  onceKey: 'glidPlask',
+  oleShout: ['ole', 'Det er flyging!'],                                        // [F*] relocated from his Concorde dream on the plane
+  oleR: 18, oleAfter: 0.5, oleEvery: 30,
 };
 
 // Bärra hem Berra – igen (free roam after the grisfest, DESIGN §10.6; game/berraJob.js). Berra naps
