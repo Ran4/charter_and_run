@@ -25,6 +25,7 @@ import { Shame } from './game/shame.js';
 import { BerraJob } from './game/berraJob.js';
 import { Glide } from './game/glide.js';
 import { PoolJudges } from './game/poolJudges.js';
+import { Honk } from './game/honk.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
 import { LEVELS, ISLAND_PALETTES } from './level.js';
@@ -159,6 +160,8 @@ class Game {
     this.berraJob = new BerraJob(this);   // free roam after the grisfest (§10.6)
     this.glide = new Glide(this);         // free roam after julafton (§10.7)
     this.judges = new PoolJudges(this);   // free roam: the sisters judge his dives (§10.8)
+    this.honk = new Honk(this);           // free roam: the island hears the horn (§10.9)
+    this.hornAt = null;                   // the last free-roam horn press: { x, z, yaw, t, pigs }
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -1389,6 +1392,7 @@ class Game {
     this.berraJob.update(dt);
     this.glide.update(dt);
     this.judges.update(dt);
+    this.honk.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);
@@ -1436,6 +1440,8 @@ class Game {
       return;
     }
     if (this.playerCar) {
+      // The horn as an event in free roam (§10.9); updateAudio plays it everywhere.
+      if (input.pressed('horn')) this.honk.press();
       if (input.pressed('interact')) this.exitCar();
       return;
     }
@@ -1683,9 +1689,9 @@ class Game {
       const giver = ms.state === 'idle' && ms.current?.giver === k && ms.current.level === this.level;
       // §9.4 idleAnim (e.g. Berra asleep), or held by the free-roam Berra job (§10.6) or the diving
       // judges at the pool's edge (§10.8): no wave, turn or chatter; Robban waves Stig over to the
-      // sleeping Berra as a giver does.
+      // sleeping Berra as a giver does. An answer to the horn waves from further off (§10.9).
       const posed = !!ms.idlePose(k) || this.berraJob.posed(k) || this.judges.posed(k);
-      n.anim.wave = (giver || this.berraJob.waving(k)) && !posed && near < 9 && !this.inDialog && n.state === 'normal';
+      n.anim.wave = ((giver || this.berraJob.waving(k)) && near < 9 || this.honk.waving(k)) && !posed && !this.inDialog && n.state === 'normal';
       if (n.state === 'normal' && !posed && near < 10 && !this.inDialog) n.yaw += Math.atan2(Math.sin(yawTo(this.player.x - n.x, this.player.z - n.z) - n.yaw), Math.cos(yawTo(this.player.x - n.x, this.player.z - n.z) - n.yaw)) * Math.min(1, dt * 3);
       // Free play only: not in the gap before an outro (bubbles stacked over its first line).
       const lines = (this.level === 'island' && this.chatterOverrides[k]) || chatter[k];
@@ -1875,7 +1881,7 @@ class Game {
     if (c && !c.dead) {
       audio.engine(true, c.revs, c.ctrl.throttle);
       audio.skid(c.air ? 0 : c.skidAmt);
-      audio.horn(input.down('horn'));
+      audio.horn(input.down('horn') && !c.spec.pigs);   // the grisbil grunts instead (honk.update, §10.9)
       if (c.skidAmt > 0.3 && !c.air) {
         this.skidT = (this.skidT || 0) - 1;
         if (this.skidT <= 0) {

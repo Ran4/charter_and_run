@@ -1,5 +1,5 @@
 // Pedestrians (charter tourists and locals) stroll the sidewalk loops around blocks, sometimes cross the street, dive out of
-// the way of speeding cars, and complain loudly when you knock them over.
+// the way of speeding cars (and, in free roam, of the player's horn: §10.9), and complain loudly when you knock them over.
 
 import { Character } from './character.js';
 import { randomPed } from './models.js';
@@ -27,6 +27,7 @@ export class Ped {
     this.target = loop.pts[this.k];
     this.panicT = 0;
     this.idleT = 0;
+    this.startled = null;   // { dx, dz, t, shout }: the horn's hop to come (startle)
     this.crossing = false;
     scene.add(this.char.root);
   }
@@ -57,21 +58,32 @@ export class Ped {
     return true;
   }
 
+  // Hop aside along (dx, dz) (unit, away from the car's line), maybe with the dodge shout (§6.7).
+  dodge(dx, dz, game, shout) {
+    const c = this.char;
+    this.panicT = 1.4;
+    c.jump(6.5);
+    c.wishX = dx * 6; c.wishZ = dz * 6;
+    c.vx = c.wishX; c.vz = c.wishZ;
+    if (shout) game.say(c, pick(c.def.local ? DODGE_ES : DODGE_SV), 1.2);
+  }
+  // The player's horn in free roam (game/honk.js, §10.9): the same hop `delay` s later, standing
+  // or walking.
+  startle(dx, dz, delay, shout) { this.startled = { dx, dz, t: delay, shout }; }
+
   update(dt, game) {
     const c = this.char;
-    if (c.state !== 'normal') { c.wishX = c.wishZ = 0; return; }
+    if (c.state !== 'normal') { c.wishX = c.wishZ = 0; this.startled = null; return; }
+    const s = this.startled;
+    if (s && (s.t -= dt) <= 0) {
+      this.startled = null;
+      if (this.panicT <= 0) { this.idleT = 0; this.dodge(s.dx, s.dz, game, s.shout); return; }
+    }
     if (this.idleT > 0) { this.idleT -= dt; c.wishX = c.wishZ = 0; return; }
     // Dive away from a fast car heading at us.
     if (this.panicT <= 0) {
       const threat = game.carThreat(c.x, c.z);
-      if (threat) {
-        this.panicT = 1.4;
-        c.jump(6.5);
-        c.wishX = threat.dx * 6; c.wishZ = threat.dz * 6;
-        c.vx = c.wishX; c.vz = c.wishZ;
-        if (r() < 0.5) game.say(c, pick(c.def.local ? DODGE_ES : DODGE_SV), 1.2);
-        return;
-      }
+      if (threat) { this.dodge(threat.dx, threat.dz, game, r() < 0.5); return; }
     } else {
       this.panicT -= dt;
       if (this.panicT > 0.6) return;

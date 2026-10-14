@@ -2,7 +2,7 @@
 // and bark tables, collectibles, unlocks, named-car names, outfits. Owner: WP-G. Source tags per
 // DESIGN §1.4 (bark tables are [F*]: every film line is relocated there). Invented (§1.6): Oles
 // prylar and hajfenor as collectibles, the grisbil unlock, the glide after julafton, the sisters
-// judging his dives at Flamenco's pool.
+// judging his dives at Flamenco's pool, the island answering his horn.
 
 export const HOMES_ISLAND = {
   ole: ['flamenco', 2.0, 1.0, 0],     // yaw 0: under the pergola, facing the pool (flamenco faces π)
@@ -258,6 +258,50 @@ export const POOL_JUDGES = {
   tease: ['siv', 'Så att du vågar stöta på giraffen.'],                           // [F*] relocated from the balcony
   result: '{kind} {a} + {b} = {sum} P',                                           // [N]
   record: 'REKORD {n} P', newRecord: 'NYTT REKORD!',                              // [N]
+};
+
+// Tutan som folk reagerar på – the horn the island hears (free roam, DESIGN §10.9; game/honk.js).
+// H pressed in a car with no mission running: pedestrians within `pedR` m ahead of the car (no
+// further aside than `pedLat` + `pedCone` × their distance ahead) hop aside as from a speeding car
+// (§6.7), with the dodge shout (always the nearest one, the rest at `pedShout`), each at most every
+// `pedEvery` s. The nearest `replies` cast NPCs within `castR` m who see the car (nothing solid
+// across the line at `eye` m over their feet to it, or to `seeW` m either side of it: a palm trunk
+// at the curb does not hide it, a hotel does) answer, the ones with their own lines first (35 m:
+// Ole under Flamenco's pergola is 27–31 m from the west street, and an AI driver's horn is heard
+// within 40 m), `replyAt` s after the press, each at most every `castEvery` s. Their own `lines`
+// (with the grisbil `pig` first; a speaker's first answer in a session is his first line, later
+// ones another than his last), else `local` for the Spanish cast and `sv` for the rest (one nobody
+// said in the same press). `poses`: an anim flag held `poseSecs` with the answer (Ole and Lasse
+// wave, Angerud raises his arm); every answerer turns to Stig meanwhile. Stig's `sorry` the first
+// time in a session anyone reacts, and his `teaseReply` `teaseGap` s after a `tease`. The grisbil
+// grunts instead of the horn (audio.oink every `oinkEvery` s while H is held) and, in free roam,
+// shows `oinkBubble` over its bed at most every `bubbleEvery` s. Invented (§1.6): the reactions;
+// the lines are relocated film lines and ours.
+export const HONK = {
+  pedR: 14, pedLat: 4, pedCone: 0.7, pedEvery: 3, pedShout: 0.5,
+  castR: 35, eye: 1.5, seeW: 1.2, replies: 2, replyAt: [0.35, 1.1], castEvery: 8, poseSecs: 1.6,
+  lines: {
+    ole: ['Det er farligere å kjøre bil enn å fly.' /* [F*] his comfort to the flight-shy Stig at Arlanda, relocated */,
+      'Hei hei, Stig-Helmer! Kjør forsiktig, da!' /* [N] */],
+    lasse: ['Hä-pååre!' /* [F*] his signature greeting, relocated */],
+    angerud: ['Jag ska tala med platschefen!' /* [F*] relocated from his row with Lasse */],
+    berra: ['Ra-tara-tara!' /* [F*] relocated: at the bikini girls by the bar */],
+    robban: ['Ra-tara-tara!' /* [F*] relocated: the two say it together in the film */],
+  },
+  pig: {
+    berra: ['Skit i det. Vi slipper gå.' /* [F*](t) relocated from their lift on the country road */],
+    robban: ['Fan, de luktar.' /* [F*](t) relocated from their lift */, 'Snacka om grisfest.' /* [F*](t) relocated from their lift */],
+  },
+  local: ['¡Turistas!' /* [N] */, '¡Ay, los suecos!' /* [N] */, '¡Hola, hola!' /* [N] */],
+  sv: ['Hallå där!' /* [N] */, 'Tuta inte åt mig!' /* [N] */, 'Vad är det nu då?' /* [N] */],
+  poses: { ole: 'wave', lasse: 'wave', angerud: 'oath' },
+  sorry: 'Förlåt! Jag kom åt tutan!',                                              // [N]
+  sorryAt: 0.6,
+  tease: 'Ra-tara-tara!',
+  teaseReply: 'Det var inte så jag menade!',                                       // [N]
+  teaseGap: 1.5,
+  oinkEvery: 0.75, bubbleEvery: 1.5,
+  oinkBubble: 'NÖFF! NÖFF!',                                                       // [N]
 };
 
 // Speedo names for named and mission cars (§11.4); unnamed cars show their type's Swedish name.

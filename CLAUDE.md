@@ -41,7 +41,7 @@ opens with a summary of the rounds and the timer changes.
   - free roam: `pintura dalasheet` (the paint shop at Gasolina, DESIGN §7.2), `berra` (Bärra hem
     Berra after the grisfest, DESIGN §10.6), `glide` (Jag kan flyga, the glide after julafton,
     DESIGN §10.7), `simhopp` (Siv och Majsan sätter poäng, the diving judges at Flamenco's pool,
-    DESIGN §10.8)
+    DESIGN §10.8), `tuta` (Tutan som folk reagerar på, the horn in free roam, DESIGN §10.9)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

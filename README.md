@@ -45,7 +45,7 @@ Samma tangenter i båda nivåerna; nivån bestämmer vad de gör.
 | Space | hoppa, i luften igen för dubbelhopp | handbroms (sladd!) | **håll i dig**: ta tag i närmaste stolsrygg vid turbulens |
 | J / klick | sparka, i luften: stampa (efter julafton: **håll in i luften** för att glidflyga) | | **håll in**: "Jag kan flyga, jag är inte rädd" – sänker FLYGRÄDSLA |
 | E | prata, kliv in, sno en bil | kliv ur (i fart: rulla ur) | prata, **sätt dig / res dig**, lås in dig på toaletten, anropsknappen, serveringsvagnen |
-| H | | tuta | |
+| H | | tuta (utanför uppdragen hör folk den) | |
 | B | | titta bakåt | |
 | M / Tab | stor karta | stor karta | plan över gaten/kabinen |
 | N | ljud av | ljud av | ljud av |
@@ -148,6 +148,11 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   dubbelhopp en volt (Siv ger nio, mer blir det aldrig) och stampar du i luften (J) blir det ett
   magplask och minuspoäng. Majsan håller alltid upp en tia. Resultatet visas längst ned, och ditt
   bästa hopp sparas som rekord.
+- **Tutan**: utanför uppdragen hör ön när du tutar (H). Fotgängare framför bilen hoppar undan, och
+  gänget i närheten svarar, om de ser bilen: Ole vinkar och påminner om att det är farligare att
+  köra bil än att flyga, Lasse ropar "Hä-pååre!", Angerud ska tala med platschefen och Berra och
+  Robban tror att du visslar efter tjejerna. Första gången ber Stig-Helmer om ursäkt. Grisbilen
+  tutar inte, den grymtar. Kör runt och hör vad alla säger!
 
 ## Vad är påhittat?
 
@@ -173,6 +178,8 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
   flyger aldrig)
 - att Siv och Majsan sätter poäng på Stigs simhopp vid poolen, poänglapparna, Majsans tior och
   magplasket (i filmen sätter systrarna poäng på männen på planet)
+- att folk reagerar på tutan, Stigs ursäkt och grisbilens grymtande tuta (replikerna är filmens,
+  flyttade, eller våra egna)
 - att grisbilen lånas ut till Stig-Helmer, att man följer Josés bil och grisbilen, och
   jeepjakten
 - fårrusningen i Fataga, kappkörningen mot nattbussen och porslinskrosset på tid
@@ -260,11 +267,12 @@ src/game/paintshop.js           the free-roam paint shop at Gasolina: the dalah�
 src/game/berraJob.js            Bärra hem Berra in free roam: Berra's naps, Robban's ask, the carry, drops and pay
 src/game/glide.js               Jag kan flyga in free roam after julafton: J held in the air glides, the landing roll
 src/game/poolJudges.js          Siv och Majsan sätter poäng in free roam: dives off Flamenco's board, cards, record
+src/game/honk.js                Tutan som folk reagerar på in free roam: pedestrians hop, the gang answers, the grunt
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
 tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, meter, kinds, perf,
-                                paintshop, berra, glide, simhopp, calibrate, calibflight)
+                                paintshop, berra, glide, simhopp, tuta, calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
 tools/pool.mjs                  re-derives every random stage's timer from the ledger
@@ -295,6 +303,7 @@ node tools/shot.mjs pintura dalasheet    # the free-roam paint shop and the dala
 node tools/shot.mjs berra                # Bärra hem Berra in free roam: naps, the carry home, drops, the pay
 node tools/shot.mjs glide                # the glide after julafton: the wing, the palm, a wall, the diving board, the lines
 node tools/shot.mjs simhopp              # the sisters judge his dives: swan dive, somersault, belly flop, record, walk
+node tools/shot.mjs tuta                 # the horn in free roam: the hop, the gang's answers, the sorry, the grisbil's grunt
 node tools/shot.mjs fullstory kinds      # the literal §8 missions and the stage-kind checks
 node tools/shot.mjs calibrate calibflight  # timer and FLYGRÄDSLA calibration (slow; see DESIGN §8, §16.4)
 node tools/pool.mjs                      # random-stage timers from the raw runs in notes/calibration-samples.md

@@ -176,7 +176,9 @@ after Tonga Tonga); Stig-Helmer gliding with his arms out after julafton, the fo
 in, Lasse's pool line on the radio and Ole's shout about it (free roam, §10.7; in the film's dream
 he only stands with his arms out before a propeller plane, and he never flies); Siv and Majsan
 judging his dives at Flamenco's pool, their score cards, Majsan's tens and the belly flop (free
-roam, §10.8; the film's points scene is on the plane, and it judges the men, not their dives).
+roam, §10.8; the film's points scene is on the plane, and it judges the men, not their dives); the
+island answering his horn: pedestrians hopping aside, the gang's lines, his apology and the
+grisbil's grunt (free roam, §10.9; in the film nobody honks at anyone).
 The film's flight has **no turbulence** and **no in-flight toilet scene**: both toilet scenes are
 at Arlanda (we keep them there). The plane's toilets are only an invented hideout.
 
@@ -310,7 +312,7 @@ Physical keys are unchanged from Bigmouth. The level config turns verbs on and o
 | `interact` | E / F / Enter / Y | talk, enter/exit car, steal car, interactables | talk, **sit/stand** ("E Sätt dig" / "E Res dig"), toilets ("E Lås in dig"), call button, trolley |
 | `map` | M / Tab | big map | cabin/gate plan |
 | `reset` | R | unstick (back to the road) | `resetSpot(g)` (§4.3): inside the cabin, back into the **aisle at the same row** (the free spot on the centre line nearest his z, within 2 m; never along the tube); in the terminal, `gateLounge`; on a **timed** stage (the toilet dash) the lounge's approach spot, or else `gateOle`'s (the PANIK home, behind the dash start), whichever is not nearer the stage's target than he is, and when both are, **R does nothing** and toasts `Inte härifrån!` (a guide waypoint's own `goal` counts, not the waypoint: §8.1 [3]). Phase 3 r2: R to `cabinRow14` was a free 14B for ombord's 7 s and landning's 5 s seat dashes, and a jump over the sprit sweep. Phase 3 r3: R did nothing, silently, whenever the lounge was nearer the target, on the untimed stages too (the queue, boarding, to Ole), where it is the only way out of a wedge (the flight level has no jump); an untimed stage has nothing to gain from it. Seated: `standPlayer()` first; ignored while a `timeline` locks the seat; both levels: ignored while `frozenT > 0` or during PANIK; a reset while `carrying` sets `bumpedT = 0.4` (spills/fails the carry: R is never a free teleport to a carry goal) |
-| horn / mute / pause | H / N / Esc, P | as Bigmouth | same (no horn) |
+| horn / mute / pause | H / N / Esc, P | as Bigmouth; in free roam the island hears the horn (§10.9), and the grisbil grunts | same (no horn) |
 
 - **Mantra on the island**: J is kick. A `mantra` stage sets `game.mantraMode = true` so J holds
   the mantra instead (julafton duet).
@@ -320,6 +322,8 @@ Physical keys are unchanged from Bigmouth. The level config turns verbs on and o
   stomps at once.
 - **Dives** (free roam, §10.8): off Flamenco's diving board into the pool, a stomp in the air is a
   belly flop and a double jump a somersault for Siv and Majsan's cards; a plain hop is a swan dive.
+- **The horn** (free roam, §10.9): H in a car makes pedestrians ahead hop aside and the nearest of
+  the gang answer; in a mission it is only the sound. The grisbil's horn is a grunt everywhere.
 - **Seated** (flight): movement input is ignored; E uses a `whileSeated` interactable if one is in
   range, else stands up (giver talk is **not** offered while seated: stand up first, §14.3); J
   mantra still works; Space does nothing. Phase 0: `handleOneShots` handles E, J and R when
@@ -1241,6 +1245,12 @@ outfit (`npc(key).def`).
 - Dodge shouts (`peds.js`): tourists `'Akta!' 'Hallå där!' 'Herre jävlar!'`, locals `'¡Cuidado!'
   '¡Turistas!'` (`Herre jävlar` [F*], relocated; others [N]). Their barks when kicked, run over or
   carjacked follow the same split (Phase 3 r2, `Game.bark`, §14.10): locals use the `_LOCAL` tables.
+- The dodge is `Ped.dodge(dx, dz, game, shout)` (feature 5): `jump(6.5)`, 6 m/s away from the car's
+  line, `panicT` 1.4 (no new steering for 0.8 s), the shout if `shout`. A speeding car's threat
+  (`game.carThreat`) calls it with the old 50 % draw on the pedestrians' seeded `r`, in the same
+  order as before. In free roam the player's horn (§10.9) calls `Ped.startle(dx, dz, delay, shout)`
+  for a pedestrian standing ahead of his car: the same dodge `delay` s later, from walking or from an
+  idle stop (which it ends); a flung or downed pedestrian drops it. Its draws use `Math.random`.
 
 ### 6.8 Props (`props.js` `TYPES`; WP-B)
 
@@ -3260,6 +3270,75 @@ are [N] (§1.6); the lines are the film's.
   for tests. The rest is session state. Lines and numbers live in `POOL_JUDGES`; scenario `simhopp`
   (§16.4).
 
+### 10.9 Tutan som folk reagerar på – the horn the island hears (free roam; feature 5, 2026-10-15)
+
+`game/honk.js` (`Honk`, owned by Game as `honk`), config `HONK` in content/island.js. In free roam H
+in a car is an event, not only a sound: pedestrians ahead hop aside, the nearest of the gang answer
+in their own way, and Stig, the most polite man on the island, says sorry. The grisbil grunts. The
+reactions are [N] (§1.6); the lines are relocated film lines [F*] and ours [N]. Later ideas that
+react to the horn read `game.hornAt`.
+
+- **When.** `honk.press()` from `handleOneShots` on `input.pressed('horn')` in the player's car (not
+  a wrecked one), and only when `active()`: on the island, `missions.state === 'idle'`, no dialogue.
+  In a mission (any state but idle), in a dialogue and in the flight level the horn stays the sound
+  it was (`updateAudio`), so the pedestrians' dodges during timed drives and every calibration pool
+  are as before. A free-roam press sets `game.hornAt = { x, z, yaw, t, pigs }` (null before the
+  first). The horn adds no SKANDAL.
+- **Pedestrians.** Each one standing (`state 'normal'`, within 2.5 m of the car's height) ahead of
+  the car within `pedR` = 14 m and no further aside than `pedLat` 4 + `pedCone` 0.7 × his distance
+  ahead (the near sidewalk from the bumper on, the far one from about 8 m ahead), at most every
+  `pedEvery` = 3 s each (`ped.honkedAt`), gets `ped.startle` (§6.7) with a delay of 0.1 + 0.02 × his
+  distance ahead + up to 0.15 s, and hops away from the car's line. The nearest one always shouts
+  the dodge shout, the others at `pedShout` = 50 %. One behind the car or outside the cone does not
+  move.
+- **The cast.** The NPCs that are `free` (standing, shown, not held by a mission's `idleAnim`, the
+  Berra job or the diving judges: the chatter rule), within `castR` = 35 m of the car, and `sees` it
+  are ranked nearest first, the ones with their own `lines` (with the grisbil, `pig`) before the
+  rest; the first `replies` = 2 answer, `replyAt` = 0.35 and 1.1 s after the press, each at most
+  every `castEvery` = 8 s (so a second press lets the next ones answer).
+  - `sees`: `collision.segmentBlocked` at `eye` = 1.5 m over his feet is clear to the car's middle,
+    or to a point `seeW` = 1.2 m to either side of it (a palm trunk or a lamp post at the curb does
+    not hide the car; a building does). So Ole under Flamenco's pergola answers from the west street
+    (27–31 m off), not from the SunTrip street behind the hotel, and no bubble rises from behind a
+    wall. 35 m: the AI drivers' honks are heard within 40 m (`onHonk`).
+  - The answer is `game.say(n, text, 2.4)`, and `n.chatT` restarts (7–13 s), so no chatter bubble
+    lands on it. For `poseSecs` = 1.6 s he turns to Stig (`dampAngle`, 6/s) and holds his pose:
+    `wave` for Ole and Lasse (`honk.waving(key)` in `syncAll`, at any distance; a giver waves only
+    within 9 m), the raised arm `oath` for Angerud. It comes down after that, or at once when he is
+    no longer free.
+  - A dialogue, a mission state or the other level drops the answers not yet said and takes the
+    poses down (`reset`, every frame while not `active`).
+
+  | who | lines | with the grisbil |
+  |---|---|---|
+  | `ole` | "Det er farligere å kjøre bil enn å fly." [F*] (his comfort to the flight-shy Stig at Arlanda; the flight level keeps it in `OLE_STATS`), "Hei hei, Stig-Helmer! Kjør forsiktig, da!" [N] | the same |
+  | `lasse` | "Hä-pååre!" [F*] (his signature greeting) | the same |
+  | `angerud` | "Jag ska tala med platschefen!" [F*] | the same |
+  | `berra` | "Ra-tara-tara!" [F*] (at the bikini girls by the bar) | "Skit i det. Vi slipper gå." [F*](t) |
+  | `robban` | "Ra-tara-tara!" [F*] (the two say it together) | "Fan, de luktar.", "Snacka om grisfest." [F*](t) |
+  | the Spanish cast (`LOCAL_CAST`) | "¡Turistas!", "¡Ay, los suecos!", "¡Hola, hola!" [N] | the same |
+  | the rest | "Hallå där!", "Tuta inte åt mig!", "Vad är det nu då?" [N] | the same |
+
+  A speaker's first answer in a session is the first of his own lines (Ole's statistics first), later
+  ones another than his last; a class line is one nobody said in the same press and not his last.
+  The lift lines are research-plot.md:319, where who says which is unsure; they follow the bodega
+  radio (island.js:363: Robban "Fan, de luktar." and "Snacka om grisfest.", Berra "Skit i det."). That
+  the lift is on a pig truck is the research's guess (osäkert), so they answer the grisbil. Angerud is hidden after
+  julafton (the ambulance, §8.13), so he answers only while he is on the island.
+- **Stig.** The first press in a session that anyone reacts to (a pedestrian startled or an NPC
+  answering) brings his `sorry` "Förlåt! Jag kom åt tutan!" [N], `sorryAt` = 0.6 s after the press.
+  When an answer is the `tease` "Ra-tara-tara!" (Berra or Robban taking the horn for a whistle after
+  the girls), his `teaseReply` "Det var inte så jag menade!" [N] comes `teaseGap` = 1.5 s after it,
+  once a press. He does not blush: the faces are vertex colours in a merged mesh.
+- **The grisbil.** Its horn is a grunt (`car.spec.pigs`): `updateAudio` keeps the horn tone off in
+  it, and `honk.update` plays `audio.oink()` on the press and every `oinkEvery` = 0.75 s while H is
+  held, in missions too (the car's sound, as the horn is). In free roam a press also shows
+  `oinkBubble` "NÖFF! NÖFF!" [N] over its bed (a plain bubble anchor 0.28 × its length behind its
+  middle, 2.1 m up) at most every `bubbleEvery` = 1.5 s. Berra and Robban answer with their lift's
+  lines, and a grunt gets no tease reply.
+- `honk.last` ({ t, pigs, peds, replies: [[key, text]], stig: [text] }) is for tests. The rest is
+  session state; nothing is saved. Scenario `tuta` (§16.4).
+
 ---
 
 ## 11. HUD / UI strings (Swedish; `src/strings.js` owned by WP-H, created by Phase 0)
@@ -3519,7 +3598,7 @@ Scheduler fixes (Phase 0): catch-up guard `if (next < ctx.currentTime) next = ct
 | `knock()`, `slap()`, `doorSlam()` | short filtered noise thumps |
 | `ambulance()` | distant two-tone 960/770 Hz sine fading in and out over 4 s |
 | `baa()` | tone slide 420 → 300 Hz with vibrato |
-| `oink()` | P2 grisbil horn |
+| `oink()` | the grisbil's horn (feature 5, §10.9): two nasal grunts 0.22 s apart, each a 190 → 120 Hz sawtooth and a band-passed noise burst; `honk.update` plays it on H and every 0.75 s while H is held, and `updateAudio` keeps `horn` off in the grisbil |
 | `thud()`, `crash()`, `coin()`, `pickup()`, `splash()` | existing |
 | `glide()` | feature 3 (§10.7), arms out: two soft band-passed noise sweeps up, 450 → 1500 Hz (0.7 s) and 900 → 2400 Hz (0.5 s, +0.15 s) |
 | `jingle(kind)` | `start`, `complete`, `fail`, `pryl` (replaces `record`) |
@@ -3625,6 +3704,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/berraJob.js` | new (feature 2, 2026-10-14) | — | `BerraJob` (`game.berraJob`): Bärra hem Berra in free roam: the naps, Robban's ask, the carry, the drops, the desk and the pay (§10.6) |
 | `src/game/glide.js` | new (feature 3, 2026-10-14) | — | `Glide` (`game.glide`): Jag kan flyga in free roam after julafton: the tap-or-hold J in the air, the glide, walls, the landing roll, the lines (§10.7) |
 | `src/game/poolJudges.js` | new (feature 4, 2026-10-15) | — | `PoolJudges` (`game.judges`): Siv och Majsan sätter poäng in free roam: the board's hops, the call and the walk to the edge, the verdicts, cards, lines, result line and record (§10.8) |
+| `src/game/honk.js` | new (feature 5, 2026-10-15) | — | `Honk` (`game.honk`): Tutan som folk reagerar på in free roam: the pedestrians' hop, the cast's answers and poses, Stig's lines, the grisbil's grunt (§10.9) |
 | `src/game/hud.js` | edit | **H** | map sources, meter, strings, legend, ring, blips, zone bar, markers; `renderPortrait` restores the model transform (§14.8) |
 | `src/game/camera.js` | edit | **A1** | profile, frameOne, cutTo, `clampZ` |
 | `src/game/fx.js` | edit | **A1** | `snow`, `steam`, `meterPuff` (rename of `shame`) |
@@ -3652,7 +3732,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/actors/character.js` | edit | **E** | `setDef`, `hidden`, `seatAt`, `standAt`, new anim flag defaults |
 | `src/actors/car.js` | edit | **E** | §6.6 types/flags, `registerCarType`, `build`/`noWheels`/`noSpeedo`/`noExplode`/`livery` |
 | `src/actors/pickups.js` | edit | **E** | `COLLECT_KINDS`, `registerCollectKind`, `Collectible` table, `Rabbit` meshes, coin value 25 |
-| `src/actors/peds.js` | edit | **E** | Swedish/Spanish shouts |
+| `src/actors/peds.js` | edit | **E** | Swedish/Spanish shouts; `dodge`, `startle` (feature 5, §6.7) |
 | `src/actors/drivers.js` | Phase 2 edit | none | (accepts duck-typed paths); an AI bus's lane path starts its turns 11 m from the junction centre instead of 8.5 (left-turn radius 13.75 m > the bus's ≈ 12 m minimum), so the excursion bus no longer swings into the grisfest farm wall; right turns stay too tight for buses (mission bus routes turn left only); traffic holds short of a closed race junction (`game.closure`, §9.2 race) |
 | `index.html`, `style.css` | edit | **H** | §11, §13.4 |
 | `tools/shot.mjs`, `tools/lib.mjs`, `tools/scenarios/core.mjs`, `tools/story/common.mjs` | edit/new | none (Phase 2) | harness, `T` API, core scenarios `start walk aerial drive traffic title talk missions views transition` + `levels` (boots into both levels) + `api` (Game API smoke test) |
@@ -3696,7 +3776,7 @@ mantra/hold, AI, cars, people (`glide.step` → the player's step → `glide.aft
 traffic/peds skipped when `!levelDef.sim.*`) → `syncAll` (also
 writes `ch.x/y/z` from `car.seatWorld(ch.seatSide)` for every car-seated character, player
 included, so framing, bubbles and distance checks see where they really are) → `missions.update` →
-`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
+`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `honk.update` (feature 5) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
 pickups/collectibles → props → `fx.tick` → `tickTown` → markers → camera → sun/sky → HUD → audio →
 traffic recycling (island) → autosave.
 
@@ -3717,6 +3797,8 @@ game.stomping;     // bool: a stomp is on its way down (onLand slams); the glide
 game.glide;        // Glide (feature 3, §10.7): the free-roam glide after julafton
 game.judges;       // PoolJudges (feature 4, §10.8): the sisters judge his dives at Flamenco's pool
 game.records;      // { simhopp?: n } free-roam bests, saved (§10.5)
+game.honk;         // Honk (feature 5, §10.9): the island hears the horn in free roam
+game.hornAt;       // null | { x, z, yaw, t, pigs }: the last free-roam horn press (§10.9)
 game.onBounce(ch, b);   // Character.step: ch bounced on trampoline block b (the boing; the judges, §10.8)
 game.onLand(ch, v, y);  // Character.step: ch landed at v m/s (> 6) on floor height y (the stomp; the judges)
 game.bumpedT;      // > 0 for 0.4 s after a trolley bowl / turbulence fall
@@ -4208,6 +4290,13 @@ shame.paint (PaintShop, §7.2): configure(cfg) from configure(); onPursuit() fro
 //   canHop(); isBoard(b); here(key); free(key); pinned(key); visit; hop; out { key: { goal, x, z,
 //   spot } }; lines; last { kind, siv, majsan, sum, record, best }; reset() (a mission start)
 
+// honk.js (feature 5, §10.9): game.honk = new Honk(game) after the judges; press() from
+//   handleOneShots for H in the player's car (true: free roam heard it; sets game.hornAt, startles
+//   the pedestrians ahead, queues the answers and Stig's lines); waving(key) read by syncAll;
+//   update(dt) after judges.update (the grisbil's grunt, the queued lines, the poses and turns;
+//   reset() while not active()); active(); free(key); sees(n, car); line(key, pigs, used); queue;
+//   answered; react { key: { until, flag } }; last { t, pigs, peds, replies, stig }
+
 // collision.js: waterAt(x, z, y) -> the `water` block he stands in at that height, or null
 //   (feature 4; moved from glide.js)
 
@@ -4364,6 +4453,9 @@ Angerud says it to him and he answers "Tja, det är ju jag, det…"), and all fo
 and the fuel surcharge (3 of the 4 `OUCH` lines, which play on 80 % of hits). Their `getUp` and
 `kicked` barks stay the tourists' (no complaint among them). Order in `Game.bark`: Ole, local,
 staff, Swedish.
+Feature 5: the answers to the horn (`HONK`, §10.9) follow the same split, with own lines first: Ole
+(bokmål), Lasse, Angerud, Berra and Robban by key, then `HONK.local` for `LOCAL_CAST` and `HONK.sv`
+for the rest. They play in free roam only, never over a dialogue.
 
 ---
 
@@ -4602,7 +4694,8 @@ Tonga Tonga depend on them); the three static luggage stowers; `smooth`/`fragile
 **P2 (only if everything else is done)**: player-driven trolley; Guardia jeep unlock; witness
 multiplier; "steady arms" mantra minigame (turbulence drifts a marker, A/D keeps it in the zone);
 Eslöv time trials; SunTrip-office hideout; Angerud searching Stig's room
-("Buenas noches, señor"); piglets falling off the grisbil; sheep flock as Fataga decor; oink horn;
+("Buenas noches, señor"); piglets falling off the grisbil; sheep flock as Fataga decor; oink horn
+(done: feature 5, §10.9);
 number plates; day cards ("Dag 2").
 
 ---
@@ -4687,6 +4780,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `dalasheet` [feature 1] | the dalahäst dress on sedan, hatch, wagon, van and pickup: side, left, front and top shots |
 | `glide` [feature 3] | Jag kan flyga (§10.7), at index 13: before `bodega` J in the air stomps at once, held or not, no glide, no toast; after it the toast waits for the first jump and shows once; a quick J in the air stomps (on the release); the dream plane's wing (jump, double jump, J): peak 5.4–6.2 m, wings and `glide` on, sinking at 2.4 m/s, the mantra bubble, 10–15 m, the roll (`down`), up and dazed; off the wingtip at the palm: under 1 s within 1 m of the trunk and landing past it; the hangar's side head-on from 10 m up: he lets go above 3 m, not landed; Flamenco's diving board (bounce, double jump): peak over 6.6 m, over 13 m, down in the pool's shallow end (`water`, `pool`), Lasse's line on the radio and `glidPlask`, Ole's shout when he stands within 16 m; again: no second radio line; D during a glide turns it right without spinning him round; not while carrying, not in a car, not in a running mission (julafton started with `bodega` added) |
 | `simhopp` [feature 4] | Siv och Majsan sätter poäng (§10.8), at index 13: the first bounce on `flamencoBoard` brings Stig's call line and both sisters walk to their spots at the edge (busy, `poolJudges`); a plain hop with W held lands in the deep end (x ≈ −8.5) as a swan dive (`swan` on the way down, off in the water): cards 4 and 10, `SVANHOPP! 4 + 10 = 14 P`, `NYTT REKORD!`, the three lines in order, the record 14; bouncing in place: no `swan` over the board, no verdict, no second call; a double jump: `VOLT! 9 + 10 = 19 P`, a new record, saved in localStorage, the nine line ("Tio!" held back by its 20 s); a stomp: `MAGPLASK! –1 + 10 = 9 P`, `REKORD 19 P`, Stig `down` and `flopped`, Majsan laughing, Siv's line and "…Minuspoäng?", then Siv's tease after the third ten, and he gets up; two swan dives in a row: both judged, no line twice, no second tease; idle, both walk home and are free with their spot ids back; a glide off the board into the pool is not judged; at ropavieja's idle (index 9) giver and extra judge from their places and turn to him; at grisfest's (index 11) a mission start with them at the edge sends them home and ends the visit, and in the running mission the board is only a trampoline; at buss17's (index 5) they are at the airport: no call, no verdict |
+| `tuta` [feature 5] | Tutan som folk reagerar på (§10.9), at index 9 (free roam): on the SunTrip street, H makes a pedestrian 10 m ahead on the far sidewalk hop away from the car's line with a dodge shout, one 8 m behind stays put; Lasse answers "Hä-pååre!", waves and turns to Stig; Ole behind the hotel does not answer; Stig's sorry once; no SKANDAL; within the cooldowns no second answer, no second sorry, no second hop (3 s), then a hop that jumps; from the west street Ole's car statistics and wave; from the north street Berra and Robban "Ra-tara-tara!" and Stig's "Det var inte så jag menade!" after it; Angerud's platschef line with `oath` up and down again; in the grisbil "NÖFF! NÖFF!" over the bed, the grunt again while H is held, Berra's and Robban's lift lines, then Robban's other one; a dialogue drops the queued answers; in a running mission no `hornAt`, no hop, no answer |
 | `talk` [Phase 0] | `autoDialog = false`, walk to Ole at `gateQueue`, E, Space twice |
 | `fullstory` [Phase 0b] | swaps the literal §8 missions (`tools/fixtures/full-missions.js`) into `MISSIONS` and plays all 13 per §16.3 (`FROM`/`TO` as `story`); must end `#13 idle`, `RESULT: PASS` |
 | `kinds` [Phase 0b] | fixture data checks; haggle misses fail; follow `minDist` fails; smooth/fragile bars (teleports never count); carry spill; checkpoint retry re-applies night + `vals` and revives plates at `dansgolv`; destroy default spawn; grab at the wreck; scene `exitCar`; Phase 3: follow shows no bar before the start and a head-on quarry does not fail it, `retryCar` (the last car reused, a typed named car, `park`), getInCar `atHome` and a wrecked `missionCar` failing, a frame-only scene stopping the car dead, a scene cutting a `collect` guest's bubbles (3 frames in: no bubble over the guest or Stig, no empty one) and keeping his placement |
@@ -6135,3 +6229,20 @@ the fixer's group.
   models.js: the `swan` pose, `anim.card` and the `scoreCard` prop; hud.js: `#score`,
   `showScore`/`hideScore`; `collision.waterAt` (moved from glide.js, §6.4). Scenario `simhopp`
   (§16.4). Free roam only: no mission, stage kind, timer or fixture changed.
+- Feature 5, "Tutan som folk reagerar på" (`features/implemented/tutan_som_folk_reagerar_pa.md`,
+  2026-10-15): the horn the island hears (§10.9; new `src/game/honk.js`, `HONK` in content/island.js;
+  §1.6, §3). In free roam (island, `missions.state === 'idle'`, no dialogue) H in a car sets
+  `game.hornAt`, makes pedestrians standing ahead within 14 m (a cone) hop aside with the dodge
+  shout (`Ped.dodge`, `Ped.startle`, §6.7; 3 s each), and the nearest two cast NPCs within 35 m who
+  see the car (`segmentBlocked`, 1.2 m either side) answer, own lines first, 8 s each: Ole "Det er
+  farligere å kjøre bil enn å fly." [F*] and a wave, Lasse "Hä-pååre!" [F*] and a wave, Angerud "Jag
+  ska tala med platschefen!" [F*] with his arm up, Berra and Robban "Ra-tara-tara!" [F*] and Stig's
+  "Det var inte så jag menade!" [N]; Spanish and Swedish class lines [N] for the rest. Stig's "Förlåt!
+  Jag kom åt tutan!" [N] the first time anyone reacts in a session. The grisbil's horn is
+  `audio.oink()` (on the press and every 0.75 s held; the P2 item of §15.5), with "NÖFF! NÖFF!" [N]
+  over its bed and Berra's and Robban's lift lines [F*](t) in free roam. main.js: `honk.press()` in
+  `handleOneShots`, `honk.update` after `judges.update`, `honk.waving` in `syncAll` (an answer waves
+  at any distance), `updateAudio` keeps the horn tone off in the grisbil (§14.2, §14.3, §14.8,
+  §12.3). Deviations from the idea: the 35 m reach and the sight rule (Ole's home is 31 m from the
+  street), at most two answers a press, no blush. Scenario `tuta` (§16.4). No mission, stage kind,
+  timer, fixture or calibration pool changed; the speeding car's dodge is the same code and draw.
