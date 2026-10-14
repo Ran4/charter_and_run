@@ -111,4 +111,5 @@ opens with a summary of the rounds and the timer changes.
   `../.wt/charter-<WP>` were merged in Phase 2 and removed on 2026-10-12 at the user's request (their
   commits are in main's history; `../.wt/saab_work` belongs to another project). Tags: `phase0a`,
   `phase0`, `phase2-merged`, `phase2-contracts`, `phase2-balance`, `phase2-docs`, `phase2`,
-  `phase3-r1`, `phase3-r2`, `phase3`. Commits are local only (no remote, never push).
+  `phase3-r1`, `phase3-r2`, `phase3`. The remote is `origin` =
+  `git@github.com:Ran4/charter_and_run.git` (SSH, set 2026-10-14); push only when the user asks.
