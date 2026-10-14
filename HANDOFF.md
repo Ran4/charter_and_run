@@ -31,7 +31,8 @@ Earlier hand-offs are in git history: the Phase 2 → 3 hand-off (this file at `
   boundary, so the next default `calibrate` run may move one of them by a second, by the rule.
 - **Open with the user** (§6): will they listen to the music and play a level by hand? (The Phase 1
   worktrees and `p1-*` branches were removed on 2026-10-12, at the user's yes.)
-- Commits on `main` are allowed. Never push; there is no remote.
+- Commits on `main` are allowed. The remote is `origin` (`git@github.com:Ran4/charter_and_run.git`);
+  push only when the user asks.
 
 ---
 
@@ -40,7 +41,8 @@ Earlier hand-offs are in git history: the Phase 2 → 3 hand-off (this file at `
 ### 1.1 Repo and tags
 
 Project folder: `/home/ran/src/html/everything_and_run/charter_and_run__sallskapsresan/`.
-It is its own local git repo, on branch `main`, with no remote.
+It is its own git repo, on branch `main`, with the remote `origin` =
+`git@github.com:Ran4/charter_and_run.git` (SSH, set 2026-10-14).
 
 | tag | commit | what |
 |---|---|---|
@@ -126,7 +128,8 @@ It is its own local git repo, on branch `main`, with no remote.
 
 ## 2. Binding user decisions (do not re-ask)
 
-- **Commits.** Local commits, tags and worktrees are allowed. Never push.
+- **Commits.** Local commits, tags and worktrees are allowed. Push to `origin` only when the user
+  asks (2026-10-14; before that there was no remote and the rule was never push).
 - **Bodega stage 9.** The Guardia-jeep chase stays. The jeep wreck steams instead of exploding,
   and the chase adds no SKANDAL.
 - **Stand-in names** for real businesses are approved: CASA LOLA, LA MEDINA, CENTRO NÓRDICO,

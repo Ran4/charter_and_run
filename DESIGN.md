@@ -4443,7 +4443,8 @@ Three reviewers (engine, film, fun). 69 findings; 69 applied, 4 of them with a c
 
 ## Changelog (user decisions, 2026-10-04)
 
-- Local git commits, tags and per-package worktrees approved (never push).
+- Local git commits, tags and per-package worktrees approved (never push; superseded 2026-10-14:
+  the repo has a remote, push when the user asks).
 - Phase 1 runs all 11 packages, in two waves because of RAM (A1 A2 B C1 C2 D1 D2 E, then F G H).
 - Bodega stage 9 Guardia-jeep chase approved as designed. The invented stand-in names (CASA LOLA,
   LA MEDINA, CENTRO NÓRDICO, HOTEL LAS GAVIOTAS, BUNGALOWS LOS CACTUS, APARTAMENTOS VIENTO SUR,
@@ -5635,3 +5636,8 @@ the fixer's group.
   the lounge or Ole's spot during the dash, else "Inte härifrån!"; E/Q after a fail; the guide
   markers and the turbulence prompt; measured timers; the telephonist; the code map's ledger, pool
   tool, HANDOFF and build reports). No code, timer, fixture or ledger change.
+
+## Changelog (user decisions, 2026-10-14)
+
+- The repo has a remote: `origin` = `git@github.com:Ran4/charter_and_run.git` (SSH; it was the
+  HTTPS URL). Push only when the user asks. Supersedes 2026-10-04's "never push".
