@@ -1,0 +1,29 @@
+# 31. Fin hund… – vakthundarna som jagar Stig
+
+**Betyg:** 6/10 · wow 3,7 · film 2,7 · Stig-Helmer 5 — *Stig som förhandlar med en hund från ett biltak är typiskt honom och spontan slapstick, men ”Fin hund.” är för litet för fansen och hundarna är nya figurer.*
+
+*Stig kliver in genom en trädgårdsgrind och en vakthund rusar fram. Han backar och mumlar ”Fin hund… fin hund…” och räddar sig upp på något högt, där han får förhandla tills hunden kallas hem.*
+
+**Kategori:** Stig-Helmer-ögonblick · **Var:** bungalowkvarteren (ungefär var fjärde tomt i de åtta kvarteren) och gården på vischan i (0,1), vid huset (−262, −185) och vattentanken (−247, −186) · **Insats:** M – en ny djurmodul med modell, ett syntetiserat skall och en lista över hundarnas tomter, men inget nytt uppdragssystem
+
+![Bungalowtomter uppifrån, tomma](free_roam_bilder/fin-hund-1.jpg)
+*Bild 1 (nuläge): Bungalowtomterna i kvarter (2,4) sedda uppifrån, med gräsmattor, pooler och murar mellan tomterna. En studsmatta skymtar i högerkanten. Trädgårdarna är tomma: här finns varken folk eller djur.*
+
+![Skiss: hund skäller på Stig vid en grind](free_roam_bilder/fin-hund-2.jpg)
+*Bild 2 (SKISS – tillfälligt uppställd i en headless-körning, finns inte i spelet): En brun vakthund på trädgårdsgången skäller ”VOFF! VOFF!”. Stig står med händerna uppe vid huvudet och mumlar ”Fin hund… fin hund…”.*
+
+![Skiss: Stig på vattentanken, hunden nedanför](free_roam_bilder/fin-hund-3.jpg)
+*Bild 3 (SKISS – tillfälligt uppställd i en headless-körning, finns inte i spelet): Gården på vischan. Stig står på vattentankens kant med utsträckta armar (”Snälla hund… sitt!”), och nedanför skäller en gul byracka ”¡Guau! ¡Guau!”. Vid huset står gasolflaskan och tomatlådan som redan finns i spelet.*
+
+**Idén.** Ungefär var fjärde bungalowtomt (cirka tolv tomter) och gården på vischan får en hund som vaktar just sin plätt. Man hör skallet redan från trottoaren och ser hunden bakom muren. Går Stig in genom grinden rusar den fram, och Stig backar och mumlar ”Fin hund… fin hund…”. Hunden biter aldrig. Den lämnar inte heller tomten, så det räcker att gå ut genom grinden igen. Den roligare utvägen är att klättra upp på något: ett biltak, rampen till vattentankens kant (1,8 m) eller en studsmatta, där Stig studsar upp och ner medan han förhandlar (”Snälla hund… sitt!”). Efter ett tag visslar ägaren från huset utan att synas (”¡Bobi! Hit!”) och hunden lunkar hem. Belöningen är själva scenen, och man vill pröva nästa grind för att se vilken hund som bor där.
+
+**Filmkopplingen.** På Arlanda nosar narkotikahunden på Stig-Helmers julklapp vid bagagekontrollen, och någon säger ”Fin hund.” (notes/research-plot.md:162, research-characters.md:563; källorna anger inte vem som säger det). Det är en liten, bortglömd replik som spelet ännu inte använder, eftersom Arlandascenen med hunden i notes/design-A-film.md:508 aldrig byggdes. Den starkare kopplingen är övningen: uppe på tanken eller biltaket står Stig med utsträckta armar, precis som när han på Arlandatoaletten gör övningen ”med utsträckta armar” och säger ”Jag kan flyga, jag är inte rädd.” (research-plot.md:176). Det är filmens kändaste replik (research-characters.md:115), och han kan mumla den mellan ”Fin hund…”-replikerna. Som extra blinkning kan en av bungalowhundarna vara en liten pudel som ser ut som hunden på Angeruds porträtt (research-characters.md:279; fru Angeruds ”Cherie måste säga adjö till husse.”, research-plot.md:156). Den får dock inte heta Chérie.
+
+**Varför vi borde göra det.**
+- ”Typiskt Stig-Helmer!”: han är rädd för allt men alltid artig, och nu står han på en vattentank och förhandlar med en byracka. Det är komik av förlägenhet, och ingen kommer till skada.
+- ”Det är ju från filmen!”: utsträckta armar och ”Jag kan flyga, jag är inte rädd.” är filmens mest igenkända ögonblick, och här får det en ny och fånig anledning.
+- Trädgårdarna, studsmattorna och vattentankens ramp finns redan men används inte till något. Med hundar får de en liten risk och en mening. En kort jakt på en avgränsad yta är typiskt Hit & Run, och samma hundsystem täcker både stan och landet.
+
+**Så kan det byggas.** En ny `src/actors/dogs.js`, byggd som den rymmande `Rabbit` (pickups.js:383) fast omvänd: hunden springer mot spelaren i stället för bort, med cirka 6,5 m/s och bara inom sin tomt plus 2 m. Hundmodellen hör hemma bland djurmodellerna i `RABBIT_MESHES` (pickups.js:341) eller i dogs.js, inte i models.js. Tomternas rektanglar och grindöppningar ligger lokalt i `bungalowLot()` (town.js:264–371) och exporteras inte i dag, så `bungalowLot()` får skicka världsrektanglar till en ny lista `dogLots`, på samma sätt som `bouncers` (town.js:51, 239). Gårdens plätt läggs till från `finca()`/`estanque()` (nature.js:323–340). Det nya är ett syntetiserat skall i audio.js, pratbubblor via `g.say`, en uppdatering i main.js samt ett testscenario. Taggar: ”Fin hund… fin hund…” \[F*](t), ”Jag kan flyga, jag är inte rädd.” [F*], ”Snälla hund… sitt!” och ”¡Bobi! Hit!” [N].
+
+**Att tänka på.** Hundarna får bara finnas och ticka när `missions.state === 'idle'`. Under running, outro och failed ska de vara gömda och sakna kollision, så att varken uppdragen, timrarna eller kalibreringspoolerna får en ny aktör (CLAUDE.md:s poolregel). Efteråt ska `story` och `fullstory` köras och visa RESULT: PASS. Ingen hund ska kunna sparkas, trampas eller köras över (main.js:1434–1435, 1557–1562), och de ger ingen SKANDAL; det följer tonregeln i DESIGN §1.2. Det finns ingen bonde vid gården (nature.js:333–339) och inga ägare på tomterna, så visslingen kommer från huset utan att någon syns, vilket också är billigast. Gårdshunden håller sig på gårdsplanen och springer inte längs grusvägen, där vischanuppdraget ställer bilen (island.js:30–33). Studsmattan är ett studsgolv, så där studsar Stig snarare än står still. Hundar långt bort stängs av för prestandans skull.

@@ -1,0 +1,25 @@
+# 122. Takterrassen på La Medina vaknar
+
+**Betyg:** 4/10 · wow 3 · film 2 · Stig-Helmer 2,3 — *En gömd takpool belönar den som letar, men solbrännerepliken räcker inte som filmkoppling och statisterna ger lite wow.*
+
+*Stig går uppför gårdstrappan på La Medina och hittar en takterrass med folk: badgäster i solstolarna, en bartender i TERRAZA · BAR och en takpool med vatten och trampolin att hoppa i från.*
+
+**Kategori:** Liv och stämning · **Var:** La Medina (1,2), takterrassen (6 m) uppför gårdstrappan, takpoolen vid ca (−148, −86) · **Insats:** M – statister på taket, riktigt vatten och en trampolin är tre små nya saker; bara gäster och mynt är S
+
+![La Medinas tomma takterrass uppifrån](free_roam_bilder/takterrassen-pa-la-medina-1.jpg)
+*Bild 1 (nuläge): La Medina uppifrån. Den stora takterrassen ovanför gården har redan allt: TERRAZA-kiosken och fyra cafébord uppe till vänster, och takpoolen med två solstolar och ett parasoll till höger om trappschaktet. Ljuspelaren vid poolen är Oles pool-penna. Det finns inte en människa där uppe.*
+
+![Stig ensam vid den tomma takpoolen](free_roam_bilder/takterrassen-pa-la-medina-2.jpg)
+*Bild 2 (nuläge): Stig ensam vid takpoolen. Solstolarna är tomma och ingen står i baren. Poolen är bara en blå yta: går man på den dammar det i stället för att plaska.*
+
+**Idén.** På terrassen sitter några gäster vid caféborden, ett par slumrar i solstolarna och en bartender står i kiosken. Takpoolen får riktigt vatten och en liten trampolin (samma studsbräda som vid Flamenco), så att Stig kan ta sats och landa med ett plask. Ett par mynt på vattentankarna belönar den som hittar trappan. Lägger sig Stig själv i en solstol (E) säger han ”Bara en liten stund.” [N], somnar, vaknar röd och svarar sedan ”Aj!” när någon stöter i honom.
+
+**Filmkopplingen.** I filmen blir Stig-Helmer bränd i solen och säger ”Aj!” när någon rör vid honom (notes/research-plot.md:296, ”(tolkat)”, så taggen blir \[F*](t)). Från taket får han dessutom äntligen den havsutsikt som broschyren lovade: ”Balkong med havsutsikt och kvällssol.” (notes/research-plot.md:253). Oles ”Penn som skriver under vannet.” (notes/research-characters.md:183) ligger redan här uppe som pryl_poolpen, och med vatten i poolen hamnar pennan där den hör hemma. Själva terrassen är en miljöreferens till det verkliga nöjescentrum som La Medina står för: ”barer en trappa upp, discomusik och fest till sent” (notes/research-setting.md:104). Filmens koppling till just det centret är osäker (research-setting.md:75), och centrets riktiga namn får aldrig synas i spelet.
+
+**Varför vi borde göra det.**
+- ”Wow, där uppe finns det ju folk!” Det är öns enda färdigbyggda takmiljö, ett dolt plan ovanför gatan precis som Hit & Runs hemliga tak. I dag är den död (Bild 2), och den som hittar trappan förtjänar en belöning.
+- ”Typiskt Stig-Helmer”: han går upp efter en penna, sätter sig en liten stund och vaknar som en kokt kräfta. Filmens solbränna blir spelarens eget fel. Dessutom är det billigt: kiosk, bord, pool och solstolar finns redan (centre.js:694-714), och nytt är bara folket, vattnet och brädan.
+
+**Så kan det byggas.** Gästerna och bartendern blir vanliga slumpade fotgängarfigurer i en egen liten lista som skapas i kasbah() genom en worldHook eller i main.js. De placeras med Character.seatAt({x, y: 6.0, z, yaw}) (character.js:58-66, samma väg som flygstolarna med explicit höjd), och de som slumrar får animationen ”slump” (models.js:1071, som Berra vid tongaSlump). Använd inte placeNpcs/HOMES (main.js:814-828): den körs i varje uppdrag, och teleport snäpper bara till marknivå. Poolen får ett ”water”-golv på takhöjd över bassängen (som hotels.js:82 gör vid CURB). fx.splash får en y-parameter (fx.js:104 har hårdkodat 0.3), och onLand (main.js:942) plaskar och spelar audio.splash() när golvet är vatten. Trampolinen är en kopia av Flamencos steg och ”bounce”-bräda (hotels.js:592-597) bredvid poolen. Mynten läggs ut med placeCoin(x, 6.9, z) (main.js:440). Bartenderns pratbubblor är svenska i textningsstil med spanska ord [N]. Solbrännan är en flagga på spelaren som byter hans aj-läten mot ”Aj!”.
+
+**Att tänka på.** Rör inte trappan eller dess kolliderare (centre.js:647-667): en saknad kolliderare lät en gång spelaren falla 5,85 m. Inget uppdrag och ingen kalibreringsrutt går över taket, men statisterna ska hållas utanför vikingbar- och tongatonga-outronas kameror. Att använda barkioskens tak som hopptorn fungerar inte: kiosken står 30 m från poolen och dess tak (8,82 m) går inte att nå med ett hopp. Kvällsmusik och slingor kräver en kväll som free roam inte har (öns palett är alltid ”day”, level.js:79). Antingen stryks de, eller så knyts de till en upplåsning som Pepes Bodega (content/island.js:156) med en egen syntetiserad discomelodi, aldrig en filmlåt. Bartendern får inte säga portierns ”Momento.”. Berras ”Det är ju fan vad solen tar här nere” finns redan två gånger (content/island.js:54, missions/island.js:313), så den är ingen nyhet om en slumrande gäst muttrar den.

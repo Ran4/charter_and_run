@@ -1,0 +1,25 @@
+# 143. Butaneron och gasolbilen
+
+**Betyg:** 2,7/10 · wow 2,3 · film 1 · Stig-Helmer 2,3 — *Gasolbilen ger bungalowgatorna liv, men den saknar helt filmförankring och är bara ett gatufordon till.*
+
+*En flakbil full av orange gasolflaskor kryper genom bungalowkvarteren och stannar vid husen. Chauffören ropar ”¡Butanooo!” och slår på en flaska, och den som kapar bilen kör sedan runt med ett flak fullt av små smällare.*
+
+**Kategori:** Fordon och gatuliv · **Var:** bungalowkvarteren, t.ex. gatan vid x ≈ 40 förbi kvarteret (3,5). Bilen utgår från BUTANO-stället vid bensinstationen GASOLINA i (4,3) · **Insats:** M – bilen, slingan, stoppen och ropet är små (S), men grannarna som kommer ut och flaskorna som smäller av flaket kostar mer
+
+![Bungalow med gasolflaska vid dörren](free_roam_bilder/butaneron-1.jpg)
+*Bild 1 (nuläge): en bungalow vid skylten BUNGALOWS LOS CACTUS. Titta på den orange gasolflaskan vid dörren. Sådana flaskor står vid nästan varje bungalow och smäller redan om man kör på dem, men ingen kör ut dem och ingen byter dem.*
+
+![Skiss: flakbil med orange flaskor och ropet ¡Butanooo!](free_roam_bilder/butaneron-2.jpg)
+*Bild 2 (SKISS – tillfälligt uppställd i en headless-körning, finns inte i spelet): en vanlig flakbil ur trafiken som stoppats vid trottoaren, med orange flaskor på flaket. Två skillnader mot idén: skissen är tagen på lägenhetsgatan och inte i bungalowkvarteren, och bubblan ”¡Butanooo!” sitter på en fotgängare. I spelet är det chauffören som ropar.*
+
+**Idén.** När inget uppdrag pågår kör en enda gasolbil från BUTANO-stället vid GASOLINA en långsam slinga genom bungalowkvarteren. Vid några hus stannar den en stund medan chauffören ropar och slår på en flaska, och en granne kommer ut och byter tom mot full. Står Stig för nära tar butaneron honom för en kund och räcker fram en flaska, och Stig betalar artigt för något han aldrig beställt. Kapar man bilen har man ett flak fullt av flaskor, och vid varje hård smäll flyger en flaska av och poppar med gnistor, rök, mynt och lite SKANDAL tills flaket är tomt.
+
+**Filmkopplingen.** Ingen direkt filmreferens, för det finns ingen butanero i filmen. Däremot står ”en butanero” med bland ”Folk på gatorna” i researchen (notes/research-setting.md:322), och orange butanflaskor som butaneros kör ut har funnits i Spanien sedan 1957 (notes/research-setting.md:318). På Kanarieöarna kan flaskorna ha sett annorlunda ut (osäkert, samma rad), men spelet har redan valt orange: flaskorna vid husdörrarna och butikens BUTANO-ställ. Bilen fanns också i den tidiga planen som ”Butanobil” med orange flaskor på flaket (notes/design-A-film.md:300) men byggdes aldrig. Stig som snällt betalar för en gasolflaska han inte behöver är den artiga förlägenhetskomik som DESIGN §1.2 bygger på. Ropet och kundförväxlingen är nya [N].
+
+**Varför vi borde göra det.**
+- ”Wow, vad kul!” Man hör ropet innan man ser bilen, och bungalowgatorna, som i dag är tomma, får en återkommande liten scen. Kapar man den har man ett rullande fyrverkeri. Det är precis en sådan udda bil man minns från Hit & Run.
+- Det är billigt för vad det ger. Flaskorna, explosionen, flakbilen och BUTANO-skylten finns redan, och bilen var planerad från början. Tekniken med last som ramlar av flaket är densamma som i önskemålet om smågrisar som ramlar av grisbilen (DESIGN.md:4209), så de två idéerna kan byggas samtidigt.
+
+**Så kan det byggas.** Lasten blir en ny flagga `butano` på flakbilen i src/actors/car.js, byggd som `pigsIn` (car.js:316, anropet vid :376), med färgen BUTANO 0xf07a1e och utan logga. Det ska bara finnas en namngiven bil, som skapas när `g.missions.state === 'idle'` och nivån har trafik och som parkeras eller tas bort när ett uppdrag startar. Den får inte läggas i `TRAFFIC_MIX` (src/main.js:45). Den ska ha en egen livscykel och inte `car.traffic`, annars räknas den in i `recycleTraffic` (main.js:1873) och raderas. Slingan går på LanePath/`pathTo` i src/actors/drivers.js. Stoppen kräver en kort paus som byggs efter avspärrningsstoppet (drivers.js:215–268). Ropet sköts av `game.say` på bilen (main.js:983) och klonket av en syntetiserad ton i audio.js. Grannarna blir 1–2 tillfälliga figurer, och för det måste `bungalowLot` (src/world/town.js:266, flaskorna vid :340–341) spara dörrpositionerna i en lista. Eftersom rekvisita inte kan skapas när spelet väl kör (src/world/props.js:322) gör flaket smällarna själv: varje flaska blir ett eget nät som döljs, och smällen återanvänder gnistorna och röken från den lilla explosionen (main.js:880–881). Att kapa bilen fungerar redan som för alla bilar (main.js:589–611).
+
+**Att tänka på.** Uppdragen och deras timers får inte påverkas. Bilen får därför bara finnas i free roam, så att ingen kalibreringspool får en ny aktör, och efteråt ska `story` köras och visa RESULT: PASS. Grannarna är den dyraste delen, eftersom fotgängarna i dag bara går sina trottoarslingor och aldrig går fram till en dörr. Enligt DESIGN §1.5 står det bara BUTANO på bilen, utan företagsnamn, logga eller verkliga märken. Ropet får inte bli en låtsasbrytning (§1.2).

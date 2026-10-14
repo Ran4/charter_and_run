@@ -1,0 +1,59 @@
+# 44. Mikrofonen på scenen – Stig läser Lasses utrop
+
+**Betyg:** 5,7/10 · wow 3,3 · film 4 · Stig-Helmer 3 — *Lasses utrop och kaffefrågan på en knapp och en publik som reagerar är en ren leksak, men den är bara öppen i ett snävt läge och kräver spärrar.*
+
+*Stig kliver upp på SunTrip-scenen och trycker E vid mikrofonen. Högtalarna plingar, han läser upp ett av Lasses utrop med tjänstemannaallvar, och hotellet runt honom gör faktiskt som han säger.*
+
+**Kategori:** Lek och fysik · **Var:** mikrofonen på SunTrip-scenen (0, −90,6) i block (3,2), med gräsmattan framför och SunTrip-poolen `suntripPool` (14, −76) 20 m bort · **Insats:** M – bubblor, pling och poser finns redan. Det nya är en tillfällig publik och några solbadare som kommer och går.
+
+![Stig på scenen bredvid mikrofonstativet](free_roam_bilder/mikrofonen-pa-scenen-1.jpg)
+*Bild 1 (nuläge): Stig har gått upp på scenen. Mikrofonstativet står mitt på scengolvet till höger om honom, och Affe (dragspel) och Gabbe (congas) står bakom med sina vanliga pratbubblor. E vid mikrofonen gör ingenting, och högtalarna på var sida är bara dekor.*
+
+![Stig vid mikrofonen och en folkmassa på gräsmattan](free_roam_bilder/mikrofonen-pa-scenen-2.jpg)
+*Bild 2 (SKISS – tillfälligt uppställd i en headless-körning, finns inte i spelet): Stig har just sagt ”Grisfesten är på torsdag och kostar 800 pesetas. Några frågor?”. Gänget och några turister har samlats på gräsmattan och hurrar. Fru Storch (vänster kant) frågar ”Finns det svenskt kaffe på hotellet?”, och Robban (höger kant) säger ”Ja, herre jävlar, minns du Benidorm? Snacka om grisfest!”. Nästa repliker blir Stigs ”Ja.”, Oles ”Norsk, da?” och ett nytt ”Ja.”.*
+
+![Hajvarning från scenen, sedd från SunTrip-poolen](free_roam_bilder/mikrofonen-pa-scenen-3.jpg)
+*Bild 3 (SKISS – tillfälligt uppställd i en headless-körning, finns inte i spelet): ”Hajar i poolen!” hörs från scenen i bakgrunden. Fenan `fena_suntrip` cirklar på riktigt i poolen, och två solbadare far upp från solstolarna och fäktar med armarna. Lasse står i gul kostym till vänster, helt oberörd: ”Hajar i poolen igen? Ring kliniken!”*
+
+**Idén.** Mikrofonen får en E-interaktion, men bara när inget uppdrag pågår. Varje tryck spelar nästa utrop i turordning, med pling i högtalarna och ungefär 6 sekunders nedkylning. Allt sker i pratbubblor, så spelaren kan gå fritt hela tiden. Utropen och vad de leder till:
+
+1. ”Ni bör inte dricka vattnet.” Gästerna vid poolbarens bord spottar ut drinkarna.
+2. ”Grisfesten är på torsdag och kostar 800 pesetas. Några frågor?” 6–8 turister strömmar in på gräsmattan och hurrar, och de i gänget som är lediga kommer också. Sedan följer filmens frågestund med Stig i Lasses roll, där han svarar ”Ja.” på båda frågorna.
+3. ”Friskoteket börjar halv tio varje morgon.” Publiken sjunker ihop och börjar glida därifrån.
+4. ”Klockan är tre spansk tid – alltså en timme tidigare än svensk tid.” Står Ole i publiken kollar han klockan: ”Digital, analog, spansk, norsk, svensk tid, kronometer, og så klokke.”
+5. ”Hajar i poolen!” Det här utropet finns bara medan fenan i SunTrip-poolen fortfarande cirklar. Varningen är alltså sann, och Stig menar den. Solbadarna flyr och Lasse viftar bort alltihop.
+
+Spelaren hittar mikrofonen tack vare scenen själv, och efter uppdrag 7 vet man redan var den står. Belöningen är reaktionerna, och att få höra Stig säga ”Ja.” i Lasses ställe. Vill vi ha en Hit & Run-morot kan alla fem utropen ge en ruta och en slant första gången.
+
+**Filmkopplingen.**
+
+- **Bussen.** Lasse står längst fram i transferbussen i gul kostym, med mikrofon (notes/research-plot.md:246). Där säger han ”Klockan är tre spansk tid – alltså en timme tidigare än svensk tid. … Ni bör inte dricka vattnet. Grisfesten är på torsdag och kostar 800 pesetas. Några frågor?”. Tidsuppgiften är för övrigt ett faktafel enligt IMDb (research-characters.md:452).
+- **Frågestunden.** Sedan följer ”Finns det svenskt kaffe på hotellet?” / ”Ja.” / ”Norskt, då?” / ”Ja.”, där fru Storch och Ole frågar (research-plot.md:247). Ole säger ”Norsk da?” på norska (research-characters.md:180), och frågan är filmens undertitel (research-plot.md:37).
+- **Friskoteket.** ”Friskoteket börjar halv tio varje morgon.” säger Lasse på välkomstmötet vid poolen, på just den här scenen med SunTrip-skylten (research-plot.md:258, :266). Att publiken droppar av följer filmen, där gympan får allt färre deltagare (research-plot.md:282).
+- **Hajarna.** ”Hajar i poolen? Delirium – ring kliniken.” säger Lasse i telefon (research-plot.md:292), och en stillbild visar en hajfena i poolen (research-characters.md:459). Stigs ”Hajar i poolen!” är vår egen vändning av den repliken ([F*] med ett [N]-utrop), inget citat.
+- **Övriga repliker.** Robbans ”Ja, herre jävlar, minns du Benidorm? Snacka om grisfest!” finns i research-characters.md:393. Oles ”Farlige saker. Der dør det mellom to og tre mennesker hver dag. Understrømmer, solstikk og haier.” (research-characters.md:186) handlar i filmen om stranden, så hajar i poolen blir en fin omvändning.
+
+**Varför vi borde göra det.**
+- ”Det är ju Lasse i bussen!” Fem kända repliker får en knapp. Den bästa är frågestunden, där Stig tar Lasses plats och svarar ”Ja.” på både svenskt och norskt kaffe. Det är filmens undertitel som ett spelbart skämt.
+- ”Typiskt Stig-Helmer!” Han läser upp som en tjänsteman, med alldeles för mycket allvar, och blir lika förvånad varje gång folk faktiskt gör som han säger. Med hajvarningen har han dessutom rätt, men alla tror på Lasse.
+- ”Wow, vad kul!” Det är en ren Hit & Run-leksak: man trycker på en knapp och världen gör något synligt. Det knyter också ihop två saker som redan finns, scenkulissen och hajfenorna, som utan det här aldrig möts.
+- Det är billigt för vad det ger. Bubblorna, `cue({ pa: true })` och posterna flail/cheer/slump/yell finns redan, och flera repliker ligger redan i CHATTER. Det går också att bygga först och sedan låta det dela kod med idén Välkomstmötet på samma scen.
+
+**Så kan det byggas.**
+
+- **Mikrofonen.** `g.addInteractable` (src/main.js:1217) vid mikrofonen (src/world/blocks/hotels.js:977-979, scengolvet ligger på y ≈ 0,55). Spärren är `enabled: g => g.level === 'island' && g.missions.state === 'idle'`. `use` spelar nästa utrop och startar nedkylningen.
+- **Pling och bubblor.** `g.cue({ pa: true })` spelar `audio.dingdong()` (main.js:1018), och bubblorna går via `g.say`.
+- **En ny modul.** Till exempel `src/game/ambient/mic.js`, med utropen som data: replik, källtagg, reaktion och villkor.
+- **Publiken.** En tillfällig skara med 6–8 `randomPed`-figurer som skapas vid kvarterskanten, går en fast linje över den öppna gräsmattan och tas bort efter ungefär 30 s. Vanliga fotgängare följer bara trottoarslingorna (src/actors/peds.js), så de ska inte styras om. Före slutet får bara de i gänget vara med som inte är uppdragsgivare eller statister, annars drar `placeNpcs` (main.js:783) tillbaka dem.
+- **Solbadarna.** De skapas på solstolarna vid SunTrip-poolen (hotels.js:1017-1018) i posen `seated`, och hoppar upp med `flail` och springer. Villkoret är `!g.collected.fenor.has('fena_suntrip')` (main.js:82).
+- **Spottet.** `yell` och en liten vattenstänk från `fx` vid poolbarens bord.
+- **Repliker och källtaggar.** Lasses rad för hajvarningen finns redan (src/content/island.js:142), Oles rader likaså (:50, :130) och frågestunden står i uppdrag 6:s bussradio (src/game/missions/island.js:157-164). Alla Stigs utrop taggas [F*], reaktionerna [N], och mekaniken förs in i README:s lista över vad som är påhittat (§1.6).
+
+**Att tänka på.**
+
+- **Uppdrag och timers.** De får inte påverkas. Spärra på `missions.state === 'idle'` och avbryt allt när ett uppdrag startar: publiken tas bort och anim-flaggor och `busy` nollställs. Inga nya solids och inga permanenta figurer i block (3,2). Friskotekets bollstadium är en poolad slumptimer runt just den här gräsmattan (DESIGN.md:1475), och enligt poolregeln startar en ändring av dess värld eller aktörer en ny pool. Bara tillfälligt, spärrat innehåll håller de 13 uppdragen, timrarna och `story` orörda.
+- **Ton (§1.2).** Stig lurar inte folk för skojs skull. Därför finns hajvarningen bara när fenan verkligen är där. Ingen SKANDAL ges heller: mätaren är ett straff (Guardias jakt), inte en belöning.
+- **Musik (§1.5).** Bara plinget. Välkomstvisan på ”Freight Train” får inte spelas eller antydas.
+- **Ole och reaktionerna.** Ole talar bokmål. Fontänerna och Flamenco-poolen ligger över 100 m bort, så reaktionerna stannar inom SunTrip-kvarteret.
+- **Krock med Välkomstmötet.** Bygger vi båda på samma scen ska mikrofonen vara låst medan showen pågår, och eden (”Sträck upp höger hand…”, research-plot.md:266) hör hemma i den ena av dem, inte i båda.
+- **Prestanda.** Publiken hålls liten: högst åtta extra figurer, och bara en kort stund.
