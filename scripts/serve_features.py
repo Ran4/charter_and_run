@@ -45,7 +45,7 @@ FEATURES = Path(__file__).resolve().parent.parent / "features"
 IMPLEMENTED = FEATURES / "implemented"
 TODO = FEATURES / "TODO.md"
 NOT_IDEAS = {"TODO.md", "saker_att_lagga_till_i_free_roam.md"}
-STATUS = {"koad": "Köad", "redo": "Redo", "klar": "Klar"}
+STATUS = {"redo": "Redo", "koad": "Köad", "klar": "Klar"}
 QUEUE_HEADING = "# Gör dessa grejer"
 WAIT_HEADING = "# Vänta med dessa tills spelaren säger till"
 
@@ -400,8 +400,8 @@ def overview(data):
 <div class="stat"><span class="v small">{mix}</span><span class="l">insats</span></div></div>
 <p>De valda idéerna för free roam på ön, med en fil per idé i <code>features/</code>. Statusen kommer från
 <code>features/TODO.md</code> och mappen <code>features/implemented/</code>:</p>
-<ul><li><b>Köad</b>: raden står under ”Gör dessa grejer” i <code>TODO.md</code>.</li>
-<li><b>Redo</b>: raden står under ”Vänta med dessa tills spelaren säger till”, eller inte alls i <code>TODO.md</code>.</li>
+<ul><li><b>Redo</b>: raden står under ”Vänta med dessa tills spelaren säger till”, eller inte alls i <code>TODO.md</code>.</li>
+<li><b>Köad</b>: raden står under ”Gör dessa grejer” i <code>TODO.md</code>.</li>
 <li><b>Klar</b>: filen ligger i <code>features/implemented/</code>.</li></ul>
 <p class="note"><b>Köa</b> och <b>Ta ur kön</b> på en idé (knappen i topplisten, eller <kbd>q</kbd>) flyttar dess rad i
 <code>TODO.md</code>. Statusen hämtas om när fliken får fokus, och sidan byggs om när en idéfil eller
@@ -844,8 +844,8 @@ figure.shot figcaption b { color: var(--ink); }
     <input id="search" type="search" placeholder="Sök i alla idéer, eller ett nummer  ( / )" autocomplete="off" spellcheck="false">
     <div class="seg" role="group" aria-label="Visa">
       <button type="button" data-vf="alla">Alla <span id="seg-alla"></span></button>
-      <button type="button" data-vf="koad">Köad <span id="seg-koad"></span></button>
       <button type="button" data-vf="redo">Redo <span id="seg-redo"></span></button>
+      <button type="button" data-vf="koad">Köad <span id="seg-koad"></span></button>
       <button type="button" data-vf="klar">Klar <span id="seg-klar"></span></button>
     </div>
     <div class="row">
@@ -895,7 +895,7 @@ const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const main = $('#main'), list = $('#list'), topbar = $('#topbar'), pager = $('#pager'), search = $('#search');
 const PAGES = new Map($$('article.page').map(a => [a.dataset.id, a]));
-const STATUS = { koad: 'Köad', redo: 'Redo', klar: 'Klar' };
+const STATUS = { redo: 'Redo', koad: 'Köad', klar: 'Klar' };
 const ORDER = { koad: 0, redo: 1, klar: 2 };
 const UKEY = 'charter-and-run/free-roam/ui-v2';
 const narrow = matchMedia('(max-width: 880px)');
