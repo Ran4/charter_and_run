@@ -1,3 +1,6 @@
+OBS: Detta dokument är deprecated, vi har använt den för att generera filer i features/ nu,
+läs inte från denna längre (annat än om utvecklaren explicit nämner den).
+
 # Saker att lägga till i free roam
 
 Det här är en meny med 143 idéer för free roam på ön, Nueva Estocolmo på Gran Canaria (uppdrag 6–13, inte flygnivån), att välja bland. Ingen av dem ändrar de 13 uppdragen eller deras timers. Några rör ändå sådant som uppdragen också använder, till exempel världens kollision i nr 70, och då står det i idéns ”Att tänka på” vilka kontrollkörningar som behövs. Varje bild kommer från det riktiga spelet: *nuläge* visar hur det ser ut i dag, och *SKISS* betyder att scenen ställdes upp tillfälligt i en headless-körning för att visa idén. Den finns alltså inte i spelet.

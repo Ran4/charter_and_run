@@ -27,7 +27,7 @@ run: | node_modules
 serve: | node_modules
 	python3 -m http.server $(PORT) --bind $(HOST)
 
-# The free-roam feature list (features/): serves the page and a JSON API (features/serve_features.py,
+# The free-roam feature list (features/): serves the page and a JSON API (scripts/serve_features.py,
 # GET /api lists the endpoints) and opens the page in Firefox. Queue / unqueue on the page edits
 # features/TODO.md. If it is already running, just open the page. NOOPEN=1 skips the browser.
 features:
@@ -39,7 +39,7 @@ features:
 			curl -sf -o /dev/null $(FEATURES_URL)api && exec setsid -f firefox $(FEATURES_URL) >/dev/null 2>&1; \
 			sleep 0.1; \
 		done ) & \
-		exec uv run features/serve_features.py --port $(FEATURES_PORT) --host $(HOST); \
+		exec uv run scripts/serve_features.py --port $(FEATURES_PORT) --host $(HOST); \
 	fi
 
 # Headless playthrough of all 13 missions; must end with RESULT: PASS (screenshots land in out/).
