@@ -209,6 +209,14 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   möte upp, med bärgaren och Angeruds utbrott, och sedan muttrar han om hederliga bilister. Parkera
   rakt i en ruta på Flamencos parkering så berömmer Majsan dig över häcken (första gången ger det en
   liten slant).
+- **Grisfest varje torsdag**: efter grisfesten står värden i grinden till gården på vischan. "Är det
+  torsdag i dag?" – "Här är det alltid torsdag, señor. Åttahundra pesetas!" Betala exakt filmens 800
+  pesetas (E; Ole betalar inte här) så blir det kväll: bandet spelar vals på scenen, gänget och några
+  turister dansar under ljusslingorna, herr Storch filmar och fru Storch undrar om det finns svenskt
+  kaffe. Gå fram till en turist som dansar ensam och tryck E: Stig provar Oles "Ska vi dansa? Hej
+  hej.", men hon vänder ryggen till. Då kommer Majsan och bjuder upp honom i stället. Står Stig sedan
+  stilla hos henne dansar de igen. Festen pågår tills Stig går ut från gården, och då är det morgonen
+  efter.
 
 ## Vad är påhittat?
 
@@ -261,6 +269,8 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
 - att Majsan lappar och bärgar bilar på ön, att Angeruds hyrbil bärgas utanför Centro La Medina och
   att hon berömmer en bil som står rakt i rutan (i filmen sker frågan, bärgningen och Angeruds utbrott
   vid en resebyrås skyltfönster i Stockholm, och systrarnas repliker om parkering sägs på balkongen)
+- att grisfesten går att köpa igen för 800 pesetas, och att en turist nobbar Stig när han provar Oles
+  "Ska vi dansa? Hej hej." (i filmen är det en enda grisfest, och Stig provar aldrig Oles fras)
 - fårrusningen i Fataga, kappkörningen mot nattbussen och porslinskrosset på tid
 - att samla ihop julfestgästerna
 - Oles prylar och hajfenorna som samlarföremål, utspridda över ön
@@ -355,12 +365,13 @@ src/game/stigSorry.js           Förlåt, förlåt! in free roam: Stig's sorry f
 src/game/pigTruck.js            Grisarna ramlar av grisbilen in free roam: the pigs tumble off, the catch, the pen at the farm
 src/game/baggageBelt.js         Åk bagageband in free roam: the belt at Gando carries Stig, he sits on a bag, the turns
 src/game/lapplisa.js            Lapplisan Majsan in free roam: the ticket and the tow, Angerud's hire car and the film scene, the bay praise
+src/game/grisfestFree.js        Grisfest varje torsdag in free roam: 800 pesetas at the gate, the evening, Majsan's invitation
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
 tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, meter, kinds, perf,
                                 paintshop, berra, glide, simhopp, tuta, dygn, super8, eslov, grodorna,
-                                artig, grisar, bagage, lapplisa, calibrate,
+                                artig, grisar, bagage, lapplisa, torsdag, calibrate,
                                 calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
@@ -402,6 +413,7 @@ node tools/shot.mjs artig                # Stig says sorry: kicks, run over, a p
 node tools/shot.mjs grisar               # the grisbil's pigs: the falls, the catch on foot and by creeping, Lasse, the pen
 node tools/shot.mjs bagage               # the baggage belt: carried, sitting on a bag, the turns, Lasse, Space and E off
 node tools/shot.mjs lapplisa lappfilm    # Majsan's tickets and tows, the bay praise; Angerud's hire car and the film scene
+node tools/shot.mjs torsdag torsdagOle   # the grisfest's evening for 800 pta: the gate, the band, Majsan's invitation, the morning after
 node tools/shot.mjs fullstory kinds      # the literal §8 missions and the stage-kind checks
 node tools/shot.mjs calibrate calibflight  # timer and FLYGRÄDSLA calibration (slow; see DESIGN §8, §16.4)
 node tools/pool.mjs                      # random-stage timers from the raw runs in notes/calibration-samples.md

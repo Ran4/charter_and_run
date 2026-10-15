@@ -44,7 +44,8 @@ export class Honk {
     return !!n && n.state === 'normal' && n.root.visible && !g.missions.idlePose(key) && !g.berraJob.posed(key) && !g.judges.posed(key) && !g.film.posed(key)
       && !g.fest.posed(key)
       && !g.eslov.owns(key)    // the rollerskier answers himself (§10.12)
-      && !g.lapp?.owns(key);   // Majsan on her round, Angerud in the tow scene (§10.17)
+      && !g.lapp?.owns(key)    // Majsan on her round, Angerud in the tow scene (§10.17)
+      && !g.party?.posed(key); // the grisfest's evening (§10.18)
   }
   // main.js syncAll: an answerer whose pose is the wave waves.
   waving(key) { return this.react[key]?.flag === 'wave'; }

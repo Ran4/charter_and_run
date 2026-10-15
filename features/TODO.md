@@ -1,7 +1,6 @@
 # Gör dessa grejer (flytta filen till features/implemented/ och uppdatera den när du är klar, och
 # flytta den till "färdiga features"-sektionen nedan)
 # markörer: ⟨par N⟩ = de två raderna med samma N körs samtidigt (var sin worktree/gren, sedan rebase på main och push), ⟨solo⟩ = körs ensam; ta grupperna uppifrån och ned
-- features/grisfest_pa_torsdag.md – 21. Grisfest varje torsdag – 800 pesetas [M] ⟨par 2⟩
 - features/fruktstandet.md – 28. Rakt genom fruktståndet [M] ⟨par 2⟩
 - features/fran_fjarde_vaningen.md – 24. Från fjärde våningen – hopptornet vid Flamencopoolen [M] ⟨solo⟩
 - features/fin_hund.md – 31. Fin hund… – vakthundarna som jagar Stig [M] ⟨par 3⟩
@@ -71,3 +70,4 @@
 - features/implemented/grisarna_ramlar_av_grisbilen.md – 15. Grisarna ramlar av grisbilen – och tutan grymtar [M]
 - features/implemented/aka_bagageband.md – 25. Åk bagageband [S]
 - features/implemented/lapplisan_majsan.md – 20. Lapplisan Majsan – ”Ursäkta, är det din bil?” [M]
+- features/implemented/grisfest_pa_torsdag.md – 21. Grisfest varje torsdag – 800 pesetas [M]

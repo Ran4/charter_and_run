@@ -100,7 +100,8 @@ export class Lapplisa {
     this.last = null;       // for tests: the last event { kind, t, ... }
   }
 
-  get live() { const g = this.g; return g.level === 'island' && g.missions.state === 'idle'; }
+  // Majsan is off duty at the grisfest's evening (§10.18): it ends her round and keeps her for the dance.
+  get live() { const g = this.g; return g.level === 'island' && g.missions.state === 'idle' && !g.party?.on; }
   // Nothing new starts in a dialogue, the nap or the morning cut, the pool fest's ring or a pursuit.
   get calm() { const g = this.g; return !g.inDialog && !g.day.busy && !g.fest.joined && !g.shame.pursuit; }
   later(secs, fn) { this.queue.push({ at: this.g.time + secs, fn }); }

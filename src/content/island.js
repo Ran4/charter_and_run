@@ -4,8 +4,9 @@
 // prylar and hajfenor as collectibles, the grisbil unlock, the glide after julafton, the sisters
 // judging his dives at Flamenco's pool, the island answering his horn, Herr Storch filming his
 // tricks and his film night, the rollerskier's training, his answer to the horn and his race, the
-// pool fest after the end (Små grodorna in Flamenco's pool, Stig hopping with them in his suit), and
-// Majsan ticketing cars on the island, the tow and her praise for a car parked straight (§10.17).
+// pool fest after the end (Små grodorna in Flamenco's pool, Stig hopping with them in his suit),
+// Majsan ticketing cars on the island, the tow and her praise for a car parked straight (§10.17), and
+// the grisfest's evening bought again at the farm's gate with a tourist's refusal (§10.18).
 
 export const HOMES_ISLAND = {
   ole: ['flamenco', 2.0, 1.0, 0],     // yaw 0: under the pergola, facing the pool (flamenco faces π)
@@ -365,6 +366,85 @@ export const BERRA_JOB = {
   thanks: 'Tack ska du ha. Här är en hundring.',                                        // [N]
   thanksDocked: 'Här är {n} pesetas. Avdrag för tappningarna.',                         // [N]
   paidToast: 'Robban betalade {n} pta.',                                                // [N]
+};
+
+// Grisfest varje torsdag – 800 pesetas (free roam; feature 21, DESIGN §10.18; game/grisfestFree.js).
+// On the island with no mission running, from `fromIndex` (after the grisfest) the farm's `host`
+// stands at his post inside the gate (his HOMES spot) with the E prompt `pay.prompt` (`pay.r` m).
+// Stig on foot within `greetR` m of him: the `greet` exchange ([delay s, who, text]; again after Stig
+// has been `greetAgainR` m off). E with fewer than `fee` pesetas: the host's `short` (Ole never pays
+// here). E with the fee: it is paid, and in a black fade (`fadeSecs`, the `inBanner`, the watch
+// spinning on to `hour` unless it is already night: from `hour` or before `nightTill`; then
+// `holdSecs`) the evening is set up: the island's clock held, the `tune`, the `band` on the stage,
+// the cast at `cast` (who is free; Ole from `oleFrom`, in his `gris` shirt), the `tourists` (`solo`
+// ones can be asked) and Stig at `enter` (or the first free of `enterAlt`). Positions are [dx, dz,
+// yaw] from `at` (the floor, yaw 0: dx east, dz south). The host walks `round` at `hostWalk` m/s,
+// waiting `hostWait` s at its ends, with a cup. Lines in free play: the host's `sangria` and Ole's
+// `heia` within their `r` m, every `every` s. E on a solo tourist (`ask.r` m, `ask.prompt`, until
+// Majsan has asked him): `ask.line`, `turnAt` s later she turns her back, `scaredAt` s later Stig's
+// `scared`; Majsan walks towards him, and `comeSecs` s later (a cut to the two-shot) she stands
+// `frontR` m in front of him: `invite`, the two dance, `seen`, Ole's `heia` with applause, `danceSecs`
+// s, and play. From then on Stig standing still within `partnerR` m of her dances with her. Stig
+// within `coffee.r` m of Fru Storch, once an evening: her `coffee.ask` to the host and, with Ole there,
+// `coffee.gap` s later his `coffee.reply`. Stig out of the walled square (`walls` + `out` m from `at`
+// in x or z): a black fade, the `outBanner`, everyone home, the watch spinning on to `morning`, the
+// clock running again. Invented (§1.6): the fest in free roam, the fee at the gate, the tourist's
+// refusal; the plates break as ever (2 pta each, no timer).
+export const GRISFEST_FREE = {
+  fromIndex: 12, oleFrom: 13,   // after the grisfest (index 11); Ole is julafton's giver until it is done
+  host: 'varden', at: 'dansgolv', fee: 800, walls: 30.6, out: 1.0,
+  pay: { r: 2.6, prompt: '<b>E</b> Betala grisfesten ({n} pta)' },             // [N]
+  greetR: 7, greetAgainR: 20,
+  greet: [
+    [0, 'stig', 'Är det torsdag i dag?'],                                        // [N] the bus: "Grisfesten är på torsdag" (research-plot.md:246)
+    [1.8, 'varden', 'Här är det alltid torsdag, señor. Åttahundra pesetas!'],    // [N]
+  ],
+  short: 'Åttahundra, señor. Inte en peseta mindre.',                            // [N]
+  fadeSecs: 0.7, holdSecs: 1.0, hour: 21, nightTill: 5.5, morning: 8,
+  inBanner: ['TORSDAG KVÄLL', 'Grisfest på vischan'],                            // [N]
+  outBanner: ['MORGONEN EFTER', 'Nästa grisfest: torsdag'],                      // [N]
+  tune: 'vals',
+  enter: [0, 20, Math.PI], enterAlt: [[3, 20], [-3, 20], [0, 15], [3, 15], [-3, 15]],
+  cast: {
+    berra: { at: [-3.2, -3.0, Math.PI / 2], dance: true },
+    siv: { at: [-2.1, -3.0, -Math.PI / 2], dance: true },
+    robban: { at: [1.6, -0.5, Math.PI / 2], dance: true },
+    ole: { at: [0.3, 3.4, 0], dance: true },                   // front and centre, facing the gate
+    majsan: { at: [7.6, 0.5, -Math.PI / 2] },                  // at the floor's east edge, watching
+    herrStorch: { at: [-7.8, 5.2, 2.3], film: true },          // filming the floor from its corner
+    fruStorch: { at: [-11.2, -2.5, Math.PI / 2] },             // at the west long table
+  },
+  tourists: [
+    { at: [2.7, -0.5, -Math.PI / 2], woman: true },            // Robban's partner
+    { at: [3.0, -5.5, Math.PI / 2], woman: false },
+    { at: [4.1, -5.5, -Math.PI / 2], woman: true },
+    { at: [-1.9, 2.3, 0.6], woman: true, solo: true },
+    { at: [4.4, 2.8, -0.5], woman: true, solo: true },
+  ],
+  band: [
+    { at: [-2.4, -18.8, 0.2], held: 'accordion' },
+    { at: [0.2, -18.8, 0], sing: true },                       // behind the mic
+    { at: [2.0, -19.2, -0.2], held: 'congas' },
+  ],
+  bandSash: 0xd8321e, seed: 2100,
+  round: [[-9.0, -0.5], [-9.0, 7.6], [9.0, 7.6], [9.0, -0.5]], hostWalk: 1.3, hostWait: 5, walk: 1.5,
+  sangria: { r: 10, every: [9, 14], line: 'Sangrian, grabbar.' },              // [F*](t) the host's chatter (research-plot.md:345)
+  heia: { r: 16, every: [14, 22], line: 'Heia Norge!' },                       // [F] his solo dance at the grisfest (research-characters.md:192)
+  ask: {
+    r: 1.9, prompt: '<b>E</b> Bjud upp',                                         // [N]
+    line: 'Ska vi dansa? Hej hej.',                                              // [F*] Ole's advice (research-plot.md:346), tried by Stig
+    turnAt: 1.3, scaredAt: 1.2, comeSecs: 1.6, frontR: 1.1,
+    scared: 'Jag är skraj att de ska nobba.',                                    // [F]
+  },
+  invite: [['majsan', 'Vill du dansa med mig?']],                                // [F]
+  accept: ['stig', 'Får jag lov…'],                                              // [F](t)
+  seen: ['siv', 'Nu blev hon uppbjuden.'],                                       // [F](t)
+  danceSecs: 4.5, partnerR: 1.6,
+  coffee: {
+    r: 9, gap: 2.0,
+    ask: ['fruStorch', 'Finns det svenskt kaffe på grisfesten?'],                // [F*] the film's subtitle (research-plot.md:37)
+    reply: ['ole', 'Norsk, da?'],                                                // [F*](t) his "Norskt, då?" at the hotel (research-plot.md:247)
+  },
 };
 
 // Siv och Majsan sätter poäng – the sisters judge his dives (free roam, DESIGN §10.8;

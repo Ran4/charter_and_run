@@ -34,6 +34,7 @@ import { StigSorry } from './game/stigSorry.js';
 import { PigTruck } from './game/pigTruck.js';
 import { BaggageBelt } from './game/baggageBelt.js';
 import { Lapplisa } from './game/lapplisa.js';
+import { GrisfestFree } from './game/grisfestFree.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
 import { LEVELS, ISLAND_PALETTES } from './level.js';
@@ -180,6 +181,7 @@ class Game {
     this.pigs = new PigTruck(this);       // free roam: the grisbil's pigs tumble off, the pen at the farm (§10.15)
     this.belt = new BaggageBelt(this);    // free roam: the baggage belt at Gando carries Stig (§10.16)
     this.lapp = new Lapplisa(this);       // free roam: Majsan tickets a car on the sidewalk, Angerud's tow (§10.17)
+    this.party = new GrisfestFree(this);  // free roam after the grisfest: 800 pesetas at the farm's gate, the evening (§10.18)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -754,6 +756,7 @@ class Game {
     if (!this.playerCar) out.push(this.player);
     if (this.levelDef.sim.peds) for (const p of this.peds) out.push(p.char);
     for (const k in this.npcs) out.push(this.npcs[k]);
+    out.push(...this.party.extras);   // the grisfest's band and tourists (§10.18)
     return out;
   }
 
@@ -1440,6 +1443,7 @@ class Game {
     this.pigs.update(dt);
     this.belt.update(dt);
     this.lapp.update(dt);
+    this.party.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);
@@ -1637,6 +1641,7 @@ class Game {
       n.wishX = w ? w.x : 0; n.wishZ = w ? w.z : 0;
       n.step(h, this);
     }
+    this.party.step(h);   // the grisfest's band and tourists (§10.18)
     this.carsVsPeople();
   }
 
@@ -1645,8 +1650,9 @@ class Game {
   areaHit(x, z, y, r, dx, dz, stomp) {
     let broke = null, bowled = false;
     for (const prop of propsNear(x, z, r)) { const b = breakProp(prop, dx * 8, dz * 8, this); if (b && !broke?.def.explode) broke = b; }
-    if (this.levelDef.sim.peds) for (const ped of this.peds) {
-      const c = ped.char;
+    // Pedestrians, and the grisfest's band and tourists (§10.18).
+    const people = (this.levelDef.sim.peds ? this.peds.map((ped) => ped.char) : []).concat(this.party.extras);
+    for (const c of people) {
       if (c.state !== 'normal' || Math.abs(c.y - y) > 1.6 || dist(c.x, c.z, x, z) > r + 0.4) continue;
       c.fling(dx * 7 + (c.x - x) * 2, 5, dz * 7 + (c.z - z) * 2);
       this.shame.add(9);
@@ -1758,8 +1764,9 @@ class Game {
       // judges at the pool's edge (§10.8): no wave, turn or chatter; Robban waves Stig over to the
       // sleeping Berra as a giver does. An answer to the horn waves from further off (§10.9); the
       // rollerskier waves his pole while he skis (§10.12); the pool fest's dancers and porter (§10.13);
-      // Majsan on her round with the ticket pad, Angerud in the tow scene (§10.17).
-      const posed = !!ms.idlePose(k) || this.berraJob.posed(k) || this.judges.posed(k) || this.film.posed(k) || this.eslov.posed(k) || this.fest.posed(k) || this.lapp.posed(k);
+      // Majsan on her round with the ticket pad, Angerud in the tow scene (§10.17); the grisfest's
+      // evening (§10.18).
+      const posed = !!ms.idlePose(k) || this.berraJob.posed(k) || this.judges.posed(k) || this.film.posed(k) || this.eslov.posed(k) || this.fest.posed(k) || this.lapp.posed(k) || this.party.posed(k);
       n.anim.wave = (((giver || this.berraJob.waving(k)) && near < 9 || this.honk.waving(k)) && !posed || this.eslov.waving(k)) && !this.inDialog && n.state === 'normal';
       if (n.state === 'normal' && !posed && near < 10 && !this.inDialog) n.yaw += Math.atan2(Math.sin(yawTo(this.player.x - n.x, this.player.z - n.z) - n.yaw), Math.cos(yawTo(this.player.x - n.x, this.player.z - n.z) - n.yaw)) * Math.min(1, dt * 3);
       // Free play only: not in the gap before an outro (bubbles stacked over its first line).

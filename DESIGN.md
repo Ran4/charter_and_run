@@ -206,7 +206,10 @@ belt); Majsan writing parking tickets on the island, coming round the corner to 
 a fade, Angerud's hire car on the sidewalk outside Centro La Medina towed by the GRÚA truck, and her
 praise for a car parked straight in a bay at Flamenco (free roam, §10.17; in the film the question,
 the tow and Angerud's outburst are at a Stockholm travel agency's window, and the sisters' parking
-lines are said on the balcony).
+lines are said on the balcony); the grisfest's evening bought again at the farm's gate for the
+film's 800 pesetas, with a band, the gang and tourists dancing, a tourist turning her back on Stig's
+"Ska vi dansa? Hej hej." and Majsan asking him all the same (free roam, §10.18; in the film there is
+one grisfest, and Stig never tries Ole's line).
 The film's flight has **no turbulence** and **no in-flight toilet scene**: both toilet scenes are
 at Arlanda (we keep them there). The plane's toilets are only an invented hideout.
 
@@ -3147,7 +3150,8 @@ town, Robban asks, Stig carries him home to the Flamenco reception on foot.
   after the grisfest). Otherwise nothing, and any other state (a mission's intro, run, fail screen
   or outro) sends Berra and Robban home at once (`placeNpc` to their HOMES or `homeOverrides` spot,
   `busy = false`, un-posed); a carry or a drop is called off and the nap waits at the same spot. No
-  mission, stage kind, timer, fixture or calibration pool changes.
+  mission, stage kind, timer, fixture or calibration pool changes. The grisfest's evening (feature
+  21, §10.18) does the same while it is on (`active` false): the two dance there.
 - **The nap.** `spots` in turn, the bench first: `berraBank` (its `bank` prop, south of the plaza
   fountain, 84 m from the desk) and `berraSolstol` (a `solstol` by the SunTrip pool, about 70 m).
   The first nap as soon as it is allowed, the next `napSecs` = 150 s after a delivery. Nobody sees
@@ -3425,7 +3429,8 @@ react to the horn read `game.hornAt`.
   takes it (within 22 m, seeing the car) Stig cheers "Heja Eslöv!" instead of saying sorry
   (`honk.last.eslov`).
 - A dancer or the porter held by the pool fest (feature 8, §10.13: `fest.posed`) does not answer, nor
-  Majsan on her ticket round or Angerud in the tow scene (feature 20, §10.17: `lapp.owns`).
+  Majsan on her ticket round or Angerud in the tow scene (feature 20, §10.17: `lapp.owns`), nor the
+  grisfest evening's cast (feature 21, §10.18: `party.posed`).
 - `honk.last` ({ t, pigs, peds, replies: [[key, text]], stig: [text], eslov? }) is for tests. The
   rest is session state; nothing is saved. Scenario `tuta` (§16.4).
 
@@ -3439,7 +3444,8 @@ alarm waking him are [N] (§1.6); the words are the film's (Affe's "kvarta", Ole
 
 - **The clock.** `day.h`, Spanish time in hours (0 ≤ h < 24), starts at `start` = 15 (Lasse in the
   bus: "Klockan är tre spansk tid"). It moves only while `live`: on the island, `missions.state ===
-  'idle'`, no dialogue, and not during its own nap or morning cut. By day (06–21) a game hour takes
+  'idle'`, no dialogue, and not during its own nap or morning cut; nor while `day.hold` is set (the
+  grisfest's evening holds its hour, feature 21, §10.18). By day (06–21) a game hour takes
   `hourSecs` = 60 s, at night (`night` 21–06) `nightHourSecs` = 30 s, so a whole day takes 19.5 min;
   the step is `dt × timeScale`. `day.run` (true unless test mode) lets it move by itself: **in test
   mode it holds at 15:00**, so `story`, `fullstory` and `calibrate` play in the day palette exactly
@@ -4092,7 +4098,9 @@ relocated, [F*], and three lines are ours, [N].
   placed home, Angerud's car and the truck out of the world, every slip off its windscreen, Angerud's
   chatter his own again, the gag and the car he left forgotten. So no mission, stage kind, timer,
   fixture or calibration pool sees any of it (asnan's paint run ends at Viking Bar with its measured
-  19 s, §8.8: the car is gone the moment it starts), and `story`/`fullstory` play as before.
+  19 s, §8.8: the car is gone the moment it starts), and `story`/`fullstory` play as before. The
+  grisfest's evening (feature 21, §10.18: `party.on`) is not `live` either: it ends all of it the
+  same way, and Majsan, home, is free for the dance.
 - **The people.** Majsan (and, in the scene, Angerud) is taken only when `free`: shown, standing, in
   no car or seat, nobody's (`!busy`: not placed by a mission, the judges, the fest or another module),
   not the waiting mission's giver or extra (Majsan: buss17, friskotek, ropavieja, fataga, so nothing
@@ -4190,6 +4198,104 @@ relocated, [F*], and three lines are ours, [N].
   he leaves far off (over 45 m) waits for him to come back; near the pool (Majsan within 25 m of him)
   no ticket; "Majsan, en niopoängare!" is not used (§10.8 has the judges); no fine or SKANDAL; the
   scene plays once ever, not "the first time each day".
+
+### 10.18 Grisfest varje torsdag – 800 pesetas (free roam; feature 21, 2026-10-15)
+
+`game/grisfestFree.js` (`GrisfestFree`, owned by Game as `party`), config `GRISFEST_FREE` in
+content/island.js. In the transfer bus Lasse says "Grisfesten är på torsdag och kostar 800 pesetas"
+(research-plot.md:246), and SunTrip's poster has promised GRISFEST / TORSDAG / 800 PTA all game (§6.3).
+After the grisfest the farm sells its evening again for exactly that: the film's warmest scene, where
+Majsan asks Stig to dance, bought back. Invented (§1.6): the fest in free roam, the fee at the gate, the
+tourist's refusal; the film lines are the grisfest's own [F] or relocated [F*], and five are ours [N].
+
+- **When.** Only while `open`: on the island, `missions.state === 'idle'` and `missions.index >=
+  fromIndex` = 12 (the grisfest done). Any other state, or the other level, ends it at once (`reset`):
+  no fade, everyone placed home, the band and the tourists out of the world, the island's tune and
+  Ole's outfit back (the one he wore before his `gris` shirt, unless someone has dressed him since),
+  the clock running again (a mission that starts in the dark gets the clock's morning cut, §10.10). So no mission, stage kind, timer, fixture or calibration pool sees it (the
+  grisfest race's finish at (−80, −200) is just outside the gate, but the evening never plays in a
+  mission), and `story`/`fullstory` play as before.
+- **The gate.** The host (`varden`, the unnamed grisfest host, §1.5) at his post (his HOMES spot
+  `['grisfest', 3, 0]`, 4.6 m inside the gate; free and within 2.5 m of it): the interactable
+  `grisfest:pay` (r `pay.r` = 2.6 m; on foot, nothing carried, no dialogue, no SKANDAL pursuit) `E
+  Betala grisfesten (800 pta)` [N]. Stig on foot within `greetR` = 7 m of him: Stig "Är det torsdag i dag?" [N], 1.8 s later
+  the host "Här är det alltid torsdag, señor. Åttahundra pesetas!" [N]; again only after Stig has been
+  `greetAgainR` = 20 m off (his own sangria chatter waits 6 s, so it does not cut his answer). E with fewer than `fee` = 800 pesetas: the host's "Åttahundra, señor. Inte
+  en peseta mindre." [N] and nothing else: Ole does not pay here (`game.pay` would let him, and the
+  evening would be free). With 800 or more: `addCoins(−800)`, the coin sound, the evening.
+- **The evening** (`begin`, `inDialog`): a black fade (`fadeSecs` 0.7 s); in the dark the banner
+  `TORSDAG KVÄLL` / `Grisfest på vischan` [N], the clock held (`day.hold`, §10.10) and the watch (if
+  found, drawn `over` the black) spinning on to `hour` = 21:00 unless it is already night (from 21:00
+  or before `nightTill` = 05:30 it keeps its hour), its palette written (night: the bulbs over the
+  floor and the pergolas against the dark, the hotels' windows and the lighthouse lit, §13.3);
+  `holdSecs` 1.0 s; the fade back. Set up in the black (`setUp`):
+  - the music `vals` (§12.1: the game's own waltz, never Kostervalsen, §1.5);
+  - the cast, each only if `free` (shown, standing, in no car or seat, not `busy`, `honk.free`, not
+    the waiting mission's giver or extra), `placeNpc`d at [dx, dz, yaw] from `dansgolv` (yaw 0: dx
+    east, dz south towards the gate). Dancing (`anim.dance`): Berra (−3.2, −3.0) with Siv (−2.1,
+    −3.0), Robban (1.6, −0.5) with a tourist, and Ole (0.3, 3.4) front and centre facing the gate in
+    his `gris` shirt, only from `oleFrom` = 13 (until julafton is done he is its giver, and
+    `nearestInteractable` starts a mission within 3.4 m of a giver wherever he stands). Majsan at the
+    floor's east edge (7.6, 0.5) watching (facing Stig while he is within 5 m); Herr Storch filming the
+    floor from its south-west corner (−7.8, 5.2; `anim.film`); Fru Storch at the west long table
+    (−11.2, −2.5). Never Angerud (in the film he searches Stig's room during the fest,
+    research-plot.md:347). Held, they are ours (`busy`, `spot = 'grisfestFree'`, `npc.steer` walks
+    them back to their places at `walk` = 1.5 m/s): `posed(key)` keeps `syncAll` from waving, turning
+    or chattering them, and `honk.free` leaves them out (and with it every module that asks it). A
+    placement by anyone else (a forced `placeNpcs`) makes them nobody's.
+  - The host walks `round` ((−9, −0.5) → (−9, 7.6) → (9, 7.6) → (9, −0.5) and back: round the floor's
+    south side, between its edge, the light poles and the pergolas' posts) at `hostWalk` = 1.3 m/s,
+    waiting `hostWait` = 5 s at either end, a cup in his hand (`cupHeld`).
+  - The band: three local men (seeded `randomPed` from `seed` = 2100, a red `sash`, no hat) on the
+    bandstand (top 1.0): an accordion (−2.4, −18.8), a singer behind the mic (0.2, −18.8; `anim.talk`)
+    and congas (2.0, −19.2). The tourists: five Swedish ones (seeded), dancing: Robban's partner (2.7,
+    −0.5), a couple at (3.0, −5.5) and (4.1, −5.5), and two women on their own (`solo`: (−1.9, 2.3)
+    and (4.4, 2.8)). These eight are the module's own `Character`s (`party.extras`, built at the first
+    evening, hidden between evenings): main.js adds them to `allChars` (the player and cars push and
+    bowl them over), steps them in `fixedStep` (`party.step`: back to their places when pushed off, put
+    back after 2.5 s stuck) and bowls them over with a kick in `areaHit` as it does pedestrians (the
+    SKANDAL and their barks as a pedestrian's, Stig's sorry, §10.14).
+  - Stig on the gravel drive at (0, 20) facing the floor (the first free of `enterAlt` if his car
+    stands there), the camera behind him.
+- **In free play** (no scene, no dialogue): the host's "Sangrian, grabbar." [F*](t) with Stig within
+  `sangria.r` = 10 m, every 9–14 s; Ole's "Heia Norge!" [F] within 16 m, every 14–22 s. Once an
+  evening, Stig within `coffee.r` = 9 m of Fru Storch: she turns to the host (4 s) and asks "Finns det
+  svenskt kaffe på grisfesten?" [F*] (the film's subtitle, research-plot.md:37), and with Ole there
+  `coffee.gap` = 2.0 s later his "Norsk, da?" [F*](t) (his "Norskt, då?" to her question at the hotel,
+  research-plot.md:247). The plates on the long tables break as ever (§6.3: 2 pta each; no counter,
+  no timer).
+- **The invitation.** E on a `solo` tourist (`grisfest:ask`, r `ask.r` = 1.9 m, `E Bjud upp` [N]; until
+  Majsan has asked him this evening): `cinematic(tourist, Stig)`, a side two-shot (behind him the
+  chase eye hid her); Stig "Ska vi dansa? Hej hej." [F*] (Ole's advice in the film, tried by Stig);
+  `turnAt` = 1.3 s later she turns her back on him and dances on; `scaredAt` = 1.2 s later his "Jag är
+  skraj att de ska nobba." [F]. Majsan starts over to him, and `comeSecs` = 1.6 s later, in a cut, the
+  two stand face to face on clear floor (`pairSpot`: Stig within 2.4 m of where he stood, Majsan
+  `frontR` = 1.1 m from him, both a metre or more from anyone else, and the sight line from the side
+  `camera.frame` takes clear) in `cam.frame(Majsan, Stig)`; his bubble comes down. The dialogue:
+  Majsan "Vill du dansa med mig?" [F], Stig "Får jag lov…" [F](t) (from his line both dance), Siv (if
+  at the evening) "Nu blev hon uppbjuden." [F](t); Ole (if there) "Heia Norge!" with applause;
+  `danceSecs` = 4.5 s; then play. From then on Stig standing still (no move input, on his feet) within
+  `partnerR` = 1.6 m of Majsan dances with her, turning to her; a step stops him. Not turned round:
+  Stig never asks Majsan (in the film she asks him, research-plot.md:346). Without Majsan at the
+  evening the scene ends after his fear.
+- **The morning after.** Stig (on foot or in a car) out of the walled square (more than `walls` + `out`
+  = 31.6 m from `dansgolv` in x or z: through the gate, over a wall or round the farmhouse): a black
+  fade, the banner `MORGONEN EFTER` / `Nästa grisfest: torsdag` [N] (the grisfest mission's own end
+  is `MORGONEN EFTER`), everyone placed home (the host at his post), the band and the tourists out of
+  the world, Ole's outfit and the island's tune back, the watch spinning on to `morning` = 08:00, the
+  clock's palette and its hold off; the fade back. He can pay again at once.
+- **The others meanwhile.** The Berra job (§10.6) waits during the evening (`berraJob.active` is false:
+  a nap on its bench is called off and both go home, free to come), and Majsan's tickets (§10.17) stop
+  (`lapp.live` is false: her round ends as at a mission start, and she is home, free to come).
+- `party.last` ({ kind: greet | short | paid | evening | ask | coffee | morning, t, … }; the
+  invitation's `step`: line | away | scared | alone | invite | dance | done, and its `pair`) is for
+  tests; everything is session state, nothing is saved. Scenarios `torsdag` and `torsdagOle` (§16.4).
+- **Not done / changed** (deviations from the idea): the evening keeps the free-roam clock (feature 30,
+  §10.10): paying moves it on to 21:00 and holds it, and leaving is the morning after at 08:00 rather
+  than "back to day" at the same hour; the refusal is a short side two-shot and Majsan's arrival a cut
+  to a two-shot on clear floor; Stig dances with her again by standing still by her (no prompt: he
+  never asks her); the host's round is a fixed walk round the floor's south side; no plate counter;
+  the band is three seeded figures of the module's own, not the cast.
 
 ## 11. HUD / UI strings (Swedish; `src/strings.js` owned by WP-H, created by Phase 0)
 
@@ -4563,7 +4669,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/strings.js` | new | **H** | `S`, `fmt()` (§11) |
 | `src/content/index.js` | new | none | merges `HOMES`, `MAP_LABELS`, `LEVEL_OUTFITS`, re-exports all content |
 | `src/content/flight.js` | new | **F** | `HOMES_GATE`, `HOMES_FLIGHT`, `MAP_LABELS_FLIGHT`, `CHATTER_FLIGHT`, `OLE_STATS`, `LEVEL_OUTFITS_GATE`, `LEVEL_OUTFITS_FLIGHT` |
-| `src/content/island.js` | new | **G** | `HOMES_ISLAND`, `MAP_LABELS_ISLAND`, `CHATTER`, `OUCH`, `GETUP`, `CARJACK`, `NPC_KICKED` (+ the `_OLE` / `_LOCAL` tables, `LOCAL_CAST`, `BARKS`: Phase 3 r2, §14.10; `STIG_SORRY`: feature 11, §10.14; `PIG_TRUCK`: feature 15, §10.15; `BAGGAGE_BELT`: feature 25, §10.16; `LAPPLISA`: feature 20, §10.17), `COLLECTIBLES`, `UNLOCKS`, `NAMED_CARS`, `LEVEL_OUTFITS_ISLAND` |
+| `src/content/island.js` | new | **G** | `HOMES_ISLAND`, `MAP_LABELS_ISLAND`, `CHATTER`, `OUCH`, `GETUP`, `CARJACK`, `NPC_KICKED` (+ the `_OLE` / `_LOCAL` tables, `LOCAL_CAST`, `BARKS`: Phase 3 r2, §14.10; `STIG_SORRY`: feature 11, §10.14; `PIG_TRUCK`: feature 15, §10.15; `BAGGAGE_BELT`: feature 25, §10.16; `LAPPLISA`: feature 20, §10.17; `GRISFEST_FREE`: feature 21, §10.18), `COLLECTIBLES`, `UNLOCKS`, `NAMED_CARS`, `LEVEL_OUTFITS_ISLAND` |
 | `src/game/missions/index.js` | new | none | `MISSIONS = [...FLIGHT_MISSIONS, ...ISLAND_MISSIONS]`, `MissionRunner` re-export |
 | `src/game/missions/runner.js` | new (from missions.js) | none | `MissionRunner` (§9.4) |
 | `src/game/missions/kinds/core.js` | new | **none** (frozen after Phase 0) | getInCar goto pickup dropoff follow rabbits race destroy grab scene |
@@ -4586,7 +4692,8 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/stigSorry.js` | new (feature 11, 2026-10-15) | — | `StigSorry` (`game.sorry`): Förlåt, förlåt! in free roam: Stig's sorry after a kick, a knock-down, a broken thing or a carjacking, and the driver's "Nej." (§10.14) |
 | `src/game/pigTruck.js` | new (feature 15, 2026-10-15) | — | `PigTruck` (`game.pigs`): Grisarna ramlar av grisbilen in free roam: the unlocked grisbil's pigs tumble off on a jolt, the loose pigs (`LoosePig`), the catch on foot and by creeping, Lasse's refusal, the delivery to the grisfest farm's pen, the grisbonde's walk and pay, the refill at Flamenco (§10.15) |
 | `src/game/baggageBelt.js` | new (feature 25, 2026-10-15) | — | `BaggageBelt` (`game.belt`): Åk bagageband in free roam: the belt at Gando carries Stig, he sits down on a bag, the ride's turns, toasts and lines, Space and E off (§10.16) |
-| `src/game/lapplisa.js` | new (feature 20, 2026-10-15) | — | `Lapplisa` (`game.lapp`): Lapplisan Majsan in free roam: the ticket and the tow for a car Stig leaves on the sidewalk, Angerud's hire car outside Centro La Medina and the film's first meeting with the GRÚA truck, Majsan's praise for a car straight in a Flamenco bay (§10.17) |
+| `src/game/lapplisa.js` | new (feature 20, 2026-10-15) | — | `Lapplisa` (`game.lapp`): Lapplisan Majsan in free roam: the ticket and the tow for a car Stig leaves on the sidewalk, Angerud's hire car outside Centro La Medina and the film's first meeting with the GRÚA truck, Majsan's praise for a car straight in a Flamenco bay (§10.17); not `live` during the grisfest's evening (feature 21) |
+| `src/game/grisfestFree.js` | new (feature 21, 2026-10-15) | — | `GrisfestFree` (`game.party`): Grisfest varje torsdag in free roam: the host's 800 pesetas at the farm's gate, the evening (the clock held at night, the vals, the band and tourists of its own, the cast on and round the floor, the host's round), the tourist's refusal and Majsan's invitation, the dance by her, Fru Storch's coffee, the morning after (§10.18) |
 | `src/game/hud.js` | edit | **H** | map sources, meter, strings, legend, ring, blips, zone bar, markers; `renderPortrait` restores the model transform (§14.8) |
 | `src/game/camera.js` | edit | **A1** | profile, frameOne, cutTo, `clampZ` |
 | `src/game/fx.js` | edit | **A1** | `snow`, `steam`, `meterPuff` (rename of `shame`) |
@@ -4631,6 +4738,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `tools/scenarios/glide.mjs` | new (feature 3) | — | glide |
 | `tools/scenarios/grisar.mjs` | new (feature 15) | — | grisar |
 | `tools/scenarios/lapplisa.mjs` | new (feature 20) | — | lapplisa, lappfilm |
+| `tools/scenarios/torsdag.mjs` | new (feature 21) | — | torsdag, torsdagOle |
 | `tools/story/flight.mjs` | new | **F** | `M_FLIGHT` (M[0..4]) |
 | `tools/story/island.mjs` | new | **G** | `M_ISLAND` (M[5..12]) |
 
@@ -4649,7 +4757,7 @@ Init: `initGfx` → `input.init` → `hud.init` → `fx.init` → fonts (Luckies
 → peds (34) → NPC `Character`s (one per `CHARS` key except `stig`, the radio-only keys `levander
 kapten pa guardia pax telefonist` and the cabin-owned `vardinna2`; `key` field; hidden until placed, §2.3) →
 player `Character(CHARS.stig)` (`key = 'stig'`) → collectibles (`COLLECTIBLES`) → markers → `Shame`
-→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `Eslov` (feature 7, §10.12; registers the rollerskier's interactable) → `PoolFest` (feature 8, §10.13) → `StigSorry` (feature 11, §10.14) → `PigTruck` (feature 15, §10.15) → `BaggageBelt` (feature 25, §10.16) → `Lapplisa` (feature 20, §10.17) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
+→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `Eslov` (feature 7, §10.12; registers the rollerskier's interactable) → `PoolFest` (feature 8, §10.13) → `StigSorry` (feature 11, §10.14) → `PigTruck` (feature 15, §10.15) → `BaggageBelt` (feature 25, §10.16) → `Lapplisa` (feature 20, §10.17) → `GrisfestFree` (feature 21, §10.18; registers the gate's and the tourists' interactables) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
 `placeNpcs(true)` → spawn the player → portraits for every key in `CAST` (`renderPortrait`
 restores each model's parent and transform, so seated cast members stay in their seats) →
 `applySaveToWorld()` →
@@ -4657,11 +4765,11 @@ loop → `window.__ready = true` → `start()` in test mode.
 
 Frame (`update`): hooks → one-shots (incl. E/J/R while seated) → fixed steps (player intent incl.
 mantra/hold, AI, cars, people (`glide.step` → the player's step → `glide.after`, feature 3 →
-`belt.carry`, feature 25) —
+`belt.carry`, feature 25 → the NPCs → `party.step`, feature 21) —
 traffic/peds skipped when `!levelDef.sim.*`) → `syncAll` (also
 writes `ch.x/y/z` from `car.seatWorld(ch.seatSide)` for every car-seated character, player
 included, so framing, bubbles and distance checks see where they really are) → `missions.update` →
-`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
+`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
 pickups/collectibles → props → `fx.tick` → `tickTown` → markers → camera → sun/sky → HUD → audio →
 traffic recycling (island) → autosave. `loop` then renders, and when `film.grabNow` is set calls
 `film.grab()` in the same task (Herr Storch's still from the frame's buffer, feature 6, §10.11).
@@ -4707,6 +4815,9 @@ game.belt;         // BaggageBelt (feature 25, §10.16): the baggage belt at Gan
 game.lapp;         // Lapplisa (feature 20, §10.17): Majsan tickets a car left on the sidewalk and has
                    // it towed, Angerud's hire car and the film's first meeting, her praise for a car
                    // straight in a Flamenco bay; lapp.posed(key) (syncAll), lapp.owns(key) (honk.free)
+game.party;        // GrisfestFree (feature 21, §10.18): the grisfest's evening for 800 pesetas at the
+                   // farm's gate; party.on, party.posed(key) (syncAll, honk.free), party.extras (the
+                   // band and tourists: allChars, areaHit), party.step(h) (fixedStep), party.last
 game.outfitOverrides; // { key: outfit } from UNLOCKS[name].outfit, merged over the island set by applyOutfits (§10.3)
 game.witnessOverride; // null | UNLOCKS[name].witness, merged over the witness rule's config on the island (§7.2)
 game.onBounce(ch, b);   // Character.step: ch bounced on trampoline block b (the boing; the judges, §10.8; film.trick('studs'))
@@ -5339,6 +5450,19 @@ shame.paint (PaintShop, §7.2): configure(cfg) from configure(); onPursuit() fro
 //   claim / release(key, home) / walkTo / steer (npc.steer); out; gag; left; tickets; aCar; aIn;
 //   truck; scene; towing; muttering; praiseT; stuck; last
 // syncAll: posed also when lapp.posed(k) (Majsan on her round, Angerud in the scene)
+// grisfestFree.js (feature 21, §10.18): game.party = new GrisfestFree(game) after lapp; update(dt)
+//   after lapp.update (reset() while not open: everything off, no fade; the queued lines; gate() (the
+//   exchange) while no evening; then tickHeld (anims, facing, a placement by others drops one),
+//   tickCast (the extras' anims, facing, unstick, sync), tickHost (the round), tickLines (sangria,
+//   Heia Norge, the coffee), partner(dt) (the dance by Majsan), leave() once out of the square);
+//   step(h) from fixedStep after the NPCs (the extras' walk back and Character.step); pay() ->
+//   begin() (async: hud.fade, day.spin, setUp: claim, buildCast, placeNpc stig, audio.setTune);
+//   invite(t) (async: cinematic, say, pairSpot, cam.frame, g.dialog); leave() (async: tearDown,
+//   day.spin); posed(key) read by syncAll and honk.free; extras read by allChars and areaHit; on read
+//   by lapp.live and berraJob.active; free(key); homeOf(key); inFarm(x, z, m); hostAtPost(); canPay();
+//   askable(); held; cast; round; lines; invited; coffee; dancing; gen; last
+// syncAll: posed also when party.posed(k); allChars() adds party.extras; areaHit bowls them over as
+//   pedestrians; dayClock: `hold` (the hour stands still while set; party only)
 // collision.js: waterAt(x, z, y) -> the `water` block he stands in at that height, or null
 //   (feature 4; moved from glide.js)
 
@@ -5550,6 +5674,17 @@ hyfs på ungdomen klarar ni inte!" and "Förbannade förmyndarmentalitet!" [F*] 
 meeting, relocated); Siv's "Spänn av, Majsan. Du är ledig." [F*](t); Stig's "Den är… hyrd." and
 Majsan's "Där ser man. Det går att parkera här nere också." [N]. After the scene Angerud's chatter is
 `LAPPLISA.mutter` until the next mission (`chatterOverrides.angerud`).
+
+Feature 21: the grisfest evening's lines are its module's (`GRISFEST_FREE`, content/island.js,
+game/grisfestFree.js, §10.18), bubbles and one dialogue: at the gate Stig's "Är det torsdag i dag?"
+and the host's "Här är det alltid torsdag, señor. Åttahundra pesetas!" and "Åttahundra, señor. Inte en
+peseta mindre." [N]; the host's "Sangrian, grabbar." [F*](t) and Ole's "Heia Norge!" [F] at the
+evening; Stig's "Ska vi dansa? Hej hej." [F*] (Ole's advice) and "Jag är skraj att de ska nobba." [F];
+the dialogue Majsan "Vill du dansa med mig?" [F], Stig "Får jag lov…" [F](t), Siv "Nu blev hon
+uppbjuden." [F](t), as in the grisfest's scene; Fru Storch's "Finns det svenskt kaffe på
+grisfesten?" [F*] and Ole's "Norsk, da?" [F*](t); the prompts "E Betala grisfesten (800 pta)" and "E
+Bjud upp" and the banners `TORSDAG KVÄLL` / `Grisfest på vischan` and `MORGONEN EFTER` / `Nästa
+grisfest: torsdag` [N].
 
 ---
 
@@ -5892,6 +6027,8 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `bagage` [feature 25] | Åk bagageband (§10.16), at index 5 (free roam before buss17): the belt a `carousel` floor at 0.79 with 13 bags; from the hall floor a jump and a step forwards land him on the belt; 1.5 s later the belt has turned him by its spin × the game time (±0.03 rad), at the same radius and height, his facing turned with it and the camera's yaw not; "Min väska har inte kommit." (the session's first ride); on the centre island (floor 1.18) he is not carried; standing still he sits down after 2.5 s on the nearest bag, on its lid, `seatIn` in from its end, facing out, and keeps its place in the ring (±0.002 rad), the prompt "E Kliv av bandet"; the first turn on time (±0.2 s of 19.6 s of carried angle), "Ett varv på bagagebandet!" and 1.2 s later Lasse's radio line, both on screen; the second and third turns' toasts and 0.6 s after the third "Den här väskan ska till Las Palmas.", Lasse once; Space off the bag and back on the belt with the ride going on; down again and E off onto the floor 3.9 m out, the ride over, not carried there; a second ride without the sigh; R from a bag to the road; in a running mission (buss17) not carried; at index 13 "Det är faktiskt rätt rogivande." and no Lasse after the first turn (the turn skipped ahead). Shots `bagage_star`, `bagage_sitter`, `bagage_sitter_sida`, `bagage_varv`, `bagage_las_palmas`, `bagage_av`, `bagage_efter_jul`. About 120 s |
 | `lapplisa` [feature 20] | Lapplisan Majsan (§10.17), at index 8 (free roam): `sidewalkAt` (the band beside the roads; not the asphalt, the square before La Medina, Flamenco's lot, the west stub or the sand; the outer ring yes); a street car on block (2,2)'s south sidewalk (four wheels), Stig beside it: after 6 s Majsan appears round the block's corner (three legs: the corner, the car's end, beside it) 12 m or more from him, writes (`anim.ticket`), the slip on the windscreen, "Ursäkta, är det din bil?", his "Nej.", "Okej, grabbar!", the black fade, the car gone, no SKANDAL; she walks off and is home at the pool once unseen; a car on the road at the kerb gets nothing; the hire car two wheels up on the kerb: "Den är… hyrd.", in again before the tow keeps it (`drove`) with the slip still on; left on the sidewalk again: towed home to its bay, slip off; Flamenco's eight bays; the hire car got into and out of in its bay: no praise; driven in straight: "Där ser man…", Siv's "Spänn av, Majsan. Du är ledig.", +50 pta and the toast; again at once nothing (90 s); crooked (0.5 rad) nothing; straight again the praise, no pay; a mission start with a slip on and Majsan out ends it all; at index 9 (ropavieja: Majsan its extra) nothing comes |
 | `lappfilm` [feature 20] | at index 7: Angerud's white hire car on the sidewalk at `angerudBil`, locked, with him at Viking Bar; driving past nothing; on foot within 12 m the scene: the eight lines in order in the dialogue (shots of each), the GRÚA truck with the car on its hook (`lift` 0.16), Angerud running out to its tail; then free roam (no letterbox, he walks), the car and the truck gone, `lappFilm` saved, Angerud home muttering ("Hederliga bilister…"), Majsan off home unseen; no car or scene again; a mission start gives Angerud his chatter back; at index 8 the car between missions and gone at a mission start; after the end (`bodega` unlocked) no Angerud, no car |
+| `torsdag` [feature 21] | Grisfest varje torsdag (§10.18): at index 11 no pay prompt at the host; at index 12 Stig coming up to the host: "Är det torsdag i dag?" then the host's answer; within 2.6 m the prompt `E Betala grisfesten (800 pta)`; E with 650 pta: "Åttahundra, señor. Inte en peseta mindre.", nothing paid, no evening; E with 2 000: 1 200 left, the black fade, 21:00 held (`day.hold`, still 21:00 after 2.5 s with the clock running), `night`, the `vals`; held: Berra, Fru Storch, Herr Storch, Majsan, Robban, Siv and the host (no Ole before julafton is done, no Angerud at the farm); the band of three on the bandstand at 1.0 (accordion, congas), the five tourists dancing on the floor at 0.4; Stig on the drive at (0, 20); Berra, Siv, Robban dance, Majsan does not; shots of the evening, the floor and the band; the host walks his round with a cup and says "Sangrian, grabbar."; Fru Storch's "Finns det svenskt kaffe på grisfesten?" once, no "Norsk, da?" without Ole; a kick (`areaHit`) bowls a tourist over and she goes back to her place; by a solo tourist the prompt `E Bjud upp`, E: she turns her back on him, Majsan within 1.4 m of him in the two-shot, both dance, his line then "Jag är skraj att de ska nobba." in order; afterwards standing still by her he dances, no ask prompt, a step (S held 0.7 s) stops it; out of the gate: the morning after at 08:00 (`day` palette, the hold off), nobody held, no extras, the tune `sol`, Majsan, Siv, the Storches at home and free, Berra and Robban home or napping again (the Berra job), the host at his post |
+| `torsdagOle` [feature 21] | at index 13 with julafton's unlock: Ole at the evening, in `gris`, dancing (a shot), no Angerud; Fru Storch's question then Ole's "Norsk, da?", and his "Heia Norge!"; out of the gate his outfit back; at index 12 a mission start (julafton) two frames into the talk: no evening, nobody held, no extras, the hold off; the mission runs by day (the clock's morning cut) without the vals |
 | `talk` [Phase 0] | `autoDialog = false`, walk to Ole at `gateQueue`, E, Space twice |
 | `fullstory` [Phase 0b] | swaps the literal §8 missions (`tools/fixtures/full-missions.js`) into `MISSIONS` and plays all 13 per §16.3 (`FROM`/`TO` as `story`); must end `#13 idle`, `RESULT: PASS` |
 | `kinds` [Phase 0b] | fixture data checks; haggle misses fail; follow `minDist` fails; smooth/fragile bars (teleports never count); carry spill; checkpoint retry re-applies night + `vals` and revives plates at `dansgolv`; destroy default spawn; grab at the wreck; scene `exitCar`; Phase 3: follow shows no bar before the start and a head-on quarry does not fail it, `retryCar` (the last car reused, a typed named car, `park`), getInCar `atHome` and a wrecked `missionCar` failing, a frame-only scene stopping the car dead, a scene cutting a `collect` guest's bubbles (3 frames in: no bubble over the guest or Stig, no empty one) and keeping his placement |
@@ -7539,3 +7676,27 @@ the fixer's group.
   kind, timer, fixture or calibration pool changed. Deviations from the idea: the free-roam tow is a
   fade (the truck only stands in the scene), no ticket near the pool or with Stig over 45 m off, no
   fine or SKANDAL, the scene plays once ever. Scenarios `lapplisa`, `lappfilm` (§16.4).
+- Feature 21, "Grisfest varje torsdag – 800 pesetas" (`features/implemented/grisfest_pa_torsdag.md`,
+  2026-10-15): the grisfest's evening bought again at the farm's gate in free roam (§10.18; new
+  `src/game/grisfestFree.js`, `GRISFEST_FREE` in content/island.js; §1.6, §10.6, §10.9, §10.10,
+  §10.17, §14.1–14.3, §14.8, §14.10, §16.4). From index 12 (the grisfest done), with no mission
+  running, the host at his post inside the gate: "Är det torsdag i dag?" / "Här är det alltid torsdag,
+  señor. Åttahundra pesetas!" [N], E `Betala grisfesten (800 pta)` [N]; short of 800 his "Åttahundra,
+  señor. Inte en peseta mindre." [N] (Ole does not pay: `addCoins`, not `game.pay`). Paid: a black fade,
+  `TORSDAG KVÄLL` [N], the clock on to 21:00 and held (new `day.hold`, dayClock.js), the vals; the
+  cast who are free on and round the floor (Berra, Siv, Robban dancing; Majsan at the edge; Herr
+  Storch filming; Fru Storch at the long table; Ole in his `gris` shirt only after julafton; never
+  Angerud), the host's round with a cup and "Sangrian, grabbar." [F*](t), a band of three seeded
+  local figures and five seeded tourists of the module's own (`party.extras`: main.js `allChars`,
+  `fixedStep` `party.step`, `areaHit`). E on a lone tourist: "Ska vi dansa? Hej hej." [F*] in a side
+  two-shot, she turns her back, "Jag är skraj att de ska nobba." [F], and Majsan asks him in a cut to a
+  two-shot on clear floor: "Vill du dansa med mig?" [F], "Får jag lov…" [F](t), Siv's "Nu blev hon
+  uppbjuden." [F](t), Ole's "Heia Norge!" [F]; then standing still by her he dances. Fru Storch's
+  "Finns det svenskt kaffe på grisfesten?" [F*] and Ole's "Norsk, da?" [F*](t), once an evening. Out of
+  the walled square: `MORGONEN EFTER` [N], everyone home, 08:00, the clock free. The Berra job and
+  Majsan's tickets wait during the evening (`berraJob.active`, `lapp.live`); honk.js `free` and main.js
+  `syncAll` leave `party.posed` out. A mission start ends all of it at once, so no mission, stage kind,
+  timer, fixture or calibration pool changed. Deviations from the idea: the free-roam clock is kept
+  (21:00 held, then 08:00), the refusal and the invitation are framed shots, the dance again by
+  standing still by her (no prompt), the host's round is fixed, no plate counter. Scenarios `torsdag`,
+  `torsdagOle` (§16.4).

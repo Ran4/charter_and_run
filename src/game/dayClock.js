@@ -39,6 +39,7 @@ export class DayClock {
     this.cfg = cfg;
     this.h = cfg.start;            // Spanish time in hours, 0 <= h < 24
     this.run = !game.testMode;     // ticks by itself between missions (tests set it)
+    this.hold = false;             // held by the grisfest's evening (§10.18): the hour stands still
     this.busy = false;             // the nap or the morning cut is playing
     this.napping = false;
     this.over = false;             // the HUD clock is drawn over the black fade
@@ -103,7 +104,7 @@ export class DayClock {
   update(dt) {
     const g = this.g;
     if (this.live) {
-      if (this.run) this.h = wrap(this.h + (dt * g.timeScale) / this.hourSecs());
+      if (this.run && !this.hold) this.h = wrap(this.h + (dt * g.timeScale) / this.hourSecs());
       if (this.key(this.h) !== this.shown) this.write();
     }
     this.showHud();

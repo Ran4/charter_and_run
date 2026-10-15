@@ -49,7 +49,8 @@ export class BerraJob {
   get berra() { return this.g.npc('berra'); }
   get robban() { return this.g.npc('robban'); }
   get spot() { return this.cfg.spots[this.spotI]; }
-  get active() { const g = this.g; return g.level === 'island' && g.missions.state === 'idle' && g.missions.index >= this.cfg.fromIndex; }
+  // Not during the grisfest's evening (§10.18): Berra and Robban are at the dance.
+  get active() { const g = this.g; return g.level === 'island' && g.missions.state === 'idle' && g.missions.index >= this.cfg.fromIndex && !g.party?.on; }
   get holding() { return this.shown || this.phase === 'carry' || this.phase === 'dropped'; }
 
   // main.js hooks. `posed`: no wave, turn or chatter (as a mission's idleAnim); `waving`: Robban
