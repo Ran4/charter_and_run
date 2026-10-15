@@ -31,6 +31,7 @@ import { Eslov } from './game/eslov.js';
 import { StorchFilm } from './game/storchFilm.js';
 import { PoolFest } from './game/poolFest.js';
 import { StigSorry } from './game/stigSorry.js';
+import { PigTruck } from './game/pigTruck.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
 import { LEVELS, ISLAND_PALETTES } from './level.js';
@@ -174,6 +175,7 @@ class Game {
     this.eslov = new Eslov(this);         // free roam: the rollerskier trains, the horn, Eslövloppet (§10.12)
     this.fest = new PoolFest(this);       // free roam after the end: Små grodorna in Flamenco's pool (§10.13)
     this.sorry = new StigSorry(this);     // free roam: Stig says sorry for what he does (§10.14)
+    this.pigs = new PigTruck(this);       // free roam: the grisbil's pigs tumble off, the pen at the farm (§10.15)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -928,11 +930,13 @@ class Game {
         if (other.isPursuer) this.shame.onRam(other, impact);
         else if (!other.isTarget && !other.locked) this.shame.add(Math.min(9, impact * 0.55));
       }
+      this.pigs.jolt(pc, 'crash', impact);   // the grisbil's pigs tumble off in free roam (§10.15)
     }
   }
   onCarLanded(car, impact) {
     if (car === this.playerCar) { audio.thud(); this.cam.shake = Math.min(1, this.cam.shake + impact * 0.03); }
     fx.dust(car.x, car.z, 6);
+    this.pigs.jolt(car, 'land', impact);
   }
   onCarDestroyed(car) {
     const f = this.focus();
@@ -1429,6 +1433,7 @@ class Game {
     this.eslov.update(dt);
     this.fest.update(dt);
     this.sorry.update(dt);
+    this.pigs.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);
@@ -1816,7 +1821,7 @@ class Game {
       const g = this.npcs[ms.current.giver];
       if (g) out.push({ type: 'mission', x: g.x, z: g.z, edge: true });
     }
-    const t = ms.target() || this.berraJob.target() || this.eslov.target();
+    const t = ms.target() || this.berraJob.target() || this.eslov.target() || this.pigs.target();
     if (t && !t.follow) out.push({ type: 'objective', x: t.x, z: t.z, edge: true });
     if (t && t.follow) out.push({ type: ms.stage?.car?.isTarget ? 'enemy' : 'friend', x: t.x, z: t.z, edge: true });
     out.push(...ms.markers());
@@ -1824,6 +1829,7 @@ class Game {
     out.push(...this.shame.paint.markers());
     out.push(...this.berraJob.markers());
     out.push(...this.eslov.markers());
+    out.push(...this.pigs.markers());
     const o = this.shame.officer;
     if (o && o.state !== 'hidden' && this.shame.pursuit) out.push({ type: 'enemy', x: o.x, z: o.z, edge: true });
     if (!all) {
@@ -1877,7 +1883,8 @@ class Game {
       this.bang.fadeBeam(nearFade(g.x, g.z));
       if (dist(g.x, g.z, f.x, f.z) > 25) target = { x: g.x, z: g.z };
     } else this.bang.show(false);
-    const t = ms.target() || this.berraJob.target() || this.eslov.target();   // or the free-roam Berra job's (§10.6), Eslövloppet's (§10.12)
+    // Or the free-roam Berra job's (§10.6), Eslövloppet's (§10.12), the grisbil's pigs' (§10.15).
+    const t = ms.target() || this.berraJob.target() || this.eslov.target() || this.pigs.target();
     if (t) {
       target = t;
       const y = t.follow ? groundAt(t.x, t.z, 0.2, 0.6) + 2.5 : groundAt(t.x, t.z, 0.2, 0.6);
@@ -1904,9 +1911,9 @@ class Game {
   }
 
   updateHud() {
-    // No mission running: the paint shop's wet-paint card (§7.2), the Berra job's (§10.6) or
-    // Eslövloppet's (§10.12), if any.
-    hud.setObjective(this.missions.objective() || this.shame.paint.objective() || this.berraJob.objective() || this.eslov.objective());
+    // No mission running: the paint shop's wet-paint card (§7.2), the Berra job's (§10.6),
+    // Eslövloppet's (§10.12) or the grisbil's pigs' (§10.15), if any.
+    hud.setObjective(this.missions.objective() || this.shame.paint.objective() || this.berraJob.objective() || this.eslov.objective() || this.pigs.objective());
     hud.setSpeedo(this.playerCar);
     if (this.missions.state !== 'failed') {
       let prompt = '';

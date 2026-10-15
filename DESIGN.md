@@ -194,7 +194,11 @@ hopping with them in his suit and the hop counter (free roam, §10.13; in the fi
 in the pool at the julfest while Stig-Helmer and Ole open the crispbread, and Stig-Helmer never
 dances); Stig-Helmer saying sorry for every kick, knock-down, broken thing and carjacking, and a
 carjacked driver answering his "Ursäkta, är det din bil?" with "Nej." (free roam, §10.14; in the film
-he is the one reality keeps happening to, and it is the traffic warden Majsan who asks him).
+he is the one reality keeps happening to, and it is the traffic warden Majsan who asks him); the
+grisbil's pigs tumbling off its bed on a hard landing, a crash or a long skid, Stig carrying them
+back over his head or creeping the bed up to them, his "Lasse! Kan du ta den där?", and the drive
+home to the grisfest farm's piglet pen for the grisbonde's thanks and pesetas (free roam, §10.15;
+in the film nobody falls off the pig truck, and Stig is not in that scene).
 The film's flight has **no turbulence** and **no in-flight toilet scene**: both toilet scenes are
 at Arlanda (we keep them there). The plane's toilets are only an invented hideout.
 
@@ -1150,7 +1154,7 @@ standing there faces. `y` (optional) = absolute height for collectible spots on 
 | (4,3) | `bensin` → `bensin` (C2, centre.js) | gas station: canopy, `GASOLINA` (no brand), prices in pesetas, kiosk; `gaspump` props explode; the workshop's two open bays (`TALLER · NEUMÁTICOS · LAVADO`) are the free-roam paint shop (§7.2): `PINTURA` on the pillar between them, paint tins and a brush by the left bay, a yellow 4 × 7 m box in front of it, the cone moved to the pillar and the parked yellow hatch to the east gable (29.5, −20), out of the painted car's way to the road | `bensin` (0, 16, π) · `pintura` (11.25, −8, 0) (the paint zone in front of the left bay, facing out of it) · cut anchor `pinturaCam` (11.25, −9.6, π) (the bay seen from the forecourt) | — |
 | (5,3) | `guardia` → `cuartel` (C2, centre.js) | ochre barracks, red-yellow-red flag mast beside the path at x 4.6 (Phase 3: off the axis to the `CASA CUARTEL` plaque), `CASA CUARTEL`; two parked green Land Rovers | `guardia` (0, 20, π) | `guardia1`, `guardia2` (type `guardia`, locked) |
 | (1,0), (3,0), (0,1) | `tomat` → `tomatfalt` (D1, nature.js) | rows of low tomato bushes (one merged mesh, walls a car drives through: no solids, or tops ≤ 0.6), packing shed `TOMATES · EXPORTACIÓN` / `EMPAQUETADO`, `tomatlada` props, dirt tracks | on (0,1): `vischan` (6, 24, π) · cut anchor `vischanCam` (5.7, 22.7, −0.14) (on the gravel track north of the vischan scene, looking back south at the road and the `CAMINO SIN ASFALTAR` sign; Phase 3 r2) · `eslovVag` (27.5, 24, 0) (the rollerskier on the Eslöv lane, 6 m up from the z −120 road and facing it; Phase 3 r2, was (28, 4, −π/2) mid-lane, 33 m off the vischan drive) — on (3,0): `packhus` (0, 10, π) | — |
-| (2,0) | `grisfest` → `grisgard` (D1, nature.js) | farm: white barn (roof top ≈ 5), pergola deck with long tables under string lights, spit-roast pig, bandstand, dance-floor platform (deck top 0.4), piglet pen, gate on the **south** road; **12 `tallrikar` prop stacks** on the tables (smash stage; `placeProp(..., baseY = table top)`, §14.7) | `grisfest` (0, 26, π) · `grisfestGate` world (−80, −204, π/2) (on the south road at the farm gate, the `follow` endpoint) · `dansgolv` (0, 0, 0) · `pryl_pung` (−18, −14, 0, 5.4) | — |
+| (2,0) | `grisfest` → `grisgard` (D1, nature.js) | farm: white barn (roof top ≈ 5), pergola deck with long tables under string lights, spit-roast pig, bandstand, dance-floor platform (deck top 0.4), piglet pen, gate on the **south** road; **12 `tallrikar` prop stacks** on the tables (smash stage; `placeProp(..., baseY = table top)`, §14.7) | `grisfest` (0, 26, π) · `grisfestGate` world (−80, −204, π/2) (on the south road at the farm gate, the `follow` endpoint) · `dansgolv` (0, 0, 0) · `pryl_pung` (−18, −14, 0, 5.4) · `grisfalla` (−11, 20.5, −π/2) and `grisfallaIn` (−18.5, 20.6, −π/2) (the pig delivery's stop by the piglet pen and the pen's middle, feature 15, §10.15) | — |
 | (0,0) | `fataga` → `fataga` (D1, nature.js) | white village houses, tile roofs, narrow lanes, date palms, small church, embroidered tablecloths on lines (`MANTELES · DUKAR`), sheepfold (fence solids, gap gate); six ochre crags along the north edge, solid along their length (Phase 3 r3: rock()'s 1 m circle plus a box 0.85·sx × 0.53·sz on the long axis, the mesh's widest section; the circle alone let the player and the chase eye 2–3 m into the rock, also in the fold's back under the shelter) | `fataga` (0, 18, π) · `fatagaBus` world (−240, −204, −π/2) (westbound kerb of the z = −200 road, the `follow` endpoint) · `fatagaFold` (−18, −12, 0) · `fatagaDukar` (8, 4, π) · cut anchor `dukarCam` (8, 4, 0) = `fatagaDukar` turned round (the stall from the square; Phase 3) · `pryl_kniv` (0, 0, 0, 1.2) | — |
 | (4,0) | `golf` → `golf` (D1, nature.js) | fairway, bunkers (sand slabs), **pond** (`water` circle + flat blue), flag 18, small clubhouse `CAMPO DE GOLF` | `golf` (0, 22, π) · `fena_golf` (−10, −6, 0, 0.35) | — |
 | (5,0) | `bungalow` → `bungalowTomt` (D1, nature.js) | Angerud's show bungalow: one-storey white cube, pool, plot fence, `SE VENDE · BUNGALOW · 4 RUM OCH KÖK` | `bungalow` (0, 22, π) · `fena_bungalow` (6, −4, 0, 0.35) | — |
@@ -1242,7 +1246,7 @@ against ×1.2 (§8 "Timers and difficulty").
 | `icecream` | Glassbil | `icecream`, sign `HELADOS` | `0xfafafa` | traffic, rare |
 | `taxi` | Taxi | sedan + flag `taxi` (cream body, roof `TAXI` box with a green LIBRE lamp) | `0xe8dcb8` | traffic ×1, `taxiAirport` |
 | `guardia` | Guardia Civil | new: `tall`, len 4.2, wid 1.9, bodyH 1.45, cabinH 0, wheelR 0.4, maxSpeed 30, accel 12, grip 9, steer .58, mass 2000, hp 160; flag `guardia` (white roof, blue lamp, white door band, spare wheel on the bonnet) | `0x2e5e3e` | pursuit, `guardia1/2` parked |
-| `grisbil` | Grisbilen | pickup + flag `pigs` (slatted rack + 3 pink pig blobs: one at −0.15 L, the back two across the bed snout to snout at −0.41/−0.425 L, scale 0.72, wholly inside the rack — Phase 3 r2, they faced aft and their snouts stuck ~0.2 m out over the tailgate; the bed-rider slots at −0.3 L stay free), maxSpeed 34, accel 14 | rust `0xa8442a` | bodega mission, unlock |
+| `grisbil` | Grisbilen | pickup + flag `pigs` (slatted rack + 3 pink pig blobs: one at −0.15 L, the back two across the bed snout to snout at −0.41/−0.425 L, scale 0.72, wholly inside the rack — Phase 3 r2, they faced aft and their snouts stuck ~0.2 m out over the tailgate; the bed-rider slots at −0.3 L stay free; since feature 15 each pig is its own outlined mesh, `PIG_SLOTS` / `car.pigs`, so one can tumble off in free roam, §10.15, same look), maxSpeed 34, accel 14 | rust `0xa8442a` | bodega mission, unlock |
 | `trolley` | Serveringsvagn | registered by cabin.js (§5.8) | `0xc8ccd2` | cabin only |
 
 Removed: `hearse`, `muscle` (their geometry branches may stay as dead code). Traffic mix (main.js):
@@ -3405,7 +3409,8 @@ react to the horn read `game.hornAt`.
   it, and `honk.update` plays `audio.oink()` on the press and every `oinkEvery` = 0.75 s while H is
   held, in missions too (the car's sound, as the horn is). In free roam a press also shows
   `oinkBubble` "NÖFF! NÖFF!" [N] over its bed (a plain bubble anchor 0.28 × its length behind its
-  middle, 2.1 m up) at most every `bubbleEvery` = 1.5 s. Berra and Robban answer with their lift's
+  middle, 2.1 m up) at most every `bubbleEvery` = 1.5 s, while a pig is in the bed (an emptied bed
+  after a delivery, feature 15, §10.15, still grunts). Berra and Robban answer with their lift's
   lines, and a grunt gets no tease reply.
 - **The rollerskier** (feature 7, §10.12) answers the horn himself: `free` leaves him out
   (`eslov.owns`), and `press` hands the car to `eslov.horn(car)` after the cast's answers. When he
@@ -3890,8 +3895,111 @@ answer are the film's first exchange with the roles swapped, [F*] (§1.6).
 - `sorry.last` ({ t, kind, text, no }) is for tests; `first`, `noDone`, `said` and `lastT` are
   session state, nothing is saved. Scenario `artig` (§16.4).
 - **Not done** (deviations from the idea): no fifth kind for a hard crash ("Jag har lite anlag för
-  åksjuka." stays the bus mission's, §8); a car he dents with a kick is not counted; the first Swedish
+  åksjuka." stays the bus mission's, §8, and since feature 15 the pig delivery's, §10.15); a car he dents with a kick is not counted; the first Swedish
   carjacking of a session always gets the "Nej." (later ones at 35 %), so the film's exchange is seen.
+
+### 10.15 Grisarna ramlar av grisbilen – the pigs tumble off the grisbil (free roam; feature 15, 2026-10-15)
+
+`game/pigTruck.js` (`PigTruck`, owned by Game as `pigs`), config `PIG_TRUCK` in content/island.js.
+Driven wildly, the unlocked grisbil loses its pigs over the side of the bed; they shake themselves
+and trot off, and Stig rounds them up, politely, on foot or by creeping the bed up to them. Taking
+all three home to the piglet pen at the grisfest farm earns the grisbonde's thanks and some pesetas.
+All of it is ours, [N] (§1.6): nobody falls off the pig truck in the film, and Stig is not in that
+scene. The lines are ours [N] and two relocated film lines [F*]. The grunting horn is feature 5's
+(§10.9).
+
+- **When.** Only the unlocked grisbil (`car: 'grisbil'`, `game.named.grisbil`, UNLOCKS.grisbil),
+  only with the player at its wheel, only while `live`: on the island with `missions.state ===
+  'idle'`; no fall, catch or delivery in a dialogue. The bodega's mission truck `grisbilFollow`
+  (§8.9) has the same pig meshes but never loses one, so its jeep chase (`TIMERS.bodegaJeep`, a
+  rammed destroy stage) and every calibration pool are as before; no timer, mission, stage kind or
+  fixture changed. In a mission (any state but idle) and in the flight level nothing falls; leaving
+  free roam (`release`) takes a carried pig off his head and puts every loose pig back in the bed,
+  empties the pen, stops the grisbonde's walk and drops the lines not yet said.
+- **The pigs** (§6.6, §14.6): each of the three is its own mesh (`car.pigs[i] = { mesh, in }` for
+  `PIG_SLOTS[i]`, built by `pigMesh(scale)`), so one can leave the bed; `car.setPig(i, on)` and
+  `car.pigWorld(i)` (its spot in world space). A burnt wreck hides them with the decals.
+- **The falls.** One pig a jolt, in `order` [1, 2, 0] (the back right, the back left, then the one
+  by the cab), no sooner than `gap` = 1.2 s after the last:
+  - a landing at `land` = 6 m/s or more (`main.onCarLanded` → `pigs.jolt(car, 'land', impact)`;
+    a drop of about 0.8 m; a curb is nothing);
+  - a crash at `crash` = 7 m/s or more into a wall or a car (`main.onCarImpact` →
+    `pigs.jolt(car, 'crash', impact)`; car damage starts at 5);
+  - a long skid: `skidSecs` = 0.6 s of `car.skidAmt` ≥ `skidAmt` 0.5 at `skidMin` = 6 m/s or more
+    (the clock runs down at 1/s between skids): a handbrake slide, a fast full-throttle turn, or a
+    full stop from about 26 m/s or more (braking from over 8 m/s reads 0.6; the grisbil's top
+    speed is about 32). Measured on the x = −40 road: full throttle, a gentle weave and full-steer
+    corners at 10, 16 and 22 m/s off the throttle drop none.
+  The pig spawns where it stood (`pigWorld`, its slot's yaw) and flies out with `fly`: `keep` 0.55
+  × the car's velocity, `back` 1.6 m/s backwards, `side` 3.2 m/s over its own side (the back two
+  their side, the front one either way) and `up` 4.6, rolling. No SKANDAL, ever.
+- **A loose pig** (`LoosePig`, a plain bubble anchor): `fly` → on landing `down` on its side for
+  `downSecs` 0.55 s (sliding to a stop) → `shake`, up and shaking itself for `shakeSecs` 0.7 s with
+  `oink` "NÖFF!" [N] over it (and `audio.oink()` within 25 m) → `trot` off at `trot` 3.2 m/s for
+  `trotSecs` 2.2 s, away from the grisbil (from Stig, when he is on foot) → `roam`: pauses and short
+  trots at 0.6 × `trot`, pulled back within `roamR` = 9 m of where it landed. Within `shyR` = 4.5 m
+  of Stig on foot it trots away at `shy` = 3.0 m/s (his walk is 5.4, so he catches it). The
+  rabbits' wall rule (a block over 0.5 m above its feet stops it; it turns off it). It is never run
+  over: a car coming at it faster than `creep` (along its line, within its width + 1.6 m, as far
+  ahead as its half length + 0.6 × its speed + 2 m) makes it `skip` `dodge` = 6 m/s aside with a
+  hop (and a "NÖFF!", at most every `oinkEvery` 3 s), and one inside a car's box is pushed out. It
+  is not kicked (areaHit does not know it). Stig's "Oj! Grisen!" [N] comes 0.5 s after the
+  session's first fall.
+- **Catching.**
+  - On foot within `catchR` = 1.4 m (and 1.2 m of height) of a pig on its feet or side, Stig lifts
+    it over his head: `anim.carryOver`, `game.carrying = { who: 'gris', job: 'pigs' }` (no car, no
+    mission talk, no glide or nap while he holds it), `speedCap` = the walk; `pickup` (his first
+    always "Förlåt, lilla gris. Upp med dig.", later at `pickChance` 50 % "Ursäkta! Nu åker vi
+    hem." / "Såja. Ingen fara.", not the one he said last) [N]. A fall, a bust, R (`bumpedT`) or
+    anything taking `carrying` drops it, and it tumbles and trots off again. Within `bedR` = 2.6 m
+    of the bed's middle (0.28 × the length behind the car's middle) it hops into its place (0.4 s).
+  - In the grisbil: rolling (over 0.3 m/s) at under `creep` = 3.5 m/s with the bed's middle within
+    `carCatchR` = 2.8 m of a pig that is up and about (`trot`/`roam`), the pig hops in (0.45 s). A
+    standing grisbil does not take it, so a pig that lands by the bed after a full stop first trots
+    off.
+- **Lasse.** Stig on foot within `askR` = 10 m of a loose pig, Lasse free (`honk.free`) within
+  `lasseR` = 22 m and nobody saying anything: "Lasse! Kan du ta den där?" [N]; `refuseGap` = 1.4 s
+  later Lasse, turned to him, "Det ingår inte i mina åtaganden." [F*] (his reply to Angerud,
+  research-plot.md:284, relocated; OUCH_STAFF has it too). At most every `askEvery` = 60 s. Both
+  NPC lines restart the speaker's chatter clock (as the horn's answers).
+- **The pen.** `zone` = 6 m round the landmark `grisfalla` (block (2,0) local (−11, 20.5), facing
+  the piglet pen's east fence at x −14.8, between the café table, the palm and the cart; the gravel
+  drive's way in from x −2 is clear for the grisbil: scenario `grisar`). With all three in the bed
+  and the grisbil stopped there (under `zone.stop` = 2 m/s): they hop out one by one (0.45 s apart,
+  0.95 s arcs 2.4 m over the higher end) over the fence to spots in the pen (`pen`: round
+  `grisfallaIn` (−18.5, 20.6), half-sizes `hw` 2.4 across × `hd` 2.9 along its yaw, the shelter and
+  trough left out), where they wander at 1.1 m/s with pauses; the previous delivery's three go.
+  About 2.2 s in, the grisbonde (if `honk.free` and within 45 m) says "¡Gracias, señor! Alla grisar
+  hemma!" [N], turned to Stig; `game.addCoins(pay)` with the coin sound and the toast "Grisbonden
+  betalade {n} pta." [N]: `cleanPay` = 250 when no pig fell since the bed was last full, else `pay`
+  = 100 and `sickGap` = 1.8 s later Stig's "Jag har lite anlag för åksjuka." [F*](t) (his line from
+  the bus, research-characters.md:128, relocated; mission 6 keeps its own). With a pig loose and the
+  grisbil stopped in the zone: the grisbonde's "Det fattas grisar, señor!" [N] (at most every 10 s),
+  no delivery. When the grisbil comes within `bonde.r` = 45 m of the zone with pigs in the bed, the
+  grisbonde walks over (`npc.steer`, 3.2 m/s, by `bonde.path` [[4.1, −6], [3.9, 2.2]]: [left,
+  forward] from `grisfalla`, round the palm, to the pen's south-east corner) and stays until the
+  grisbil has gone or `bonde.hold` = 4 s after his thanks; placeNpcs takes him home when Stig is
+  far off (its 50 m rule). His chatter "Akta grisarna, señor!" fits it.
+- **The bed fills again** (`fill`) when the grisbil stands within `home.r` = 20 m of its bay
+  (UNLOCKS.grisbil's spot, `flamencoDrive` + 4 m) with nobody at the wheel and Stig over `home.away`
+  = 30 m from it: after a delivery, or with pigs left loose more than 60 m from him. Then `falls` = 0
+  (the clean pay counts from there). A grisbil that is gone or wrecked takes its loose pigs with it.
+- **HUD** (after the mission's, the paint shop's, the Berra job's and Eslövloppet's): carrying, the
+  objective "Bär grisen tillbaka till flaket." and the guide follows the bed; a pig loose, "En gris
+  har ramlat av flaket! Gå fram till den – eller krypkör intill." ("{n} grisar har ramlat av
+  flaket! Gå fram till dem – eller krypkör intill.") and the guide follows the nearest; at the wheel
+  with a full bed, "Kör hem grisarna till fållan på grisfesten." and the ring at the zone; title
+  "Grisbilen" [N]. Every loose pig is a `friend` blip on the minimap. Nothing after a delivery until
+  the bed is full again.
+- The horn's "NÖFF! NÖFF!" bubble over the bed shows only while a pig is in it (§10.9); the grunt
+  itself stays.
+- `pigs.last` ({ t, why, slot, impact }) and `pigs.paid` ({ t, pay, clean }) are for tests; `falls`,
+  `delivered`, `loose`, `pen` and the rest are session state, nothing is saved (a reload starts with
+  a full bed). Scenario `grisar` (§16.4).
+- **Not done / changed** (deviations from the idea): the pigs hop over the fence themselves (the
+  sketch had Stig lift the last one); R in the grisbil does not take loose pigs away (only a mission,
+  the other level, a wreck or the bed's refill at Flamenco do); the grunting horn was already feature
+  5's; "Fan, de luktar." stays Berra's and Robban's (the horn, §10.9).
 
 ## 11. HUD / UI strings (Swedish; `src/strings.js` owned by WP-H, created by Phase 0)
 
@@ -4265,7 +4373,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/strings.js` | new | **H** | `S`, `fmt()` (§11) |
 | `src/content/index.js` | new | none | merges `HOMES`, `MAP_LABELS`, `LEVEL_OUTFITS`, re-exports all content |
 | `src/content/flight.js` | new | **F** | `HOMES_GATE`, `HOMES_FLIGHT`, `MAP_LABELS_FLIGHT`, `CHATTER_FLIGHT`, `OLE_STATS`, `LEVEL_OUTFITS_GATE`, `LEVEL_OUTFITS_FLIGHT` |
-| `src/content/island.js` | new | **G** | `HOMES_ISLAND`, `MAP_LABELS_ISLAND`, `CHATTER`, `OUCH`, `GETUP`, `CARJACK`, `NPC_KICKED` (+ the `_OLE` / `_LOCAL` tables, `LOCAL_CAST`, `BARKS`: Phase 3 r2, §14.10; `STIG_SORRY`: feature 11, §10.14), `COLLECTIBLES`, `UNLOCKS`, `NAMED_CARS`, `LEVEL_OUTFITS_ISLAND` |
+| `src/content/island.js` | new | **G** | `HOMES_ISLAND`, `MAP_LABELS_ISLAND`, `CHATTER`, `OUCH`, `GETUP`, `CARJACK`, `NPC_KICKED` (+ the `_OLE` / `_LOCAL` tables, `LOCAL_CAST`, `BARKS`: Phase 3 r2, §14.10; `STIG_SORRY`: feature 11, §10.14; `PIG_TRUCK`: feature 15, §10.15), `COLLECTIBLES`, `UNLOCKS`, `NAMED_CARS`, `LEVEL_OUTFITS_ISLAND` |
 | `src/game/missions/index.js` | new | none | `MISSIONS = [...FLIGHT_MISSIONS, ...ISLAND_MISSIONS]`, `MissionRunner` re-export |
 | `src/game/missions/runner.js` | new (from missions.js) | none | `MissionRunner` (§9.4) |
 | `src/game/missions/kinds/core.js` | new | **none** (frozen after Phase 0) | getInCar goto pickup dropoff follow rabbits race destroy grab scene |
@@ -4286,6 +4394,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/eslov.js` | new (feature 7, 2026-10-15) | — | `Eslov` (`game.eslov`): Heja Eslöv! in free roam: the rollerskier skis up and down the Eslöv lane, answers the horn and E, "Spår!", Eslövloppet round the tomato fields (§10.12) |
 | `src/game/poolFest.js` | new (feature 8, 2026-10-15) | — | `PoolFest` (`game.fest`): Små grodorna i poolen in free roam after the end: the visit, the wade into the ring, the set of rounds on the music's clock, the dance, the exchange, the porter, Stig in the ring, the hop counter, the cheer and the coin (§10.13) |
 | `src/game/stigSorry.js` | new (feature 11, 2026-10-15) | — | `StigSorry` (`game.sorry`): Förlåt, förlåt! in free roam: Stig's sorry after a kick, a knock-down, a broken thing or a carjacking, and the driver's "Nej." (§10.14) |
+| `src/game/pigTruck.js` | new (feature 15, 2026-10-15) | — | `PigTruck` (`game.pigs`): Grisarna ramlar av grisbilen in free roam: the unlocked grisbil's pigs tumble off on a jolt, the loose pigs (`LoosePig`), the catch on foot and by creeping, Lasse's refusal, the delivery to the grisfest farm's pen, the grisbonde's walk and pay, the refill at Flamenco (§10.15) |
 | `src/game/hud.js` | edit | **H** | map sources, meter, strings, legend, ring, blips, zone bar, markers; `renderPortrait` restores the model transform (§14.8) |
 | `src/game/camera.js` | edit | **A1** | profile, frameOne, cutTo, `clampZ` |
 | `src/game/fx.js` | edit | **A1** | `snow`, `steam`, `meterPuff` (rename of `shame`) |
@@ -4311,7 +4420,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/world/rio.js` | new | **B** | `buildRioCard` (P1) |
 | `src/actors/models.js` | edit | **E** | `CHARS`, `CAST`, new def fields, anim flags, `buildBustGeo`, `outfitDef`, `randomPed` palette |
 | `src/actors/character.js` | edit | **E** | `setDef`, `hidden`, `seatAt`, `standAt`, new anim flag defaults |
-| `src/actors/car.js` | edit | **E** | §6.6 types/flags, `registerCarType`, `build`/`noWheels`/`noSpeedo`/`noExplode`/`livery` |
+| `src/actors/car.js` | edit | **E** | §6.6 types/flags, `registerCarType`, `build`/`noWheels`/`noSpeedo`/`noExplode`/`livery`; the grisbil's pig meshes `PIG_SLOTS`, `pigMesh`, `car.pigs`, `setPig`, `pigWorld` (feature 15, §10.15) |
 | `src/actors/pickups.js` | edit | **E** | `COLLECT_KINDS`, `registerCollectKind`, `Collectible` table, `Rabbit` meshes, coin value 25 |
 | `src/actors/peds.js` | edit | **E** | Swedish/Spanish shouts; `dodge`, `startle` (feature 5, §6.7) |
 | `src/actors/drivers.js` | Phase 2 edit | none | (accepts duck-typed paths); an AI bus's lane path starts its turns 11 m from the junction centre instead of 8.5 (left-turn radius 13.75 m > the bus's ≈ 12 m minimum), so the excursion bus no longer swings into the grisfest farm wall; right turns stay too tight for buses (mission bus routes turn left only); traffic holds short of a closed race junction (`game.closure`, §9.2 race) |
@@ -4328,6 +4437,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `tools/scenarios/paintshop.mjs` | new (feature 1) | — | pintura, dalasheet |
 | `tools/scenarios/berra.mjs` | new (feature 2) | — | berra |
 | `tools/scenarios/glide.mjs` | new (feature 3) | — | glide |
+| `tools/scenarios/grisar.mjs` | new (feature 15) | — | grisar |
 | `tools/story/flight.mjs` | new | **F** | `M_FLIGHT` (M[0..4]) |
 | `tools/story/island.mjs` | new | **G** | `M_ISLAND` (M[5..12]) |
 
@@ -4346,7 +4456,7 @@ Init: `initGfx` → `input.init` → `hud.init` → `fx.init` → fonts (Luckies
 → peds (34) → NPC `Character`s (one per `CHARS` key except `stig`, the radio-only keys `levander
 kapten pa guardia pax telefonist` and the cabin-owned `vardinna2`; `key` field; hidden until placed, §2.3) →
 player `Character(CHARS.stig)` (`key = 'stig'`) → collectibles (`COLLECTIBLES`) → markers → `Shame`
-→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `Eslov` (feature 7, §10.12; registers the rollerskier's interactable) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
+→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `Eslov` (feature 7, §10.12; registers the rollerskier's interactable) → `PoolFest` (feature 8, §10.13) → `StigSorry` (feature 11, §10.14) → `PigTruck` (feature 15, §10.15) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
 `placeNpcs(true)` → spawn the player → portraits for every key in `CAST` (`renderPortrait`
 restores each model's parent and transform, so seated cast members stay in their seats) →
 `applySaveToWorld()` →
@@ -4357,7 +4467,7 @@ mantra/hold, AI, cars, people (`glide.step` → the player's step → `glide.aft
 traffic/peds skipped when `!levelDef.sim.*`) → `syncAll` (also
 writes `ch.x/y/z` from `car.seatWorld(ch.seatSide)` for every car-seated character, player
 included, so framing, bubbles and distance checks see where they really are) → `missions.update` →
-`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
+`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
 pickups/collectibles → props → `fx.tick` → `tickTown` → markers → camera → sun/sky → HUD → audio →
 traffic recycling (island) → autosave. `loop` then renders, and when `film.grabNow` is set calls
 `film.grab()` in the same task (Herr Storch's still from the frame's buffer, feature 6, §10.11).
@@ -4374,7 +4484,8 @@ game.collected = { prylar: Set, fenor: Set };  game.unlocked: Set;
 game.holding;      // bool: Space held in flight (set in fixedStep)
 game.mantraOn;     // bool: mantra currently held (after wind-up)
 game.mantraMode;   // bool: island J = mantra (mantra stage)
-game.carrying;     // null | { item } | { who } (the free-roam Berra job's { who: 'berra', job }, §10.6)
+game.carrying;     // null | { item } | { who } (the free-roam Berra job's { who: 'berra', job }, §10.6;
+                   // a pig over his head { who: 'gris', job: 'pigs' }, §10.15)
 game.stomping;     // bool: a stomp is on its way down (onLand slams); the glide clears it (§10.7)
 game.glide;        // Glide (feature 3, §10.7): the free-roam glide after julafton
 game.judges;       // PoolJudges (feature 4, §10.8): the sisters judge his dives at Flamenco's pool
@@ -4389,6 +4500,9 @@ game.film;         // StorchFilm (feature 6, §10.11): Herr Storch films Stig's 
 game.eslov;        // Eslov (feature 7, §10.12): the rollerskier in free roam, the horn, Eslövloppet
 game.fest;         // PoolFest (feature 8, §10.13): Små grodorna in Flamenco's pool after the end;
 game.sorry;        // StigSorry (feature 11, §10.14): Stig says sorry in free roam
+game.pigs;         // PigTruck (feature 15, §10.15): the grisbil's pigs tumble off in free roam,
+                   // the catch, the pen at the farm; pigs.jolt(car, 'land' | 'crash', impact) from
+                   // onCarLanded / onCarImpact (the player's car)
                    // fest.joined (Stig in the ring: handleOneShots gives Space to fest.hop(), no kick;
                    // fixedStep zeroes his wish), fest.posed(key), fest.visit, fest.phase, fest.last
 game.outfitOverrides; // { key: outfit } from UNLOCKS[name].outfit, merged over the island set by applyOutfits (§10.3)
@@ -4724,6 +4838,11 @@ export function registerCarType(key, spec)            // used by cabin.js for 't
 // Occupants (Phase 2, §6.6): car.seatY() (bust base / hips − 0.12, car-local), car.roofY() (roof
 // underside − 0.08; buses too), car.fitScale(h, base = seatY()) = clamp((roofY − base) / h,
 // 0.72, 1). main.addBust / addRider (not 'bed') / seat use them, so no head pokes through a roof.
+// The grisbil's pigs (feature 15, §10.15): export PIG_SLOTS ([x, z / len, yaw, scale] on the bed
+// floor) and pigMesh(scale) (an outlined pig, feet at 0, snout +z; built once per scale and
+// cloned); a `pigs` car gets car.pigs[i] = { mesh, in } in its tilt group (empty otherwise);
+// car.setPig(i, on) (hidden while off, or on a burnt wreck); car.pigWorld(i, out?) -> { x, y, z }
+// its spot in world space; damage's burn hides them, repair shows the ones `in`.
 ```
 
 **pickups.js**
@@ -4973,6 +5092,16 @@ shame.paint (PaintShop, §7.2): configure(cfg) from configure(); onPursuit() fro
 //   carjack(ch) -> bool from enterCar (true: the driver's own bark is
 //   left out, he answers "Nej."); update(dt) after fest.update (reset() while not active());
 //   active(); pending(); push(kind, at, no); queue; up; lastT; first; noDone; said; last
+// pigTruck.js (feature 15, §10.15): game.pigs = new PigTruck(game) after the sorry; jolt(car, kind,
+//   impact) from main.onCarLanded ('land') and onCarImpact ('crash', the player's car when it is
+//   involved); update(dt) after sorry.update (release() while not live; the queue; skid(car, dt);
+//   the loose pigs' stepPig / stepHop / carried and the pen's stepPen; catching, delivering, refill,
+//   walking (the grisbonde, npc.steer), asking (Lasse), the NPC turned to Stig); target() after
+//   eslov.target() in updateMarkers and mapMarkers; objective() after eslov.objective() in
+//   updateHud; markers() in mapMarkers; truck(); bed(car); tip(car, why, impact); fill(car);
+//   clear(car); bay(); zone(); bonde(); deliver(car); dropPig(pig); loose; pen; falls; delivered;
+//   busy; carry; walk; last; paid
+// honk.js: the "NÖFF! NÖFF!" bubble over the bed only while car.pigs has one `in` (§10.9)
 // collision.js: waterAt(x, z, y) -> the `water` block he stands in at that height, or null
 //   (feature 4; moved from glide.js)
 
@@ -5162,6 +5291,13 @@ STIG_SORRY = {
   no: 'Nej.',   // [F*] Stig's answer there, relocated: the carjacked driver gives it
 };
 ```
+
+Feature 15: the grisbil's pig lines are their own module's (`PIG_TRUCK`, content/island.js,
+game/pigTruck.js, §10.15), not chatter or barks: the pig's "NÖFF!" [N], Stig's "Oj! Grisen!",
+"Förlåt, lilla gris. Upp med dig.", "Ursäkta! Nu åker vi hem.", "Såja. Ingen fara.", "Lasse! Kan du
+ta den där?" [N] and "Jag har lite anlag för åksjuka." [F*](t), Lasse's "Det ingår inte i mina
+åtaganden." [F*], the grisbonde's "¡Gracias, señor! Alla grisar hemma!" and "Det fattas grisar,
+señor!" [N].
 
 ---
 
@@ -5500,6 +5636,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `grodorna` [feature 8] | Små grodorna i poolen (§10.13): no fest at index 11 (Lasse at SunTrip in `sol`) nor at index 13 without `bodega`; with it (unlock + forced placement) Lasse wears `jul` and he, Affe, Gabbe and Fru Storch stand at their pool-deck homes, Herr Storch on the beach; at 23.30 no visit; Stig on the deck: all seven ours (`poolFest`, busy, invulnerable, posed), wading 0.5 m in their places facing the middle; the exchange in order, once; round 1 on the audio clock; sampled in the page: in the air 0.17–0.22 s after an even beat with tails (beats 0–7), Affe hopping without `groda`, down at 0.55–0.75 s, ears on 8–11, the chorus higher; the porter at his spot with his line and the head shake, then home and free; on the coping dry with "Dansa med" and the gap marked; E: in the gap, stiff (`groda` 3), wading, `I TAKT 0 / 8`, "Kliv ur ringen"; J no kick; E out onto the coping, dry; in again and a step out; no SKANDAL; round 2 two beats after round 1 (±0.06 s), the pause 12 s (±0.8); a dancer does not answer the horn; off the deck all walk home and are free with their spot ids; julafton's unlock gone mid-visit: home at once. Shots `grodorna_vadar`, `_portier`, `_ring`, `_kanten` |
 | `grodtakt` [feature 8] | the hop counter (§10.13), Space as real key events timed in the page: seven on the beat (`I TAKT 7 / 8`, a shot in the air), the eighth: the goal, `I TAKT 8 / 8` teal, the ring cheers, +50 pta, the toast, "Heia Norge!" then Lasse's line, and Stig's "Hopp… och hopp…"; half a hop off the beat: a miss, `OTAKT!`, Majsan and Ole laugh; a skipped hop beat breaks the row; eight across the gap between two rounds (round 2's beat 0 counts): the goal again, no second coin; the music off: no new cue, judged on the audio clock; no audio clock (`audio.clock` stubbed null): the round on the game clock, judged; a dive off the board: the judges take Siv and Majsan out of the ring and judge it; home again, the fest takes them back. Shots `grodorna_takt`, `_hopp`, `_jubel`, `_otakt` |
 | `artig` [feature 11] | Förlåt, förlåt! (§10.14), at index 9 (free roam) on Gasolina's forecourt: a kick bowls a pedestrian over, his line comes first and Stig's "Oj! Förlåt, förlåt! Det var inte meningen." 0.3–1.0 s after it (the session's first offence), +27 SKANDAL as always; a second kick within the 7 s gap: his line, no sorry; one kick into two people: both speak, one sorry, another kick line; a kicked petrol pump: "Oj… förlåt.", +12.6; a kicked bin: "Jag ersätter den, självklart!"; in a car on the z = 40 road a pedestrian run over at 13 m/s: "Förlåt! Jag såg er inte!", +54; a bin driven through at 10 m/s: another prop line; a bin an AI car breaks (`game.breakProp` with a traffic car): none; a carjacking with a Swedish driver (the session's first): no bark from him at first, +24, Stig's "Ursäkta, är det din bil?", the driver's "Nej." over 0.5 s after it; a Spanish driver: his `CARJACK_LOCAL` line at once and the question, no "Nej."; a Swedish one with the draw stubbed over `noChance`: his `CARJACK` line, the question, no "Nej."; a kick while his own line is up: no sorry, nothing queued; a dialogue drops a queued sorry and takes one that is up down; in a running mission (ropavieja) a kick: the pedestrian's line, no sorry. Shots `artig_spark`, `_tva`, `_pump`, `_kor`, `_kapning` |
+| `grisar` [feature 15] | Grisarna ramlar av grisbilen (§10.15), at index 9 (free roam) in the unlocked grisbil: three pigs in the bed, the objective and the zone ring; full throttle, a weave and corners at 10–22 m/s off the throttle drop none; a full stop from top speed tips the back right one ("skid"), Stig's "Oj! Grisen!", it lies, shakes with "NÖFF!" and trots off, no SKANDAL, the guide and a blip follow it; a standing grisbil does not take it, the bed rolled up to it at 2.2 m/s does; a car at 12 m/s makes a pinned pig skip, never under it; on foot it trots away, Stig lifts it ("Förlåt, lilla gris. Upp med dig.", walk cap, `carryOver`), R drops it, at the bed it hops in and his hands are free; Lasse is asked and refuses, not again within the minute; a 2.2 m drop ("land", ≥ 6) and the farm's wall at 12 m/s ("crash", ≥ 7) tip one each, two jolts inside the gap one, weaker none; the drive from the gravel drive to `grisfalla` hits nothing; with a pig loose the grisbonde's "Det fattas grisar, señor!", no delivery; with all three: three over the fence, his thanks, +100 pta, "Jag har lite anlag för åksjuka.", he stands at the pen, the three wander inside it, no second delivery; the bed refills at the Flamenco bay with Stig 35 m off; a clean trip +250, no sigh; a mission start puts a loose pig back and empties the pen; no jolt tips one in a mission |
 | `talk` [Phase 0] | `autoDialog = false`, walk to Ole at `gateQueue`, E, Space twice |
 | `fullstory` [Phase 0b] | swaps the literal §8 missions (`tools/fixtures/full-missions.js`) into `MISSIONS` and plays all 13 per §16.3 (`FROM`/`TO` as `story`); must end `#13 idle`, `RESULT: PASS` |
 | `kinds` [Phase 0b] | fixture data checks; haggle misses fail; follow `minDist` fails; smooth/fragile bars (teleports never count); carry spill; checkpoint retry re-applies night + `vals` and revives plates at `dansgolv`; destroy default spawn; grab at the wreck; scene `exitCar`; Phase 3: follow shows no bar before the start and a head-on quarry does not fail it, `retryCar` (the last car reused, a typed named car, `park`), getInCar `atHome` and a wrecked `missionCar` failing, a frame-only scene stopping the car dead, a scene cutting a `collect` guest's bubbles (3 frames in: no bubble over the guest or Stig, no empty one) and keeping his placement |
@@ -5576,6 +5713,7 @@ fatagaDukar golf bungalow bygge dromplan airport hittegods busBay bagageband dyn
 + the diving board `flamencoBoard` (feature 4, §10.8)
 + Stig's bed in room 107 `stigSang` (feature 30, §10.10)
 + the pool fest's ring `flamencoRing` (feature 8, §10.13)
++ the pig delivery's stop and the piglet pen `grisfalla grisfallaIn` (feature 15, §10.15)
 + collectibles `pryl_klocka pryl_poolpen pryl_kalkylator pryl_kniv pryl_kamera pryl_glasogon
 pryl_pung fena_flamenco fena_suntrip fena_plaza fena_golf fena_bungalow fena_hamn fena_hav` + Rio
 `rioBoat rioCam`.
@@ -7084,3 +7222,24 @@ the fixer's group.
   mission, stage kind, timer, fixture or calibration pool changed. Deviations from the idea: no
   crash line, a dented car is not counted, the first Swedish carjacking always gets the "Nej.".
   Scenario `artig` (§16.4).
+- Feature 15, "Grisarna ramlar av grisbilen – och tutan grymtar"
+  (`features/implemented/grisarna_ramlar_av_grisbilen.md`, 2026-10-15): the unlocked grisbil's pigs
+  tumble off in free roam (§10.15; new `src/game/pigTruck.js`, `PIG_TRUCK` in content/island.js,
+  landmarks `grisfalla grisfallaIn`; §1.6, §6.3, §6.6, §10.9, §10.14, §14.1–14.3, §14.6, §14.8, §14.10,
+  §16.4, Appendix A). car.js: the three pigs are their own meshes (`PIG_SLOTS`, `pigMesh`,
+  `car.pigs`, `setPig`, `pigWorld`; same look, scenario `cars`). With the player at the wheel, on the
+  island with `missions.state === 'idle'`: a landing at 6 m/s or more, a crash at 7 or more or 0.6 s
+  of skidding (a handbrake slide, a full stop from about 26 m/s) tips one pig over the side (back two
+  first, 1.2 s apart); it lies, shakes itself ("NÖFF!" [N]) and trots off, shy of Stig but slower
+  than his walk, skips aside from any car and is never run over; no SKANDAL. Stig lifts it over his
+  head on foot ("Förlåt, lilla gris. Upp med dig." [N], walking only) and it hops into the bed at the
+  bed, or the bed rolled up to it slowly takes it; "Lasse! Kan du ta den där?" [N] / "Det ingår inte
+  i mina åtaganden." [F*]. All three stopped by the piglet pen at the grisfest farm: over the fence,
+  the grisbonde walks over and thanks ("¡Gracias, señor! Alla grisar hemma!" [N]), 250 pta for a
+  clean trip, else 100 and Stig's "Jag har lite anlag för åksjuka." [F*](t); the bed fills again at
+  its Flamenco bay. main.js: `pigs.jolt` from `onCarLanded`/`onCarImpact`, `pigs.update` after
+  `sorry.update`, `target()`/`objective()`/`markers()` after Eslövloppet's; honk.js shows the
+  "NÖFF! NÖFF!" bubble only while a pig is in the bed (the grunting horn itself was feature 5's).
+  The bodega's `grisbilFollow` never loses a pig; no mission, stage kind, timer, fixture or
+  calibration pool changed. Deviations from the idea: the pigs hop over the fence themselves, R does
+  not take loose pigs away, the bed refills at Flamenco with Stig 30 m off. Scenario `grisar` (§16.4).

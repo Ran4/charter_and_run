@@ -188,6 +188,13 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   (första gången alltid, sedan ibland: han hinner inte med). Tar du en bil frågar han föraren
   "Ursäkta, är det din bil?", och ibland svarar en svensk turist bara "Nej.". SKANDAL-mätaren stiger
   precis lika mycket ändå.
+- **Grisarna ramlar av grisbilen**: kör grisbilen (upplåst efter uppdrag 9) för vilt, med en hård
+  landning, en krock, en lång sladd eller en tvärnit från full fart, så tumlar en gris av flaket. Den
+  ruskar på sig ("NÖFF!") och travar iväg. Gå fram till den så lyfter Stig den över huvudet (gå, spring
+  inte) och bär den till flaket, eller krypkör så att flaket rullar intill den så hoppar den upp själv.
+  Kör den fort mot den så skuttar den bara undan, och Lasse vägrar hjälpa till. Stanna med alla tre
+  grisar vid grisfållan på grisfestgården: grisarna hoppar in, grisbonden tackar och betalar (mer om
+  ingen gris ramlade av på vägen). Nästa gång grisbilen står vid Flamenco har den tre nya grisar.
 
 ## Vad är påhittat?
 
@@ -231,6 +238,9 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
   din bil?", och han som svarar)
 - att grisbilen lånas ut till Stig-Helmer, att man följer Josés bil och grisbilen, och
   jeepjakten
+- att grisarna ramlar av grisbilen när man kör vilt, att Stig fångar in dem och kör hem dem till
+  grisfållan, och att Lasse vägrar hjälpa till (ingen ramlar av grisbilen i filmen, och Stig-Helmer
+  är inte med i den scenen)
 - fårrusningen i Fataga, kappkörningen mot nattbussen och porslinskrosset på tid
 - att samla ihop julfestgästerna
 - Oles prylar och hajfenorna som samlarföremål, utspridda över ön
@@ -322,12 +332,13 @@ src/game/storchFilm.js          Lite film. in free roam: Herr Storch films the t
 src/game/eslov.js               Heja Eslöv! in free roam: the rollerskier trains, answers the horn, Eslövloppet
 src/game/poolFest.js            Små grodorna i poolen after the end: the ring in the pool, the porter, Stig dancing, the counter
 src/game/stigSorry.js           Förlåt, förlåt! in free roam: Stig's sorry for kicks, knock-downs, breakage and carjackings
+src/game/pigTruck.js            Grisarna ramlar av grisbilen in free roam: the pigs tumble off, the catch, the pen at the farm
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
 tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, meter, kinds, perf,
                                 paintshop, berra, glide, simhopp, tuta, dygn, super8, eslov, grodorna,
-                                artig, calibrate, calibflight)
+                                artig, grisar, calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
 tools/pool.mjs                  re-derives every random stage's timer from the ledger
@@ -365,6 +376,7 @@ node tools/shot.mjs eslov                # the rollerskier: his lane, the horn, 
 ESLOV_RUNS=8 node tools/shot.mjs eslovlopp  # measure Eslövloppet's timer with calibrate's walker (DESIGN §10.12)
 node tools/shot.mjs grodorna grodtakt    # the pool fest after the end: the ring, the porter, Stig in the ring, eight on the beat
 node tools/shot.mjs artig                # Stig says sorry: kicks, run over, a pump, bins, carjackings and the driver's "Nej."
+node tools/shot.mjs grisar               # the grisbil's pigs: the falls, the catch on foot and by creeping, Lasse, the pen
 node tools/shot.mjs fullstory kinds      # the literal §8 missions and the stage-kind checks
 node tools/shot.mjs calibrate calibflight  # timer and FLYGRÄDSLA calibration (slow; see DESIGN §8, §16.4)
 node tools/pool.mjs                      # random-stage timers from the raw runs in notes/calibration-samples.md

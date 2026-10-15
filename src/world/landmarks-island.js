@@ -103,6 +103,12 @@ export const ISLAND_LANDMARKS = {
   // (2,0) the grisfest farm
   grisfest: { b: [2, 0], at: [0, 26], yaw: PI },
   grisfestGate: { world: [-80, -204], yaw: PI / 2 },
+  // Grisarna ramlar av grisbilen (free roam, §10.15): where the grisbil stops to send its pigs over
+  // the piglet pen's east fence (x -14.8, nature.js), facing the pen, between the café table at
+  // (-9.5, 16), the palm at (-8, 26) and the cart; and the pen's free middle (the shelter and the
+  // trough left out), round which the delivered pigs wander.
+  grisfalla: { b: [2, 0], at: [-11, 20.5], yaw: -PI / 2 },
+  grisfallaIn: { b: [2, 0], at: [-18.5, 20.6], yaw: -PI / 2 },
   dansgolv: { b: [2, 0], at: [0, 0], yaw: 0 },
   pryl_pung: { b: [2, 0], at: [-18, -14], yaw: 0, y: 5.4 },
   // (0,0) Fataga

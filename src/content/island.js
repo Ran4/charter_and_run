@@ -150,6 +150,59 @@ export const STIG_SORRY = {
   no: 'Nej.',                                                                      // [F*] Stig's answer there, relocated: the driver gives it
 };
 
+// Grisarna ramlar av grisbilen – the pigs tumble off the grisbil (free roam, DESIGN §10.15;
+// game/pigTruck.js). Only the unlocked `car` (UNLOCKS.grisbil; the bodega's grisbilFollow never),
+// only with the player at its wheel, on the island with no mission running (`missions.state ===
+// 'idle'`). A landing at `land` m/s or more, a crash at `crash` m/s or more, or `skidSecs` s of
+// skidding (skidAmt >= `skidAmt` at `skidMin` m/s or more; a full stop from top speed is one) tips
+// one pig over the side, in `order` (the back two first), no sooner than `gap` s after the last. It
+// flies out with `fly` (`keep` × the car's velocity, `back`/`side`/`up` m/s), lies `downSecs`, shakes
+// itself `shakeSecs` with `oink` over it and trots off at `trot` m/s for `trotSecs`; then it potters
+// round where it landed (`roamR`) and trots away from Stig within `shyR` m at `shy` m/s (slower than
+// his walk). Stig on foot within `catchR` m lifts it over his head (walking only; `pickup`, the first
+// always, then at `pickChance`) and carries it to the bed (`bedR` m from the bed's middle); the
+// grisbil rolling at under `creep` m/s with the bed within `carCatchR` m of a pig on its feet makes
+// it hop up itself, and any car coming at it faster than that makes it skip `dodge` m/s aside
+// (never run over, never kicked, no SKANDAL). Stig on foot within `askR` m of a loose pig with Lasse
+// within `lasseR` m asks him (`ask`, at most every `askEvery` s), and Lasse refuses `refuseGap` s
+// later. With all three in the bed, the grisbil stopped (under `zone.stop` m/s) within `zone.r` m of
+// `zone.lm` by the piglet pen sends them over the fence into the pen (`pen`: their wander box round
+// `pen.lm`, half-sizes `hw` across and `hd` along its yaw), and the grisbonde thanks and pays `pay`
+// (`cleanPay` when none fell since the bed was last full; else Stig sighs `sick` `sickGap` s later).
+// He walks over to the pen (`bonde.path`, [left, forward] from `zone.lm`) when the grisbil comes
+// within `bonde.r` m with pigs in the bed, and stays until it has gone or `bonde.hold` s after his
+// thanks. The bed fills again when the grisbil stands within `home.r` m of its bay at Flamenco with
+// Stig over `home.away` m off. Invented (§1.6): all of it.
+export const PIG_TRUCK = {
+  car: 'grisbil',
+  land: 6, crash: 7, skidAmt: 0.5, skidMin: 6, skidSecs: 0.6, gap: 1.2,
+  order: [1, 2, 0],
+  fly: { keep: 0.55, back: 1.6, side: 3.2, up: 4.6 },
+  downSecs: 0.55, shakeSecs: 0.7, trot: 3.2, trotSecs: 2.2, roamR: 9, shyR: 4.5, shy: 3.0,
+  catchR: 1.4, bedR: 2.6, creep: 3.5, carCatchR: 2.8, dodge: 6, oinkEvery: 3,
+  zone: { lm: 'grisfalla', r: 6, stop: 2 },
+  pen: { lm: 'grisfallaIn', hw: 2.4, hd: 2.9 },
+  home: { r: 20, away: 30 },
+  pay: 100, cleanPay: 250,
+  bonde: { r: 45, path: [[4.1, -6], [3.9, 2.2]], walk: 3.2, hold: 4 },
+  askR: 10, lasseR: 22, askEvery: 60, refuseGap: 1.4, pickChance: 0.5,
+  oink: 'NÖFF!',                                                                     // [N] the pig
+  fall: 'Oj! Grisen!',                                                               // [N] Stig, the session's first fall
+  pickup: ['Förlåt, lilla gris. Upp med dig.' /* [N] */, 'Ursäkta! Nu åker vi hem.' /* [N] */, 'Såja. Ingen fara.' /* [N] */],
+  ask: 'Lasse! Kan du ta den där?',                                                  // [N] Stig
+  refuse: 'Det ingår inte i mina åtaganden.',                                        // [F*] Lasse's reply to Angerud, relocated
+  thanks: '¡Gracias, señor! Alla grisar hemma!',                                     // [N] the grisbonde
+  missing: 'Det fattas grisar, señor!',                                              // [N] the grisbonde
+  sick: 'Jag har lite anlag för åksjuka.',                                           // [F*](t) Stig's line from the bus, relocated
+  sickGap: 1.8,
+  title: 'Grisbilen',                                                                // [N]
+  looseText: 'En gris har ramlat av flaket! Gå fram till den – eller krypkör intill.',   // [N]
+  looseMany: '{n} grisar har ramlat av flaket! Gå fram till dem – eller krypkör intill.', // [N]
+  carryText: 'Bär grisen tillbaka till flaket.',                                     // [N]
+  homeText: 'Kör hem grisarna till fållan på grisfesten.',                           // [N]
+  paidToast: 'Grisbonden betalade {n} pta.',                                         // [N]
+};
+
 // Collectible sets (DESIGN §10.1). Generic pickup code lives in main.js.
 export const COLLECTIBLES = {
   prylar: {

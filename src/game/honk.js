@@ -55,7 +55,8 @@ export class Honk {
     const pigs = !!car.spec.pigs;
     g.hornAt = { x: car.x, z: car.z, yaw: car.yaw, t: g.time, pigs };
     const last = this.last = { t: g.time, pigs, peds: 0, replies: [], stig: [] };
-    if (pigs && g.time - this.bubbleT >= c.bubbleEvery) {
+    // The bubble over the bed only while a pig is in it (an emptied bed, §10.15, still grunts).
+    if (pigs && car.pigs.some((q) => q.in) && g.time - this.bubbleT >= c.bubbleEvery) {
       this.bubbleT = g.time;
       g.say(this.bedAnchor(car), c.oinkBubble, 1.3);
     }

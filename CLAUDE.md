@@ -51,7 +51,9 @@ opens with a summary of the rounds and the timer changes.
     grodtakt` (Små grodorna i poolen, the pool fest after the end: the ring in Flamenco's shallow end,
     the porter, Stig in the ring and the hop counter, DESIGN §10.13), `artig` (Förlåt, förlåt!,
     Stig's sorry after a kick, a knock-down, a broken thing or a carjacking, and the driver's "Nej.",
-    DESIGN §10.14)
+    DESIGN §10.14), `grisar` (Grisarna ramlar av grisbilen, the unlocked grisbil's pigs tumbling off,
+    the catch on foot and by creeping, Lasse's refusal and the delivery to the farm's pen, DESIGN
+    §10.15)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

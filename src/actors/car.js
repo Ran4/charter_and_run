@@ -316,19 +316,29 @@ function pigBody(g, x, y, z, ry, s = 1, head = true) {
 function pigsIn(ctx) {
   const { g, L, W, top } = ctx;
   const bz0 = -L / 2 + 0.1, bz1 = -L * 0.07, wood = 0x8a5a32;
-  // Slatted rack round the bed.
+  // Slatted rack round the bed. The pigs in it are their own meshes (Car.pigs, PIG_SLOTS).
   for (let k = 0; k <= 5; k++) for (const sx of [-1, 1]) g.box(wood, sx * (W / 2 - 0.06), top + 0.55, bz0 + (k / 5) * (bz1 - bz0), 0.07, 1.1, 0.07);
   for (const y of [0.55, 0.85, 1.08]) {
     for (const sx of [-1, 1]) g.box(wood, sx * (W / 2 - 0.04), top + y, (bz0 + bz1) / 2, 0.05, 0.07, bz1 - bz0);
     g.box(wood, 0, top + y, bz0, W - 0.08, 0.07, 0.05);
   }
-  // Pigs at the front and the back of the bed, leaving the middle (z = -0.3 L, the 'bed' rider
-  // slots of main.addRider) free for hitch-hikers. The back two stand across the bed, snout to snout
-  // and a little apart, wholly inside the rack (facing aft at -0.42 L their heads and snouts stuck
-  // ~0.2 m out over the tailgate).
-  pigBody(g, 0.05, top, -L * 0.15, Math.PI / 2 + 0.15, 0.85);
-  pigBody(g, -0.47, top, -L * 0.41, Math.PI / 2 - 0.12, 0.72);
-  pigBody(g, 0.47, top, -L * 0.425, -Math.PI / 2 - 0.12, 0.72);
+}
+// The three pigs in the bed, each its own mesh so one can tumble off and be put back (free roam,
+// DESIGN §10.15): [x, z / len, yaw, scale], car-local on the bed floor. One at the front and two at
+// the back of the bed, leaving the middle (z = -0.3 L, the 'bed' rider slots of main.addRider) free
+// for hitch-hikers. The back two stand across the bed, snout to snout and a little apart, wholly
+// inside the rack (facing aft at -0.42 L their heads and snouts stuck ~0.2 m out over the tailgate).
+export const PIG_SLOTS = [[0.05, -0.15, Math.PI / 2 + 0.15, 0.85], [-0.47, -0.41, Math.PI / 2 - 0.12, 0.72], [0.47, -0.425, -Math.PI / 2 - 0.12, 0.72]];
+// A pig mesh of scale s (feet at y 0, snout along +z), outlined; built once per scale and cloned
+// (geometry shared). The loose pigs of game/pigTruck.js are the same meshes.
+const _pigMesh = {};
+export function pigMesh(s) {
+  if (!_pigMesh[s]) {
+    const g = new GeoBuilder();
+    pigBody(g, 0, 0, 0, 0, s);
+    _pigMesh[s] = toonMesh(g.build(), { outline: 0.035 });
+  }
+  return _pigMesh[s].clone();
 }
 
 function taxiSign(ctx) {
@@ -461,6 +471,19 @@ export class Car {
       const gm = new THREE.Mesh(glass, MAT.glass);
       gm.renderOrder = 2;
       this.tilt.add(gm);
+    }
+    // The grisbil's pigs: `pigs[i]` = { mesh, in } for PIG_SLOTS[i]; `in` false while that pig is
+    // off the bed (setPig). A burnt wreck hides them with the decals.
+    this.pigs = [];
+    if (spec.pigs) {
+      const top = spec.wheelR * 0.95 + spec.bodyH;
+      for (const [x, z, ry, s] of PIG_SLOTS) {
+        const mesh = pigMesh(s);
+        mesh.position.set(x, top, z * spec.len);
+        mesh.rotation.y = ry;
+        this.tilt.add(mesh);
+        this.pigs.push({ mesh, in: true });
+      }
     }
     this.wheels = [];
     const wg = getWheelGeo();
@@ -688,6 +711,7 @@ export class Car {
         this.burn = 6;
         this.body.material = MAT.burnt;
         for (const e of this.decals) e.visible = false;
+        for (const p of this.pigs) p.mesh.visible = false;
         FX.explosion(this.x, this.y + 0.5, this.z);
         this.vy = 6; this.air = true;
         this.w += (Math.random() - 0.5) * 3;
@@ -702,6 +726,23 @@ export class Car {
     this.burn = 0;
     this.body.material = MAT.toon;
     for (const e of this.decals) e.visible = true;
+    for (const p of this.pigs) p.mesh.visible = p.in;
+  }
+
+  // Pig i of the bed on (in it) or off (tumbled off, carried, in the pen: game/pigTruck.js).
+  setPig(i, on) {
+    const p = this.pigs[i];
+    if (!p) return;
+    p.in = on;
+    p.mesh.visible = on && this.body.material !== MAT.burnt;
+  }
+  // Where pig i stands in the bed, in world space (from the physics state, like seatWorld).
+  pigWorld(i, out = { x: 0, y: 0, z: 0 }) {
+    const s = this.spec, [lx, lz] = PIG_SLOTS[i], c = Math.cos(this.yaw), sn = Math.sin(this.yaw), z = lz * s.len;
+    out.x = this.x + lx * c + z * sn;
+    out.y = this.y + s.wheelR * 0.95 + s.bodyH;
+    out.z = this.z - lx * sn + z * c;
+    return out;
   }
 
   // A new coat of paint (the free-roam paint shop, DESIGN §7.2). The colour is baked into the body's
