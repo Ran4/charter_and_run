@@ -1,6 +1,5 @@
 # Gör dessa grejer (flytta filen till features/implemented/ och uppdatera den när du är klar, och
 # flytta den till "färdiga features"-sektionen nedan)
-- features/sma_grodorna_runt_poolen.md – 8. Små grodorna i poolen [M]
 - features/artiga_stig.md – 11. Förlåt, förlåt! – Stig-Helmer ber om ursäkt [S]
 - features/grisarna_ramlar_av_grisbilen.md – 15. Grisarna ramlar av grisbilen – och tutan grymtar [M]
 - features/lapplisan_majsan.md – 20. Lapplisan Majsan – ”Ursäkta, är det din bil?” [M]
@@ -69,3 +68,4 @@
 - features/implemented/dygnet_runt.md – 30. Dygnet runt – kväll på ön och en tupplur i rum 107 [M]
 - features/implemented/storch_super8.md – 6. Lite film. – herr Storchs semesterfilm [M]
 - features/implemented/heja_eslov.md – 7. Heja Eslöv! – rullskidåkaren tränar på riktigt [M]
+- features/implemented/sma_grodorna_runt_poolen.md – 8. Små grodorna i poolen [M]

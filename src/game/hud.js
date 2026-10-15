@@ -50,6 +50,7 @@ export const hud = {
       <div id="prompt"></div>
       <div id="score"><div class="score-main"></div><div class="score-sub"></div></div>
       <div id="fade"></div>
+      <div id="takt"></div>
       <div id="toasts"></div>
       <div id="banner"><div class="banner-main"></div><div class="banner-sub"></div></div>
       <div id="bubbles"></div>
@@ -85,6 +86,7 @@ export const hud = {
     this.clockEl = $('klocka');
     this.fadeEl = $('fade');
     this.scoreEl = $('score');
+    this.taktEl = $('takt');
     this.vfEl = $('viewfinder');
     this.fnEl = $('filmnight');
     this.flash = $('flash');
@@ -328,6 +330,20 @@ export const hud = {
     this._scoreT = setTimeout(() => e.classList.remove('show'), secs * 1000);
   },
   hideScore() { clearTimeout(this._scoreT); this.scoreEl.classList.remove('show'); },
+
+  // The pool fest's hop counter (game/poolFest.js, §10.13), top right under the meter while Stig is
+  // in the ring: `text` ("I TAKT 6 / 8"), null hides it; `flash` 'miss' (red) or 'goal' (teal) for
+  // 0.9 s. Touches the DOM only on a change.
+  setTakt(text, flash = '') {
+    const e = this.taktEl, on = text != null;
+    if (on && text !== this._taktText) { this._taktText = text; e.textContent = upper(text); }
+    if (on !== this._taktOn) { this._taktOn = on; e.classList.toggle('show', on); }
+    if (flash) {
+      e.classList.remove('miss', 'goal'); void e.offsetWidth; e.classList.add(flash);
+      clearTimeout(this._taktT);
+      this._taktT = setTimeout(() => e.classList.remove('miss', 'goal'), 900);
+    } else if (!on) { clearTimeout(this._taktT); e.classList.remove('miss', 'goal'); }
+  },
 
   letterbox(on) { $('letterbox').classList.toggle('on', on); },
 

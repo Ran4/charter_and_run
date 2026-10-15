@@ -3,7 +3,8 @@
 // DESIGN §1.4 (bark tables are [F*]: every film line is relocated there). Invented (§1.6): Oles
 // prylar and hajfenor as collectibles, the grisbil unlock, the glide after julafton, the sisters
 // judging his dives at Flamenco's pool, the island answering his horn, Herr Storch filming his
-// tricks and his film night, the rollerskier's training, his answer to the horn and his race.
+// tricks and his film night, the rollerskier's training, his answer to the horn and his race, and the
+// pool fest after the end (Små grodorna in Flamenco's pool, Stig hopping with them in his suit).
 
 export const HOMES_ISLAND = {
   ole: ['flamenco', 2.0, 1.0, 0],     // yaw 0: under the pergola, facing the pool (flamenco faces π)
@@ -160,7 +161,13 @@ export const UNLOCKS = {
   // Lite film. (§10.11): the lens cap is off after julafton, so the witness rule turns round (an
   // offence near Herr Storch counts: there is evidence now; `witness` is merged over
   // METERS.skandal.witnessToast), and his chatter knows it.
-  bodega: { hook: 'bodegaLit', label: ['Pepes Bodega', 'bodega'], home: { berra: ['bodega', -1.5, 0.5], robban: ['bodega', 1.5, 0.5], angerud: null },
+  // Små grodorna (§10.13): the Christmas party is not quite over. Lasse keeps his Santa outfit
+  // (`outfit`, merged over the island's set), and he, Affe, Gabbe and Fru Storch stay on Flamenco's
+  // pool deck by the plastic tree (Herr Storch films on the beach, §10.11).
+  bodega: { hook: 'bodegaLit', label: ['Pepes Bodega', 'bodega'],
+    home: { berra: ['bodega', -1.5, 0.5], robban: ['bodega', 1.5, 0.5], angerud: null,
+      lasse: ['flamencoPool', -3.4, 2.8], fruStorch: ['flamencoPool', 0.6, 2.6], affe: ['flamencoPool', 4.6, 2.4], gabbe: ['flamencoPool', 6.0, 1.2] },
+    outfit: { lasse: 'jul' },
     chatter: { berra: ['Robban! Jag hittade Pepes Bodega!' /* [F*] */], robban: ['Pepes Bodega. Glöm aldrig det, du.' /* [F*] */],
       herrStorch: ['Lite film.' /* [F*](t) */, 'Locket är av nu, ska du veta.' /* [N] */] },
     witness: { text: 'Linsskyddet är av – nu finns det bevis!', evidence: true },   // [N] the offence counts
@@ -466,6 +473,61 @@ export const ESLOV = {
       line: 'Det är träningen som gör det!' },                                     // [N]
     abort: 'Eslövloppet avbrutet – det springs till fots.',                        // [N]
   },
+};
+
+// Små grodorna i poolen – the pool fest after the end (free roam, DESIGN §10.13; game/poolFest.js).
+// On the island with `missions.state === 'idle'`, from `fromIndex` (after julafton) with the unlock
+// `after`, between `hours` on the free-roam clock. Stig on Flamenco's pool deck (`deck`: [x0, x1],
+// [z0, z1] m from `at` in world axes; the visit ends `margin` m outside it) calls the party: the
+// `ring` (free, within `claimR` m of `at`) wade at `walk` m/s to their places on a circle of `r` m
+// round `at` (clockwise from Stig's gap at world yaw `gapYaw`; `leader` in the middle) and stand
+// `wade` m deep. The `musicians` keep their instruments; the rest hop with their hands as ears or
+// tails (anim `groda`). A set: `rounds` rounds of the `tune` (`gapBeats` apart), then `pauseSecs` s;
+// the first starts `startSecs` s after the last dancer is in place (or `formSecs` after the call).
+// Every other beat from beat 0 the ring hops `hop.h` m for `hop.air` of the two beats (`hop.chorus`
+// from beat `hop.chorusFrom`). The music's level at a round's start falls from 1 at `vol.near` m to
+// `vol.min` at `vol.far` m. The first visit of a session, Stig within `askR` m of the gap: the `ask`
+// exchange ([delay s, who, text]). Each visit, at the first round, the `porter` steps out to `at`
+// ([dx, dz] from `at`), says `line`, shakes his head `shakeSecs` s, stays `stay` s and goes back.
+// `join`: E at the gap (`r` m; marked on the water) and Stig steps into the ring (stiff as a stick);
+// Space hops `hopV` m/s; within `window` s of a ring hop it is in time. `goal` in a row: the ring
+// cheers `cheerSecs` s, `cheer` (Ole), and once a visit Lasse's `pay` pta (`payLine`, `payToast`).
+// Off the beat the ring laughs (`laughSecs`, at most every `laughEvery` s); a ring hop missed breaks
+// the row. Lines at most every `again` s. E again, or a step, takes him out (`out` m behind the gap).
+// Invented (§1.6): the fest in free roam, the ring round Lasse, the hop counter, Stig dancing at all
+// (in the film he and Ole open the crispbread while the others dance); the melody is traditional.
+export const POOL_FEST = {
+  at: 'flamencoRing', after: 'bodega', fromIndex: 13, hours: [9, 23],
+  deck: { x: [-22, 23], z: [-13, 22] }, margin: 8,
+  r: 2.9, gapYaw: -0.35, leader: 'lasse',
+  ring: ['majsan', 'siv', 'affe', 'gabbe', 'fruStorch', 'ole'],
+  musicians: ['affe', 'gabbe'],
+  claimR: 40, walk: 1.7, wade: 0.5, minDancers: 3,
+  tune: 'smaGrodorna', rounds: 2, gapBeats: 2, pauseSecs: 12, startSecs: 1.5, formSecs: 12,
+  hop: { h: 0.3, chorus: 0.42, chorusFrom: 16, air: 0.42 },
+  vol: { near: 12, far: 50, min: 0.15 },
+  askR: 14,
+  ask: [
+    [0, 'stig', 'Måste man gå på den?'],                                          // [F*] julafton morning, about the party (research-plot.md:365), relocated to the pool's edge
+    [2.4, 'majsan', 'Var inte så typiskt svensk.'],                              // [F*] her answer (research-characters.md:224)
+    [5.0, 'stig', 'Det är väl typiskt svenskt att ha julfest bland palmerna.'],   // [F*](t) the same exchange (speaker interpreted)
+  ],
+  porter: {
+    who: 'portier', at: [1.4, -9.6], walk: 1.4, shakeSecs: 2.2, stay: 6,
+    line: 'De där svenskarna är heltokiga!',                                     // [F*](t) the Spaniards at the julfest; julafton gives it to the porter
+  },
+  join: {
+    r: 2.6, hopV: 4.6, out: 2.4, camTurn: 0.4,
+    prompt: '<b>E</b> Dansa med',                                                // [N]
+    leave: '<b>E</b> Kliv ur ringen',                                            // [N]
+    line: 'Hopp… och hopp…',                                                     // [N] Stig, counting himself in
+  },
+  window: 0.18, goal: 8, cheerSecs: 2.2, laughSecs: 1.3, laughEvery: 4, again: 20,
+  cheer: ['ole', 'Heia Norge!'],                                                 // [F*] his solo dance at the grisfest ends "Heja Norge!" (research-plot.md:348)
+  pay: 50,
+  payLine: 'Bravo, Stig-Helmer! En slant från SunTrip.',                        // [N]
+  payToast: 'Lasse gav dig {n} pta.',                                            // [N]
+  takt: 'I TAKT', miss: 'OTAKT!',                                                // [N] · [N]
 };
 
 // Speedo names for named and mission cars (§11.4); unnamed cars show their type's Swedish name.

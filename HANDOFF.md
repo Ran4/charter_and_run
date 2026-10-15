@@ -408,7 +408,8 @@ Where: file or DESIGN section; numbers are from the named report.
 ### 4.7 Needs the user
 
 - Nobody has listened to the music or the trad melodies (Små grodorna, Hej tomtegubbar, Helan går);
-  headless runs cannot judge them.
+  headless runs cannot judge them. Since feature 8 (DESIGN §10.13) Små grodorna plays round after
+  round at Flamenco's pool after the end, and its hop counter is judged on the melody's beat.
 - Play by hand: the on-foot timers (only modelled so far, §4.2), the gate dash's fear, and the feel
   of the side-sliding chase camera under porches and balconies.
 

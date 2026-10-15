@@ -985,7 +985,7 @@ function heldPose(m, st, t, place = false) {
   const h = m.def.held;
   if (!h || !PROP_GEO[h]) return;
   const [R, L] = m.arms;
-  const busy = st.wings || st.cupUp || st.cupHeld || st.push || st.hold || st.flail || st.oath || st.dance || st.laugh || st.mirror || st.film || st.giraffe || st.butterKnife || st.carryOver || st.shoeOff || st.calc || st.cheer || st.wave || st.kick > 0;
+  const busy = st.wings || st.cupUp || st.cupHeld || st.push || st.hold || st.flail || st.oath || st.dance || st.laugh || st.mirror || st.film || st.giraffe || st.butterKnife || st.carryOver || st.shoeOff || st.calc || st.groda || st.cheer || st.wave || st.kick > 0;
   const pose = !place && !busy;
   const moving = st.speed > 0.3;
   switch (h) {
@@ -1150,6 +1150,29 @@ function poseFlags(m, st, t) {
       legs[1].rotation.set(Math.max(0, -Math.sin(t * 5.2)) * -0.45, 0, 0.08);
     }
   }
+  if (st.groda) {
+    // Små grodorna in Flamenco's pool (game/poolFest.js): 1 "öron", straight arms up beside the head
+    // like a frog's ears; 2 "svansar", the hands behind at the seat; both crouched (the hips forward,
+    // the legs apart and forward, the body low). 3 is Stig hopping with them, stiff as a stick: arms
+    // pressed to his sides, legs straight together, chin up. The hop itself is `hop` below (Stig's is
+    // a real jump).
+    const k = st.groda;
+    if (k === 3) {
+      R.rotation.set(0.04, 0, -0.06); L.rotation.set(0.04, 0, 0.06);
+      legs[0].rotation.set(0, 0, -0.02); legs[1].rotation.set(0, 0, 0.02);
+      m.hips.rotation.x = 0;
+      m.neck.rotation.x = -0.14;
+    } else {
+      if (k === 2) { R.rotation.set(0.85, 0, -0.32); L.rotation.set(0.85, 0, 0.32); }
+      else { R.rotation.set(-0.22, 0, -2.75); L.rotation.set(-0.22, 0, 2.75); }
+      legs[0].rotation.set(-0.38, 0, -0.22); legs[1].rotation.set(-0.38, 0, 0.22);
+      m.hips.rotation.x += 0.3;
+      m.neck.rotation.x = -0.25;
+      m.body.position.y -= 0.08 * s;
+    }
+  }
+  // A hop on the beat that is only a look (the ring in the pool): the whole body up `hop` m.
+  if (st.hop) m.body.position.y += st.hop;
   if (st.laugh) {
     // Holding the belly, leaning back, shaking.
     R.rotation.set(-0.55, 0, 0.62);

@@ -143,6 +143,12 @@ body.panik #app canvas { filter: saturate(1.5) contrast(1.08); }
 .score-sub { font: 16px var(--display); letter-spacing: 1.5px; color: var(--terracotta); margin-top: 2px; }
 .score-sub:empty { display: none; }
 #score.record .score-sub { color: var(--teal); }
+/* The pool fest's hop counter (§10.13): top right under the meter; the toasts move down under it. */
+#takt { position: absolute; top: 88px; right: 24px; font: 26px/1 var(--display); letter-spacing: 1px; color: var(--ink); background: var(--cream); border: 3px solid var(--ink); border-radius: 14px; padding: 7px 14px 5px; box-shadow: 3px 4px 0 var(--ink); opacity: 0; transform: translateX(20px); transition: opacity 0.25s, transform 0.25s; white-space: nowrap; pointer-events: none; }
+#takt.show { opacity: 1; transform: none; }
+#takt.miss { color: var(--cream); background: var(--red); animation: bump 0.25s ease-out; }
+#takt.goal { color: var(--cream); background: var(--teal); animation: bump 0.25s ease-out; }
+#takt.show ~ #toasts { top: 142px; }
 #prompt b { background: var(--sun); color: var(--ink); border-radius: 6px; padding: 0 7px; margin-right: 4px; font-family: var(--display); font-weight: 400; box-shadow: 0 2px 0 #b8860b; }
 #toasts { position: absolute; right: 24px; top: 104px; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; max-width: min(430px, 40vw); }
 /* Below a shown objective card (with timer, bar and two text lines it reaches about 170 px down),

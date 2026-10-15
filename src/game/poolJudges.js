@@ -56,11 +56,12 @@ export class PoolJudges {
     return !!cur && cur.level === 'island' && (cur.giver === key || !!cur.extra?.some((e) => e === key || (Array.isArray(e) && e[0] === key)));
   }
   // She can judge: standing, shown, not held by a mission's idle pose or the Berra job, and not
-  // placed by anyone else (busy) unless she is ours.
+  // placed by anyone else (busy) unless she is ours. Dancing in the pool fest's ring she can (the
+  // call takes her out of it, and the fest takes her back once she is home, §10.13).
   free(key) {
     const g = this.g, n = g.npc(key);
     return !!n && n.state === 'normal' && n.root.visible && !g.missions.idlePose(key) && !g.berraJob.posed(key)
-      && (!n.busy || n.spot === MARK);
+      && (!n.busy || n.spot === MARK || !!g.fest?.posed(key));
   }
   // Free and within `judgeR` m of the board (not at the airport or friskotek as a mission's extra).
   here(key) {

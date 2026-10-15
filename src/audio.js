@@ -352,13 +352,16 @@ export const audio = {
   helanGar() { this.trad('helanGar'); },
 
   // Public-domain traditional cue (§12.1): a one-shot accordion melody with an oom-pah under it,
-  // over a ducked music bus. opts.vol (0..1) scales it (helanGar is "faint" by default).
-  // Returns the length in seconds.
+  // over a ducked music bus. opts.vol (0..1) scales it (helanGar is "faint" by default); opts.duck
+  // is the music bus's level under it (0.3; the pool fest's faint far rounds duck less, §10.13).
+  // Returns the length in seconds (0: no context, muted or music off). `tradAt` is the audio-clock
+  // time of the cue's beat 0 (read with `clock()`; the pool fest dances on it).
   trad(name, opts = {}) {
     const m = TRAD[name];
     if (!m || !ctx || this.muted || !this.musicOn) return 0;
     const vol = opts.vol ?? (name === 'helanGar' ? 0.55 : 1);
     const beat = 60 / m.bpm, t0 = ctx.currentTime + 0.12;
+    this.tradAt = t0;
     let end = 0;
     for (const [b, n, d] of m.notes) {
       if (n > 0) accordion(mtof(n), t0 + b * beat, d * beat * 0.92, 0.07 * vol, tradBus);
@@ -372,10 +375,12 @@ export const audio = {
     }
     const len = end * beat + 0.4;
     clearTimeout(this._tradT);
-    tradDuck.gain.setTargetAtTime(0.3, ctx.currentTime, 0.15);
+    tradDuck.gain.setTargetAtTime(opts.duck ?? 0.3, ctx.currentTime, 0.15);
     this._tradT = setTimeout(() => { if (ctx) tradDuck.gain.setTargetAtTime(1, ctx.currentTime, 0.4); }, len * 1000);
     return len;
   },
+  // The audio clock in seconds while the context runs, else null (none yet, or suspended).
+  clock() { return ctx && ctx.state === 'running' ? ctx.currentTime : null; },
   // Test hook (tools/scenarios/meter.mjs): RMS of the master output over the last ~40 ms, the
   // context state and the tune that is playing now.
   level() {
@@ -794,3 +799,8 @@ const TRAD = {
   },
 };
 export const TRAD_NAMES = Object.keys(TRAD);
+// A melody's tempo and length in beats (its last note's end): the pool fest's beat clock (§10.13).
+export function tradInfo(name) {
+  const m = TRAD[name];
+  return m && { bpm: m.bpm, beats: Math.max(...m.notes.map(([b, , d]) => b + d)) };
+}

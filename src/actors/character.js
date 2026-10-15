@@ -3,13 +3,14 @@
 // seated (in a car via game.seat, or in a plane seat via seatAt) | hidden (no step, invisible).
 // `tumble(secs, roll)`: a forward roll onto his back, then down (the glide's landing, game/glide.js).
 // `flop(secs)`: flat on his belly, then up (the belly flop into the pool, game/poolJudges.js).
+// `wade`: metres the standing model is sunk below his feet (waist-deep in the pool, game/poolFest.js).
 
 import { buildCharacter, animateCharacter } from './models.js';
 import { queryBlocks, circleVsBlock, groundAt, groundInfo, topAt, RAMP } from '../world/collision.js';
 import { dampAngle, yawTo } from '../util.js';
 
 export const STEP = 0.45;
-export const ANIM_FLAGS = ['wings', 'cupUp', 'cupHeld', 'push', 'planeSeat', 'hold', 'flail', 'oath', 'dance', 'laugh', 'slump', 'shoeOff', 'mirror', 'film', 'giraffe', 'butterKnife', 'carryOver', 'glide', 'swan', 'calc', 'ski'];
+export const ANIM_FLAGS = ['wings', 'cupUp', 'cupHeld', 'push', 'planeSeat', 'hold', 'flail', 'oath', 'dance', 'laugh', 'slump', 'shoeOff', 'mirror', 'film', 'giraffe', 'butterKnife', 'carryOver', 'glide', 'swan', 'calc', 'ski', 'groda'];
 export const GRAV = 24;
 const _blocks = [], _hit = {};
 
@@ -27,7 +28,7 @@ export class Character {
     this.timer = 0;
     this.wishX = 0; this.wishZ = 0;
     this.faceWish = true;
-    this.anim = { speed: 0, air: false, vy: 0, kick: 0, talk: false, seated: false, flung: false, down: false, t: Math.random() * 10, spin: 0, look: 0, wave: false, cheer: false, sprint: false, yell: false };
+    this.anim = { speed: 0, air: false, vy: 0, kick: 0, talk: false, seated: false, flung: false, down: false, t: Math.random() * 10, spin: 0, look: 0, wave: false, cheer: false, sprint: false, yell: false, hop: 0 };
     for (const f of ANIM_FLAGS) this.anim[f] = false;
     this.car = null;
     this.spin = 0; this.spinRate = 0;
@@ -36,6 +37,7 @@ export class Character {
     this.height = this.model.height;
     this.floats = def.kind === 'wizard' || def.kind === 'ghost';
     this.solid = true;
+    this.wade = 0;
     this.sync(0);
   }
 
@@ -233,7 +235,7 @@ export class Character {
     animateCharacter(this.model, a, dt);
     if (this.state === 'seated') return;
     this.root.visible = true;
-    this.root.position.set(this.x, this.y, this.z);
+    this.root.position.set(this.x, this.y - (this.state === 'normal' ? this.wade : 0), this.z);
     this.root.rotation.set(0, this.yaw, 0);
     if (this.state === 'flung') {
       this.root.rotation.x = this.spin;

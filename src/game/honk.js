@@ -38,10 +38,11 @@ export class Honk {
     return g.level === 'island' && g.missions.state === 'idle' && !g.inDialog;
   }
   // An NPC who can answer: standing, shown, and not held by a mission's idle pose, the Berra job,
-  // the diving judges or Herr Storch's filming (the same rule as the chatter bubbles).
+  // the diving judges, Herr Storch's filming or the pool fest (the same rule as the chatter bubbles).
   free(key) {
     const g = this.g, n = g.npc(key);
     return !!n && n.state === 'normal' && n.root.visible && !g.missions.idlePose(key) && !g.berraJob.posed(key) && !g.judges.posed(key) && !g.film.posed(key)
+      && !g.fest.posed(key)
       && !g.eslov.owns(key);   // the rollerskier answers himself (§10.12)
   }
   // main.js syncAll: an answerer whose pose is the wave waves.

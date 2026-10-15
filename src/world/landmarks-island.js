@@ -36,6 +36,10 @@ export const ISLAND_LANDMARKS = {
   // 0.97, hotels.js), facing along it out over the deep end. Not a standing spot: the sisters' places
   // at the pool's edge are offsets from it (POOL_JUDGES.spots), and its block is the judged board.
   flamencoBoard: { b: [3, 3], at: [-14.1, 7], yaw: PI / 2 },
+  // Små grodorna (free roam, §10.13): the middle of the pool fest's ring in the shallow end (pool x
+  // [-7, 6], z [1.5, 12.5]), 2.5 m east of the circling fin's path (fena_flamenco, r 1.2 round (-3, 7)).
+  // Lasse stands here; the ring's places and Stig's gap (POOL_FEST) are round it.
+  flamencoRing: { b: [3, 3], at: [2, 8], yaw: 0 },
   // Dygnet runt (free roam, §10.10): the middle of Stig's turquoise bed in room 107 (top 0.70,
   // hotels.js stigOleRoom), the way a sleeper on his back faces (feet to the patio, head on the
   // pillow by the back wall). The nap's E spot, and Ole's and Stig's places are offsets from it

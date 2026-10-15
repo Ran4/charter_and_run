@@ -188,7 +188,11 @@ stills he takes after julafton and his film night, and the witness rule turning 
 looks through his camera, and there is no film night); the rollerskier training up and down the
 Eslöv lane, his answer to the horn ("Bara 390 mil kvar!"), his "Spår!", Stig's cheer and Eslövloppet
 round the tomato fields (free roam, §10.12; in the film he only passes Berra and Robban on the
-country road, and "Heja Eslöv!" is Berra's).
+country road, and "Heja Eslöv!" is Berra's); the pool fest after the end: the SunTrip lot dancing
+Små grodorna in Flamenco's pool in free roam, the ring round Lasse, the porter's walk out, Stig
+hopping with them in his suit and the hop counter (free roam, §10.13; in the film the others dance
+in the pool at the julfest while Stig-Helmer and Ole open the crispbread, and Stig-Helmer never
+dances).
 The film's flight has **no turbulence** and **no in-flight toilet scene**: both toilet scenes are
 at Arlanda (we keep them there). The plane's toilets are only an invented hideout.
 
@@ -252,7 +256,7 @@ Removed Bigmouth keys: `nick maurice andrew steve jay jessi connie duke shame` (
 | `berra` | `arlanda` (cowichan), `flyg`, `sol` (+ `hat:'cap'`† white) | per level |
 | `robban` | `flyg` (orange, `collar` `0x1f2f6a`), `sol` (navy with yellow dots, `collar` `0xffd23f`, white cap with `peakC` `0x2a4fa0`) | per level |
 | `angerud` | `arlanda` (`coat` camel `0xc8a06a`, `hat:'fur'` `0x5a3a22`), `flyg` (dark suit, blue shirt), `sol` (light-blue suit, white shirt + shades) | `arlanda` at the gate (mission 1), then per level |
-| `lasse` | `sol` (yellow suit), `jul` (red T-shirt, red shorts with a white `shortsHem` + tomte hat) | `jul` in julafton |
+| `lasse` | `sol` (yellow suit), `jul` (red T-shirt, red shorts with a white `shortsHem` + tomte hat) | `jul` in julafton, and on the island after the end (`UNLOCKS.bodega.outfit`, §10.3, §10.13) |
 | `majsan`, `siv` | `flyg` (cardigan over dress: shirt colour on top; no print, no `skirtPrint`), `sol` | per level |
 
 Invented look details (§1.6): Stig's arlanda scarf and Fru Storch's white dress. The other looks in
@@ -306,6 +310,11 @@ and fur hat).
 - Free roam from index 12 (after the grisfest): the Berra job (§10.6) borrows `berra` and `robban`
   (`busy`) for a nap on the plaza bench or a SunTrip lounger and the carry home; a mission start
   sends both home at once.
+- After the end (`UNLOCKS.bodega.home`, §10.3): `lasse` `['flamencoPool', -3.4, 2.8]`, `fruStorch`
+  `['flamencoPool', 0.6, 2.6]`, `affe` `['flamencoPool', 4.6, 2.4]`, `gabbe` `['flamencoPool', 6.0,
+  1.2]`: on Flamenco's south pool deck by the plastic tree (world (0.4, 15.2), (−3.6, 15.4), (−7.6,
+  15.6), (−9, 16.8), facing the pool), where the pool fest (§10.13) borrows them with Ole and the
+  sisters. Herr Storch stays on the beach (§10.11).
 
 ---
 
@@ -344,6 +353,9 @@ Physical keys are unchanged from Bigmouth. The level config turns verbs on and o
 - **The rollerskier** (free roam, §10.12): H in a car within 22 m of him is Stig's "Heja Eslöv!"; on
   foot "E Heja Eslöv!" does the same, he stops, and for 9 s "E Eslövloppet – ett varv runt fälten"
   starts the race. The race is on foot: a car or R ends it.
+- **The pool fest** (free roam after the end, §10.13): at the gap marked on the water in the dancers'
+  ring "E Dansa med" puts Stig in the ring; there Space is a small hop judged against the ring's beat,
+  J does nothing, and "E Kliv ur ringen" or a step (any move key) takes him out.
 - **Seated** (flight): movement input is ignored; E uses a `whileSeated` interactable if one is in
   range, else stands up (giver talk is **not** offered while seated: stand up first, §14.3); J
   mantra still works; Space does nothing. Phase 0: `handleOneShots` handles E, J and R when
@@ -1126,7 +1138,7 @@ standing there faces. `y` (optional) = absolute height for collectible spots on 
 
 | block (i,j) | type → builder (owner, file) | content | landmarks: `id` (lx, lz, yaw[, y]) | named / parked cars |
 |---|---|---|---|---|
-| (3,3) | `flamenco` → `hotelFlamenco` (C1, hotels.js) | 7-storey white slab x [−26, 26], z [−27, −14] with balcony rows, terracotta accents, `HOTEL FLAMENCO` roof sign; open reception porch (canopy, desk, plastic Christmas tree `julgran` prop, `RECEPCIÓN`; Phase 3 r2: `HOTEL FLAMENCO · RECEPCIÓN` stands on a terracotta panel above the pergola's fascia, where it no longer fills the top of the chase frame, and the garland runs across the fascia's face) at the slab's south face; ground-floor room patios along the south face (Stig & Ole's room west, room 113 east) with a visible 1st-floor balcony above 113; terracotta piers at the bay lines, solid (Phase 3 r2); pool deck south with a **walkable shallow pool** (flat blue slab at CURB+0.02 + `box(..., CURB, 'water')`, sign "TRE METER DJUPT I ENA ÄNDEN, / EN METER I DEN ANDRA. / BARNVÄNLIG!" (three lines) [F*] (the bungalow seller's line, relocated)); poolbar with straw parasols (`BAR PISCINA · SVENSKT KAFFE`); the julafton party `julgran` on the pool deck at (2.2, 16), in the party and sunset-duet shots (Phase 3); room numbers: a closed room's centred above its own glass door, an open room's (107, 113) on its right-hand pier (Phase 3); parking lot on the west; the parking signs here and at SunTrip's lot are a blue `P` plate over a name strip (`HOTEL FLAMENCO`, `SUNTRIP`) on a post that stops under them (Phase 3 r2: one two-line plate had shrunk the P to the name's size, and the post ran through both faces); **PEPES BODEGA**: small whitewashed annex x [4, 12], z [−31, −27] on the north side with a green door, barrels, sign `PEPES BODEGA · VINOS · RON` facing north (`worldHooks.bodegaLit(on)` lights it after julafton) | `flamenco` (−4, −8, π) (faces the hotel, so the views/cutaway camera stands on the pool deck; Phase 2) · `flamencoRecepcion` (2, −10, 0) · `flamencoPatio` (−18, −11, 0) · `rum113` (18, −11, 0) · `flamencoBalcony` (18, −8, π) · `flamencoPool` (−3, 18, π) · cut anchors (Phase 3; a cut stands `dist` m behind one, looking the way it faces): `rum107Cam` (−18, −11, π) = `flamencoPatio` turned round (looks into room 107), `recepcionCam` (2, −10, π) = `flamencoRecepcion` turned round (the desk from the porch front) · `flamencoDeck` (−4, −2.5, 0) (the island spawn: approachSpot puts the player on the pool deck at (−4, −1) facing the hotel, the chase camera over the pool rather than under the pergola slats; Phase 2) · `flamencoBar` (16, 12, −π/2) · `flamencoDrive` (−26, 22, π) · `flamencoBack` (−6, −33.5, 0) · `bodega` (8, −33.5, 0) · `fena_flamenco` (−3, 7, 0, 0.35) · `flamencoBoard` (−14.1, 7, π/2) (the middle of the diving board's bounce pad, facing out over the deep end: the judged board and the anchor of the sisters' spots at the pool's edge; not a standing spot; §10.8) · `stigSang` (−19.75, −20.35, 0) (the middle of Stig's turquoise bed in room 107, the way a sleeper on his back faces: the nap's E spot and the anchor of Ole's and Stig's places; not a standing spot, `teleport` puts him on the 0.70 mattress; §10.10) | `hyrbil` (sedan `0xf4f4f0`) at `flamencoDrive` — default `getInCar` car and test car |
+| (3,3) | `flamenco` → `hotelFlamenco` (C1, hotels.js) | 7-storey white slab x [−26, 26], z [−27, −14] with balcony rows, terracotta accents, `HOTEL FLAMENCO` roof sign; open reception porch (canopy, desk, plastic Christmas tree `julgran` prop, `RECEPCIÓN`; Phase 3 r2: `HOTEL FLAMENCO · RECEPCIÓN` stands on a terracotta panel above the pergola's fascia, where it no longer fills the top of the chase frame, and the garland runs across the fascia's face) at the slab's south face; ground-floor room patios along the south face (Stig & Ole's room west, room 113 east) with a visible 1st-floor balcony above 113; terracotta piers at the bay lines, solid (Phase 3 r2); pool deck south with a **walkable shallow pool** (flat blue slab at CURB+0.02 + `box(..., CURB, 'water')`, sign "TRE METER DJUPT I ENA ÄNDEN, / EN METER I DEN ANDRA. / BARNVÄNLIG!" (three lines) [F*] (the bungalow seller's line, relocated)); poolbar with straw parasols (`BAR PISCINA · SVENSKT KAFFE`); the julafton party `julgran` on the pool deck at (2.2, 16), in the party and sunset-duet shots (Phase 3); room numbers: a closed room's centred above its own glass door, an open room's (107, 113) on its right-hand pier (Phase 3); parking lot on the west; the parking signs here and at SunTrip's lot are a blue `P` plate over a name strip (`HOTEL FLAMENCO`, `SUNTRIP`) on a post that stops under them (Phase 3 r2: one two-line plate had shrunk the P to the name's size, and the post ran through both faces); **PEPES BODEGA**: small whitewashed annex x [4, 12], z [−31, −27] on the north side with a green door, barrels, sign `PEPES BODEGA · VINOS · RON` facing north (`worldHooks.bodegaLit(on)` lights it after julafton) | `flamenco` (−4, −8, π) (faces the hotel, so the views/cutaway camera stands on the pool deck; Phase 2) · `flamencoRecepcion` (2, −10, 0) · `flamencoPatio` (−18, −11, 0) · `rum113` (18, −11, 0) · `flamencoBalcony` (18, −8, π) · `flamencoPool` (−3, 18, π) · cut anchors (Phase 3; a cut stands `dist` m behind one, looking the way it faces): `rum107Cam` (−18, −11, π) = `flamencoPatio` turned round (looks into room 107), `recepcionCam` (2, −10, π) = `flamencoRecepcion` turned round (the desk from the porch front) · `flamencoDeck` (−4, −2.5, 0) (the island spawn: approachSpot puts the player on the pool deck at (−4, −1) facing the hotel, the chase camera over the pool rather than under the pergola slats; Phase 2) · `flamencoBar` (16, 12, −π/2) · `flamencoDrive` (−26, 22, π) · `flamencoBack` (−6, −33.5, 0) · `bodega` (8, −33.5, 0) · `fena_flamenco` (−3, 7, 0, 0.35) · `flamencoBoard` (−14.1, 7, π/2) (the middle of the diving board's bounce pad, facing out over the deep end: the judged board and the anchor of the sisters' spots at the pool's edge; not a standing spot; §10.8) · `stigSang` (−19.75, −20.35, 0) (the middle of Stig's turquoise bed in room 107, the way a sleeper on his back faces: the nap's E spot and the anchor of Ole's and Stig's places; not a standing spot, `teleport` puts him on the 0.70 mattress; §10.10) · `flamencoRing` (2, 8, 0) (the middle of the pool fest's ring in the shallow end, 2.5 m east of the circling fin's path; Lasse's place; the ring's places and Stig's gap are round it; §10.13) | `hyrbil` (sedan `0xf4f4f0`) at `flamencoDrive` — default `getInCar` car and test car |
 | (3,2) | `suntrip` → `hotelSunTrip` (C1, hotels.js) | lower U-shaped hotel on red rock; welcome **stage** with SunTrip sun backdrop (red text on yellow sun), accordion/conga props; pool; **friskotek lawn**; SunTrip office porch on the south side facing Flamenco's back; posters `GRISFEST TORSDAG · 800 PTA`, `FRISKOTEKET 9.30`; the free-standing `FRISKOTEKET / VARJE MORGON 9.30` board on the lawn's west edge is solid (Phase 3 r3: only its posts were, so he walked through it and the chase eye stood behind it) | `suntrip` (−14, 24, π) (faces the office porch; Phase 2) · `scen` (0, −14, 0) · `friskotek` (−10, 8, 0) · `suntripPool` (14, 4, π) · `suntripLot` (24, 22, π) · `fena_suntrip` (14, 8, 0, 0.35) · `berraSolstol` (17.4, 2.2, 0) (the pool lounger Berra naps on, on its prop, facing its backrest end; §10.6) | — |
 | (1,2) | `kasbah` → `kasbah` (C2, centre.js) | **Centro La Medina** (fictional; internal id `kasbah`): two-level nightlife courtyard centre: arcade, stairs (ramp) to a roof terrace (top ≈ 6.0) with a balustrade above the bottom three steps and a sloped wall collider along it (Phase 3: the way on is over those three steps), neon signs `CENTRO LA MEDINA`, `VIKING BAR` (horned helmet), `TONGA TONGA` (mirror ball), `BAR SVENSKA · SMÖRGÅSAR` | `kasbah` (0, 22, π) · `vikingbar` (−16, 18, π) · `tongatonga` (14, 18, π) · `tongaLot` (20, 27, π) · `tongaSlump` (16.3, 17.4, 0.5) (where Berra slumps after Tonga Tonga and is picked up, at the right of the group in the street shot; Phase 3 r3) · `pryl_poolpen` (8, −6, 0, 7.2) | — |
 | (4,2) | `cita` → `cita` (C2, centre.js) | **Centro Nórdico** (fictional; internal id `cita`) strip mall, sign `CENTRO NÓRDICO`: `SUPERMERCADO`, `FERRETERÍA`, `FARMACIA`, `ESTANCO`, `TELÉFONOS · HYTT 1·2·3`, `SOUVENIRS`, `SVENSKT KAFFE`, `CAMBIO · 1 KR = 17 PTA` (Phase 3: the north shop row and its canopy fit the courtyard between the wings, x ±11; `SOUVENIRS · REGALOS` and `FARMACIA` with its green cross sit on the wings' courtyard faces) | `cita` (0, 22, π) · `supermercado` (−18, 18, π) · `ferreteria` (18, 18, π) · `telefon` (0, 8, π) | — |
@@ -3041,7 +3053,11 @@ UNLOCKS = {
   grisbil: { car: { type: 'grisbil', name: 'grisbil', at: 'flamencoDrive', dx: 4, dz: 0 },
              toast: 'Upplåst: <b>Grisbilen</b> – parkerad vid Hotell Flamenco. Den luktar.' },   // [N]
   samba:   { tune: 'samba', toast: 'Upplåst: <b>Musik: samba</b> i pausmenyn' },                 // [N] P1
-  bodega:  { hook: 'bodegaLit', label: ['Pepes Bodega', 'bodega'], home: { berra: ['bodega', -1.5, 0.5], robban: ['bodega', 1.5, 0.5], angerud: null },
+  bodega:  { hook: 'bodegaLit', label: ['Pepes Bodega', 'bodega'],
+             home: { berra: ['bodega', -1.5, 0.5], robban: ['bodega', 1.5, 0.5], angerud: null,
+                     lasse: ['flamencoPool', -3.4, 2.8], fruStorch: ['flamencoPool', 0.6, 2.6],          // feature 8, §10.13
+                     affe: ['flamencoPool', 4.6, 2.4], gabbe: ['flamencoPool', 6.0, 1.2] },
+             outfit: { lasse: 'jul' },                                                              // feature 8
              chatter: { berra: ['Robban! Jag hittade Pepes Bodega!' /* [F*] */], robban: ['Pepes Bodega. Glöm aldrig det, du.' /* [F*] */],
                         herrStorch: ['Lite film.' /* [F*](t) */, 'Locket är av nu, ska du veta.' /* [N] */] },   // feature 6
              witness: { text: 'Linsskyddet är av – nu finns det bevis!', evidence: true },          // [N] feature 6, §7.2
@@ -3059,7 +3075,10 @@ once-ever marker `glidPlask` (Lasse's pool line has been said) there.
 `home` overrides the island HOMES entry (main.js `homeOverrides`); a `null` home hides the NPC
 (`key in homeOverrides`, Phase 3 r2: a falsy override used to be ignored). `chatter` (Phase 3 r2,
 main.js `chatterOverrides`) replaces that NPC's free-roam CHATTER on the island. Both are applied
-by `applyUnlock`, so a loaded save gets them too. The toast shows on the first unlock only;
+by `applyUnlock`, so a loaded save gets them too. `outfit` (feature 8, §10.13; main.js
+`outfitOverrides`) is merged over the island's `LEVEL_OUTFITS` set by `applyOutfits`, so it is worn
+from the next forced placement (`placeNpcs(true)`: the runner's `complete()`, the end card, a load):
+after the end Lasse keeps his Santa outfit. The toast shows on the first unlock only;
 `game.unlock(name, { holdToast: true })` (Phase 3 r3) applies and saves the unlock but returns the
 toast (or null) instead of showing it, for the runner to show after the end card (§9.4 item 8).
 P2: `guardiaJeep` (buyable Land Rover that halves SKANDAL gain).
@@ -3068,8 +3087,10 @@ P2: `guardiaJeep` (buyable Land Rover that halves SKANDAL gain).
 
 Player: `arlanda` (mission 1) → `kostym` (from mission 1's outro, flight, island until buss17) →
 `hawaii` (buss17 outro cue; persisted) → `rio` (end card only). NPC outfits by home set from
-`LEVEL_OUTFITS` via `levelDef.outfits(g)` (gate set only while `missions.index === 0`, §4.2) and by cue (`ole` `gris` on grisfest stage 5's `startCue`, `lasse` `jul` in
-julafton). Cut fallback: no swaps.
+`LEVEL_OUTFITS` via `levelDef.outfits(g)` (gate set only while `missions.index === 0`, §4.2), on the
+island with an unlock's `outfit` merged over it (`outfitOverrides`: `lasse` `jul` after the end,
+§10.3), and by cue (`ole` `gris` on grisfest stage 5's `startCue`, `lasse` `jul` in julafton). Cut
+fallback: no swaps.
 **Re-application (review fix 1):** `placeNpcs(true)` re-applies the home set's outfits
 (`applyOutfits`) whenever the runner is not in `outro`, so the gate → flight set follows
 `missions.index` without a level change, a cue outfit lasts through its mission's outro and reverts
@@ -3306,6 +3327,10 @@ are [N] (§1.6); the lines are the film's.
   from the board, or when a sister is no longer free (knocked over, placed by someone else). The
   ones out walk home. There (within 0.3 m) they are free again with their spot id back, and
   placeNpcs leaves them.
+- **The pool fest** (feature 8, §10.13): a sister dancing in its ring (`fest.posed`, `spot =
+  'poolFest'`) is `free` too, so the judges still work after the end. The call takes her out of the
+  ring (her spot becomes `poolJudges`, and the fest lets her go where she stands); home after the
+  visit, her spot id is the fest's again and the fest takes her back into the ring.
 - **The record.** `game.records.simhopp` is the best total, saved at once when it is beaten (§10.5);
   the first verdict ever is a record. `judges.last` ({ kind, siv, majsan, sum, record, best }) is
   for tests. The rest is session state. Lines and numbers live in `POOL_JUDGES`; scenario `simhopp`
@@ -3381,6 +3406,7 @@ react to the horn read `game.hornAt`.
   (`eslov.owns`), and `press` hands the car to `eslov.horn(car)` after the cast's answers. When he
   takes it (within 22 m, seeing the car) Stig cheers "Heja Eslöv!" instead of saying sorry
   (`honk.last.eslov`).
+- A dancer or the porter held by the pool fest (feature 8, §10.13: `fest.posed`) does not answer.
 - `honk.last` ({ t, pigs, peds, replies: [[key, text]], stig: [text], eslov? }) is for tests. The
   rest is session state; nothing is saved. Scenario `tuta` (§16.4).
 
@@ -3687,6 +3713,122 @@ landmark, and in a mission he stands there as before.
   pedestrians); the grunting grisbil horn is feature 5's (§10.9); Stig's hop aside is a hop and a
   push, not a forced step (the skier passes him either way).
 
+### 10.13 Små grodorna i poolen – the pool fest after the end (free roam; feature 8, 2026-10-15)
+
+`game/poolFest.js` (`PoolFest`, owned by Game as `fest`), config `POOL_FEST` in content/island.js. The
+Christmas party is not quite over: whenever Stig comes onto Flamenco's pool deck after the end, the
+SunTrip lot wade into the shallow end, stand in a ring round Lasse in his Santa outfit and dance Små
+grodorna, a couple of rounds and a pause, again and again; at a gap in the ring Stig can step in and
+hop with them, stiff in his suit. The film's julfest has the others dancing Christmas dances in the
+pool ("Små grodorna"), with the Spaniards' "De där svenskarna är heltokiga!", while Stig-Helmer and
+Ole open the crispbread (notes/research-plot.md:373; research-characters.md:50); Stig-Helmer dancing,
+the ring round Lasse, the porter's walk, the counter and the coin are [N] (§1.6). The melody is
+traditional and only the melody plays (§1.5): no verses, no lyrics in a bubble.
+
+- **When.** Only while `active`: on the island with `missions.state === 'idle'`, `missions.index >=
+  fromIndex` = 13 (after julafton) and julafton's unlock `after` = `bodega`. Out of it `update`
+  resets at once: everyone ours is `placeNpc`d at home (HOMES or `homeOverrides`), `busy` false,
+  their dance and wade off, Stig out of the ring, the counter hidden. So no mission, stage kind,
+  timer, fixture or calibration pool sees it (there are no missions after the end; the reset covers a
+  debug `?mission`). A visit begins only between `hours` = [9, 23) on the free-roam clock
+  (`day.h`, §10.10; held at 15 in test mode), with no dialogue and no nap or morning cut
+  (`day.busy`), and with at least `minDancers` = 3 of them free; past 23 the visit ends.
+- **Homes after the end** (`UNLOCKS.bodega`, §2.3, §10.3): Lasse, Affe, Gabbe and Fru Storch live on
+  the south pool deck by the plastic tree, and Lasse wears `jul` (red T-shirt, shorts, tomte hat).
+  Ole stays under the pergola, the sisters on the deck, Herr Storch on the beach (his camera, §10.11).
+- **The visit.** It begins when the focus (Stig on foot or his car) is on the `deck` (world-axis
+  offsets [x −22…23], [z −13…22] from the ring's middle `flamencoRing` (2, 8): Flamenco's pool deck,
+  not the hotel) and ends when it leaves the deck by more than `margin` = 8 m. At the start the fest
+  claims every one of `leader` (`lasse`) and `ring` (`majsan siv affe gabbe fruStorch ole`) who is
+  free (standing, shown, not in a car or a seat, not `busy` unless ours, not held by a mission's
+  idle pose, the Berra job, the diving judges or Herr Storch's camera) and within `claimR` = 40 m of
+  the ring's middle (each frame of the visit it claims again whoever is free: back from the judges
+  or the nap). Ours: `busy`, `spot = 'poolFest'` (the old spot id kept for the way back),
+  `invulnerable` (a car in the pool pushes them aside, `fling` refuses), `npc.steer` to their place
+  at `walk` = 1.7 m/s easing in, and `fest.posed` (`syncAll`: no wave, 10 m turn or chatter; `honk.free`
+  leaves them out). A placement by anyone else (the judges' call, the nap, a forced `placeNpcs`) lets
+  one go where they stand (only our own `steer` is removed).
+- **The ring.** Lasse in the middle; the ring's places on a circle of `r` = 2.9 m, seven of them
+  (the six and Stig's gap), from the gap at world yaw `gapYaw` = −0.35 (south-south-west, so the
+  chase camera behind Stig in it clears the plastic tree) clockwise seen from above: Majsan, Siv,
+  Affe, Gabbe, Fru Storch, Ole (Majsan and Ole on either side of the gap). The places span x
+  −0.75…4.9, z 5.1…10.7 in the shallow end (x −7…6, z 1.5…12.5): 1.4 m and more from the circling
+  fin's path (r 1.2 round (−3, 7)) and 1.2 m from the red ring toy. In place (within 0.35 m, still)
+  they face the middle (5/s). Standing on a `water` floor they wade: `Character.wade` eases to
+  `wade` = 0.5 m at 1.4 m/s (the model sunk below the feet, §14.6: the water plane hides the legs),
+  and a ring of foam (a shared white `RingGeometry` 0.4–0.55 m at the water + 0.075 m, over the
+  lane line and glints) lies round each wader, swelling 1.9× on a landing.
+- **The set.** `form` until everyone ours is in place (at least `minDancers`) or `formSecs` = 12 s,
+  `wait` `startSecs` = 1.5 s, then `rounds` = 2 rounds of `tune` = `smaGrodorna` (32 beats at 132
+  bpm, 14.55 s), the second `gapBeats` = 2 beats after the first ends, then `pause` `pauseSecs` =
+  12 s, and again while the visit lasts. A round starts with `audio.trad(tune, { vol, duck })`: `vol`
+  falls from 1 within `vol.near` = 12 m of the ring to `vol.min` = 0.15 at `vol.far` = 50 m (set once
+  per round), `duck` = 1 − 0.7 × vol (the island tune dips less under a faint round).
+- **The clock.** A round's beat 0 is `audio.tradAt` (the audio clock of the cue's first beat), its
+  time `audio.clock() − tradAt`, so the ring dances on what is heard. With the music off or muted
+  (`trad` returns 0) the round runs silent on the audio clock from now + 0.12 s; with no running
+  audio context (`clock()` null, also mid-round: re-anchored) on `game.time`.
+- **The dance.** Every other beat from beat 0 (the oom-pah's bass beats: 16 hops a round) the ring
+  hops for `hop.air` = 0.42 of the two beats (0.38 s, as Stig's real hop), a parabola `hop.h` =
+  0.3 m high, `hop.chorus` = 0.42 m from beat `hop.chorusFrom` = 16 ("kou ack ack ack"): `anim.hop`
+  lifts the body, a look only. The arms (`anim.groda`, §14.6): 2 "svansar" (hands behind) on beats
+  0–7 and 12–15, 1 "öron" (straight arms up by the head) on 8–11 and the chorus. The `musicians`
+  (`affe`, `gabbe`) hop without `groda`: they play their accordion and congas. Lasse turns once round
+  in a round (from the gap, 12/s), and between rounds faces Stig within 20 m, else the gap. A
+  landing swells the dancer's foam and throws four small drops from the waist (with Stig within
+  60 m of the ring).
+- **The exchange.** The first visit of a session, once the ring has formed and Stig stands on foot
+  within `askR` = 14 m of the gap, not in the ring, with Majsan in her place: Stig "Måste man gå på
+  den?" [F*] (julafton morning, about the party, research-plot.md:365), 2.4 s later Majsan "Var inte
+  så typiskt svensk." [F*] (research-characters.md:224), 5.0 s Stig "Det är väl typiskt svenskt att
+  ha julfest bland palmerna." [F*](t) (the same exchange; speaker interpreted). Stepping into the
+  ring first skips it.
+- **The porter.** At the first round of each visit (at most every 60 s) the porter, if free and within
+  `claimR`, is borrowed the same way and walks at `porter.walk` = 1.4 m/s from his desk to
+  `porter.at` = (+1.4, −9.6) from the ring's middle (world (3.4, −1.6), the north deck between the
+  pergola and the pool), faces the ring, says "De där svenskarna är heltokiga!" [F*](t) 0.4 s after
+  arriving, shakes his head (`anim.look` = 0.42 sin 11t) for `shakeSecs` = 2.2 s, stays `stay` = 6 s,
+  walks back and is free with his spot id back.
+- **Stig in the ring.** Once the ring has formed, an interactable (`poolFest`, r `join.r` = 2.6 m)
+  at the gap (marked on the water by two pulsing sun-yellow rings, 0.5–0.64 and 0.2–0.27 m) offers
+  "E Dansa med" [N] to Stig on foot, on the ground and free (no car, carry, bust freeze, PANIK or
+  dialogue). E teleports him into the gap facing the middle (the chase camera behind him, turned
+  `join.camTurn` = 0.4 rad so his head does not hide Lasse), `fest.joined`; he wades 0.5 m and stands
+  stiff as a stick (`groda` 3). In the ring (main.js): movement wishes are zero, Space is
+  `fest.hop()` (a real jump at `join.hopV` = 4.6 m/s, 0.44 m up and 0.38 s in the air; no double
+  jump), J does nothing, E is "E Kliv ur ringen" [N] (back up onto the coping `join.out` = 2.4 m
+  behind the gap, dry at once), and a move key (input over 0.5) also takes him out (he walks; the
+  wade eases out). His first hop after stepping in: "Hopp… och hopp…" [N] (at most every 25 s).
+- **The beat.** A hop during a round is judged against the nearest hop beat k (0, 2 … 30): within
+  `window` = 0.18 s and not yet hit, it is in time (`streak` + 1); in the gap between two rounds the
+  next round's beat 0 counts (`nextAt`), early. Otherwise it is off the beat: the row is gone, the
+  two nearest in the ring (not Lasse) laugh for `laughSecs` = 1.3 s and `audio.laugh()` (at most every
+  `laughEvery` = 4 s). A hop beat whose window closes without his hop breaks a row of one or more
+  (`stats.breaks`, no laugh). The pause ends a row. Hops outside the rounds are only hops.
+- **Eight.** `goal` = 8 in a row: the counter shows 8 / 8, the ring cheers (`anim.cheer`, the hop
+  off) for `cheerSecs` = 2.2 s, `audio.applause(2)`, Ole's "Heia Norge!" [F*] (his grisfest solo
+  dance's "Heja Norge!", research-plot.md:348) 0.3 s later if he is in place, and once a visit, with
+  Lasse in place, `pay` = 50 pta, the toast "Lasse gav dig 50 pta." [N] and 1.5 s later Lasse's
+  "Bravo, Stig-Helmer! En slant från SunTrip." [N]. The row starts again from 0.
+- **The counter** (`hud.setTakt`, §11.4) shows while he is in the ring: "I TAKT {n} / 8" [N], "OTAKT!"
+  [N] in red for 0.9 s on a miss, teal for 0.9 s on the eighth.
+- **Lines** go through `game.say`, each at most every `again` = 20 s; queued ones wait through a
+  dialogue and are dropped when 2 s late. Dancing never adds SKANDAL (the fest adds none, and in the
+  ring J does nothing).
+- **The judges** (feature 4, §10.8) may take Siv and Majsan out of the ring for a dive and give them
+  back (see there). **The nap** (§10.10) may take Ole (the visit has ended by then: room 107 is not
+  on the deck).
+- **The visit ends:** everyone ours walks home (`homeOf`: HOMES or `homeOverrides`) and is let go
+  there (within 0.3 m) with the old spot id; with Stig and the place both more than 60 m off, at
+  once. Stig leaves the ring, the counter goes.
+- `fest.last` ({ kind: 'begin' | 'end' | 'join' | 'leave' | 'goal', … } or a hop's { k, off, ok,
+  round }) and `fest.stats` ({ hits, misses, breaks, goals, rounds }) are for tests. Nothing is saved.
+  Scenarios `grodorna` and `grodtakt` (§16.4).
+- **Not done** (deviations from the idea): Herr Storch does not film the fest from the north edge
+  (his camera keeps him on the beach, §10.11), so the ring is six and Lasse, not eight; the ring
+  stands still (no walking round in the verses); the porter's line is once a visit, at the first
+  round; the fest is a day fest by the clock (not at night), and the sky is the clock's as anywhere.
+
 ## 11. HUD / UI strings (Swedish; `src/strings.js` owned by WP-H, created by Phase 0)
 
 `strings.js` exports `S` (flat object) and `fmt(key, vars)`. Engine code uses `S.key` only.
@@ -3739,12 +3881,19 @@ mutes without touching the button, which then said `Ljud: på` while muted).
 | dialogue next | `E ▸` |
 | minimap rim badge | `N` (island) / `FRAM` (flight) |
 | big-map legend | from `game.mapLegend()` (§10.1) |
-| prompts | `<b>E</b> Prata med {name}` · `<b>E</b> Kliv in` · `<b>E</b> Ta bilen` · `<b>E</b> Sätt dig` · `<b>E</b> Res dig` · `<b>E</b> Lås in dig` · `<b>E</b> Ta en juice` · `<b>E</b> Kvarta en stund` (Stig's bed, §10.10) · `<b>E</b> Titta i kameran` / `<b>E</b> Se filmen` (Herr Storch, §10.11) · `<b>E</b> Heja Eslöv!` / `<b>E</b> Eslövloppet – ett varv runt fälten` (the rollerskier, §10.12) · `<b>SPACE</b> Håll i dig!` · `<b>J</b> håll: Jag kan flyga!` (the `<b>` keycap is Luckiest Guy: uppercase). Order (`updateHud`): talk, then `Håll i dig!` while the cabin is turbulent and he stands without holding on (Phase 3 r3, §5.7), then the car, interactable (seats, toilets…) and stand prompts |
+| prompts | `<b>E</b> Prata med {name}` · `<b>E</b> Kliv in` · `<b>E</b> Ta bilen` · `<b>E</b> Sätt dig` · `<b>E</b> Res dig` · `<b>E</b> Lås in dig` · `<b>E</b> Ta en juice` · `<b>E</b> Kvarta en stund` (Stig's bed, §10.10) · `<b>E</b> Titta i kameran` / `<b>E</b> Se filmen` (Herr Storch, §10.11) · `<b>E</b> Heja Eslöv!` / `<b>E</b> Eslövloppet – ett varv runt fälten` (the rollerskier, §10.12) · `<b>E</b> Dansa med` / `<b>E</b> Kliv ur ringen` (the pool fest's gap, §10.13) · `<b>SPACE</b> Håll i dig!` · `<b>J</b> håll: Jag kan flyga!` (the `<b>` keycap is Luckiest Guy: uppercase). Order (`updateHud`): talk, then `Håll i dig!` while the cabin is turbulent and he stands without holding on (Phase 3 r3, §5.7), then the car, interactable (seats, toilets…) and stand prompts |
 
 **The result line** (feature 4, §10.8): `#score`, low in the middle (bottom 92 px, under the
 prompt at 178 px), a cream card with the dive and its sum in Luckiest Guy over the record line
 (terracotta, teal for `NYTT REKORD!`). `hud.showScore(main, sub, record, secs = 4.5)` pops it in
 (uppercased, §1.3); `hud.hideScore()` takes it down (the judges' `reset`).
+
+**The hop counter** (feature 8, §10.13): `#takt`, top right under the meter (top 88 px, right 24 px),
+a cream card in Luckiest Guy 26 px, while Stig is in the pool fest's ring: `I TAKT {n} / 8`, `OTAKT!`
+(cream on red, 0.9 s, with the coin bump) on a hop off the beat, `I TAKT 8 / 8` on teal (0.9 s) on
+the eighth. `hud.setTakt(text, flash = '')` (uppercased; null hides it; `flash` `miss` | `goal`).
+While it shows the toast column starts at 142 px (`#takt.show ~ #toasts`; the objective card's 196 px
+wins when both show).
 
 **Toasts, bubbles and the objective card** (Phase 3):
 - **Toasts** (`hud.toast(text, cls = '', secs)`; radio lines are toasts) stay up `secs`, by default
@@ -3912,8 +4061,12 @@ prompt at 178 px), a cream card with the dive and its sum in Luckiest Guy over t
 | `samba` | Ole's boombox (cue), Tonga Tonga, Rio card, unlock | 100 bpm, Dm7–G7–Cmaj7–A7; surdo (sine 60→45 Hz) on 2, tamborim (short high noise ticks), agogô (two square tones) |
 
 **Public-domain traditional cues only** (`audio.trad(name)`, one-shot accordion/square melody over
-a ducked music bus): `smaGrodorna` (julafton pool dance), `hejTomtegubbar` (julafton toast),
-`helanGar` (faint, end of the buss17 outro). **Never** "Freight Train", "Feliz", Kostervalsen or any
+a ducked music bus): `smaGrodorna` (julafton pool dance; and round after round in the pool fest
+after the end, §10.13), `hejTomtegubbar` (julafton toast), `helanGar` (faint, end of the buss17
+outro). `trad(name, { vol, duck })` returns the length in s (0 with no context, muted or the music
+off); `duck` is the music bus's level under it (default 0.3; the pool fest ducks less for a faint far
+round); `audio.tradAt` is the audio-clock time of the cue's beat 0 and `audio.clock()` the audio
+clock (null while the context is not running); `tradInfo(name)` gives `{ bpm, beats }` (feature 8). **Never** "Freight Train", "Feliz", Kostervalsen or any
 Bengt Palmers theme.
 
 Scheduler fixes (Phase 0): catch-up guard `if (next < ctx.currentTime) next = ctx.currentTime +
@@ -4067,6 +4220,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/dayClock.js` | new (feature 30, 2026-10-15) | — | `DayClock` (`game.day`): Dygnet runt in free roam: the island's clock, the palette blend and night lights, Ole's watch in the HUD, NÄSTA MORGON before a mission, the nap in room 107, chatter by the hour (§10.10) |
 | `src/game/storchFilm.js` | new (feature 6, 2026-10-15) | — | `StorchFilm` (`game.film`): Lite film. in free roam: Herr Storch trots over the sand to film Stig's tricks, his viewfinder (black before the end), the stills and the film night after it (§10.11) |
 | `src/game/eslov.js` | new (feature 7, 2026-10-15) | — | `Eslov` (`game.eslov`): Heja Eslöv! in free roam: the rollerskier skis up and down the Eslöv lane, answers the horn and E, "Spår!", Eslövloppet round the tomato fields (§10.12) |
+| `src/game/poolFest.js` | new (feature 8, 2026-10-15) | — | `PoolFest` (`game.fest`): Små grodorna i poolen in free roam after the end: the visit, the wade into the ring, the set of rounds on the music's clock, the dance, the exchange, the porter, Stig in the ring, the hop counter, the cheer and the coin (§10.13) |
 | `src/game/hud.js` | edit | **H** | map sources, meter, strings, legend, ring, blips, zone bar, markers; `renderPortrait` restores the model transform (§14.8) |
 | `src/game/camera.js` | edit | **A1** | profile, frameOne, cutTo, `clampZ` |
 | `src/game/fx.js` | edit | **A1** | `snow`, `steam`, `meterPuff` (rename of `shame`) |
@@ -4138,7 +4292,7 @@ mantra/hold, AI, cars, people (`glide.step` → the player's step → `glide.aft
 traffic/peds skipped when `!levelDef.sim.*`) → `syncAll` (also
 writes `ch.x/y/z` from `car.seatWorld(ch.seatSide)` for every car-seated character, player
 included, so framing, bubbles and distance checks see where they really are) → `missions.update` →
-`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
+`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `fest.update` (feature 8) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
 pickups/collectibles → props → `fx.tick` → `tickTown` → markers → camera → sun/sky → HUD → audio →
 traffic recycling (island) → autosave. `loop` then renders, and when `film.grabNow` is set calls
 `film.grab()` in the same task (Herr Storch's still from the frame's buffer, feature 6, §10.11).
@@ -4168,6 +4322,10 @@ game.day;          // DayClock (feature 30, §10.10): day.h (Spanish time, 0–2
 game.film;         // StorchFilm (feature 6, §10.11): Herr Storch films Stig's tricks in free roam,
                    // his viewfinder, the stills and the film night after the end
 game.eslov;        // Eslov (feature 7, §10.12): the rollerskier in free roam, the horn, Eslövloppet
+game.fest;         // PoolFest (feature 8, §10.13): Små grodorna in Flamenco's pool after the end;
+                   // fest.joined (Stig in the ring: handleOneShots gives Space to fest.hop(), no kick;
+                   // fixedStep zeroes his wish), fest.posed(key), fest.visit, fest.phase, fest.last
+game.outfitOverrides; // { key: outfit } from UNLOCKS[name].outfit, merged over the island set by applyOutfits (§10.3)
 game.witnessOverride; // null | UNLOCKS[name].witness, merged over the witness rule's config on the island (§7.2)
 game.onBounce(ch, b);   // Character.step: ch bounced on trampoline block b (the boing; the judges, §10.8; film.trick('studs'))
 game.onLand(ch, v, y);  // Character.step: ch landed at v m/s (> 6) on floor height y (the stomp; the judges; film.onLand)
@@ -4447,6 +4605,15 @@ recovery up to 0.35 m over it) from the hand's height over his soles, laid back 
 standing, the poles rest forward and out with the hands on the grips. With `wave` (the base pose's
 left arm up) the left pole is held up. Only `game.eslov` sets it (on the island, always), so the
 cast sheets show the base look.
+`groda` (feature 8, §10.13; not a boolean: false, or the variant): Små grodorna in the pool. 1
+"öron", both arms straight up beside the head (R (−0.22, 0, −2.75), L mirrored); 2 "svansar", the
+hands behind at the seat (R (0.85, 0, −0.32)); both crouched (the legs apart and forward (−0.38, 0,
+∓0.22), the hips 0.3 forward, the chin up 0.25, the body 0.08 × scale lower). 3 is Stig hopping with
+them, stiff as a stick: arms pressed to his sides, legs straight together, chin up (it also overrides
+the air pose of his real hop). `heldPose` counts it as busy (the musicians hop without it). Posed
+before `laugh`, so a laughing dancer holds her belly. `anim.hop` (feature 8; a number, metres, 0 =
+none): the whole body lifted that far (`m.body.position.y +=`), the ring's beat-synced hop, a look
+only.
 
 **character.js**: `ch.setDef(def)` (rebuild model under the same parent; keep x/y/z/yaw/state;
 `height` updated); state `'hidden'` (step no-op, `root.visible = false`, skipped by
@@ -4463,6 +4630,9 @@ own heading, head first (root order `YXZ`, x = π/2, lifted 0.25 as any `down`),
 The nap (feature 30, §10.10) lays him on his bed with `tumble(1e9, 1e-3)` and `tumbleT = 1` (past
 the roll: on his back, head along −his heading, so heading the bed's yaw puts it on the pillow) and
 ends it by hand (`state 'normal'`, `tumbleT` null, order `XYZ`, a teleport to the bed's foot).
+`ch.wade` (feature 8, §10.13; metres, default 0): in state `normal` `sync` sets the root that far
+below his feet (`y − wade`), so in the pool the water plane hides his legs (waist-deep at 0.5);
+physics, bubbles' anchors and `ch.y` are unchanged. Only `game.fest` sets it (easing it, `wadeTo`).
 
 **main.js `carsVsPeople`** (Phase 3 r1 repair): a car knocks a `normal` character over (`fling`,
 `onCharHit`) only when its **own** speed into him (`car.v · n`, n from the car to him) is over
@@ -4699,6 +4869,8 @@ shame.paint (PaintShop, §7.2): configure(cfg) from configure(); onPursuit() fro
 //   s, yaw); busy; napping; over; spinH; last { kind, from, to, part?, ole?, pips? }
 // gfx.js: setNightLights(on | null), skyDark(), beaconLit() (the night lights' switch, §13.3)
 // hud.js: setClock(main, zone, sub, over) (#klocka; main null hides it), fade(on) (#fade)
+// hud.js: setTakt(text, flash) (#takt, the pool fest's hop counter; null hides it; flash 'miss' |
+//   'goal' for 0.9 s; feature 8, §10.13)
 // storchFilm.js (feature 6, §10.11): game.film = new StorchFilm(game) after the clock (it registers
 //   the interactable `storchFilm` and loads the stills); trick(kind) from handleOneShots (the double
 //   jump), onBounce, shame.add's witness branch (free roam) and its own watchAir (the glide);
@@ -4720,6 +4892,13 @@ shame.paint (PaintShop, §7.2): configure(cfg) from configure(); onPursuit() fro
 //   course(); pathAt(s); startRace(); endRace(kind, el); place(); timer (a test's clock for the next
 //   race); race; back; last { kind: 'heja' | 'spar' | 'race', … }; raceClock(t) (exported: 0:38,4)
 // audio.js: whirr(secs) (the film camera)
+// poolFest.js (feature 8, §10.13): game.fest = new PoolFest(game) after the skier (it registers the
+//   interactable `poolFest` and adds its marks to the scene); update(dt) after eslov.update (reset()
+//   while not active; begin/end of a visit; claim; tick: form | wait | round | gap | pause; the
+//   exchange; tickHeld, tickPorter, tickJoined, tickMarks); posed(key) read by syncAll, honk.free
+//   and judges.free; joined read by handleOneShots and fixedStep; hop() from handleOneShots (Space in
+//   the ring); slot(i), gap, outSpot, centre, beat, now(), hopAt(t), armsAt(t), canJoin(), join(),
+//   leave(step); visit; phase; round { n, t0, game, t, vol }; nextAt; streak; stats; last
 
 // collision.js: waterAt(x, z, y) -> the `water` block he stands in at that height, or null
 //   (feature 4; moved from glide.js)
@@ -4746,7 +4925,9 @@ fx.splash(x, z, n = 16, sp = 3)   // n drops thrown out at sp m/s; the fin's def
 // shame.inScene (getter: inDialog || inCutaway); shame.hideoutT; steer state; a teleports debug
 //   counter; hideout interactable id 'hideout:<landmark>' (registered in configure());
 //   shame.tuneBefore (a mission tune to restore after the pursuit, else null; Phase 3, §7.2).
-// audio.sirenNear(d); audio.trad(name, { vol }) -> length in s (respects mute and the music toggle);
+// audio.sirenNear(d); audio.trad(name, { vol, duck }) -> length in s (respects mute and the music
+//   toggle; sets audio.tradAt, the cue's beat 0 on the audio clock; feature 8); audio.clock() -> the
+//   audio clock, or null while the context is not running; export tradInfo(name) -> { bpm, beats };
 //   audio.sweep(...); audio.level() test hook { rms, state, tune }; export TRAD_NAMES; tune bar()
 //   voices snare/accordion/chime/pad/conga/pluck/brass/surdo/agogo/sleigh/flute; setTune(current)
 //   cancels a pending switch.
@@ -5225,6 +5406,8 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `filmkvall` [feature 6] | after the end (index 13, `bodega` unlocked): `witnessOverride.evidence`; a kicked sunbed near him adds SKANDAL with `Linsskyddet är av – nu finns det bevis!`, and his filming keeps a still; a trick 5 m off with Stig standing, then a double jump while he films: at least two takes, one still kept; both saved as jpegs under `charter-and-run-film-v1` (written to the OUT dir as `filmkvall_still{1,2}.jpg`); home again with Stig near, "Vill du se min film?" and `Se filmen`; E: `FILMKVÄLL`, `DAG 1`…`DAG 7`, two stills, "Blir'e inge film?" before the stills and "Lite film." after them, then `seen` 2 and the prompt `Titta i kameran`; E: the live viewfinder (`JULAFTON`, "Nu blir'e film!", a clear gate, the sepia filter on the canvas, off again after); a reload without `?fresh` loads both stills |
 | `eslov` [feature 7] | Heja Eslöv! (§10.12), at index 9 (free roam): he stands at his place with the `ski` look, ours; he skis inside the lane (±3 m of its middle, z −188.5…−134.4) to its north end and back at up to 3.2 m/s; the horn from a car on the z −120 road 9 m east of the lane: `honk.last.eslov`, no island answer from him, "Heja Eslöv!" and "Bara 390 mil kvar!", a wave, no sorry, nothing again within 8 s; on foot the prompt `E Heja Eslöv!`, the cheer and another reply, he stops, the offer and the prompt `E Eslövloppet – ett varv runt fälten`; Stig 6.5 m ahead in his track: "Spår!", "Oj, förlåt!", the hop, the skier passes more than 0.8 m from him; a race with a 20 s clock, Stig at the start: the countdown, the card `ESLÖVLOPPET` at 0:17–0:19 and `2:A · KONTROLL 0/5`, lost, no pesetas, his line at the line, no card after; R and a car end a race; a race won by calibrate's walker at the shipped clock: `DU VANN!` with "nytt rekord", 100 pta, `records.eslov` saved, 10–30 % of the clock left, his and Stig's lines at the line; then the `won` reply; a mission's start puts him at his place, not ours, and he stays there |
 | `eslovlopp` [feature 7] | Eslövloppet's timer (§10.12, §8 "Timers and difficulty"): calibrate's walker runs the lap `ESLOV_RUNS` (3) times at `&ts=1` with the clock raised; prints `CAL eslovLopp` (the median + 2.5 s → the timer) and `CAL CHECK` against the shipped timer (the sample's 90 % bootstrap range); its raw times go into the ledger (`eslovLopp`) |
+| `grodorna` [feature 8] | Små grodorna i poolen (§10.13): no fest at index 11 (Lasse at SunTrip in `sol`) nor at index 13 without `bodega`; with it (unlock + forced placement) Lasse wears `jul` and he, Affe, Gabbe and Fru Storch stand at their pool-deck homes, Herr Storch on the beach; at 23.30 no visit; Stig on the deck: all seven ours (`poolFest`, busy, invulnerable, posed), wading 0.5 m in their places facing the middle; the exchange in order, once; round 1 on the audio clock; sampled in the page: in the air 0.17–0.22 s after an even beat with tails (beats 0–7), Affe hopping without `groda`, down at 0.55–0.75 s, ears on 8–11, the chorus higher; the porter at his spot with his line and the head shake, then home and free; on the coping dry with "Dansa med" and the gap marked; E: in the gap, stiff (`groda` 3), wading, `I TAKT 0 / 8`, "Kliv ur ringen"; J no kick; E out onto the coping, dry; in again and a step out; no SKANDAL; round 2 two beats after round 1 (±0.06 s), the pause 12 s (±0.8); a dancer does not answer the horn; off the deck all walk home and are free with their spot ids; julafton's unlock gone mid-visit: home at once. Shots `grodorna_vadar`, `_portier`, `_ring`, `_kanten` |
+| `grodtakt` [feature 8] | the hop counter (§10.13), Space as real key events timed in the page: seven on the beat (`I TAKT 7 / 8`, a shot in the air), the eighth: the goal, `I TAKT 8 / 8` teal, the ring cheers, +50 pta, the toast, "Heia Norge!" then Lasse's line, and Stig's "Hopp… och hopp…"; half a hop off the beat: a miss, `OTAKT!`, Majsan and Ole laugh; a skipped hop beat breaks the row; eight across the gap between two rounds (round 2's beat 0 counts): the goal again, no second coin; the music off: no new cue, judged on the audio clock; no audio clock (`audio.clock` stubbed null): the round on the game clock, judged; a dive off the board: the judges take Siv and Majsan out of the ring and judge it; home again, the fest takes them back. Shots `grodorna_takt`, `_hopp`, `_jubel`, `_otakt` |
 | `talk` [Phase 0] | `autoDialog = false`, walk to Ole at `gateQueue`, E, Space twice |
 | `fullstory` [Phase 0b] | swaps the literal §8 missions (`tools/fixtures/full-missions.js`) into `MISSIONS` and plays all 13 per §16.3 (`FROM`/`TO` as `story`); must end `#13 idle`, `RESULT: PASS` |
 | `kinds` [Phase 0b] | fixture data checks; haggle misses fail; follow `minDist` fails; smooth/fragile bars (teleports never count); carry spill; checkpoint retry re-applies night + `vals` and revives plates at `dansgolv`; destroy default spawn; grab at the wreck; scene `exitCar`; Phase 3: follow shows no bar before the start and a head-on quarry does not fail it, `retryCar` (the last car reused, a typed named car, `park`), getInCar `atHome` and a wrecked `missionCar` failing, a frame-only scene stopping the car dead, a scene cutting a `collect` guest's bubbles (3 frames in: no bubble over the guest or Stig, no empty one) and keeping his placement |
@@ -5300,6 +5483,7 @@ fatagaDukar golf bungalow bygge dromplan airport hittegods busBay bagageband dyn
 + Berra's naps `berraBank berraSolstol` (feature 2, §10.6)
 + the diving board `flamencoBoard` (feature 4, §10.8)
 + Stig's bed in room 107 `stigSang` (feature 30, §10.10)
++ the pool fest's ring `flamencoRing` (feature 8, §10.13)
 + collectibles `pryl_klocka pryl_poolpen pryl_kalkylator pryl_kniv pryl_kamera pryl_glasogon
 pryl_pung fena_flamenco fena_suntrip fena_plaza fena_golf fena_bungalow fena_hamn fena_hav` + Rio
 `rioBoat rioCam`.
@@ -5323,8 +5507,9 @@ faar blomma gris`. **Collectible sets**: `prylar fenor`. **Unlocks**: `grisbil s
 carry mantra timeline scene haggle smash`.
 
 **Anim flags**: `wings cupUp cupHeld push planeSeat hold flail oath dance laugh slump shoeOff mirror film
-giraffe butterKnife carryOver glide` (+ existing `kick talk wave cheer sprint spin look`, and the
-glide's numeric `bank`, feature 3).
+giraffe butterKnife carryOver glide swan calc ski groda` (+ existing `kick talk wave cheer sprint spin
+look`, the glide's numeric `bank`, feature 3, the judges' `card`, feature 4, and the pool fest's
+numeric `hop`, feature 8; `groda` is 1 | 2 | 3, §14.6).
 
 **Tunes**: `muzak sol skandal vals jul samba`; trad cues `smaGrodorna hejTomtegubbar helanGar`.
 **SFX**: `chime pling dingdong beep applause heartbeat rattle flush squeak siren laugh knock slap
@@ -6767,3 +6952,27 @@ the fixer's group.
   Deviations from the idea: no pedestrian dodges the skier; the hop aside is a push, not a forced
   step. Scenarios `eslov`, `eslovlopp` (§16.4). No mission, stage kind, mission timer, fixture or
   existing calibration pool changed; in a mission he stands at `eslovVag` as before.
+- Feature 8, "Små grodorna i poolen" (`features/implemented/sma_grodorna_runt_poolen.md`,
+  2026-10-15): the pool fest after the end (§10.13; new `src/game/poolFest.js`, `POOL_FEST` in
+  content/island.js, landmark `flamencoRing`; §1.6, §2.2, §2.3, §3, §6.3, §10.3, §10.4, §10.8, §10.9,
+  §11.4, §12.1, §14.1–14.3, §14.6, §14.8, §16.4, appendix A). After julafton `UNLOCKS.bodega` also
+  moves Lasse, Affe, Gabbe and Fru Storch to Flamenco's pool deck and keeps Lasse in `jul` (a new
+  unlock field `outfit`, main.js `outfitOverrides`, merged over the island set in `applyOutfits`).
+  With Stig on the deck (09–23 on the clock) Lasse and six of the gang wade into the shallow end, in
+  a ring round him (Stig's gap marked on the water), and dance Små grodorna: two rounds of the trad
+  cue and a 12 s pause, on the music's own clock (`audio.tradAt`, `audio.clock()`; the game's when
+  there is no running audio), hopping on every other beat with the arms as tails or ears (anim flag
+  `groda`, numeric `anim.hop`; the musicians play), waist-deep (`Character.wade`) with foam rings.
+  The first visit of a session brings "Måste man gå på den?" / "Var inte så typiskt svensk." / "Det är
+  väl typiskt svenskt att ha julfest bland palmerna." [F*]; each visit the porter steps out with "De
+  där svenskarna är heltokiga!" [F*](t) and shakes his head. "E Dansa med" puts Stig in the ring,
+  stiff (`groda` 3); Space hops, judged within 0.18 s of the ring's hop beats; eight in a row: the
+  cheer, Ole's "Heia Norge!" [F*] and once a visit 50 pta from Lasse; off the beat the ring laughs.
+  The counter `#takt` (`hud.setTakt`). audio.js: `trad` takes `duck` and sets `tradAt`, `clock()`,
+  `tradInfo(name)`. Integrations: `judges.free` accepts a sister in the ring (the call takes her out,
+  the fest takes her back), `honk.free` leaves the fest's dancers out, `syncAll` reads `fest.posed`,
+  `handleOneShots` hands Space to `fest.hop()` in the ring, `fixedStep` holds him there. Deviations
+  from the idea: Herr Storch stays on the beach (his camera, §10.11), so the ring is Lasse and six;
+  the ring stands still in the verses; the fest is a day fest by the clock. Scenarios `grodorna`,
+  `grodtakt` (§16.4). No mission, stage kind, timer, fixture or calibration pool changed; the trad
+  melody has still not been heard by a person (HANDOFF §4.7).

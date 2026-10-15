@@ -29,6 +29,7 @@ import { Honk } from './game/honk.js';
 import { DayClock } from './game/dayClock.js';
 import { Eslov } from './game/eslov.js';
 import { StorchFilm } from './game/storchFilm.js';
+import { PoolFest } from './game/poolFest.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
 import { LEVELS, ISLAND_PALETTES } from './level.js';
@@ -90,6 +91,7 @@ class Game {
     this.unlocked = new Set();
     this.records = {};            // free-roam bests, saved: `simhopp` (the diving judges' best total, §10.8)
     this.homeOverrides = {};
+    this.outfitOverrides = {};    // UNLOCKS[name].outfit: merged over the island's outfit set (Lasse's Santa outfit after the end, §10.13)
     this.chatterOverrides = {};   // UNLOCKS[name].chatter: free-roam chatter that replaces CHATTER[key] (island)
     this.witnessOverride = null;  // UNLOCKS[name].witness: merged over the witness rule's config on the island (§10.11)
     this.interactables = [];
@@ -169,6 +171,7 @@ class Game {
     this.day = new DayClock(this);        // free roam: the island's clock, evenings, the nap (§10.10)
     this.film = new StorchFilm(this);     // free roam: Herr Storch films his tricks, the film night (§10.11)
     this.eslov = new Eslov(this);         // free roam: the rollerskier trains, the horn, Eslövloppet (§10.12)
+    this.fest = new PoolFest(this);       // free roam after the end: Små grodorna in Flamenco's pool (§10.13)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -858,7 +861,7 @@ class Game {
   // Outfits (§2.2, §10.4)
 
   applyOutfits() {
-    const set = this.levelDef.outfits(this);
+    const set = this.level === 'island' ? { ...this.levelDef.outfits(this), ...this.outfitOverrides } : this.levelDef.outfits(this);
     for (const key of Object.keys(this.npcs)) {
       const want = set[key] ?? null;
       if ((this.npcs[key].outfit ?? null) !== want) this.setNpcOutfit(key, want);
@@ -1194,6 +1197,7 @@ class Game {
     }
     if (u.hook) worldHooks[u.hook]?.(true);
     if (u.home) Object.assign(this.homeOverrides, u.home);
+    if (u.outfit) Object.assign(this.outfitOverrides, u.outfit);   // worn from the next forced placement (placeNpcs(true))
     if (u.chatter) Object.assign(this.chatterOverrides, u.chatter);
     if (u.witness) this.witnessOverride = u.witness;
     // u.tune: offered by the pause-menu Musik button once unlocked (cycleMusic); never auto-played.
@@ -1416,6 +1420,7 @@ class Game {
     this.day.update(dt);
     this.film.update(dt);
     this.eslov.update(dt);
+    this.fest.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);
@@ -1474,6 +1479,12 @@ class Game {
       return;
     }
     if (p.state !== 'normal') return;
+    // In the pool fest's ring (§10.13): Space is a hop on the beat, E steps out; no kick or stomp.
+    if (this.fest.joined) {
+      if (input.pressed('jump')) this.fest.hop();
+      if (input.pressed('interact')) this.interact();
+      return;
+    }
     const verbs = this.levelDef.verbs;
     if (input.pressed('jump')) {
       if (verbs.jump) {
@@ -1557,7 +1568,8 @@ class Game {
       else { c.throttle = input.throttle(); c.brake = input.brake(); c.steer = input.steer(); c.handbrake = input.down('handbrake'); }
       c.park = false;
     } else if (p.state === 'normal') {
-      if (frozen || this.holding || p.anim.wings) { p.wishX = p.wishZ = 0; p.anim.sprint = false; }
+      // In the pool fest's ring he stands in his place (a step out leaves it: fest.update).
+      if (frozen || this.holding || p.anim.wings || this.fest.joined) { p.wishX = p.wishZ = 0; p.anim.sprint = false; }
       else {
         const mx = input.moveX(), my = input.moveY();
         const fx = Math.sin(this.cam.yaw), fz = Math.cos(this.cam.yaw);
@@ -1713,8 +1725,8 @@ class Game {
       // §9.4 idleAnim (e.g. Berra asleep), or held by the free-roam Berra job (§10.6) or the diving
       // judges at the pool's edge (§10.8): no wave, turn or chatter; Robban waves Stig over to the
       // sleeping Berra as a giver does. An answer to the horn waves from further off (§10.9); the
-      // rollerskier waves his pole while he skis (§10.12).
-      const posed = !!ms.idlePose(k) || this.berraJob.posed(k) || this.judges.posed(k) || this.film.posed(k) || this.eslov.posed(k);
+      // rollerskier waves his pole while he skis (§10.12); the pool fest's dancers and porter (§10.13).
+      const posed = !!ms.idlePose(k) || this.berraJob.posed(k) || this.judges.posed(k) || this.film.posed(k) || this.eslov.posed(k) || this.fest.posed(k);
       n.anim.wave = (((giver || this.berraJob.waving(k)) && near < 9 || this.honk.waving(k)) && !posed || this.eslov.waving(k)) && !this.inDialog && n.state === 'normal';
       if (n.state === 'normal' && !posed && near < 10 && !this.inDialog) n.yaw += Math.atan2(Math.sin(yawTo(this.player.x - n.x, this.player.z - n.z) - n.yaw), Math.cos(yawTo(this.player.x - n.x, this.player.z - n.z) - n.yaw)) * Math.min(1, dt * 3);
       // Free play only: not in the gap before an outro (bubbles stacked over its first line).
