@@ -44,7 +44,7 @@ Samma tangenter i båda nivåerna; nivån bestämmer vad de gör.
 | Shift | spring | | skynda – men det ökar rädslan |
 | Space | hoppa, i luften igen för dubbelhopp | handbroms (sladd!) | **håll i dig**: ta tag i närmaste stolsrygg vid turbulens |
 | J / klick | sparka, i luften: stampa (efter julafton: **håll in i luften** för att glidflyga) | | **håll in**: "Jag kan flyga, jag är inte rädd" – sänker FLYGRÄDSLA |
-| E | prata, kliv in, sno en bil, kvarta en stund i Stigs säng i rum 107, titta i herr Storchs kamera | kliv ur (i fart: rulla ur) | prata, **sätt dig / res dig**, lås in dig på toaletten, anropsknappen, serveringsvagnen |
+| E | prata, kliv in, sno en bil, kvarta en stund i Stigs säng i rum 107, titta i herr Storchs kamera, heja på rullskidåkaren | kliv ur (i fart: rulla ur) | prata, **sätt dig / res dig**, lås in dig på toaletten, anropsknappen, serveringsvagnen |
 | H | | tuta (utanför uppdragen hör folk den) | |
 | B | | titta bakåt | |
 | M / Tab | stor karta | stor karta | plan över gaten/kabinen |
@@ -167,6 +167,13 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   bleka smalfilmsfärger, varje trick han filmar blir en stillbild, och han frågar "Vill du se min
   film?". Filmkvällen visar sju svarta dagar och sedan dina egna bravader från julafton. Men nu finns
   det bevis: en förseelse nära honom ger SKANDAL som överallt annars.
+- **Heja Eslöv!**: rullskidåkaren med ESLÖV på bröstet tränar på Eslövvägen vid tomatfälten (ute
+  på vischan, vid skylten ESLÖV 3 900 KM). Tuta när du kör förbi, så ropar Stig "Heja Eslöv!" och
+  skidåkaren vinkar med staven: "Bara 390 mil kvar!". Till fots räcker det att trycka E. Då stannar
+  han och bjuder på **Eslövloppet**, ett varv runt tomatfälten på vägarna med start och mål vid
+  skylten. Stig springer, skidåkaren stakar och klockan tickar, och han går i mål precis när tiden
+  tar slut. Vinner du får du en slant och din bästa tid sparas. Loppet springs till fots, så en bil
+  eller R avbryter det. Står du mitt i hans spår kommer ett "Spår!" bakifrån.
 
 ## Vad är påhittat?
 
@@ -200,6 +207,8 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
 - att herr Storch springer fram och filmar Stigs trick, sökaren med den svarta bilden,
   stillbilderna efter julafton och filmkvällen (linsskyddet och den förlorade veckan är filmens
   julfest, men i filmen tittar ingen i hans kamera)
+- att rullskidåkaren tränar fram och tillbaka, svarar på tutan, ropar "Spår!" och tävlar med Stig
+  runt tomatfälten (i filmen är det Berra som ropar "Heja Eslöv!", och Robban svarar "Herre jävlar!")
 - att grisbilen lånas ut till Stig-Helmer, att man följer Josés bil och grisbilen, och
   jeepjakten
 - fårrusningen i Fataga, kappkörningen mot nattbussen och porslinskrosset på tid
@@ -290,11 +299,13 @@ src/game/poolJudges.js          Siv och Majsan sätter poäng in free roam: dive
 src/game/honk.js                Tutan som folk reagerar på in free roam: pedestrians hop, the gang answers, the grunt
 src/game/dayClock.js            Dygnet runt in free roam: the island's clock, evenings and nights, Ole's watch, the nap
 src/game/storchFilm.js          Lite film. in free roam: Herr Storch films the tricks, his viewfinder, stills, film night
+src/game/eslov.js               Heja Eslöv! in free roam: the rollerskier trains, answers the horn, Eslövloppet
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
 tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, meter, kinds, perf,
-                                paintshop, berra, glide, simhopp, tuta, dygn, super8, calibrate, calibflight)
+                                paintshop, berra, glide, simhopp, tuta, dygn, super8, eslov, calibrate,
+                                calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
 tools/pool.mjs                  re-derives every random stage's timer from the ledger
@@ -328,6 +339,8 @@ node tools/shot.mjs simhopp              # the sisters judge his dives: swan div
 node tools/shot.mjs tuta                 # the horn in free roam: the hop, the gang's answers, the sorry, the grisbil's grunt
 node tools/shot.mjs dygn dygnGiver       # the clock in free roam: the sky by the hour, Ole's watch, the nap, NÄSTA MORGON
 node tools/shot.mjs super8 filmkvall     # Herr Storch films the tricks: the trot, the black viewfinder, stills, the film night
+node tools/shot.mjs eslov                # the rollerskier: his lane, the horn, E, "Spår!", Eslövloppet lost, aborted and won
+ESLOV_RUNS=8 node tools/shot.mjs eslovlopp  # measure Eslövloppet's timer with calibrate's walker (DESIGN §10.12)
 node tools/shot.mjs fullstory kinds      # the literal §8 missions and the stage-kind checks
 node tools/shot.mjs calibrate calibflight  # timer and FLYGRÄDSLA calibration (slow; see DESIGN §8, §16.4)
 node tools/pool.mjs                      # random-stage timers from the raw runs in notes/calibration-samples.md

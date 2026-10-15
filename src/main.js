@@ -27,6 +27,7 @@ import { Glide } from './game/glide.js';
 import { PoolJudges } from './game/poolJudges.js';
 import { Honk } from './game/honk.js';
 import { DayClock } from './game/dayClock.js';
+import { Eslov } from './game/eslov.js';
 import { StorchFilm } from './game/storchFilm.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
@@ -167,6 +168,7 @@ class Game {
     this.hornAt = null;                   // the last free-roam horn press: { x, z, yaw, t, pigs }
     this.day = new DayClock(this);        // free roam: the island's clock, evenings, the nap (§10.10)
     this.film = new StorchFilm(this);     // free roam: Herr Storch films his tricks, the film night (§10.11)
+    this.eslov = new Eslov(this);         // free roam: the rollerskier trains, the horn, Eslövloppet (§10.12)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -1413,6 +1415,7 @@ class Game {
     this.honk.update(dt);
     this.day.update(dt);
     this.film.update(dt);
+    this.eslov.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);
@@ -1709,9 +1712,10 @@ class Game {
       const giver = ms.state === 'idle' && ms.current?.giver === k && ms.current.level === this.level;
       // §9.4 idleAnim (e.g. Berra asleep), or held by the free-roam Berra job (§10.6) or the diving
       // judges at the pool's edge (§10.8): no wave, turn or chatter; Robban waves Stig over to the
-      // sleeping Berra as a giver does. An answer to the horn waves from further off (§10.9).
-      const posed = !!ms.idlePose(k) || this.berraJob.posed(k) || this.judges.posed(k) || this.film.posed(k);
-      n.anim.wave = ((giver || this.berraJob.waving(k)) && near < 9 || this.honk.waving(k)) && !posed && !this.inDialog && n.state === 'normal';
+      // sleeping Berra as a giver does. An answer to the horn waves from further off (§10.9); the
+      // rollerskier waves his pole while he skis (§10.12).
+      const posed = !!ms.idlePose(k) || this.berraJob.posed(k) || this.judges.posed(k) || this.film.posed(k) || this.eslov.posed(k);
+      n.anim.wave = (((giver || this.berraJob.waving(k)) && near < 9 || this.honk.waving(k)) && !posed || this.eslov.waving(k)) && !this.inDialog && n.state === 'normal';
       if (n.state === 'normal' && !posed && near < 10 && !this.inDialog) n.yaw += Math.atan2(Math.sin(yawTo(this.player.x - n.x, this.player.z - n.z) - n.yaw), Math.cos(yawTo(this.player.x - n.x, this.player.z - n.z) - n.yaw)) * Math.min(1, dt * 3);
       // Free play only: not in the gap before an outro (bubbles stacked over its first line).
       const lines = (this.level === 'island' && this.chatterOverrides[k]) || chatter[k];
@@ -1787,13 +1791,14 @@ class Game {
       const g = this.npcs[ms.current.giver];
       if (g) out.push({ type: 'mission', x: g.x, z: g.z, edge: true });
     }
-    const t = ms.target() || this.berraJob.target();
+    const t = ms.target() || this.berraJob.target() || this.eslov.target();
     if (t && !t.follow) out.push({ type: 'objective', x: t.x, z: t.z, edge: true });
     if (t && t.follow) out.push({ type: ms.stage?.car?.isTarget ? 'enemy' : 'friend', x: t.x, z: t.z, edge: true });
     out.push(...ms.markers());
     for (const h of this.shame.pursuers) if (!h.dead) out.push({ type: 'enemy', x: h.x, z: h.z, edge: true });
     out.push(...this.shame.paint.markers());
     out.push(...this.berraJob.markers());
+    out.push(...this.eslov.markers());
     const o = this.shame.officer;
     if (o && o.state !== 'hidden' && this.shame.pursuit) out.push({ type: 'enemy', x: o.x, z: o.z, edge: true });
     if (!all) {
@@ -1847,7 +1852,7 @@ class Game {
       this.bang.fadeBeam(nearFade(g.x, g.z));
       if (dist(g.x, g.z, f.x, f.z) > 25) target = { x: g.x, z: g.z };
     } else this.bang.show(false);
-    const t = ms.target() || this.berraJob.target();   // or the free-roam Berra job's (§10.6)
+    const t = ms.target() || this.berraJob.target() || this.eslov.target();   // or the free-roam Berra job's (§10.6), Eslövloppet's (§10.12)
     if (t) {
       target = t;
       const y = t.follow ? groundAt(t.x, t.z, 0.2, 0.6) + 2.5 : groundAt(t.x, t.z, 0.2, 0.6);
@@ -1874,8 +1879,9 @@ class Game {
   }
 
   updateHud() {
-    // No mission running: the paint shop's wet-paint card (§7.2) or the Berra job's (§10.6), if any.
-    hud.setObjective(this.missions.objective() || this.shame.paint.objective() || this.berraJob.objective());
+    // No mission running: the paint shop's wet-paint card (§7.2), the Berra job's (§10.6) or
+    // Eslövloppet's (§10.12), if any.
+    hud.setObjective(this.missions.objective() || this.shame.paint.objective() || this.berraJob.objective() || this.eslov.objective());
     hud.setSpeedo(this.playerCar);
     if (this.missions.state !== 'failed') {
       let prompt = '';

@@ -45,7 +45,9 @@ opens with a summary of the rounds and the timer changes.
     `dygn dygnGiver` (Dygnet runt, the island's clock, Ole's watch and the nap in room 107, DESIGN
     §10.10; the clock holds at 15:00 in test mode unless a test sets `__game.day.run`), `super8
     filmkvall` (Lite film., Herr Storch filming the tricks, his viewfinder, the stills and the film
-    night after the end, DESIGN §10.11)
+    night after the end, DESIGN §10.11), `eslov eslovlopp` (Heja Eslöv!, the rollerskier training
+    on the Eslöv lane, his answer to the horn and Eslövloppet round the tomato fields, DESIGN
+    §10.12; `eslovlopp` measures the race's timer with calibrate's walker, `ESLOV_RUNS`)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

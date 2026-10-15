@@ -11,7 +11,7 @@
 //   peak), hairFlower,
 //   shirt, longSleeves, print [c1, c2, c3] + printStyle ('confetti'|'dots'|'floral'|'check') (under
 //   a suit or a vest only on the shirt in front), skirtPrint (the dress's dots if not the print's),
-//   stripe (one band) + stripes (several), sash, scarf (neck), apron, belly, collar, suit (colour of
+//   stripe (one band) + stripes (several) + bib (text printed on the one band's front), sash, scarf (neck), apron, belly, collar, suit (colour of
 //   the shirt seen in the jacket's V), coat (long coat tails), tie, bowtie, vest, epaulets, badge,
 //   chain, belt, dress (cone skirt) + pinafore (the dress also covers the torso), pants, shorts +
 //   baggy + shortsHem (a band at the hem), legsC (stockings), shoes, hands (gloves/mittens) +
@@ -115,7 +115,9 @@ export const CHARS = {
     pants: 0x6a5a48, hat: 'sunhat', voice: 225, ring: '#d8321e' }),
   stadare: A({ name: 'Städerskan', scale: 1.08, legK: 1.06, nose: 'big', hat: 'scarf', hatC: 0x5a4a6a, hair: 'bun', hairC: 0x2a2a2a, dress: 0x1d1426, apron: 0xf0a0c0,
     shirt: 0x1d1426, longSleeves: true, pants: 0x1d1426, legsC: 0x3a3030, held: 'broom', voice: 260, ring: '#d8321e' }),
-  eslov: A({ name: 'Rullskidåkaren', hair: 'short', hairC: 0xc9a66b, hat: 'cap', hatC: 0xffd23f, shirt: 0x2a4fa0, stripe: 0xffd23f, pants: 0x2a4fa0, longSleeves: true,
+  // ESLÖV printed on the yellow band, as on the film's rollerskier's chest; his skis and poles come
+  // with the `ski` anim flag (game/eslov.js), so the cast sheets show the base look.
+  eslov: A({ name: 'Rullskidåkaren', hair: 'short', hairC: 0xc9a66b, hat: 'cap', hatC: 0xffd23f, shirt: 0x2a4fa0, stripe: 0xffd23f, bib: 'ESLÖV', pants: 0x2a4fa0, longSleeves: true,
     hands: 0xffd23f, voice: 320, ring: '#fff8e6' }),
   grisbonde: A({ name: 'Grisbonden', skin: 0xb8865a, hair: 'short', hairC: 0x2a2a2a, shirt: 0x6a5a3a, longSleeves: true, pants: 0x4a3a2a, mustache: 0x2a2a2a, stache: 'thick',
     hat: 'sunhat', voice: 200, ring: '#d8321e' }),
@@ -451,12 +453,13 @@ function torsoParts(g, d, T, lo = false, pg = g) {
   if (d.print) printParts(pg, d, T, lo);
   if (d.stripe) {
     // Bands hugging the torso (and the belly): elliptic cylinders just outside the shirt.
+    // A band with a print (`bib`) is wider, to carry the letters.
     const n = d.stripes ? (lo ? 2 : 4) : 1;
     for (let k = 0; k < n; k++) {
       const y = n === 1 ? H * 0.55 : H * (0.33 + k * 0.16);
       const yy = (y - H / 2) / (H / 2), kk = Math.abs(yy) > 0.5 ? Math.sqrt(Math.max(0, 1 - ((Math.abs(yy) - 0.5) / 0.5) ** 2)) : 1;
       const bz = d.belly && y < H * 0.6 ? D * 0.1 : 0;
-      g.add(PRIM.cyl(16), d.stripe, mat(0, y, bz, 0, 0, 0, W * kk * 1.04, H * (n === 1 ? 0.12 : 0.075), (D * kk + bz * 2) * 1.06));
+      g.add(PRIM.cyl(16), d.stripe, mat(0, y, bz, 0, 0, 0, W * kk * 1.04, H * (n === 1 ? (d.bib ? BIB_H : 0.12) : 0.075), (D * kk + bz * 2) * 1.06));
     }
   }
   if (d.vest) {
@@ -499,6 +502,25 @@ function torsoParts(g, d, T, lo = false, pg = g) {
     // White blouse showing at the collar.
     g.box(d.shirt, 0, H * 0.9, D * 0.45, W * 0.28, H * 0.18, D * 0.1, 0, -0.2);
   }
+}
+
+// The text on a single band's front (`bib`: the rollerskier's ESLÖV): a strip of the band's elliptic
+// cylinder just outside it, `BIB_ARC` rad round the front, the letters on a transparent canvas and
+// unlit, like the town's signs (no outline). One texture per text.
+const BIB_H = 0.2, BIB_ARC = 1.9;
+const _bibTex = {};
+function bibMesh(d, T) {
+  const { H, W, D } = T;
+  let tex = _bibTex[d.bib];
+  if (!tex) {
+    tex = _bibTex[d.bib] = new THREE.CanvasTexture(textCanvas(d.bib, 0.46, 0.12, { bg: null, fg: '#1b3a8a', border: null, scale: 0.86, ppm: 640 }));
+    tex.colorSpace = THREE.SRGBColorSpace;
+    tex.anisotropy = 4;
+  }
+  const m = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 1, 16, 1, true, -BIB_ARC / 2, BIB_ARC), new THREE.MeshBasicMaterial({ map: tex, transparent: true }));
+  m.position.y = H * 0.55;
+  m.scale.set(W * 1.04 * 1.03, H * BIB_H * 0.9, D * 1.06 * 1.06);
+  return m;
 }
 
 // Confetti / dots / floral / check on the shirt (front, sides and back). Under a suit jacket or a
@@ -648,7 +670,24 @@ const PROP_GEO = {
     g.cyl(0x8a5a32, 0, 0.06, 0, 0.018, 0.22, 6);
     g.box(0xf4f0e6, 0, 0.36, 0, 0.6, 0.42, 0.03);
   },
+  // The rollerskier's kit (anim.ski). A red rollerski: origin at the shoe's sole, the binding under
+  // it, a black wheel at each end down to `SKI_LIFT` under the sole.
+  skiR: rollerski, skiL: rollerski,
+  // A pole: the grip at the origin, the shaft down -y to the hard tip `POLE_LEN` below it.
+  poleR: skiPole, poleL: skiPole,
 };
+function rollerski(g) {
+  g.box(0xd8321e, 0, -0.025, 0.02, 0.075, 0.03, 0.74);
+  g.box(0x1d1d22, 0, -0.004, 0.04, 0.09, 0.03, 0.17);
+  for (const z of [-0.31, 0.35]) g.cyl(0x1d1d22, 0, -0.065, z, 0.045, 0.05, 10, 0, 0, Math.PI / 2);
+}
+function skiPole(g) {
+  g.cyl(0x1d1d22, 0, 0.02, 0, 0.024, 0.15, 8);
+  g.cyl(0xc8ccd2, 0, -0.64, 0, 0.012, 1.2, 6);
+  g.cyl(0x1d1d22, 0, -1.25, 0, 0.032, 0.012, 8);
+  g.cone(0x5a6068, 0, -1.29, 0, 0.013, 0.06, 5, Math.PI);
+}
+const SKI_LIFT = 0.11, POLE_LEN = 1.32;
 const _propCache = {};
 // The number on a score card (`anim.card`, a string such as '10' or '–1'): a plane on each side of
 // the board, its texture drawn once per number.
@@ -759,6 +798,7 @@ export function buildCharacter(d) {
     }
     add(hips, g.build());
     if (!pg.empty) hips.add(toonMesh(pg.build(), { outline: 0, cast: false }));
+    if (d.bib && d.stripe && !d.stripes) hips.add(bibMesh(d, T));
   }
   // Head on a neck pivot.
   const neck = new THREE.Group();
@@ -840,7 +880,7 @@ export function buildCharacter(d) {
 //   st: { speed, air, vy, kick (0..1), talk, seated, flung, down, wave, cheer, t, sprint, yell,
 //         + the anim flags (character.js ANIM_FLAGS) }
 
-const _v = new THREE.Vector3(), _w = new THREE.Vector3();
+const _v = new THREE.Vector3(), _w = new THREE.Vector3(), DOWN = new THREE.Vector3(0, -1, 0);
 
 export function animateCharacter(m, st, dt) {
   const t = st.t;
@@ -1190,6 +1230,7 @@ function poseFlags(m, st, t) {
     inHand(m, prop(m, 'butterKnife'), 0, 0, 0.02, 0.02, -0.5 + Math.sin(t * 7) * 0.2, -0.2, 0);
     inHand(m, prop(m, 'knacke'), 1, 0, 0.03, 0.03, 0, 0.3, 0);
   }
+  if (st.ski) skiPose(m, st, t);
   if (st.shoeOff) {
     // At the arch: standing on one leg in a wool sock, the shoe in his hand.
     legs[0].rotation.set(0.95, 0, -0.1);
@@ -1202,6 +1243,54 @@ function poseFlags(m, st, t) {
     const sock = prop(m, 'sock', legs[0]);
     sock.position.set(0, -m.legLen + 0.05 * s, 0.06 * s);
     sock.scale.setScalar(s);
+  }
+}
+
+// The rollerskier (anim.ski, game/eslov.js): a red rollerski under each shoe (the body rides
+// SKI_LIFT up on their wheels, the skis kept level whatever the legs do) and a pole in each hand.
+// Moving, he double-poles on m.phase at half the walking rate (u, 0..1 a cycle): the push from arms
+// high in front to arms back, bending at the hips and dipping, the tips planted behind; then the
+// arms swing forward with the tips trailing off the ground. Each pole is aimed so its tip reaches
+// the ground (or `lift` over it) from where the hand is: from the hand's height over his soles the
+// horizontal reach of a POLE_LEN pole follows, laid back and a little out (standing: forward and
+// out, the hands resting on the grips). The waving hand (`wave`, the base pose) holds its pole up.
+function skiPose(m, st) {
+  const [R, L] = m.arms, legs = m.legs, s = m.s;
+  const a = Math.min(1, st.speed / 2.5), u = ((m.phase * 0.5) / (Math.PI * 2)) % 1;
+  const push = u < 0.42, k = push ? u / 0.42 : (u - 0.42) / 0.58, e = (1 - Math.cos(Math.PI * k)) / 2;
+  const bend = push ? Math.sin(Math.PI * k) : 0;
+  const lean = a * (0.18 + 0.42 * bend);
+  m.hips.rotation.x = lean;
+  m.body.position.y = (SKI_LIFT - a * 0.06 * bend) * s;
+  legs[0].rotation.set(-0.06 * a * bend, 0, -0.05);
+  legs[1].rotation.set(-0.06 * a * bend, 0, 0.05);
+  const arm = -0.42 + ((push ? -1.25 + 1.8 * e : 0.55 - 1.8 * e) + 0.42) * a;
+  R.rotation.set(arm, 0, -0.2);
+  if (!st.wave) L.rotation.set(arm, 0, 0.2);
+  for (let i = 0; i < 2; i++) {
+    const sk = prop(m, i ? 'skiL' : 'skiR', legs[i]);
+    sk.position.set(0, -m.legLen - 0.015 * s, 0.06 * s);
+    sk.rotation.set(-legs[i].rotation.x, 0, -legs[i].rotation.z);
+  }
+  const lp = POLE_LEN * s, c = Math.cos(lean), sn = Math.sin(lean);
+  for (let i = 0; i < 2; i++) {
+    const sx = i ? 1 : -1, p = prop(m, i ? 'poleL' : 'poleR');
+    hand(m, i, _v);
+    p.position.copy(_v);
+    if (i === 1 && st.wave) _w.set(0.3, 0.92, -0.25);
+    else {
+      const hh = m.body.position.y + m.legLen + _v.y * c - _v.z * sn;
+      const lift = push ? 0 : 0.35 * Math.sin(Math.PI * k) * a;
+      const v = Math.min(lp * 0.98, Math.max(0.2, hh - lift)), reach = Math.sqrt(lp * lp - v * v);
+      let hx = sx * (0.45 + (0.22 - 0.45) * a), hz = 0.89 + (-0.97 - 0.89) * a;
+      const hl = Math.hypot(hx, hz) || 1;
+      hx /= hl; hz /= hl;
+      _w.set(hx * reach, -v, hz * reach);
+    }
+    // From the root's axes into the hips' (leaned `lean` about x).
+    const y = _w.y, z = _w.z;
+    _w.set(_w.x, y * c + z * sn, -y * sn + z * c).normalize();
+    p.quaternion.setFromUnitVectors(DOWN, _w);
   }
 }
 

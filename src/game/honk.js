@@ -41,7 +41,8 @@ export class Honk {
   // the diving judges or Herr Storch's filming (the same rule as the chatter bubbles).
   free(key) {
     const g = this.g, n = g.npc(key);
-    return !!n && n.state === 'normal' && n.root.visible && !g.missions.idlePose(key) && !g.berraJob.posed(key) && !g.judges.posed(key) && !g.film.posed(key);
+    return !!n && n.state === 'normal' && n.root.visible && !g.missions.idlePose(key) && !g.berraJob.posed(key) && !g.judges.posed(key) && !g.film.posed(key)
+      && !g.eslov.owns(key);   // the rollerskier answers himself (§10.12)
   }
   // main.js syncAll: an answerer whose pose is the wave waves.
   waving(key) { return this.react[key]?.flag === 'wave'; }
@@ -94,7 +95,10 @@ export class Honk {
       if (text === c.tease && tease == null) tease = at;
     });
     // Stig: sorry the first time anyone reacts, and red-faced at Berra's whistle.
-    if ((ahead.length || near.length) && !this.sorry) {
+    // Within reach of the rollerskier Stig cheers "Heja Eslöv!" (§10.12): he meant to honk, no sorry.
+    const heja = g.eslov.horn(car);
+    if (heja) last.eslov = true;
+    if ((ahead.length || near.length) && !this.sorry && !heja) {
       this.sorry = true;
       this.queue.push({ at: g.time + c.sorryAt, who: 'stig', text: c.sorry });
       last.stig.push(c.sorry);

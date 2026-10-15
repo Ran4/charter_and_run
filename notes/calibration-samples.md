@@ -301,3 +301,30 @@ Current pool: `walker-r1r2/d9451f8`: n 17, median 67.40 → T_ref 67.40 → time
 | r3g1-D | 2026-10-10 | ea6c96a | `walker-r1r2/d9451f8` | default (RUNS=3: 2 runs) | 1 | 67.0 | run 0: 71.2 s, 1 impact (the Herr Storch leg, 21.2 s, held 1.8 s; not clean) |
 | r3l-D | 2026-10-11 | 6d5b919 + uncommitted: this step's flowers timer 27 (island.js, the fixture) and docs; no stage or autopilot change | `walker-r1r2/d9451f8` | default (RUNS=3: 2 runs) | 2 | 67.1 67.4 | none (no impact) |
 | r3g2-D | 2026-10-11 | 4887ede | `walker-r1r2/d9451f8` | default (RUNS=3: 2 runs) | 2 | 67.9 68.5 | none (no impact; run 1's Majsan leg held 1.4 s) |
+
+## `eslovLopp` · §10.12 · Eslövloppet, once round the tomato fields (free roam, feature 7) · on foot: timer = ceil(1.25 × (median + 5 × 0.5))
+
+A deterministic course (four fixed checkpoints, radius 6, and the line at the ESLÖV sign, on the
+roads round block (0,1)), so the rule is the median. Not a mission stage (no §8 table row, no
+fixture): DESIGN §10.12 and `ESLOV.race.timer` quote it. Measured by scenario `eslovlopp` in free
+roam at index 9 with `&ts=1`: calibrate's walker (`walker-r1r2`, `installAutopilot` imported from
+the unchanged `calibrate.mjs`) runs from the start line, each frame heading for the race's current
+target (a checkpoint's middle, then 1.2 m past the line) and switching as soon as the race takes a
+checkpoint, as a player follows the arrow; the race's clock is raised to 600 s, so the skier stands
+by the start and does not touch the run. Times are the race's own clock (`eslov.last.t`: `game.time`
+from `KÖR!` to the line). Sample ids: `f7` feature 7 (`-1` its first probe, `-8` its batch, `-F1`…`-F6`
+the default runs on the final tree). The stage code was uncommitted on 1b3b561 (feature 7's commit is
+the first with it).
+
+Current pool: `walker-r1r2/1b3b561`: n 27, median 28.18 → T_ref 30.68 → timer ceil(1.25 × 30.68) = **39** (90 % range 39–39).
+
+| sample | date | code | pool | env | n | raw times (s, run order) | excluded (reason) |
+|---|---|---|---|---|---|---|---|
+| f7-1 | 2026-10-15 | 1b3b561 + uncommitted: feature 7 (`src/game/eslov.js`, `ESLOV`, models.js, main.js, honk.js, `tools/scenarios/eslov.mjs`) | `walker-r1r2/1b3b561` | ESLOV_RUNS=1 | 1 | 28.18 | none (falls 0) |
+| f7-8 | 2026-10-15 | 1b3b561 + uncommitted: feature 7, as f7-1 (the timer literal 43 → 39 and the skier's resting turn changed during the batch; neither touches the run) | `walker-r1r2/1b3b561` | ESLOV_RUNS=8 | 8 | 28.20 28.18 28.18 28.18 28.20 28.18 28.18 28.18 | none (falls 0) |
+| f7-F1 | 2026-10-15 | 1b3b561 + uncommitted: feature 7, the final tree (its commit) | `walker-r1r2/1b3b561` | default (ESLOV_RUNS=3) | 3 | 28.18 28.18 28.18 | none (falls 0; the invocation logged one console error, its text not kept, RESULT FAIL; not seen again in F2–F6) |
+| f7-F2 | 2026-10-15 | 1b3b561 + uncommitted: feature 7, the final tree (its commit) | `walker-r1r2/1b3b561` | default (ESLOV_RUNS=3) | 3 | 28.18 28.18 28.18 | none (falls 0) |
+| f7-F3 | 2026-10-15 | 1b3b561 + uncommitted: feature 7, the final tree (its commit) | `walker-r1r2/1b3b561` | default (ESLOV_RUNS=3) | 3 | 28.18 28.18 28.18 | none (falls 0) |
+| f7-F4 | 2026-10-15 | 1b3b561 + uncommitted: feature 7, the final tree (its commit) | `walker-r1r2/1b3b561` | default (ESLOV_RUNS=3) | 3 | 28.18 28.18 28.18 | none (falls 0) |
+| f7-F5 | 2026-10-15 | 1b3b561 + uncommitted: feature 7, the final tree (its commit) | `walker-r1r2/1b3b561` | default (ESLOV_RUNS=3) | 3 | 28.18 28.18 28.18 | none (falls 0) |
+| f7-F6 | 2026-10-15 | 1b3b561 + uncommitted: feature 7, the final tree (its commit) | `walker-r1r2/1b3b561` | default (ESLOV_RUNS=3) | 3 | 28.18 28.18 28.18 | none (falls 0) |

@@ -3,7 +3,7 @@
 // DESIGN §1.4 (bark tables are [F*]: every film line is relocated there). Invented (§1.6): Oles
 // prylar and hajfenor as collectibles, the grisbil unlock, the glide after julafton, the sisters
 // judging his dives at Flamenco's pool, the island answering his horn, Herr Storch filming his
-// tricks and his film night.
+// tricks and his film night, the rollerskier's training, his answer to the horn and his race.
 
 export const HOMES_ISLAND = {
   ole: ['flamenco', 2.0, 1.0, 0],     // yaw 0: under the pergola, facing the pool (flamenco faces π)
@@ -77,6 +77,8 @@ export const CHATTER = {
   hittegods: ['Hammarby…?' /* [F*] */],
   varden: ['Sangrian, grabbar.' /* [F*](t) */],
   grisbonde: ['Akta grisarna, señor!' /* [N] */],
+  // Said while he stands at the lane's south end between laps (game/eslov.js, §10.12).
+  eslov: ['Man får passa på när det är barmark.' /* [N] */, 'Hemma i Eslöv är det slask nu.' /* [N] */],
 };
 
 // Barks by speaker (§14.10; Game.bark picks the table). These four are the Swedish tourists' (charter
@@ -398,6 +400,71 @@ export const STORCH_FILM = {
     weekLine: 'Blir\'e inge film?',                                               // [F*] his julfest line, said again over his black week
     julLine: 'Lite film.',                                                        // [F*](t)
     max: 4, secs: 10, minSecs: 1, steps: [[1.7, 'l1'], [3.0, 'jul'], [4.6, 'l2']],
+  },
+};
+
+// Heja Eslöv! – the rollerskier trains for real (free roam, DESIGN §10.12; game/eslov.js). On the
+// island with `missions.state === 'idle'` `who` skis up and down the Eslöv lane: a loop from `at`
+// (yaw 0, south) `lane.to` m north and back, `lane.side` m right of the lane's middle each way,
+// turning round on a half circle of that radius, at `speed` m/s (eased by `accel` m/s², `turnSpeed`
+// in the turns); every `restEvery`th lap he stands `restSecs` s at the south end facing the road
+// (his chatter then). At night (`day.dark`) he stands there. Stig on foot in his track (within
+// `spar.ahead` m ahead, `spar.lat` m aside) gets `spar.call` (at most every `spar.every` s) and the
+// skier swerves to pass him `spar.pass` m off; `spar.sorryAt` s later Stig's `spar.sorry` and a hop
+// aside at `spar.hop` m/s. A car in his track within `block` m: he stops, and after `blockSecs` s
+// turns back. The horn (game/honk.js) within `heja.r` m, if he sees the car: Stig's `heja.stig`
+// `heja.stigAt` s after the press and his `heja.replies` (the first one first; `heja.won` after a
+// won race) at `heja.replyAt` s, waving his pole `heja.waveSecs` s; at most every `heja.every` s. On
+// foot E (`heja.prompt`, within `heja.r2` m): the same, he brakes to a stop facing Stig and
+// `race.offerAt` s later offers the race (`race.offer`; E `race.prompt` for `race.offerSecs` s).
+// The race (`race`): Stig and the skier on the start line (offsets [dx, dz] in world axes from
+// `at`), a black cut, `count` s of countdown, then once round the tomato fields through `cps`
+// ([dx, dz, r]) and back over the line (`line`: dz, half width) going north, within `timer` s. The
+// skier skis `path` at the speed that crosses the line at `timer` s: beat him and Stig wins `prize`
+// pta and his best time is kept (`game.records.eslov`). On foot only: a car or a jump in position
+// (R) ends it. Invented (§1.6): his training, the horn answer, the "Spår!" gag and the race; Berra's
+// "Heja Eslöv!" is the film's, given to Stig.
+export const ESLOV = {
+  who: 'eslov', at: 'eslovVag',
+  lane: { to: -50, side: 1.0 },
+  speed: 3.2, accel: 1.2, turnSpeed: 1.0, restEvery: 2, restSecs: 5,
+  spar: {
+    ahead: 7, lat: 1.1, pass: 1.5, every: 15, sorryAt: 0.7, hop: 3.2,
+    call: 'Spår!',                                                                 // [N] the skiers' old call on the track
+    sorry: 'Oj, förlåt!',                                                          // [N]
+  },
+  block: 5, blockSecs: 2.5,
+  heja: {
+    r: 22, r2: 3, every: 8, stigAt: 0.3, replyAt: 1.25, waveSecs: 1.8, greetSecs: 2.4,
+    prompt: '<b>E</b> Heja Eslöv!',                                                 // [F*]
+    stig: 'Heja Eslöv!',                                                           // [F*] Berra's shout at the rollerskier (research-plot.md:318), given to Stig
+    replies: ['Bara 390 mil kvar!' /* [N] the sign's 3 900 km */, 'Tack! Det är bara att staka på!' /* [N] */,
+      'Hälsa hem till Sverige!' /* [N] */],
+    won: ['Där har vi löparen!' /* [N] */, 'Bara 390 mil kvar!' /* [N] */],
+  },
+  race: {
+    offerAt: 1.2, offerSecs: 9,
+    offer: 'Ska vi ta ett varv runt fälten? Start och mål vid skylten.',          // [N]
+    prompt: '<b>E</b> Eslövloppet – ett varv runt fälten',                         // [N]
+    yes: 'Ett varv? Det klarar jag.',                                              // [N]
+    title: 'Eslövloppet',                                                          // [N]
+    text: 'Spring ett varv runt tomatfälten – före rullskidåkaren!',              // [N]
+    best: 'Rekord {t}',                                                            // [N]
+    // Measured (DESIGN §8 "Timers and difficulty", on foot; §10.12, scenario `eslovlopp`): the
+    // walker's median lap 28.18 s + 0.5 s × 5 targets = T_ref 30.68, ceil(1.25 × 30.68) = 39 (pool
+    // `eslovLopp` in notes/calibration-samples.md).
+    timer: 39, prize: 100, fadeSecs: 0.6, count: 3.5,
+    stig: [-1.2, -7], skier: [1.0, -7], line: [-8, 3.6],
+    cps: [[0, -59, 6], [-63, -59, 6], [-63, 11, 6], [0, 11, 6]],
+    path: [[1, -7], [1, -59.1], [-62.6, -59.1], [-62.6, 11.1], [1, 11.1], [1, -8]],
+    afterSecs: 3.5,
+    win: { banner: 'DU VANN!', sub: 'Eslövloppet på {t}', record: 'Eslövloppet på {t} – nytt rekord!',  // [N]
+      line: 'Där fick jag! Här, en slant till en läsk.',                           // [N]
+      stig: 'Tack! Det var nog bara tur.',                                         // [N]
+      toast: 'Rullskidåkaren gav dig {n} pta.' },                                  // [N]
+    lose: { banner: 'RULLSKIDÅKAREN VANN', sub: 'Eslövloppet – försök igen',       // [N]
+      line: 'Det är träningen som gör det!' },                                     // [N]
+    abort: 'Eslövloppet avbrutet – det springs till fots.',                        // [N]
   },
 };
 
