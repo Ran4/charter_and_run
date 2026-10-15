@@ -30,6 +30,7 @@ import { DayClock } from './game/dayClock.js';
 import { Eslov } from './game/eslov.js';
 import { StorchFilm } from './game/storchFilm.js';
 import { PoolFest } from './game/poolFest.js';
+import { StigSorry } from './game/stigSorry.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
 import { LEVELS, ISLAND_PALETTES } from './level.js';
@@ -172,6 +173,7 @@ class Game {
     this.film = new StorchFilm(this);     // free roam: Herr Storch films his tricks, the film night (§10.11)
     this.eslov = new Eslov(this);         // free roam: the rollerskier trains, the horn, Eslövloppet (§10.12)
     this.fest = new PoolFest(this);       // free roam after the end: Små grodorna in Flamenco's pool (§10.13)
+    this.sorry = new StigSorry(this);     // free roam: Stig says sorry for what he does (§10.14)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -625,7 +627,9 @@ class Game {
         ped.char.teleport(e.x, e.z);
         ped.char.state = 'normal';
         ped.char.fling(Math.cos(car.yaw) * 4, 4, -Math.sin(car.yaw) * 4);
-        this.say(ped.char, this.bark(ped.char, 'carjack'), 2);
+        // In free roam Stig asks whether it is his car, and a Swedish driver may answer "Nej."
+        // instead of complaining (§10.14).
+        if (!this.sorry.carjack(ped.char)) this.say(ped.char, this.bark(ped.char, 'carjack'), 2);
       }
       this.shame.add(8);
     }
@@ -897,7 +901,10 @@ class Game {
   // ------------------------------------------------------------------------------------------
   // Events
 
-  breakProp(p, vx, vz, car) { breakProp(p, vx, vz, this); }
+  // A car drives through a prop; the player's own gets Stig's sorry in free roam (§10.14).
+  breakProp(p, vx, vz, car) {
+    if (breakProp(p, vx, vz, this) && car && car === this.playerCar) this.sorry.offence(p.def.explode ? 'boom' : 'prop');
+  }
   onPropBroken(p, vx, vz) {
     audio.smash();
     if (p.def.coins) burstCoins(p.x, 0.4, p.z, p.def.coins, vx, vz);
@@ -950,7 +957,7 @@ class Game {
     audio.ouch();
     audio.thud();
     if (ch === this.player) { hud.flashColor('rgba(255,80,60,0.35)'); return; }
-    if (byPlayer) this.shame.add(ch.key ? 14 : 18);
+    if (byPlayer) { this.shame.add(ch.key ? 14 : 18); this.sorry.offence('hit'); }
     if (Math.random() < 0.8) this.say(ch, this.bark(ch, 'ouch'), 1.6);
   }
   onGetUp(ch) {
@@ -1421,6 +1428,7 @@ class Game {
     this.film.update(dt);
     this.eslov.update(dt);
     this.fest.update(dt);
+    this.sorry.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);
@@ -1613,9 +1621,11 @@ class Game {
     this.carsVsPeople();
   }
 
-  // Kicks and stomps: break props, bowl people over, squash shark fins, dent cars.
+  // Kicks and stomps: break props, bowl people over, squash shark fins, dent cars. Stig says sorry
+  // once a kick, however many it bowls over or breaks (§10.14).
   areaHit(x, z, y, r, dx, dz, stomp) {
-    for (const prop of propsNear(x, z, r)) breakProp(prop, dx * 8, dz * 8, this);
+    let broke = null, bowled = false;
+    for (const prop of propsNear(x, z, r)) { const b = breakProp(prop, dx * 8, dz * 8, this); if (b && !broke?.def.explode) broke = b; }
     if (this.levelDef.sim.peds) for (const ped of this.peds) {
       const c = ped.char;
       if (c.state !== 'normal' || Math.abs(c.y - y) > 1.6 || dist(c.x, c.z, x, z) > r + 0.4) continue;
@@ -1623,11 +1633,13 @@ class Game {
       this.shame.add(9);
       audio.ouch();
       this.say(c, this.bark(c, 'ouch'), 1.5);
+      bowled = true;
     }
     for (const k in this.npcs) {
       const n = this.npcs[k];
       if (n.state !== 'normal' || dist(n.x, n.z, x, z) > r + 0.6) continue;
       this.say(n, this.bark(n, 'kicked'), 1.4);
+      bowled = true;
     }
     for (const [setName, list] of Object.entries(this.collectibles)) {
       if (COLLECTIBLES[setName].pickup !== 'squash') continue;
@@ -1647,6 +1659,7 @@ class Game {
         if (c.traffic) this.shame.add(2);
       }
     }
+    this.sorry.offence(broke?.def.explode ? 'boom' : bowled ? 'kick' : broke ? 'prop' : null);
   }
 
   carsVsPeople() {

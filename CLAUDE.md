@@ -49,7 +49,9 @@ opens with a summary of the rounds and the timer changes.
     on the Eslöv lane, his answer to the horn and Eslövloppet round the tomato fields, DESIGN
     §10.12; `eslovlopp` measures the race's timer with calibrate's walker, `ESLOV_RUNS`), `grodorna
     grodtakt` (Små grodorna i poolen, the pool fest after the end: the ring in Flamenco's shallow end,
-    the porter, Stig in the ring and the hop counter, DESIGN §10.13)
+    the porter, Stig in the ring and the hop counter, DESIGN §10.13), `artig` (Förlåt, förlåt!,
+    Stig's sorry after a kick, a knock-down, a broken thing or a carjacking, and the driver's "Nej.",
+    DESIGN §10.14)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

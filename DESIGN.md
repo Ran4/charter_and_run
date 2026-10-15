@@ -192,7 +192,9 @@ country road, and "Heja Eslöv!" is Berra's); the pool fest after the end: the S
 Små grodorna in Flamenco's pool in free roam, the ring round Lasse, the porter's walk out, Stig
 hopping with them in his suit and the hop counter (free roam, §10.13; in the film the others dance
 in the pool at the julfest while Stig-Helmer and Ole open the crispbread, and Stig-Helmer never
-dances).
+dances); Stig-Helmer saying sorry for every kick, knock-down, broken thing and carjacking, and a
+carjacked driver answering his "Ursäkta, är det din bil?" with "Nej." (free roam, §10.14; in the film
+he is the one reality keeps happening to, and it is the traffic warden Majsan who asks him).
 The film's flight has **no turbulence** and **no in-flight toilet scene**: both toilet scenes are
 at Arlanda (we keep them there). The plane's toilets are only an invented hideout.
 
@@ -1277,6 +1279,8 @@ outfit (`npc(key).def`).
 - Dodge shouts (`peds.js`): tourists `'Akta!' 'Hallå där!' 'Herre jävlar!'`, locals `'¡Cuidado!'
   '¡Turistas!'` (`Herre jävlar` [F*], relocated; others [N]). Their barks when kicked, run over or
   carjacked follow the same split (Phase 3 r2, `Game.bark`, §14.10): locals use the `_LOCAL` tables.
+  In free roam a carjacked Swedish tourist may answer Stig's question with "Nej." instead of his
+  complaint (feature 11, §10.14).
 - The dodge is `Ped.dodge(dx, dz, game, shout)` (feature 5): `jump(6.5)`, 6 m/s away from the car's
   line, `panicT` 1.4 (no new steering for 0.8 s), the shout if `shout`. A speeding car's threat
   (`game.carThreat`) calls it with the old 50 % draw on the pedestrians' seeded `r`, in the same
@@ -1398,7 +1402,8 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
   car / ×0.7 foot; ramming a non-target unlocked car `min(9, impact·0.55)`; wrecking
   traffic/unnamed parked car +12; running over a named NPC +14 / pedestrian +18; kicking a ped +9;
   kicking a traffic car +2. So a pedestrian run over is +54 and two make a pursuit (it took six), a
-  kick +27 (four), a wrecked car +36. FLYGRÄDSLA (`panic` mode) has no `gain`.
+  kick +27 (four), a wrecked car +36. Stig's free-roam sorry (feature 11, §10.14) changes none of
+  them. FLYGRÄDSLA (`panic` mode) has no `gain`.
 - **Decay**: after `idleDelay` = 10 s clean (4 until feature SKANDAL), −`decayIdle`/s. In
   pursuit (`bands`, unchanged by feature SKANDAL): −3/s beyond 70 m from the nearest pursuer,
   −1/s at 35–70 m, 0 closer (so an escape is ≈ 33 s of staying more than 70 m away); −12/s extra
@@ -3829,6 +3834,65 @@ traditional and only the melody plays (§1.5): no verses, no lyrics in a bubble.
   stands still (no walking round in the verses); the porter's line is once a visit, at the first
   round; the fest is a day fest by the clock (not at night), and the sky is the clock's as anywhere.
 
+### 10.14 Förlåt, förlåt! – Stig-Helmer says sorry (free roam; feature 11, 2026-10-15)
+
+`game/stigSorry.js` (`StigSorry`, owned by Game as `sorry`), config `STIG_SORRY` in content/island.js
+(§14.10). Stig-Helmer is too well brought up for Hit & Run: what he does in free roam he apologises
+for, in his own bubble. The damage is done all the same: every SKANDAL amount (§7.2) and every bark of
+the people he hurts (§14.10) is what it was. The apologies are [N]; the carjacking's question and
+answer are the film's first exchange with the roles swapped, [F*] (§1.6).
+
+- **When.** Only while `active()`: on the island, `missions.state === 'idle'`, no dialogue. In a
+  mission, a dialogue or the flight level (which has its own "Ursäkta!", §5.10) he says nothing, so
+  no scripted line of his is covered or replaced (a speaker has one bubble, §11.4) and no mission,
+  timer or calibration pool changes; nothing reads these bubbles (the mantra auto-bubble and the
+  glide's only wait while one is up). Never while he is still saying something (`saying(player)`:
+  the horn's sorry, a judge's call, a line of the free-roam modules): then nothing is queued, and a
+  queued line is dropped if one of his came first.
+- **The offences** (`offence(kind)`), each `at` = 0.5 s after it, so the victim's line comes first:
+  - `kick`: a kick or a stomp (`areaHit`) that bowls a pedestrian over or hits a cast NPC. One line a
+    kick however many it hits (`areaHit` sums the kick up and calls once).
+  - `hit`: his car runs someone over (`onCharHit` with `car === playerCar`).
+  - `prop`: he breaks a thing, on foot (`areaHit`, when it hit nobody) or with his own car
+    (`Game.breakProp(p, vx, vz, car)` with `car === playerCar`; an AI car's breakage is not his).
+  - `boom`: the thing he broke goes up (`def.explode`: a petrol pump or a butano bottle), on foot or
+    in his car; it outranks the rest in the same kick.
+  The session's first offence always gets a line (so the first prank shows it); after that each
+  kind's `chance` (kick 0.5, hit 0.6, prop 0.35, boom 1), and none sooner than `gap` = 7 s after his
+  last (he would never stop mowing through a crowd). A queued line not yet said gives way to a
+  weightier one in the same moment (prop < kick = hit < boom < carjack: the parasol and the man
+  under it in one frame give the man's line).
+- **The carjacking** (`carjack(ch)`, from `enterCar` when a driver tumbles out): no gap and no draw,
+  only the `saying` rule. `askAt` = 0.6 s after it Stig asks "Ursäkta, är det din bil?" [F*] (in the
+  film the traffic warden Majsan asks him at the travel agency's window, research-plot.md:95).
+  When the driver is a Swedish tourist (`!def.local`), the session's first time and then at
+  `noChance` = 35 %, the driver keeps quiet as he tumbles out (his `carjack` bark is left out) and
+  answers `noGap` = 0.9 s after the question with Stig's own "Nej." [F*] from there, standing anchor
+  (§11.4; the two bubbles are metres apart: the car and the asphalt). He is dropped if hidden,
+  seated or over 40 m off by then. Otherwise his own complaint comes at once, as before.
+- **Lines** (`game.say(player, text, secs = 2.2)`; the "Nej." 1.6): a kind's first line in a session
+  is its first, later ones not the one it gave last.
+
+  | kind | lines |
+  |---|---|
+  | `kick` | "Oj! Förlåt, förlåt! Det var inte meningen.", "Ursäkta! Har ni slagit er?", "Förlåt! Jag tappade balansen.", "Oj, oj… Förlåt! Jag ville inte…" [N] |
+  | `hit` | "Förlåt! Jag såg er inte!", "Oj! Förlåt! Hur gick det?", "Förlåt! Bromsen satt inte där jag trodde." [N] |
+  | `prop` | "Jag ersätter den, självklart!", "Oj… Den stod visst i vägen. Förlåt.", "Förlåt! Jag betalar, så klart." [N] |
+  | `boom` | "Oj… förlåt." [N] |
+  | `carjack` | "Ursäkta, är det din bil?" [F*] (Majsan's question, relocated) |
+  | `no` (the driver) | "Nej." [F*] (Stig's answer, relocated) |
+
+  "Det måste vara värmen." is not his (it is the pedestrians' `GETUP`, §14.10), and none of these is
+  ever shown as a film quote (README, tips).
+- **Leaving free roam** (a mission state, a dialogue, the other level) drops the lines not yet said,
+  and a bubble of ours still up comes down (`game.unsay`, only when it is still ours: a line said
+  over it since is left alone).
+- `sorry.last` ({ t, kind, text, no }) is for tests; `first`, `noDone`, `said` and `lastT` are
+  session state, nothing is saved. Scenario `artig` (§16.4).
+- **Not done** (deviations from the idea): no fifth kind for a hard crash ("Jag har lite anlag för
+  åksjuka." stays the bus mission's, §8); a car he dents with a kick is not counted; the first Swedish
+  carjacking of a session always gets the "Nej." (later ones at 35 %), so the film's exchange is seen.
+
 ## 11. HUD / UI strings (Swedish; `src/strings.js` owned by WP-H, created by Phase 0)
 
 `strings.js` exports `S` (flat object) and `fmt(key, vars)`. Engine code uses `S.key` only.
@@ -4201,7 +4265,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/strings.js` | new | **H** | `S`, `fmt()` (§11) |
 | `src/content/index.js` | new | none | merges `HOMES`, `MAP_LABELS`, `LEVEL_OUTFITS`, re-exports all content |
 | `src/content/flight.js` | new | **F** | `HOMES_GATE`, `HOMES_FLIGHT`, `MAP_LABELS_FLIGHT`, `CHATTER_FLIGHT`, `OLE_STATS`, `LEVEL_OUTFITS_GATE`, `LEVEL_OUTFITS_FLIGHT` |
-| `src/content/island.js` | new | **G** | `HOMES_ISLAND`, `MAP_LABELS_ISLAND`, `CHATTER`, `OUCH`, `GETUP`, `CARJACK`, `NPC_KICKED` (+ the `_OLE` / `_LOCAL` tables, `LOCAL_CAST`, `BARKS`: Phase 3 r2, §14.10), `COLLECTIBLES`, `UNLOCKS`, `NAMED_CARS`, `LEVEL_OUTFITS_ISLAND` |
+| `src/content/island.js` | new | **G** | `HOMES_ISLAND`, `MAP_LABELS_ISLAND`, `CHATTER`, `OUCH`, `GETUP`, `CARJACK`, `NPC_KICKED` (+ the `_OLE` / `_LOCAL` tables, `LOCAL_CAST`, `BARKS`: Phase 3 r2, §14.10; `STIG_SORRY`: feature 11, §10.14), `COLLECTIBLES`, `UNLOCKS`, `NAMED_CARS`, `LEVEL_OUTFITS_ISLAND` |
 | `src/game/missions/index.js` | new | none | `MISSIONS = [...FLIGHT_MISSIONS, ...ISLAND_MISSIONS]`, `MissionRunner` re-export |
 | `src/game/missions/runner.js` | new (from missions.js) | none | `MissionRunner` (§9.4) |
 | `src/game/missions/kinds/core.js` | new | **none** (frozen after Phase 0) | getInCar goto pickup dropoff follow rabbits race destroy grab scene |
@@ -4221,6 +4285,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/storchFilm.js` | new (feature 6, 2026-10-15) | — | `StorchFilm` (`game.film`): Lite film. in free roam: Herr Storch trots over the sand to film Stig's tricks, his viewfinder (black before the end), the stills and the film night after it (§10.11) |
 | `src/game/eslov.js` | new (feature 7, 2026-10-15) | — | `Eslov` (`game.eslov`): Heja Eslöv! in free roam: the rollerskier skis up and down the Eslöv lane, answers the horn and E, "Spår!", Eslövloppet round the tomato fields (§10.12) |
 | `src/game/poolFest.js` | new (feature 8, 2026-10-15) | — | `PoolFest` (`game.fest`): Små grodorna i poolen in free roam after the end: the visit, the wade into the ring, the set of rounds on the music's clock, the dance, the exchange, the porter, Stig in the ring, the hop counter, the cheer and the coin (§10.13) |
+| `src/game/stigSorry.js` | new (feature 11, 2026-10-15) | — | `StigSorry` (`game.sorry`): Förlåt, förlåt! in free roam: Stig's sorry after a kick, a knock-down, a broken thing or a carjacking, and the driver's "Nej." (§10.14) |
 | `src/game/hud.js` | edit | **H** | map sources, meter, strings, legend, ring, blips, zone bar, markers; `renderPortrait` restores the model transform (§14.8) |
 | `src/game/camera.js` | edit | **A1** | profile, frameOne, cutTo, `clampZ` |
 | `src/game/fx.js` | edit | **A1** | `snow`, `steam`, `meterPuff` (rename of `shame`) |
@@ -4292,7 +4357,7 @@ mantra/hold, AI, cars, people (`glide.step` → the player's step → `glide.aft
 traffic/peds skipped when `!levelDef.sim.*`) → `syncAll` (also
 writes `ch.x/y/z` from `car.seatWorld(ch.seatSide)` for every car-seated character, player
 included, so framing, bubbles and distance checks see where they really are) → `missions.update` →
-`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `fest.update` (feature 8) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
+`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
 pickups/collectibles → props → `fx.tick` → `tickTown` → markers → camera → sun/sky → HUD → audio →
 traffic recycling (island) → autosave. `loop` then renders, and when `film.grabNow` is set calls
 `film.grab()` in the same task (Herr Storch's still from the frame's buffer, feature 6, §10.11).
@@ -4323,6 +4388,7 @@ game.film;         // StorchFilm (feature 6, §10.11): Herr Storch films Stig's 
                    // his viewfinder, the stills and the film night after the end
 game.eslov;        // Eslov (feature 7, §10.12): the rollerskier in free roam, the horn, Eslövloppet
 game.fest;         // PoolFest (feature 8, §10.13): Små grodorna in Flamenco's pool after the end;
+game.sorry;        // StigSorry (feature 11, §10.14): Stig says sorry in free roam
                    // fest.joined (Stig in the ring: handleOneShots gives Space to fest.hop(), no kick;
                    // fixedStep zeroes his wish), fest.posed(key), fest.visit, fest.phase, fest.last
 game.outfitOverrides; // { key: outfit } from UNLOCKS[name].outfit, merged over the island set by applyOutfits (§10.3)
@@ -4900,6 +4966,13 @@ shame.paint (PaintShop, §7.2): configure(cfg) from configure(); onPursuit() fro
 //   the ring); slot(i), gap, outSpot, centre, beat, now(), hopAt(t), armsAt(t), canJoin(), join(),
 //   leave(step); visit; phase; round { n, t0, game, t, vol }; nextAt; streak; stats; last
 
+// stigSorry.js (feature 11, §10.14): game.sorry = new StigSorry(game) after the pool fest;
+//   offence(kind) -> text | null (kind 'kick' | 'hit' | 'prop' | 'boom' | null) from areaHit (once a
+//   kick: 'boom' if a broken prop explodes, else 'kick' if it bowled anyone over or hit a cast NPC,
+//   else 'prop'), onCharHit (his car) and Game.breakProp(p, vx, vz, car) (car === playerCar);
+//   carjack(ch) -> bool from enterCar (true: the driver's own bark is
+//   left out, he answers "Nej."); update(dt) after fest.update (reset() while not active());
+//   active(); pending(); push(kind, at, no); queue; up; lastT; first; noDone; said; last
 // collision.js: waterAt(x, z, y) -> the `water` block he stands in at that height, or null
 //   (feature 4; moved from glide.js)
 
@@ -5071,6 +5144,24 @@ tid." 14–16. With the clock held (test mode) every line stays in, as before.
 Feature 6: after the end `UNLOCKS.bodega.chatter` gives Herr Storch "Lite film." [F*](t) and "Locket
 är av nu, ska du veta." [N] (§10.3, §10.11); his offer "Vill du se min film?" [N] is the film
 module's own bubble, not chatter, and while he is out filming he has no chatter.
+
+Feature 11: Stig's own apologies are not barks (BARKS is picked by who is hurt), so they have their
+own table, `STIG_SORRY` (content/island.js, game/stigSorry.js, §10.14), said by Stig in free roam
+after the hurt one's bark:
+
+```js
+STIG_SORRY = {
+  at: 0.5, gap: 7, secs: 2.2, chance: { kick: 0.5, hit: 0.6, prop: 0.35, boom: 1 },
+  askAt: 0.6, noGap: 0.9, noChance: 0.35, noSecs: 1.6,
+  kick: ['Oj! Förlåt, förlåt! Det var inte meningen.' /*[N]*/, 'Ursäkta! Har ni slagit er?' /*[N]*/,
+         'Förlåt! Jag tappade balansen.' /*[N]*/, 'Oj, oj… Förlåt! Jag ville inte…' /*[N]*/],
+  hit: ['Förlåt! Jag såg er inte!' /*[N]*/, 'Oj! Förlåt! Hur gick det?' /*[N]*/, 'Förlåt! Bromsen satt inte där jag trodde.' /*[N]*/],
+  prop: ['Jag ersätter den, självklart!' /*[N]*/, 'Oj… Den stod visst i vägen. Förlåt.' /*[N]*/, 'Förlåt! Jag betalar, så klart.' /*[N]*/],
+  boom: ['Oj… förlåt.' /*[N]*/],
+  carjack: ['Ursäkta, är det din bil?' /*[F*] Majsan's question to Stig, relocated: Stig asks*/],
+  no: 'Nej.',   // [F*] Stig's answer there, relocated: the carjacked driver gives it
+};
+```
 
 ---
 
@@ -5408,6 +5499,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `eslovlopp` [feature 7] | Eslövloppet's timer (§10.12, §8 "Timers and difficulty"): calibrate's walker runs the lap `ESLOV_RUNS` (3) times at `&ts=1` with the clock raised; prints `CAL eslovLopp` (the median + 2.5 s → the timer) and `CAL CHECK` against the shipped timer (the sample's 90 % bootstrap range); its raw times go into the ledger (`eslovLopp`) |
 | `grodorna` [feature 8] | Små grodorna i poolen (§10.13): no fest at index 11 (Lasse at SunTrip in `sol`) nor at index 13 without `bodega`; with it (unlock + forced placement) Lasse wears `jul` and he, Affe, Gabbe and Fru Storch stand at their pool-deck homes, Herr Storch on the beach; at 23.30 no visit; Stig on the deck: all seven ours (`poolFest`, busy, invulnerable, posed), wading 0.5 m in their places facing the middle; the exchange in order, once; round 1 on the audio clock; sampled in the page: in the air 0.17–0.22 s after an even beat with tails (beats 0–7), Affe hopping without `groda`, down at 0.55–0.75 s, ears on 8–11, the chorus higher; the porter at his spot with his line and the head shake, then home and free; on the coping dry with "Dansa med" and the gap marked; E: in the gap, stiff (`groda` 3), wading, `I TAKT 0 / 8`, "Kliv ur ringen"; J no kick; E out onto the coping, dry; in again and a step out; no SKANDAL; round 2 two beats after round 1 (±0.06 s), the pause 12 s (±0.8); a dancer does not answer the horn; off the deck all walk home and are free with their spot ids; julafton's unlock gone mid-visit: home at once. Shots `grodorna_vadar`, `_portier`, `_ring`, `_kanten` |
 | `grodtakt` [feature 8] | the hop counter (§10.13), Space as real key events timed in the page: seven on the beat (`I TAKT 7 / 8`, a shot in the air), the eighth: the goal, `I TAKT 8 / 8` teal, the ring cheers, +50 pta, the toast, "Heia Norge!" then Lasse's line, and Stig's "Hopp… och hopp…"; half a hop off the beat: a miss, `OTAKT!`, Majsan and Ole laugh; a skipped hop beat breaks the row; eight across the gap between two rounds (round 2's beat 0 counts): the goal again, no second coin; the music off: no new cue, judged on the audio clock; no audio clock (`audio.clock` stubbed null): the round on the game clock, judged; a dive off the board: the judges take Siv and Majsan out of the ring and judge it; home again, the fest takes them back. Shots `grodorna_takt`, `_hopp`, `_jubel`, `_otakt` |
+| `artig` [feature 11] | Förlåt, förlåt! (§10.14), at index 9 (free roam) on Gasolina's forecourt: a kick bowls a pedestrian over, his line comes first and Stig's "Oj! Förlåt, förlåt! Det var inte meningen." 0.3–1.0 s after it (the session's first offence), +27 SKANDAL as always; a second kick within the 7 s gap: his line, no sorry; one kick into two people: both speak, one sorry, another kick line; a kicked petrol pump: "Oj… förlåt.", +12.6; a kicked bin: "Jag ersätter den, självklart!"; in a car on the z = 40 road a pedestrian run over at 13 m/s: "Förlåt! Jag såg er inte!", +54; a bin driven through at 10 m/s: another prop line; a bin an AI car breaks (`game.breakProp` with a traffic car): none; a carjacking with a Swedish driver (the session's first): no bark from him at first, +24, Stig's "Ursäkta, är det din bil?", the driver's "Nej." over 0.5 s after it; a Spanish driver: his `CARJACK_LOCAL` line at once and the question, no "Nej."; a Swedish one with the draw stubbed over `noChance`: his `CARJACK` line, the question, no "Nej."; a kick while his own line is up: no sorry, nothing queued; a dialogue drops a queued sorry and takes one that is up down; in a running mission (ropavieja) a kick: the pedestrian's line, no sorry. Shots `artig_spark`, `_tva`, `_pump`, `_kor`, `_kapning` |
 | `talk` [Phase 0] | `autoDialog = false`, walk to Ole at `gateQueue`, E, Space twice |
 | `fullstory` [Phase 0b] | swaps the literal §8 missions (`tools/fixtures/full-missions.js`) into `MISSIONS` and plays all 13 per §16.3 (`FROM`/`TO` as `story`); must end `#13 idle`, `RESULT: PASS` |
 | `kinds` [Phase 0b] | fixture data checks; haggle misses fail; follow `minDist` fails; smooth/fragile bars (teleports never count); carry spill; checkpoint retry re-applies night + `vals` and revives plates at `dansgolv`; destroy default spawn; grab at the wreck; scene `exitCar`; Phase 3: follow shows no bar before the start and a head-on quarry does not fail it, `retryCar` (the last car reused, a typed named car, `park`), getInCar `atHome` and a wrecked `missionCar` failing, a frame-only scene stopping the car dead, a scene cutting a `collect` guest's bubbles (3 frames in: no bubble over the guest or Stig, no empty one) and keeping his placement |
@@ -6976,3 +7068,19 @@ the fixer's group.
   the ring stands still in the verses; the fest is a day fest by the clock. Scenarios `grodorna`,
   `grodtakt` (§16.4). No mission, stage kind, timer, fixture or calibration pool changed; the trad
   melody has still not been heard by a person (HANDOFF §4.7).
+- Feature 11, "Förlåt, förlåt! – Stig-Helmer ber om ursäkt" (`features/implemented/artiga_stig.md`,
+  2026-10-15): Stig says sorry in free roam (§10.14; new `src/game/stigSorry.js`, `STIG_SORRY` in
+  content/island.js; §1.6, §6.7, §7.2, §14.1–14.3, §14.10, §16.4). On the island with
+  `missions.state === 'idle'` and no dialogue, 0.5 s after a kick or stomp that bowls someone over
+  (one line a kick), a pedestrian run over by his car, a thing he breaks on foot or with his car, or
+  one that goes up: a line of his own [N] ("Oj! Förlåt, förlåt! Det var inte meningen.", "Förlåt! Jag
+  såg er inte!", "Jag ersätter den, självklart!", "Oj… förlåt." …), the session's first offence always,
+  later at a per-kind chance and at most every 7 s, never while he is saying something. A carjacking
+  always brings "Ursäkta, är det din bil?" [F*] 0.6 s later, and a Swedish driver (the session's first,
+  then 35 %) keeps his complaint and answers "Nej." [F*] (the film's first exchange, roles swapped).
+  main.js: `areaHit` sums a kick up and calls `sorry.offence` once, `onCharHit` and `Game.breakProp`
+  call it for the player's car only, `enterCar` asks `sorry.carjack(ch)` whether the driver's own
+  bark is left out, `sorry.update` after `fest.update` (§14.2, §14.3). No SKANDAL amount, bark,
+  mission, stage kind, timer, fixture or calibration pool changed. Deviations from the idea: no
+  crash line, a dented car is not counted, the first Swedish carjacking always gets the "Nej.".
+  Scenario `artig` (§16.4).

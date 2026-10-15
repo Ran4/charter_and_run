@@ -124,6 +124,32 @@ export const BARKS = {
   carjack: { sv: CARJACK, local: CARJACK_LOCAL },   // only pedestrians lose a car
 };
 
+// Förlåt, förlåt! – Stig-Helmer says sorry (free roam; feature 11, DESIGN §10.14; game/stigSorry.js).
+// Stig's own lines, so not in BARKS (that one is picked by who is hurt). On the island with no
+// mission running (`missions.state === 'idle'`) and no dialogue, `at` s after he bowls someone over
+// with a kick or a stomp (`kick`, one line a kick however many it hits), runs someone over (`hit`),
+// breaks a thing on foot or in his car (`prop`) or makes it go up (`boom`: a petrol pump or a gas
+// bottle): the session's first offence always, later ones at `chance` and no sooner than `gap` s
+// after his last. A carjacking always gets `carjack` `askAt` s after the driver tumbles out; a
+// Swedish tourist then answers `no` `noGap` s after the question instead of his complaint (the
+// session's first one always, then at `noChance`). Never while Stig is still saying something.
+// A kind's first line in a session is its first, later ones not its last. The SKANDAL is unchanged.
+// Invented (§1.6): the apologies; Majsan's question and Stig's answer are the film's, roles swapped.
+export const STIG_SORRY = {
+  at: 0.5, gap: 7, secs: 2.2,
+  chance: { kick: 0.5, hit: 0.6, prop: 0.35, boom: 1 },
+  askAt: 0.6, noGap: 0.9, noChance: 0.35, noSecs: 1.6,
+  kick: ['Oj! Förlåt, förlåt! Det var inte meningen.' /* [N] */, 'Ursäkta! Har ni slagit er?' /* [N] */,
+    'Förlåt! Jag tappade balansen.' /* [N] */, 'Oj, oj… Förlåt! Jag ville inte…' /* [N] */],
+  hit: ['Förlåt! Jag såg er inte!' /* [N] */, 'Oj! Förlåt! Hur gick det?' /* [N] */,
+    'Förlåt! Bromsen satt inte där jag trodde.' /* [N] */],
+  prop: ['Jag ersätter den, självklart!' /* [N] */, 'Oj… Den stod visst i vägen. Förlåt.' /* [N] */,
+    'Förlåt! Jag betalar, så klart.' /* [N] */],
+  boom: ['Oj… förlåt.' /* [N] */],
+  carjack: ['Ursäkta, är det din bil?' /* [F*] Majsan's question to Stig at the travel agency's window, relocated: Stig asks */],
+  no: 'Nej.',                                                                      // [F*] Stig's answer there, relocated: the driver gives it
+};
+
 // Collectible sets (DESIGN §10.1). Generic pickup code lives in main.js.
 export const COLLECTIBLES = {
   prylar: {
