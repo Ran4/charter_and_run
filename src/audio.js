@@ -297,6 +297,12 @@ export const audio = {
     this.tone(70, 0.16, 'sine', 0.38, 42); this.noise(0.04, 0.05, 180, 'lowpass');
     this.tone(64, 0.14, 'sine', 0.28, 40, 0.22); this.noise(0.04, 0.035, 160, 'lowpass', 0.22);
   },
+  // Herr Storch's film camera (§10.11): the clockwork motor's whirr, a run of soft clicks over a hum.
+  whirr(secs = 1.2) {
+    const n = Math.round(secs * 18);
+    for (let k = 0; k < n; k++) this.noise(0.016, 0.035, 2600, 'bandpass', k / 18, 5);
+    this.tone(118, secs, 'sawtooth', 0.01, 112);
+  },
   // Turbulence: cabin rattle with a few loose clinks.
   rattle() {
     this.noise(0.3, 0.15, 300);

@@ -43,7 +43,9 @@ opens with a summary of the rounds and the timer changes.
     DESIGN §10.7), `simhopp` (Siv och Majsan sätter poäng, the diving judges at Flamenco's pool,
     DESIGN §10.8), `tuta` (Tutan som folk reagerar på, the horn in free roam, DESIGN §10.9),
     `dygn dygnGiver` (Dygnet runt, the island's clock, Ole's watch and the nap in room 107, DESIGN
-    §10.10; the clock holds at 15:00 in test mode unless a test sets `__game.day.run`)
+    §10.10; the clock holds at 15:00 in test mode unless a test sets `__game.day.run`), `super8
+    filmkvall` (Lite film., Herr Storch filming the tricks, his viewfinder, the stills and the film
+    night after the end, DESIGN §10.11)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

@@ -240,6 +240,53 @@ body.in-dialog #minimap-wrap, body.in-dialog #speedo, body.in-dialog #prompt { o
 #flash.go { animation: flash 0.6s ease-out; }
 @keyframes flash { from { opacity: 1; } to { opacity: 0; } }
 
+/* ---------------------------------------------------------------- Herr Storch's camera (§10.11) */
+/* The viewfinder: outside the gate the screen is the camera's black body (the gate's spread shadow),
+   sprocket holes either side, the title over it and his line under it. The gate is black with dust
+   (the lens cap) or, `live` after the end, the 3D view in pale small-gauge colours (a style choice:
+   1979 home film was in colour). Over everything in the HUD, bubbles and toasts included. */
+#viewfinder, #filmnight { position: absolute; inset: 0; display: none; z-index: 4; pointer-events: none; }
+#viewfinder.show, #filmnight.show { display: block; animation: vfIn 0.35s ease-out; }
+@keyframes vfIn { from { opacity: 0; } }
+.vf-gate { position: absolute; left: 50%; top: 47%; transform: translate(-50%, -50%); width: min(66vw, 92vh); aspect-ratio: 4 / 3; border-radius: 22px; overflow: hidden; background: #050403; box-shadow: 0 0 0 200vmax #0c0a0d; }
+#viewfinder.live .vf-gate { background: transparent; }
+.vf-gate::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 70px 24px rgba(0, 0, 0, 0.85), inset 0 0 0 2px rgba(255, 240, 210, 0.12); }
+.vf-flicker { position: absolute; inset: 0; background: rgba(255, 228, 170, 0.07); animation: vfFlicker 0.18s steps(2) infinite; }
+#viewfinder:not(.live) .vf-flicker { display: none; }
+@keyframes vfFlicker { 50% { opacity: 0.15; } }
+/* Dust and a scratch: six specks on tiles of unlike sizes, jumping every 0.12 s. */
+.vf-dust, .fn-frame i { position: absolute; inset: -20%; animation: vfDust 0.48s steps(1) infinite;
+  background-image: radial-gradient(circle at 18% 27%, rgba(255, 248, 225, 0.7) 0 1.2px, transparent 2px), radial-gradient(circle at 71% 63%, rgba(255, 248, 225, 0.55) 0 1px, transparent 1.8px), radial-gradient(circle at 44% 82%, rgba(255, 248, 225, 0.45) 0 1.6px, transparent 2.4px), radial-gradient(ellipse 1px 16px at 86% 35%, rgba(255, 248, 225, 0.3) 0 60%, transparent 100%), radial-gradient(circle at 57% 12%, rgba(255, 248, 225, 0.6) 0 0.8px, transparent 1.5px), radial-gradient(ellipse 5px 2px at 30% 55%, rgba(255, 248, 225, 0.3) 0 50%, transparent 100%);
+  background-size: 431px 353px, 389px 467px, 523px 409px, 613px 541px, 277px 319px, 701px 587px; }
+@keyframes vfDust { 25% { background-position: 141px 77px, 63px 240px, 300px 31px, 211px 97px, 19px 151px, 420px 260px; } 50% { background-position: 280px 190px, 170px 51px, 90px 270px, 455px 300px, 160px 40px, 120px 400px; } 75% { background-position: 66px 299px, 300px 107px, 410px 160px, 90px 420px, 230px 260px, 590px 110px; } }
+.vf-label { position: absolute; right: 26px; bottom: 18px; font: 800 22px var(--body); letter-spacing: 2px; color: rgba(255, 240, 205, 0.7); text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7); }
+.vf-perf { position: absolute; top: 47%; transform: translateY(-50%); width: 30px; height: min(49.5vw, 69vh); border-radius: 4px; background: repeating-linear-gradient(to bottom, transparent 0 12px, #d8cfb8 12px 34px, transparent 34px 46px); }
+.vf-perf.l { left: calc(50% - min(33vw, 46vh) - 62px); }
+.vf-perf.r { left: calc(50% + min(33vw, 46vh) + 32px); }
+.vf-title { position: absolute; z-index: 1; left: 0; right: 0; top: 2.2vh; text-align: center; font: clamp(26px, 4.4vh, 40px) var(--display); letter-spacing: 2px; color: #f4e7c4; }
+.vf-line { position: absolute; left: 0; right: 0; bottom: 3.2vh; text-align: center; font: 800 clamp(18px, 3.2vh, 26px) var(--body); color: #fff; }
+.vf-line span, .fn-line span { color: #c9b994; font-size: 0.78em; }
+body.film-live #app canvas { filter: sepia(0.42) saturate(0.8) contrast(1.06) brightness(1.04); }
+/* The film night: seven black days on one strip, his line, the julafton stills on the next. */
+#filmnight { background: #0d0a0c; color: #fff; text-align: center; padding-top: 3vh; }
+.fn-title { font: clamp(34px, 6vh, 56px) var(--display); letter-spacing: 2px; color: #f4e7c4; }
+.fn-sub { margin: 0.4vh 0 2.4vh; font: 800 clamp(15px, 2.4vh, 20px) var(--body); color: #c9b994; }
+.fn-strip { position: relative; display: flex; justify-content: center; gap: 1.2vw; margin: 0 3vw; padding: 3.2vh 2vw; background: #000; border-radius: 6px; }
+.fn-strip::before, .fn-strip::after { content: ""; position: absolute; left: 1.2vw; right: 1.2vw; height: 1.4vh; background: repeating-linear-gradient(to right, #d8cfb8 0 18px, transparent 18px 46px); }
+.fn-strip::before { top: 0.9vh; }
+.fn-strip::after { bottom: 0.9vh; }
+.fn-frame { position: relative; flex: 1 1 0; max-width: 13%; aspect-ratio: 16 / 9; overflow: hidden; background: #070605; border: 1px solid #2a2622; border-radius: 3px; opacity: 0; animation: fnIn 0.45s ease-out var(--d) forwards; }
+.fn-jul .fn-frame { max-width: min(40%, 64vh); background: #000; }
+.fn-frame img { display: block; width: 100%; height: 100%; object-fit: cover; filter: sepia(0.42) saturate(0.8) contrast(1.06) brightness(1.04); }
+.fn-frame span { position: absolute; left: 8px; bottom: 5px; font: 800 clamp(11px, 1.8vh, 15px) var(--body); letter-spacing: 1px; color: rgba(255, 240, 205, 0.55); }
+.fn-jul .fn-frame span { top: 6px; bottom: auto; padding: 1px 8px; border-radius: 4px; background: rgba(29, 20, 38, 0.8); font: clamp(12px, 2vh, 17px) var(--display); color: #fff; }
+.fn-jul { visibility: hidden; }
+#filmnight.jul .fn-jul { visibility: visible; }
+#filmnight:not(.jul) .fn-jul .fn-frame { animation: none; }
+.fn-line { margin: 1.8vh 0; font: 800 clamp(18px, 3.4vh, 28px) var(--body); opacity: 0; transition: opacity 0.4s; }
+#filmnight.l1 .fn-l1, #filmnight.l2 .fn-l2 { opacity: 1; }
+@keyframes fnIn { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: none; } }
+
 #bigmap { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; flex-direction: column; background: rgba(29, 20, 38, 0.55); }
 #bigmap.show { display: flex; }
 #bigmap canvas { width: min(82vh, 90vw); height: min(82vh, 90vw); border: 5px solid var(--ink); border-radius: 18px; box-shadow: 8px 9px 0 var(--ink); background: #d9bf86; }

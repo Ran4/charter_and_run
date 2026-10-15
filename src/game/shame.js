@@ -9,7 +9,8 @@
 //     you crawl or stand near a Land Rover for 4 s, or are rammed twice within 14 s (`carBust`).
 //     Escape by getting far away until the meter drains, or bribe the porter at Hotel
 //     Flamenco's reception (hideout, 500 pta, 60 s cooldown). Offences near Herr Storch add nothing
-//     (the witness rule: his lens cap is on). In free roam a car can also be painted like a dalahäst
+//     (the witness rule: his lens cap is on; after the end it is off and they count, §10.11; in free
+//     roam he films them, storchFilm.js). In free roam a car can also be painted like a dalahäst
 //     at Gasolina's workshop (paintshop.js, `this.paint`; the same cooldown).
 
 import { Car } from '../actors/car.js';
@@ -116,20 +117,24 @@ export class Shame {
       return;
     }
     if (this.locked && !force) return;
-    // Witness rule: an offence near Herr Storch adds nothing (the lens cap is on).
-    const w = this.cfg.witnessToast;
+    // Witness rule: an offence near Herr Storch adds nothing (the lens cap is on). After the end the
+    // cap is off (UNLOCKS.bodega.witness, `evidence`): it counts, with its own toast (§10.11).
+    const w = this.cfg.witnessToast && (g.level === 'island' && g.witnessOverride ? { ...this.cfg.witnessToast, ...g.witnessOverride } : this.cfg.witnessToast);
     if (w && !force) {
       const n = g.npcs?.[w.who];
       const f = g.focus();
       if (n && n.state !== 'hidden' && dist(n.x, n.z, f.x, f.z) < w.r) {
+        // In free roam Herr Storch himself films it, trotting over if he must (game/storchFilm.js).
+        const roam = !!g.film?.active;
+        if (roam) g.film.trick('bus');
         // The lens-cap toast and the filming are free-roam colour: never over a scene or cutaway.
         if (this.witnessT <= 0 && !this.inScene) {
           this.witnessT = w.cooldown ?? 60;
           hud.toast(w.text, 'witness');
-          if (w.say) g.say(n, w.say, 2.4);
-          if (n.anim && !n.anim.film) { n.anim.film = true; this.filmT = 2.4; this.filmWho = n; }
+          if (!roam && w.say) g.say(n, w.say, 2.4);
+          if (!roam && n.anim && !n.anim.film) { n.anim.film = true; this.filmT = 2.4; this.filmWho = n; }
         }
-        return;
+        if (!w.evidence) return;
       }
     }
     this.v = Math.min(100, this.v + amount * (this.cfg.gain ?? 1));

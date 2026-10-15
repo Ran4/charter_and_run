@@ -54,6 +54,8 @@ export const hud = {
       <div id="banner"><div class="banner-main"></div><div class="banner-sub"></div></div>
       <div id="bubbles"></div>
       <div id="letterbox"><div class="lb-top"></div><div class="lb-bot"></div></div>
+      <div id="viewfinder"><div class="vf-title"></div><div class="vf-gate"><div class="vf-flicker"></div><div class="vf-dust"></div><div class="vf-label"></div></div><div class="vf-perf l"></div><div class="vf-perf r"></div><div class="vf-line"></div></div>
+      <div id="filmnight"></div>
       <div id="dialog"><div class="dlg-portrait"><img alt=""></div><div class="dlg-body"><div class="dlg-name"></div><div class="dlg-text"></div></div><div class="dlg-next">${S.dialogNext}</div></div>
       <div id="flash"></div>
       <div id="bigmap"><canvas width="760" height="760"></canvas><div class="bm-legend"></div></div>
@@ -83,6 +85,8 @@ export const hud = {
     this.clockEl = $('klocka');
     this.fadeEl = $('fade');
     this.scoreEl = $('score');
+    this.vfEl = $('viewfinder');
+    this.fnEl = $('filmnight');
     this.flash = $('flash');
     this.bigmap = $('bigmap');
   },
@@ -326,6 +330,35 @@ export const hud = {
   hideScore() { clearTimeout(this._scoreT); this.scoreEl.classList.remove('show'); },
 
   letterbox(on) { $('letterbox').classList.toggle('on', on); },
+
+  // Herr Storch's viewfinder (game/storchFilm.js, §10.11) over everything: o = { title, label, who,
+  // line, live } or null. Without `live` the gate is black (the lens cap); with it the 3D view shows
+  // through the gate in pale small-gauge colours (body.film-live filters the canvas).
+  viewfinder(o) {
+    const e = this.vfEl;
+    document.body.classList.toggle('film-live', !!o?.live);
+    if (!o) { e.classList.remove('show'); return; }
+    e.querySelector('.vf-title').textContent = upper(o.title);
+    e.querySelector('.vf-label').textContent = o.label;
+    e.querySelector('.vf-line').innerHTML = o.line ? `<span>${o.who}:</span> – ${o.line}` : '';
+    e.classList.toggle('live', !!o.live);
+    e.classList.add('show');
+  },
+  // His film night: o = { title, sub, who, week: [labels], weekLine, stills: [data URLs], label,
+  // julLine } or null. The black week shows at once; filmNightStep('l1' | 'jul' | 'l2') brings in his
+  // first line, the julafton stills and his second line.
+  filmNight(o) {
+    const e = this.fnEl;
+    if (!o) { e.className = ''; e.innerHTML = ''; return; }
+    const line = (k, text) => `<div class="fn-line fn-${k}"><span>${o.who}:</span> – ${text}</div>`;
+    e.innerHTML = `<div class="fn-title">${upper(o.title)}</div><div class="fn-sub">${o.sub}</div>`
+      + `<div class="fn-strip fn-week">${o.week.map((d, k) => `<div class="fn-frame black" style="--d:${(0.15 + k * 0.14).toFixed(2)}s"><i></i><span>${d}</span></div>`).join('')}</div>`
+      + line('l1', o.weekLine)
+      + `<div class="fn-strip fn-jul">${o.stills.map((src, k) => `<div class="fn-frame" style="--d:${(k * 0.3).toFixed(2)}s"><img src="${src}" alt=""><span>${o.label}</span></div>`).join('')}</div>`
+      + line('l2', o.julLine);
+    e.className = 'show';
+  },
+  filmNightStep(cls) { this.fnEl.classList.add(cls); },
 
   // ------------------------------------------------------------------------------------------
   // Dialogue: lines of { who, text, cue }. game.cue(cue) fires when a line starts. Resolves when

@@ -44,7 +44,7 @@ Samma tangenter i båda nivåerna; nivån bestämmer vad de gör.
 | Shift | spring | | skynda – men det ökar rädslan |
 | Space | hoppa, i luften igen för dubbelhopp | handbroms (sladd!) | **håll i dig**: ta tag i närmaste stolsrygg vid turbulens |
 | J / klick | sparka, i luften: stampa (efter julafton: **håll in i luften** för att glidflyga) | | **håll in**: "Jag kan flyga, jag är inte rädd" – sänker FLYGRÄDSLA |
-| E | prata, kliv in, sno en bil, kvarta en stund i Stigs säng i rum 107 | kliv ur (i fart: rulla ur) | prata, **sätt dig / res dig**, lås in dig på toaletten, anropsknappen, serveringsvagnen |
+| E | prata, kliv in, sno en bil, kvarta en stund i Stigs säng i rum 107, titta i herr Storchs kamera | kliv ur (i fart: rulla ur) | prata, **sätt dig / res dig**, lås in dig på toaletten, anropsknappen, serveringsvagnen |
 | H | | tuta (utanför uppdragen hör folk den) | |
 | B | | titta bakåt | |
 | M / Tab | stor karta | stor karta | plan över gaten/kabinen |
@@ -160,6 +160,13 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   turkosa säng (E): bilden tonar ner, klockan snurrar fram till nästa del av dygnet och Ole väcker
   honom med miniräknarens alarm. Pratar du med en uppdragsgivare på kvällen blir det "NÄSTA MORGON"
   först, så uppdragen spelas alltid i dagsljus.
+- **Lite film.**: gör ett trick på stranden (dubbelhopp, stampa, hoppa ned från livräddartornet,
+  glidflyg, sparka sönder en solstol) nära herr Storch, så kommer han springande över sanden och
+  filmar. Ställ dig vid honom och tryck E ("Titta i kameran"): bilden i hans sökare är kolsvart,
+  men han är strålande nöjd. Efter julafton är linsskyddet av. Då ser du ön genom hans kamera i
+  bleka smalfilmsfärger, varje trick han filmar blir en stillbild, och han frågar "Vill du se min
+  film?". Filmkvällen visar sju svarta dagar och sedan dina egna bravader från julafton. Men nu finns
+  det bevis: en förseelse nära honom ger SKANDAL som överallt annars.
 
 ## Vad är påhittat?
 
@@ -190,6 +197,9 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
 - klockan som spelmekanik (kvällar och nätter mellan uppdragen, Oles klocka under pesetas, "NÄSTA
   MORGON" före ett uppdrag), Stigs tupplur i rum 107 och att Ole väcker honom med miniräknarens
   alarm (i filmen visar Ole bara upp miniräknaren med väckarklocka, och ordet "kvarta" är Affes)
+- att herr Storch springer fram och filmar Stigs trick, sökaren med den svarta bilden,
+  stillbilderna efter julafton och filmkvällen (linsskyddet och den förlorade veckan är filmens
+  julfest, men i filmen tittar ingen i hans kamera)
 - att grisbilen lånas ut till Stig-Helmer, att man följer Josés bil och grisbilen, och
   jeepjakten
 - fårrusningen i Fataga, kappkörningen mot nattbussen och porslinskrosset på tid
@@ -279,11 +289,12 @@ src/game/glide.js               Jag kan flyga in free roam after julafton: J hel
 src/game/poolJudges.js          Siv och Majsan sätter poäng in free roam: dives off Flamenco's board, cards, record
 src/game/honk.js                Tutan som folk reagerar på in free roam: pedestrians hop, the gang answers, the grunt
 src/game/dayClock.js            Dygnet runt in free roam: the island's clock, evenings and nights, Ole's watch, the nap
+src/game/storchFilm.js          Lite film. in free roam: Herr Storch films the tricks, his viewfinder, stills, film night
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
 tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, meter, kinds, perf,
-                                paintshop, berra, glide, simhopp, tuta, dygn, calibrate, calibflight)
+                                paintshop, berra, glide, simhopp, tuta, dygn, super8, calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
 tools/pool.mjs                  re-derives every random stage's timer from the ledger
@@ -316,6 +327,7 @@ node tools/shot.mjs glide                # the glide after julafton: the wing, t
 node tools/shot.mjs simhopp              # the sisters judge his dives: swan dive, somersault, belly flop, record, walk
 node tools/shot.mjs tuta                 # the horn in free roam: the hop, the gang's answers, the sorry, the grisbil's grunt
 node tools/shot.mjs dygn dygnGiver       # the clock in free roam: the sky by the hour, Ole's watch, the nap, NÄSTA MORGON
+node tools/shot.mjs super8 filmkvall     # Herr Storch films the tricks: the trot, the black viewfinder, stills, the film night
 node tools/shot.mjs fullstory kinds      # the literal §8 missions and the stage-kind checks
 node tools/shot.mjs calibrate calibflight  # timer and FLYGRÄDSLA calibration (slow; see DESIGN §8, §16.4)
 node tools/pool.mjs                      # random-stage timers from the raw runs in notes/calibration-samples.md

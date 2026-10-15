@@ -27,6 +27,7 @@ import { Glide } from './game/glide.js';
 import { PoolJudges } from './game/poolJudges.js';
 import { Honk } from './game/honk.js';
 import { DayClock } from './game/dayClock.js';
+import { StorchFilm } from './game/storchFilm.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
 import { LEVELS, ISLAND_PALETTES } from './level.js';
@@ -89,6 +90,7 @@ class Game {
     this.records = {};            // free-roam bests, saved: `simhopp` (the diving judges' best total, §10.8)
     this.homeOverrides = {};
     this.chatterOverrides = {};   // UNLOCKS[name].chatter: free-roam chatter that replaces CHATTER[key] (island)
+    this.witnessOverride = null;  // UNLOCKS[name].witness: merged over the witness rule's config on the island (§10.11)
     this.interactables = [];
     this.holding = false;
     this.mantraOn = false;
@@ -164,6 +166,7 @@ class Game {
     this.honk = new Honk(this);           // free roam: the island hears the horn (§10.9)
     this.hornAt = null;                   // the last free-roam horn press: { x, z, yaw, t, pigs }
     this.day = new DayClock(this);        // free roam: the island's clock, evenings, the nap (§10.10)
+    this.film = new StorchFilm(this);     // free roam: Herr Storch films his tricks, the film night (§10.11)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -956,19 +959,23 @@ class Game {
     return pick((ch.key === 'ole' && t.ole) || ((ch.def?.local || LOCAL_CAST.includes(ch.key)) && t.local) || (STAFF_CAST.includes(ch.key) && t.staff) || t.sv);
   }
   onBodyBounce(ch) { if (dist(ch.x, ch.z, this.focus().x, this.focus().z) < 40) audio.thud(); }
-  // A trampoline under the player (b: its block): the boing, and Flamenco's board to the judges (§10.8).
+  // A trampoline under the player (b: its block): the boing, and Flamenco's board to the judges (§10.8);
+  // a bounce is a trick for Herr Storch's camera (§10.11).
   onBounce(ch, b) {
     if (ch !== this.player) return;
     audio.boing();
     this.judges.onBounce(b);
+    this.film.trick('studs');
   }
   // J in the air (§3): slam down; the landing (onLand) breaks props, bowls people over, dents cars.
   stomp() { this.player.vy = -18; this.stomping = true; audio.kick(); }
   // y: the floor he lands on. A hop off Flamenco's board into the pool is judged and splashes
-  // instead of the dust (§10.8); it reads `stomping` (the belly flop) before it is cleared.
+  // instead of the dust (§10.8); it reads `stomping` (the belly flop) before it is cleared, as does
+  // Herr Storch's camera (a stomp or a long drop is a trick, §10.11).
   onLand(ch, v, y) {
     if (ch !== this.player) return;
     const wet = this.judges.onLand(y);
+    this.film.onLand(y, this.stomping);
     if (this.stomping) {
       this.stomping = false;
       audio.crash(0.4);
@@ -1186,6 +1193,7 @@ class Game {
     if (u.hook) worldHooks[u.hook]?.(true);
     if (u.home) Object.assign(this.homeOverrides, u.home);
     if (u.chatter) Object.assign(this.chatterOverrides, u.chatter);
+    if (u.witness) this.witnessOverride = u.witness;
     // u.tune: offered by the pause-menu Musik button once unlocked (cycleMusic); never auto-played.
   }
   // The Rio end card (§11.7; set built by rio.js at x = -3000, landmarks rioBoat/rioCam): a white
@@ -1348,6 +1356,7 @@ class Game {
   }
   resetSave() {
     try { localStorage.removeItem(SAVE_KEY); } catch (e) { /* ignore */ }
+    this.film.forget();   // Herr Storch's stills (their own key, §10.5)
     location.href = location.pathname;
   }
 
@@ -1363,6 +1372,7 @@ class Game {
     else if (!this.started) this.idleTitle(dt);
     else if (input.padPressed('pause')) this.pause(false);   // pad Start toggles the pause card
     renderer.render(scene, camera);
+    if (this.film?.grabNow) this.film.grab();   // Herr Storch's still, in this frame's buffer (§10.11)
     input.endFrame();
     this.frame++;
     window.__frame = this.frame;
@@ -1402,6 +1412,7 @@ class Game {
     this.judges.update(dt);
     this.honk.update(dt);
     this.day.update(dt);
+    this.film.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);
@@ -1464,7 +1475,7 @@ class Game {
     if (input.pressed('jump')) {
       if (verbs.jump) {
         if (p.onGround) { p.jump(8.6); this.jumps = 1; audio.jump(); }
-        else if (this.jumps < 2) { p.vy = 8.0; this.jumps = 2; audio.jump(); this.spinT = 0.4; }
+        else if (this.jumps < 2) { p.vy = 8.0; this.jumps = 2; audio.jump(); this.spinT = 0.4; this.film.trick('volt'); }
       } else if (verbs.hold && !this.spaceToastShown) { this.spaceToastShown = true; hud.toast(S.spaceFirst); }
     }
     if (input.pressed('attack') && verbs.kick && !this.mantraMode && this.kickT <= 0) {
@@ -1699,7 +1710,7 @@ class Game {
       // §9.4 idleAnim (e.g. Berra asleep), or held by the free-roam Berra job (§10.6) or the diving
       // judges at the pool's edge (§10.8): no wave, turn or chatter; Robban waves Stig over to the
       // sleeping Berra as a giver does. An answer to the horn waves from further off (§10.9).
-      const posed = !!ms.idlePose(k) || this.berraJob.posed(k) || this.judges.posed(k);
+      const posed = !!ms.idlePose(k) || this.berraJob.posed(k) || this.judges.posed(k) || this.film.posed(k);
       n.anim.wave = ((giver || this.berraJob.waving(k)) && near < 9 || this.honk.waving(k)) && !posed && !this.inDialog && n.state === 'normal';
       if (n.state === 'normal' && !posed && near < 10 && !this.inDialog) n.yaw += Math.atan2(Math.sin(yawTo(this.player.x - n.x, this.player.z - n.z) - n.yaw), Math.cos(yawTo(this.player.x - n.x, this.player.z - n.z) - n.yaw)) * Math.min(1, dt * 3);
       // Free play only: not in the gap before an outro (bubbles stacked over its first line).

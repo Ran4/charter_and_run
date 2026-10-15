@@ -2,7 +2,8 @@
 // and bark tables, collectibles, unlocks, named-car names, outfits. Owner: WP-G. Source tags per
 // DESIGN §1.4 (bark tables are [F*]: every film line is relocated there). Invented (§1.6): Oles
 // prylar and hajfenor as collectibles, the grisbil unlock, the glide after julafton, the sisters
-// judging his dives at Flamenco's pool, the island answering his horn.
+// judging his dives at Flamenco's pool, the island answering his horn, Herr Storch filming his
+// tricks and his film night.
 
 export const HOMES_ISLAND = {
   ole: ['flamenco', 2.0, 1.0, 0],     // yaw 0: under the pergola, facing the pool (flamenco faces π)
@@ -154,8 +155,13 @@ export const UNLOCKS = {
   // After the end: Berra and Robban posted at the bodega they found, with chatter about having found
   // it (their CHATTER is about looking for it); Angerud is in hospital (the ambulance in the julafton
   // scene), so a `null` home hides him (§8.13 "After the outro").
+  // Lite film. (§10.11): the lens cap is off after julafton, so the witness rule turns round (an
+  // offence near Herr Storch counts: there is evidence now; `witness` is merged over
+  // METERS.skandal.witnessToast), and his chatter knows it.
   bodega: { hook: 'bodegaLit', label: ['Pepes Bodega', 'bodega'], home: { berra: ['bodega', -1.5, 0.5], robban: ['bodega', 1.5, 0.5], angerud: null },
-    chatter: { berra: ['Robban! Jag hittade Pepes Bodega!' /* [F*] */], robban: ['Pepes Bodega. Glöm aldrig det, du.' /* [F*] */] },
+    chatter: { berra: ['Robban! Jag hittade Pepes Bodega!' /* [F*] */], robban: ['Pepes Bodega. Glöm aldrig det, du.' /* [F*] */],
+      herrStorch: ['Lite film.' /* [F*](t) */, 'Locket är av nu, ska du veta.' /* [N] */] },
+    witness: { text: 'Linsskyddet är av – nu finns det bevis!', evidence: true },   // [N] the offence counts
     toast: 'Pepes Bodega har öppnat – på baksidan av hotellet.' },                   // [N]
   // Jag kan flyga (§10.7): the glide comes with `bodega` (julafton); this unlock only carries its
   // toast, shown the first time he is in the air in free roam after the end card (game/glide.js).
@@ -347,6 +353,51 @@ export const DAY = {
     cam: [-0.4, 3.75, 2.45], look: [0.45, 0.15, 1.2],
     lamp: { hemiSky: 0xffe2b8, hemiGround: 0x9a7050, hemiI: 1.7 },
     pipAt: 0.7, sleepOn: 2.2, wakeAt: 1.4, after: 1.6,
+  },
+};
+
+// Lite film. – herr Storchs semesterfilm (free roam, DESIGN §10.11; game/storchFilm.js). A trick by
+// Stig within `r` m of `who` (a double jump, a bounce, a stomp, a drop of `drop` m or more, the glide,
+// or an offence the witness rule sees) makes him notice (`notice` s, turned to Stig) and, standing
+// on the `sand` ([x0, x1], [z0, z1] m from the landmark `at`: the beach of block (3,6), not the
+// paseo or a road) more than `near` m off, trot at `trot` m/s to `filmDist` m from Stig (kept on the
+// sand; at most `giveUp` s, or stuck `stuckSecs` s); then he films for `filmSecs` s with `say`, and
+// walks home at `walk` m/s. At most every `every` s. Never in a mission, and as a mission's giver or
+// extra (pinned) he films from his place. `look`: E within `r` m, his viewfinder for `secs` s (E or
+// Space after `minSecs`): the day counter (`day`, mission index − `dayFrom`, 1–7) and a black picture
+// with one of `capLines`; after the end (unlock `after`) the island through his lens, `julLabel` and
+// `liveLine`. After the end each filming keeps a still (`stills`: from his eye at Stig, `w`×`h` jpeg;
+// the first `first` s in, again when Stig is `higher` m higher, at most `grabs` takes; the best is
+// kept, the newest `max` saved under `key`), and with unseen stills he offers `offer` (within
+// `offerR` m, every `offerEvery` s) and E is `night`: the film night (seven black days and the newest
+// `max` stills). Invented (§1.6): his reactions, the viewfinder, the stills and the film night; the
+// lens cap and the black week are the film's (the julfest, notes/research-plot.md:370).
+export const STORCH_FILM = {
+  who: 'herrStorch', after: 'bodega',
+  sand: { at: 'playa', x: [-29.5, 29.5], z: [-34.5, 19.5] },
+  r: 25, every: 30, notice: 0.35, near: 7, filmDist: 5, trot: 3.4, walk: 1.5, giveUp: 7, stuckSecs: 0.6,
+  filmSecs: 2.6, drop: 3,
+  say: 'Lite film.',                                                              // [F*](t) his Arlanda answer (speaker unsure), as the witness toast's
+  dayFrom: 5,
+  look: {
+    r: 2, secs: 4.5, minSecs: 0.6, eye: 1.6, ahead: 0.45,
+    prompt: '<b>E</b> Titta i kameran',                                           // [N]
+    title: 'I KAMERAN',                                                           // [N]
+    day: 'DAG {n}',                                                               // [N]
+    julLabel: 'JULAFTON',                                                         // [N]
+    capLines: ['Strålande ljus i dag.' /* [N] */, 'Det här blir en fin semesterfilm.' /* [N] */],
+    liveLine: 'Nu blir\'e film!',                                                 // [N] his "Blir'e inge film?" turned round
+  },
+  stills: { w: 320, h: 180, q: 0.75, fov: 48, first: 0.2, higher: 0.5, grabs: 3, max: 8, key: 'charter-and-run-film-v1' },
+  offer: 'Vill du se min film?',                                                  // [N]
+  offerR: 7, offerEvery: 25,
+  night: {
+    prompt: '<b>E</b> Se filmen',                                                 // [N]
+    title: 'FILMKVÄLL',                                                           // [N]
+    sub: 'Herr Storchs semesterfilm · dag 1–7 och julafton',                      // [N]
+    weekLine: 'Blir\'e inge film?',                                               // [F*] his julfest line, said again over his black week
+    julLine: 'Lite film.',                                                        // [F*](t)
+    max: 4, secs: 10, minSecs: 1, steps: [[1.7, 'l1'], [3.0, 'jul'], [4.6, 'l2']],
   },
 };
 

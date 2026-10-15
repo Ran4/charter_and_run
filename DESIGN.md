@@ -182,7 +182,10 @@ grisbil's grunt (free roam, §10.9; in the film nobody honks at anyone); the isl
 mechanic (evenings and nights in free roam, Ole's watch under the pesetas, NÄSTA MORGON before a
 mission), Stig napping on his bed in room 107 and Ole waking him with his calculator's alarm (free
 roam, §10.10; in the film Ole only shows the calculator with an alarm off, and the word "kvarta" is
-Affe's).
+Affe's); Herr Storch trotting over to film Stig's tricks, his viewfinder with its black picture, the
+stills he takes after julafton and his film night, and the witness rule turning round after the end
+(free roam, §10.11; the lens cap and the lost week are the film's julfest, but in the film nobody
+looks through his camera, and there is no film night).
 The film's flight has **no turbulence** and **no in-flight toilet scene**: both toilet scenes are
 at Arlanda (we keep them there). The plane's toilets are only an invented hideout.
 
@@ -331,6 +334,10 @@ Physical keys are unchanged from Bigmouth. The level config turns verbs on and o
 - **The nap** (free roam, §10.10): E at Stig's bed in room 107 ("E Kvarta en stund") sleeps on to
   the next part of the day; E at a mission giver in the evening or at night starts it the next
   morning.
+- **Herr Storch's camera** (free roam, §10.11): a double jump, a bounce, a stomp, a long drop, the
+  glide or an offence within 25 m of him and he films it; E by him ("E Titta i kameran") is his
+  viewfinder for 4.5 s (E or Space closes it after 0.6 s); after the end, with new stills, E is "E Se
+  filmen", his film night.
 - **Seated** (flight): movement input is ignored; E uses a `whileSeated` interactable if one is in
   range, else stands up (giver talk is **not** offered while seated: stand up first, §14.3); J
   mantra still works; Space does nothing. Phase 0: `handleOneShots` handles E, J and R when
@@ -1481,7 +1488,14 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
   is known for good.
 - **Witness rule** (P1): an offence within 20 m of `herrStorch` adds **0** SKANDAL (no evidence:
   the lens cap is on) and shows the toast `Ingen fara: linsskyddet sitter på.` (≤ once per 60 s;
-  offences inside the cooldown still add 0).
+  offences inside the cooldown still add 0). In a mission he lifts his camera where he stands with
+  `say` "Lite film." (2.4 s, `filmT`); in free roam (`game.film.active`: island,
+  `missions.state === 'idle'`) the offence is a trick for `game.film` instead (`trick('bus')`, §10.11:
+  he trots over the sand and films it), and the toast is the same. **After the end** (feature 6)
+  `UNLOCKS.bodega.witness` = `{ text: 'Linsskyddet är av – nu finns det bevis!', evidence: true }`
+  [N] is merged over `witnessToast` on the island (`game.witnessOverride`, set by `applyUnlock`): the
+  cap is off, the offence **counts** as anywhere else, with that toast (same cooldown), and he films
+  it. Only free roam after the story sees it (no mission is left), so no timer or pool changes.
 - `shame.locked = true` freezes the meter (cinematics, the smash stage, the buss17 intro) **in
   `pursuit` mode only** (panic mode: §5.9); the runner resets it to false on stage change unless
   the stage sets `lockMeter: true`.
@@ -3022,11 +3036,16 @@ UNLOCKS = {
              toast: 'Upplåst: <b>Grisbilen</b> – parkerad vid Hotell Flamenco. Den luktar.' },   // [N]
   samba:   { tune: 'samba', toast: 'Upplåst: <b>Musik: samba</b> i pausmenyn' },                 // [N] P1
   bodega:  { hook: 'bodegaLit', label: ['Pepes Bodega', 'bodega'], home: { berra: ['bodega', -1.5, 0.5], robban: ['bodega', 1.5, 0.5], angerud: null },
-             chatter: { berra: ['Robban! Jag hittade Pepes Bodega!' /* [F*] */], robban: ['Pepes Bodega. Glöm aldrig det, du.' /* [F*] */] },
+             chatter: { berra: ['Robban! Jag hittade Pepes Bodega!' /* [F*] */], robban: ['Pepes Bodega. Glöm aldrig det, du.' /* [F*] */],
+                        herrStorch: ['Lite film.' /* [F*](t) */, 'Locket är av nu, ska du veta.' /* [N] */] },   // feature 6
+             witness: { text: 'Linsskyddet är av – nu finns det bevis!', evidence: true },          // [N] feature 6, §7.2
              toast: 'Pepes Bodega har öppnat – på baksidan av hotellet.' },                        // [N]
   glid:    { toast: 'Upplåst: <b>Jag kan flyga</b> – håll J i luften' },                          // [N] feature 3
 };
 ```
+`witness` (feature 6, §10.11) is merged over `METERS.skandal.witnessToast` on the island
+(`applyUnlock` sets `game.witnessOverride`): after the end the lens cap is off, so an offence near
+Herr Storch counts (§7.2). The same unlock is his "after the end" in `game.film` (`after: 'bodega'`).
 `glid` (feature 3, §10.7) carries only the toast: the glide comes with `bodega`, and `game.glide`
 unlocks `glid` the first time he is in the air in free roam after it, so the toast shows then, once.
 A name not in `UNLOCKS` is only added to `game.unlocked` (saved with it): the glide keeps its
@@ -3068,7 +3087,10 @@ Berra job (§10.6) is not saved. `unlocked` also holds the glide's `glid` (its t
 marker `glidPlask` (Lasse's pool line said; saved at once), §10.7. `records` holds the free-roam
 bests (`game.records`; a missing key is no record yet): `simhopp`, the diving judges' best total,
 saved at once when beaten (feature 4, §10.8). The free-roam clock (§10.10) is not saved: every
-session's island starts at 15:00.
+session's island starts at 15:00. Herr Storch's stills (feature 6, §10.11) have their own key,
+**`charter-and-run-film-v1`**: a JSON array of up to 8 `data:image/jpeg` URLs (320×180, quality
+0.75, about 10–15 kB each), written when a still is kept, read at start unless `?fresh`, and
+removed with the save by `resetSave` (`film.forget()`). The v1 save is unchanged.
 
 ### 10.6 Bärra hem Berra (free roam; feature 2, 2026-10-14)
 
@@ -3434,6 +3456,103 @@ alarm waking him are [N] (§1.6); the words are the film's (Affe's "kvarta", Ole
 - `day.last` (`{ kind: 'nap' | 'morning', from, to, part?, ole?, pips? }`) is for tests. Scenarios
   `dygn` and `dygnGiver` (§16.4).
 
+### 10.11 Lite film. – herr Storchs semesterfilm (free roam; feature 6, 2026-10-15)
+
+`game/storchFilm.js` (`StorchFilm`, owned by Game as `film`), config `STORCH_FILM` in
+content/island.js. The witness gag (§7.2) gets a cameraman: Herr Storch notices Stig's tricks, trots
+over the sand and films them with the lens cap on, and E by him shows his viewfinder: black. Only the
+player knows why. After the end the cap is off: the viewfinder shows the island in pale small-gauge
+colours, his filming keeps stills, and his film night shows the black week and then the player's
+own julafton stunts. The lens cap and the lost week are the film's julfest (Ole: "Har du filmet sånn
+lenge?", Storch: "Hela veckan.", "Blir'e inge film?", §8.13, notes/research-plot.md:370); his
+reactions, the viewfinder, the stills and the film night are [N] (§1.6).
+
+- **When.** Only while `active`: on the island with `missions.state === 'idle'`. In any other state
+  `update` resets at once: a view closes, and a Herr Storch who is out is teleported back to his
+  place and let go (then `startStage`'s `placeNpcs(true)` places everyone as before). So he never
+  moves in a mission, the 20 m witness zone, which follows him, is at his home in every mission,
+  julafton's round-up finds him at `playa` (its `findAt` places him there anyway), and no timer or
+  calibration pool sees a new actor.
+- **Tricks** (`film.trick(kind)`; refused in a dialogue or a view, while he is not `free`, while he
+  is on another trick (he may be walking home), within `every` = 30 s of the last one taken, or more
+  than `r` = 25 m from Stig, the focus, his car included):
+  - `volt`: the double jump (`handleOneShots`, the second press);
+  - `studs`: a bounce (`onBounce`, any trampoline);
+  - `stamp`: a stomp's landing, and `fall`: a landing `drop` = 3 m or more under the top of his air
+    time (off the lifeguard tower; not on a trampoline, which is `studs`), both from `onLand`
+    (`film.onLand(y, stomping)`, before `stomping` is cleared; `film.watchAir` keeps the top);
+  - `glid`: the glide starting (`game.glide.on`, §10.7);
+  - `bus`: an offence the witness rule sees (§7.2: within 20 m; a kicked sunbed, a hit tourist, a
+    car knock).
+  `free`: standing, shown, not in a car or a seat, not held by a mission's `idleAnim`, the Berra job
+  or the diving judges, and not `busy` on anyone else's errand.
+- **The run.** A taken trick claims him (`busy`, `spot = 'storchFilm'`, `npc.steer`; `from` is his
+  home spot when he stands within 6 m of it, else where he stands) and goes through:
+  1. `notice` (`notice` = 0.35 s): he turns to Stig.
+  2. Within `near` = 7 m, as the waiting mission's giver or extra (`pinned`: friskotek's extras),
+     or when he is not on the sand: he films from where he stands. Otherwise `trot`: at `trot` =
+     3.4 m/s to `filmDist` = 5 m from Stig on the line between them, re-aimed every frame and
+     clamped to the `sand` rectangle (x −29.5…29.5, z −34.5…19.5 around `playa`, world x
+     −29.5…29.5, z 215.5…269.5: the beach of block (3,6), not the paseo or the roads; the rectangle
+     is convex, so a straight run from sand to sand stays on it). It ends
+     at the goal (0.4 m), within 5.3 m of Stig, after `giveUp` = 7 s, or stuck (under 0.5 m/s for
+     `stuckSecs` = 0.6 s after the first 0.4 s: a sunbed in the way).
+  3. `film` (`filmSecs` = 2.6 s): `anim.film` (the camera at the eye, §14.6), `say` "Lite film."
+     [F*](t) (2.4 s), `audio.whirr()`, turned to Stig all the while.
+  4. `home` at `walk` = 1.5 m/s to `from`, then `settle` (0.6 s, turning to the way he faced) and he
+     is let go: `busy` false, `spot` his home id again (so `placeNpcs` leaves him), or none when he
+     is not on it (stuck 2 s on the way: `placeNpcs` takes him home once Stig is 50 m off). Knocked
+     over, he drops the filming and walks home once up. A trick while he walks home starts again
+     from 1.
+  While he is out (`film.posed(key)`) `syncAll` gives him no turn to the player, wave or chatter, and
+  the horn's answerers skip him (`honk.free`).
+- **The viewfinder** (an interactable `storchFilm`, §14.3, at Herr Storch, `look.r` = 2 m; prompt
+  `<b>E</b> Titta i kameran` [N]; enabled by `canLook`: `active`, no dialogue or view, he is `free`
+  and not noticing or trotting (filming or walking home is fine), no pursuit, nothing carried, Stig on
+  foot, standing, on the ground). E: `inDialog`, letterbox, Stig still; Herr Storch claimed for it if
+  he was not out, held where he stands, the camera up. The cut camera stands at his eye (`look.eye`
+  = 1.6 m over his feet, `look.ahead` = 0.45 m in front) looking 12 m along the chase camera's
+  heading (where the player was looking), 0.5 m down; both men are hidden for it (behind the lens).
+  `hud.viewfinder` (§11.4) over everything: `I KAMERAN` [N], the gate, sprocket holes either side,
+  dust, the counter `DAG {n}` [N] (n = missions.index − `dayFrom` 5, clamped 1–7: DAG 1 at buss17
+  and friskotek, DAG 7 before julafton) and his line in Nunito under it. **Before the end** the gate
+  is black (the lens cap), and his line is one of `capLines`: "Strålande ljus i dag." or "Det här
+  blir en fin semesterfilm." [N], never "Blir'e inge film?" (he does not know yet). **After the
+  end** (unlock `after` = `bodega`) the gate is clear, `body.film-live` filters the canvas (sepia
+  0.42, saturate 0.8, contrast 1.06, brightness 1.04: pale small-gauge colours, a style choice,
+  since 1979 home film was colour), a faint flicker, the counter `JULAFTON` [N] and "Nu blir'e film!"
+  [N]. It holds `look.secs` = 4.5 s, or E or Space after `minSecs` = 0.6 s (not in test mode); then
+  the camera comes back, `inDialog` is cleared and he is let go if the view claimed him.
+- **Stills** (after the end only). While he films, `grabNow` asks `main.loop` for a take right after
+  the frame's render (`preserveDrawingBuffer` is false): `film.grab()` renders the scene once more
+  from his eye at Stig (a separate camera, fov `stills.fov` 48, aimed 1.0 m over Stig's feet or
+  0.9 m over the car's; Herr Storch hidden for it), copies the canvas's middle 16:9 into a 320×180
+  canvas, keeps it as `toDataURL('image/jpeg', 0.75)`, and renders the player's frame again, so the
+  screen never shows his. The first take is `first` = 0.2 s into the filming; another when Stig is
+  `higher` = 0.5 m higher than in the last kept one (up to `grabs` = 3): the highest is kept. When the
+  filming ends it joins `film.stills` (the newest `max` = 8; §10.5 saves them under their own key).
+- **The offer and the film night.** `offering` = after the end with more stills than `seen` (0 at
+  the start of a session, so a saved album is offered once a session). Then, standing free and
+  idle at home with Stig within `offerR` = 7 m, he says "Vill du se min film?" [N] (every
+  `offerEvery` = 25 s), and E at him is `<b>E</b> Se filmen` [N]: `hud.filmNight` over everything,
+  with the letterbox and `inDialog` as for the viewfinder. `FILMKVÄLL` [N] (Luckiest Guy) over
+  "Herr Storchs semesterfilm · dag 1–7 och julafton" [N] (Nunito: the O in STORCHS came out small in
+  Luckiest Guy), a film strip of seven black frames `DAG 1`…`DAG 7` with dust (they stay black: the
+  film's point is the lost week); at `steps` 1.7 s his "Blir'e inge film?" [F*] (his julfest line,
+  said again over his black week; this is the only place he says it outside julafton); at 3.0 s a
+  second strip with the newest `night.max` = 4 stills tagged `JULAFTON`, in the same pale filter; at
+  4.6 s "Lite film." [F*](t). `night.secs` = 10 s, or E or Space after 1 s. `seen` then counts every
+  still, and E is the viewfinder again until he keeps a new one.
+- **Sound.** `audio.whirr(secs)`: the camera's clockwork (§12.3), when he films, on a viewfinder and
+  for the film night.
+- `film.last` ({ kind, t, d0, ran, filmed, still, at, grabs }) and `film.lastView` ({ kind, live,
+  label, line } | { kind: 'night', stills, steps }) are for tests. Scenarios `super8` and `filmkvall`
+  (§16.4).
+- **Not done:** Fru Storch does not react; he does not film car stunts other than offences (a car
+  landing is no trick); the stills are of the player only; the black week has no stills from the
+  flight. The witness multiplier and the day cards of §15.5 stay P2 (the counter `DAG n` is only in
+  his camera).
+
 ---
 
 ## 11. HUD / UI strings (Swedish; `src/strings.js` owned by WP-H, created by Phase 0)
@@ -3481,12 +3600,14 @@ mutes without touching the button, which then said `Ljud: på` while muted).
 |---|---|
 | coins | `{n} pta` |
 | Ole's watch (feature 30, §10.10) | `#klocka` under the coins (top 76 px, a cream card): the watch icon (`.pryl-icon`), the Spanish time `hh:mm` (Luckiest Guy 30 px), `SPANSK TID` (terracotta) over `{no} norsk · {sv} svensk` (an hour on); shown on the island once pryl `klocka` is found (`hud.setClock(main, zone, sub, over)`); hidden with the coins under the letterbox unless `over` (drawn over `#fade`); `#collect` moves down to 136 px while it shows, and speech bubbles stay under it as under the objective card |
+| Herr Storch's viewfinder (feature 6, §10.11) | `#viewfinder` over the whole HUD (z-index 4, over bubbles and toasts): the black camera body round a 4:3 gate (min(66vw, 92vh) wide, 47 % down, rounded 22 px; the body is the gate's 200vmax spread shadow), cream sprocket holes either side, `I KAMERAN` (Luckiest Guy, `.vf-title`, over the shadow) at the top, the counter (`DAG {n}` / `JULAFTON`, Nunito 800 22 px, bottom right in the gate), dust and a scratch jumping every 0.12 s, his line `Herr Storch: – …` in Nunito at the bottom; the gate black (`#050403`) with the cap, clear with `live` (and `body.film-live` filters the canvas, a faint warm flicker); `hud.viewfinder(o \| null)` |
+| Herr Storch's film night (feature 6, §10.11) | `#filmnight` over the whole HUD (`#0d0a0c`): `FILMKVÄLL` (Luckiest Guy) over the sub (Nunito), a black strip with sprocket holes top and bottom and seven black 16:9 frames with dust and `DAG 1`…`DAG 7` (fading in 0.14 s apart), his first line, a second strip with up to four stills (`img`, the pale filter, a `JULAFTON` tag in Luckiest Guy) and his second line; `hud.filmNight(o \| null)`, `hud.filmNightStep('l1' \| 'jul' \| 'l2')` brings in the line, the stills and the last line |
 | meter label | `FLYGRÄDSLA` (flight) / `SKANDAL` (island); pursuit suffix (CSS `::after`) ` · ¡ALTO!` |
 | speedo unit | `KM/H` (× 3.6); car name = Swedish `spec.name` or `NAMED_CARS[name]` (`buss17`: "SunTrips buss 17", `hyrbil`: "Hyrbilen", `grisbil`: "Grisbilen", `nattbuss`: "Nattbussen", `joseBil`: "Josés bil", `guardiaJeep`: "Guardia-jeepen") |
 | dialogue next | `E ▸` |
 | minimap rim badge | `N` (island) / `FRAM` (flight) |
 | big-map legend | from `game.mapLegend()` (§10.1) |
-| prompts | `<b>E</b> Prata med {name}` · `<b>E</b> Kliv in` · `<b>E</b> Ta bilen` · `<b>E</b> Sätt dig` · `<b>E</b> Res dig` · `<b>E</b> Lås in dig` · `<b>E</b> Ta en juice` · `<b>E</b> Kvarta en stund` (Stig's bed, §10.10) · `<b>SPACE</b> Håll i dig!` · `<b>J</b> håll: Jag kan flyga!` (the `<b>` keycap is Luckiest Guy: uppercase). Order (`updateHud`): talk, then `Håll i dig!` while the cabin is turbulent and he stands without holding on (Phase 3 r3, §5.7), then the car, interactable (seats, toilets…) and stand prompts |
+| prompts | `<b>E</b> Prata med {name}` · `<b>E</b> Kliv in` · `<b>E</b> Ta bilen` · `<b>E</b> Sätt dig` · `<b>E</b> Res dig` · `<b>E</b> Lås in dig` · `<b>E</b> Ta en juice` · `<b>E</b> Kvarta en stund` (Stig's bed, §10.10) · `<b>E</b> Titta i kameran` / `<b>E</b> Se filmen` (Herr Storch, §10.11) · `<b>SPACE</b> Håll i dig!` · `<b>J</b> håll: Jag kan flyga!` (the `<b>` keycap is Luckiest Guy: uppercase). Order (`updateHud`): talk, then `Håll i dig!` while the cabin is turbulent and he stands without holding on (Phase 3 r3, §5.7), then the car, interactable (seats, toilets…) and stand prompts |
 
 **The result line** (feature 4, §10.8): `#score`, low in the middle (bottom 92 px, under the
 prompt at 178 px), a cream card with the dive and its sum in Luckiest Guy over the record line
@@ -3701,6 +3822,7 @@ Scheduler fixes (Phase 0): catch-up guard `if (next < ctx.currentTime) next = ct
 | `oink()` | the grisbil's horn (feature 5, §10.9): two nasal grunts 0.22 s apart, each a 190 → 120 Hz sawtooth and a band-passed noise burst; `honk.update` plays it on H and every 0.75 s while H is held, and `updateAudio` keeps `horn` off in the grisbil |
 | `thud()`, `crash()`, `coin()`, `pickup()`, `splash()` | existing |
 | `pip()` | Ole's calculator alarm (feature 30, §10.10): PIP-PIP-PIP twice, 2794 Hz square pips of 0.06 s 0.12 s apart, the second three 0.55 s on; the nap plays it twice |
+| `whirr(secs = 1.2)` | Herr Storch's film camera (feature 6, §10.11): the clockwork motor, 18 soft clicks a second (0.016 s band-passed noise bursts at 2.6 kHz) over a faint 118 → 112 Hz sawtooth hum; when he films (2.1 s), on a viewfinder (1.2 s) and for the film night (2.4 s) |
 | `glide()` | feature 3 (§10.7), arms out: two soft band-passed noise sweeps up, 450 → 1500 Hz (0.7 s) and 900 → 2400 Hz (0.5 s, +0.15 s) |
 | `jingle(kind)` | `start`, `complete`, `fail`, `pryl` (replaces `record`) |
 | `trad(name)` | §12.1 |
@@ -3811,6 +3933,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/poolJudges.js` | new (feature 4, 2026-10-15) | — | `PoolJudges` (`game.judges`): Siv och Majsan sätter poäng in free roam: the board's hops, the call and the walk to the edge, the verdicts, cards, lines, result line and record (§10.8) |
 | `src/game/honk.js` | new (feature 5, 2026-10-15) | — | `Honk` (`game.honk`): Tutan som folk reagerar på in free roam: the pedestrians' hop, the cast's answers and poses, Stig's lines, the grisbil's grunt (§10.9) |
 | `src/game/dayClock.js` | new (feature 30, 2026-10-15) | — | `DayClock` (`game.day`): Dygnet runt in free roam: the island's clock, the palette blend and night lights, Ole's watch in the HUD, NÄSTA MORGON before a mission, the nap in room 107, chatter by the hour (§10.10) |
+| `src/game/storchFilm.js` | new (feature 6, 2026-10-15) | — | `StorchFilm` (`game.film`): Lite film. in free roam: Herr Storch trots over the sand to film Stig's tricks, his viewfinder (black before the end), the stills and the film night after it (§10.11) |
 | `src/game/hud.js` | edit | **H** | map sources, meter, strings, legend, ring, blips, zone bar, markers; `renderPortrait` restores the model transform (§14.8) |
 | `src/game/camera.js` | edit | **A1** | profile, frameOne, cutTo, `clampZ` |
 | `src/game/fx.js` | edit | **A1** | `snow`, `steam`, `meterPuff` (rename of `shame`) |
@@ -3871,7 +3994,7 @@ Init: `initGfx` → `input.init` → `hud.init` → `fx.init` → fonts (Luckies
 → peds (34) → NPC `Character`s (one per `CHARS` key except `stig`, the radio-only keys `levander
 kapten pa guardia pax telefonist` and the cabin-owned `vardinna2`; `key` field; hidden until placed, §2.3) →
 player `Character(CHARS.stig)` (`key = 'stig'`) → collectibles (`COLLECTIBLES`) → markers → `Shame`
-→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
+→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
 `placeNpcs(true)` → spawn the player → portraits for every key in `CAST` (`renderPortrait`
 restores each model's parent and transform, so seated cast members stay in their seats) →
 `applySaveToWorld()` →
@@ -3882,9 +4005,10 @@ mantra/hold, AI, cars, people (`glide.step` → the player's step → `glide.aft
 traffic/peds skipped when `!levelDef.sim.*`) → `syncAll` (also
 writes `ch.x/y/z` from `car.seatWorld(ch.seatSide)` for every car-seated character, player
 included, so framing, bubbles and distance checks see where they really are) → `missions.update` →
-`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `honk.update` (feature 5) → `day.update` (feature 30) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
+`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
 pickups/collectibles → props → `fx.tick` → `tickTown` → markers → camera → sun/sky → HUD → audio →
-traffic recycling (island) → autosave.
+traffic recycling (island) → autosave. `loop` then renders, and when `film.grabNow` is set calls
+`film.grab()` in the same task (Herr Storch's still from the frame's buffer, feature 6, §10.11).
 
 ### 14.3 Game API (main.js; Phase 0; **the contract every agent codes against**)
 
@@ -3908,8 +4032,11 @@ game.hornAt;       // null | { x, z, yaw, t, pigs }: the last free-roam horn pre
 game.day;          // DayClock (feature 30, §10.10): day.h (Spanish time, 0–24), day.run (moves by
                    // itself; false in test mode), day.set(h), day.resync(), day.dark, day.lit(),
                    // day.lineOk(text), async day.toMorning() (runner.begin), day.napping, day.last
-game.onBounce(ch, b);   // Character.step: ch bounced on trampoline block b (the boing; the judges, §10.8)
-game.onLand(ch, v, y);  // Character.step: ch landed at v m/s (> 6) on floor height y (the stomp; the judges)
+game.film;         // StorchFilm (feature 6, §10.11): Herr Storch films Stig's tricks in free roam,
+                   // his viewfinder, the stills and the film night after the end
+game.witnessOverride; // null | UNLOCKS[name].witness, merged over the witness rule's config on the island (§7.2)
+game.onBounce(ch, b);   // Character.step: ch bounced on trampoline block b (the boing; the judges, §10.8; film.trick('studs'))
+game.onLand(ch, v, y);  // Character.step: ch landed at v m/s (> 6) on floor height y (the stomp; the judges; film.onLand)
 game.bumpedT;      // > 0 for 0.4 s after a trolley bowl / turbulence fall
 game.inDialog;  game.autoDialog;  game.dialogSpeed (55, TEST 220);
 game.closure;      // null | a race's closed course { nodes: Set<nodeId>, update(), closed(nodeId) }
@@ -4424,6 +4551,18 @@ shame.paint (PaintShop, §7.2): configure(cfg) from configure(); onPursuit() fro
 //   s, yaw); busy; napping; over; spinH; last { kind, from, to, part?, ole?, pips? }
 // gfx.js: setNightLights(on | null), skyDark(), beaconLit() (the night lights' switch, §13.3)
 // hud.js: setClock(main, zone, sub, over) (#klocka; main null hides it), fade(on) (#fade)
+// storchFilm.js (feature 6, §10.11): game.film = new StorchFilm(game) after the clock (it registers
+//   the interactable `storchFilm` and loads the stills); trick(kind) from handleOneShots (the double
+//   jump), onBounce, shame.add's witness branch (free roam) and its own watchAir (the glide);
+//   onLand(y, stomping) from main.onLand; update(dt) after day.update (reset() while not active;
+//   the run notice → trot → film → home → settle; the offer); posed(key) read by syncAll and
+//   honk.free; grabNow / grab() after main.loop's render; active; after; offering; free(); pinned();
+//   sand; onSand(x, z); aim(f); steer(); claim(); release(); canLook(); look(); night(); hold(secs,
+//   min, tick); dayLabel(); stills; seen; load(); save(); forget() (resetSave); st; view; last;
+//   lastView
+// hud.js: viewfinder(o | null) (#viewfinder, body.film-live), filmNight(o | null),
+//   filmNightStep(cls) (#filmnight)
+// audio.js: whirr(secs) (the film camera)
 
 // collision.js: waterAt(x, z, y) -> the `water` block he stands in at that height, or null
 //   (feature 4; moved from glide.js)
@@ -4589,6 +4728,10 @@ Feature 30: three CHATTER lines carry a time of day (`DAY.chatter`, §10.10), an
 from the lines `day.lineOk` allows while the free-roam clock runs: Gabbe's "Natturen går klockan
 nio!" 17–21, Lasse's "Friskoteket börjar halv tio varje morgon." 06–10 and "Klockan är tre spansk
 tid." 14–16. With the clock held (test mode) every line stays in, as before.
+
+Feature 6: after the end `UNLOCKS.bodega.chatter` gives Herr Storch "Lite film." [F*](t) and "Locket
+är av nu, ska du veta." [N] (§10.3, §10.11); his offer "Vill du se min film?" [N] is the film
+module's own bubble, not chatter, and while he is out filming he has no chatter.
 
 ---
 
@@ -4825,12 +4968,14 @@ Tonga Tonga depend on them); the three static luggage stowers; `smooth`/`fragile
 12. (replaced: the bodega Guardia jeep is a P0 `destroy` stage; no forced pursuit)
 
 **P2 (only if everything else is done)**: player-driven trolley; Guardia jeep unlock; witness
-multiplier; "steady arms" mantra minigame (turbulence drifts a marker, A/D keeps it in the zone);
+multiplier (feature 6, §10.11, gives Herr Storch a camera that films the tricks and turns the rule
+round after the end, but there is no multiplier); "steady arms" mantra minigame (turbulence drifts a marker, A/D keeps it in the zone);
 Eslöv time trials; SunTrip-office hideout; Angerud searching Stig's room
 ("Buenas noches, señor"); piglets falling off the grisbil; sheep flock as Fataga decor; oink horn
 (done: feature 5, §10.9);
 number plates; day cards ("Dag 2"; the free-roam clock and its NÄSTA MORGON before an evening
-mission are feature 30, §10.10, but there are no day cards).
+mission are feature 30, §10.10, and Herr Storch's viewfinder counts `DAG 1`–`DAG 7` (feature 6,
+§10.11), but there are no day cards).
 
 ---
 
@@ -4917,6 +5062,8 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `tuta` [feature 5] | Tutan som folk reagerar på (§10.9), at index 9 (free roam): on the SunTrip street, H makes a pedestrian 10 m ahead on the far sidewalk hop away from the car's line with a dodge shout, one 8 m behind stays put; Lasse answers "Hä-pååre!", waves and turns to Stig; Ole behind the hotel does not answer; Stig's sorry once; no SKANDAL; within the cooldowns no second answer, no second sorry, no second hop (3 s), then a hop that jumps; from the west street Ole's car statistics and wave; from the north street Berra and Robban "Ra-tara-tara!" and Stig's "Det var inte så jag menade!" after it; Angerud's platschef line with `oath` up and down again; in the grisbil "NÖFF! NÖFF!" over the bed, the grunt again while H is held, Berra's and Robban's lift lines, then Robban's other one; a dialogue drops the queued answers; in a running mission no `hornAt`, no hop, no answer |
 | `dygn` [feature 30] | Dygnet runt (§10.10), at index 9 (free roam): in test mode the clock holds at 15:00 with the day palette unlit; with `day.run` an hour a minute by day and two at night (× timeScale, measured 60 and 120 h per scaled hour); the sky (top r + g + b, fog, sun) at 12:00 day unlit, 19:24 between day and sunset unlit, 19:45 the sunset unlit, 20:10 between sunset and night with `nightGlow` drawn and the lighthouse lantern shown, 21:00 and 23:00 night lit, 06:15 dawn lit, 06:45 lighter and unlit, 08:00 day; Ole's watch hidden until pryl `klocka`, then `20:10` / `SPANSK TID` / `21:10 norsk · 21:10 svensk` with `#collect` under it; beach, pool, plaza and aerial shots at 19:30, 20:10, 20:15, 22:00, 23:00, 06:24; the bed's `Kvarta en stund`, the nap 15:00 → 20:00 (`kvällen`): in the dark `ZZZ…` and the watch spinning over the fade, Stig `down` on the 0.70 mattress, Ole at the bed's head with `calc` up, two PIPs, Ole's line, "Zzz…" twice, not "Morn, gutten min!", Stig up at the bed's foot, the toast; Ole let go but by the bed, home under the pergola once Stig is 50 m off; 20:00 → 23:00 (`natten`, his warm-night line), 23:00 → 08:00 (`morgonen`, day); no nap in a pursuit or a car; the chatter hours; a mission talked to at 22:30: NÄSTA MORGON over the fade, 09:00, the mission in the day palette unlit, the clock still while it runs, free roam at 09:00 after an abort; grisfest's `onEnd('complete')` sets 08:00 |
 | `dygnGiver` [feature 30] | at asnan's idle (index 7, giver Ole at `flamenco`): after a nap Ole is back at the giver's place (the end goes through black), not by the bed |
+| `super8` [feature 6] | Lite film. before the end (§10.11), at index 9: a double jump on the boardwalk 16 m south of Herr Storch is taken (`volt`), he goes `notice`, `trot`, `film`, `home`, `settle`, films from about 5 m (3.5–6.2) with "Lite film.", and is back on his home spot within 0.4 m, free, with no SKANDAL and no still; a trick inside the 30 s is let pass; one within 7 m he films from his place without running; a sunbed kicked for real 10 m from him adds 0 SKANDAL with the lens-cap toast, and he takes it (`bus`) and films it; teleported near the sand's north edge with Stig on the road beyond the paseo, he films from no further north than the sand's edge (z ≥ 215.2); E by him (`Titta i kameran`): `inDialog`, `I KAMERAN`, `DAG 4`, the gate `rgb(5, 4, 3)`, no canvas filter, one of his satisfied lines, then the play again after 4.5 s (the chase camera back, he is free at home); trotting off when a mission is talked to, he is at home when it runs, and in it he takes no trick; as friskotek's extra (index 6) he films from his place |
+| `filmkvall` [feature 6] | after the end (index 13, `bodega` unlocked): `witnessOverride.evidence`; a kicked sunbed near him adds SKANDAL with `Linsskyddet är av – nu finns det bevis!`, and his filming keeps a still; a trick 5 m off with Stig standing, then a double jump while he films: at least two takes, one still kept; both saved as jpegs under `charter-and-run-film-v1` (written to the OUT dir as `filmkvall_still{1,2}.jpg`); home again with Stig near, "Vill du se min film?" and `Se filmen`; E: `FILMKVÄLL`, `DAG 1`…`DAG 7`, two stills, "Blir'e inge film?" before the stills and "Lite film." after them, then `seen` 2 and the prompt `Titta i kameran`; E: the live viewfinder (`JULAFTON`, "Nu blir'e film!", a clear gate, the sepia filter on the canvas, off again after); a reload without `?fresh` loads both stills |
 | `talk` [Phase 0] | `autoDialog = false`, walk to Ole at `gateQueue`, E, Space twice |
 | `fullstory` [Phase 0b] | swaps the literal §8 missions (`tools/fixtures/full-missions.js`) into `MISSIONS` and plays all 13 per §16.3 (`FROM`/`TO` as `story`); must end `#13 idle`, `RESULT: PASS` |
 | `kinds` [Phase 0b] | fixture data checks; haggle misses fail; follow `minDist` fails; smooth/fragile bars (teleports never count); carry spill; checkpoint retry re-applies night + `vals` and revives plates at `dansgolv`; destroy default spawn; grab at the wreck; scene `exitCar`; Phase 3: follow shows no bar before the start and a head-on quarry does not fail it, `retryCar` (the last car reused, a typed named car, `park`), getInCar `atHome` and a wrecked `missionCar` failing, a frame-only scene stopping the car dead, a scene cutting a `collect` guest's bubbles (3 frames in: no bubble over the guest or Stig, no empty one) and keeping his placement |
@@ -6410,3 +6557,31 @@ the fixer's group.
   20:10, and at nine it has been night for half an hour); the nap wakes to four fixed hours; the room
   light for the scene; Lasse's three o'clock line also gets its hours. Scenarios `dygn`, `dygnGiver`
   (§16.4). No mission, stage kind, timer, fixture or calibration pool changed.
+- Feature 6, "Lite film. – herr Storchs semesterfilm" (`features/implemented/storch_super8.md`,
+  2026-10-15): Herr Storch films Stig's tricks in free roam (§10.11; new `src/game/storchFilm.js`,
+  `STORCH_FILM` in content/island.js; §1.6, §3, §7.2, §10.3, §10.5, §11.4, §12.3, §14.1–14.3, §14.8,
+  §14.10, §15.5, §16.4). On the island with `missions.state === 'idle'`, a double jump, a bounce, a
+  stomp, a drop of 3 m, the glide or an offence the witness rule sees, within 25 m of him and at most
+  every 30 s, makes him turn to Stig (0.35 s) and, standing on the beach's sand more than 7 m off,
+  trot at 3.4 m/s to 5 m from Stig (clamped to the sand: never the paseo or a road; at most 7 s), film
+  2.6 s with "Lite film." [F*](t) and the camera's whirr (`audio.whirr`), and walk home; as a
+  mission's extra he films from his place. Out of free roam he is back at his place at once, so the
+  witness zone is at his home in every mission. E by him ("Titta i kameran" [N]) is his viewfinder
+  (`#viewfinder`: `I KAMERAN`, sprocket holes, dust, `DAG 1`–`7` by the mission index, a black gate
+  with the cap and a satisfied [N] line). After the end (`bodega`) the cap is off: the viewfinder
+  shows the island from his eye in pale colours (`body.film-live`, a canvas filter; `JULAFTON`, "Nu
+  blir'e film!" [N]); each filming keeps a still (`film.grab()` right after `main.loop`'s render, a
+  second render from his eye at Stig into a 320×180 jpeg, the highest of up to three takes), saved
+  under its own key `charter-and-run-film-v1` (8 at most; the v1 save is unchanged); with new stills
+  he offers "Vill du se min film?" [N] and E is "Se filmen" [N]: the film night (`#filmnight`:
+  seven black days, "Blir'e inge film?" [F*], the julafton stills, "Lite film."). The witness rule
+  turns round after the end (`UNLOCKS.bodega.witness`, `game.witnessOverride`: an offence near him
+  counts, "Linsskyddet är av – nu finns det bevis!" [N]), and his chatter gets "Locket är av nu, ska
+  du veta." [N]. main.js: `film.trick` from the double jump and `onBounce`, `film.onLand` from
+  `onLand`, `film.update` after `day.update`, `film.grab` after the render, `film.posed` in `syncAll`
+  (and `honk.free`), `witnessOverride` in `applyUnlock`, `film.forget()` in `resetSave`; shame.js's
+  witness branch hands free-roam offences to `film.trick('bus')`. Deviations from the idea: the
+  viewfinder looks the way the player looks (not only at Stig), the stills are taken from his eye at
+  Stig in a second render, the film night shows the newest four, the offer comes with new stills
+  (once a session for a saved album), and the rule's turn after the end is done. Scenarios `super8`,
+  `filmkvall` (§16.4). No mission, stage kind, timer, fixture or calibration pool changed.
