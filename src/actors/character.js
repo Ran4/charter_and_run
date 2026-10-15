@@ -10,7 +10,7 @@ import { queryBlocks, circleVsBlock, groundAt, groundInfo, topAt, RAMP } from '.
 import { dampAngle, yawTo } from '../util.js';
 
 export const STEP = 0.45;
-export const ANIM_FLAGS = ['wings', 'cupUp', 'cupHeld', 'push', 'planeSeat', 'hold', 'flail', 'oath', 'dance', 'laugh', 'slump', 'shoeOff', 'mirror', 'film', 'giraffe', 'butterKnife', 'carryOver', 'glide', 'swan', 'calc', 'ski', 'groda'];
+export const ANIM_FLAGS = ['wings', 'cupUp', 'cupHeld', 'push', 'planeSeat', 'hold', 'flail', 'oath', 'dance', 'laugh', 'slump', 'shoeOff', 'mirror', 'film', 'giraffe', 'butterKnife', 'carryOver', 'glide', 'swan', 'calc', 'ski', 'groda', 'ticket'];
 export const GRAV = 24;
 const _blocks = [], _hit = {};
 

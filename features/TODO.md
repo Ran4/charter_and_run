@@ -1,7 +1,6 @@
 # Gör dessa grejer (flytta filen till features/implemented/ och uppdatera den när du är klar, och
 # flytta den till "färdiga features"-sektionen nedan)
 # markörer: ⟨par N⟩ = de två raderna med samma N körs samtidigt (var sin worktree/gren, sedan rebase på main och push), ⟨solo⟩ = körs ensam; ta grupperna uppifrån och ned
-- features/lapplisan_majsan.md – 20. Lapplisan Majsan – ”Ursäkta, är det din bil?” [M] ⟨par 1⟩
 - features/grisfest_pa_torsdag.md – 21. Grisfest varje torsdag – 800 pesetas [M] ⟨par 2⟩
 - features/fruktstandet.md – 28. Rakt genom fruktståndet [M] ⟨par 2⟩
 - features/fran_fjarde_vaningen.md – 24. Från fjärde våningen – hopptornet vid Flamencopoolen [M] ⟨solo⟩
@@ -12,9 +11,6 @@
 - features/smorj_in_majsan.md – 35. Smörj in Majsans rygg – SOLKRÄM-mätaren [S] ⟨par 5⟩
 - features/rum_107_troferum.md – 38. Rum 107 fylls med resans minnen [S] ⟨par 5⟩
 - features/skjortbytet.md – 36. Skjortbytet – Guardia letar efter ”el de la camisa” [M] ⟨solo⟩
-
-# Vänta med dessa tills spelaren säger till
-# markörer som ovan: ⟨par N⟩ = de två raderna med samma N körs samtidigt, ⟨solo⟩ = körs ensam; här från par 6 och uppåt så att taggarna är unika när rader köas en och en
 - features/prata_med_ganget.md – 39. Prata med gänget [M] ⟨par 6⟩
 - features/stunthopp.md – 40. Stunthopp med G17-stämpel [M] ⟨par 6⟩
 - features/hoppet_mellan_hotelltaken.md – 41. Hoppet mellan hotelltaken [M] ⟨solo⟩
@@ -24,6 +20,9 @@
 - features/strandkyssen.md – 57. Strandkyssen i bränningen [M] ⟨par 8⟩
 - features/guardia_jeepen.md – 51. Låna Guardia-jeepen – ”Ursäkta, är det din bil?” [M] ⟨solo⟩
 - features/fyren_mantrat.md – 52. Uppför fyren – mantrat på 51 meters höjd [M] ⟨solo⟩
+
+# Vänta med dessa tills spelaren säger till
+# markörer som ovan: ⟨par N⟩ = de två raderna med samma N körs samtidigt, ⟨solo⟩ = körs ensam; här från par 6 och uppåt så att taggarna är unika när rader köas en och en
 - features/ringklockan_och_kon.md – 59. Ringklockan i receptionen – ”Och när ska vi lämna rummen?” [M] ⟨par 9⟩
 - features/garderoben_i_rum_107.md – 67. Garderoben och bergsprängaren i rum 107 [S] ⟨par 9⟩
 - features/kyrkfrid.md – 60. Kyrkfrid i Templo Ecuménico [M] ⟨solo⟩
@@ -71,3 +70,4 @@
 - features/implemented/artiga_stig.md – 11. Förlåt, förlåt! – Stig-Helmer ber om ursäkt [S]
 - features/implemented/grisarna_ramlar_av_grisbilen.md – 15. Grisarna ramlar av grisbilen – och tutan grymtar [M]
 - features/implemented/aka_bagageband.md – 25. Åk bagageband [S]
+- features/implemented/lapplisan_majsan.md – 20. Lapplisan Majsan – ”Ursäkta, är det din bil?” [M]

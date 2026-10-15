@@ -33,6 +33,7 @@ import { PoolFest } from './game/poolFest.js';
 import { StigSorry } from './game/stigSorry.js';
 import { PigTruck } from './game/pigTruck.js';
 import { BaggageBelt } from './game/baggageBelt.js';
+import { Lapplisa } from './game/lapplisa.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
 import { LEVELS, ISLAND_PALETTES } from './level.js';
@@ -178,6 +179,7 @@ class Game {
     this.sorry = new StigSorry(this);     // free roam: Stig says sorry for what he does (§10.14)
     this.pigs = new PigTruck(this);       // free roam: the grisbil's pigs tumble off, the pen at the farm (§10.15)
     this.belt = new BaggageBelt(this);    // free roam: the baggage belt at Gando carries Stig (§10.16)
+    this.lapp = new Lapplisa(this);       // free roam: Majsan tickets a car on the sidewalk, Angerud's tow (§10.17)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -1437,6 +1439,7 @@ class Game {
     this.sorry.update(dt);
     this.pigs.update(dt);
     this.belt.update(dt);
+    this.lapp.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);
@@ -1754,8 +1757,9 @@ class Game {
       // §9.4 idleAnim (e.g. Berra asleep), or held by the free-roam Berra job (§10.6) or the diving
       // judges at the pool's edge (§10.8): no wave, turn or chatter; Robban waves Stig over to the
       // sleeping Berra as a giver does. An answer to the horn waves from further off (§10.9); the
-      // rollerskier waves his pole while he skis (§10.12); the pool fest's dancers and porter (§10.13).
-      const posed = !!ms.idlePose(k) || this.berraJob.posed(k) || this.judges.posed(k) || this.film.posed(k) || this.eslov.posed(k) || this.fest.posed(k);
+      // rollerskier waves his pole while he skis (§10.12); the pool fest's dancers and porter (§10.13);
+      // Majsan on her round with the ticket pad, Angerud in the tow scene (§10.17).
+      const posed = !!ms.idlePose(k) || this.berraJob.posed(k) || this.judges.posed(k) || this.film.posed(k) || this.eslov.posed(k) || this.fest.posed(k) || this.lapp.posed(k);
       n.anim.wave = (((giver || this.berraJob.waving(k)) && near < 9 || this.honk.waving(k)) && !posed || this.eslov.waving(k)) && !this.inDialog && n.state === 'normal';
       if (n.state === 'normal' && !posed && near < 10 && !this.inDialog) n.yaw += Math.atan2(Math.sin(yawTo(this.player.x - n.x, this.player.z - n.z) - n.yaw), Math.cos(yawTo(this.player.x - n.x, this.player.z - n.z) - n.yaw)) * Math.min(1, dt * 3);
       // Free play only: not in the gap before an outro (bubbles stacked over its first line).

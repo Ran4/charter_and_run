@@ -54,7 +54,10 @@ opens with a summary of the rounds and the timer changes.
     DESIGN §10.14), `grisar` (Grisarna ramlar av grisbilen, the unlocked grisbil's pigs tumbling off,
     the catch on foot and by creeping, Lasse's refusal and the delivery to the farm's pen, DESIGN
     §10.15), `bagage` (Åk bagageband, the belt at Gando carrying Stig, his seat on a bag, the turns'
-    toasts and lines, Space and E off, DESIGN §10.16)
+    toasts and lines, Space and E off, DESIGN §10.16), `lapplisa lappfilm` (Lapplisan Majsan, her
+    ticket and the tow for a car left on the sidewalk, her praise for a car straight in a Flamenco bay;
+    Angerud's hire car outside Centro La Medina and the film's first meeting with the GRÚA truck,
+    DESIGN §10.17)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

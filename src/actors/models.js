@@ -643,6 +643,16 @@ const PROP_GEO = {
     g.box(0x8a5a32, 0, 0, 0, 0.03, 0.03, 0.1);
     g.box(0xd8dce0, 0, 0, 0.11, 0.035, 0.008, 0.13);
   },
+  lappblock(g) {   // Majsan's pad of parking tickets (anim.ticket, game/lapplisa.js): yellow slips on a card back
+    g.box(0x8a6a4a, 0, 0.0, 0, 0.17, 0.24, 0.02);
+    g.box(0xf7d84a, 0, 0.005, 0.016, 0.15, 0.21, 0.014);
+    g.box(0x1d1426, 0, 0.06, 0.024, 0.1, 0.012, 0.002);
+    g.box(0x1d1426, 0, 0.03, 0.024, 0.11, 0.008, 0.002);
+  },
+  penna(g) {       // her pen
+    g.cyl(0x2a4a8a, 0, 0.02, 0, 0.012, 0.15, 6);
+    g.cone(0xd8dce0, 0, -0.07, 0, 0.012, 0.03, 6, Math.PI);
+  },
   knacke(g) {   // a SPORT-KNÄCKE pack in the hand
     g.box(0xe8b04a, 0, 0.0, 0, 0.26, 0.1, 0.07);
     g.box(0xd8321e, 0, 0.0, 0.036, 0.22, 0.03, 0.005);
@@ -985,7 +995,7 @@ function heldPose(m, st, t, place = false) {
   const h = m.def.held;
   if (!h || !PROP_GEO[h]) return;
   const [R, L] = m.arms;
-  const busy = st.wings || st.cupUp || st.cupHeld || st.push || st.hold || st.flail || st.oath || st.dance || st.laugh || st.mirror || st.film || st.giraffe || st.butterKnife || st.carryOver || st.shoeOff || st.calc || st.groda || st.cheer || st.wave || st.kick > 0;
+  const busy = st.wings || st.cupUp || st.cupHeld || st.push || st.hold || st.flail || st.oath || st.dance || st.laugh || st.mirror || st.film || st.giraffe || st.butterKnife || st.ticket || st.carryOver || st.shoeOff || st.calc || st.groda || st.cheer || st.wave || st.kick > 0;
   const pose = !place && !busy;
   const moving = st.speed > 0.3;
   switch (h) {
@@ -1252,6 +1262,14 @@ function poseFlags(m, st, t) {
     m.neck.rotation.x = 0.28;
     inHand(m, prop(m, 'butterKnife'), 0, 0, 0.02, 0.02, -0.5 + Math.sin(t * 7) * 0.2, -0.2, 0);
     inHand(m, prop(m, 'knacke'), 1, 0, 0.03, 0.03, 0, 0.3, 0);
+  }
+  if (st.ticket) {
+    // Majsan writing a parking ticket (game/lapplisa.js, §10.17): the pad held up in the left hand at
+    // the chest, the pen scribbling over it in the right, her head bent to it.
+    R.rotation.set(-1.25 + Math.sin(t * 11) * 0.06, 0, 0.5 + Math.sin(t * 7) * 0.05); L.rotation.set(-1.15, 0, -0.5);
+    m.neck.rotation.x = 0.32;
+    inHand(m, prop(m, 'lappblock'), 1, 0, 0.04, 0.05, -0.6, 0.5, 0);
+    inHand(m, prop(m, 'penna'), 0, 0, 0.02, 0.03, 0.9, 0, 0.3);
   }
   if (st.ski) skiPose(m, st, t);
   if (st.shoeOff) {

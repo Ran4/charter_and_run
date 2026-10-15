@@ -523,6 +523,7 @@ export class Car {
     this.noEnter = false;
     this.noExplode = false;
     this.isPursuer = false;
+    this.lift = 0;           // the nose raised, rad (hooked to the tow truck in Lapplisan Majsan, §10.17)
     this.updateObb();
     this.root.position.set(this.x, this.y, this.z);
     this.root.rotation.y = this.yaw;
@@ -785,8 +786,10 @@ export class Car {
     const vr = this.vx * -fz + this.vz * fx;
     this.roll = damp(this.roll, clamp(vr * 0.012 - this.steerAngle * this.forwardSpeed * 0.004, -0.12, 0.12), 8, dt);
     this.bump = Math.max(0, this.bump - dt * 1.5);
-    this.tilt.rotation.set(this.pitch, 0, this.roll);
+    this.tilt.rotation.set(this.pitch - this.lift, 0, this.roll);
     this.tilt.position.y = -Math.sin(this.bump * 12) * this.bump * 0.4;
+    // Hooked to the tow truck (§10.17): the nose `lift` rad up about the rear wheels.
+    if (this.lift) this.tilt.position.y += Math.sin(this.lift) * (s.len / 2 - s.wheelR - 0.38);
     for (const w of this.wheels) {
       w.mesh.rotation.x = this.wheelSpin;
       w.piv.rotation.y = w.front ? -this.steerAngle : 0;

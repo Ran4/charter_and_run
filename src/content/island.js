@@ -3,8 +3,9 @@
 // DESIGN §1.4 (bark tables are [F*]: every film line is relocated there). Invented (§1.6): Oles
 // prylar and hajfenor as collectibles, the grisbil unlock, the glide after julafton, the sisters
 // judging his dives at Flamenco's pool, the island answering his horn, Herr Storch filming his
-// tricks and his film night, the rollerskier's training, his answer to the horn and his race, and the
-// pool fest after the end (Små grodorna in Flamenco's pool, Stig hopping with them in his suit).
+// tricks and his film night, the rollerskier's training, his answer to the horn and his race, the
+// pool fest after the end (Små grodorna in Flamenco's pool, Stig hopping with them in his suit), and
+// Majsan ticketing cars on the island, the tow and her praise for a car parked straight (§10.17).
 
 export const HOMES_ISLAND = {
   ole: ['flamenco', 2.0, 1.0, 0],     // yaw 0: under the pergola, facing the pool (flamenco faces π)
@@ -201,6 +202,57 @@ export const PIG_TRUCK = {
   carryText: 'Bär grisen tillbaka till flaket.',                                     // [N]
   homeText: 'Kör hem grisarna till fållan på grisfesten.',                           // [N]
   paidToast: 'Grisbonden betalade {n} pta.',                                         // [N]
+};
+
+// Lapplisan Majsan – "Ursäkta, är det din bil?" (free roam, DESIGN §10.17; game/lapplisa.js). On the
+// island with no mission running (`missions.state === 'idle'`); Majsan only when she is free (shown,
+// standing, nobody else's: not the waiting mission's giver or extra, not judging or dancing).
+// (1) A car Stig has left still with at least `wheels` wheels on the sidewalk (layout.js sidewalkAt)
+// for `delay` s while he is within `nearR` m: Majsan comes round the nearest corner (`cornerIn` m
+// round it, a walk of at most `cornerMax` m; else from `alongR` m along the sidewalk; out of the
+// camera's view, which counts to `seenR` m, and `minFromStig` m from him)
+// at `walk` m/s on a line `ins` m in from the kerb, writes a ticket for `writeSecs` s and puts it on
+// the windscreen. Stig on foot within `askR` m: `ask`, and `askGap` s later his `no` (the hire car's
+// `noHyrbil`). `towGap` s after that (or after the ticket): `tow`, and `fadeAt` s later the car is
+// gone: behind a `fadeSecs` s black fade with Stig within `seeR` m, else at once. A car off the
+// street goes; a named one (the hire car, the grisbil) is back in its bay. Getting in first keeps it
+// (and its ticket). Never a bus, a Guardia jeep, a locked car or the grisbil with a pig off it.
+// (2) Between missions, with Angerud at Viking Bar, his white hire car (`angerud`) stands on the
+// sidewalk outside Centro La Medina (landmark `angerudBil`); the first time Stig walks past on foot
+// within `angerud.r` m the film's first meeting plays as a short scene (`film`), with the GRÚA truck
+// (`angerud.truck`) and his outburst, once ever (`angerud.onceKey` in the saved unlocks); after it he
+// mutters `mutter` until the next mission.
+// (3) A car Stig leaves straight in one of Flamenco's painted bays (its middle inside, its axis within
+// `bayYaw` rad of the bay's): Majsan at home by the pool (within `homeR` m of her spot and `praiseR`
+// m of the car) `praise`, and Siv `replyGap` s later `praiseReply`; the first time ever `praisePay`
+// pta (`praiseKey`). At most every `praiseEvery` s.
+// Invented (§1.6): Majsan ticketing on the island, the tow, her praise. The film lines are the first
+// meeting at the travel agency's window and the sisters' balcony, relocated.
+export const LAPPLISA = {
+  wheels: 2, still: 0.5, delay: 6, nearR: 45,
+  walk: 2.6, ins: 1.9, cornerIn: 7, cornerMax: 32, alongR: 22, minFromStig: 12, seenR: 90, stuckSecs: 2, leaveMax: 25,
+  writeSecs: 2.2, askR: 14, askGap: 1.1, towGap: 3.5, fadeAt: 1.2, fadeSecs: 0.6, seeR: 60, secs: 2.4,
+  ask: 'Ursäkta, är det din bil?',                                                  // [F*] Majsan at the travel agency's window, relocated
+  no: 'Nej.',                                                                       // [F*] Stig's answer there, relocated
+  noHyrbil: 'Den är… hyrd.',                                                        // [N] Stig, of the hire car
+  tow: 'Okej, grabbar!',                                                            // [F*] Majsan to the tow men, relocated
+  angerud: {
+    lm: 'angerudBil', type: 'hatch', color: 0xf4f4f0, r: 12, onceKey: 'lappFilm', run: 3.2,
+    truck: { type: 'pickup', color: 0xf07a1e, sign: 'GRÚA' },                       // [N] the truck's sign (no firm's name, §1.5)
+  },
+  film: {
+    outburst: ['Vad i helvete tar ni er till?' /* [F*] Angerud rushing out, relocated */,
+      'Hederliga bilister ger ni er på, men få hyfs på ungdomen klarar ni inte!' /* [F*] */,
+      'Förbannade förmyndarmentalitet!' /* [F*] */],
+    why: 'Är det inte jobbigt när alla skäller?',                                   // [F*] Stig to Majsan, relocated
+    job: 'Jo, jag gör ju bara mitt jobb.',                                          // [F*] Majsan's answer, relocated
+  },
+  mutter: ['Hederliga bilister ger ni er på…' /* [F*] shortened */, 'Förbannade förmyndarmentalitet!' /* [F*] */,
+    'Jag ska tala med platschefen.' /* [F*] */],
+  bayYaw: 0.17, homeR: 4, praiseR: 40, praiseEvery: 90, replyGap: 2.4, praisePay: 50, praiseKey: 'lappRuta',
+  praise: 'Där ser man. Det går att parkera här nere också.',                       // [N] Majsan over the hedge
+  praiseReply: 'Spänn av, Majsan. Du är ledig.',                                    // [F*](t) Siv on the balcony, relocated
+  paidToast: 'Snyggt parkerat! {n} pta.',                                            // [N]
 };
 
 // Collectible sets (DESIGN §10.1). Generic pickup code lives in main.js.

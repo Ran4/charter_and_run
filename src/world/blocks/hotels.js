@@ -661,10 +661,16 @@ function flamencoBar(f, glow) {
 }
 
 // Parking lot west of the pool (§6.3 flamencoDrive, the hyrbil's spot); service drive to the back.
+// Its eight painted bays (two rows of four, 2.8 × 5 m between the stripes) go out in world space as
+// `flamencoBays`, { x, z, hw, hd, yaw } (half-sizes across and along `yaw`), for Majsan's praise of a
+// car parked straight in one (game/lapplisa.js, §10.17).
+export const flamencoBays = [];
 function flamencoLot(f, glow) {
+  flamencoBays.length = 0;
   for (const z0 of [8, 19.5]) {
     for (const x of [-30.2, -27.4, -24.6, -21.8, -19]) f.flat(STRIPE, x, z0 + 2.5, 0.12, 5, Y_LINE);
     f.flat(STRIPE, -24.6, z0 + (z0 < 10 ? 0 : 5), 11.2, 0.12, Y_LINE);
+    for (const x of [-28.8, -26.0, -23.2, -20.4]) flamencoBays.push({ x: f.wx(x, z0 + 2.5), z: f.wz(x, z0 + 2.5), hw: 1.4, hd: 2.5, yaw: f.yaw });
   }
   // Hedge between the lot and the pool deck, with a gap for the path.
   for (const [z0, z1] of [[-0.5, 12], [16, 30.3]]) {

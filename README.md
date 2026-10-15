@@ -200,6 +200,15 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   sätter han sig på närmaste väska och åker vidare som vilket bagage som helst. Första gången suckar
   han "Min väska har inte kommit.", varje varv får ett meddelande, Lasse svarar i radion efter det
   första och efter tredje varvet är Stig själv bagage. Space hoppar av väskan, E kliver av bandet.
+- **Lapplisan Majsan**: ställ en bil uppe på trottoaren och gå ifrån den, så kommer Majsan efter en
+  stund gående runt hörnet med lappblocket. Hon sätter en gul lapp på vindrutan, och står Stig kvar
+  frågar hon "Ursäkta, är det din bil?". Han svarar sanningsenligt "Nej." (hyrbilen: "Den är…
+  hyrd."). Kör iväg innan hon säger "Okej, grabbar!", annars tonar bilden ut och bilen är bärgad
+  (hyrbilen och grisbilen står då i sina rutor vid Flamenco). Mellan uppdragen står Angeruds vita
+  hyrbil på trottoaren utanför Centro La Medina: första gången Stig går förbi spelas filmens första
+  möte upp, med bärgaren och Angeruds utbrott, och sedan muttrar han om hederliga bilister. Parkera
+  rakt i en ruta på Flamencos parkering så berömmer Majsan dig över häcken (första gången ger det en
+  liten slant).
 
 ## Vad är påhittat?
 
@@ -249,6 +258,9 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
 - att Stig åker bagageband och sitter på någon annans resväska, och att han säger "Den här väskan ska
   till Las Palmas." om sig själv (i filmen saknas hans väska när de landar, och repliken sägs på
   japanska på en flygplats där väskan irrar runt)
+- att Majsan lappar och bärgar bilar på ön, att Angeruds hyrbil bärgas utanför Centro La Medina och
+  att hon berömmer en bil som står rakt i rutan (i filmen sker frågan, bärgningen och Angeruds utbrott
+  vid en resebyrås skyltfönster i Stockholm, och systrarnas repliker om parkering sägs på balkongen)
 - fårrusningen i Fataga, kappkörningen mot nattbussen och porslinskrosset på tid
 - att samla ihop julfestgästerna
 - Oles prylar och hajfenorna som samlarföremål, utspridda över ön
@@ -342,12 +354,14 @@ src/game/poolFest.js            Små grodorna i poolen after the end: the ring i
 src/game/stigSorry.js           Förlåt, förlåt! in free roam: Stig's sorry for kicks, knock-downs, breakage and carjackings
 src/game/pigTruck.js            Grisarna ramlar av grisbilen in free roam: the pigs tumble off, the catch, the pen at the farm
 src/game/baggageBelt.js         Åk bagageband in free roam: the belt at Gando carries Stig, he sits on a bag, the turns
+src/game/lapplisa.js            Lapplisan Majsan in free roam: the ticket and the tow, Angerud's hire car and the film scene, the bay praise
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
 tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, meter, kinds, perf,
                                 paintshop, berra, glide, simhopp, tuta, dygn, super8, eslov, grodorna,
-                                artig, grisar, bagage, calibrate, calibflight)
+                                artig, grisar, bagage, lapplisa, calibrate,
+                                calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
 tools/pool.mjs                  re-derives every random stage's timer from the ledger
@@ -387,6 +401,7 @@ node tools/shot.mjs grodorna grodtakt    # the pool fest after the end: the ring
 node tools/shot.mjs artig                # Stig says sorry: kicks, run over, a pump, bins, carjackings and the driver's "Nej."
 node tools/shot.mjs grisar               # the grisbil's pigs: the falls, the catch on foot and by creeping, Lasse, the pen
 node tools/shot.mjs bagage               # the baggage belt: carried, sitting on a bag, the turns, Lasse, Space and E off
+node tools/shot.mjs lapplisa lappfilm    # Majsan's tickets and tows, the bay praise; Angerud's hire car and the film scene
 node tools/shot.mjs fullstory kinds      # the literal §8 missions and the stage-kind checks
 node tools/shot.mjs calibrate calibflight  # timer and FLYGRÄDSLA calibration (slow; see DESIGN §8, §16.4)
 node tools/pool.mjs                      # random-stage timers from the raw runs in notes/calibration-samples.md

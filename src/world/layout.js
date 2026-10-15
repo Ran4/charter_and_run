@@ -37,6 +37,28 @@ export function baseGround(x, z) {
   return isRoad(x, z) ? 0 : CURB;
 }
 
+// The sidewalk (Lapplisan Majsan, DESIGN §10.17): the kerb-high band SW m wide beside every road,
+// round each block and round the town (the outer ring), as town.js lays it; not the asphalt (the
+// west stub included), not the lots, squares and gardens inside a block, not the sand past EDGE.
+// Null off it, else { along: 'x' | 'z' (the way it runs), road (the centre line it runs beside: a
+// z for 'x', an x for 'z'), side (±1: the side of that line it is on), lo, hi (its straight stretch
+// between the crossing roads' kerbs, along `along`), ring (a block's ring, with a corner round the
+// block at lo and hi; false: the outer ring) }. In a block corner the nearer road wins.
+const nearestLine = (v) => rc(Math.max(0, Math.min(N, Math.round((v + HALF) / P))));
+export function sidewalkAt(x, z) {
+  const o = HALF + RHW, ax = Math.abs(x), az = Math.abs(z);
+  if (ax > EDGE || az > EDGE) return null;
+  const lx = nearestLine(x), lz = nearestLine(z), dx = Math.abs(x - lx), dz = Math.abs(z - lz);
+  if ((dx <= RHW && az <= o) || (dz <= RHW && (ax <= o || (lz === rc(3) && x < 0)))) return null;
+  if (az > o) return { along: 'x', road: Math.sign(z) * HALF, side: Math.sign(z), lo: -EDGE, hi: EDGE, ring: false };
+  if (ax > o) return { along: 'z', road: Math.sign(x) * HALF, side: Math.sign(x), lo: -EDGE, hi: EDGE, ring: false };
+  if (Math.min(dx, dz) > RHW + SW) return null;
+  const cell = (v) => Math.max(0, Math.min(N - 1, Math.floor((v + HALF) / P)));
+  if (dz <= dx) { const i = cell(x); return { along: 'x', road: lz, side: Math.sign(z - lz), lo: rc(i) + RHW, hi: rc(i + 1) - RHW, ring: true }; }
+  const j = cell(z);
+  return { along: 'z', road: lx, side: Math.sign(x - lx), lo: rc(j) + RHW, hi: rc(j + 1) - RHW, ring: true };
+}
+
 // MAP[j][i]: the block type at column i, row j (DESIGN §6.2). Unknown types build an empty slab.
 //                 i=0          1            2            3            4            5            6
 export const MAP = [

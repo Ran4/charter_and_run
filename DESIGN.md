@@ -202,7 +202,11 @@ in the film nobody falls off the pig truck, and Stig is not in that scene); Stig
 baggage belt at Gando, sitting on someone else's suitcase, the lap toasts and his "Den här väskan ska
 till Las Palmas." about himself (free roam, §10.16; in the film his bag is missing at Las Palmas and
 goes round the world's airports in cutaways, where a Japanese voice says the line; nobody rides a
-belt).
+belt); Majsan writing parking tickets on the island, coming round the corner to a car Stig leaves on the sidewalk, the tow behind
+a fade, Angerud's hire car on the sidewalk outside Centro La Medina towed by the GRÚA truck, and her
+praise for a car parked straight in a bay at Flamenco (free roam, §10.17; in the film the question,
+the tow and Angerud's outburst are at a Stockholm travel agency's window, and the sisters' parking
+lines are said on the balcony).
 The film's flight has **no turbulence** and **no in-flight toilet scene**: both toilet scenes are
 at Arlanda (we keep them there). The plane's toilets are only an invented hideout.
 
@@ -1148,9 +1152,9 @@ standing there faces. `y` (optional) = absolute height for collectible spots on 
 
 | block (i,j) | type → builder (owner, file) | content | landmarks: `id` (lx, lz, yaw[, y]) | named / parked cars |
 |---|---|---|---|---|
-| (3,3) | `flamenco` → `hotelFlamenco` (C1, hotels.js) | 7-storey white slab x [−26, 26], z [−27, −14] with balcony rows, terracotta accents, `HOTEL FLAMENCO` roof sign; open reception porch (canopy, desk, plastic Christmas tree `julgran` prop, `RECEPCIÓN`; Phase 3 r2: `HOTEL FLAMENCO · RECEPCIÓN` stands on a terracotta panel above the pergola's fascia, where it no longer fills the top of the chase frame, and the garland runs across the fascia's face) at the slab's south face; ground-floor room patios along the south face (Stig & Ole's room west, room 113 east) with a visible 1st-floor balcony above 113; terracotta piers at the bay lines, solid (Phase 3 r2); pool deck south with a **walkable shallow pool** (flat blue slab at CURB+0.02 + `box(..., CURB, 'water')`, sign "TRE METER DJUPT I ENA ÄNDEN, / EN METER I DEN ANDRA. / BARNVÄNLIG!" (three lines) [F*] (the bungalow seller's line, relocated)); poolbar with straw parasols (`BAR PISCINA · SVENSKT KAFFE`); the julafton party `julgran` on the pool deck at (2.2, 16), in the party and sunset-duet shots (Phase 3); room numbers: a closed room's centred above its own glass door, an open room's (107, 113) on its right-hand pier (Phase 3); parking lot on the west; the parking signs here and at SunTrip's lot are a blue `P` plate over a name strip (`HOTEL FLAMENCO`, `SUNTRIP`) on a post that stops under them (Phase 3 r2: one two-line plate had shrunk the P to the name's size, and the post ran through both faces); **PEPES BODEGA**: small whitewashed annex x [4, 12], z [−31, −27] on the north side with a green door, barrels, sign `PEPES BODEGA · VINOS · RON` facing north (`worldHooks.bodegaLit(on)` lights it after julafton) | `flamenco` (−4, −8, π) (faces the hotel, so the views/cutaway camera stands on the pool deck; Phase 2) · `flamencoRecepcion` (2, −10, 0) · `flamencoPatio` (−18, −11, 0) · `rum113` (18, −11, 0) · `flamencoBalcony` (18, −8, π) · `flamencoPool` (−3, 18, π) · cut anchors (Phase 3; a cut stands `dist` m behind one, looking the way it faces): `rum107Cam` (−18, −11, π) = `flamencoPatio` turned round (looks into room 107), `recepcionCam` (2, −10, π) = `flamencoRecepcion` turned round (the desk from the porch front) · `flamencoDeck` (−4, −2.5, 0) (the island spawn: approachSpot puts the player on the pool deck at (−4, −1) facing the hotel, the chase camera over the pool rather than under the pergola slats; Phase 2) · `flamencoBar` (16, 12, −π/2) · `flamencoDrive` (−26, 22, π) · `flamencoBack` (−6, −33.5, 0) · `bodega` (8, −33.5, 0) · `fena_flamenco` (−3, 7, 0, 0.35) · `flamencoBoard` (−14.1, 7, π/2) (the middle of the diving board's bounce pad, facing out over the deep end: the judged board and the anchor of the sisters' spots at the pool's edge; not a standing spot; §10.8) · `stigSang` (−19.75, −20.35, 0) (the middle of Stig's turquoise bed in room 107, the way a sleeper on his back faces: the nap's E spot and the anchor of Ole's and Stig's places; not a standing spot, `teleport` puts him on the 0.70 mattress; §10.10) · `flamencoRing` (2, 8, 0) (the middle of the pool fest's ring in the shallow end, 2.5 m east of the circling fin's path; Lasse's place; the ring's places and Stig's gap are round it; §10.13) | `hyrbil` (sedan `0xf4f4f0`) at `flamencoDrive` — default `getInCar` car and test car |
+| (3,3) | `flamenco` → `hotelFlamenco` (C1, hotels.js) | 7-storey white slab x [−26, 26], z [−27, −14] with balcony rows, terracotta accents, `HOTEL FLAMENCO` roof sign; open reception porch (canopy, desk, plastic Christmas tree `julgran` prop, `RECEPCIÓN`; Phase 3 r2: `HOTEL FLAMENCO · RECEPCIÓN` stands on a terracotta panel above the pergola's fascia, where it no longer fills the top of the chase frame, and the garland runs across the fascia's face) at the slab's south face; ground-floor room patios along the south face (Stig & Ole's room west, room 113 east) with a visible 1st-floor balcony above 113; terracotta piers at the bay lines, solid (Phase 3 r2); pool deck south with a **walkable shallow pool** (flat blue slab at CURB+0.02 + `box(..., CURB, 'water')`, sign "TRE METER DJUPT I ENA ÄNDEN, / EN METER I DEN ANDRA. / BARNVÄNLIG!" (three lines) [F*] (the bungalow seller's line, relocated)); poolbar with straw parasols (`BAR PISCINA · SVENSKT KAFFE`); the julafton party `julgran` on the pool deck at (2.2, 16), in the party and sunset-duet shots (Phase 3); room numbers: a closed room's centred above its own glass door, an open room's (107, 113) on its right-hand pier (Phase 3); parking lot on the west (its eight painted 2.8 × 5 m bays exported as `flamencoBays`, feature 20, §10.17); the parking signs here and at SunTrip's lot are a blue `P` plate over a name strip (`HOTEL FLAMENCO`, `SUNTRIP`) on a post that stops under them (Phase 3 r2: one two-line plate had shrunk the P to the name's size, and the post ran through both faces); **PEPES BODEGA**: small whitewashed annex x [4, 12], z [−31, −27] on the north side with a green door, barrels, sign `PEPES BODEGA · VINOS · RON` facing north (`worldHooks.bodegaLit(on)` lights it after julafton) | `flamenco` (−4, −8, π) (faces the hotel, so the views/cutaway camera stands on the pool deck; Phase 2) · `flamencoRecepcion` (2, −10, 0) · `flamencoPatio` (−18, −11, 0) · `rum113` (18, −11, 0) · `flamencoBalcony` (18, −8, π) · `flamencoPool` (−3, 18, π) · cut anchors (Phase 3; a cut stands `dist` m behind one, looking the way it faces): `rum107Cam` (−18, −11, π) = `flamencoPatio` turned round (looks into room 107), `recepcionCam` (2, −10, π) = `flamencoRecepcion` turned round (the desk from the porch front) · `flamencoDeck` (−4, −2.5, 0) (the island spawn: approachSpot puts the player on the pool deck at (−4, −1) facing the hotel, the chase camera over the pool rather than under the pergola slats; Phase 2) · `flamencoBar` (16, 12, −π/2) · `flamencoDrive` (−26, 22, π) · `flamencoBack` (−6, −33.5, 0) · `bodega` (8, −33.5, 0) · `fena_flamenco` (−3, 7, 0, 0.35) · `flamencoBoard` (−14.1, 7, π/2) (the middle of the diving board's bounce pad, facing out over the deep end: the judged board and the anchor of the sisters' spots at the pool's edge; not a standing spot; §10.8) · `stigSang` (−19.75, −20.35, 0) (the middle of Stig's turquoise bed in room 107, the way a sleeper on his back faces: the nap's E spot and the anchor of Ole's and Stig's places; not a standing spot, `teleport` puts him on the 0.70 mattress; §10.10) · `flamencoRing` (2, 8, 0) (the middle of the pool fest's ring in the shallow end, 2.5 m east of the circling fin's path; Lasse's place; the ring's places and Stig's gap are round it; §10.13) | `hyrbil` (sedan `0xf4f4f0`) at `flamencoDrive` — default `getInCar` car and test car |
 | (3,2) | `suntrip` → `hotelSunTrip` (C1, hotels.js) | lower U-shaped hotel on red rock; welcome **stage** with SunTrip sun backdrop (red text on yellow sun), accordion/conga props; pool; **friskotek lawn**; SunTrip office porch on the south side facing Flamenco's back; posters `GRISFEST TORSDAG · 800 PTA`, `FRISKOTEKET 9.30`; the free-standing `FRISKOTEKET / VARJE MORGON 9.30` board on the lawn's west edge is solid (Phase 3 r3: only its posts were, so he walked through it and the chase eye stood behind it) | `suntrip` (−14, 24, π) (faces the office porch; Phase 2) · `scen` (0, −14, 0) · `friskotek` (−10, 8, 0) · `suntripPool` (14, 4, π) · `suntripLot` (24, 22, π) · `fena_suntrip` (14, 8, 0, 0.35) · `berraSolstol` (17.4, 2.2, 0) (the pool lounger Berra naps on, on its prop, facing its backrest end; §10.6) | — |
-| (1,2) | `kasbah` → `kasbah` (C2, centre.js) | **Centro La Medina** (fictional; internal id `kasbah`): two-level nightlife courtyard centre: arcade, stairs (ramp) to a roof terrace (top ≈ 6.0) with a balustrade above the bottom three steps and a sloped wall collider along it (Phase 3: the way on is over those three steps), neon signs `CENTRO LA MEDINA`, `VIKING BAR` (horned helmet), `TONGA TONGA` (mirror ball), `BAR SVENSKA · SMÖRGÅSAR` | `kasbah` (0, 22, π) · `vikingbar` (−16, 18, π) · `tongatonga` (14, 18, π) · `tongaLot` (20, 27, π) · `tongaSlump` (16.3, 17.4, 0.5) (where Berra slumps after Tonga Tonga and is picked up, at the right of the group in the street shot; Phase 3 r3) · `pryl_poolpen` (8, −6, 0, 7.2) | — |
+| (1,2) | `kasbah` → `kasbah` (C2, centre.js) | **Centro La Medina** (fictional; internal id `kasbah`): two-level nightlife courtyard centre: arcade, stairs (ramp) to a roof terrace (top ≈ 6.0) with a balustrade above the bottom three steps and a sloped wall collider along it (Phase 3: the way on is over those three steps), neon signs `CENTRO LA MEDINA`, `VIKING BAR` (horned helmet), `TONGA TONGA` (mirror ball), `BAR SVENSKA · SMÖRGÅSAR` | `kasbah` (0, 22, π) · `vikingbar` (−16, 18, π) · `tongatonga` (14, 18, π) · `tongaLot` (20, 27, π) · `tongaSlump` (16.3, 17.4, 0.5) (where Berra slumps after Tonga Tonga and is picked up, at the right of the group in the street shot; Phase 3 r3) · `pryl_poolpen` (8, −6, 0, 7.2) · `angerudBil` (−7, 32.75, −π/2) (Angerud's hire car on the south sidewalk between missions, feature 20, §10.17) | — |
 | (4,2) | `cita` → `cita` (C2, centre.js) | **Centro Nórdico** (fictional; internal id `cita`) strip mall, sign `CENTRO NÓRDICO`: `SUPERMERCADO`, `FERRETERÍA`, `FARMACIA`, `ESTANCO`, `TELÉFONOS · HYTT 1·2·3`, `SOUVENIRS`, `SVENSKT KAFFE`, `CAMBIO · 1 KR = 17 PTA` (Phase 3: the north shop row and its canopy fit the courtyard between the wings, x ±11; `SOUVENIRS · REGALOS` and `FARMACIA` with its green cross sit on the wings' courtyard faces) | `cita` (0, 22, π) · `supermercado` (−18, 18, π) · `ferreteria` (18, 18, π) · `telefon` (0, 8, π) | — |
 | (2,3) | `plaza` → `plaza` (C2, centre.js) | palms, fountain (shallow walkable pool), restaurant terraces; the north row's arcade (12 arches), shops `CAFETERÍA EL SOL` · `HELADERÍA LA PALMERA` · `CORREOS · TELÉGRAFOS` · `BANCO · CAMBIO` · `PELUQUERÍA` (Phase 3 r3: each name on a 3.5 × 0.8 m board on the arcade's front above its arch's crown (4.09), y 4.1–4.9, two lines where needed; on the shop wall at 3.62 the 5.6–6.6 m signs hung behind the 3.93 m arches, which showed only their middle third) and the arcade café tables keep to x [−19, 29], clear of the west row (x [−29, −19]) that stands on the north row's west end (Phase 3 r2: two arches, the café sign and two tables were inside it); **CASA LOLA** (`CASA LOLA · COMIDA CANARIA`, fictional; internal id `grillpaco`) terrace on the SE corner (Phase 3 r2: the bougainvillea along its eave sits above the pergola's camera cap, west of the name board; Phase 3 r3: the string lights hang from the cross beams' underside (3.08) with a 0.15 sag, the lowest bulb at 2.72, and the pergola's camera ceiling is under 2.72: capped at 2.6 under lights sagging to 2.44, a bulb sat over his head) | `plaza` (0, 6.8, π) (south of the fountain rim, facing it: the fountain column stands at (0, 0); Phase 2) · `grillpaco` (20, 22, π) · `grillpacoMamma` (25, 24, π) · `grillpacoCurb` world (−60, 36, −π/2) (westbound kerb of the z = 40 road, the `follow` endpoint) · `fena_plaza` (0, 0, 0, 0.35) · `berraBank` (0, 8.6, 0) (the bench south of the fountain Berra naps on, on its prop, facing away from the fountain; §10.6) | — |
 | (2,1) | `marknad` → `marknad` (C2, centre.js) | rows of striped stall awnings (some `bounce` awnings as climb pads), souvenir stand with painted donkeys `BURROS 500 PTA`, postcard racks, plastic giraffes; the `MERCADILLO · MARKNAD` board on two legs over the south path hangs at 3.85–4.95, above the chase eye (Phase 3 r3: at 2.35–3.45 it covered him walking in from the south road) | `marknad` (0, 22, π) · `asnestand` (6, 2, π) · `pryl_kalkylator` (−12, −8, 0, 3.4) (on an awning roof) | — |
@@ -3420,7 +3424,8 @@ react to the horn read `game.hornAt`.
   (`eslov.owns`), and `press` hands the car to `eslov.horn(car)` after the cast's answers. When he
   takes it (within 22 m, seeing the car) Stig cheers "Heja Eslöv!" instead of saying sorry
   (`honk.last.eslov`).
-- A dancer or the porter held by the pool fest (feature 8, §10.13: `fest.posed`) does not answer.
+- A dancer or the porter held by the pool fest (feature 8, §10.13: `fest.posed`) does not answer, nor
+  Majsan on her ticket round or Angerud in the tow scene (feature 20, §10.17: `lapp.owns`).
 - `honk.last` ({ t, pigs, peds, replies: [[key, text]], stig: [text], eslov? }) is for tests. The
   rest is session state; nothing is saved. Scenario `tuta` (§16.4).
 
@@ -4069,6 +4074,122 @@ väskan ska till Las Palmas"); nobody rides a belt. The two film lines are [F*],
   are props, and people cannot step on); he sits facing out over a bag's end, as in the sketches, on
   the nearest bag, not one he picks; the third turn's line is his own (in the film a Japanese voice).
   The game has no achievements, so the toasts and the lines are the reward.
+### 10.17 Lapplisan Majsan – "Ursäkta, är det din bil?" (free roam; feature 20, 2026-10-15)
+
+`game/lapplisa.js` (`Lapplisa`, owned by Game as `lapp`), config `LAPPLISA` in content/island.js.
+Majsan is a traffic warden in Stockholm (the film's first meeting, research-plot.md:94–102), and on
+the island she cannot leave it be. Three parts: (1) a car Stig leaves on the sidewalk brings her with
+her ticket pad, the film's question and his true "Nej.", and then the tow; (2) between missions
+Angerud's hire car stands on the sidewalk outside Centro La Medina, and the first time Stig walks
+past it the film's scene plays, with the GRÚA truck and Angerud's outburst; (3) a car he leaves
+straight in one of Flamenco's painted bays gets her praise over the hedge, and Siv's answer from the
+balcony scene. Invented (§1.6): her tickets on the island, the tow, the praise; the film lines are
+relocated, [F*], and three lines are ours, [N].
+
+- **When.** Only while `live`: on the island with `missions.state === 'idle'`. Nothing new starts in
+  a dialogue, the nap or the morning cut (`day.busy`), the pool fest's ring or a pursuit (`calm`).
+  Any other mission state, or the other level, ends all of it at once (`end`): Majsan and Angerud
+  placed home, Angerud's car and the truck out of the world, every slip off its windscreen, Angerud's
+  chatter his own again, the gag and the car he left forgotten. So no mission, stage kind, timer,
+  fixture or calibration pool sees any of it (asnan's paint run ends at Viking Bar with its measured
+  19 s, §8.8: the car is gone the moment it starts), and `story`/`fullstory` play as before.
+- **The people.** Majsan (and, in the scene, Angerud) is taken only when `free`: shown, standing, in
+  no car or seat, nobody's (`!busy`: not placed by a mission, the judges, the fest or another module),
+  not the waiting mission's giver or extra (Majsan: buss17, friskotek, ropavieja, fataga, so nothing
+  happens at those indices) and `honk.free`. Taken, she is ours (`busy`, `spot = 'lapplisa'`,
+  `npc.steer` walks her): `posed(key)` keeps `syncAll` from waving, turning her by the 10 m rule or
+  giving her chatter, and `owns(key)` keeps `honk.free` (and with it the horn, the pigs' Lasse and
+  the rest) off her. Let go, she is placed home at once where nobody sees it, or left for
+  `placeNpcs` (its 50 m rule).
+- **(1) The sidewalk** (`layout.sidewalkAt(x, z)`): the kerb-high band `SW` = 3.5 m beside every road,
+  round each block (`ring`, with a corner at each end of its straight stretch `lo`..`hi`) and round
+  the town (the outer ring), as town.js lays it; not the asphalt (the west stub too), not a block's
+  lots, squares and gardens (the square before La Medina, Flamenco's and SunTrip's lots), not the sand
+  past `EDGE`. A car counts with `wheels` = 2 or more of its four contact points on it (`wheelsOn`;
+  two up on the kerb is enough).
+- **The ticket.** The car he last got out of (`track`: `playerCar` turning null), still (under
+  `still` = 0.5 m/s) on the sidewalk: its clock runs while he is within `nearR` = 45 m (it holds
+  further off and starts again when the car is moved off). After `delay` = 6 s, looked for twice a
+  second: Majsan free, not where the camera sees her (`seen`: inside the view within `seenR` = 90 m
+  with nothing tall in between) and not within 25 m of him (she never vanishes before his eyes or
+  from beside him at the pool, so a car on Flamenco's own sidewalk gets nothing), and a way in
+  (`comePlan`): round a corner of the car's block, `cornerIn` = 7 m round it on the side street, when
+  that walk is at most `cornerMax` = 32 m, the nearer first; else from `alongR` = 22 m along the same
+  sidewalk (the outer ring has no corners); its start on free sidewalk, out of view and
+  `minFromStig` = 12 m from him. She appears there and walks at `walk` = 2.6 m/s on a line `ins` =
+  1.9 m in from the kerb (clear of the lamps, palms and sidewalk furniture) to the car's near end,
+  then beside its windscreen (either side or before the nose, the free spot nearest; `standAt`). A
+  walk that makes no headway for `stuckSecs` = 2 s hops to its next waypoint (unseen, or on the second
+  try). There she writes for `writeSecs` = 2.2 s (`anim.ticket`, §14.6), and the slip goes on the
+  windscreen: a yellow 0.26 × 0.17 slip low on the glass on the driver's side (car-local, so it
+  rides along; vans and the ice-cream van on the cab's front), `car.lappSlip`. With Stig on foot within
+  `askR` = 14 m and not saying anything she turns to him: "Ursäkta, är det din bil?" [F*], and
+  `askGap` = 1.1 s later his "Nej." [F*] — true: he took it off the street — or for the hire car
+  (`name === 'hyrbil'`) "Den är… hyrd." [N]. `towGap` = 3.5 s later (after the answer, or the slip
+  when there was no question) she raises a hand (`anim.oath`), "Okej, grabbar!" [F*], and `fadeAt` =
+  1.2 s after that the car goes: with the car within `seeR` = 60 m of him behind a black fade
+  (`hud.fade`, `fadeSecs` = 0.6 s each way, him frozen by `inDialog` meanwhile), else at once. A car
+  from the street or a parked one is removed (`removeCar`); a named one with a bay (`car.home`: the
+  hire car, the grisbil) is put back in it, as getInCar's `atHome` does (§9, the grisfest's hire car
+  is there for its stage 2), its slip off. Then she walks off round the nearer corner (`awayPath`;
+  still in view at its end she walks on 10 m, twice at most) and is placed home once nobody sees
+  her, or after `leaveMax` = 25 s left for `placeNpcs`.
+  - Getting back into it first (any time before the fade) keeps the car, and its slip stays on the
+    windscreen; she walks off. A car moved more than 3 m from where she found it, a wreck or a car
+    gone ends it the same way. Knocked over or in a dialogue, her clock waits.
+  - Never towed: a bus, a Guardia jeep, a locked car (the airport taxis, Angerud's), one the player
+    can never enter, the GRÚA truck, the grisbil with a pig off its bed or over Stig's head (§10.15),
+    a car Stig sits in. No SKANDAL, no fine and no money for any of it.
+  - Lines are bubbles (`game.say`, `secs` = 2.4; his 1.8), each NPC's chatter clock restarted.
+- **(2) Angerud's hire car and the film's first meeting.** A white (`0xf4f4f0`) `hatch` (Småbil) made
+  once, locked, stands on the south sidewalk of block (1,2) outside Centro La Medina, at landmark
+  `angerudBil` (−7, 32.75, −π/2: facing west with the traffic on that side, between a palm 5 m
+  ahead of its nose and the post box behind), while the scene is still to come (`onceKey` `lappFilm`
+  not in the saved unlocks) and Angerud stands at his home spot at Viking Bar (`vikingbar` + (2, 1);
+  shown, nobody's): between missions on the island, until julafton's end sends him to hospital
+  (UNLOCKS.bodega's `angerud: null`, §8.13); the scene needs Majsan free too, so it can first play at
+  asnan's index (7). It is put there and taken away only where the
+  camera does not see its spot (looked at twice a second) and never on top of another car; a mission
+  start takes it away at once. The first time Stig is on foot (standing, nothing carried, no
+  pursuit) within `angerud.r` = 12 m of it, with Majsan and Angerud free, the scene plays (`film`;
+  `lappFilm` saved at its start, so it plays once ever):
+  1. Letterbox, `inDialog`. Majsan at its nose writing on her pad, Stig stopped on the sidewalk 2.4 m
+     up the street, a still camera from the road (the palm in the foreground, Viking Bar behind); 1 s
+     later the slip is on, she looks up. Dialogue: Majsan "Ursäkta, är det din bil?", Stig "Nej.",
+     Majsan "Okej, grabbar!" (her hand up, `oath` 1.6 s) [F*].
+  2. Black: the GRÚA truck (a `pickup` Flakbil in orange `0xf07a1e`, GRÚA [N] on both bed sides and a
+     board on the cab roof, a boom over the tailgate, a driver bust; locked, never enterable; no firm's
+     name, §1.5) stands in the road with his car on its hook behind it (`car.lift` = 0.16 rad: the nose
+     up about the rear wheels, §14.6), Majsan in the road at the gap, Stig further along the sidewalk.
+     Back from black, Angerud runs out from the bar's courtyard (`run` = 3.2 m/s, `oath` and `yell`) to
+     its tail by the post box; dialogue: "Vad i helvete tar ni er till?", "Hederliga bilister ger ni
+     er på, men få hyfs på ungdomen klarar ni inte!", "Förbannade förmyndarmentalitet!" [F*] (his own
+     swearing from the film).
+  3. Black: truck and car gone, Angerud home at his bar. Majsan and Stig face to face on the sidewalk
+     (`cam.frame`): Stig "Är det inte jobbigt när alla skäller?", Majsan "Jo, jag gör ju bara mitt
+     jobb." [F*]. Then free roam: the camera behind Stig, she walks off round the corner and home.
+  After it Angerud's chatter is `mutter` ("Hederliga bilister ger ni er på…", "Förbannade
+  förmyndarmentalitet!", "Jag ska tala med platschefen." [F*]; `game.chatterOverrides.angerud`) until
+  the next mission starts ("the rest of the day"). Driving past does nothing.
+- **(3) Flamenco's bays** (`hotels.js` `flamencoBays`: the lot's eight painted bays, two rows of four,
+  2.8 × 5 m, world `{ x, z, hw, hd, yaw }`). A car he has driven (it got more than 5 m from where he
+  got in: not the hire car got into and out of in its bay) and left, once it stands still (under
+  0.3 m/s), with its middle within 0.8 m across and 1.5 m along of a bay's and its axis within `bayYaw`
+  = 0.17 rad (10°) of the bay's either way (nose in or out): Majsan at home by the pool (within `homeR`
+  = 4 m of her spot, free, within `praiseR` = 40 m of the car, not saying anything) says "Där ser man.
+  Det går att parkera här nere också." [N] (her "Här nere parkerar de hursomhelst." [F*] chatter is
+  the setup), and `replyGap` = 2.4 s later Siv, free within 8 m of her, "Spänn av, Majsan. Du är
+  ledig." [F*](t). The first time ever (`praiseKey` `lappRuta` in the saved unlocks) +`praisePay` =
+  50 pta with the coin sound and the toast "Snyggt parkerat! 50 pta." [N]. At most every
+  `praiseEvery` = 90 s; one look a time he gets out.
+- `lapp.last` ({ kind: come | ticket | drove | tow | praise | film, t, … }) and `lapp.stuck` are for
+  tests; everything else is session state except the two saved markers. Scenarios `lapplisa` and
+  `lappfilm` (§16.4).
+- **Not done / changed** (deviations from the idea): the tow in free roam is the M version's fade,
+  with no truck driving up (the truck stands only in the film scene, put there in the black); a car
+  he leaves far off (over 45 m) waits for him to come back; near the pool (Majsan within 25 m of him)
+  no ticket; "Majsan, en niopoängare!" is not used (§10.8 has the judges); no fine or SKANDAL; the
+  scene plays once ever, not "the first time each day".
 
 ## 11. HUD / UI strings (Swedish; `src/strings.js` owned by WP-H, created by Phase 0)
 
@@ -4442,7 +4563,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/strings.js` | new | **H** | `S`, `fmt()` (§11) |
 | `src/content/index.js` | new | none | merges `HOMES`, `MAP_LABELS`, `LEVEL_OUTFITS`, re-exports all content |
 | `src/content/flight.js` | new | **F** | `HOMES_GATE`, `HOMES_FLIGHT`, `MAP_LABELS_FLIGHT`, `CHATTER_FLIGHT`, `OLE_STATS`, `LEVEL_OUTFITS_GATE`, `LEVEL_OUTFITS_FLIGHT` |
-| `src/content/island.js` | new | **G** | `HOMES_ISLAND`, `MAP_LABELS_ISLAND`, `CHATTER`, `OUCH`, `GETUP`, `CARJACK`, `NPC_KICKED` (+ the `_OLE` / `_LOCAL` tables, `LOCAL_CAST`, `BARKS`: Phase 3 r2, §14.10; `STIG_SORRY`: feature 11, §10.14; `PIG_TRUCK`: feature 15, §10.15; `BAGGAGE_BELT`: feature 25, §10.16), `COLLECTIBLES`, `UNLOCKS`, `NAMED_CARS`, `LEVEL_OUTFITS_ISLAND` |
+| `src/content/island.js` | new | **G** | `HOMES_ISLAND`, `MAP_LABELS_ISLAND`, `CHATTER`, `OUCH`, `GETUP`, `CARJACK`, `NPC_KICKED` (+ the `_OLE` / `_LOCAL` tables, `LOCAL_CAST`, `BARKS`: Phase 3 r2, §14.10; `STIG_SORRY`: feature 11, §10.14; `PIG_TRUCK`: feature 15, §10.15; `BAGGAGE_BELT`: feature 25, §10.16; `LAPPLISA`: feature 20, §10.17), `COLLECTIBLES`, `UNLOCKS`, `NAMED_CARS`, `LEVEL_OUTFITS_ISLAND` |
 | `src/game/missions/index.js` | new | none | `MISSIONS = [...FLIGHT_MISSIONS, ...ISLAND_MISSIONS]`, `MissionRunner` re-export |
 | `src/game/missions/runner.js` | new (from missions.js) | none | `MissionRunner` (§9.4) |
 | `src/game/missions/kinds/core.js` | new | **none** (frozen after Phase 0) | getInCar goto pickup dropoff follow rabbits race destroy grab scene |
@@ -4465,6 +4586,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/stigSorry.js` | new (feature 11, 2026-10-15) | — | `StigSorry` (`game.sorry`): Förlåt, förlåt! in free roam: Stig's sorry after a kick, a knock-down, a broken thing or a carjacking, and the driver's "Nej." (§10.14) |
 | `src/game/pigTruck.js` | new (feature 15, 2026-10-15) | — | `PigTruck` (`game.pigs`): Grisarna ramlar av grisbilen in free roam: the unlocked grisbil's pigs tumble off on a jolt, the loose pigs (`LoosePig`), the catch on foot and by creeping, Lasse's refusal, the delivery to the grisfest farm's pen, the grisbonde's walk and pay, the refill at Flamenco (§10.15) |
 | `src/game/baggageBelt.js` | new (feature 25, 2026-10-15) | — | `BaggageBelt` (`game.belt`): Åk bagageband in free roam: the belt at Gando carries Stig, he sits down on a bag, the ride's turns, toasts and lines, Space and E off (§10.16) |
+| `src/game/lapplisa.js` | new (feature 20, 2026-10-15) | — | `Lapplisa` (`game.lapp`): Lapplisan Majsan in free roam: the ticket and the tow for a car Stig leaves on the sidewalk, Angerud's hire car outside Centro La Medina and the film's first meeting with the GRÚA truck, Majsan's praise for a car straight in a Flamenco bay (§10.17) |
 | `src/game/hud.js` | edit | **H** | map sources, meter, strings, legend, ring, blips, zone bar, markers; `renderPortrait` restores the model transform (§14.8) |
 | `src/game/camera.js` | edit | **A1** | profile, frameOne, cutTo, `clampZ` |
 | `src/game/fx.js` | edit | **A1** | `snow`, `steam`, `meterPuff` (rename of `shame`) |
@@ -4475,22 +4597,22 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/util.js` | unchanged | none | |
 | `src/world/frame.js` | new (from town.js) | none | `Frame` |
 | `src/world/registry.js` | new | none | `worldHooks` |
-| `src/world/layout.js` | edit | **B** | `MAP`, `BLOCK_MAP_COLORS`, `laneSpot` (Phase 0) |
+| `src/world/layout.js` | edit | **B** | `MAP`, `BLOCK_MAP_COLORS`, `laneSpot` (Phase 0); `sidewalkAt` (feature 20, §10.17) |
 | `src/world/landmarks-island.js` | new | none (Phase 2 applies reported changes) | canonical island landmark table |
 | `src/world/town.js` | edit | **B** | streets, outskirts, residential, dispatch via `BLOCK_BUILDERS` |
 | `src/world/props.js` | edit | **B** | `TYPES` (§6.8), flags, `reviveProps`, `propsOfType` |
 | `src/world/collision.js` | edit | none | `segmentBlocked` nearest hit |
 | `src/world/blocks/index.js` | new | none | `BLOCK_BUILDERS` merge |
-| `src/world/blocks/hotels.js` | new | **C1** | `flamenco`, `suntrip` |
+| `src/world/blocks/hotels.js` | new | **C1** | `flamenco`, `suntrip`; `flamencoBays` (feature 20, §10.17) |
 | `src/world/blocks/centre.js` | new | **C2** | `kasbah`, `cita`, `plaza`, `marknad`, `kyrka`, `bensin`, `guardia` |
 | `src/world/blocks/nature.js` | new | **D1** | `tomat`, `grisfest`, `fataga`, `golf`, `bungalow`, `bygge`, `dyner` |
 | `src/world/blocks/coast.js` | new | **D2** | `flygplats`, `dromplan`, `fyren`, `playa`, `hamn`; `BELT` (feature 25, §10.16) |
 | `src/world/cabin.js` | new | **A1** | §5 interior, collision, seats, trolley, turbulence, fear, interactables, blockers, `CAM_CABIN`, `FLIGHT_PALETTES`, `FEAR`; calls `buildFlightScenery` |
 | `src/world/flightScenery.js` | new | **A2** | §5.6 visuals: gate-set visuals, airframe, animated scenery per phase, `buildFlightScenery`, `buildPlaneExterior` |
 | `src/world/rio.js` | new | **B** | `buildRioCard` (P1) |
-| `src/actors/models.js` | edit | **E** | `CHARS`, `CAST`, new def fields, anim flags, `buildBustGeo`, `outfitDef`, `randomPed` palette |
+| `src/actors/models.js` | edit | **E** | `CHARS`, `CAST`, new def fields, anim flags, `buildBustGeo`, `outfitDef`, `randomPed` palette; the `ticket` flag and its `lappblock`/`penna` props (feature 20, §10.17) |
 | `src/actors/character.js` | edit | **E** | `setDef`, `hidden`, `seatAt`, `standAt`, new anim flag defaults |
-| `src/actors/car.js` | edit | **E** | §6.6 types/flags, `registerCarType`, `build`/`noWheels`/`noSpeedo`/`noExplode`/`livery`; the grisbil's pig meshes `PIG_SLOTS`, `pigMesh`, `car.pigs`, `setPig`, `pigWorld` (feature 15, §10.15) |
+| `src/actors/car.js` | edit | **E** | §6.6 types/flags, `registerCarType`, `build`/`noWheels`/`noSpeedo`/`noExplode`/`livery`; the grisbil's pig meshes `PIG_SLOTS`, `pigMesh`, `car.pigs`, `setPig`, `pigWorld` (feature 15, §10.15); `car.lift`, the nose raised on the tow truck's hook (feature 20, §10.17) |
 | `src/actors/pickups.js` | edit | **E** | `COLLECT_KINDS`, `registerCollectKind`, `Collectible` table, `Rabbit` meshes, coin value 25 |
 | `src/actors/peds.js` | edit | **E** | Swedish/Spanish shouts; `dodge`, `startle` (feature 5, §6.7) |
 | `src/actors/drivers.js` | Phase 2 edit | none | (accepts duck-typed paths); an AI bus's lane path starts its turns 11 m from the junction centre instead of 8.5 (left-turn radius 13.75 m > the bus's ≈ 12 m minimum), so the excursion bus no longer swings into the grisfest farm wall; right turns stay too tight for buses (mission bus routes turn left only); traffic holds short of a closed race junction (`game.closure`, §9.2 race) |
@@ -4508,6 +4630,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `tools/scenarios/berra.mjs` | new (feature 2) | — | berra |
 | `tools/scenarios/glide.mjs` | new (feature 3) | — | glide |
 | `tools/scenarios/grisar.mjs` | new (feature 15) | — | grisar |
+| `tools/scenarios/lapplisa.mjs` | new (feature 20) | — | lapplisa, lappfilm |
 | `tools/story/flight.mjs` | new | **F** | `M_FLIGHT` (M[0..4]) |
 | `tools/story/island.mjs` | new | **G** | `M_ISLAND` (M[5..12]) |
 
@@ -4526,7 +4649,7 @@ Init: `initGfx` → `input.init` → `hud.init` → `fx.init` → fonts (Luckies
 → peds (34) → NPC `Character`s (one per `CHARS` key except `stig`, the radio-only keys `levander
 kapten pa guardia pax telefonist` and the cabin-owned `vardinna2`; `key` field; hidden until placed, §2.3) →
 player `Character(CHARS.stig)` (`key = 'stig'`) → collectibles (`COLLECTIBLES`) → markers → `Shame`
-→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `Eslov` (feature 7, §10.12; registers the rollerskier's interactable) → `PoolFest` (feature 8, §10.13) → `StigSorry` (feature 11, §10.14) → `PigTruck` (feature 15, §10.15) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
+→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `Eslov` (feature 7, §10.12; registers the rollerskier's interactable) → `PoolFest` (feature 8, §10.13) → `StigSorry` (feature 11, §10.14) → `PigTruck` (feature 15, §10.15) → `BaggageBelt` (feature 25, §10.16) → `Lapplisa` (feature 20, §10.17) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
 `placeNpcs(true)` → spawn the player → portraits for every key in `CAST` (`renderPortrait`
 restores each model's parent and transform, so seated cast members stay in their seats) →
 `applySaveToWorld()` →
@@ -4538,7 +4661,7 @@ mantra/hold, AI, cars, people (`glide.step` → the player's step → `glide.aft
 traffic/peds skipped when `!levelDef.sim.*`) → `syncAll` (also
 writes `ch.x/y/z` from `car.seatWorld(ch.seatSide)` for every car-seated character, player
 included, so framing, bubbles and distance checks see where they really are) → `missions.update` →
-`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
+`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
 pickups/collectibles → props → `fx.tick` → `tickTown` → markers → camera → sun/sky → HUD → audio →
 traffic recycling (island) → autosave. `loop` then renders, and when `film.grabNow` is set calls
 `film.grab()` in the same task (Herr Storch's still from the frame's buffer, feature 6, §10.11).
@@ -4570,6 +4693,8 @@ game.film;         // StorchFilm (feature 6, §10.11): Herr Storch films Stig's 
                    // his viewfinder, the stills and the film night after the end
 game.eslov;        // Eslov (feature 7, §10.12): the rollerskier in free roam, the horn, Eslövloppet
 game.fest;         // PoolFest (feature 8, §10.13): Små grodorna in Flamenco's pool after the end;
+                   // fest.joined (Stig in the ring: handleOneShots gives Space to fest.hop(), no kick;
+                   // fixedStep zeroes his wish), fest.posed(key), fest.visit, fest.phase, fest.last
 game.sorry;        // StigSorry (feature 11, §10.14): Stig says sorry in free roam
 game.pigs;         // PigTruck (feature 15, §10.15): the grisbil's pigs tumble off in free roam,
                    // the catch, the pen at the farm; pigs.jolt(car, 'land' | 'crash', impact) from
@@ -4579,6 +4704,9 @@ game.belt;         // BaggageBelt (feature 25, §10.16): the baggage belt at Gan
                    // standUp('off'), R calls release(false) first, updateHud shows its prompt)
                    // fest.joined (Stig in the ring: handleOneShots gives Space to fest.hop(), no kick;
                    // fixedStep zeroes his wish), fest.posed(key), fest.visit, fest.phase, fest.last
+game.lapp;         // Lapplisa (feature 20, §10.17): Majsan tickets a car left on the sidewalk and has
+                   // it towed, Angerud's hire car and the film's first meeting, her praise for a car
+                   // straight in a Flamenco bay; lapp.posed(key) (syncAll), lapp.owns(key) (honk.free)
 game.outfitOverrides; // { key: outfit } from UNLOCKS[name].outfit, merged over the island set by applyOutfits (§10.3)
 game.witnessOverride; // null | UNLOCKS[name].witness, merged over the witness rule's config on the island (§7.2)
 game.onBounce(ch, b);   // Character.step: ch bounced on trampoline block b (the boing; the judges, §10.8; film.trick('studs'))
@@ -4868,6 +4996,10 @@ the air pose of his real hop). `heldPose` counts it as busy (the musicians hop w
 before `laugh`, so a laughing dancer holds her belly. `anim.hop` (feature 8; a number, metres, 0 =
 none): the whole body lifted that far (`m.body.position.y +=`), the ring's beat-synced hop, a look
 only.
+`ticket` (feature 20, §10.17): Majsan writing a parking ticket: the `lappblock` prop (a pad of yellow
+slips on a card back, 0.17 × 0.24) held up in the left hand at the chest (L (−1.15, 0, −0.5)), the
+`penna` prop (a blue pen) scribbling over it in the right (R about (−1.25, 0, 0.5) with an 11/s and
+7/s wobble), her head bent to it (neck 0.32); `heldPose` counts it as busy.
 
 **character.js**: `ch.setDef(def)` (rebuild model under the same parent; keep x/y/z/yaw/state;
 `height` updated); state `'hidden'` (step no-op, `root.visible = false`, skipped by
@@ -4917,6 +5049,9 @@ export function registerCarType(key, spec)            // used by cabin.js for 't
 // cloned); a `pigs` car gets car.pigs[i] = { mesh, in } in its tilt group (empty otherwise);
 // car.setPig(i, on) (hidden while off, or on a burnt wreck); car.pigWorld(i, out?) -> { x, y, z }
 // its spot in world space; damage's burn hides them, repair shows the ones `in`.
+// car.lift (feature 20, §10.17; default 0): the nose raised that many rad about the rear wheels
+// (sync adds it to the pitch and lifts the tilt group by sin(lift) × the rear axle's distance), for
+// the car on the GRÚA truck's hook. car.lappSlip: the parking slip's mesh in its tilt group, or null.
 ```
 
 **pickups.js**
@@ -4948,6 +5083,13 @@ export class Frame { constructor(S, F, ox, oz, yaw = 0, scene) ...  mark(name, l
 
 // world/layout.js
 export function laneSpot(a, b, t = 12) -> { x, z, yaw }    // a, b: node ids or [i, j]
+export function sidewalkAt(x, z) -> null | { along: 'x' | 'z', road, side: ±1, lo, hi, ring }
+//   (feature 20, §10.17): the kerb-high band SW m wide beside every road (the block rings and the
+//   outer ring), not the asphalt (the west stub too), a block's lots and squares or the sand past EDGE;
+//   `road` the centre line it runs beside, `lo`..`hi` its straight stretch between the crossing kerbs,
+//   `ring` false on the outer ring (no corners). In a block corner the nearer road wins.
+// world/blocks/hotels.js: flamencoBays [{ x, z, hw: 1.4, hd: 2.5, yaw }] (feature 20): Flamenco's
+//   eight painted bays in world space, filled when the block is built.
 export const BLOCK_MAP_COLORS = { flamenco: '#f4efe6', ... }  // minimap lot colours per MAP type
 
 // world/landmarks-island.js
@@ -5186,6 +5328,17 @@ shame.paint (PaintShop, §7.2): configure(cfg) from configure(); onPursuit() fro
 //   placeSeat(dt); lap(n); queue(at, who, text, ride, what); end(); riding; onBelt; angle; laps;
 //   seat; boarded; lasseDone; lines; last; events; rides
 // honk.js: the "NÖFF! NÖFF!" bubble over the bed only while car.pigs has one `in` (§10.9)
+// lapplisa.js (feature 20, §10.17): game.lapp = new Lapplisa(game) after the belt; update(dt) after
+//   belt.update (end() while not live: everything off; the queue; track() (the car he gets out of,
+//   inAt.far: how far he drove it); angerudCar() (twice a second); filmReady() -> film() (async, the
+//   scene: g.dialog, hud.fade, cam.cutTo / cam.frame); waiting(dt) (the bay praise, the sidewalk
+//   clock, comePlan); gagStep(dt) (come, write, asked, tow); tow(car) / haul(car); walkers(dt) (the
+//   held NPCs' walks, unstick hops, facing, the walk off and home)); posed(key) read by syncAll;
+//   owns(key) read by honk.free; free(key); needed(key); seen(x, z); wheelsOn(car); towable(car);
+//   comePlan(car, sw); awayPath(x, z); standAt(car, from); inBay(car); praise(car); ticketOn/Off(car);
+//   claim / release(key, home) / walkTo / steer (npc.steer); out; gag; left; tickets; aCar; aIn;
+//   truck; scene; towing; muttering; praiseT; stuck; last
+// syncAll: posed also when lapp.posed(k) (Majsan on her round, Angerud in the scene)
 // collision.js: waterAt(x, z, y) -> the `water` block he stands in at that height, or null
 //   (feature 4; moved from glide.js)
 
@@ -5388,6 +5541,15 @@ game/baggageBelt.js, §10.16): Stig's "Min väska har inte kommit." [F*] (the se
 before julafton) or "Det är faktiskt rätt rogivande." [N] (after it), his "Den här väskan ska till Las
 Palmas." [F*] after the third turn, Lasse's radio "Den dyker upp. Det gör de alltid." [N], the toasts
 "Ett varv på bagagebandet!" … "{n} varv på bagagebandet!" [N] and the prompt "E Kliv av bandet" [N].
+
+Feature 20: Lapplisan Majsan's lines are her module's (`LAPPLISA`, content/island.js,
+game/lapplisa.js, §10.17), bubbles and one scene's dialogue: Majsan's "Ursäkta, är det din bil?",
+"Okej, grabbar!" and "Jo, jag gör ju bara mitt jobb.", Stig's "Nej." and "Är det inte jobbigt när
+alla skäller?", Angerud's "Vad i helvete tar ni er till?", "Hederliga bilister ger ni er på, men få
+hyfs på ungdomen klarar ni inte!" and "Förbannade förmyndarmentalitet!" [F*] (the film's first
+meeting, relocated); Siv's "Spänn av, Majsan. Du är ledig." [F*](t); Stig's "Den är… hyrd." and
+Majsan's "Där ser man. Det går att parkera här nere också." [N]. After the scene Angerud's chatter is
+`LAPPLISA.mutter` until the next mission (`chatterOverrides.angerud`).
 
 ---
 
@@ -5728,6 +5890,8 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `artig` [feature 11] | Förlåt, förlåt! (§10.14), at index 9 (free roam) on Gasolina's forecourt: a kick bowls a pedestrian over, his line comes first and Stig's "Oj! Förlåt, förlåt! Det var inte meningen." 0.3–1.0 s after it (the session's first offence), +27 SKANDAL as always; a second kick within the 7 s gap: his line, no sorry; one kick into two people: both speak, one sorry, another kick line; a kicked petrol pump: "Oj… förlåt.", +12.6; a kicked bin: "Jag ersätter den, självklart!"; in a car on the z = 40 road a pedestrian run over at 13 m/s: "Förlåt! Jag såg er inte!", +54; a bin driven through at 10 m/s: another prop line; a bin an AI car breaks (`game.breakProp` with a traffic car): none; a carjacking with a Swedish driver (the session's first): no bark from him at first, +24, Stig's "Ursäkta, är det din bil?", the driver's "Nej." over 0.5 s after it; a Spanish driver: his `CARJACK_LOCAL` line at once and the question, no "Nej."; a Swedish one with the draw stubbed over `noChance`: his `CARJACK` line, the question, no "Nej."; a kick while his own line is up: no sorry, nothing queued; a dialogue drops a queued sorry and takes one that is up down; in a running mission (ropavieja) a kick: the pedestrian's line, no sorry. Shots `artig_spark`, `_tva`, `_pump`, `_kor`, `_kapning` |
 | `grisar` [feature 15] | Grisarna ramlar av grisbilen (§10.15), at index 9 (free roam) in the unlocked grisbil: three pigs in the bed, the objective and the zone ring; full throttle, a weave and corners at 10–22 m/s off the throttle drop none; a full stop from top speed tips the back right one ("skid"), Stig's "Oj! Grisen!", it lies, shakes with "NÖFF!" and trots off, no SKANDAL, the guide and a blip follow it; a standing grisbil does not take it, the bed rolled up to it at 2.2 m/s does; a car at 12 m/s makes a pinned pig skip, never under it; on foot it trots away, Stig lifts it ("Förlåt, lilla gris. Upp med dig.", walk cap, `carryOver`), R drops it, at the bed it hops in and his hands are free; Lasse is asked and refuses, not again within the minute; a 2.2 m drop ("land", ≥ 6) and the farm's wall at 12 m/s ("crash", ≥ 7) tip one each, two jolts inside the gap one, weaker none; the drive from the gravel drive to `grisfalla` hits nothing; with a pig loose the grisbonde's "Det fattas grisar, señor!", no delivery; with all three: three over the fence, his thanks, +100 pta, "Jag har lite anlag för åksjuka.", he stands at the pen, the three wander inside it, no second delivery; the bed refills at the Flamenco bay with Stig 35 m off; a clean trip +250, no sigh; a mission start puts a loose pig back and empties the pen; no jolt tips one in a mission |
 | `bagage` [feature 25] | Åk bagageband (§10.16), at index 5 (free roam before buss17): the belt a `carousel` floor at 0.79 with 13 bags; from the hall floor a jump and a step forwards land him on the belt; 1.5 s later the belt has turned him by its spin × the game time (±0.03 rad), at the same radius and height, his facing turned with it and the camera's yaw not; "Min väska har inte kommit." (the session's first ride); on the centre island (floor 1.18) he is not carried; standing still he sits down after 2.5 s on the nearest bag, on its lid, `seatIn` in from its end, facing out, and keeps its place in the ring (±0.002 rad), the prompt "E Kliv av bandet"; the first turn on time (±0.2 s of 19.6 s of carried angle), "Ett varv på bagagebandet!" and 1.2 s later Lasse's radio line, both on screen; the second and third turns' toasts and 0.6 s after the third "Den här väskan ska till Las Palmas.", Lasse once; Space off the bag and back on the belt with the ride going on; down again and E off onto the floor 3.9 m out, the ride over, not carried there; a second ride without the sigh; R from a bag to the road; in a running mission (buss17) not carried; at index 13 "Det är faktiskt rätt rogivande." and no Lasse after the first turn (the turn skipped ahead). Shots `bagage_star`, `bagage_sitter`, `bagage_sitter_sida`, `bagage_varv`, `bagage_las_palmas`, `bagage_av`, `bagage_efter_jul`. About 120 s |
+| `lapplisa` [feature 20] | Lapplisan Majsan (§10.17), at index 8 (free roam): `sidewalkAt` (the band beside the roads; not the asphalt, the square before La Medina, Flamenco's lot, the west stub or the sand; the outer ring yes); a street car on block (2,2)'s south sidewalk (four wheels), Stig beside it: after 6 s Majsan appears round the block's corner (three legs: the corner, the car's end, beside it) 12 m or more from him, writes (`anim.ticket`), the slip on the windscreen, "Ursäkta, är det din bil?", his "Nej.", "Okej, grabbar!", the black fade, the car gone, no SKANDAL; she walks off and is home at the pool once unseen; a car on the road at the kerb gets nothing; the hire car two wheels up on the kerb: "Den är… hyrd.", in again before the tow keeps it (`drove`) with the slip still on; left on the sidewalk again: towed home to its bay, slip off; Flamenco's eight bays; the hire car got into and out of in its bay: no praise; driven in straight: "Där ser man…", Siv's "Spänn av, Majsan. Du är ledig.", +50 pta and the toast; again at once nothing (90 s); crooked (0.5 rad) nothing; straight again the praise, no pay; a mission start with a slip on and Majsan out ends it all; at index 9 (ropavieja: Majsan its extra) nothing comes |
+| `lappfilm` [feature 20] | at index 7: Angerud's white hire car on the sidewalk at `angerudBil`, locked, with him at Viking Bar; driving past nothing; on foot within 12 m the scene: the eight lines in order in the dialogue (shots of each), the GRÚA truck with the car on its hook (`lift` 0.16), Angerud running out to its tail; then free roam (no letterbox, he walks), the car and the truck gone, `lappFilm` saved, Angerud home muttering ("Hederliga bilister…"), Majsan off home unseen; no car or scene again; a mission start gives Angerud his chatter back; at index 8 the car between missions and gone at a mission start; after the end (`bodega` unlocked) no Angerud, no car |
 | `talk` [Phase 0] | `autoDialog = false`, walk to Ole at `gateQueue`, E, Space twice |
 | `fullstory` [Phase 0b] | swaps the literal §8 missions (`tools/fixtures/full-missions.js`) into `MISSIONS` and plays all 13 per §16.3 (`FROM`/`TO` as `story`); must end `#13 idle`, `RESULT: PASS` |
 | `kinds` [Phase 0b] | fixture data checks; haggle misses fail; follow `minDist` fails; smooth/fragile bars (teleports never count); carry spill; checkpoint retry re-applies night + `vals` and revives plates at `dansgolv`; destroy default spawn; grab at the wreck; scene `exitCar`; Phase 3: follow shows no bar before the start and a head-on quarry does not fail it, `retryCar` (the last car reused, a typed named car, `park`), getInCar `atHome` and a wrecked `missionCar` failing, a frame-only scene stopping the car dead, a scene cutting a `collect` guest's bubbles (3 frames in: no bubble over the guest or Stig, no empty one) and keeping his placement |
@@ -5805,6 +5969,7 @@ fatagaDukar golf bungalow bygge dromplan airport hittegods busBay bagageband dyn
 + Stig's bed in room 107 `stigSang` (feature 30, §10.10)
 + the pool fest's ring `flamencoRing` (feature 8, §10.13)
 + the pig delivery's stop and the piglet pen `grisfalla grisfallaIn` (feature 15, §10.15)
++ Angerud's hire car on the sidewalk `angerudBil` (feature 20, §10.17)
 + collectibles `pryl_klocka pryl_poolpen pryl_kalkylator pryl_kniv pryl_kamera pryl_glasogon
 pryl_pung fena_flamenco fena_suntrip fena_plaza fena_golf fena_bungalow fena_hamn fena_hav` + Rio
 `rioBoat rioCam`.
@@ -5822,13 +5987,13 @@ kon bagagevagn automat gaspump butano julgran tallrikar resvaska glasskylt`.
 
 **Collect kinds**: `pryl fena flaska juice knacke asna vaska giraff`. **Rabbit meshes**: `badboll
 faar blomma gris`. **Collectible sets**: `prylar fenor`. **Unlocks**: `grisbil samba bodega glid`
-(+ the saved marker `glidPlask`, feature 3, §10.3).
+(+ the saved markers `glidPlask`, feature 3, §10.3, and `lappFilm` `lappRuta`, feature 20, §10.17).
 
 **Stage kinds**: `getInCar goto pickup dropoff follow rabbits race destroy grab collect sit interact
 carry mantra timeline scene haggle smash`.
 
 **Anim flags**: `wings cupUp cupHeld push planeSeat hold flail oath dance laugh slump shoeOff mirror film
-giraffe butterKnife carryOver glide swan calc ski groda` (+ existing `kick talk wave cheer sprint spin
+giraffe butterKnife carryOver glide swan calc ski groda ticket` (+ existing `kick talk wave cheer sprint spin
 look`, the glide's numeric `bank`, feature 3, the judges' `card`, feature 4, and the pool fest's
 numeric `hop`, feature 8; `groda` is 1 | 2 | 3, §14.6).
 
@@ -7352,3 +7517,25 @@ the fixer's group.
   prompt in `updateHud`. No mission, stage kind, timer, fixture or calibration pool changed (no stage
   plays in the hall; notes/calibration-samples.md says so). Deviations from the idea: only Stig rides;
   he sits facing out on the nearest bag; the third turn's line is his own. Scenario `bagage` (§16.4).
+- Feature 20, "Lapplisan Majsan – ”Ursäkta, är det din bil?”"
+  (`features/implemented/lapplisan_majsan.md`, 2026-10-15): Majsan the traffic warden in free roam
+  (§10.17; new `src/game/lapplisa.js`, `LAPPLISA` in content/island.js, landmark `angerudBil`;
+  §1.6, §6.3, §10.9, §14.1–14.3, §14.6–14.8, §14.10, §16.4, Appendix A). layout.js `sidewalkAt` (the
+  sidewalk band beside every road), hotels.js `flamencoBays` (the lot's eight bays), car.js `car.lift`
+  (the nose up on the tow hook), models.js/character.js the `ticket` flag with the `lappblock` and
+  `penna` props. On the island with `missions.state === 'idle'`: a car Stig leaves with two or more
+  wheels on the sidewalk brings Majsan round the nearest corner after 6 s (out of view), she writes a
+  ticket (a yellow slip on the windscreen), asks "Ursäkta, är det din bil?" [F*] (his "Nej." [F*], the
+  hire car's "Den är… hyrd." [N]), "Okej, grabbar!" [F*], and behind a black fade the car is gone (a
+  named one back in its bay); getting in first keeps it. Between missions Angerud's white hire car
+  stands on the sidewalk outside Centro La Medina; the first time Stig walks past, the film's first
+  meeting plays as a scene, once ever (saved `lappFilm`): the question and answer, the GRÚA truck with
+  the car on its hook, Angerud's outburst, "Är det inte jobbigt när alla skäller?" / "Jo, jag gör ju
+  bara mitt jobb." [F*]; he mutters about honest motorists until the next mission. A car left
+  straight in a Flamenco bay: "Där ser man. Det går att parkera här nere också." [N] and Siv's "Spänn
+  av, Majsan. Du är ledig." [F*](t), 50 pta the first time (saved `lappRuta`). main.js: `lapp.update`
+  after `belt.update`, `lapp.posed` in `syncAll`; honk.js `free` leaves `lapp.owns` out. A mission
+  start ends all of it at once (the car and truck gone, Majsan and Angerud home), so no mission, stage
+  kind, timer, fixture or calibration pool changed. Deviations from the idea: the free-roam tow is a
+  fade (the truck only stands in the scene), no ticket near the pool or with Stig over 45 m off, no
+  fine or SKANDAL, the scene plays once ever. Scenarios `lapplisa`, `lappfilm` (§16.4).
