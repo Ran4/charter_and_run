@@ -53,7 +53,8 @@ opens with a summary of the rounds and the timer changes.
     Stig's sorry after a kick, a knock-down, a broken thing or a carjacking, and the driver's "Nej.",
     DESIGN §10.14), `grisar` (Grisarna ramlar av grisbilen, the unlocked grisbil's pigs tumbling off,
     the catch on foot and by creeping, Lasse's refusal and the delivery to the farm's pen, DESIGN
-    §10.15)
+    §10.15), `bagage` (Åk bagageband, the belt at Gando carrying Stig, his seat on a bag, the turns'
+    toasts and lines, Space and E off, DESIGN §10.16)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

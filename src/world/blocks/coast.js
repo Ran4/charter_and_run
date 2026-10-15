@@ -5,7 +5,7 @@
 // Every builder works in its block Frame (yaw 0, local ±31 = world offset from the block centre).
 // Static geometry goes into the block's merged GeoBuilders (f.S outlined, f.F flat ground). The few
 // moving or switchable parts get their own small meshes and one shared ticker (see onTick):
-//   - the baggage carousel ring (rotates),
+//   - the baggage carousel ring (rotates; its belt carries Stig in free roam: `BELT`, §10.16),
 //   - the airport hall roof (hidden while the camera looks into the hall: a dollhouse cut-away),
 //   - flags and the windsock (sway), the marina boats (bob),
 //   - the lighthouse lantern glow and beam (night palettes only).
@@ -51,6 +51,14 @@ function onTick(fn, scene) {
     scene.onBeforeRender = function (...a) { prev?.apply(this, a); run(performance.now() / 1000); };
   }
 }
+
+// The baggage belt of CINTA 2 at Gando as the free-roam ride sees it (game/baggageBelt.js, §10.16),
+// filled by the flygplats builder: the ring's middle (world), its spin (rad/s of game time: the ring's
+// rotation.y is `t * spin`, so a ring-local angle a is the world angle a + t * spin round the middle,
+// at (sin, cos)), the belt's floor block, its top and radii (the still centre island inside r0), and
+// the bags (`k` the slot, `a` its ring-local angle, `top` its lid, `out` the radius of its outer end;
+// the skis are left out).
+export const BELT = { x: 0, z: 0, spin: 0.32, top: 0, r0: 0, r1: 0, block: null, bags: [] };
 
 // Coins wanted at build time, placed once the pool exists (pickups.initCoins runs after buildTown).
 const pendingCoins = [];
@@ -349,7 +357,14 @@ function gando(f, W) {
   f.cone(0xc8ccd2, CX, CURB + 1.15, CZ, 1.85, 0.5, 24);
   f.cyl(0x5a5e66, CX, CURB + 2.2, CZ, 0.1, 2.6, 8);
   f.sign('CINTA 2 · BAGAGE', CX, CURB + 3.3, CZ, 3.6, 0.6, 0, { bg: '#1b2f6b', fg: '#f7c31b', border: null, scale: 0.6, double: true });
-  f.circ(CX, CZ, 3.3, CURB + 0.8, 'carousel');
+  // The belt is the floor at its own top (the ride carries Stig on it, game/baggageBelt.js §10.16);
+  // the centre island stands still: its own floor, stepped up the cone, and the sign's post.
+  Object.assign(BELT, { x: f.wx(CX, CZ), z: f.wz(CX, CZ), top: CURB + 0.64, r0: 1.85, r1: 3.3, bags: [] });
+  BELT.block = f.circ(CX, CZ, BELT.r1, BELT.top, 'carousel');
+  f.circ(CX, CZ, 1.85, CURB + 0.9);
+  f.circ(CX, CZ, 1.35, CURB + 1.03);
+  f.circ(CX, CZ, 0.85, CURB + 1.17);
+  f.circ(CX, CZ, 0.1, 99, 'pole');
   {
     const G = new GeoBuilder(), lf = new Frame(G, G, 0, 0, 0, scene);
     const COL = [0x8a5a3a, BLUE, 0xc0392b, GREEN, OCHRE, ORANGE, 0x6a6a72, 0x8a5a3a, 0xc2307a, 0x2f5a8a, 0xd8743a, 0x5a3a2a];
@@ -364,10 +379,11 @@ function gando(f, W) {
       const w = 0.75 + (k % 3) * 0.1, h = 0.26 + (k % 2) * 0.06;
       lf.boxC(COL[k % COL.length], x, CURB + 0.66 + h / 2, z, w, h, 0.5, a + PI / 2);
       lf.boxC(0x2a2a2a, x, CURB + 0.7 + h, z, 0.25, 0.06, 0.08, a + PI / 2);
+      BELT.bags.push({ k, a, top: CURB + 0.66 + h, out: 2.5 + w / 2 });
     }
     const ring = meshOf(G, scene, 0.025);
     ring.position.set(f.wx(CX, CZ), 0, f.wz(CX, CZ));
-    onTick((t) => { ring.rotation.y = t * 0.32; }, scene);
+    onTick((t) => { ring.rotation.y = t * BELT.spin; }, scene);
   }
   // Lost-and-found (OBJETOS PERDIDOS · HITTEGODS): the clerk stands at `hittegods` (-14, 6) behind
   // his counter, facing the hall; behind him a wall of shelves full of suitcases.

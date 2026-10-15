@@ -32,6 +32,7 @@ import { StorchFilm } from './game/storchFilm.js';
 import { PoolFest } from './game/poolFest.js';
 import { StigSorry } from './game/stigSorry.js';
 import { PigTruck } from './game/pigTruck.js';
+import { BaggageBelt } from './game/baggageBelt.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
 import { LEVELS, ISLAND_PALETTES } from './level.js';
@@ -176,6 +177,7 @@ class Game {
     this.fest = new PoolFest(this);       // free roam after the end: Små grodorna in Flamenco's pool (§10.13)
     this.sorry = new StigSorry(this);     // free roam: Stig says sorry for what he does (§10.14)
     this.pigs = new PigTruck(this);       // free roam: the grisbil's pigs tumble off, the pen at the farm (§10.15)
+    this.belt = new BaggageBelt(this);    // free roam: the baggage belt at Gando carries Stig (§10.16)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -1434,6 +1436,7 @@ class Game {
     this.fest.update(dt);
     this.sorry.update(dt);
     this.pigs.update(dt);
+    this.belt.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);
@@ -1475,6 +1478,7 @@ class Game {
     if (input.pressed('reset')) {
       // Never while busted-frozen or flailing (§14.3 frozenT, §5.9).
       if (this.frozenT > 0 || this.shame.panicT > 0) return;
+      this.belt.release(false);   // off his bag on the baggage belt first (§10.16)
       if (p.seatId) { if (this.stageLocksSeat()) return; this.standPlayer(); }
       // A reset spills a carry: R is never a free teleport to a carry goal.
       if (this.resetPlayer() && this.carrying) this.bumpedT = 0.4;
@@ -1487,6 +1491,12 @@ class Game {
       return;
     }
     if (this.frozenT > 0 || this.shame.panicT > 0) return;
+    // On a bag on the baggage belt (§10.16): Space hops off the bag, E steps off the belt.
+    if (this.belt.seated) {
+      if (input.pressed('jump')) this.belt.standUp('hop');
+      else if (input.pressed('interact')) this.belt.standUp('off');
+      return;
+    }
     if (p.state === 'seated' && p.seatId) {
       if (input.pressed('interact')) this.interact();
       return;
@@ -1614,6 +1624,7 @@ class Game {
     this.glide.step(h);
     if (!this.playerCar) p.step(h, this);
     this.glide.after(h);
+    this.belt.carry(h);   // standing on the baggage belt, it carries him (§10.16)
     if (def.sim.peds) for (const ped of this.peds) { ped.update(h, this); ped.char.step(h, this); }
     for (const k in this.npcs) {
       const n = this.npcs[k];
@@ -1930,6 +1941,7 @@ class Game {
         else if (it?.type === 'it') prompt = it.it.prompt || '';
         else if (it?.type === 'stand') prompt = S.promptStand;
       }
+      if (this.belt.seated && !this.inDialog) prompt = this.belt.cfg.prompt;
       hud.setPrompt(prompt);
     }
     if (this.frame % 2 === 0) {

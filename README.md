@@ -195,6 +195,11 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   Kör den fort mot den så skuttar den bara undan, och Lasse vägrar hjälpa till. Stanna med alla tre
   grisar vid grisfållan på grisfestgården: grisarna hoppar in, grisbonden tackar och betalar (mer om
   ingen gris ramlade av på vägen). Nästa gång grisbilen står vid Flamenco har den tre nya grisar.
+- **Åk bagageband**: hoppa upp på bagagebandet CINTA 2 i ankomsthallen på Gando, så åker Stig-Helmer
+  med runt bland de andras resväskor (ett varv tar ungefär 20 sekunder). Står han still en stund
+  sätter han sig på närmaste väska och åker vidare som vilket bagage som helst. Första gången suckar
+  han "Min väska har inte kommit.", varje varv får ett meddelande, Lasse svarar i radion efter det
+  första och efter tredje varvet är Stig själv bagage. Space hoppar av väskan, E kliver av bandet.
 
 ## Vad är påhittat?
 
@@ -241,6 +246,9 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
 - att grisarna ramlar av grisbilen när man kör vilt, att Stig fångar in dem och kör hem dem till
   grisfållan, och att Lasse vägrar hjälpa till (ingen ramlar av grisbilen i filmen, och Stig-Helmer
   är inte med i den scenen)
+- att Stig åker bagageband och sitter på någon annans resväska, och att han säger "Den här väskan ska
+  till Las Palmas." om sig själv (i filmen saknas hans väska när de landar, och repliken sägs på
+  japanska på en flygplats där väskan irrar runt)
 - fårrusningen i Fataga, kappkörningen mot nattbussen och porslinskrosset på tid
 - att samla ihop julfestgästerna
 - Oles prylar och hajfenorna som samlarföremål, utspridda över ön
@@ -333,12 +341,13 @@ src/game/eslov.js               Heja Eslöv! in free roam: the rollerskier train
 src/game/poolFest.js            Små grodorna i poolen after the end: the ring in the pool, the porter, Stig dancing, the counter
 src/game/stigSorry.js           Förlåt, förlåt! in free roam: Stig's sorry for kicks, knock-downs, breakage and carjackings
 src/game/pigTruck.js            Grisarna ramlar av grisbilen in free roam: the pigs tumble off, the catch, the pen at the farm
+src/game/baggageBelt.js         Åk bagageband in free roam: the belt at Gando carries Stig, he sits on a bag, the turns
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
 tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, meter, kinds, perf,
                                 paintshop, berra, glide, simhopp, tuta, dygn, super8, eslov, grodorna,
-                                artig, grisar, calibrate, calibflight)
+                                artig, grisar, bagage, calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
 tools/pool.mjs                  re-derives every random stage's timer from the ledger
@@ -377,6 +386,7 @@ ESLOV_RUNS=8 node tools/shot.mjs eslovlopp  # measure Eslövloppet's timer with 
 node tools/shot.mjs grodorna grodtakt    # the pool fest after the end: the ring, the porter, Stig in the ring, eight on the beat
 node tools/shot.mjs artig                # Stig says sorry: kicks, run over, a pump, bins, carjackings and the driver's "Nej."
 node tools/shot.mjs grisar               # the grisbil's pigs: the falls, the catch on foot and by creeping, Lasse, the pen
+node tools/shot.mjs bagage               # the baggage belt: carried, sitting on a bag, the turns, Lasse, Space and E off
 node tools/shot.mjs fullstory kinds      # the literal §8 missions and the stage-kind checks
 node tools/shot.mjs calibrate calibflight  # timer and FLYGRÄDSLA calibration (slow; see DESIGN §8, §16.4)
 node tools/pool.mjs                      # random-stage timers from the raw runs in notes/calibration-samples.md

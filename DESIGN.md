@@ -198,7 +198,11 @@ he is the one reality keeps happening to, and it is the traffic warden Majsan wh
 grisbil's pigs tumbling off its bed on a hard landing, a crash or a long skid, Stig carrying them
 back over his head or creeping the bed up to them, his "Lasse! Kan du ta den där?", and the drive
 home to the grisfest farm's piglet pen for the grisbonde's thanks and pesetas (free roam, §10.15;
-in the film nobody falls off the pig truck, and Stig is not in that scene).
+in the film nobody falls off the pig truck, and Stig is not in that scene); Stig-Helmer riding the
+baggage belt at Gando, sitting on someone else's suitcase, the lap toasts and his "Den här väskan ska
+till Las Palmas." about himself (free roam, §10.16; in the film his bag is missing at Las Palmas and
+goes round the world's airports in cutaways, where a Japanese voice says the line; nobody rides a
+belt).
 The film's flight has **no turbulence** and **no in-flight toilet scene**: both toilet scenes are
 at Arlanda (we keep them there). The plane's toilets are only an invented hideout.
 
@@ -1160,7 +1164,7 @@ standing there faces. `y` (optional) = absolute height for collectible spots on 
 | (5,0) | `bungalow` → `bungalowTomt` (D1, nature.js) | Angerud's show bungalow: one-storey white cube, pool, plot fence, `SE VENDE · BUNGALOW · 4 RUM OCH KÖK` | `bungalow` (0, 22, π) · `fena_bungalow` (6, −4, 0, 0.35) | — |
 | (5,1) | `bygge` → `bygge` (D1, nature.js) | half-built hotel frame, crane, girder deck with ramp (Bigmouth construction reworked), `PRÓXIMAMENTE · HOTEL NUEVA ESTOCOLMO II`, cones/barrels; the storeys under the 2nd- and 3rd-floor slabs are closed (dark core, brick infill on the faces the floor below walks along), since their colliders are solid from the ground (Phase 3) | `bygge` (0, 22, π) · `pryl_klocka` (6, −6, 0, 7.6) | — |
 | (6,1) | `dromplan` → `dromplan` (D2, coast.js) | **the old propeller "drömplanet"**: faded red 4-engine prop plane (DC-7-like) on a dirt lot by the road, wing reachable via a crate ramp, windsock, sign `AERÓDROMO` | `dromplan` (0, 20, π) · `pryl_kamera` (−4, −2, 0, 3.6) (on the wing) | — |
-| (6,0) | `flygplats` → `gando` (D2, coast.js) | low terminal with open arrivals canopy `LLEGADAS · ANKOMST`, baggage carousel (animated ring of suitcases), `OBJETOS PERDIDOS · HITTEGODS` desk with a wall of suitcase silhouettes, bus bay `BUSS 17`; **the parked DC-8** (`buildPlaneExterior`) **outside the bound wall at (240, −335)** — WP-B clears the tree ring **and the hills** in that sector (§6.4) | `airport` (0, 22, π) · `hittegods` (−14, 6, 0) · `busBay` (16, 24, −π/2) · `bagageband` (6, 11, π) (south of the carousel, facing it, so the views camera stands on the forecourt; Phase 3) | `buss17` (bus, livery `suntrip`) at `busBay`; `taxiAirport` (taxi, locked) |
+| (6,0) | `flygplats` → `gando` (D2, coast.js) | low terminal with open arrivals canopy `LLEGADAS · ANKOMST`, baggage carousel (animated ring of suitcases; its belt carries Stig in free roam, §10.16: the belt a `carousel` floor at CURB + 0.64, the centre island its own stepped floor, the sign's post a pole), `OBJETOS PERDIDOS · HITTEGODS` desk with a wall of suitcase silhouettes, bus bay `BUSS 17`; **the parked DC-8** (`buildPlaneExterior`) **outside the bound wall at (240, −335)** — WP-B clears the tree ring **and the hills** in that sector (§6.4) | `airport` (0, 22, π) · `hittegods` (−14, 6, 0) · `busBay` (16, 24, −π/2) · `bagageband` (6, 11, π) (south of the carousel, facing it, so the views camera stands on the forecourt; Phase 3) | `buss17` (bus, livery `suntrip`) at `busBay`; `taxiAirport` (taxi, locked) |
 | (0,4), (0,5) | `dyner` → `dyner` (D1, nature.js) | large sand dunes (ramps), palm grove, lagoon pond; behind them, beyond the west bound, a row of big visual-only dunes from town.js (§6.4, Phase 3 r2) | `dyner` (0, 0, π − 0.4) on (0,4) (faces the arch, so the views camera stands on the sand south of it, clear of the boardwalk palms; Phase 3) | — |
 | (0,6) | `fyren` → `fyren` (D2, coast.js) | **Faro de Maspalomas**: ~55 m grey-blue stone tower (tallest landmark, visible from everywhere), keeper's house (roof top ≈ 4.0, reachable by a dune ramp) | `fyren` (0, 10, π) (coin arc on the keeper's-house roof) | — |
 | (1..4,6) | `playa` → `playa` (D2, coast.js) | sand, sunbed rows (`solstol`), parasols, `HELADOS` kiosk, lifeguard tower, pedal boats on the sand, towels on sunbeds | `playa` on (3,6): (0, 10, 0) · `fena_hav` world (0, 304) (sea shallows, y 0.35) | — |
@@ -4001,6 +4005,71 @@ scene. The lines are ours [N] and two relocated film lines [F*]. The grunting ho
   the other level, a wreck or the bed's refill at Flamenco do); the grunting horn was already feature
   5's; "Fan, de luktar." stays Berra's and Robban's (the horn, §10.9).
 
+### 10.16 Åk bagageband – the baggage belt carries Stig (free roam; feature 25, 2026-10-15)
+
+`game/baggageBelt.js` (`BaggageBelt`, owned by Game as `belt`), config `BAGGAGE_BELT` in
+content/island.js, the belt itself `BELT` in world/blocks/coast.js (§14.7). The belt of CINTA 2 in
+Gando's arrivals hall (block (6,0), local (6, 5.5), world (246, −234.5)) carries Stig-Helmer round in
+the ring's own time, and standing still on it he sits down on the nearest bag and rides on as
+luggage. Invented (§1.6): in the film his bag is missing at Las Palmas ("Min väska har inte kommit.",
+research-plot.md:238) and goes round the world's airports in cutaways (a Japanese voice: "Den här
+väskan ska till Las Palmas"); nobody rides a belt. The two film lines are [F*], the rest [N].
+
+- **When.** Only while `active()`: on the island with `missions.state === 'idle'`. In a mission (any
+  other state) and in the flight level the belt carries nobody; a ride then ends (a seated Stig
+  stands up on the belt, the lines not yet said go). No mission, stage kind, timer, fixture or
+  calibration pool changes: no stage plays in the hall (buss17's intro stands at `airport`, 16 m off,
+  and its drive starts at `busBay`). In a dialogue the belt keeps turning, but its lines wait (below).
+- **The floor** (coast.js, §6.3). The belt is a `carousel` circle (`r1` = 3.3, the skirt included)
+  with its top at the belt's surface, `BELT.top` = CURB + 0.64 = 0.79. (It was one circle at CURB +
+  0.8 over the whole carousel, so he stood above the belt and sank into the centre island.) The
+  centre island stands still: its own floor at CURB + 0.9 (r 1.85, `r0`), stepped up the cone at
+  CURB + 1.03 (r 1.35) and CURB + 1.17 (r 0.85), and the sign's post a pole (r 0.1). From the hall
+  floor the belt is a wall for people (0.64 m over a 0.45 step) and for cars (step 0.6): he jumps on.
+  From the belt the island is a step. `teleport`'s ground snap (`groundAt(x, z, 0.2, 0.6)`) reaches
+  the belt's top, so a spot on the belt snaps onto it; no landmark is there.
+- **Carried.** `carry(h)` runs after the player's step every fixed step. On foot, on the ground and
+  standing on `BELT.block` (its top within 0.02 m), he and his facing turn round the middle by
+  `BELT.spin` × h = 0.32 rad/s, the ring's own spin: the ring's `rotation.y` is `game.time × spin`,
+  so a turn takes 2π / 0.32 = 19.6 s. A walk on the belt adds to it. The follow camera's yaw is not
+  his (on foot it never turns by itself, §14.5), so the view does not spin; it follows him round. In
+  the air he is not carried (he lands a little behind), and a hop over the belt keeps the ride.
+- **Sitting.** Standing still on the belt for `sitAfter` = 2.5 s (no move input, under 0.3 m/s, on
+  the ground, nothing carried, no mantra, kick, hold, bust or flail, no dialogue) he sits down on the
+  nearest bag by its angle round the middle (13 bags; the skis are not one). `seatAt` gives state
+  `seated` and the plane-seat pose, with no `seatId`. He faces out, on its lid (`top`: CURB + 0.92
+  or 0.98), `seatIn` = 0.28 m in from its outer end, with his legs over its end, and slides there in
+  `sitSecs` = 0.35 s (his hips from where they stood). Every frame after `syncAll` the seat is the
+  bag's place in the turning ring (`placeSeated`), so he goes round exactly with it. The prompt is
+  "E Kliv av bandet" [N].
+- **Off.** Space hops him off the bag: up on the belt where he sat, facing out, with a jump at `hopV`
+  = 8.6 m/s. The ride goes on, and after 2.5 s standing still he sits down again. E steps him off the
+  belt onto the hall floor, `offR` = 3.9 m from the middle, facing out: the ride ends. R lets go of
+  the bag first (`release`), then resets as always.
+- **A ride** starts when the belt first carries him and ends `offSecs` = 0.6 s after he has left the
+  belt (not while he is in the air over it), when E takes him off, or when free roam ends. It counts
+  the angle the belt has carried him, standing or sitting, so a turn is about 19.6 s of game time
+  whatever he does on it:
+  - The session's first ride, `boardAt` = 0.8 s in: Stig's "Min väska har inte kommit." [F*]
+    (relocated from the arrival; buss17's intro keeps its own, §8.6). Once julafton has brought the
+    bag back (missions index ≥ `bagBackIndex` = 13) it is "Det är faktiskt rätt rogivande." [N].
+  - Every full turn, a toast: "Ett varv på bagagebandet!", "Två varv på bagagebandet!", "Tre varv på
+    bagagebandet!", then "{n} varv på bagagebandet!" [N].
+  - After the session's first turn, before julafton, `lasseAt` = 1.2 s later, Lasse on the radio:
+    "Den dyker upp. Det gör de alltid." [N] (his answer in buss17's intro, relocated).
+  - After the third turn of a ride (`luggageLap`), `luggageAt` = 0.6 s later, Stig is the bag: "Den
+    här väskan ska till Las Palmas." [F*] (said in Japanese at an airport in the film,
+    research-plot.md:238; relocated).
+  Stig's lines are his own bubble (`game.say`, 2.4 s). A line due in a dialogue, or while he is
+  saying something, waits up to 4 s and is then dropped; a ride's own lines go when it ends.
+- `belt.last`, `belt.events` (the last 40: `board`, `lap`, `sit`, `hop`, `off`, `lasse`, `luggage`)
+  and `belt.rides` are for tests; `boarded` and `lasseDone` are session state, and nothing is saved.
+  Scenario `bagage` (§16.4).
+- **Not done** (deviations from the idea): only Stig rides (the hall's loose suitcases and trolleys
+  are props, and people cannot step on); he sits facing out over a bag's end, as in the sketches, on
+  the nearest bag, not one he picks; the third turn's line is his own (in the film a Japanese voice).
+  The game has no achievements, so the toasts and the lines are the reward.
+
 ## 11. HUD / UI strings (Swedish; `src/strings.js` owned by WP-H, created by Phase 0)
 
 `strings.js` exports `S` (flat object) and `fmt(key, vars)`. Engine code uses `S.key` only.
@@ -4373,7 +4442,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/strings.js` | new | **H** | `S`, `fmt()` (§11) |
 | `src/content/index.js` | new | none | merges `HOMES`, `MAP_LABELS`, `LEVEL_OUTFITS`, re-exports all content |
 | `src/content/flight.js` | new | **F** | `HOMES_GATE`, `HOMES_FLIGHT`, `MAP_LABELS_FLIGHT`, `CHATTER_FLIGHT`, `OLE_STATS`, `LEVEL_OUTFITS_GATE`, `LEVEL_OUTFITS_FLIGHT` |
-| `src/content/island.js` | new | **G** | `HOMES_ISLAND`, `MAP_LABELS_ISLAND`, `CHATTER`, `OUCH`, `GETUP`, `CARJACK`, `NPC_KICKED` (+ the `_OLE` / `_LOCAL` tables, `LOCAL_CAST`, `BARKS`: Phase 3 r2, §14.10; `STIG_SORRY`: feature 11, §10.14; `PIG_TRUCK`: feature 15, §10.15), `COLLECTIBLES`, `UNLOCKS`, `NAMED_CARS`, `LEVEL_OUTFITS_ISLAND` |
+| `src/content/island.js` | new | **G** | `HOMES_ISLAND`, `MAP_LABELS_ISLAND`, `CHATTER`, `OUCH`, `GETUP`, `CARJACK`, `NPC_KICKED` (+ the `_OLE` / `_LOCAL` tables, `LOCAL_CAST`, `BARKS`: Phase 3 r2, §14.10; `STIG_SORRY`: feature 11, §10.14; `PIG_TRUCK`: feature 15, §10.15; `BAGGAGE_BELT`: feature 25, §10.16), `COLLECTIBLES`, `UNLOCKS`, `NAMED_CARS`, `LEVEL_OUTFITS_ISLAND` |
 | `src/game/missions/index.js` | new | none | `MISSIONS = [...FLIGHT_MISSIONS, ...ISLAND_MISSIONS]`, `MissionRunner` re-export |
 | `src/game/missions/runner.js` | new (from missions.js) | none | `MissionRunner` (§9.4) |
 | `src/game/missions/kinds/core.js` | new | **none** (frozen after Phase 0) | getInCar goto pickup dropoff follow rabbits race destroy grab scene |
@@ -4395,6 +4464,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/poolFest.js` | new (feature 8, 2026-10-15) | — | `PoolFest` (`game.fest`): Små grodorna i poolen in free roam after the end: the visit, the wade into the ring, the set of rounds on the music's clock, the dance, the exchange, the porter, Stig in the ring, the hop counter, the cheer and the coin (§10.13) |
 | `src/game/stigSorry.js` | new (feature 11, 2026-10-15) | — | `StigSorry` (`game.sorry`): Förlåt, förlåt! in free roam: Stig's sorry after a kick, a knock-down, a broken thing or a carjacking, and the driver's "Nej." (§10.14) |
 | `src/game/pigTruck.js` | new (feature 15, 2026-10-15) | — | `PigTruck` (`game.pigs`): Grisarna ramlar av grisbilen in free roam: the unlocked grisbil's pigs tumble off on a jolt, the loose pigs (`LoosePig`), the catch on foot and by creeping, Lasse's refusal, the delivery to the grisfest farm's pen, the grisbonde's walk and pay, the refill at Flamenco (§10.15) |
+| `src/game/baggageBelt.js` | new (feature 25, 2026-10-15) | — | `BaggageBelt` (`game.belt`): Åk bagageband in free roam: the belt at Gando carries Stig, he sits down on a bag, the ride's turns, toasts and lines, Space and E off (§10.16) |
 | `src/game/hud.js` | edit | **H** | map sources, meter, strings, legend, ring, blips, zone bar, markers; `renderPortrait` restores the model transform (§14.8) |
 | `src/game/camera.js` | edit | **A1** | profile, frameOne, cutTo, `clampZ` |
 | `src/game/fx.js` | edit | **A1** | `snow`, `steam`, `meterPuff` (rename of `shame`) |
@@ -4414,7 +4484,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/world/blocks/hotels.js` | new | **C1** | `flamenco`, `suntrip` |
 | `src/world/blocks/centre.js` | new | **C2** | `kasbah`, `cita`, `plaza`, `marknad`, `kyrka`, `bensin`, `guardia` |
 | `src/world/blocks/nature.js` | new | **D1** | `tomat`, `grisfest`, `fataga`, `golf`, `bungalow`, `bygge`, `dyner` |
-| `src/world/blocks/coast.js` | new | **D2** | `flygplats`, `dromplan`, `fyren`, `playa`, `hamn` |
+| `src/world/blocks/coast.js` | new | **D2** | `flygplats`, `dromplan`, `fyren`, `playa`, `hamn`; `BELT` (feature 25, §10.16) |
 | `src/world/cabin.js` | new | **A1** | §5 interior, collision, seats, trolley, turbulence, fear, interactables, blockers, `CAM_CABIN`, `FLIGHT_PALETTES`, `FEAR`; calls `buildFlightScenery` |
 | `src/world/flightScenery.js` | new | **A2** | §5.6 visuals: gate-set visuals, airframe, animated scenery per phase, `buildFlightScenery`, `buildPlaneExterior` |
 | `src/world/rio.js` | new | **B** | `buildRioCard` (P1) |
@@ -4463,11 +4533,12 @@ restores each model's parent and transform, so seated cast members stay in their
 loop → `window.__ready = true` → `start()` in test mode.
 
 Frame (`update`): hooks → one-shots (incl. E/J/R while seated) → fixed steps (player intent incl.
-mantra/hold, AI, cars, people (`glide.step` → the player's step → `glide.after`, feature 3) —
+mantra/hold, AI, cars, people (`glide.step` → the player's step → `glide.after`, feature 3 →
+`belt.carry`, feature 25) —
 traffic/peds skipped when `!levelDef.sim.*`) → `syncAll` (also
 writes `ch.x/y/z` from `car.seatWorld(ch.seatSide)` for every car-seated character, player
 included, so framing, bubbles and distance checks see where they really are) → `missions.update` →
-`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
+`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
 pickups/collectibles → props → `fx.tick` → `tickTown` → markers → camera → sun/sky → HUD → audio →
 traffic recycling (island) → autosave. `loop` then renders, and when `film.grabNow` is set calls
 `film.grab()` in the same task (Herr Storch's still from the frame's buffer, feature 6, §10.11).
@@ -4503,6 +4574,9 @@ game.sorry;        // StigSorry (feature 11, §10.14): Stig says sorry in free r
 game.pigs;         // PigTruck (feature 15, §10.15): the grisbil's pigs tumble off in free roam,
                    // the catch, the pen at the farm; pigs.jolt(car, 'land' | 'crash', impact) from
                    // onCarLanded / onCarImpact (the player's car)
+game.belt;         // BaggageBelt (feature 25, §10.16): the baggage belt at Gando carries Stig in free
+                   // roam; belt.seated (on a bag: handleOneShots gives Space to standUp('hop') and E to
+                   // standUp('off'), R calls release(false) first, updateHud shows its prompt)
                    // fest.joined (Stig in the ring: handleOneShots gives Space to fest.hop(), no kick;
                    // fixedStep zeroes his wish), fest.posed(key), fest.visit, fest.phase, fest.last
 game.outfitOverrides; // { key: outfit } from UNLOCKS[name].outfit, merged over the island set by applyOutfits (§10.3)
@@ -4885,6 +4959,9 @@ export const worldHooks = {};   // e.g. worldHooks.bodegaLit = (on) => {...} set
 
 // world/blocks/*.js
 export const BUILDERS = { type: (f, W, ctx) => void };   // ctx = { i, j, scene, rnd }
+// coast.js (feature 25, §10.16): BELT = { x, z, spin, top, r0, r1, block, bags: [{ k, a, top, out }] },
+//   the baggage belt as the free-roam ride sees it, filled by the flygplats builder (the ring's
+//   rotation.y is t × BELT.spin; a ring-local angle a is the world angle a + t × spin at (sin, cos))
 
 // world/props.js
 placeProp(type, x, z, yaw, baseY = CURB);  finalizeProps(scene);   // unknown type → console.warn, skipped
@@ -5101,6 +5178,13 @@ shame.paint (PaintShop, §7.2): configure(cfg) from configure(); onPursuit() fro
 //   updateHud; markers() in mapMarkers; truck(); bed(car); tip(car, why, impact); fill(car);
 //   clear(car); bay(); zone(); bonde(); deliver(car); dropPig(pig); loose; pen; falls; delivered;
 //   busy; carry; walk; last; paid
+// baggageBelt.js (feature 25, §10.16): game.belt = new BaggageBelt(game) after the pigs; carry(h) in
+//   fixedStep after glide.after (on the belt: turned with it, turn(a) counts the turns); update(dt)
+//   after pigs.update (end() while not active(); the seat placed in the ring; the ride's end; sitting
+//   down; the lines); standUp('hop' | 'off') from handleOneShots while seated; release(stand) (R:
+//   release(false) before resetPlayer); active(); seated; spec (= coast.js BELT); bagBack; sit();
+//   placeSeat(dt); lap(n); queue(at, who, text, ride, what); end(); riding; onBelt; angle; laps;
+//   seat; boarded; lasseDone; lines; last; events; rides
 // honk.js: the "NÖFF! NÖFF!" bubble over the bed only while car.pigs has one `in` (§10.9)
 // collision.js: waterAt(x, z, y) -> the `water` block he stands in at that height, or null
 //   (feature 4; moved from glide.js)
@@ -5298,6 +5382,12 @@ game/pigTruck.js, §10.15), not chatter or barks: the pig's "NÖFF!" [N], Stig's
 ta den där?" [N] and "Jag har lite anlag för åksjuka." [F*](t), Lasse's "Det ingår inte i mina
 åtaganden." [F*], the grisbonde's "¡Gracias, señor! Alla grisar hemma!" and "Det fattas grisar,
 señor!" [N].
+
+Feature 25: the baggage belt's lines are its module's (`BAGGAGE_BELT`, content/island.js,
+game/baggageBelt.js, §10.16): Stig's "Min väska har inte kommit." [F*] (the session's first ride,
+before julafton) or "Det är faktiskt rätt rogivande." [N] (after it), his "Den här väskan ska till Las
+Palmas." [F*] after the third turn, Lasse's radio "Den dyker upp. Det gör de alltid." [N], the toasts
+"Ett varv på bagagebandet!" … "{n} varv på bagagebandet!" [N] and the prompt "E Kliv av bandet" [N].
 
 ---
 
@@ -5637,6 +5727,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `grodtakt` [feature 8] | the hop counter (§10.13), Space as real key events timed in the page: seven on the beat (`I TAKT 7 / 8`, a shot in the air), the eighth: the goal, `I TAKT 8 / 8` teal, the ring cheers, +50 pta, the toast, "Heia Norge!" then Lasse's line, and Stig's "Hopp… och hopp…"; half a hop off the beat: a miss, `OTAKT!`, Majsan and Ole laugh; a skipped hop beat breaks the row; eight across the gap between two rounds (round 2's beat 0 counts): the goal again, no second coin; the music off: no new cue, judged on the audio clock; no audio clock (`audio.clock` stubbed null): the round on the game clock, judged; a dive off the board: the judges take Siv and Majsan out of the ring and judge it; home again, the fest takes them back. Shots `grodorna_takt`, `_hopp`, `_jubel`, `_otakt` |
 | `artig` [feature 11] | Förlåt, förlåt! (§10.14), at index 9 (free roam) on Gasolina's forecourt: a kick bowls a pedestrian over, his line comes first and Stig's "Oj! Förlåt, förlåt! Det var inte meningen." 0.3–1.0 s after it (the session's first offence), +27 SKANDAL as always; a second kick within the 7 s gap: his line, no sorry; one kick into two people: both speak, one sorry, another kick line; a kicked petrol pump: "Oj… förlåt.", +12.6; a kicked bin: "Jag ersätter den, självklart!"; in a car on the z = 40 road a pedestrian run over at 13 m/s: "Förlåt! Jag såg er inte!", +54; a bin driven through at 10 m/s: another prop line; a bin an AI car breaks (`game.breakProp` with a traffic car): none; a carjacking with a Swedish driver (the session's first): no bark from him at first, +24, Stig's "Ursäkta, är det din bil?", the driver's "Nej." over 0.5 s after it; a Spanish driver: his `CARJACK_LOCAL` line at once and the question, no "Nej."; a Swedish one with the draw stubbed over `noChance`: his `CARJACK` line, the question, no "Nej."; a kick while his own line is up: no sorry, nothing queued; a dialogue drops a queued sorry and takes one that is up down; in a running mission (ropavieja) a kick: the pedestrian's line, no sorry. Shots `artig_spark`, `_tva`, `_pump`, `_kor`, `_kapning` |
 | `grisar` [feature 15] | Grisarna ramlar av grisbilen (§10.15), at index 9 (free roam) in the unlocked grisbil: three pigs in the bed, the objective and the zone ring; full throttle, a weave and corners at 10–22 m/s off the throttle drop none; a full stop from top speed tips the back right one ("skid"), Stig's "Oj! Grisen!", it lies, shakes with "NÖFF!" and trots off, no SKANDAL, the guide and a blip follow it; a standing grisbil does not take it, the bed rolled up to it at 2.2 m/s does; a car at 12 m/s makes a pinned pig skip, never under it; on foot it trots away, Stig lifts it ("Förlåt, lilla gris. Upp med dig.", walk cap, `carryOver`), R drops it, at the bed it hops in and his hands are free; Lasse is asked and refuses, not again within the minute; a 2.2 m drop ("land", ≥ 6) and the farm's wall at 12 m/s ("crash", ≥ 7) tip one each, two jolts inside the gap one, weaker none; the drive from the gravel drive to `grisfalla` hits nothing; with a pig loose the grisbonde's "Det fattas grisar, señor!", no delivery; with all three: three over the fence, his thanks, +100 pta, "Jag har lite anlag för åksjuka.", he stands at the pen, the three wander inside it, no second delivery; the bed refills at the Flamenco bay with Stig 35 m off; a clean trip +250, no sigh; a mission start puts a loose pig back and empties the pen; no jolt tips one in a mission |
+| `bagage` [feature 25] | Åk bagageband (§10.16), at index 5 (free roam before buss17): the belt a `carousel` floor at 0.79 with 13 bags; from the hall floor a jump and a step forwards land him on the belt; 1.5 s later the belt has turned him by its spin × the game time (±0.03 rad), at the same radius and height, his facing turned with it and the camera's yaw not; "Min väska har inte kommit." (the session's first ride); on the centre island (floor 1.18) he is not carried; standing still he sits down after 2.5 s on the nearest bag, on its lid, `seatIn` in from its end, facing out, and keeps its place in the ring (±0.002 rad), the prompt "E Kliv av bandet"; the first turn on time (±0.2 s of 19.6 s of carried angle), "Ett varv på bagagebandet!" and 1.2 s later Lasse's radio line, both on screen; the second and third turns' toasts and 0.6 s after the third "Den här väskan ska till Las Palmas.", Lasse once; Space off the bag and back on the belt with the ride going on; down again and E off onto the floor 3.9 m out, the ride over, not carried there; a second ride without the sigh; R from a bag to the road; in a running mission (buss17) not carried; at index 13 "Det är faktiskt rätt rogivande." and no Lasse after the first turn (the turn skipped ahead). Shots `bagage_star`, `bagage_sitter`, `bagage_sitter_sida`, `bagage_varv`, `bagage_las_palmas`, `bagage_av`, `bagage_efter_jul`. About 120 s |
 | `talk` [Phase 0] | `autoDialog = false`, walk to Ole at `gateQueue`, E, Space twice |
 | `fullstory` [Phase 0b] | swaps the literal §8 missions (`tools/fixtures/full-missions.js`) into `MISSIONS` and plays all 13 per §16.3 (`FROM`/`TO` as `story`); must end `#13 idle`, `RESULT: PASS` |
 | `kinds` [Phase 0b] | fixture data checks; haggle misses fail; follow `minDist` fails; smooth/fragile bars (teleports never count); carry spill; checkpoint retry re-applies night + `vals` and revives plates at `dansgolv`; destroy default spawn; grab at the wreck; scene `exitCar`; Phase 3: follow shows no bar before the start and a head-on quarry does not fail it, `retryCar` (the last car reused, a typed named car, `park`), getInCar `atHome` and a wrecked `missionCar` failing, a frame-only scene stopping the car dead, a scene cutting a `collect` guest's bubbles (3 frames in: no bubble over the guest or Stig, no empty one) and keeping his placement |
@@ -7243,3 +7334,21 @@ the fixer's group.
   The bodega's `grisbilFollow` never loses a pig; no mission, stage kind, timer, fixture or
   calibration pool changed. Deviations from the idea: the pigs hop over the fence themselves, R does
   not take loose pigs away, the bed refills at Flamenco with Stig 30 m off. Scenario `grisar` (§16.4).
+- Feature 25, "Åk bagageband" (`features/implemented/aka_bagageband.md`, 2026-10-15): the baggage belt
+  at Gando carries Stig in free roam (§10.16; new `src/game/baggageBelt.js`, `BAGGAGE_BELT` in
+  content/island.js, `BELT` in coast.js; §1.6, §6.3, §14.1–14.3, §14.7, §14.8, §14.10, §16.4).
+  coast.js splits the carousel's floor: the belt a `carousel` circle with its top at the belt's
+  surface (CURB + 0.64, was one circle at CURB + 0.8 over the whole carousel), the centre island its
+  own floor stepped up the cone (CURB + 0.9 / 1.03 / 1.17), the sign's post a pole; the ring's spin
+  is `BELT.spin` (0.32 rad/s, unchanged). On the island with `missions.state === 'idle'` the belt
+  turns him and his facing with the ring (`belt.carry` after the player's step); standing still
+  2.5 s he sits down on the nearest bag (`seatAt`, facing out) and rides on it; Space hops him off,
+  E steps him off the belt, R lets go first. Lines: "Min väska har inte kommit." [F*] (the session's
+  first ride before julafton, after it "Det är faktiskt rätt rogivande." [N]), a toast every turn
+  ("Ett varv på bagagebandet!" [N]), Lasse's "Den dyker upp. Det gör de alltid." [N] on the radio
+  after the first (once a session, before julafton), "Den här väskan ska till Las Palmas." [F*] after
+  the third; prompt "E Kliv av bandet" [N]. main.js: `belt.carry` in `fixedStep`, `belt.update` after
+  `pigs.update`, Space/E to `belt.standUp` in `handleOneShots`, `belt.release(false)` before R, the
+  prompt in `updateHud`. No mission, stage kind, timer, fixture or calibration pool changed (no stage
+  plays in the hall; notes/calibration-samples.md says so). Deviations from the idea: only Stig rides;
+  he sits facing out on the nearest bag; the third turn's line is his own. Scenario `bagage` (§16.4).

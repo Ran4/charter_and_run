@@ -609,6 +609,34 @@ export const POOL_FEST = {
   takt: 'I TAKT', miss: 'OTAKT!',                                                // [N] · [N]
 };
 
+// Åk bagageband – the baggage belt carries Stig (free roam; feature 25, DESIGN §10.16;
+// game/baggageBelt.js). On the island with no mission running (`missions.state === 'idle'`) the belt
+// of CINTA 2 at Gando (world/blocks/coast.js `BELT`) carries him round at the ring's own spin, about
+// 20 s a turn. Standing still on it for `sitAfter` s he sits down on the nearest bag (`seatIn` m in
+// from its outer end, facing out; eased over `sitSecs` s) and rides on as luggage; Space hops him off
+// the bag (`hopV` m/s), E steps him off the belt onto the hall floor (`offR` m from the middle). A
+// ride ends `offSecs` s after he has left the belt. The session's first ride: `board` `boardAt` s in,
+// [0] before julafton has brought his bag back (missions index under `bagBackIndex`), [1] after.
+// Every full turn the belt has carried him: the toast `laps[n - 1]` (`lapN` past them); after the
+// session's first, before julafton, Lasse on the radio `lasseAt` s later; after the `luggageLap`th of
+// a ride, `luggageAt` s later, Stig's `luggage`. Invented (§1.6): riding the belt at all.
+export const BAGGAGE_BELT = {
+  sitAfter: 2.5, sitSecs: 0.35, seatIn: 0.28, hopV: 8.6, offR: 3.9, offSecs: 0.6,
+  bagBackIndex: 13,   // julafton (mission 13, index 12) brings the bag back
+  boardAt: 0.8,
+  board: [
+    'Min väska har inte kommit.',        // [F*] Stig at the airport in Las Palmas (research-plot.md:238), relocated to the belt
+    'Det är faktiskt rätt rogivande.',   // [N] after julafton, with the bag back
+  ],
+  laps: ['Ett varv på bagagebandet!' /* [N] */, 'Två varv på bagagebandet!' /* [N] */, 'Tre varv på bagagebandet!' /* [N] */],
+  lapN: '{n} varv på bagagebandet!',     // [N]
+  lasse: ['lasse', 'Den dyker upp. Det gör de alltid.'],   // [N] his answer in buss17's intro (missions/island.js), relocated
+  lasseAt: 1.2,
+  luggageLap: 3, luggageAt: 0.6,
+  luggage: 'Den här väskan ska till Las Palmas.',   // [F*] said at a Japanese airport (research-plot.md:238), relocated: Stig is the bag
+  prompt: '<b>E</b> Kliv av bandet',     // [N]
+};
+
 // Speedo names for named and mission cars (§11.4); unnamed cars show their type's Swedish name.
 export const NAMED_CARS = {
   buss17: 'SunTrips buss 17', hyrbil: 'Hyrbilen', grisbil: 'Grisbilen', nattbuss: 'Nattbussen', joseBil: 'Josés bil', guardiaJeep: 'Guardia-jeepen',

@@ -80,6 +80,14 @@ sheep and balls pools sit on a rounding boundary (sheep 28 → 27 → 28 with tw
 n 4), so the orchestrator stopped adding default runs before the tag rather than let the last one
 decide. The pools stay open: every future run goes in, and a timer follows its pool.
 
+**Feature 25 (Åk bagageband, 2026-10-15) touches no pool.** It changed the collision in Gando's
+arrivals hall (coast.js: the carousel's one floor at CURB + 0.8 split into the belt at CURB + 0.64,
+the centre island's own stepped floor and the sign's post as a pole) and added a carry after the
+player's step that runs only with `missions.state === 'idle'` (DESIGN §10.16). No pooled stage plays
+in the hall (Eslövloppet, the one free-roam pool, starts on the Eslöv lane in block (0,1) and runs
+round the tomato fields, not through Gando's block (6,0)), and no autopilot passes it, so every pool
+below stands and no timer changed.
+
 ## `friskotekBalls` · §8.7 s1 · six fleeing beach balls · on foot: timer = ceil(1.25 × (p75 + 6 × 0.5))
 
 Phase 3 r2 island-staging placed everyone for the intro's group shot (Stig, Lasse, the sisters, the
