@@ -36,6 +36,11 @@ export const ISLAND_LANDMARKS = {
   // 0.97, hotels.js), facing along it out over the deep end. Not a standing spot: the sisters' places
   // at the pool's edge are offsets from it (POOL_JUDGES.spots), and its block is the judged board.
   flamencoBoard: { b: [3, 3], at: [-14.1, 7], yaw: PI / 2 },
+  // Dygnet runt (free roam, §10.10): the middle of Stig's turquoise bed in room 107 (top 0.70,
+  // hotels.js stigOleRoom), the way a sleeper on his back faces (feet to the patio, head on the
+  // pillow by the back wall). The nap's E spot, and Ole's and Stig's places are offsets from it
+  // (DAY.nap). Not a standing spot: `teleport` would put him on the mattress.
+  stigSang: { b: [3, 3], at: [-19.75, -20.35], yaw: 0 },
   // (3,2) Hotel SunTrip
   suntrip: { b: [3, 2], at: [-14, 24], yaw: PI },     // faces the office porch (C1)
   scen: { b: [3, 2], at: [0, -14], yaw: 0 },

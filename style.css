@@ -30,6 +30,19 @@ body:not(.playing) #hud { opacity: 0; }
 #coins.bump { animation: bump 0.25s ease-out; }
 @keyframes bump { 40% { transform: scale(1.18) rotate(-3deg); } }
 .coin-icon { width: 40px; height: 40px; border-radius: 50%; background: radial-gradient(circle at 50% 50%, transparent 0 46%, rgba(29, 20, 38, 0.35) 47% 51%, transparent 52%), radial-gradient(circle at 36% 32%, #fff3b0 0 16%, #f7c31b 17% 62%, #c98a12 63%); border: 3px solid var(--ink); box-shadow: 2px 3px 0 rgba(29, 20, 38, 0.35); }
+/* Ole's watch (§10.10): the Spanish time under the pesetas, the Norwegian and Swedish time beside it;
+   the collectibles card moves down under it while it shows. */
+#klocka { position: absolute; top: 76px; left: 22px; display: flex; align-items: center; gap: 9px; background: var(--cream); border: 3px solid var(--ink); border-radius: 14px; padding: 5px 14px 5px 9px; box-shadow: 3px 4px 0 var(--ink); opacity: 0; transition: opacity 0.3s; white-space: nowrap; }
+#klocka.show { opacity: 1; }
+#klocka .pryl-icon { width: 24px; height: 26px; }
+#klocka .k-main { font: 30px/1 var(--display); color: var(--ink); letter-spacing: 1px; padding-top: 3px; }
+#klocka .k-side { display: flex; flex-direction: column; gap: 1px; }
+#klocka .k-zone { font: 900 12px/1.1 var(--body); color: var(--terracotta); letter-spacing: 1px; }
+#klocka .k-sub { font: 800 12px/1.1 var(--body); color: var(--ink); }
+#klocka.show ~ #collect { top: 136px; }
+#klocka.over { z-index: 3; }
+#fade { position: absolute; inset: 0; background: #0d0a14; opacity: 0; transition: opacity 0.6s; z-index: 1; }
+#fade.on { opacity: 1; }
 #collect { position: absolute; top: 76px; left: 22px; font: 800 17px var(--body); background: var(--cream); border: 3px solid var(--ink); border-radius: 14px; padding: 6px 12px; box-shadow: 3px 4px 0 var(--ink); opacity: 0; transform: translateX(-20px); transition: 0.25s; display: flex; align-items: center; gap: 8px; }
 #collect.show { opacity: 1; transform: none; }
 /* Collectible icons: Ole's gadgets (a digital watch) and the shark fins. */
@@ -203,7 +216,7 @@ body.panik #app canvas { filter: saturate(1.5) contrast(1.08); }
 #letterbox .lb-top { top: 0; }
 #letterbox .lb-bot { bottom: 0; }
 #letterbox.on .lb-top, #letterbox.on .lb-bot { height: 9vh; }
-body:has(#letterbox.on) #coins, body:has(#letterbox.on) #shame, body:has(#letterbox.on) #minimap-wrap, body:has(#letterbox.on) #speedo { opacity: 0; }
+body:has(#letterbox.on) #coins, body:has(#letterbox.on) #shame, body:has(#letterbox.on) #minimap-wrap, body:has(#letterbox.on) #speedo, body:has(#letterbox.on) #klocka:not(.over) { opacity: 0; }
 /* An in-stage talk (haggle, collect, interact lines): the objective card slides up out of the way
    (only its bar stuck out under the top bar) and comes back with the play. */
 body:has(#letterbox.on) #objective.show { transform: translate(-50%, -220%); }
@@ -290,6 +303,9 @@ h1 span { display: inline-block; -webkit-text-stroke: 0.05em var(--ink); paint-o
   #shame { width: 190px; }
   .shame-label { font-size: 18px; }
   #coins { font-size: 32px; }
+  #klocka { top: 60px; padding: 3px 10px 3px 7px; }
+  #klocka .k-main { font-size: 22px; }
+  #klocka.show ~ #collect { top: 110px; }
   .title-card { padding: 50px 16px 14px; }
   .controls { grid-template-columns: 1fr; }
 }

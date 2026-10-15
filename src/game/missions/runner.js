@@ -45,6 +45,9 @@ export class MissionRunner {
     if (!def || this.state !== 'idle') return;
     this.state = 'intro';
     this.syncIdleAnim();     // the idle pose ends when the talk starts
+    // In the evening or at night (the free-roam clock, §10.10) the mission starts the next morning:
+    // black, NÄSTA MORGON, the clock to nine and the day palette, then the talk as by day.
+    if (g.level === 'island' && g.day.dark) await g.day.toMorning();
     const giver = g.npc(def.giver);
     g.player.wishX = g.player.wishZ = 0;
     g.player.vx = g.player.vz = 0;
@@ -274,6 +277,7 @@ export class MissionRunner {
     }
     this.state = 'idle';
     g.placeNpcs(true);
+    g.day.resync();   // free roam again: the clock's palette (after the end card's, if one plays)
     if (this.index >= MISSIONS.length) {
       if (g.pendingEndCard) { g.pendingEndCard = false; await g.playEndCard(); if (heldToast) hud.toast(heldToast); }
       else { hud.showBanner(S.gameComplete, S.gameCompleteSub, 'good', 5000); audio.jingle('complete'); }

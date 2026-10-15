@@ -7,7 +7,7 @@
 // Pepes Bodega's lights are a few small meshes that worldHooks.bodegaLit(on) switches.
 // Signs are player-facing Swedish/Spanish; film lines used as signs carry their source tag.
 
-import { THREE, PRIM, mat, GeoBuilder, MAT, toonMesh } from '../../gfx.js';
+import { THREE, PRIM, mat, GeoBuilder, MAT, toonMesh, skyDark } from '../../gfx.js';
 import { CURB } from '../layout.js';
 import { box } from '../collision.js';
 import { worldHooks } from '../registry.js';
@@ -35,7 +35,7 @@ const pick = (a, rnd) => a[Math.floor(rnd() * a.length) % a.length];
 
 // Lit windows for the night palette (grisfest): while a builder runs, NIGHT collects warm panes
 // in front of a share of the glass; nightMesh() turns them into one unlit mesh that draws only
-// when the sky is dark.
+// when the sky is dark (gfx.skyDark).
 const NIGHT_COLS = [0xffd890, 0xffe6b0, 0xffc870, 0xffd890, 0xcfe0ff];
 let NIGHT = null, NIGHT_RND = Math.random;
 function nightPane(x, y, z, w, h, d, ry = 0) {
@@ -47,11 +47,7 @@ function nightMesh(scene) {
   if (!g || g.empty) return;
   const m = new THREE.Mesh(g.build(), MAT.mouth);
   m.frustumCulled = false;
-  const top = MAT.sky?.uniforms?.top?.value;
-  m.onBeforeRender = (r, sc, cam, geo) => {
-    const dark = top && top.r + top.g + top.b < 0.8;
-    geo.setDrawRange(0, dark ? Infinity : 0);
-  };
+  m.onBeforeRender = (r, sc, cam, geo) => { geo.setDrawRange(0, skyDark() ? Infinity : 0); };
   scene.add(m);
 }
 

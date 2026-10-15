@@ -304,6 +304,52 @@ export const HONK = {
   oinkBubble: 'NÖFF! NÖFF!',                                                       // [N]
 };
 
+// Dygnet runt – the island's clock, its evenings and the nap in room 107 (free roam, DESIGN §10.10;
+// game/dayClock.js). The clock `h` (Spanish time, 0–24) starts at `start` (Lasse in the bus:
+// "Klockan är tre spansk tid") and runs only between missions (island, `missions.state === 'idle'`,
+// no dialogue; in test mode only when a test sets `day.run`): `hourSecs` s a game hour, `nightHourSecs`
+// from `night[0]` to `night[1]` (a day ≈ 19.5 min). `sky`: [hour, palette] key frames (§13.3,
+// no new palettes), eased between neighbours (dawn 6–7, the sunset 19–19.75, dusk 19.75–20.5). The
+// night lights and the lighthouse burn from `lit[0]` to `lit[1]` (gfx.setNightLights). A mission
+// talk outside `dayHours` (any palette but day) fades to `morningBanner`, the clock to `morning`,
+// and the mission starts as by day (every timer is measured in daylight). `chatter`: lines of
+// CHATTER said only within [from, to). `nap`: E at Stig's bed (landmark `stigSang`, radius `r`):
+// black, the clock to the next of `wake` (at least `minGap` h on), Stig on his bed, Ole at its head
+// (`oleAt`: [left, forward, world yaw] from the bed) with his calculator's alarm, then Stig up at
+// `stigAt`; the camera at `cam` ([left, forward, height]) looks at `look`. When the town's lights are
+// on, so is the room's: `lamp` (the hemisphere light) for the scene, as if Ole had switched on the
+// ceiling lamp (the glowing pane over the room), and the clock's palette after it.
+// Invented (§1.6): the clock as a mechanic, the nap and the alarm waking him; the words are the
+// film's (Affe's "kvarta", Ole's gadgets) and ours.
+export const DAY = {
+  start: 15, hourSecs: 60, nightHourSecs: 30, night: [21, 6],
+  sky: [[6, 'night'], [7, 'day'], [19, 'day'], [19.75, 'sunset'], [20.5, 'night']],
+  lit: [20, 6.5], dayHours: [7, 19],
+  morning: 9, fadeSecs: 0.7, spinSecs: 1.4, holdSecs: 1.2,
+  morningBanner: ['NÄSTA MORGON', 'Klockan nio, spansk tid'],                       // [N] · [N]
+  zone: 'SPANSK TID',                                                               // [F*] Ole's watch: "Spansk, norsk, svensk tid"
+  others: '{no} norsk · {sv} svensk',                                               // [F*] the same watch
+  chatter: {
+    'Natturen går klockan nio!': [17, 21],
+    'Friskoteket börjar halv tio varje morgon.': [6, 10],
+    'Klockan är tre spansk tid.': [14, 16],
+  },
+  nap: {
+    lm: 'stigSang', r: 2.0, minGap: 0.5,
+    prompt: '<b>E</b> Kvarta en stund',                                             // [F*] Affe's "Jag måste få kvarta nån gång."
+    wake: [[8, 'morgonen'], [15, 'eftermiddagen'], [20, 'kvällen'], [23, 'natten']],
+    banner: 'Zzz…',                                                                 // [N]
+    zzz: 'Zzz…',                                                                    // [N]
+    ole: 'PIP-PIP-PIP! Kalkulator – med vekkerklokke!',                             // [F*] his gadget line (the calculator with an alarm); the alarm call ours
+    toast: 'Stig kvartade till {part}.',                                            // [N]
+    night: 'Vad härligt det är med de här varma nätterna…',                         // [F*](t) relocated: a warm night by the pool in the film, speaker unsure
+    oleAt: [1.0, -0.2, -Math.PI / 2], stigAt: [0.15, 1.55, Math.PI],
+    cam: [-0.4, 3.75, 2.45], look: [0.45, 0.15, 1.2],
+    lamp: { hemiSky: 0xffe2b8, hemiGround: 0x9a7050, hemiI: 1.7 },
+    pipAt: 0.7, sleepOn: 2.2, wakeAt: 1.4, after: 1.6,
+  },
+};
+
 // Speedo names for named and mission cars (§11.4); unnamed cars show their type's Swedish name.
 export const NAMED_CARS = {
   buss17: 'SunTrips buss 17', hyrbil: 'Hyrbilen', grisbil: 'Grisbilen', nattbuss: 'Nattbussen', joseBil: 'Josés bil', guardiaJeep: 'Guardia-jeepen',

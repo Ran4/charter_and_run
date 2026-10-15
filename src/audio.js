@@ -280,6 +280,8 @@ export const audio = {
   dingdong() { this.tone(659, 0.45, 'sine', 0.11); this.tone(1318, 0.2, 'sine', 0.012); this.tone(523, 0.45, 'sine', 0.11, null, 0.45); this.tone(1046, 0.2, 'sine', 0.012, null, 0.45); },
   // The metal-detector arch.
   beep() { for (let k = 0; k < 3; k++) this.tone(880, 0.14, 'square', 0.07, null, k * 0.2); },
+  // Ole's calculator alarm (the nap in room 107, §10.10): a digital watch's PIP-PIP-PIP, twice.
+  pip() { for (let k = 0; k < 6; k++) this.tone(2794, 0.06, 'square', 0.045, null, (k % 3) * 0.12 + (k >= 3 ? 0.55 : 0)); },
   // The charter flight's landing applause: ~30 hand claps a second, swelling then thinning out.
   applause(secs = 2) {
     if (!ctx) return;

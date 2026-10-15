@@ -2,7 +2,7 @@
 // routes input to the player or their car, applies the level system (DESIGN §4) and exposes the
 // Game API every module codes against (DESIGN §14.3). Frozen after Phase 0 (Phase 2 only).
 
-import { THREE, initGfx, renderer, scene, camera, followSun, tickSky, setSkyPalette, setCloudsVisible, setShadows } from './gfx.js';
+import { THREE, initGfx, renderer, scene, camera, followSun, tickSky, setSkyPalette, setCloudsVisible, setShadows, setNightLights } from './gfx.js';
 import { input } from './input.js';
 import { audio } from './audio.js';
 import { buildTown, parkedCars, tickTown } from './world/town.js';
@@ -26,6 +26,7 @@ import { BerraJob } from './game/berraJob.js';
 import { Glide } from './game/glide.js';
 import { PoolJudges } from './game/poolJudges.js';
 import { Honk } from './game/honk.js';
+import { DayClock } from './game/dayClock.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
 import { LEVELS, ISLAND_PALETTES } from './level.js';
@@ -162,6 +163,7 @@ class Game {
     this.judges = new PoolJudges(this);   // free roam: the sisters judge his dives (§10.8)
     this.honk = new Honk(this);           // free roam: the island hears the horn (§10.9)
     this.hornAt = null;                   // the last free-roam horn press: { x, z, yaw, t, pigs }
+    this.day = new DayClock(this);        // free roam: the island's clock, evenings, the nap (§10.10)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -271,7 +273,10 @@ class Game {
       cab.setPhase(this.levelDef.phaseForIndex(this.missions.index), { instant: true });
       cab.setSeatbelt(false, { chime: false });
       hud.setMapSource(cab.mapSource(cab.phase));
-    } else this.setSky(this.levelDef.palette || 'day');
+    } else {
+      this.setSky(this.levelDef.palette || 'day');
+      this.day.resync();   // the free-roam clock's palette at the next free-roam frame (§10.10)
+    }
     audio.setTune(this.levelTune());
     this.mantraMode = false;
   }
@@ -296,9 +301,12 @@ class Game {
     return this.musicLabel();
   }
 
+  // A named island palette at once (missions' `sky` cues, the end card). The night lights go back
+  // to following the sky; the free-roam clock forces them only while it blends (§10.10, §13.3).
   setSky(name) {
     if (!ISLAND_PALETTES[name]) return;
     this.sky = name;
+    setNightLights(null);
     if (this.level === 'island') setSkyPalette(ISLAND_PALETTES[name]);
   }
 
@@ -1393,6 +1401,7 @@ class Game {
     this.glide.update(dt);
     this.judges.update(dt);
     this.honk.update(dt);
+    this.day.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);
@@ -1697,7 +1706,12 @@ class Game {
       const lines = (this.level === 'island' && this.chatterOverrides[k]) || chatter[k];
       if (near < 9 && n.state === 'normal' && !posed && !this.inDialog && ms.state === 'idle' && lines) {
         n.chatT = (n.chatT ?? 2 + Math.random() * 3) - dt;
-        if (n.chatT <= 0) { n.chatT = 7 + Math.random() * 6; this.say(n, pick(lines), 2.6); }
+        if (n.chatT <= 0) {
+          n.chatT = 7 + Math.random() * 6;
+          // A line tied to a time of day only within its hours (the free-roam clock, §10.10).
+          const now = this.level === 'island' ? lines.filter((l) => this.day.lineOk(l)) : lines;
+          if (now.length) this.say(n, pick(now), 2.6);
+        }
       }
       n.sync(dt);
     }
@@ -1806,7 +1820,8 @@ class Game {
     // near, the giver's (Phase 3 r2) and the objective's (r3) laid a yellow wedge over a third of the
     // frame (ombord's seat dash started 3.5 m from its first waypoint's beam).
     const nearFade = (x, z) => (this.cabin.inCabin(x, z) ? clamp((dist(camera.position.x, camera.position.z, x, z) - 4) / 4, 0, 1) : 1);
-    if (ms.state === 'idle' && ms.current && ms.current.level === this.level && this.npcs[ms.current.giver]) {
+    // Not over Ole by the bed in the nap (§10.10).
+    if (ms.state === 'idle' && ms.current && ms.current.level === this.level && this.npcs[ms.current.giver] && !this.day.napping) {
       const g = this.npcs[ms.current.giver];
       this.bang.show(true);
       const by = g.y + g.height + 0.9;

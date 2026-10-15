@@ -639,6 +639,11 @@ const PROP_GEO = {
     g.sphere(0xb8b4a8, 0, 0, 0, 0.19, 0.15, 0.33);
     g.cyl(0xb8b4a8, 0, 0.1, -0.05, 0.08, 0.2, 8);
   },
+  kalkylator(g) {  // Ole's calculator with an alarm (anim.calc, the nap in room 107): black, a green display
+    g.box(0x1d1d22, 0, 0, 0, 0.15, 0.25, 0.045);
+    g.box(0x9fe0a0, 0, 0.065, 0.024, 0.115, 0.055, 0.006);
+    for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++) g.box(r === 2 && c === 2 ? 0xf07a1e : 0xc8c8c0, -0.04 + c * 0.04, -0.012 - r * 0.036, 0.024, 0.026, 0.022, 0.006);
+  },
   scoreCard(g) {   // the sisters' score card on a stick (anim.card; the number is a face, cardFace)
     g.cyl(0x8a5a32, 0, 0.06, 0, 0.018, 0.22, 6);
     g.box(0xf4f0e6, 0, 0.36, 0, 0.6, 0.42, 0.03);
@@ -940,7 +945,7 @@ function heldPose(m, st, t, place = false) {
   const h = m.def.held;
   if (!h || !PROP_GEO[h]) return;
   const [R, L] = m.arms;
-  const busy = st.wings || st.cupUp || st.cupHeld || st.push || st.hold || st.flail || st.oath || st.dance || st.laugh || st.mirror || st.film || st.giraffe || st.butterKnife || st.carryOver || st.shoeOff || st.cheer || st.wave || st.kick > 0;
+  const busy = st.wings || st.cupUp || st.cupHeld || st.push || st.hold || st.flail || st.oath || st.dance || st.laugh || st.mirror || st.film || st.giraffe || st.butterKnife || st.carryOver || st.shoeOff || st.calc || st.cheer || st.wave || st.kick > 0;
   const pose = !place && !busy;
   const moving = st.speed > 0.3;
   switch (h) {
@@ -1112,6 +1117,14 @@ function poseFlags(m, st, t) {
     m.hips.rotation.x -= 0.16;
     m.neck.rotation.x = -0.32;
     m.body.position.y += Math.abs(Math.sin(t * 16)) * 0.035 * s;
+  }
+  if (st.calc) {
+    // Ole's calculator held up high, its alarm going (the nap in room 107, game/dayClock.js): the left
+    // arm (the near one, as he stands at the bed's head facing Stig) up and a little forward, the
+    // display to the front, a small shake.
+    L.rotation.set(-0.45 + Math.sin(t * 13) * 0.05, 0, 2.55);
+    m.neck.rotation.x = -0.12;
+    inHand(m, prop(m, 'kalkylator'), 1, 0, 0.1, 0.04, 0.35, 0, 0);
   }
   if (st.card != null) {
     // A score card held out in the right hand, from shoulder to eye height and off to her right, under

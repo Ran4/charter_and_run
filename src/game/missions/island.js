@@ -567,7 +567,8 @@ export const ISLAND_MISSIONS = [
       () => carry({ who: 'berra', to: 'flamencoRecepcion', radius: 2.2, walkSpeed: 3.2, failOn: { fall: true }, text: 'Bärra hem Berra!', failText: 'Berra vaknade och började sjunga.', checkpoint: true, retryAt: FLAMENCO_LOT }),   // [F*] · [N] (P1; P0 fallback: dropoff at flamencoDrive)
     ],
     onEnd(g, reason) {
-      if (reason === 'complete') g.cue({ banner: ['MORGONEN EFTER', 'Julafton på Gran Canaria', 'mission'] });   // [N]
+      // MORGONEN EFTER: the free-roam clock goes on from eight (§10.10).
+      if (reason === 'complete') { g.cue({ banner: ['MORGONEN EFTER', 'Julafton på Gran Canaria', 'mission'] }); g.day.set(8); }   // [N]
       g.cue({ sky: 'day', music: g.levelTune() });   // the island's tune: `sol`, or the player's `samba`
     },
     // The desk from the porch front: the porter faces the camera, Angerud and Carmencita on his left and

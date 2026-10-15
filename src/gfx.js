@@ -344,6 +344,19 @@ export function setSkyPalette({ top, horizon, fogNear, fogFar, sun: sunC, sunI, 
   if (hemiGround !== undefined) hemi.groundColor.set(hemiGround);
   if (hemiI !== undefined) hemi.intensity = hemiI;
 }
+// The night lights (§13.3): lit windows, lamp panes and glows draw while `skyDark()`, the lighthouse
+// beam while `beaconLit()`. By default both follow the sky: the `top` colour darker than r + g + b
+// 0.8 (`night`, `sunset`), the sun weaker than 1.6. The free-roam clock (game/dayClock.js, §10.10)
+// forces them (true / false) while it blends the palettes, so the town lights up at one time;
+// `setNightLights(null)` (Game.setSky) hands them back to the sky.
+let nightForce = null;
+export function setNightLights(on) { nightForce = on ?? null; }
+export function skyDark() {
+  if (nightForce != null) return nightForce;
+  const top = MAT.sky?.uniforms?.top?.value;
+  return !!top && top.r + top.g + top.b < 0.8;
+}
+export function beaconLit() { return nightForce != null ? nightForce : !!sun && sun.intensity < 1.6; }
 export function setCloudsVisible(on) { if (MAT._clouds) MAT._clouds.visible = !!on; }
 export function setShadows(on) { sun.castShadow = !!on; }
 

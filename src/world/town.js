@@ -10,7 +10,7 @@
 // flat, shadow-receiving ground mesh (F). Signs are batched into one mesh per sign texture.
 // Invented for the game (§1.6 spirit): every hotel/complex name on the residential signs.
 
-import { THREE, GeoBuilder, toonMesh, MAT, PRIM, mat, makeWedge, textCanvas } from '../gfx.js';
+import { THREE, GeoBuilder, toonMesh, MAT, PRIM, mat, makeWedge, textCanvas, skyDark } from '../gfx.js';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { N, HALF, RHW, SW, CURB, EDGE, BOUND, rc, blockInterior, MAP, landmarks } from './layout.js';
 import { box, circle, ramp } from './collision.js';
@@ -978,15 +978,13 @@ export function buildTown(sc) {
   addPedLoops();
 }
 
-// The night glow (nightGlow) as one unlit mesh, drawn only while the sky is dark (night, sunset).
+// The night glow (nightGlow) as one unlit mesh, drawn only while the sky is dark (night, sunset;
+// gfx.skyDark, which the free-roam clock may force, §10.10).
 function nightLights() {
   if (nightGlow.empty) return;
   const m = new THREE.Mesh(nightGlow.build(), MAT.mouth);
   m.name = 'nightGlow';
-  m.onBeforeRender = (r, sc, cam, geo) => {
-    const top = MAT.sky?.uniforms?.top?.value;
-    geo.setDrawRange(0, top && top.r + top.g + top.b < 0.8 ? Infinity : 0);
-  };
+  m.onBeforeRender = (r, sc, cam, geo) => { geo.setDrawRange(0, skyDark() ? Infinity : 0); };
   scene.add(m);
 }
 

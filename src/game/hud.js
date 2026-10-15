@@ -41,6 +41,7 @@ export const hud = {
       <div id="sirenlights"><div class="sl-l"></div><div class="sl-r"></div></div>
       <div id="panik"></div>
       <div id="coins"><span class="coin-icon"></span><span id="coin-n">0 pta</span></div>
+      <div id="klocka"><span class="pryl-icon"></span><span class="k-main"></span><span class="k-side"><span class="k-zone"></span><span class="k-sub"></span></span></div>
       <div id="collect"></div>
       <div id="shame"><div class="shame-label"></div><div class="shame-row"><div class="meter-icon"><i></i></div><div class="shame-bar"><div class="shame-fill"></div><div class="shame-ticks"></div></div></div></div>
       <div id="objective"><div class="obj-title"></div><div class="obj-text"></div><div class="obj-timer"></div><div class="obj-bar"><div class="obj-zone"></div><div class="obj-bar-fill"></div><div class="obj-marker"></div><span class="obj-bar-label"></span></div></div>
@@ -48,6 +49,7 @@ export const hud = {
       <div id="speedo"><div class="sp-num">0</div><div class="sp-unit">${S.speedUnit}</div><div class="sp-hp"><div class="sp-hp-fill"></div></div><div class="sp-name"></div></div>
       <div id="prompt"></div>
       <div id="score"><div class="score-main"></div><div class="score-sub"></div></div>
+      <div id="fade"></div>
       <div id="toasts"></div>
       <div id="banner"><div class="banner-main"></div><div class="banner-sub"></div></div>
       <div id="bubbles"></div>
@@ -78,6 +80,8 @@ export const hud = {
     this.bubbles = $('bubbles');
     this.dialog = $('dialog');
     this.collectEl = $('collect');
+    this.clockEl = $('klocka');
+    this.fadeEl = $('fade');
     this.scoreEl = $('score');
     this.flash = $('flash');
     this.bigmap = $('bigmap');
@@ -287,6 +291,20 @@ export const hud = {
     this.flash.classList.remove('go'); void this.flash.offsetWidth; this.flash.classList.add('go');
   },
 
+  // Ole's watch under the pesetas (game/dayClock.js, §10.10): `main` (the Spanish time, Luckiest
+  // Guy), `zone` over `sub` beside it (the Norwegian and Swedish time); main null hides it. `over`:
+  // drawn over the black fade (the nap's spinning clock). Touches the DOM only on a change.
+  setClock(main, zone = '', sub = '', over = false) {
+    const e = this.clockEl, on = main != null;
+    if (on && main !== this._clockMain) { this._clockMain = main; e.querySelector('.k-main').textContent = main; }
+    if (on && zone + sub !== this._clockSub) { this._clockSub = zone + sub; e.querySelector('.k-zone').textContent = zone; e.querySelector('.k-sub').textContent = sub; }
+    if (on !== this._clockOn) { this._clockOn = on; e.classList.toggle('show', on); }
+    if (over !== this._clockOver) { this._clockOver = over; e.classList.toggle('over', over); }
+  },
+  // The black fade over the 3D view and the HUD (the banner and an `over` clock stay on top); its
+  // 0.6 s opacity transition is style.css `#fade`.
+  fade(on) { this.fadeEl.classList.toggle('on', !!on); },
+
   showCollect(text) {
     this.collectEl.innerHTML = text;
     this.collectEl.classList.add('show');
@@ -389,7 +407,7 @@ export const hud = {
     const v = _bubbleV;
     const placed = [];
     const W = window.innerWidth, H = window.innerHeight;
-    let ob;   // the objective card's rect, read once per tick when needed
+    let ob, ck;   // the objective card's and Ole's watch's rects, read once per tick when needed
     for (let k = 0; k < list.length; k++) {   // oldest first: newer bubbles move up out of the way
       const it = list[k];
       if (now > it.until) { it.b.remove(); list.splice(k--, 1); continue; }
@@ -412,7 +430,10 @@ export const hud = {
       // BUBBLE_TAIL below that and stops BUBBLE_GAP above the head.
       const x = Math.min(W - w / 2 - 8, Math.max(w / 2 + 8, (v.x * 0.5 + 0.5) * W));
       if (ob === undefined) ob = this.obj.classList.contains('show') ? this.obj.getBoundingClientRect() : null;
-      const top = ob && x + w / 2 > ob.left && x - w / 2 < ob.right ? Math.max(BUBBLE_TOP, ob.bottom + 8) : BUBBLE_TOP;
+      let top = ob && x + w / 2 > ob.left && x - w / 2 < ob.right ? Math.max(BUBBLE_TOP, ob.bottom + 8) : BUBBLE_TOP;
+      // Under the watch under the pesetas too, while it shows (not under the letterbox, §10.10).
+      if (ck === undefined) ck = this._clockOn && (this._clockOver || !$('letterbox').classList.contains('on')) ? this.clockEl.getBoundingClientRect() : null;
+      if (ck && x + w / 2 > ck.left && x - w / 2 < ck.right) top = Math.max(top, ck.bottom + 8);
       let y = Math.max((-v.y * 0.5 + 0.5) * H - BUBBLE_TAIL - BUBBLE_GAP, top + h);
       for (let moved = true, n = 0; moved && n < 8; n++) {
         moved = false;

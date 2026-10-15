@@ -178,7 +178,11 @@ he only stands with his arms out before a propeller plane, and he never flies); 
 judging his dives at Flamenco's pool, their score cards, Majsan's tens and the belly flop (free
 roam, §10.8; the film's points scene is on the plane, and it judges the men, not their dives); the
 island answering his horn: pedestrians hopping aside, the gang's lines, his apology and the
-grisbil's grunt (free roam, §10.9; in the film nobody honks at anyone).
+grisbil's grunt (free roam, §10.9; in the film nobody honks at anyone); the island's clock as a
+mechanic (evenings and nights in free roam, Ole's watch under the pesetas, NÄSTA MORGON before a
+mission), Stig napping on his bed in room 107 and Ole waking him with his calculator's alarm (free
+roam, §10.10; in the film Ole only shows the calculator with an alarm off, and the word "kvarta" is
+Affe's).
 The film's flight has **no turbulence** and **no in-flight toilet scene**: both toilet scenes are
 at Arlanda (we keep them there). The plane's toilets are only an invented hideout.
 
@@ -324,6 +328,9 @@ Physical keys are unchanged from Bigmouth. The level config turns verbs on and o
   belly flop and a double jump a somersault for Siv and Majsan's cards; a plain hop is a swan dive.
 - **The horn** (free roam, §10.9): H in a car makes pedestrians ahead hop aside and the nearest of
   the gang answer; in a mission it is only the sound. The grisbil's horn is a grunt everywhere.
+- **The nap** (free roam, §10.10): E at Stig's bed in room 107 ("E Kvarta en stund") sleeps on to
+  the next part of the day; E at a mission giver in the evening or at night starts it the next
+  morning.
 - **Seated** (flight): movement input is ignored; E uses a `whileSeated` interactable if one is in
   range, else stands up (giver talk is **not** offered while seated: stand up first, §14.3); J
   mantra still works; Space does nothing. Phase 0: `handleOneShots` handles E, J and R when
@@ -1106,7 +1113,7 @@ standing there faces. `y` (optional) = absolute height for collectible spots on 
 
 | block (i,j) | type → builder (owner, file) | content | landmarks: `id` (lx, lz, yaw[, y]) | named / parked cars |
 |---|---|---|---|---|
-| (3,3) | `flamenco` → `hotelFlamenco` (C1, hotels.js) | 7-storey white slab x [−26, 26], z [−27, −14] with balcony rows, terracotta accents, `HOTEL FLAMENCO` roof sign; open reception porch (canopy, desk, plastic Christmas tree `julgran` prop, `RECEPCIÓN`; Phase 3 r2: `HOTEL FLAMENCO · RECEPCIÓN` stands on a terracotta panel above the pergola's fascia, where it no longer fills the top of the chase frame, and the garland runs across the fascia's face) at the slab's south face; ground-floor room patios along the south face (Stig & Ole's room west, room 113 east) with a visible 1st-floor balcony above 113; terracotta piers at the bay lines, solid (Phase 3 r2); pool deck south with a **walkable shallow pool** (flat blue slab at CURB+0.02 + `box(..., CURB, 'water')`, sign "TRE METER DJUPT I ENA ÄNDEN, / EN METER I DEN ANDRA. / BARNVÄNLIG!" (three lines) [F*] (the bungalow seller's line, relocated)); poolbar with straw parasols (`BAR PISCINA · SVENSKT KAFFE`); the julafton party `julgran` on the pool deck at (2.2, 16), in the party and sunset-duet shots (Phase 3); room numbers: a closed room's centred above its own glass door, an open room's (107, 113) on its right-hand pier (Phase 3); parking lot on the west; the parking signs here and at SunTrip's lot are a blue `P` plate over a name strip (`HOTEL FLAMENCO`, `SUNTRIP`) on a post that stops under them (Phase 3 r2: one two-line plate had shrunk the P to the name's size, and the post ran through both faces); **PEPES BODEGA**: small whitewashed annex x [4, 12], z [−31, −27] on the north side with a green door, barrels, sign `PEPES BODEGA · VINOS · RON` facing north (`worldHooks.bodegaLit(on)` lights it after julafton) | `flamenco` (−4, −8, π) (faces the hotel, so the views/cutaway camera stands on the pool deck; Phase 2) · `flamencoRecepcion` (2, −10, 0) · `flamencoPatio` (−18, −11, 0) · `rum113` (18, −11, 0) · `flamencoBalcony` (18, −8, π) · `flamencoPool` (−3, 18, π) · cut anchors (Phase 3; a cut stands `dist` m behind one, looking the way it faces): `rum107Cam` (−18, −11, π) = `flamencoPatio` turned round (looks into room 107), `recepcionCam` (2, −10, π) = `flamencoRecepcion` turned round (the desk from the porch front) · `flamencoDeck` (−4, −2.5, 0) (the island spawn: approachSpot puts the player on the pool deck at (−4, −1) facing the hotel, the chase camera over the pool rather than under the pergola slats; Phase 2) · `flamencoBar` (16, 12, −π/2) · `flamencoDrive` (−26, 22, π) · `flamencoBack` (−6, −33.5, 0) · `bodega` (8, −33.5, 0) · `fena_flamenco` (−3, 7, 0, 0.35) · `flamencoBoard` (−14.1, 7, π/2) (the middle of the diving board's bounce pad, facing out over the deep end: the judged board and the anchor of the sisters' spots at the pool's edge; not a standing spot; §10.8) | `hyrbil` (sedan `0xf4f4f0`) at `flamencoDrive` — default `getInCar` car and test car |
+| (3,3) | `flamenco` → `hotelFlamenco` (C1, hotels.js) | 7-storey white slab x [−26, 26], z [−27, −14] with balcony rows, terracotta accents, `HOTEL FLAMENCO` roof sign; open reception porch (canopy, desk, plastic Christmas tree `julgran` prop, `RECEPCIÓN`; Phase 3 r2: `HOTEL FLAMENCO · RECEPCIÓN` stands on a terracotta panel above the pergola's fascia, where it no longer fills the top of the chase frame, and the garland runs across the fascia's face) at the slab's south face; ground-floor room patios along the south face (Stig & Ole's room west, room 113 east) with a visible 1st-floor balcony above 113; terracotta piers at the bay lines, solid (Phase 3 r2); pool deck south with a **walkable shallow pool** (flat blue slab at CURB+0.02 + `box(..., CURB, 'water')`, sign "TRE METER DJUPT I ENA ÄNDEN, / EN METER I DEN ANDRA. / BARNVÄNLIG!" (three lines) [F*] (the bungalow seller's line, relocated)); poolbar with straw parasols (`BAR PISCINA · SVENSKT KAFFE`); the julafton party `julgran` on the pool deck at (2.2, 16), in the party and sunset-duet shots (Phase 3); room numbers: a closed room's centred above its own glass door, an open room's (107, 113) on its right-hand pier (Phase 3); parking lot on the west; the parking signs here and at SunTrip's lot are a blue `P` plate over a name strip (`HOTEL FLAMENCO`, `SUNTRIP`) on a post that stops under them (Phase 3 r2: one two-line plate had shrunk the P to the name's size, and the post ran through both faces); **PEPES BODEGA**: small whitewashed annex x [4, 12], z [−31, −27] on the north side with a green door, barrels, sign `PEPES BODEGA · VINOS · RON` facing north (`worldHooks.bodegaLit(on)` lights it after julafton) | `flamenco` (−4, −8, π) (faces the hotel, so the views/cutaway camera stands on the pool deck; Phase 2) · `flamencoRecepcion` (2, −10, 0) · `flamencoPatio` (−18, −11, 0) · `rum113` (18, −11, 0) · `flamencoBalcony` (18, −8, π) · `flamencoPool` (−3, 18, π) · cut anchors (Phase 3; a cut stands `dist` m behind one, looking the way it faces): `rum107Cam` (−18, −11, π) = `flamencoPatio` turned round (looks into room 107), `recepcionCam` (2, −10, π) = `flamencoRecepcion` turned round (the desk from the porch front) · `flamencoDeck` (−4, −2.5, 0) (the island spawn: approachSpot puts the player on the pool deck at (−4, −1) facing the hotel, the chase camera over the pool rather than under the pergola slats; Phase 2) · `flamencoBar` (16, 12, −π/2) · `flamencoDrive` (−26, 22, π) · `flamencoBack` (−6, −33.5, 0) · `bodega` (8, −33.5, 0) · `fena_flamenco` (−3, 7, 0, 0.35) · `flamencoBoard` (−14.1, 7, π/2) (the middle of the diving board's bounce pad, facing out over the deep end: the judged board and the anchor of the sisters' spots at the pool's edge; not a standing spot; §10.8) · `stigSang` (−19.75, −20.35, 0) (the middle of Stig's turquoise bed in room 107, the way a sleeper on his back faces: the nap's E spot and the anchor of Ole's and Stig's places; not a standing spot, `teleport` puts him on the 0.70 mattress; §10.10) | `hyrbil` (sedan `0xf4f4f0`) at `flamencoDrive` — default `getInCar` car and test car |
 | (3,2) | `suntrip` → `hotelSunTrip` (C1, hotels.js) | lower U-shaped hotel on red rock; welcome **stage** with SunTrip sun backdrop (red text on yellow sun), accordion/conga props; pool; **friskotek lawn**; SunTrip office porch on the south side facing Flamenco's back; posters `GRISFEST TORSDAG · 800 PTA`, `FRISKOTEKET 9.30`; the free-standing `FRISKOTEKET / VARJE MORGON 9.30` board on the lawn's west edge is solid (Phase 3 r3: only its posts were, so he walked through it and the chase eye stood behind it) | `suntrip` (−14, 24, π) (faces the office porch; Phase 2) · `scen` (0, −14, 0) · `friskotek` (−10, 8, 0) · `suntripPool` (14, 4, π) · `suntripLot` (24, 22, π) · `fena_suntrip` (14, 8, 0, 0.35) · `berraSolstol` (17.4, 2.2, 0) (the pool lounger Berra naps on, on its prop, facing its backrest end; §10.6) | — |
 | (1,2) | `kasbah` → `kasbah` (C2, centre.js) | **Centro La Medina** (fictional; internal id `kasbah`): two-level nightlife courtyard centre: arcade, stairs (ramp) to a roof terrace (top ≈ 6.0) with a balustrade above the bottom three steps and a sloped wall collider along it (Phase 3: the way on is over those three steps), neon signs `CENTRO LA MEDINA`, `VIKING BAR` (horned helmet), `TONGA TONGA` (mirror ball), `BAR SVENSKA · SMÖRGÅSAR` | `kasbah` (0, 22, π) · `vikingbar` (−16, 18, π) · `tongatonga` (14, 18, π) · `tongaLot` (20, 27, π) · `tongaSlump` (16.3, 17.4, 0.5) (where Berra slumps after Tonga Tonga and is picked up, at the right of the group in the street shot; Phase 3 r3) · `pryl_poolpen` (8, −6, 0, 7.2) | — |
 | (4,2) | `cita` → `cita` (C2, centre.js) | **Centro Nórdico** (fictional; internal id `cita`) strip mall, sign `CENTRO NÓRDICO`: `SUPERMERCADO`, `FERRETERÍA`, `FARMACIA`, `ESTANCO`, `TELÉFONOS · HYTT 1·2·3`, `SOUVENIRS`, `SVENSKT KAFFE`, `CAMBIO · 1 KR = 17 PTA` (Phase 3: the north shop row and its canopy fit the courtyard between the wings, x ±11; `SOUVENIRS · REGALOS` and `FARMACIA` with its green cross sit on the wings' courtyard faces) | `cita` (0, 22, π) · `supermercado` (−18, 18, π) · `ferreteria` (18, 18, π) · `telefon` (0, 8, π) | — |
@@ -2822,7 +2829,9 @@ def = { id, title, level: 'flight' | 'island', giver, at, reward,
 
 Runner changes (Phase 0):
 1. `MISSIONS = [...FLIGHT_MISSIONS, ...ISLAND_MISSIONS]` from `missions/index.js`.
-2. `begin()`: intro cinematic with the title card (banner `def.title` / `Uppdrag ${index + 1} av
+2. `begin()`: on the island, outside the free-roam clock's day hours (evening or night), first
+   `await g.day.toMorning()` (NÄSTA MORGON, the clock to 09:00 and the day palette; feature 30,
+   §10.10), so every mission starts by day. Then the intro cinematic with the title card (banner `def.title` / `Uppdrag ${index + 1} av
    ${MISSIONS.length}`, cls `mission intro`, 3.2 s, and the `start` jingle) in the top letterbox
    bar while the intro plays; it is hidden when the intro ends if still up → `if (def.cost) await
    g.pay(def.cost)` → `startMission(0)`. Stage 0 starts on a clear screen (Phase 3: the 2.8 s
@@ -2924,7 +2933,9 @@ Runner changes (Phase 0):
    { instant: true })` with no `hold` (so an unheld or held mission phase chain stops), seatbelt sign
    off (no chime), then palette and map source for that phase. A retry re-applies the mission's
    ambient cues on top, item 3); `abort()` also runs
-   `cleanupMission()` if needed. `complete()` calls `onEnd(g, 'complete')` after the outro.
+   `cleanupMission()` if needed. `complete()` calls `onEnd(g, 'complete')` after the outro. On the
+   island `restoreAmbience()` and `complete()` (once the state is idle) call `g.day.resync()`: the
+   free-roam clock's palette comes back at the next free-roam frame (§10.10).
 7. `cleanupMission()` NPC list = `Object.keys(g.npcs)`; seated home NPCs are re-seated by
    `placeNpcs(true)`; stage-registered interactables, `onJolt` listeners and rider busts are
    removed; hidden riders are shown; flight level: `cabin.setAisleBlockers(false)`; `freezeCar`,
@@ -3056,7 +3067,8 @@ Saved on mission complete, collectible pickup, level transition, and every 30 s.
 Berra job (§10.6) is not saved. `unlocked` also holds the glide's `glid` (its toast shown) and the
 marker `glidPlask` (Lasse's pool line said; saved at once), §10.7. `records` holds the free-roam
 bests (`game.records`; a missing key is no record yet): `simhopp`, the diving judges' best total,
-saved at once when beaten (feature 4, §10.8).
+saved at once when beaten (feature 4, §10.8). The free-roam clock (§10.10) is not saved: every
+session's island starts at 15:00.
 
 ### 10.6 Bärra hem Berra (free roam; feature 2, 2026-10-14)
 
@@ -3339,6 +3351,89 @@ react to the horn read `game.hornAt`.
 - `honk.last` ({ t, pigs, peds, replies: [[key, text]], stig: [text] }) is for tests. The rest is
   session state; nothing is saved. Scenario `tuta` (§16.4).
 
+### 10.10 Dygnet runt – the island's clock, its evenings and the nap in room 107 (free roam; feature 30, 2026-10-15)
+
+`game/dayClock.js` (`DayClock`, owned by Game as `day`), config `DAY` in content/island.js. Between
+missions time goes by on the island: the sky glides through the existing palettes (§13.3; no new
+ones), the town lights up in the evening, Ole's watch shows the time once found, and Stig can nap
+on his bed in room 107 until Ole wakes him with his calculator's alarm. The clock, the nap and the
+alarm waking him are [N] (§1.6); the words are the film's (Affe's "kvarta", Ole's gadgets) and ours.
+
+- **The clock.** `day.h`, Spanish time in hours (0 ≤ h < 24), starts at `start` = 15 (Lasse in the
+  bus: "Klockan är tre spansk tid"). It moves only while `live`: on the island, `missions.state ===
+  'idle'`, no dialogue, and not during its own nap or morning cut. By day (06–21) a game hour takes
+  `hourSecs` = 60 s, at night (`night` 21–06) `nightHourSecs` = 30 s, so a whole day takes 19.5 min;
+  the step is `dt × timeScale`. `day.run` (true unless test mode) lets it move by itself: **in test
+  mode it holds at 15:00**, so `story`, `fullstory` and `calibrate` play in the day palette exactly
+  as before (`day.set(h)` still sets it). Not saved (§10.5): every session's island starts at three.
+- **The sky.** `sky` key frames `[[6, night], [7, day], [19, day], [19.75, sunset], [20.5, night]]`,
+  smoothstep-eased between neighbours: dawn 06–07, the sunset 19–19:45, dusk 19:45–20:30, night
+  till six. Blended as the cabin's (`cabin.stepPalette`): `top`, `horizon`, `sun`, `hemiSky`,
+  `hemiGround`, `cloudRim` in linear light, `fogNear`, `fogFar`, `sunI`, `hemiI` straight, and
+  `sunDir` with the blend towards the sunset (the long evening shadows) but with its cube towards
+  night (it swings late, at a weak sun, so the shadows do not wheel round over the town at dusk;
+  night→day keeps one direction). The clock writes (`setSkyPalette`, `setNightLights`, `game.sky` =
+  the nearer palette) only when the state changes: the blend in 1/200 steps plus the lights
+  (`day.key`). Measured, top r + g + b in linear light (day 1.007, sunset 0.472, night 0.063): 19:24
+  0.71, 19:45 0.472, 20:10 0.232 (fog near 153, sun 1.44: the sketch's dusk, a little past halfway
+  from sunset to night), 21:00 night, 06:15 0.212, 06:45 0.859; at 60 × speed the blend runs at
+  60 fps.
+- **The lights.** `lit` = [20, 6.5]: from 20:00 to 06:30 the clock forces the night lights
+  (`gfx.skyDark`: the hotels' windows, `nightGlow`'s lamps and globes) and the lighthouse
+  (`gfx.beaconLit`) on, and off by day, so the town lights up at one time (by the sky's own
+  thresholds the windows would come on at about 19:20 and the lighthouse at about 20:05). `Game.setSky` hands both
+  back to the sky (§13.3), so the missions' palettes and the end card light as before. The idea said
+  nine; by then the sky has been night for half an hour, and the sketch shows them lit at 20:10.
+- **Missions are not touched.** The clock stands still in every mission state but idle (intro,
+  running, outro, failed). `runner.begin`, after `state = 'intro'`: outside `dayHours` = [7, 19)
+  (any palette but day) it awaits `day.toMorning()`: `inDialog`, a black fade (`fadeSecs` 0.7), the
+  banner `NÄSTA MORGON` / `Klockan nio, spansk tid` [N], the watch (if found) spinning on to
+  `morning` = 09:00 over `spinSecs` 1.4 s, the day palette, `holdSecs` 1.2 s, the fade back; then
+  the talk goes on as by day. So every mission starts in the day palette, where its timer was
+  measured; grisfest's and julafton's own skies (their `startCue`s) and the end card are unchanged.
+  When a mission hands the sky back, `day.resync()` brings the clock's palette back at the next
+  free-roam frame: `restoreAmbience` (fail, abort) and `complete` once the state is idle (before an
+  end card, which holds `inDialog`). Grisfest's `onEnd('complete')` (MORGONEN EFTER) sets 08:00.
+- **Ole's watch.** With pryl `klocka` found (§10.1), on the island: `#klocka` under the pesetas
+  (§11.4) with the watch icon, the Spanish time and `SPANSK TID` [F*] over `{no} norsk · {sv} svensk`
+  [F*], an hour on (the same time twice, as on Ole's watch: "Spansk, norsk, svensk tid"). It goes
+  with the coins under the letterbox, except while it is drawn `over` the black fade (the nap and
+  the morning cut), where it spins on.
+- **The nap.** An interactable (`kvarta`, §14.3) at landmark `stigSang` (Stig's turquoise bed in
+  room 107, §6.3), radius `nap.r` = 2.0 m (the bed's foot and side, not Ole's bed 3.5 m off), prompt
+  `E Kvarta en stund` [F*] (Affe's "Jag måste få kvarta nån gång."), enabled by `canNap`: `live`, no
+  pursuit, nothing carried, on foot, standing on the ground. E (`inDialog`, letterbox):
+  1. A black fade (0.7 s). In the dark: the banner `ZZZ…` [N]; Stig teleported onto the mattress
+     (0.70) and laid on his back (`tumble` past its roll); Ole, if free (shown, standing, not in a
+     car or seat, not held by an idle pose, the Berra job or the judges), `placeNpc`d at the bed's
+     head facing it (`oleAt`: 1.0 m left, 0.2 m back, world yaw −π/2); the camera cut to the room's
+     front-left corner (`cam` −0.4, 3.75, 2.45 m up, looking at `look` 0.45, 0.15, 1.2 m: Ole does
+     not hide Stig); the watch spins on to the next `wake` hour at least `minGap` = 0.5 h on (08
+     `morgonen`, 15 `eftermiddagen`, 20 `kvällen`, 23 `natten`); the palette for that hour, and while
+     the lights are on the `lamp` (hemisphere `0xffe2b8` / `0x9a7050`, 1.7) for the scene, as if Ole
+     had switched on the ceiling lamp (the glowing pane over the room; at night the room was too dark
+     to read).
+  2. The fade back. Stig "Zzz…" [N]; `pipAt` 0.7 s later `audio.pip()` and Ole's `calc` (the
+     calculator up in his near, left hand, §14.6) with "PIP-PIP-PIP! Kalkulator – med vekkerklokke!"
+     [F*] (his gadget line; the alarm call ours); `sleepOn` 2.2 s later "Zzz…" again (he sleeps on);
+     `wakeAt` 1.4 s later the second PIP and Stig on his feet at the bed's foot (`stigAt`, facing
+     the bed), the toast `Stig kvartade till {part}.` [N], and at 23:00 his "Vad härligt det är med
+     de här varma nätterna…" [F*](t); `after` 1.6 s later the camera back behind him, the clock's
+     palette (the lamp off) and play.
+  3. Ole is let go (`busy` false, `spot` null): `placeNpcs` leaves him by the bed until Stig is
+     50 m off (it never pops anyone in front of him) and then sends him home. When the waiting
+     mission needs him at its place (its giver or an extra: asnan, grisfest, julafton; buss17's and
+     friskotek's extras), the end goes through black and he is there when it lifts. The giver's "!"
+     is hidden during the nap. Ole never wakes him with julafton's "Morn, gutten min!".
+- **Chatter with a time of day** (`DAY.chatter`, filtered in `syncAll` by `day.lineOk` while the
+  clock runs): Gabbe's "Natturen går klockan nio!" 17–21, Lasse's "Friskoteket börjar halv tio varje
+  morgon." 06–10 and "Klockan är tre spansk tid." 14–16 (that one so he does not say it at midnight).
+- **Not done** (it would make this L): own palettes for the forenoon or the siesta, lights fading
+  in (they share `MAT.mouth` and switch at once), night routines for people or cars; traffic and
+  pedestrians are the same at night. No day cards (§15.5).
+- `day.last` (`{ kind: 'nap' | 'morning', from, to, part?, ole?, pips? }`) is for tests. Scenarios
+  `dygn` and `dygnGiver` (§16.4).
+
 ---
 
 ## 11. HUD / UI strings (Swedish; `src/strings.js` owned by WP-H, created by Phase 0)
@@ -3385,12 +3480,13 @@ mutes without touching the button, which then said `Ljud: på` while muted).
 | element | text |
 |---|---|
 | coins | `{n} pta` |
+| Ole's watch (feature 30, §10.10) | `#klocka` under the coins (top 76 px, a cream card): the watch icon (`.pryl-icon`), the Spanish time `hh:mm` (Luckiest Guy 30 px), `SPANSK TID` (terracotta) over `{no} norsk · {sv} svensk` (an hour on); shown on the island once pryl `klocka` is found (`hud.setClock(main, zone, sub, over)`); hidden with the coins under the letterbox unless `over` (drawn over `#fade`); `#collect` moves down to 136 px while it shows, and speech bubbles stay under it as under the objective card |
 | meter label | `FLYGRÄDSLA` (flight) / `SKANDAL` (island); pursuit suffix (CSS `::after`) ` · ¡ALTO!` |
 | speedo unit | `KM/H` (× 3.6); car name = Swedish `spec.name` or `NAMED_CARS[name]` (`buss17`: "SunTrips buss 17", `hyrbil`: "Hyrbilen", `grisbil`: "Grisbilen", `nattbuss`: "Nattbussen", `joseBil`: "Josés bil", `guardiaJeep`: "Guardia-jeepen") |
 | dialogue next | `E ▸` |
 | minimap rim badge | `N` (island) / `FRAM` (flight) |
 | big-map legend | from `game.mapLegend()` (§10.1) |
-| prompts | `<b>E</b> Prata med {name}` · `<b>E</b> Kliv in` · `<b>E</b> Ta bilen` · `<b>E</b> Sätt dig` · `<b>E</b> Res dig` · `<b>E</b> Lås in dig` · `<b>E</b> Ta en juice` · `<b>SPACE</b> Håll i dig!` · `<b>J</b> håll: Jag kan flyga!` (the `<b>` keycap is Luckiest Guy: uppercase). Order (`updateHud`): talk, then `Håll i dig!` while the cabin is turbulent and he stands without holding on (Phase 3 r3, §5.7), then the car, interactable (seats, toilets…) and stand prompts |
+| prompts | `<b>E</b> Prata med {name}` · `<b>E</b> Kliv in` · `<b>E</b> Ta bilen` · `<b>E</b> Sätt dig` · `<b>E</b> Res dig` · `<b>E</b> Lås in dig` · `<b>E</b> Ta en juice` · `<b>E</b> Kvarta en stund` (Stig's bed, §10.10) · `<b>SPACE</b> Håll i dig!` · `<b>J</b> håll: Jag kan flyga!` (the `<b>` keycap is Luckiest Guy: uppercase). Order (`updateHud`): talk, then `Håll i dig!` while the cabin is turbulent and he stands without holding on (Phase 3 r3, §5.7), then the car, interactable (seats, toilets…) and stand prompts |
 
 **The result line** (feature 4, §10.8): `#score`, low in the middle (bottom 92 px, under the
 prompt at 178 px), a cream card with the dive and its sum in Luckiest Guy over the record line
@@ -3509,7 +3605,11 @@ prompt at 178 px), a cream card with the dive and its sum in Luckiest Guy over t
   before stage 0 starts. `#hud #banner.intro`: top 4.5vh, flex row (main + pill), main
   `clamp(22px, 5vh, 40px)`, no tilt.
 - Transition: `LAS PALMAS` / `Soldis och 22 grader varmt.` [F*].
-- Grisfest end: `MORGONEN EFTER` / `Julafton på Gran Canaria`.
+- Grisfest end: `MORGONEN EFTER` / `Julafton på Gran Canaria` (the free-roam clock to 08:00, §10.10).
+- **The free-roam clock** (feature 30, §10.10), over the black `#fade` (`hud.fade(on)`, 0.6 s
+  opacity, `z-index` 1 under the banner's 2): `NÄSTA MORGON` / `Klockan nio, spansk tid` before a
+  mission talked to in the evening or at night, `ZZZ…` during the nap (cls `mission`, held until
+  hidden).
 - **End card** (`game.playEndCard()`, P1, ~10 s, letterboxed): fade to white; camera to `rioCam`
   looking at `rioBoat` with Stig (outfit `rio`), Majsan, Ole (`rio`), Siv placed on the deck and an
   orchestra of busts; tune `samba`; banner `RIO…?` / *"Svenskarna reser inte till någonting… dom
@@ -3600,6 +3700,7 @@ Scheduler fixes (Phase 0): catch-up guard `if (next < ctx.currentTime) next = ct
 | `baa()` | tone slide 420 → 300 Hz with vibrato |
 | `oink()` | the grisbil's horn (feature 5, §10.9): two nasal grunts 0.22 s apart, each a 190 → 120 Hz sawtooth and a band-passed noise burst; `honk.update` plays it on H and every 0.75 s while H is held, and `updateAudio` keeps `horn` off in the grisbil |
 | `thud()`, `crash()`, `coin()`, `pickup()`, `splash()` | existing |
+| `pip()` | Ole's calculator alarm (feature 30, §10.10): PIP-PIP-PIP twice, 2794 Hz square pips of 0.06 s 0.12 s apart, the second three 0.55 s on; the nap plays it twice |
 | `glide()` | feature 3 (§10.7), arms out: two soft band-passed noise sweeps up, 450 → 1500 Hz (0.7 s) and 900 → 2400 Hz (0.5 s, +0.15 s) |
 | `jingle(kind)` | `start`, `complete`, `fail`, `pryl` (replaces `record`) |
 | `trad(name)` | §12.1 |
@@ -3643,12 +3744,16 @@ one. The flight palettes leave it out (the town clouds are hidden in the flight 
 | `above` (cruise) | `0x1f6fd0` | `0xbfe0ff` | 300 / 900 | `0xfff4dc` 2.6 | `0xe6f2ff` / `0xffffff` 1.6 | `0x7fb8ef` |
 | `descent` (approach) | `0x2a86e0` | `0xf2e4c4` | 260 / 820 | `0xffe7b8` 2.8 | `0xd8ecff` / `0xa08060` 1.5 | `0x9ad0f0` |
 | `island` (landing, landed; island `day`) | `0x2a86e0` | `0xf2e4c4` | 220 / 760 | `0xffe7b8` 2.9 | `0xd8ecff` / `0xa08060` 1.45 | `0xa8d8f8` |
-| `night` (grisfest) | `0x141a3c` | `0x3a2f4e` | 120 / 600 | `0x9fb4ff` 0.9 | `0x5a6aa0` / `0x3a2a20` 0.9 | — |
-| `sunset` (grisfest dusk, julafton mantra, Rio) | `0x3a4fa0` | `0xf7a26b` | 200 / 760 | `0xffb070` 2.2 | `0xffd8b0` / `0x8a5a40` 1.3 | — |
+| `night` (grisfest; free-roam nights, §10.10) | `0x141a3c` | `0x3a2f4e` | 120 / 600 | `0x9fb4ff` 0.9 | `0x5a6aa0` / `0x3a2a20` 0.9 | — |
+| `sunset` (grisfest dusk, julafton mantra, Rio; free-roam evenings, §10.10) | `0x3a4fa0` | `0xf7a26b` | 200 / 760 | `0xffb070` 2.2 | `0xffd8b0` / `0x8a5a40` 1.3 | — |
 
 Flight palettes keep `fogNear ≥ 40` so the interior is never fogged. Night: string lights are unlit
 `MeshBasicMaterial` bulbs (grisfest block, Kasbah neon). Lit windows and lamps that glow only after
-dark draw while the sky `top` is dark (r + g + b < 0.8: `night` and `sunset`): the hotels' windows
+dark draw while `gfx.skyDark()`: by default while the sky `top` is dark (r + g + b < 0.8 in linear
+light: `night` and `sunset`), and the lighthouse while `gfx.beaconLit()` (by default the sun weaker
+than 1.6); the free-roam clock (feature 30, §10.10) forces both with `gfx.setNightLights(on)` while
+it blends the island palettes between missions (lit 20:00–06:30), and `Game.setSky` hands them back
+to the sky with `setNightLights(null)`. The hotels' windows
 (hotels.js `nightMesh`) and, since Phase 3, the street lamps' lantern panes and star centres
 (town.js `nightGlow`, one unlit mesh for the whole island; block builders may add their own night
 lights to it in world coordinates while `buildTown` runs). The coast adds the marina's quay-lamp
@@ -3705,6 +3810,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/glide.js` | new (feature 3, 2026-10-14) | — | `Glide` (`game.glide`): Jag kan flyga in free roam after julafton: the tap-or-hold J in the air, the glide, walls, the landing roll, the lines (§10.7) |
 | `src/game/poolJudges.js` | new (feature 4, 2026-10-15) | — | `PoolJudges` (`game.judges`): Siv och Majsan sätter poäng in free roam: the board's hops, the call and the walk to the edge, the verdicts, cards, lines, result line and record (§10.8) |
 | `src/game/honk.js` | new (feature 5, 2026-10-15) | — | `Honk` (`game.honk`): Tutan som folk reagerar på in free roam: the pedestrians' hop, the cast's answers and poses, Stig's lines, the grisbil's grunt (§10.9) |
+| `src/game/dayClock.js` | new (feature 30, 2026-10-15) | — | `DayClock` (`game.day`): Dygnet runt in free roam: the island's clock, the palette blend and night lights, Ole's watch in the HUD, NÄSTA MORGON before a mission, the nap in room 107, chatter by the hour (§10.10) |
 | `src/game/hud.js` | edit | **H** | map sources, meter, strings, legend, ring, blips, zone bar, markers; `renderPortrait` restores the model transform (§14.8) |
 | `src/game/camera.js` | edit | **A1** | profile, frameOne, cutTo, `clampZ` |
 | `src/game/fx.js` | edit | **A1** | `snow`, `steam`, `meterPuff` (rename of `shame`) |
@@ -3765,7 +3871,7 @@ Init: `initGfx` → `input.init` → `hud.init` → `fx.init` → fonts (Luckies
 → peds (34) → NPC `Character`s (one per `CHARS` key except `stig`, the radio-only keys `levander
 kapten pa guardia pax telefonist` and the cabin-owned `vardinna2`; `key` field; hidden until placed, §2.3) →
 player `Character(CHARS.stig)` (`key = 'stig'`) → collectibles (`COLLECTIBLES`) → markers → `Shame`
-→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
+→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
 `placeNpcs(true)` → spawn the player → portraits for every key in `CAST` (`renderPortrait`
 restores each model's parent and transform, so seated cast members stay in their seats) →
 `applySaveToWorld()` →
@@ -3776,7 +3882,7 @@ mantra/hold, AI, cars, people (`glide.step` → the player's step → `glide.aft
 traffic/peds skipped when `!levelDef.sim.*`) → `syncAll` (also
 writes `ch.x/y/z` from `car.seatWorld(ch.seatSide)` for every car-seated character, player
 included, so framing, bubbles and distance checks see where they really are) → `missions.update` →
-`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `honk.update` (feature 5) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
+`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `honk.update` (feature 5) → `day.update` (feature 30) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
 pickups/collectibles → props → `fx.tick` → `tickTown` → markers → camera → sun/sky → HUD → audio →
 traffic recycling (island) → autosave.
 
@@ -3799,6 +3905,9 @@ game.judges;       // PoolJudges (feature 4, §10.8): the sisters judge his dive
 game.records;      // { simhopp?: n } free-roam bests, saved (§10.5)
 game.honk;         // Honk (feature 5, §10.9): the island hears the horn in free roam
 game.hornAt;       // null | { x, z, yaw, t, pigs }: the last free-roam horn press (§10.9)
+game.day;          // DayClock (feature 30, §10.10): day.h (Spanish time, 0–24), day.run (moves by
+                   // itself; false in test mode), day.set(h), day.resync(), day.dark, day.lit(),
+                   // day.lineOk(text), async day.toMorning() (runner.begin), day.napping, day.last
 game.onBounce(ch, b);   // Character.step: ch bounced on trampoline block b (the boing; the judges, §10.8)
 game.onLand(ch, v, y);  // Character.step: ch landed at v m/s (> 6) on floor height y (the stomp; the judges)
 game.bumpedT;      // > 0 for 0.4 s after a trolley bowl / turbulence fall
@@ -3810,7 +3919,8 @@ game.closure;      // null | a race's closed course { nodes: Set<nodeId>, update
 game.levelFor(index) -> 'flight' | 'island'
 game.setLevel(name, { index, instant = true } = {})
 async game.transitionTo(name)
-game.restoreAmbience()                    // level tune, mantraMode=false; island palette; flight:
+game.restoreAmbience()                    // level tune, mantraMode=false; island palette (and
+                                          // day.resync(), §10.10); flight:
                                           // cabin.stopTurbulence() (Phase 2), then
                                           // setPhase(phaseForIndex(index), {instant}) no hold,
                                           // seatbelt off, palette + map for it (§9.4 item 6)
@@ -3823,7 +3933,8 @@ game.setIslandTune(name)                  // switches now only if the island's a
                                           // playing (never over `skandal` or a music cue); saves
 game.cycleMusic() -> label;  game.musicLabel()   // pause-menu Musik: på → samba (after the
                                           // unlock) → av → på (§11.3)
-game.setSky(name)                         // island palettes: 'day' | 'night' | 'sunset'
+game.setSky(name)                         // island palettes: 'day' | 'night' | 'sunset'; also
+                                          // setNightLights(null): the lights follow the sky (§13.3)
 
 // ---- NPCs ----
 game.npc(key)                             // 'stig' → player
@@ -4057,6 +4168,10 @@ alone). `anim.look` (radians added to the neck's yaw) is the glide's dazed shake
 (a stick and a 0.6 × 0.42 board, its number a face plane on each side drawn once per string by
 `textCanvas`) out in the right hand at shoulder to eye height, off to her right (right arm
 (−1.15, 0, −0.45)); posed after `laugh`, so a laughing judge keeps her other hand on her belly.
+`calc` (feature 30, §10.10): Ole's calculator alarm held up high in the **left** hand (the near one
+as he stands at the head of Stig's bed facing him; left arm (−0.45 ± a 13/s shake, 0, 2.55)), the
+`kalkylator` prop (a black 0.15 × 0.25 × 0.045 body, a green display, nine keys, one orange), the
+neck tipped back a little; `heldPose` counts it as busy.
 
 **character.js**: `ch.setDef(def)` (rebuild model under the same parent; keep x/y/z/yaw/state;
 `height` updated); state `'hidden'` (step no-op, `root.visible = false`, skipped by
@@ -4070,6 +4185,9 @@ than 0.3 m off); at the end order `XYZ`, `onGetUp`. `fling` cancels it. `GRAV` (
 `ch.flop(secs)` (feature 4, §10.8; only from `normal`): state `down` for `secs`, face down along his
 own heading, head first (root order `YXZ`, x = π/2, lifted 0.25 as any `down`), then order `XYZ`,
 `onGetUp`; `fling` cancels it. The `down` pose spreads his arms and legs: the belly flop.
+The nap (feature 30, §10.10) lays him on his bed with `tumble(1e9, 1e-3)` and `tumbleT = 1` (past
+the roll: on his back, head along −his heading, so heading the bed's yaw puts it on the pillow) and
+ends it by hand (`state 'normal'`, `tumbleT` null, order `XYZ`, a teleport to the bed's foot).
 
 **main.js `carsVsPeople`** (Phase 3 r1 repair): a car knocks a `normal` character over (`fling`,
 `onCharHit`) only when its **own** speed into him (`car.v · n`, n from the car to him) is over
@@ -4297,6 +4415,16 @@ shame.paint (PaintShop, §7.2): configure(cfg) from configure(); onPursuit() fro
 //   reset() while not active()); active(); free(key); sees(n, car); line(key, pigs, used); queue;
 //   answered; react { key: { until, flag } }; last { t, pigs, peds, replies, stig }
 
+// dayClock.js (feature 30, §10.10): game.day = new DayClock(game) after the horn (it registers the
+//   bed's interactable `kvarta`); update(dt) after honk.update (moves h while live and run, writes
+//   the palette and lights when key(h) changes, shows the watch); live; isDay(h); dark; lit(h);
+//   hourSecs(h); blend(h) -> { a, b, s }; key(h); palette(h) -> { pal, name }; write(); resync();
+//   set(h); showHud(); spin(from, to); lineOk(text) (syncAll's chatter); toMorning() (awaited by
+//   runner.begin); canNap(); nextWake(h) -> [h, part, d]; oleFree(); oleNeeded(); nap(); wake(p,
+//   s, yaw); busy; napping; over; spinH; last { kind, from, to, part?, ole?, pips? }
+// gfx.js: setNightLights(on | null), skyDark(), beaconLit() (the night lights' switch, §13.3)
+// hud.js: setClock(main, zone, sub, over) (#klocka; main null hides it), fade(on) (#fade)
+
 // collision.js: waterAt(x, z, y) -> the `water` block he stands in at that height, or null
 //   (feature 4; moved from glide.js)
 
@@ -4456,6 +4584,11 @@ staff, Swedish.
 Feature 5: the answers to the horn (`HONK`, §10.9) follow the same split, with own lines first: Ole
 (bokmål), Lasse, Angerud, Berra and Robban by key, then `HONK.local` for `LOCAL_CAST` and `HONK.sv`
 for the rest. They play in free roam only, never over a dialogue.
+
+Feature 30: three CHATTER lines carry a time of day (`DAY.chatter`, §10.10), and `syncAll` picks
+from the lines `day.lineOk` allows while the free-roam clock runs: Gabbe's "Natturen går klockan
+nio!" 17–21, Lasse's "Friskoteket börjar halv tio varje morgon." 06–10 and "Klockan är tre spansk
+tid." 14–16. With the clock held (test mode) every line stays in, as before.
 
 ---
 
@@ -4696,7 +4829,8 @@ multiplier; "steady arms" mantra minigame (turbulence drifts a marker, A/D keeps
 Eslöv time trials; SunTrip-office hideout; Angerud searching Stig's room
 ("Buenas noches, señor"); piglets falling off the grisbil; sheep flock as Fataga decor; oink horn
 (done: feature 5, §10.9);
-number plates; day cards ("Dag 2").
+number plates; day cards ("Dag 2"; the free-roam clock and its NÄSTA MORGON before an evening
+mission are feature 30, §10.10, but there are no day cards).
 
 ---
 
@@ -4781,6 +4915,8 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `glide` [feature 3] | Jag kan flyga (§10.7), at index 13: before `bodega` J in the air stomps at once, held or not, no glide, no toast; after it the toast waits for the first jump and shows once; a quick J in the air stomps (on the release); the dream plane's wing (jump, double jump, J): peak 5.4–6.2 m, wings and `glide` on, sinking at 2.4 m/s, the mantra bubble, 10–15 m, the roll (`down`), up and dazed; off the wingtip at the palm: under 1 s within 1 m of the trunk and landing past it; the hangar's side head-on from 10 m up: he lets go above 3 m, not landed; Flamenco's diving board (bounce, double jump): peak over 6.6 m, over 13 m, down in the pool's shallow end (`water`, `pool`), Lasse's line on the radio and `glidPlask`, Ole's shout when he stands within 16 m; again: no second radio line; D during a glide turns it right without spinning him round; not while carrying, not in a car, not in a running mission (julafton started with `bodega` added) |
 | `simhopp` [feature 4] | Siv och Majsan sätter poäng (§10.8), at index 13: the first bounce on `flamencoBoard` brings Stig's call line and both sisters walk to their spots at the edge (busy, `poolJudges`); a plain hop with W held lands in the deep end (x ≈ −8.5) as a swan dive (`swan` on the way down, off in the water): cards 4 and 10, `SVANHOPP! 4 + 10 = 14 P`, `NYTT REKORD!`, the three lines in order, the record 14; bouncing in place: no `swan` over the board, no verdict, no second call; a double jump: `VOLT! 9 + 10 = 19 P`, a new record, saved in localStorage, the nine line ("Tio!" held back by its 20 s); a stomp: `MAGPLASK! –1 + 10 = 9 P`, `REKORD 19 P`, Stig `down` and `flopped`, Majsan laughing, Siv's line and "…Minuspoäng?", then Siv's tease after the third ten, and he gets up; two swan dives in a row: both judged, no line twice, no second tease; idle, both walk home and are free with their spot ids back; a glide off the board into the pool is not judged; at ropavieja's idle (index 9) giver and extra judge from their places and turn to him; at grisfest's (index 11) a mission start with them at the edge sends them home and ends the visit, and in the running mission the board is only a trampoline; at buss17's (index 5) they are at the airport: no call, no verdict |
 | `tuta` [feature 5] | Tutan som folk reagerar på (§10.9), at index 9 (free roam): on the SunTrip street, H makes a pedestrian 10 m ahead on the far sidewalk hop away from the car's line with a dodge shout, one 8 m behind stays put; Lasse answers "Hä-pååre!", waves and turns to Stig; Ole behind the hotel does not answer; Stig's sorry once; no SKANDAL; within the cooldowns no second answer, no second sorry, no second hop (3 s), then a hop that jumps; from the west street Ole's car statistics and wave; from the north street Berra and Robban "Ra-tara-tara!" and Stig's "Det var inte så jag menade!" after it; Angerud's platschef line with `oath` up and down again; in the grisbil "NÖFF! NÖFF!" over the bed, the grunt again while H is held, Berra's and Robban's lift lines, then Robban's other one; a dialogue drops the queued answers; in a running mission no `hornAt`, no hop, no answer |
+| `dygn` [feature 30] | Dygnet runt (§10.10), at index 9 (free roam): in test mode the clock holds at 15:00 with the day palette unlit; with `day.run` an hour a minute by day and two at night (× timeScale, measured 60 and 120 h per scaled hour); the sky (top r + g + b, fog, sun) at 12:00 day unlit, 19:24 between day and sunset unlit, 19:45 the sunset unlit, 20:10 between sunset and night with `nightGlow` drawn and the lighthouse lantern shown, 21:00 and 23:00 night lit, 06:15 dawn lit, 06:45 lighter and unlit, 08:00 day; Ole's watch hidden until pryl `klocka`, then `20:10` / `SPANSK TID` / `21:10 norsk · 21:10 svensk` with `#collect` under it; beach, pool, plaza and aerial shots at 19:30, 20:10, 20:15, 22:00, 23:00, 06:24; the bed's `Kvarta en stund`, the nap 15:00 → 20:00 (`kvällen`): in the dark `ZZZ…` and the watch spinning over the fade, Stig `down` on the 0.70 mattress, Ole at the bed's head with `calc` up, two PIPs, Ole's line, "Zzz…" twice, not "Morn, gutten min!", Stig up at the bed's foot, the toast; Ole let go but by the bed, home under the pergola once Stig is 50 m off; 20:00 → 23:00 (`natten`, his warm-night line), 23:00 → 08:00 (`morgonen`, day); no nap in a pursuit or a car; the chatter hours; a mission talked to at 22:30: NÄSTA MORGON over the fade, 09:00, the mission in the day palette unlit, the clock still while it runs, free roam at 09:00 after an abort; grisfest's `onEnd('complete')` sets 08:00 |
+| `dygnGiver` [feature 30] | at asnan's idle (index 7, giver Ole at `flamenco`): after a nap Ole is back at the giver's place (the end goes through black), not by the bed |
 | `talk` [Phase 0] | `autoDialog = false`, walk to Ole at `gateQueue`, E, Space twice |
 | `fullstory` [Phase 0b] | swaps the literal §8 missions (`tools/fixtures/full-missions.js`) into `MISSIONS` and plays all 13 per §16.3 (`FROM`/`TO` as `story`); must end `#13 idle`, `RESULT: PASS` |
 | `kinds` [Phase 0b] | fixture data checks; haggle misses fail; follow `minDist` fails; smooth/fragile bars (teleports never count); carry spill; checkpoint retry re-applies night + `vals` and revives plates at `dansgolv`; destroy default spawn; grab at the wreck; scene `exitCar`; Phase 3: follow shows no bar before the start and a head-on quarry does not fail it, `retryCar` (the last car reused, a typed named car, `park`), getInCar `atHome` and a wrecked `missionCar` failing, a frame-only scene stopping the car dead, a scene cutting a `collect` guest's bubbles (3 frames in: no bubble over the guest or Stig, no empty one) and keeping his placement |
@@ -4855,6 +4991,7 @@ fatagaDukar golf bungalow bygge dromplan airport hittegods busBay bagageband dyn
 + the paint shop `pintura` and its cut anchor `pinturaCam` (feature 1, §7.2)
 + Berra's naps `berraBank berraSolstol` (feature 2, §10.6)
 + the diving board `flamencoBoard` (feature 4, §10.8)
++ Stig's bed in room 107 `stigSang` (feature 30, §10.10)
 + collectibles `pryl_klocka pryl_poolpen pryl_kalkylator pryl_kniv pryl_kamera pryl_glasogon
 pryl_pung fena_flamenco fena_suntrip fena_plaza fena_golf fena_bungalow fena_hamn fena_hav` + Rio
 `rioBoat rioCam`.
@@ -6246,3 +6383,30 @@ the fixer's group.
   §12.3). Deviations from the idea: the 35 m reach and the sight rule (Ole's home is 31 m from the
   street), at most two answers a press, no blush. Scenario `tuta` (§16.4). No mission, stage kind,
   timer, fixture or calibration pool changed; the speeding car's dodge is the same code and draw.
+- Feature 30, "Dygnet runt – kväll på ön och en tupplur i rum 107" (`features/implemented/dygnet_runt.md`,
+  2026-10-15): the island's clock between missions (§10.10; new `src/game/dayClock.js`, `DAY` in
+  content/island.js; §1.6, §3, §6.3, §9.4, §10.5, §11.4, §11.7, §12.3, §13.3, §14.1–14.3, §14.6,
+  §14.8, §14.10, §15.5). `game.day.h` starts at 15:00 and moves only in free roam (island,
+  `missions.state === 'idle'`, no dialogue): an hour a minute by day, twice as fast 21–06 (a day
+  19.5 min); in test mode it holds (`day.run` false), so story, fullstory and calibrate are as
+  before. The existing palettes are blended by the hour (dawn 06–07, the sunset 19–19:45, dusk
+  19:45–20:30), and the night lights and the lighthouse are forced on 20:00–06:30 through the new
+  `gfx.setNightLights` / `skyDark` / `beaconLit` (town.js, hotels.js and coast.js read them; by
+  default they follow the sky as before, and `Game.setSky` hands them back). Missions: the clock
+  stands still in every state but idle; `runner.begin` in the evening or at night awaits
+  `day.toMorning()` (black, `NÄSTA MORGON`, 09:00, the day palette), so every timer still runs by
+  day; `restoreAmbience` and `complete` call `day.resync()`; grisfest's MORGONEN EFTER sets 08:00.
+  Ole's watch (pryl `klocka`) shows `20:10 SPANSK TID` / `21:10 norsk · 21:10 svensk` under the
+  pesetas (`#klocka`, `hud.setClock`; `#collect` moves under it; bubbles stay under it). The nap: E
+  "Kvarta en stund" [F*] at Stig's bed (landmark `stigSang`, r 2 m; not in a pursuit, a car, a carry
+  or a mission): black (`#fade`, `hud.fade`), the watch spinning on to the next of 08, 15, 20, 23,
+  Stig on his back on the mattress, Ole at the bed's head with his calculator up (anim flag `calc`,
+  prop `kalkylator`), a warm room light for the scene while the lights are on, `audio.pip()` and
+  "PIP-PIP-PIP! Kalkulator – med vekkerklokke!" [F*], "Zzz…" [N] twice, Stig up at the bed's foot and
+  `Stig kvartade till {part}.` [N] (at 23:00 his "Vad härligt det är med de här varma nätterna…"
+  [F*](t)); Ole then goes home by placeNpcs's 50 m rule, or in the dark when the waiting mission needs
+  him. Chatter by the hour: Gabbe's night tour 17–21, Lasse's friskotek 06–10 and his three o'clock
+  14–16. Deviations from the idea: the lights come on at 20:00, not nine (the sketch has them lit at
+  20:10, and at nine it has been night for half an hour); the nap wakes to four fixed hours; the room
+  light for the scene; Lasse's three o'clock line also gets its hours. Scenarios `dygn`, `dygnGiver`
+  (§16.4). No mission, stage kind, timer, fixture or calibration pool changed.

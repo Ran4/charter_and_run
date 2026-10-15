@@ -44,7 +44,7 @@ Samma tangenter i båda nivåerna; nivån bestämmer vad de gör.
 | Shift | spring | | skynda – men det ökar rädslan |
 | Space | hoppa, i luften igen för dubbelhopp | handbroms (sladd!) | **håll i dig**: ta tag i närmaste stolsrygg vid turbulens |
 | J / klick | sparka, i luften: stampa (efter julafton: **håll in i luften** för att glidflyga) | | **håll in**: "Jag kan flyga, jag är inte rädd" – sänker FLYGRÄDSLA |
-| E | prata, kliv in, sno en bil | kliv ur (i fart: rulla ur) | prata, **sätt dig / res dig**, lås in dig på toaletten, anropsknappen, serveringsvagnen |
+| E | prata, kliv in, sno en bil, kvarta en stund i Stigs säng i rum 107 | kliv ur (i fart: rulla ur) | prata, **sätt dig / res dig**, lås in dig på toaletten, anropsknappen, serveringsvagnen |
 | H | | tuta (utanför uppdragen hör folk den) | |
 | B | | titta bakåt | |
 | M / Tab | stor karta | stor karta | plan över gaten/kabinen |
@@ -153,6 +153,13 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   köra bil än att flyga, Lasse ropar "Hä-pååre!", Angerud ska tala med platschefen och Berra och
   Robban tror att du visslar efter tjejerna. Första gången ber Stig-Helmer om ursäkt. Grisbilen
   tutar inte, den grymtar. Kör runt och hör vad alla säger!
+- **Dygnet runt**: mellan uppdragen går tiden på ön, en timme i minuten och dubbelt så fort på
+  natten. Vid sju glider himlen över i solnedgång, vid åtta tänds fönstren, lyktorna och fyren, och
+  vid sex ljusnar det igen. Har du hittat Oles klocka sitter den under pesetas, med spansk tid och
+  norsk och svensk tid bredvid (samma tid två gånger). I rum 107 kan Stig "kvarta en stund" i sin
+  turkosa säng (E): bilden tonar ner, klockan snurrar fram till nästa del av dygnet och Ole väcker
+  honom med miniräknarens alarm. Pratar du med en uppdragsgivare på kvällen blir det "NÄSTA MORGON"
+  först, så uppdragen spelas alltid i dagsljus.
 
 ## Vad är påhittat?
 
@@ -180,6 +187,9 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
   magplasket (i filmen sätter systrarna poäng på männen på planet)
 - att folk reagerar på tutan, Stigs ursäkt och grisbilens grymtande tuta (replikerna är filmens,
   flyttade, eller våra egna)
+- klockan som spelmekanik (kvällar och nätter mellan uppdragen, Oles klocka under pesetas, "NÄSTA
+  MORGON" före ett uppdrag), Stigs tupplur i rum 107 och att Ole väcker honom med miniräknarens
+  alarm (i filmen visar Ole bara upp miniräknaren med väckarklocka, och ordet "kvarta" är Affes)
 - att grisbilen lånas ut till Stig-Helmer, att man följer Josés bil och grisbilen, och
   jeepjakten
 - fårrusningen i Fataga, kappkörningen mot nattbussen och porslinskrosset på tid
@@ -268,11 +278,12 @@ src/game/berraJob.js            Bärra hem Berra in free roam: Berra's naps, Rob
 src/game/glide.js               Jag kan flyga in free roam after julafton: J held in the air glides, the landing roll
 src/game/poolJudges.js          Siv och Majsan sätter poäng in free roam: dives off Flamenco's board, cards, record
 src/game/honk.js                Tutan som folk reagerar på in free roam: pedestrians hop, the gang answers, the grunt
+src/game/dayClock.js            Dygnet runt in free roam: the island's clock, evenings and nights, Ole's watch, the nap
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
 tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, meter, kinds, perf,
-                                paintshop, berra, glide, simhopp, tuta, calibrate, calibflight)
+                                paintshop, berra, glide, simhopp, tuta, dygn, calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
 tools/pool.mjs                  re-derives every random stage's timer from the ledger
@@ -304,6 +315,7 @@ node tools/shot.mjs berra                # Bärra hem Berra in free roam: naps, 
 node tools/shot.mjs glide                # the glide after julafton: the wing, the palm, a wall, the diving board, the lines
 node tools/shot.mjs simhopp              # the sisters judge his dives: swan dive, somersault, belly flop, record, walk
 node tools/shot.mjs tuta                 # the horn in free roam: the hop, the gang's answers, the sorry, the grisbil's grunt
+node tools/shot.mjs dygn dygnGiver       # the clock in free roam: the sky by the hour, Ole's watch, the nap, NÄSTA MORGON
 node tools/shot.mjs fullstory kinds      # the literal §8 missions and the stage-kind checks
 node tools/shot.mjs calibrate calibflight  # timer and FLYGRÄDSLA calibration (slow; see DESIGN §8, §16.4)
 node tools/pool.mjs                      # random-stage timers from the raw runs in notes/calibration-samples.md

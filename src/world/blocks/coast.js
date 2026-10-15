@@ -18,7 +18,7 @@
 // The DC-7 by the road is the film's dream-sequence plane (notes/research-flight.md §1.4: long
 // faded red, near Bahía Feliz); its registration EC-DRM is invented.
 
-import { THREE, GeoBuilder, toonMesh, signMesh, mat, PRIM, makeWedge, camera, sun } from '../../gfx.js';
+import { THREE, GeoBuilder, toonMesh, signMesh, mat, PRIM, makeWedge, camera, beaconLit } from '../../gfx.js';
 import { CURB } from '../layout.js';
 import { box, ramp } from '../collision.js';
 import { Frame } from '../frame.js';
@@ -828,7 +828,7 @@ function fyren(f, W) {
   f.cone(0x3a4a48, TX, TOP + 4.75, TZ, 1.8, 1.3, 16);
   f.cyl(0x3a4a48, TX, TOP + 5.7, TZ, 0.06, 0.9, 6);
   f.sphere(0x3a4a48, TX, TOP + 6.2, TZ, 0.3);
-  // Night: a warm lantern core and a rotating beam (only while the sun is low).
+  // Night: a warm lantern core and a rotating beam (only while the sun is low: gfx.beaconLit).
   {
     const ly = TOP + 2.95, wx = f.wx(TX, TZ), wz = f.wz(TX, TZ);
     const core = new THREE.Mesh(new THREE.CylinderGeometry(1.64, 1.64, 2.25, 16), new THREE.MeshBasicMaterial({ color: 0xfff0b0 }));
@@ -849,7 +849,7 @@ function fyren(f, W) {
     core.visible = beam.visible = false;
     f.scene.add(core, beam);
     onTick((t) => {
-      const night = !!sun && sun.intensity < 1.6;
+      const night = beaconLit();
       core.visible = beam.visible = night;
       if (night) beam.rotation.y = t * 0.8;
     }, f.scene);
