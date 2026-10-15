@@ -35,6 +35,7 @@ import { PigTruck } from './game/pigTruck.js';
 import { BaggageBelt } from './game/baggageBelt.js';
 import { Lapplisa } from './game/lapplisa.js';
 import { GrisfestFree } from './game/grisfestFree.js';
+import { FruitStands } from './game/fruitStands.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
 import { LEVELS, ISLAND_PALETTES } from './level.js';
@@ -182,6 +183,7 @@ class Game {
     this.belt = new BaggageBelt(this);    // free roam: the baggage belt at Gando carries Stig (§10.16)
     this.lapp = new Lapplisa(this);       // free roam: Majsan tickets a car on the sidewalk, Angerud's tow (§10.17)
     this.party = new GrisfestFree(this);  // free roam after the grisfest: 800 pesetas at the farm's gate, the evening (§10.18)
+    this.stands = new FruitStands(this);  // free roam: his car goes through the market's fruit stalls (§10.19)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -910,9 +912,16 @@ class Game {
   // ------------------------------------------------------------------------------------------
   // Events
 
-  // A car drives through a prop; the player's own gets Stig's sorry in free roam (§10.14).
+  // A car drives through a prop; the player's own gets Stig's sorry in free roam (§10.14). A fruit
+  // stall breaks only under his car in free roam (`stands.canBreak`; else null and car.js meets the
+  // wall), its seller and the souvenir seller's swear after it (§10.19). Returns the prop if it broke.
   breakProp(p, vx, vz, car) {
-    if (breakProp(p, vx, vz, this) && car && car === this.playerCar) this.sorry.offence(p.def.explode ? 'boom' : 'prop');
+    const stall = p.type === 'frutas';
+    if (stall && !this.stands.canBreak(car)) return null;
+    const b = breakProp(p, vx, vz, this);
+    if (b && car && car === this.playerCar) this.sorry.offence(p.def.explode ? 'boom' : stall ? 'stand' : 'prop');
+    if (b && stall) this.stands.onBroken(p, car);
+    return b;
   }
   onPropBroken(p, vx, vz) {
     audio.smash();
@@ -1444,6 +1453,7 @@ class Game {
     this.belt.update(dt);
     this.lapp.update(dt);
     this.party.update(dt);
+    this.stands.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);
@@ -1649,7 +1659,8 @@ class Game {
   // once a kick, however many it bowls over or breaks (§10.14).
   areaHit(x, z, y, r, dx, dz, stomp) {
     let broke = null, bowled = false;
-    for (const prop of propsNear(x, z, r)) { const b = breakProp(prop, dx * 8, dz * 8, this); if (b && !broke?.def.explode) broke = b; }
+    // A fruit stall is the car's only (`carOnly`, §10.19).
+    for (const prop of propsNear(x, z, r)) { if (prop.def.carOnly) continue; const b = breakProp(prop, dx * 8, dz * 8, this); if (b && !broke?.def.explode) broke = b; }
     // Pedestrians, and the grisfest's band and tourists (§10.18).
     const people = (this.levelDef.sim.peds ? this.peds.map((ped) => ped.char) : []).concat(this.party.extras);
     for (const c of people) {
@@ -1765,8 +1776,9 @@ class Game {
       // sleeping Berra as a giver does. An answer to the horn waves from further off (§10.9); the
       // rollerskier waves his pole while he skis (§10.12); the pool fest's dancers and porter (§10.13);
       // Majsan on her round with the ticket pad, Angerud in the tow scene (§10.17); the grisfest's
-      // evening (§10.18).
-      const posed = !!ms.idlePose(k) || this.berraJob.posed(k) || this.judges.posed(k) || this.film.posed(k) || this.eslov.posed(k) || this.fest.posed(k) || this.lapp.posed(k) || this.party.posed(k);
+      // evening (§10.18); the souvenir seller swearing at a smashed fruit stall (§10.19).
+      const posed = !!ms.idlePose(k) || this.berraJob.posed(k) || this.judges.posed(k) || this.film.posed(k) || this.eslov.posed(k) || this.fest.posed(k) || this.lapp.posed(k) || this.party.posed(k)
+        || this.stands.posed(k);
       n.anim.wave = (((giver || this.berraJob.waving(k)) && near < 9 || this.honk.waving(k)) && !posed || this.eslov.waving(k)) && !this.inDialog && n.state === 'normal';
       if (n.state === 'normal' && !posed && near < 10 && !this.inDialog) n.yaw += Math.atan2(Math.sin(yawTo(this.player.x - n.x, this.player.z - n.z) - n.yaw), Math.cos(yawTo(this.player.x - n.x, this.player.z - n.z) - n.yaw)) * Math.min(1, dt * 3);
       // Free play only: not in the gap before an outro (bubbles stacked over its first line).

@@ -1,10 +1,11 @@
 // Breakable street furniture: Correos boxes, bins, beach showers, sunbeds, garden walls, butano
 // bottles... Each type is one instanced mesh. Smash one with a car or a kick and it bursts into
 // debris and coins (25 pta each).
-//   Type flags (DESIGN §6.8): debris: n (chunks), splash: true, explode: 'big' | 'small'.
+//   Type flags (DESIGN §6.8): debris: n (chunks), splash: true, explode: 'big' | 'small'; the fruit
+//   stalls' carOnly (no kick breaks it), kind (its block's kind), spread / debrisY, shreds, slow, sign.
 //   Every car-smashable prop has top > 0.75 (cars ride over anything with top <= y + 0.6).
 
-import { THREE, GeoBuilder, MAT, PRIM, outlineGeometry, outlineMat, mat } from '../gfx.js';
+import { THREE, GeoBuilder, MAT, PRIM, outlineGeometry, outlineMat, mat, signMesh } from '../gfx.js';
 import { box, circle, ceiling } from './collision.js';
 
 const CURB = 0.15;
@@ -293,6 +294,47 @@ const SPEC = {
       g.box(0x6a4a2a, 0.1, 0.31, 0.17, 0.14, 0.04, 0.04);
     },
   },
+  // A fruit stall at the market (feature 28, DESIGN §10.19): centre.js's market stall with a
+  // yellow-and-orange striped awning (a walkable roof at 2.55), crates of tomatoes, bananas,
+  // oranges and melons on the counter. Only his car breaks it, and only in free roam (`carOnly`;
+  // game/fruitStands.js decides): in a mission it is the wall the stall always was. `kind: 'stall'`
+  // keeps its solid the stall's for the camera, the guides and the officer (a 'prop' they see
+  // through). Fruit-coloured debris (`color` a list) over the counter (`spread`, `debrisY`), the
+  // awning torn into `shreds`, the car slowed to `slow` of its speed. A placement may give it a sign
+  // on the awning (`sign`: the text; FRUTAS on the market's first).
+  frutas: {
+    w: 5, d: 3.5, top: 2.55, coins: 4, shame: 3, minSpeed: 6, carOnly: true, kind: 'stall',
+    debris: 26, spread: 3.4, debrisY: 0.75, shreds: 4, slow: 0.8,
+    color: [0xd8321e, 0xf7c31b, 0xf07a1e, 0x6ab04a, 0xe8452a, 0xb88a52],
+    sign: { y: 2.82, z: 1.55, w: 3.6, h: 0.62, posts: 1.2, opts: { bg: '#fff8e6', fg: '#1d1426', border: '#1d1426', scale: 0.62, double: true } },
+    build(g) {
+      const w = 5, d = 3.5, hd = d / 2, top = 2.4, AW = [0xf7c31b, 0xf07a1e], WOOD = 0x6a4528;
+      g.boxB(0xf2e6d0, 0, 0, -hd + 0.08, w - 0.1, top - 0.15, 0.1);
+      for (const s of [-1, 1]) g.boxB(AW[1], s * (w / 2 - 0.06), 1.0, 0, 0.06, top - 1.15, d - 0.2);
+      for (const s of [-1, 1]) for (const t of [-1, 1]) g.boxB(WOOD, s * (w / 2 - 0.08), 0, t * (hd - 0.08), 0.12, top, 0.12);
+      g.boxB(WOOD, 0, 0, hd - 0.45, w - 0.3, 0.88, 0.8);
+      g.boxB(AW[0], 0, 0.88, hd - 0.45, w - 0.18, 0.05, 0.86);
+      g.boxB(AW[0], 0, 0.45, hd - 0.04, w - 0.18, 0.45, 0.04);
+      for (let k = 0; k < 8; k++) {
+        const u = -w / 2 + (k + 0.5) * (w / 8);
+        g.boxB(AW[k % 2], u, top - 0.14, 0.12, w / 8, 0.14, d + 0.5);
+        g.boxB(AW[k % 2], u, top - 0.48, hd + 0.36, w / 8, 0.34, 0.05);
+      }
+      // Eight crates on the counter: tomatoes, bananas, oranges, melons, lemons, round again.
+      const FRUIT = [0xd8321e, 0xf7c31b, 0xf07a1e, 0x6ab04a, 0xf0a020];
+      for (let k = 0; k < 8; k++) {
+        const x = -w / 2 + 0.6 + k * ((w - 1.2) / 7), z = hd - 0.45, c = FRUIT[k % 5];
+        g.boxB(0xb88a52, x, 0.93, z, 0.42, 0.14, 0.5);
+        if (c === 0xf7c31b) for (let m = 0; m < 3; m++) g.box(c, x, 1.12, z - 0.14 + m * 0.14, 0.34, 0.07, 0.11, 0.25 * (m - 1), 0, 0.35);
+        else if (c === 0x6ab04a) for (let m = 0; m < 2; m++) ball(g, c, x + (m - 0.5) * 0.18, 1.18, z + (m - 0.5) * 0.14, 0.26, 0.22, 0.3, 0);
+        else for (let m = 0; m < 4; m++) ball(g, c, x + (m % 2 - 0.5) * 0.18, 1.13, z + ((m >> 1) - 0.5) * 0.2, 0.17, 0.17, 0.17, 0);
+      }
+      // A half melon on the front crate and three tomato boxes stacked by the counter's end.
+      ball(g, 0xe8452a, 1.95, 1.17, hd - 0.3, 0.24, 0.12, 0.24, 0);
+      for (let k = 0; k < 3; k++) g.boxB(k === 1 ? 0xa8763e : 0xc08a50, -1.9 + k * 0.05, k * 0.3, -0.4, 0.5, 0.3, 0.4, k * 0.12);
+      for (let k = 0; k < 4; k++) ball(g, 0xd8321e, -2.0 + (k % 2) * 0.18, 0.95, -0.48 + (k >> 1) * 0.16, 0.16, 0.16, 0.16, 0);
+    },
+  },
   // Ice-cream A-board: a cone with three scoops painted on.
   glasskylt: {
     w: 0.8, d: 0.2, top: 1.3, coins: 1, shame: 1, minSpeed: 3, color: 0xfafafa,
@@ -312,21 +354,40 @@ const SPEC = {
 export const TYPES = {};
 for (const [k, d] of Object.entries(SPEC)) TYPES[k] = { ...d };
 
-const placements = []; // { type, x, z, yaw, baseY }
+const placements = []; // { type, x, z, yaw, baseY, sign? }
 export const props = []; // runtime list
 let meshes = {};
 let debris, debrisState = [];
 const DEBRIS = 160;
+// Torn awning (the fruit stalls' `shreds`): striped flaps that flutter down and lie where they land.
+let shreds = null, shredState = [];
+const SHREDS = 12;
 
 // baseY: the height the prop stands on (CURB on the ground; a table top for the grisfest plates).
+// opts.sign: the text of the type's `sign` (a board on posts, its own mesh, hidden while broken).
 // Must be called before finalizeProps (props are instanced at finalize time).
 const warned = new Set();
-export function placeProp(type, x, z, yaw = 0, baseY = CURB) {
+export function placeProp(type, x, z, yaw = 0, baseY = CURB, opts = {}) {
   if (!TYPES[type]) {
     if (!warned.has(type)) { warned.add(type); console.warn('placeProp: unknown prop type', type); }
     return;
   }
-  placements.push({ type, x, z, yaw, baseY });
+  placements.push({ type, x, z, yaw, baseY, sign: opts.sign ?? null });
+}
+
+// A placement's sign: the board on two posts over the awning, in the prop's frame.
+function buildSign(p, scene) {
+  const s = p.def.sign, grp = new THREE.Group();
+  const m = signMesh(p.sign, s.w, s.h, s.opts);
+  m.position.set(0, s.y, s.z);
+  grp.add(m);
+  const g = new GeoBuilder();
+  for (const x of [-s.posts, s.posts]) g.boxB(0x6a4528, x, p.def.top - CURB, s.z, 0.08, 0.15, 0.08);
+  grp.add(new THREE.Mesh(g.build(), MAT.toon));
+  grp.position.set(p.x, p.baseY, p.z);
+  grp.rotation.y = p.yaw;
+  scene.add(grp);
+  return grp;
 }
 
 const _m = new THREE.Matrix4(), _zero = new THREE.Matrix4().makeScale(0, 0, 0);
@@ -351,14 +412,15 @@ export function finalizeProps(scene) {
     const m = meshes[p.type];
     const idx = m.next++;
     const prop = { ...p, def, idx, alive: true, respawn: 0 };
-    const top = p.baseY - CURB + def.top;
+    const top = p.baseY - CURB + def.top, kind = def.kind ?? 'prop';
     // Fences turn by multiples of 90 degrees, so their footprint stays an axis-aligned box.
-    if (def.r) prop.block = circle(p.x, p.z, def.r, top, 'prop', prop);
+    if (def.r) prop.block = circle(p.x, p.z, def.r, top, kind, prop);
     else {
       const turned = Math.abs(Math.sin(p.yaw)) > 0.7;
       const hw = (turned ? def.d : def.w) / 2, hd = (turned ? def.w : def.d) / 2;
-      prop.block = box(p.x - hw, p.z - hd, p.x + hw, p.z + hd, top, 'prop', prop);
+      prop.block = box(p.x - hw, p.z - hd, p.x + hw, p.z + hd, top, kind, prop);
     }
+    prop.sign = p.sign && def.sign ? buildSign(prop, scene) : null;
     if (def.canopy) {
       const [h, u, t] = def.canopy, c = ceiling(p.x - h, p.z - h, p.x + h, p.z + h, p.baseY + u, p.baseY + t);
       c.underOnly = true; c.block = prop.block;
@@ -378,6 +440,19 @@ export function finalizeProps(scene) {
     debrisState.push({ t: 0, x: 0, y: 0, z: 0, vx: 0, vy: 0, vz: 0, s: 0.2, rx: 0, ry: 0, wx: 0, wy: 0 });
   }
   scene.add(debris);
+  if (Object.keys(counts).some((t) => TYPES[t].shreds)) {
+    // One flap: four stripes of the fruit stalls' awning, yellow and orange.
+    const g = new GeoBuilder();
+    for (let k = 0; k < 4; k++) g.box(k % 2 ? 0xf07a1e : 0xf7c31b, -0.27 + k * 0.18, 0, 0, 0.18, 0.03, 0.62);
+    shreds = new THREE.InstancedMesh(g.build(), MAT.toon, SHREDS);
+    shreds.castShadow = true;
+    shreds.frustumCulled = false;
+    for (let k = 0; k < SHREDS; k++) {
+      shreds.setMatrixAt(k, _zero);
+      shredState.push({ t: 0, x: 0, y: 0, z: 0, vx: 0, vy: 0, vz: 0, rx: 0, ry: 0, rz: 0, wx: 0, wy: 0, wz: 0, s: 1 });
+    }
+    scene.add(shreds);
+  }
   placements.length = 0;
 }
 
@@ -387,35 +462,61 @@ function setMatrix(p, show) {
   else _m.copy(_zero);
   m.im.setMatrixAt(p.idx, _m);
   m.im.instanceMatrix.needsUpdate = true;
+  if (p.sign) p.sign.visible = show;
 }
 
 let debrisNext = 0;
 const _c = new THREE.Color();
-export function spawnDebris(x, y, z, color, n, vx = 0, vz = 0, power = 1) {
-  _c.set(color);
+// color: one colour, or a list the chunks take in turn (the fruit stalls' tomatoes, bananas...).
+// spread: the width of the square they start in.
+export function spawnDebris(x, y, z, color, n, vx = 0, vz = 0, power = 1, spread = 0.6) {
+  const list = Array.isArray(color) ? color : null;
+  if (!list) _c.set(color);
   for (let k = 0; k < n; k++) {
     const i = debrisNext++ % DEBRIS;
     const d = debrisState[i];
     d.t = 1.6 + Math.random() * 0.8;
-    d.x = x + (Math.random() - 0.5) * 0.6; d.y = y + Math.random() * 0.6; d.z = z + (Math.random() - 0.5) * 0.6;
+    d.x = x + (Math.random() - 0.5) * spread; d.y = y + Math.random() * 0.6; d.z = z + (Math.random() - 0.5) * spread;
     d.vx = vx * 0.6 + (Math.random() - 0.5) * 7 * power;
     d.vz = vz * 0.6 + (Math.random() - 0.5) * 7 * power;
     d.vy = 3 + Math.random() * 6 * power;
     d.s = 0.12 + Math.random() * 0.22;
     d.wx = (Math.random() - 0.5) * 20; d.wy = (Math.random() - 0.5) * 20;
-    debris.setColorAt(i, k % 3 === 2 ? _c.clone().multiplyScalar(0.7) : _c);
+    if (list) _c.set(list[k % list.length]);
+    debris.setColorAt(i, !list && k % 3 === 2 ? _c.clone().multiplyScalar(0.7) : _c);
   }
   debris.instanceColor.needsUpdate = true;
+}
+
+// n flaps of torn awning from a roof of half-size (hw, hd) at height y, turned yaw, pushed along
+// (vx, vz) by the car: they flutter (low gravity, drag), then lie flat where they land.
+let shredNext = 0;
+export function spawnShreds(x, y, z, yaw, hw, hd, n, vx = 0, vz = 0) {
+  if (!shreds) return;
+  const c = Math.cos(yaw), s = Math.sin(yaw);
+  for (let k = 0; k < n; k++) {
+    const d = shredState[shredNext++ % SHREDS];
+    const u = ((k + 0.5) / n - 0.5) * 2 * hw * 0.8, v = (Math.random() - 0.5) * hd;
+    d.t = 3.2 + Math.random() * 1.2;
+    d.x = x + u * c + v * s; d.y = y + Math.random() * 0.3; d.z = z - u * s + v * c;
+    d.vx = vx * 0.45 + (Math.random() - 0.5) * 5; d.vz = vz * 0.45 + (Math.random() - 0.5) * 5;
+    d.vy = 4 + Math.random() * 3.5;
+    d.rx = Math.random() * 6; d.ry = Math.random() * 6; d.rz = Math.random() * 6;
+    d.wx = (Math.random() - 0.5) * 9; d.wy = (Math.random() - 0.5) * 6; d.wz = (Math.random() - 0.5) * 9;
+    d.s = 0.85 + Math.random() * 0.4;
+  }
 }
 
 // Returns the prop if it broke.
 export function breakProp(p, vx = 0, vz = 0, game = null) {
   if (!p.alive) return null;
+  const def = p.def, y0 = p.baseY ?? CURB;
   p.alive = false;
   p.block.dead = true;
   p.respawn = 75 + Math.random() * 40;
   setMatrix(p, false);
-  spawnDebris(p.x, (p.baseY ?? CURB) + 0.25, p.z, p.def.color, p.def.debris ?? 7, vx, vz);
+  spawnDebris(p.x, y0 + (def.debrisY ?? 0.25), p.z, def.color, def.debris ?? 7, vx, vz, 1, def.spread ?? 0.6);
+  if (def.shreds) spawnShreds(p.x, y0 + def.top - CURB, p.z, p.yaw, (def.w ?? 2 * def.r) / 2, (def.d ?? 2 * def.r) / 2, def.shreds, vx, vz);
   if (game) game.onPropBroken(p, vx, vz);
   return p;
 }
@@ -445,6 +546,24 @@ export function tickProps(dt, px, pz) {
     debris.setMatrixAt(i, _m);
   }
   if (any) debris.instanceMatrix.needsUpdate = true;
+  if (!shreds) return;
+  any = false;
+  const drag = Math.exp(-1.6 * dt);   // the air catches the cloth
+  for (let i = 0; i < SHREDS; i++) {
+    const d = shredState[i];
+    if (d.t <= 0) continue;
+    any = true;
+    d.t -= dt;
+    d.vy = Math.max(-3.5, d.vy - 9 * dt);
+    d.vx *= drag; d.vz *= drag;
+    d.x += d.vx * dt; d.y += d.vy * dt; d.z += d.vz * dt;
+    if (d.y <= 0.17) { d.y = 0.17; d.vx = d.vy = d.vz = 0; d.rx = d.rz = 0; d.wx = d.wy = d.wz = 0; }
+    d.rx += d.wx * dt; d.ry += d.wy * dt; d.rz += d.wz * dt;
+    const s = d.t <= 0 ? 0 : d.s * Math.min(1, d.t * 1.5);
+    _m.copy(mat(d.x, d.y, d.z, d.rx, d.ry, d.rz, s, s, s));
+    shreds.setMatrixAt(i, _m);
+  }
+  if (any) shreds.instanceMatrix.needsUpdate = true;
 }
 
 const inArea = (p, a) => !a || (p.x - a.x) ** 2 + (p.z - a.z) ** 2 <= a.r * a.r;

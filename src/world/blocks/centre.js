@@ -1063,17 +1063,21 @@ function marknad(f) {
   rflat(f, 0xe6d2a8, -4, -23.5, 4, 31, CURB + 0.02);
   rflat(f, 0xe6d2a8, -29, 11.5, 29, 15, CURB + 0.02);
   rflat(f, 0xe6d2a8, -29, -6, 17, 1, CURB + 0.02);
-  const SCH = [[RED, WHITE2], [0x2f5a9a, WHITE2], [SUN, 0xf07a1e], [GREEN, WHITE2], [BOUG, 0xf4d0e0], [0x1e9aa0, WHITE2], [TERRA, CREAM]];
+  // The yellow-and-orange awning is the fruit stalls' alone (feature 28): SCH[2] was [SUN, orange].
+  const SCH = [[RED, WHITE2], [0x2f5a9a, WHITE2], [0x7a3a6a, WHITE2], [GREEN, WHITE2], [BOUG, 0xf4d0e0], [0x1e9aa0, WHITE2], [TERRA, CREAM]];
   const xs = [-24.5, -18.5, -12.5, -6.5, 6.5, 12.5, 18.5, 24.5];
   const rowA = ['fruit', 'hats', 'cloth', 'pots', 'spices', 'bags', 'shoes', 'fruit'];
   const rowA2 = ['flowers', 'sunglasses', 'tablecloths', 'pots', 'hats', 'fruit', 'spices', 'bags'];
   const rowC = ['pots', 'cloth', 'hats', 'spices', 'fruit', 'sunglasses', 'churros', 'flowers'];
   const SIGNS = { 0: 'FRUTAS', 3: 'CERÁMICA', 6: 'ZAPATOS' }; // [N]
-  xs.forEach((x, k) => stall(f, x, -25.25, 5, 3.5, 1, { colors: SCH[k % 7], goods: rowA[k], sign: SIGNS[k] }));
-  xs.forEach((x, k) => stall(f, x, -16.75, 5, 3.5, -1, { colors: SCH[(k + 3) % 7], goods: rowA2[k], sign: k === 4 ? 'SOMBREROS' : undefined }));
-  xs.forEach((x, k) => stall(f, x, 9.75, 5, 3.5, 1, { colors: SCH[(k + 5) % 7], goods: rowC[k], sign: k === 6 ? 'CHURROS' : k === 3 ? 'ESPECIAS' : k === 1 ? 'BORDADOS' : undefined, signBg: '#f7c31b' }));
+  // The five fruit stalls are props (`frutas`, world/props.js): his car goes straight through them in
+  // free roam (game/fruitStands.js, DESIGN §10.19). Same place, size and walkable awning (2.55).
+  const fruit = (x, z, face1, sign) => f.prop('frutas', x, z, face1 > 0 ? 0 : PI, CURB, { sign });
+  xs.forEach((x, k) => rowA[k] === 'fruit' ? fruit(x, -25.25, 1, SIGNS[k]) : stall(f, x, -25.25, 5, 3.5, 1, { colors: SCH[k % 7], goods: rowA[k], sign: SIGNS[k] }));
+  xs.forEach((x, k) => rowA2[k] === 'fruit' ? fruit(x, -16.75, -1) : stall(f, x, -16.75, 5, 3.5, -1, { colors: SCH[(k + 3) % 7], goods: rowA2[k], sign: k === 4 ? 'SOMBREROS' : undefined }));
+  xs.forEach((x, k) => rowC[k] === 'fruit' ? fruit(x, 9.75, 1) : stall(f, x, 9.75, 5, 3.5, 1, { colors: SCH[(k + 5) % 7], goods: rowC[k], sign: k === 6 ? 'CHURROS' : k === 3 ? 'ESPECIAS' : k === 1 ? 'BORDADOS' : undefined, signBg: '#f7c31b' }));
   stall(f, -24.5, -8, 5, 4, 1, { colors: SCH[4], goods: 'tablecloths', sign: 'MANTELES' });
-  stall(f, 18.5, -8, 5, 4, 1, { colors: SCH[1], goods: 'fruit' });
+  fruit(18.5, -7.75, 1);   // 3.5 deep, not 4: its counter in line with its neighbour's
   stall(f, 24.5, -8, 5, 4, 1, { colors: SCH[2], goods: 'pots' });
 
   // K: the electronics stall whose awning carries pryl_kalkylator (y 3.4 = 0.85 above the top).

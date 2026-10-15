@@ -6,7 +6,8 @@
 // tricks and his film night, the rollerskier's training, his answer to the horn and his race, the
 // pool fest after the end (Små grodorna in Flamenco's pool, Stig hopping with them in his suit),
 // Majsan ticketing cars on the island, the tow and her praise for a car parked straight (§10.17), and
-// the grisfest's evening bought again at the farm's gate with a tourist's refusal (§10.18).
+// the grisfest's evening bought again at the farm's gate with a tourist's refusal (§10.18), and
+// the market's fruit stalls his car goes through, with their seller's cry (§10.19).
 
 export const HOMES_ISLAND = {
   ole: ['flamenco', 2.0, 1.0, 0],     // yaw 0: under the pergola, facing the pool (flamenco faces π)
@@ -130,8 +131,8 @@ export const BARKS = {
 // Stig's own lines, so not in BARKS (that one is picked by who is hurt). On the island with no
 // mission running (`missions.state === 'idle'`) and no dialogue, `at` s after he bowls someone over
 // with a kick or a stomp (`kick`, one line a kick however many it hits), runs someone over (`hit`),
-// breaks a thing on foot or in his car (`prop`) or makes it go up (`boom`: a petrol pump or a gas
-// bottle): the session's first offence always, later ones at `chance` and no sooner than `gap` s
+// breaks a thing on foot or in his car (`prop`; a market fruit stall `stand`, §10.19) or makes it go
+// up (`boom`: a petrol pump or a gas bottle): the session's first offence always, later ones at `chance` and no sooner than `gap` s
 // after his last. A carjacking always gets `carjack` `askAt` s after the driver tumbles out; a
 // Swedish tourist then answers `no` `noGap` s after the question instead of his complaint (the
 // session's first one always, then at `noChance`). Never while Stig is still saying something.
@@ -139,7 +140,7 @@ export const BARKS = {
 // Invented (§1.6): the apologies; Majsan's question and Stig's answer are the film's, roles swapped.
 export const STIG_SORRY = {
   at: 0.5, gap: 7, secs: 2.2,
-  chance: { kick: 0.5, hit: 0.6, prop: 0.35, boom: 1 },
+  chance: { kick: 0.5, hit: 0.6, prop: 0.35, stand: 1, boom: 1 },
   askAt: 0.6, noGap: 0.9, noChance: 0.35, noSecs: 1.6,
   kick: ['Oj! Förlåt, förlåt! Det var inte meningen.' /* [N] */, 'Ursäkta! Har ni slagit er?' /* [N] */,
     'Förlåt! Jag tappade balansen.' /* [N] */, 'Oj, oj… Förlåt! Jag ville inte…' /* [N] */],
@@ -148,6 +149,7 @@ export const STIG_SORRY = {
   prop: ['Jag ersätter den, självklart!' /* [N] */, 'Oj… Den stod visst i vägen. Förlåt.' /* [N] */,
     'Förlåt! Jag betalar, så klart.' /* [N] */],
   boom: ['Oj… förlåt.' /* [N] */],
+  stand: ['Oj… förlåt… jag ersätter naturligtvis!' /* [N] */],   // a fruit stall (§10.19)
   carjack: ['Ursäkta, är det din bil?' /* [F*] Majsan's question to Stig at the travel agency's window, relocated: Stig asks */],
   no: 'Nej.',                                                                      // [F*] Stig's answer there, relocated: the driver gives it
 };
@@ -767,6 +769,22 @@ export const BAGGAGE_BELT = {
   luggageLap: 3, luggageAt: 0.6,
   luggage: 'Den här väskan ska till Las Palmas.',   // [F*] said at a Japanese airport (research-plot.md:238), relocated: Stig is the bag
   prompt: '<b>E</b> Kliv av bandet',     // [N]
+};
+
+// Rakt genom fruktståndet (free roam; feature 28, DESIGN §10.19; game/fruitStands.js). The market's
+// five fruit stalls (world/props.js `frutas`) break under his car on the island with no mission
+// running (`missions.state === 'idle'`): the fruit seller (`vendor`, a figure of her own) pops up beside
+// the wreck for `vendorSecs` s and cries `vendorLine`; Stig's sorry is STIG_SORRY's `stand`; from
+// missions index `swearFrom` (after asnan) the souvenir seller, `swearR` m off or nearer, swears
+// `swearLine` `swearAt` s after the crash, at most once in `swearGap` s. Invented (§1.6): the
+// breakable stalls, the seller and her cry.
+export const FRUKTSTAND = {
+  vendorSecs: 4, vendorLineSecs: 2.4,
+  vendorLine: '¡Mis tomates!',   // [N] the form of the locals' "¡Mi coche!" (CARJACK_LOCAL)
+  vendor: { kind: 'adult', scale: 0.95, wide: 1.15, skin: 0xc99a6e, hair: 'bun', hairC: 0x1d1426, brows: 0x1d1426, lashes: true, nose: 'small',
+    hat: 'scarf', hatC: 0xd8321e, shirt: 0xf4f0e6, dress: 0x2f5a9a, apron: 0xf7c31b, pants: 0x2f5a9a, legsC: 0x6a4a3a, shoes: 0x2a2a2a, voice: 380 },
+  swearFrom: 8, swearR: 25, swearGap: 60, swearAt: 1.4, swearSecs: 2.4,
+  swearLine: 'Jävla smålänningar!',   // [F*] the souvenir seller's when Ole haggles the donkey down (research-plot.md:302–304; asnan's win), relocated
 };
 
 // Speedo names for named and mission cars (§11.4); unnamed cars show their type's Swedish name.

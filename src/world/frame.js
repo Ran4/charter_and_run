@@ -46,7 +46,7 @@ export class Frame {
     return ceiling(x - hw, z - hd, x + hw, z + hd, under, top);
   }
   circ(lx, lz, r, top = 99, kind = 'solid') { return circle(this.wx(lx, lz), this.wz(lx, lz), r, top, kind); }
-  prop(type, lx, lz, ly = 0, baseY = CURB) { placeProp(type, this.wx(lx, lz), this.wz(lx, lz), this.yaw + ly, baseY); }
+  prop(type, lx, lz, ly = 0, baseY = CURB, opts) { placeProp(type, this.wx(lx, lz), this.wz(lx, lz), this.yaw + ly, baseY, opts); }
   // Landmark: yaw = the direction a person standing there faces; y (optional) = absolute height
   // for collectible spots on roofs.
   mark(name, lx, lz, ly = 0, y) {

@@ -59,7 +59,9 @@ opens with a summary of the rounds and the timer changes.
     Angerud's hire car outside Centro La Medina and the film's first meeting with the GRÚA truck,
     DESIGN §10.17), `torsdag torsdagOle` (Grisfest varje torsdag, 800 pesetas at the farm's gate after
     the grisfest: the evening with the band and the dancers, the tourist's refusal and Majsan's
-    invitation, the morning after; Ole only after julafton; DESIGN §10.18)
+    invitation, the morning after; Ole only after julafton; DESIGN §10.18), `frukt fruktFore` (Rakt genom fruktståndet, his car through the market's five fruit
+    stalls, the seller's "¡Mis tomates!", the souvenir seller's swear after asnan, the stalls back at a
+    mission start, DESIGN §10.19)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

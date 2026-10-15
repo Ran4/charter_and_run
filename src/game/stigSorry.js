@@ -12,7 +12,7 @@ import { STIG_SORRY } from '../content/index.js';
 import { dist, pick } from '../util.js';
 
 // A line not yet said gives way to a weightier one (a parasol and the man under it in one frame).
-const RANK = { prop: 1, kick: 2, hit: 2, boom: 3, carjack: 4 };
+const RANK = { prop: 1, stand: 1.5, kick: 2, hit: 2, boom: 3, carjack: 4 };
 
 export class StigSorry {
   constructor(game, cfg = STIG_SORRY) {
@@ -34,7 +34,8 @@ export class StigSorry {
   }
   pending() { return this.queue.find((q) => q.who === 'stig'); }
 
-  // kind: 'kick' | 'hit' | 'prop' | 'boom' (null: nothing to say). Returns the line queued, or null.
+  // kind: 'kick' | 'hit' | 'prop' | 'stand' (a fruit stall, §10.19) | 'boom' (null: nothing to say).
+  // Returns the line queued, or null.
   offence(kind) {
     const g = this.g, c = this.cfg;
     if (!kind || !this.active() || g.saying(g.player)) return null;

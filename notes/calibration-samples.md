@@ -88,6 +88,16 @@ in the hall (Eslövloppet, the one free-roam pool, starts on the Eslöv lane in 
 round the tomato fields, not through Gando's block (6,0)), and no autopilot passes it, so every pool
 below stands and no timer changed.
 
+**Feature 28 (Rakt genom fruktståndet, 2026-10-15) touches no pool.** It made the market's five fruit
+stalls (block (2,1)) `frutas` props whose solid is the stall's (kind `'stall'`, the same footprints and
+tops; the lone stall at (18.5, −7.75) 3.5 m deep instead of 4, its back 0.5 m further south, inside
+the market), breakable only by the player's car with `missions.state === 'idle'` and all five standing
+again at every mission start (DESIGN §10.19). car.js now knows a prop by its block's `ref` and meets it
+as a wall when `game.breakProp` refuses; for every other prop the smash is what it was, and kicks
+(`areaHit`) skip only the fruit stalls. No pooled stage plays in the market's interior (julafton's
+guests stop Majsan at its south entrance, the Guardia jeep flees by the streets), and no stage can
+break a stall, so every pool below stands and no timer changed.
+
 ## `friskotekBalls` · §8.7 s1 · six fleeing beach balls · on foot: timer = ceil(1.25 × (p75 + 6 × 0.5))
 
 Phase 3 r2 island-staging placed everyone for the intro's group shot (Stig, Lasse, the sisters, the

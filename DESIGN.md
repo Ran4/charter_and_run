@@ -209,7 +209,10 @@ the tow and Angerud's outburst are at a Stockholm travel agency's window, and th
 lines are said on the balcony); the grisfest's evening bought again at the farm's gate for the
 film's 800 pesetas, with a band, the gang and tourists dancing, a tourist turning her back on Stig's
 "Ska vi dansa? Hej hej." and Majsan asking him all the same (free roam, §10.18; in the film there is
-one grisfest, and Stig never tries Ole's line).
+one grisfest, and Stig never tries Ole's line); the market's fruit stalls Stig's car goes straight through, their
+seller popping up beside the wreck with "¡Mis tomates!" and the souvenir seller's "Jävla
+smålänningar!" at it (free roam, §10.19; in the film the seller swears when Ole haggles the donkey
+down, and no car goes through the market).
 The film's flight has **no turbulence** and **no in-flight toilet scene**: both toilet scenes are
 at Arlanda (we keep them there). The plane's toilets are only an invented hideout.
 
@@ -1160,7 +1163,7 @@ standing there faces. `y` (optional) = absolute height for collectible spots on 
 | (1,2) | `kasbah` → `kasbah` (C2, centre.js) | **Centro La Medina** (fictional; internal id `kasbah`): two-level nightlife courtyard centre: arcade, stairs (ramp) to a roof terrace (top ≈ 6.0) with a balustrade above the bottom three steps and a sloped wall collider along it (Phase 3: the way on is over those three steps), neon signs `CENTRO LA MEDINA`, `VIKING BAR` (horned helmet), `TONGA TONGA` (mirror ball), `BAR SVENSKA · SMÖRGÅSAR` | `kasbah` (0, 22, π) · `vikingbar` (−16, 18, π) · `tongatonga` (14, 18, π) · `tongaLot` (20, 27, π) · `tongaSlump` (16.3, 17.4, 0.5) (where Berra slumps after Tonga Tonga and is picked up, at the right of the group in the street shot; Phase 3 r3) · `pryl_poolpen` (8, −6, 0, 7.2) · `angerudBil` (−7, 32.75, −π/2) (Angerud's hire car on the south sidewalk between missions, feature 20, §10.17) | — |
 | (4,2) | `cita` → `cita` (C2, centre.js) | **Centro Nórdico** (fictional; internal id `cita`) strip mall, sign `CENTRO NÓRDICO`: `SUPERMERCADO`, `FERRETERÍA`, `FARMACIA`, `ESTANCO`, `TELÉFONOS · HYTT 1·2·3`, `SOUVENIRS`, `SVENSKT KAFFE`, `CAMBIO · 1 KR = 17 PTA` (Phase 3: the north shop row and its canopy fit the courtyard between the wings, x ±11; `SOUVENIRS · REGALOS` and `FARMACIA` with its green cross sit on the wings' courtyard faces) | `cita` (0, 22, π) · `supermercado` (−18, 18, π) · `ferreteria` (18, 18, π) · `telefon` (0, 8, π) | — |
 | (2,3) | `plaza` → `plaza` (C2, centre.js) | palms, fountain (shallow walkable pool), restaurant terraces; the north row's arcade (12 arches), shops `CAFETERÍA EL SOL` · `HELADERÍA LA PALMERA` · `CORREOS · TELÉGRAFOS` · `BANCO · CAMBIO` · `PELUQUERÍA` (Phase 3 r3: each name on a 3.5 × 0.8 m board on the arcade's front above its arch's crown (4.09), y 4.1–4.9, two lines where needed; on the shop wall at 3.62 the 5.6–6.6 m signs hung behind the 3.93 m arches, which showed only their middle third) and the arcade café tables keep to x [−19, 29], clear of the west row (x [−29, −19]) that stands on the north row's west end (Phase 3 r2: two arches, the café sign and two tables were inside it); **CASA LOLA** (`CASA LOLA · COMIDA CANARIA`, fictional; internal id `grillpaco`) terrace on the SE corner (Phase 3 r2: the bougainvillea along its eave sits above the pergola's camera cap, west of the name board; Phase 3 r3: the string lights hang from the cross beams' underside (3.08) with a 0.15 sag, the lowest bulb at 2.72, and the pergola's camera ceiling is under 2.72: capped at 2.6 under lights sagging to 2.44, a bulb sat over his head) | `plaza` (0, 6.8, π) (south of the fountain rim, facing it: the fountain column stands at (0, 0); Phase 2) · `grillpaco` (20, 22, π) · `grillpacoMamma` (25, 24, π) · `grillpacoCurb` world (−60, 36, −π/2) (westbound kerb of the z = 40 road, the `follow` endpoint) · `fena_plaza` (0, 0, 0, 0.35) · `berraBank` (0, 8.6, 0) (the bench south of the fountain Berra naps on, on its prop, facing away from the fountain; §10.6) | — |
-| (2,1) | `marknad` → `marknad` (C2, centre.js) | rows of striped stall awnings (some `bounce` awnings as climb pads), souvenir stand with painted donkeys `BURROS 500 PTA`, postcard racks, plastic giraffes; the `MERCADILLO · MARKNAD` board on two legs over the south path hangs at 3.85–4.95, above the chase eye (Phase 3 r3: at 2.35–3.45 it covered him walking in from the south road) | `marknad` (0, 22, π) · `asnestand` (6, 2, π) · `pryl_kalkylator` (−12, −8, 0, 3.4) (on an awning roof) | — |
+| (2,1) | `marknad` → `marknad` (C2, centre.js) | rows of striped stall awnings (some `bounce` awnings as climb pads); the five fruit stalls are `frutas` props (§6.8; feature 28, §10.19): rad A's west end (−24.5, −25.25, `FRUTAS` board) and east end (24.5, −25.25), rad A2 (12.5, −16.75, facing −z), rad C (6.5, 9.75) and the lone one (18.5, −7.75; 3.5 m deep, its counter in line with its 4 m neighbour's), all with the yellow-and-orange awning, which no other stall has (the old `SCH[2]` [SUN, orange] scheme is plum and white, 0x7a3a6a); souvenir stand with painted donkeys `BURROS 500 PTA`, postcard racks, plastic giraffes; the `MERCADILLO · MARKNAD` board on two legs over the south path hangs at 3.85–4.95, above the chase eye (Phase 3 r3: at 2.35–3.45 it covered him walking in from the south road) | `marknad` (0, 22, π) · `asnestand` (6, 2, π) · `pryl_kalkylator` (−12, −8, 0, 3.4) (on an awning roof) | — |
 | (3,1) | `kyrka` → `kyrka` (C2, centre.js) | **Templo Ecuménico**: white rationalist church (flat planes, bell slab), palm plaza, crèche, small fountain; sign `ES UNA IGLESIA` / `DET ÄR EN KYRKA.` [F*] (the sisters' language record, relocated; uppercase since Phase 3 r2, §1.3) | `kyrka` (0, 18, π) | — |
 | (4,3) | `bensin` → `bensin` (C2, centre.js) | gas station: canopy, `GASOLINA` (no brand), prices in pesetas, kiosk; `gaspump` props explode; the workshop's two open bays (`TALLER · NEUMÁTICOS · LAVADO`) are the free-roam paint shop (§7.2): `PINTURA` on the pillar between them, paint tins and a brush by the left bay, a yellow 4 × 7 m box in front of it, the cone moved to the pillar and the parked yellow hatch to the east gable (29.5, −20), out of the painted car's way to the road | `bensin` (0, 16, π) · `pintura` (11.25, −8, 0) (the paint zone in front of the left bay, facing out of it) · cut anchor `pinturaCam` (11.25, −9.6, π) (the bay seen from the forecourt) | — |
 | (5,3) | `guardia` → `cuartel` (C2, centre.js) | ochre barracks, red-yellow-red flag mast beside the path at x 4.6 (Phase 3: off the axis to the `CASA CUARTEL` plaque), `CASA CUARTEL`; two parked green Land Rovers | `guardia` (0, 20, π) | `guardia1`, `guardia2` (type `guardia`, locked) |
@@ -1331,6 +1334,19 @@ Coins = number of 25-pta coins burst. `shame` = SKANDAL added (× 1.2 in a car, 
 | `tallrikar` | (new) | r 0.4 | 0.9 | 2 | 0 | 2 | plate stack (grisfest smash) | D grisfest (12) |
 | `resvaska` | (new) | 0.8 × 0.5 | 0.9 | 2 | 0 | 3 | suitcase | D airport |
 | `glasskylt` | (new) | 0.8 × 0.2 | 1.3 | 1 | 1 | 3 | ice-cream board | D playa |
+| `frutas` | (new, feature 28) | 5 × 3.5 | 2.55 | 4 | 3 | 6 | the market's fruit stall (centre.js `stall()`'s look: a yellow-and-orange awning, a walkable roof, crates of fruit on the counter); `carOnly`, `kind: 'stall'`, `debris: 26` over `spread: 3.4` at `debrisY: 0.75` in the fruit colours (`color` a list), `shreds: 4`, `slow: 0.8`, `sign` (FRUTAS on one); breaks only under his car in free roam (§10.19) | C marknad (5) |
+
+**Feature 28 flags** (§10.19; any type may use them): `carOnly` (a kick never breaks it: `areaHit`
+skips it); `kind` (its collision block's kind, default `'prop'`: the fruit stall's `'stall'` is a solid
+the chase camera, `segmentBlocked`/`discPush` and the officer treat as the market's static stall, not
+a see-through prop; car.js knows a prop by its block's `ref`); `spread` (the debris starts in a square
+that wide, default 0.6) and `debrisY` (its height over the base, default 0.25); `color` a list (the
+chunks take its colours in turn, none darkened); `shreds: n` (n flaps of striped awning flutter from
+the roof: a pool of 12, gravity 9, drag 1.6/s, at most 3.5 m/s down, flat where they land, 3.2–4.4 s);
+`slow` (the car keeps this much of its speed through it, default 0.92); `sign: { y, z, w, h, posts,
+opts }` (a placement's `placeProp(…, { sign: text })` gets a board on two posts over the awning, its
+own mesh, hidden while the prop is broken). `game.breakProp` may refuse (returns null): the car then
+meets the prop as a wall.
 
 Dropped: `mailbox newsbox flamingo gnome fence woodfence hay tombstone hydrant pump crate barrel
 trashcan bench cone cart vending` (renamed as above). `main.js` reads `def.splash` / `def.explode`
@@ -3877,11 +3893,12 @@ answer are the film's first exchange with the roles swapped, [F*] (§1.6).
     (`Game.breakProp(p, vx, vz, car)` with `car === playerCar`; an AI car's breakage is not his).
   - `boom`: the thing he broke goes up (`def.explode`: a petrol pump or a butano bottle), on foot or
     in his car; it outranks the rest in the same kick.
+  - `stand` (feature 28, §10.19): his car goes through one of the market's fruit stalls.
   The session's first offence always gets a line (so the first prank shows it); after that each
-  kind's `chance` (kick 0.5, hit 0.6, prop 0.35, boom 1), and none sooner than `gap` = 7 s after his
-  last (he would never stop mowing through a crowd). A queued line not yet said gives way to a
-  weightier one in the same moment (prop < kick = hit < boom < carjack: the parasol and the man
-  under it in one frame give the man's line).
+  kind's `chance` (kick 0.5, hit 0.6, prop 0.35, stand 1, boom 1), and none sooner than `gap` = 7 s
+  after his last (he would never stop mowing through a crowd). A queued line not yet said gives way
+  to a weightier one in the same moment (prop < stand < kick = hit < boom < carjack: the parasol and
+  the man under it in one frame give the man's line).
 - **The carjacking** (`carjack(ch)`, from `enterCar` when a driver tumbles out): no gap and no draw,
   only the `saying` rule. `askAt` = 0.6 s after it Stig asks "Ursäkta, är det din bil?" [F*] (in the
   film the traffic warden Majsan asks him at the travel agency's window, research-plot.md:95).
@@ -3899,6 +3916,7 @@ answer are the film's first exchange with the roles swapped, [F*] (§1.6).
   | `hit` | "Förlåt! Jag såg er inte!", "Oj! Förlåt! Hur gick det?", "Förlåt! Bromsen satt inte där jag trodde." [N] |
   | `prop` | "Jag ersätter den, självklart!", "Oj… Den stod visst i vägen. Förlåt.", "Förlåt! Jag betalar, så klart." [N] |
   | `boom` | "Oj… förlåt." [N] |
+  | `stand` | "Oj… förlåt… jag ersätter naturligtvis!" [N] (a fruit stall, §10.19) |
   | `carjack` | "Ursäkta, är det din bil?" [F*] (Majsan's question, relocated) |
   | `no` (the driver) | "Nej." [F*] (Stig's answer, relocated) |
 
@@ -4297,6 +4315,63 @@ tourist's refusal; the film lines are the grisfest's own [F] or relocated [F*], 
   never asks her); the host's round is a fixed walk round the floor's south side; no plate counter;
   the band is three seeded figures of the module's own, not the cast.
 
+### 10.19 Rakt genom fruktståndet – his car through the market's fruit stalls (free roam; feature 28, 2026-10-15)
+
+`game/fruitStands.js` (`FruitStands`, owned by Game as `stands`), config `FRUKTSTAND` in
+content/island.js, the prop type `frutas` (world/props.js, §6.8). The car chase's cliché: until now
+every stall stopped his car dead; five of them now go to pieces under it, the fruit flying.
+
+- **The stalls.** The market's five fruit stalls (§6.3 (2,1): rad A's two ends, rad A2's, rad C's and
+  the lone one) are `frutas` props in place of `stall()` calls: the same place, 5 × 3.5 m, a walkable
+  awning at 2.55, the block's kind `'stall'` (the camera, the guides and the officer see the stall's
+  solid, not a see-through prop). One instanced look, so they lose the market's colour round: the
+  yellow-and-orange awning, which no other stall has (the old `SCH[2]` stalls are plum and white), so
+  a player learns which stalls go. The `FRUTAS` board is rad A's west stall's `sign`, hidden with it.
+- **When.** Only `Game.breakProp(p, vx, vz, car)` with `stands.canBreak(car)`: his own car, on the
+  island, `missions.state === 'idle'`, no dialogue; car.js breaks it above `minSpeed` 6 m/s and the car
+  keeps `slow` = 0.8 of its speed. Otherwise `breakProp` returns null and car.js meets the stall as a
+  wall, as before (a car at 3 m/s, any car in a mission, an AI car, a Land Rover). A kick never
+  (`carOnly`).
+- **The smash** is the props' (§6.8): 26 chunks in the fruit colours over the counter (tomato red,
+  banana yellow, orange, melon green, light red, crate brown), 4 flaps of awning that flutter down and
+  lie where they land, the board gone, `audio.smash`, 4 coins (100 pta), SKANDAL `shame` 3 × 1.2 in a
+  car (× `gain` 3: +10.8), and two juice spills (`fx.spill`, red and yellow).
+- **The seller** (`vendor`: a Spanish market woman in a red headscarf, a blue dress and a yellow apron,
+  a `Character` of her own with `key` `frutera`, in no NPC list, no collision): she pops up with a
+  dust puff beside the wreck, at the first of six spots round the footprint (the front corners 0.6 m
+  in from the ends and 0.9 m out, the middles of the sides 0.8 m out, the back corners) with 0.45 m
+  clear of solids and out of the car's lane (2.4 m either side of its line, ahead of it); none such,
+  the clear one furthest behind it. Nobody comes to harm (§1.2): she is never ahead of the car. She
+  flails (`flail`, `yell`), turns to him and cries "¡Mis tomates!" [N] (2.4 s; the form of the locals'
+  "¡Mi coche!"), and after `vendorSecs` = 4 s (or at a dialogue) she is gone with another puff. The
+  next crash takes her there.
+- **Stig** says sorry through StigSorry's `stand` kind (§10.14): "Oj… förlåt… jag ersätter
+  naturligtvis!" [N] 0.5 s after (chance 1; the 7 s gap and the saying rule as every kind), from the
+  car. He does not stop.
+- **The souvenir seller** (at `asnestand`): from missions index `swearFrom` = 8 (after asnan, whose win
+  has his swearing), within `swearR` = 25 m of the stall (rad C's, A2's and the lone one; not rad A's
+  ends), free (`honk.free`) and not saying anything: `swearAt` = 1.4 s after the crash "Jävla
+  smålänningar!" [F*] (the line Ole's haggle gets from him, research-plot.md:302–304, relocated), 2.4 s,
+  with `yell`, turned to the wreck, then 2.4 s turning back to his stand; meanwhile
+  `stands.posed('souvenir')` (syncAll neither turns him to Stig nor gives him chatter). At most once
+  in `swearGap` = 60 s, a shared pause, so he never swears twice in a row.
+- **Coming back.** A broken stall comes back by the props' rule (75–115 s, him more than 70 m off,
+  `tickProps`), but not while a car's OBB overlaps its footprint (`update`, before `tickProps`, holds
+  its `respawn` at 0.5 s). A mission start (any state but `idle`) or the other level brings all five
+  back at once (`reset`): a car in a footprint is first moved out along the SAT normal (depth + 0.3 m),
+  the seller is hidden, the souvenir seller's swear dropped. So every mission (asnan's drive to the
+  market and haggle at the souvenir stand, julafton's pickup at the entrance) meets the stalls as
+  before, with the same footprints and tops (the lone stall 0.5 m shallower at the back, its counter
+  where it was): no mission, stage kind, timer, fixture or calibration pool changed.
+- `stands.last` ({ t, i, x, z, vendor: { x, z }, swear }) is for tests; nothing is saved. Scenarios
+  `frukt` and `fruktFore` (§16.4).
+- **Not done / changed** (deviations from the idea): Ole's "Blomster? … Meloner? Agurker? Bananer?"
+  (it needs "Ole åker med", not built); no tomato stains on the ground; the debris is the props' cubes
+  in the fruit colours, not fruit shapes; only his car breaks one (traffic and the Land Rovers meet the
+  wall, so no sorry or seller for theirs); the lone stall 3.5 m deep (it was 4); the market's three
+  other yellow-and-orange stalls repainted plum; the seller has no collision (the car can pass
+  through her, but she never stands in its way).
+
 ## 11. HUD / UI strings (Swedish; `src/strings.js` owned by WP-H, created by Phase 0)
 
 `strings.js` exports `S` (flat object) and `fmt(key, vars)`. Engine code uses `S.key` only.
@@ -4669,7 +4744,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/strings.js` | new | **H** | `S`, `fmt()` (§11) |
 | `src/content/index.js` | new | none | merges `HOMES`, `MAP_LABELS`, `LEVEL_OUTFITS`, re-exports all content |
 | `src/content/flight.js` | new | **F** | `HOMES_GATE`, `HOMES_FLIGHT`, `MAP_LABELS_FLIGHT`, `CHATTER_FLIGHT`, `OLE_STATS`, `LEVEL_OUTFITS_GATE`, `LEVEL_OUTFITS_FLIGHT` |
-| `src/content/island.js` | new | **G** | `HOMES_ISLAND`, `MAP_LABELS_ISLAND`, `CHATTER`, `OUCH`, `GETUP`, `CARJACK`, `NPC_KICKED` (+ the `_OLE` / `_LOCAL` tables, `LOCAL_CAST`, `BARKS`: Phase 3 r2, §14.10; `STIG_SORRY`: feature 11, §10.14; `PIG_TRUCK`: feature 15, §10.15; `BAGGAGE_BELT`: feature 25, §10.16; `LAPPLISA`: feature 20, §10.17; `GRISFEST_FREE`: feature 21, §10.18), `COLLECTIBLES`, `UNLOCKS`, `NAMED_CARS`, `LEVEL_OUTFITS_ISLAND` |
+| `src/content/island.js` | new | **G** | `HOMES_ISLAND`, `MAP_LABELS_ISLAND`, `CHATTER`, `OUCH`, `GETUP`, `CARJACK`, `NPC_KICKED` (+ the `_OLE` / `_LOCAL` tables, `LOCAL_CAST`, `BARKS`: Phase 3 r2, §14.10; `STIG_SORRY`: feature 11, §10.14; `PIG_TRUCK`: feature 15, §10.15; `BAGGAGE_BELT`: feature 25, §10.16; `LAPPLISA`: feature 20, §10.17; `GRISFEST_FREE`: feature 21, §10.18; `FRUKTSTAND`: feature 28, §10.19), `COLLECTIBLES`, `UNLOCKS`, `NAMED_CARS`, `LEVEL_OUTFITS_ISLAND` |
 | `src/game/missions/index.js` | new | none | `MISSIONS = [...FLIGHT_MISSIONS, ...ISLAND_MISSIONS]`, `MissionRunner` re-export |
 | `src/game/missions/runner.js` | new (from missions.js) | none | `MissionRunner` (§9.4) |
 | `src/game/missions/kinds/core.js` | new | **none** (frozen after Phase 0) | getInCar goto pickup dropoff follow rabbits race destroy grab scene |
@@ -4694,6 +4769,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/baggageBelt.js` | new (feature 25, 2026-10-15) | — | `BaggageBelt` (`game.belt`): Åk bagageband in free roam: the belt at Gando carries Stig, he sits down on a bag, the ride's turns, toasts and lines, Space and E off (§10.16) |
 | `src/game/lapplisa.js` | new (feature 20, 2026-10-15) | — | `Lapplisa` (`game.lapp`): Lapplisan Majsan in free roam: the ticket and the tow for a car Stig leaves on the sidewalk, Angerud's hire car outside Centro La Medina and the film's first meeting with the GRÚA truck, Majsan's praise for a car straight in a Flamenco bay (§10.17); not `live` during the grisfest's evening (feature 21) |
 | `src/game/grisfestFree.js` | new (feature 21, 2026-10-15) | — | `GrisfestFree` (`game.party`): Grisfest varje torsdag in free roam: the host's 800 pesetas at the farm's gate, the evening (the clock held at night, the vals, the band and tourists of its own, the cast on and round the floor, the host's round), the tourist's refusal and Majsan's invitation, the dance by her, Fru Storch's coffee, the morning after (§10.18) |
+| `src/game/fruitStands.js` | new (feature 28, 2026-10-15) | — | `FruitStands` (`game.stands`): Rakt genom fruktståndet in free roam: when his car may break a market fruit stall, the fruit seller beside the wreck, the souvenir seller's swear, the stalls back at a mission start (§10.19) |
 | `src/game/hud.js` | edit | **H** | map sources, meter, strings, legend, ring, blips, zone bar, markers; `renderPortrait` restores the model transform (§14.8) |
 | `src/game/camera.js` | edit | **A1** | profile, frameOne, cutTo, `clampZ` |
 | `src/game/fx.js` | edit | **A1** | `snow`, `steam`, `meterPuff` (rename of `shame`) |
@@ -4702,16 +4778,16 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/audio.js` | edit | **H** | §12 API |
 | `src/input.js` | edit | none | pad Start → `pause` |
 | `src/util.js` | unchanged | none | |
-| `src/world/frame.js` | new (from town.js) | none | `Frame` |
+| `src/world/frame.js` | new (from town.js) | none | `Frame` (`prop(…, opts)` passes `opts` to `placeProp`: feature 28) |
 | `src/world/registry.js` | new | none | `worldHooks` |
 | `src/world/layout.js` | edit | **B** | `MAP`, `BLOCK_MAP_COLORS`, `laneSpot` (Phase 0); `sidewalkAt` (feature 20, §10.17) |
 | `src/world/landmarks-island.js` | new | none (Phase 2 applies reported changes) | canonical island landmark table |
 | `src/world/town.js` | edit | **B** | streets, outskirts, residential, dispatch via `BLOCK_BUILDERS` |
-| `src/world/props.js` | edit | **B** | `TYPES` (§6.8), flags, `reviveProps`, `propsOfType` |
+| `src/world/props.js` | edit | **B** | `TYPES` (§6.8), flags, `reviveProps`, `propsOfType`; the `frutas` stall, its flags, the debris palette, `spawnShreds` and the signs (feature 28, §10.19) |
 | `src/world/collision.js` | edit | none | `segmentBlocked` nearest hit |
 | `src/world/blocks/index.js` | new | none | `BLOCK_BUILDERS` merge |
 | `src/world/blocks/hotels.js` | new | **C1** | `flamenco`, `suntrip`; `flamencoBays` (feature 20, §10.17) |
-| `src/world/blocks/centre.js` | new | **C2** | `kasbah`, `cita`, `plaza`, `marknad`, `kyrka`, `bensin`, `guardia` |
+| `src/world/blocks/centre.js` | new | **C2** | `kasbah`, `cita`, `plaza`, `marknad`, `kyrka`, `bensin`, `guardia`; the market's five fruit stalls as `frutas` props (feature 28, §10.19) |
 | `src/world/blocks/nature.js` | new | **D1** | `tomat`, `grisfest`, `fataga`, `golf`, `bungalow`, `bygge`, `dyner` |
 | `src/world/blocks/coast.js` | new | **D2** | `flygplats`, `dromplan`, `fyren`, `playa`, `hamn`; `BELT` (feature 25, §10.16) |
 | `src/world/cabin.js` | new | **A1** | §5 interior, collision, seats, trolley, turbulence, fear, interactables, blockers, `CAM_CABIN`, `FLIGHT_PALETTES`, `FEAR`; calls `buildFlightScenery` |
@@ -4719,7 +4795,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/world/rio.js` | new | **B** | `buildRioCard` (P1) |
 | `src/actors/models.js` | edit | **E** | `CHARS`, `CAST`, new def fields, anim flags, `buildBustGeo`, `outfitDef`, `randomPed` palette; the `ticket` flag and its `lappblock`/`penna` props (feature 20, §10.17) |
 | `src/actors/character.js` | edit | **E** | `setDef`, `hidden`, `seatAt`, `standAt`, new anim flag defaults |
-| `src/actors/car.js` | edit | **E** | §6.6 types/flags, `registerCarType`, `build`/`noWheels`/`noSpeedo`/`noExplode`/`livery`; the grisbil's pig meshes `PIG_SLOTS`, `pigMesh`, `car.pigs`, `setPig`, `pigWorld` (feature 15, §10.15); `car.lift`, the nose raised on the tow truck's hook (feature 20, §10.17) |
+| `src/actors/car.js` | edit | **E** | §6.6 types/flags, `registerCarType`, `build`/`noWheels`/`noSpeedo`/`noExplode`/`livery`; the grisbil's pig meshes `PIG_SLOTS`, `pigMesh`, `car.pigs`, `setPig`, `pigWorld` (feature 15, §10.15); `car.lift`, the nose raised on the tow truck's hook (feature 20, §10.17); a prop is known by its block's `ref`, `game.breakProp` may refuse, `def.slow` (feature 28, §10.19) |
 | `src/actors/pickups.js` | edit | **E** | `COLLECT_KINDS`, `registerCollectKind`, `Collectible` table, `Rabbit` meshes, coin value 25 |
 | `src/actors/peds.js` | edit | **E** | Swedish/Spanish shouts; `dodge`, `startle` (feature 5, §6.7) |
 | `src/actors/drivers.js` | Phase 2 edit | none | (accepts duck-typed paths); an AI bus's lane path starts its turns 11 m from the junction centre instead of 8.5 (left-turn radius 13.75 m > the bus's ≈ 12 m minimum), so the excursion bus no longer swings into the grisfest farm wall; right turns stay too tight for buses (mission bus routes turn left only); traffic holds short of a closed race junction (`game.closure`, §9.2 race) |
@@ -4757,7 +4833,7 @@ Init: `initGfx` → `input.init` → `hud.init` → `fx.init` → fonts (Luckies
 → peds (34) → NPC `Character`s (one per `CHARS` key except `stig`, the radio-only keys `levander
 kapten pa guardia pax telefonist` and the cabin-owned `vardinna2`; `key` field; hidden until placed, §2.3) →
 player `Character(CHARS.stig)` (`key = 'stig'`) → collectibles (`COLLECTIBLES`) → markers → `Shame`
-→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `Eslov` (feature 7, §10.12; registers the rollerskier's interactable) → `PoolFest` (feature 8, §10.13) → `StigSorry` (feature 11, §10.14) → `PigTruck` (feature 15, §10.15) → `BaggageBelt` (feature 25, §10.16) → `Lapplisa` (feature 20, §10.17) → `GrisfestFree` (feature 21, §10.18; registers the gate's and the tourists' interactables) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
+→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `Eslov` (feature 7, §10.12; registers the rollerskier's interactable) → `PoolFest` (feature 8, §10.13) → `StigSorry` (feature 11, §10.14) → `PigTruck` (feature 15, §10.15) → `BaggageBelt` (feature 25, §10.16) → `Lapplisa` (feature 20, §10.17) → `GrisfestFree` (feature 21, §10.18; registers the gate's and the tourists' interactables) → `FruitStands` (feature 28, §10.19) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
 `placeNpcs(true)` → spawn the player → portraits for every key in `CAST` (`renderPortrait`
 restores each model's parent and transform, so seated cast members stay in their seats) →
 `applySaveToWorld()` →
@@ -4769,7 +4845,7 @@ mantra/hold, AI, cars, people (`glide.step` → the player's step → `glide.aft
 traffic/peds skipped when `!levelDef.sim.*`) → `syncAll` (also
 writes `ch.x/y/z` from `car.seatWorld(ch.seatSide)` for every car-seated character, player
 included, so framing, bubbles and distance checks see where they really are) → `missions.update` →
-`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
+`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `stands.update` (feature 28) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
 pickups/collectibles → props → `fx.tick` → `tickTown` → markers → camera → sun/sky → HUD → audio →
 traffic recycling (island) → autosave. `loop` then renders, and when `film.grabNow` is set calls
 `film.grab()` in the same task (Herr Storch's still from the frame's buffer, feature 6, §10.11).
@@ -4818,6 +4894,11 @@ game.lapp;         // Lapplisa (feature 20, §10.17): Majsan tickets a car left 
 game.party;        // GrisfestFree (feature 21, §10.18): the grisfest's evening for 800 pesetas at the
                    // farm's gate; party.on, party.posed(key) (syncAll, honk.free), party.extras (the
                    // band and tourists: allChars, areaHit), party.step(h) (fixedStep), party.last
+game.stands;       // FruitStands (feature 28, §10.19): canBreak(car) (Game.breakProp), onBroken(p, car),
+                   // stands.posed(key) (syncAll: the souvenir seller swearing), stalls, vendor, last
+game.breakProp(p, vx, vz, car) -> p | null   // car.js's smash: null when refused (a fruit stall
+                   // outside free roam or under any car but his: the car meets a wall); Stig's sorry
+                   // ('stand' for a fruit stall), then stands.onBroken (feature 28)
 game.outfitOverrides; // { key: outfit } from UNLOCKS[name].outfit, merged over the island set by applyOutfits (§10.3)
 game.witnessOverride; // null | UNLOCKS[name].witness, merged over the witness rule's config on the island (§7.2)
 game.onBounce(ch, b);   // Character.step: ch bounced on trampoline block b (the boing; the judges, §10.8; film.trick('studs'))
@@ -5217,7 +5298,10 @@ export const BUILDERS = { type: (f, W, ctx) => void };   // ctx = { i, j, scene,
 //   rotation.y is t × BELT.spin; a ring-local angle a is the world angle a + t × spin at (sin, cos))
 
 // world/props.js
-placeProp(type, x, z, yaw, baseY = CURB);  finalizeProps(scene);   // unknown type → console.warn, skipped
+placeProp(type, x, z, yaw, baseY = CURB, { sign }?);  finalizeProps(scene);   // unknown type → console.warn, skipped
+//   { sign: text } (feature 28): the type's `sign` board with that text (prop.sign, a Group shown
+//   with the prop); spawnDebris(x, y, z, color | [colours], n, vx, vz, power, spread);
+//   spawnShreds(x, y, z, yaw, hw, hd, n, vx, vz) (the awning flaps; only if a placed type has `shreds`)
 //   baseY (Phase 0): the prop is drawn at baseY, its block top = baseY − CURB + def.top, debris spawns
 //   at baseY + 0.25 (grisfest plates on the tables)  breakProp(p, vx, vz, game);  tickProps(dt, x, z);
 propsNear(x, z, r);  props;
@@ -5416,7 +5500,7 @@ shame.paint (PaintShop, §7.2): configure(cfg) from configure(); onPursuit() fro
 //   leave(step); visit; phase; round { n, t0, game, t, vol }; nextAt; streak; stats; last
 
 // stigSorry.js (feature 11, §10.14): game.sorry = new StigSorry(game) after the pool fest;
-//   offence(kind) -> text | null (kind 'kick' | 'hit' | 'prop' | 'boom' | null) from areaHit (once a
+//   offence(kind) -> text | null (kind 'kick' | 'hit' | 'prop' | 'stand' | 'boom' | null) from areaHit (once a
 //   kick: 'boom' if a broken prop explodes, else 'kick' if it bowled anyone over or hit a cast NPC,
 //   else 'prop'), onCharHit (his car) and Game.breakProp(p, vx, vz, car) (car === playerCar);
 //   carjack(ch) -> bool from enterCar (true: the driver's own bark is
@@ -5463,6 +5547,14 @@ shame.paint (PaintShop, §7.2): configure(cfg) from configure(); onPursuit() fro
 //   askable(); held; cast; round; lines; invited; coffee; dancing; gen; last
 // syncAll: posed also when party.posed(k); allChars() adds party.extras; areaHit bowls them over as
 //   pedestrians; dayClock: `hold` (the hour stands still while set; party only)
+// fruitStands.js (feature 28, §10.19): game.stands = new FruitStands(game) after the lapp; update(dt)
+//   after lapp.update and before tickProps (reset() while not on the island in idle: the five back, a
+//   car moved out of a footprint, the seller hidden; the queue; the seller's 4 s and facing; the
+//   souvenir seller's turn and turn back; a broken stall's respawn held at 0.5 s with a car in it);
+//   canBreak(car) and onBroken(p, car) from Game.breakProp; vendorSpot(p, car); showVendor /
+//   hideVendor; carIn(p); posed(key) read by syncAll; stalls; vendor; vendorT; swearT; swearing; last
+// syncAll: posed also when stands.posed(k) (the souvenir seller swearing at a smashed stall)
+// areaHit: props with def.carOnly are skipped (a kick never breaks a fruit stall)
 // collision.js: waterAt(x, z, y) -> the `water` block he stands in at that height, or null
 //   (feature 4; moved from glide.js)
 
@@ -5685,6 +5777,10 @@ uppbjuden." [F](t), as in the grisfest's scene; Fru Storch's "Finns det svenskt 
 grisfesten?" [F*] and Ole's "Norsk, da?" [F*](t); the prompts "E Betala grisfesten (800 pta)" and "E
 Bjud upp" and the banners `TORSDAG KVÄLL` / `Grisfest på vischan` and `MORGONEN EFTER` / `Nästa
 grisfest: torsdag` [N].
+
+Feature 28: the fruit stalls' lines (`FRUKTSTAND`, content/island.js, game/fruitStands.js, §10.19),
+bubbles: the fruit seller's "¡Mis tomates!" [N], the souvenir seller's "Jävla smålänningar!" [F*]
+(asnan's, relocated) and Stig's `STIG_SORRY.stand` "Oj… förlåt… jag ersätter naturligtvis!" [N].
 
 ---
 
@@ -6029,6 +6125,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `lappfilm` [feature 20] | at index 7: Angerud's white hire car on the sidewalk at `angerudBil`, locked, with him at Viking Bar; driving past nothing; on foot within 12 m the scene: the eight lines in order in the dialogue (shots of each), the GRÚA truck with the car on its hook (`lift` 0.16), Angerud running out to its tail; then free roam (no letterbox, he walks), the car and the truck gone, `lappFilm` saved, Angerud home muttering ("Hederliga bilister…"), Majsan off home unseen; no car or scene again; a mission start gives Angerud his chatter back; at index 8 the car between missions and gone at a mission start; after the end (`bodega` unlocked) no Angerud, no car |
 | `torsdag` [feature 21] | Grisfest varje torsdag (§10.18): at index 11 no pay prompt at the host; at index 12 Stig coming up to the host: "Är det torsdag i dag?" then the host's answer; within 2.6 m the prompt `E Betala grisfesten (800 pta)`; E with 650 pta: "Åttahundra, señor. Inte en peseta mindre.", nothing paid, no evening; E with 2 000: 1 200 left, the black fade, 21:00 held (`day.hold`, still 21:00 after 2.5 s with the clock running), `night`, the `vals`; held: Berra, Fru Storch, Herr Storch, Majsan, Robban, Siv and the host (no Ole before julafton is done, no Angerud at the farm); the band of three on the bandstand at 1.0 (accordion, congas), the five tourists dancing on the floor at 0.4; Stig on the drive at (0, 20); Berra, Siv, Robban dance, Majsan does not; shots of the evening, the floor and the band; the host walks his round with a cup and says "Sangrian, grabbar."; Fru Storch's "Finns det svenskt kaffe på grisfesten?" once, no "Norsk, da?" without Ole; a kick (`areaHit`) bowls a tourist over and she goes back to her place; by a solo tourist the prompt `E Bjud upp`, E: she turns her back on him, Majsan within 1.4 m of him in the two-shot, both dance, his line then "Jag är skraj att de ska nobba." in order; afterwards standing still by her he dances, no ask prompt, a step (S held 0.7 s) stops it; out of the gate: the morning after at 08:00 (`day` palette, the hold off), nobody held, no extras, the tune `sol`, Majsan, Siv, the Storches at home and free, Berra and Robban home or napping again (the Berra job), the host at his post |
 | `torsdagOle` [feature 21] | at index 13 with julafton's unlock: Ole at the evening, in `gris`, dancing (a shot), no Angerud; Fru Storch's question then Ole's "Norsk, da?", and his "Heia Norge!"; out of the gate his outfit back; at index 12 a mission start (julafton) two frames into the talk: no evening, nobody held, no extras, the hold off; the mission runs by day (the clock's morning cut) without the vals |
+| `frukt`, `fruktFore` [feature 28] | Rakt genom fruktståndet (§10.19). `frukt`, at index 9 (free roam, after asnan): the five fruit stalls are `frutas` props (kind `stall`, top 2.55, at their §6.3 places, the FRUTAS board on rad A's west); a kick and his car at 3 m/s leave rad C's standing (the car stopped at the counter); at 11 m/s from the front it breaks: the seller up beside it (within 4.5 m, not ahead of the car), flailing, "¡Mis tomates!", Stig's `stand` line 0.35–0.75 s after, the souvenir seller's "Jävla smålänningar!" 1.25–1.6 s after, +10.8 SKANDAL, coins; she is gone after 4 s; an AI car's `game.breakProp` refused; FRUTAS from the west at 12 m/s: stall and board gone, no swear (40 m off); the lone stall within 60 s: the seller there, her cry, no swear; a broken stall stays down with him near and with a car in its footprint, and is back with neither (him 150 m off); a mission start (ropavieja): all five up, the board up, a car in the lone stall's footprint moved out; in the mission his car at 11 m/s stops at rad C's counter, no seller. `fruktFore`, at index 6: it breaks, her cry, the souvenir seller at his stand within 25 m, no swear. Shots `frukt_rad`, `_frutas`, `_krasch`, `_mis_tomates`, `_smalanningar`, `_frutas_krasch`, `_uppdrag` |
 | `talk` [Phase 0] | `autoDialog = false`, walk to Ole at `gateQueue`, E, Space twice |
 | `fullstory` [Phase 0b] | swaps the literal §8 missions (`tools/fixtures/full-missions.js`) into `MISSIONS` and plays all 13 per §16.3 (`FROM`/`TO` as `story`); must end `#13 idle`, `RESULT: PASS` |
 | `kinds` [Phase 0b] | fixture data checks; haggle misses fail; follow `minDist` fails; smooth/fragile bars (teleports never count); carry spill; checkpoint retry re-applies night + `vals` and revives plates at `dansgolv`; destroy default spawn; grab at the wreck; scene `exitCar`; Phase 3: follow shows no bar before the start and a head-on quarry does not fail it, `retryCar` (the last car reused, a typed named car, `park`), getInCar `atHome` and a wrecked `missionCar` failing, a frame-only scene stopping the car dead, a scene cutting a `collect` guest's bubbles (3 frames in: no bubble over the guest or Stig, no empty one) and keeping his placement |
@@ -6120,7 +6217,8 @@ fataga golf bungalow bygge dromplan flygplats dyner fyren playa hamn bungalowR l
 **Car types**: `sedan hatch wagon van pickup bus guagua icecream taxi guardia grisbil trolley`.
 
 **Prop types**: `papelera correos vykort dusch parasoll solstol palmkruka mur tomatlada tunna bank
-kon bagagevagn automat gaspump butano julgran tallrikar resvaska glasskylt`.
+kon bagagevagn automat gaspump butano julgran tallrikar resvaska glasskylt frutas` (`frutas`:
+feature 28).
 
 **Collect kinds**: `pryl fena flaska juice knacke asna vaska giraff`. **Rabbit meshes**: `badboll
 faar blomma gris`. **Collectible sets**: `prylar fenor`. **Unlocks**: `grisbil samba bodega glid`
@@ -7700,3 +7798,20 @@ the fixer's group.
   (21:00 held, then 08:00), the refusal and the invitation are framed shots, the dance again by
   standing still by her (no prompt), the host's round is fixed, no plate counter. Scenarios `torsdag`,
   `torsdagOle` (§16.4).
+- Feature 28, "Rakt genom fruktståndet" (`features/implemented/fruktstandet.md`, 2026-10-15): his car
+  straight through the market's fruit stalls in free roam (§10.19; new `src/game/fruitStands.js`,
+  `FRUKTSTAND` in content/island.js, the prop type `frutas`; §1.6, §6.3, §6.8, §10.14, §14.1–14.3,
+  §14.7, §14.8, §14.10, §16.4, Appendix A). The five fruit stalls (rad A's ends, rad A2's, rad C's, the
+  lone one, now 3.5 m deep) are `frutas` props with the stall's look, place, 2.55 walkable awning and
+  solid (block kind `'stall'`), all with the yellow-and-orange awning no other stall has (`SCH[2]` is
+  plum and white); the FRUTAS board is a prop `sign`. New prop flags (§6.8): `carOnly`, `kind`,
+  `spread`/`debrisY`, a colour list, `shreds` (awning flaps), `slow`, `sign`; car.js knows a prop by
+  its block's `ref` and meets it as a wall when `game.breakProp` refuses (returns null). On the island
+  with `missions.state === 'idle'`, only his car above 6 m/s: fruit debris, flaps, 4 coins, +3 × 1.2
+  SKANDAL; the fruit seller (a figure of her own) beside the wreck and out of the car's way, "¡Mis
+  tomates!" [N], 4 s; Stig's new `STIG_SORRY.stand` "Oj… förlåt… jag ersätter naturligtvis!" [N]
+  (§10.14, chance 1); after asnan the souvenir seller within 25 m "Jävla smålänningar!" [F*], at most
+  once a minute. A stall comes back by the props' rule, not with a car in it; a mission start brings
+  all five back (a car in a footprint moved out), so no mission, stage kind, timer, fixture or
+  calibration pool changed. Deviations: no Ole line (needs "Ole åker med"), no tomato stains, only his
+  car, cube debris. Scenarios `frukt`, `fruktFore` (§16.4).

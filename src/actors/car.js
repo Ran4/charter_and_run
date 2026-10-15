@@ -659,12 +659,14 @@ export class Car {
     for (const b of list) {
       const top = b.shape === RAMP ? topAt(b, this.x, this.z) : b.top;
       if (top <= this.y + 0.6) continue;
-      if (b.kind === 'prop') {
+      // A prop (its block's `ref`; a fruit stall's kind is 'stall'): broken above its minSpeed unless
+      // the game says no (a fruit stall in a mission, §10.19), then a wall like any other.
+      if (b.ref?.def) {
         if (!obbVsBlock(o, b, _hit)) continue;
-        const sp = this.speed;
-        if (sp > (b.ref.def.minSpeed ?? 3) && game) {
-          game.breakProp(b.ref, this.vx, this.vz, this);
-          this.vx *= 0.92; this.vz *= 0.92;
+        const def = b.ref.def;
+        if (this.speed > (def.minSpeed ?? 3) && game?.breakProp(b.ref, this.vx, this.vz, this)) {
+          const k = def.slow ?? 0.92;
+          this.vx *= k; this.vz *= k;
           continue;
         }
         this.resolveStatic(_hit, game, b);
