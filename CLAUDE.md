@@ -61,7 +61,9 @@ opens with a summary of the rounds and the timer changes.
     the grisfest: the evening with the band and the dancers, the tourist's refusal and Majsan's
     invitation, the morning after; Ole only after julafton; DESIGN §10.18), `frukt fruktFore` (Rakt genom fruktståndet, his car through the market's five fruit
     stalls, the seller's "¡Mis tomates!", the souvenir seller's swear after asnan, the stalls back at a
-    mission start, DESIGN §10.19)
+    mission start, DESIGN §10.19), `hopptorn` (Från fjärde våningen, the 10 m diving tower at Flamenco's
+    deep end: the ladder's E points, the dive with the mantra, the belly flop and the cannonball,
+    Lasse's line; its solids only between missions, DESIGN §10.20)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

@@ -593,6 +593,7 @@ function flamencoPool(f, rnd, glow) {
   f.box(TRIM, -14.1, C + 0.72, 7, 3.6, 0.1, 0.62);
   f.box(0x1e9aa0, -14.1, C + 0.82, 7, 3.4, 0.02, 0.5);
   f.solid(-14.1, 7, 3.6, 0.62, C + 0.82, 'bounce');
+  diveTower(f);
   // Pool toys: a ring and an air mattress (flat on the water).
   prim(f, PRIM.torus(), RED, 1.2, Y_GLINT + 0.05, 4.0, 1.4, 1.4, 1.4, PI / 2);
   f.boxC(SUN, -8.5, Y_GLINT + 0.06, 10.6, 0.8, 0.12, 1.9, 0.5);
@@ -617,6 +618,70 @@ function flamencoPool(f, rnd, glow) {
   f.sign('GOD JUL · FELIZ NAVIDAD', -3, C + 2.95, 29.9, 7.0, 0.75, PI, { bg: '#d8321e', fg: '#fff8e6', border: '#f2c12e', scale: 0.66, double: true });   // §6.9 [N]
   stringLights(f, glow, -6.6, C + 3.4, 29.9, -9.5, C + 4.2, 27.5, 5, 0.3);
   stringLights(f, glow, 0.6, C + 3.4, 29.9, 9.5, C + 4.2, 27.8, 8, 0.5);
+}
+
+// Från fjärde våningen (free roam, §10.20): the 10 m diving tower at the deep end, on the strip
+// between the hedge and the pool, north of the low board. A white room at its foot (the whole
+// footprint, x [-17.4, -14.8], z [2.4, 4.8]), four posts with two terracotta landings over it, the
+// platform at C + 9.8 (the hotel's fourth floor, Y1 + 2 FH), railed on all four sides but for the
+// board, which reaches 1.4 m out over the deep end; the steel ladder up the north face, the
+// TRAMPOLÍN signs. The solids go out in DIVE_TOWER and are live only between missions (their `dead`
+// asks `DIVE_TOWER.live()`, game/diveTower.js): no mission stage sees them, so no stage's world and no
+// calibration pool changes. Collision is footprints, so the tower is solid from the ground to the
+// platform (the room shows it) and the board an unseen pillar in the water, as the low board's.
+export const DIVE_TOWER = { top: C + 9.8, blocks: [], live: () => true };
+function diveTower(f) {
+  const X0 = -17.4, X1 = -14.8, Z0 = 2.4, Z1 = 4.8, cx = (X0 + X1) / 2, cz = (Z0 + Z1) / 2;
+  const TOP = DIVE_TOWER.top, W = X1 - X0, D = Z1 - Z0, LAD = -15.5, TEAL = 0x1e9aa0;
+  // The room, the two landings (overhanging 0.15) on four posts, the platform slab.
+  f.box(WHITE, cx, C, cz, W, 3.0, D);
+  f.box(TEAL, cx, C, cz, W + 0.04, 0.35, D + 0.04);
+  for (const y of [C + 3.0, C + 6.4]) f.box(TERRA, cx, y, cz, W + 0.3, 0.22, D + 0.3);
+  f.box(TRIM, cx, C + 9.58, cz, W + 0.3, 0.22, D + 0.3);
+  f.box(TEAL, cx, TOP - 0.01, cz, W - 0.2, 0.02, D - 0.2);
+  for (const x of [X0 + 0.2, X1 - 0.2]) for (const z of [Z0 + 0.2, Z1 - 0.2]) {
+    f.box(TRIM, x, C + 3.22, z, 0.36, 3.18, 0.36);
+    f.box(TRIM, x, C + 6.62, z, 0.36, 2.96, 0.36);
+  }
+  // The board, out over the deep end, its non-slip top teal as the low board's.
+  f.box(TRIM, -14.1, TOP - 0.2, cz, 1.4, 0.2, 1.0);
+  f.box(TEAL, -14.05, TOP, cz, 1.3, 0.02, 0.9);
+  f.box(STEEL, -14.75, TOP - 0.5, cz, 0.25, 0.3, 0.9);
+  // The railing: posts and two rails round the platform, open at the board (and where the ladder
+  // comes up, a gap he is too wide for).
+  const RH = 1.0;
+  const rail = (x0, z0, x1, z1) => {
+    const l = Math.hypot(x1 - x0, z1 - z0), ly = Math.atan2(x1 - x0, z1 - z0);
+    for (const y of [RH, RH * 0.5]) f.boxC(CHROME, (x0 + x1) / 2, TOP + y, (z0 + z1) / 2, 0.05, 0.05, l, ly);
+    const n = Math.max(1, Math.round(l / 0.9));
+    for (let k = 0; k <= n; k++) f.cyl(CHROME, x0 + (x1 - x0) * k / n, TOP + RH / 2, z0 + (z1 - z0) * k / n, 0.03, RH, 5);
+  };
+  const e = 0.07;
+  rail(X0 + e, Z0 + e, X0 + e, Z1 - e);                              // west
+  rail(X0 + e, Z1 - e, X1 - e, Z1 - e);                              // south
+  rail(X0 + e, Z0 + e, LAD - 0.33, Z0 + e);                          // north, west of the ladder
+  rail(LAD + 0.33, Z0 + e, X1 - e, Z0 + e);                          // north, east of it
+  rail(X1 - e, Z0 + e, X1 - e, cz - 0.55);                           // east, either side of the board
+  rail(X1 - e, cz + 0.55, X1 - e, Z1 - e);
+  // The ladder up the north face: two rails standing 0.9 m over the platform as grips, rungs every 0.3 m.
+  for (const s of [-0.3, 0.3]) f.box(CHROME, LAD + s, C, Z0 - 0.22, 0.06, TOP - C + 0.9, 0.06);
+  for (let y = C + 0.3; y < TOP; y += 0.3) f.boxC(CHROME, LAD, y, Z0 - 0.22, 0.6, 0.04, 0.04);
+  // The signs (§1.3): on the room's pool side and beside the ladder.
+  f.sign('TRAMPOLÍN 10 M', X1 + 0.02, C + 1.95, cz, 2.1, 0.55, PI / 2, { bg: '#fff8e6', fg: '#1c4f8a', border: '#1c7fb8', scale: 0.62 });   // [N]
+  f.sign('TRAMPOLÍN\n10 M', -16.65, C + 1.8, Z0 - 0.02, 1.2, 0.75, PI, { bg: '#fff8e6', fg: '#1c4f8a', border: '#1c7fb8', scale: 0.62 });   // [N]
+  // Solids: the tower and its ladder (the platform's floor), the board, the railing (walls up there).
+  const T = DIVE_TOWER.blocks;
+  T.length = 0;
+  T.push(f.solid(cx, (Z0 - 0.28 + Z1) / 2, W, D + 0.28, TOP, 'tower'));
+  T.push(f.solid(-14.1, cz, 1.4, 1.0, TOP, 'tower'));
+  const R = TOP + RH + 0.1;
+  T.push(f.solid(X0 + 0.05, cz, 0.1, D, R, 'tower'));
+  T.push(f.solid(cx, Z1 - 0.05, W, 0.1, R, 'tower'));
+  T.push(f.solid((X0 + LAD - 0.3) / 2, Z0 + 0.05, LAD - 0.3 - X0, 0.1, R, 'tower'));
+  T.push(f.solid((LAD + 0.3 + X1) / 2, Z0 + 0.05, X1 - LAD - 0.3, 0.1, R, 'tower'));
+  T.push(f.solid(X1 - 0.05, (Z0 + cz - 0.5) / 2, 0.1, cz - 0.5 - Z0, R, 'tower'));
+  T.push(f.solid(X1 - 0.05, (cz + 0.5 + Z1) / 2, 0.1, Z1 - cz - 0.5, R, 'tower'));
+  for (const b of T) Object.defineProperty(b, 'dead', { get: () => !DIVE_TOWER.live(), set() {}, configurable: true });
 }
 
 // Pool bar (§6.3: "BAR PISCINA · SVENSKT KAFFE" under straw). Berra holds court at flamencoBar

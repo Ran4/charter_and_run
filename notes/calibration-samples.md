@@ -98,6 +98,17 @@ as a wall when `game.breakProp` refuses; for every other prop the smash is what 
 guests stop Majsan at its south entrance, the Guardia jeep flees by the streets), and no stage can
 break a stall, so every pool below stands and no timer changed.
 
+**Feature 24 (Från fjärde våningen, 2026-10-16) touches no pool.** It put a 10 m diving tower on the
+strip between Flamenco's hedge and the pool's deep end (block (3,3), x [−17.4, −13.4], z [2.12, 4.8]
+with its board). That strip is inside `grisfestFlowers`' spawn ring (within 40 m of `flamenco`), and
+`julaftonGuests`' walk passes west of the hedge. So the tower's solids are live only on the island with
+`missions.state === 'idle'` (each block's `dead` is a getter, DESIGN §10.20): in every mission state
+`queryBlocks`, `groundAt`, `spotFree`, `freeSpot`, `footReach` and calibrate's walker meet the strip as
+before (checked by scenario `hopptorn`: in a running mission no tower solid, the floor at 0.15, the
+spot free and in `footReach` from `flamenco`). The tower's geometry draws no random numbers, so the
+rest of the world builds as before. Any other hard landing in water now splashes instead of raising
+dust (`game.waterSplash`, a look only). Every pool below stands and no timer changed.
+
 ## `friskotekBalls` · §8.7 s1 · six fleeing beach balls · on foot: timer = ceil(1.25 × (p75 + 6 × 0.5))
 
 Phase 3 r2 island-staging placed everyone for the intro's group shot (Stig, Lasse, the sisters, the

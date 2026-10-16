@@ -1137,6 +1137,23 @@ function poseFlags(m, st, t) {
     m.body.rotation.x = 0.5;
     m.neck.rotation.x = -0.35;
   }
+  if (st.leap) {
+    // Off the 10 m tower (game/diveTower.js): Levander's arms straight out (as `wings`, shaking a
+    // little more), legs together, tipping forward as the fall gathers speed, so that he comes down
+    // flat (the belly flop). Only a look: it steers nothing.
+    const k = Math.min(1, Math.max(0, -st.vy) / 20);
+    R.rotation.set(0, 0, -1.55 + Math.sin(t * 9) * 0.06); L.rotation.set(0, 0, 1.55 - Math.sin(t * 9) * 0.06);
+    legs[0].rotation.set(0.08, 0, -0.03); legs[1].rotation.set(0.08, 0, 0.03);
+    m.body.rotation.x = 1.3 * k;
+    m.neck.rotation.x = -0.15 - 0.45 * k;
+  }
+  if (st.bomb) {
+    // A cannonball (the stomp off the tower): knees up, arms round them, chin down.
+    legs[0].rotation.set(-1.55, 0, -0.12); legs[1].rotation.set(-1.55, 0, 0.12);
+    R.rotation.set(-1.05, 0, 0.42); L.rotation.set(-1.05, 0, -0.42);
+    m.body.rotation.x = 0.3;
+    m.neck.rotation.x = 0.25;
+  }
   if (st.flail) {
     R.rotation.set(Math.sin(t * 14) * 0.8, 0, -1.9 - Math.sin(t * 11) * 0.5);
     L.rotation.set(-Math.sin(t * 13) * 0.8, 0, 1.9 + Math.sin(t * 12) * 0.5);

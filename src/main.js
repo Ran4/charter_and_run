@@ -8,7 +8,7 @@ import { audio } from './audio.js';
 import { buildTown, parkedCars, tickTown } from './world/town.js';
 import { finalizeProps, tickProps, breakProp, propsNear, props as allProps } from './world/props.js';
 import { lm, landmarks, routeAim, N, P, HALF, LANE, nodeX, nodeZ, neighbors, blockInterior } from './world/layout.js';
-import { groundAt, queryBlocks, contains, circleVsObb, circleVsBlock, topAt } from './world/collision.js';
+import { groundAt, queryBlocks, contains, circleVsObb, circleVsBlock, topAt, waterAt } from './world/collision.js';
 import { worldHooks } from './world/registry.js';
 import { buildCabin, CABIN_X } from './world/cabin.js';
 import { buildRioCard } from './world/rio.js';
@@ -25,6 +25,7 @@ import { Shame } from './game/shame.js';
 import { BerraJob } from './game/berraJob.js';
 import { Glide } from './game/glide.js';
 import { PoolJudges } from './game/poolJudges.js';
+import { DiveTower } from './game/diveTower.js';
 import { Honk } from './game/honk.js';
 import { DayClock } from './game/dayClock.js';
 import { Eslov } from './game/eslov.js';
@@ -172,6 +173,7 @@ class Game {
     this.berraJob = new BerraJob(this);   // free roam after the grisfest (§10.6)
     this.glide = new Glide(this);         // free roam after julafton (§10.7)
     this.judges = new PoolJudges(this);   // free roam: the sisters judge his dives (§10.8)
+    this.tower = new DiveTower(this);     // free roam: the 10 m diving tower at Flamenco's pool (§10.20)
     this.honk = new Honk(this);           // free roam: the island hears the horn (§10.9)
     this.hornAt = null;                   // the last free-roam horn press: { x, z, yaw, t, pigs }
     this.day = new DayClock(this);        // free roam: the island's clock, evenings, the nap (§10.10)
@@ -1001,20 +1003,36 @@ class Game {
   }
   // J in the air (§3): slam down; the landing (onLand) breaks props, bowls people over, dents cars.
   stomp() { this.player.vy = -18; this.stomping = true; audio.kick(); }
-  // y: the floor he lands on. A hop off Flamenco's board into the pool is judged and splashes
-  // instead of the dust (§10.8); it reads `stomping` (the belly flop) before it is cleared, as does
-  // Herr Storch's camera (a stomp or a long drop is a trick, §10.11).
+  // y: the floor he lands on. A dive off the 10 m tower into the water (§10.20) and a hop off
+  // Flamenco's board into the pool (judged, §10.8) splash instead of the dust, and so does any other
+  // hard landing in water (waterSplash); they read `stomping` (the cannonball, the belly flop) before
+  // it is cleared, as does Herr Storch's camera (a stomp or a long drop is a trick, §10.11).
   onLand(ch, v, y) {
     if (ch !== this.player) return;
-    const wet = this.judges.onLand(y);
+    const dove = this.tower.onLand(v, y), judged = this.judges.onLand(y);
+    let wet = dove || judged;
     this.film.onLand(y, this.stomping);
+    if (!wet && !ch.standingOn && waterAt(ch.x, ch.z, y)) { this.waterSplash(ch.x, ch.z, v, this.stomping); wet = true; }
     if (this.stomping) {
       this.stomping = false;
       audio.crash(0.4);
-      this.cam.shake = 0.6;
+      this.cam.shake = Math.max(this.cam.shake, 0.6);
       if (!wet) fx.dust(ch.x, ch.z, 12, ch.y + 0.2);
       this.areaHit(ch.x, ch.z, ch.y, 2.6, 0, 0, true);
     } else if (!wet) fx.dust(ch.x, ch.z, 3, ch.y + 0.1);
+  }
+  // Water thrown up where he lands hard (v m/s, over 6) in a pool or a pond, for the dust: the drops
+  // and the sound grow with v (about 22 off the 10 m tower), and a stomp's is a cannonball, a column
+  // of water and a boom with the camera shaken (§10.20). Built once for every hard landing in water;
+  // the judged hops and the glide keep their own.
+  waterSplash(x, z, v, bomb = false) {
+    const k = clamp((v - 6) / 16, 0, 1);
+    fx.splash(x, z, Math.round(16 + 34 * k), 3 + 3.5 * k, 4 + k);
+    if (bomb) {
+      fx.splash(x, z, Math.round(30 + 50 * k), 1.4 + k, 7 + 3 * k);
+      this.cam.shake = Math.max(this.cam.shake, 0.6 + 0.8 * k);
+    }
+    audio.splash(bomb ? 1 + k : k);
   }
   onHonk(car) {
     const f = this.focus();
@@ -1443,6 +1461,7 @@ class Game {
     this.berraJob.update(dt);
     this.glide.update(dt);
     this.judges.update(dt);
+    this.tower.update(dt);
     this.honk.update(dt);
     this.day.update(dt);
     this.film.update(dt);

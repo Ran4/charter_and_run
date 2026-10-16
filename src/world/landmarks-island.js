@@ -36,6 +36,13 @@ export const ISLAND_LANDMARKS = {
   // 0.97, hotels.js), facing along it out over the deep end. Not a standing spot: the sisters' places
   // at the pool's edge are offsets from it (POOL_JUDGES.spots), and its block is the judged board.
   flamencoBoard: { b: [3, 3], at: [-14.1, 7], yaw: PI / 2 },
+  // Från fjärde våningen (free roam, §10.20): the foot of the 10 m tower's ladder (its north face,
+  // hotels.js diveTower), facing it: the E spot KLÄTTRA UPP and where KLÄTTRA NER puts him (turned
+  // round); and the platform (y = its top, 9.95) beside the ladder's top, facing along the board out
+  // over the deep end: the E spot KLÄTTRA NER and where KLÄTTRA UPP puts him. Not standing spots for
+  // `teleport` (the platform is no ground-level floor; the tower solid only between missions).
+  hopptorn: { b: [3, 3], at: [-15.5, 1.55], yaw: 0 },
+  hopptornTopp: { b: [3, 3], at: [-15.6, 3.15], yaw: PI / 2, y: 9.95 },
   // Små grodorna (free roam, §10.13): the middle of the pool fest's ring in the shallow end (pool x
   // [-7, 6], z [1.5, 12.5]), 2.5 m east of the circling fin's path (fena_flamenco, r 1.2 round (-3, 7)).
   // Lasse stands here; the ring's places and Stig's gap (POOL_FEST) are round it.

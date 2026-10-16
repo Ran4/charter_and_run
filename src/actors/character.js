@@ -4,13 +4,14 @@
 // `tumble(secs, roll)`: a forward roll onto his back, then down (the glide's landing, game/glide.js).
 // `flop(secs)`: flat on his belly, then up (the belly flop into the pool, game/poolJudges.js).
 // `wade`: metres the standing model is sunk below his feet (waist-deep in the pool, game/poolFest.js).
+// `leap`, `bomb`: the falls off the 10 m tower (arms out, the cannonball; game/diveTower.js).
 
 import { buildCharacter, animateCharacter } from './models.js';
 import { queryBlocks, circleVsBlock, groundAt, groundInfo, topAt, RAMP } from '../world/collision.js';
 import { dampAngle, yawTo } from '../util.js';
 
 export const STEP = 0.45;
-export const ANIM_FLAGS = ['wings', 'cupUp', 'cupHeld', 'push', 'planeSeat', 'hold', 'flail', 'oath', 'dance', 'laugh', 'slump', 'shoeOff', 'mirror', 'film', 'giraffe', 'butterKnife', 'carryOver', 'glide', 'swan', 'calc', 'ski', 'groda', 'ticket'];
+export const ANIM_FLAGS = ['wings', 'cupUp', 'cupHeld', 'push', 'planeSeat', 'hold', 'flail', 'oath', 'dance', 'laugh', 'slump', 'shoeOff', 'mirror', 'film', 'giraffe', 'butterKnife', 'carryOver', 'glide', 'swan', 'calc', 'ski', 'groda', 'ticket', 'leap', 'bomb'];
 export const GRAV = 24;
 const _blocks = [], _hit = {};
 

@@ -488,6 +488,25 @@ export const POOL_JUDGES = {
   record: 'REKORD {n} P', newRecord: 'NYTT REKORD!',                              // [N]
 };
 
+// Från fjärde våningen – the 10 m diving tower at Flamenco's deep end (free roam, DESIGN §10.20;
+// game/diveTower.js, the tower in world/blocks/hotels.js). E at the ladder's foot (`foot`, within
+// `r` m) climbs up, E on the platform (`top`) climbs down: a black fade of `fadeSecs` s, held
+// `holdSecs` s. Off the platform he spreads his arms and says the mantra (S.mantraLine, [F*]: the
+// exercise at Levander's clinic, relocated). Into the water a stomp is a cannonball (the biggest
+// splash, the camera shaken), anything else a belly flop: face down `flopSecs` s, then up with `oj`
+// (at most every `ojAgain` s). The session's first dive into the water brings Lasse on the radio
+// `radioAt` s later (not when the glide's landing has said the line this session). Invented (§1.6):
+// the tower, the cannonball and the belly flop.
+export const TOWER = {
+  foot: 'hopptorn', top: 'hopptornTopp', r: 1.3,
+  fadeSecs: 0.35, holdSecs: 0.2,
+  promptUp: '<b>E</b> Klättra upp',     // [N]
+  promptDown: '<b>E</b> Klättra ner',   // [N]
+  flopSecs: 1.6, ojAgain: 8, radioAt: 1.2,
+  oj: 'Oj.',   // [N]
+  radio: ['lasse', 'Från fjärde våningen? Ner i poolen? Ring kliniken.'],   // [F*] Lasse's phone call in the film (research-plot.md:292), now about Stig
+};
+
 // Tutan som folk reagerar på – the horn the island hears (free roam, DESIGN §10.9; game/honk.js).
 // H pressed in a car with no mission running: pedestrians within `pedR` m ahead of the car (no
 // further aside than `pedLat` + `pedCone` × their distance ahead) hop aside as from a speeding car

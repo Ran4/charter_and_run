@@ -44,6 +44,7 @@ export class Glide {
     this.oleSaid = false;
     this.tumbling = false;
     this.dazeT = 0;
+    this.radioSaid = false;   // Lasse's line this session (the diving tower's first dive reads it, §10.20)
     this.last = null;     // the last glide, for tests: { x0, z0, y0, yMax, x1, z1, y1, secs, dist, landed, water, pool }
   }
 
@@ -144,7 +145,8 @@ export class Glide {
     if (L) Object.assign(L, { x1: p.x, z1: p.z, y1: p.y, secs: +this.t.toFixed(2), dist: +dist(L.x0, L.z0, p.x, p.z).toFixed(2), landed });
   }
 
-  // Down he comes: a splash on water (and Lasse, once ever, in a pool) or dust, then the roll.
+  // Down he comes: a splash on water (and Lasse, once ever, in a pool, unless the diving tower's
+  // first dive has said the line this session) or dust, then the roll.
   land() {
     const g = this.g, p = g.player, c = this.cfg;
     const b = p.standingOn ? null : waterAt(p.x, p.z, p.y), water = !!b, pool = !!b?.pool;
@@ -153,10 +155,11 @@ export class Glide {
     if (water) { fx.splash(p.x, p.z, 28, 4.5); audio.splash(); }
     else { fx.dust(p.x, p.z, 9, p.y + 0.2); audio.thud(); }
     if (p.tumble(c.tumble.secs, c.tumble.roll)) this.tumbling = true;
-    if (pool && !g.unlocked.has(c.onceKey)) {
+    if (pool && !g.unlocked.has(c.onceKey) && !g.tower.radioSaid) {
       g.unlocked.add(c.onceKey);
       g.save();
       g.radio(c.poolRadio[0], c.poolRadio[1]);
+      this.radioSaid = true;
     }
   }
 

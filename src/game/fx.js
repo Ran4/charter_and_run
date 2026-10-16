@@ -101,11 +101,12 @@ export const fx = {
   steam(x, y, z) {
     this.spawn(x + (Math.random() - 0.5) * 0.5, y, z + (Math.random() - 0.5) * 0.5, 0xf2f2f2, { vy: 2.2 + Math.random(), vx: (Math.random() - 0.5) * 0.6, vz: (Math.random() - 0.5) * 0.6, s0: 0.5, s1: 1.8, life: 1.3 });
   },
-  // Water thrown up: a squashed fin; `n` drops thrown out at `sp` m/s (Stig landing in a pool).
-  splash(x, z, n = 16, sp = 3) {
+  // Water thrown up: a squashed fin; `n` drops thrown out at `sp` m/s and up at `up`..2 × `up` m/s
+  // (Stig landing in a pool; the cannonball's column, game.waterSplash).
+  splash(x, z, n = 16, sp = 3, up = 4) {
     for (let k = 0; k < n; k++) {
       const a = Math.random() * Math.PI * 2;
-      this.spawn(x, 0.3, z, k % 2 ? 0x9fdcff : 0xffffff, { vx: Math.cos(a) * sp, vz: Math.sin(a) * sp, vy: 4 + Math.random() * 4, s0: 0.5, s1: 0.1, life: 0.8, drag: 0.8, grav: 14 });
+      this.spawn(x, 0.3, z, k % 2 ? 0x9fdcff : 0xffffff, { vx: Math.cos(a) * sp, vz: Math.sin(a) * sp, vy: up + Math.random() * up, s0: 0.5, s1: 0.1, life: 0.8 + Math.max(0, up - 4) * 0.12, drag: 0.8, grav: 14 });
     }
   },
 

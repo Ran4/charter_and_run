@@ -231,7 +231,11 @@ export const audio = {
   boing() { this.tone(180, 0.35, 'sine', 0.2, 720); this.tone(240, 0.25, 'triangle', 0.08, 900, 0.05); },
   ouch() { this.tone(520, 0.18, 'triangle', 0.12, 260); },
   glide() { this.sweep(0.7, 0.06, 450, 1500, 'bandpass', 1.1); this.sweep(0.5, 0.03, 900, 2400, 'bandpass', 2, 0.15); },   // arms out: a whoosh of air
-  splash() { this.noise(0.5, 0.35, 1200, 'bandpass', 0, 0.7); this.sweep(0.35, 0.12, 3000, 700, 'bandpass', 1.5, 0.05); },
+  // k (0..2): 0 a hop into the pool, 1 a fall from the 10 m tower, 2 the cannonball (a boom under it).
+  splash(k = 0) {
+    this.noise(0.5 + 0.35 * k, 0.35 + 0.08 * k, 1200 - 250 * k, 'bandpass', 0, 0.7); this.sweep(0.35 + 0.2 * k, 0.12 + 0.04 * k, 3000, 700, 'bandpass', 1.5, 0.05);
+    if (k > 1) this.tone(75, 0.4, 'sine', 0.3 * (k - 1), 38);
+  },
   door() { this.tone(160, 0.06, 'square', 0.1, 120); this.noise(0.08, 0.15, 800, 'lowpass', 0.04); },
   pickup() { [660, 880, 1320].forEach((f, i) => this.tone(f, 0.12, 'triangle', 0.1, null, i * 0.07)); },
   squash() { this.noise(0.15, 0.3, 1800, 'bandpass', 0, 3); this.tone(900, 0.1, 'sawtooth', 0.06, 200); },

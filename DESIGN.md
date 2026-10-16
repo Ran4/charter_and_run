@@ -212,7 +212,10 @@ film's 800 pesetas, with a band, the gang and tourists dancing, a tourist turnin
 one grisfest, and Stig never tries Ole's line); the market's fruit stalls Stig's car goes straight through, their
 seller popping up beside the wreck with "¡Mis tomates!" and the souvenir seller's "Jävla
 smålänningar!" at it (free roam, §10.19; in the film the seller swears when Ole haggles the donkey
-down, and no car goes through the market).
+down, and no car goes through the market); the 10 m diving tower at Flamenco's deep end, the
+mantra with his arms out off its platform, the cannonball and the belly flop, and Lasse's phone call
+about it on the radio (free roam, §10.20; in the film Lasse repeats a guest's call at the SunTrip
+desk, nobody dives, and the depth sign is the bungalow seller's line).
 The film's flight has **no turbulence** and **no in-flight toilet scene**: both toilet scenes are
 at Arlanda (we keep them there). The plane's toilets are only an invented hideout.
 
@@ -361,6 +364,9 @@ Physical keys are unchanged from Bigmouth. The level config turns verbs on and o
   stomps at once.
 - **Dives** (free roam, §10.8): off Flamenco's diving board into the pool, a stomp in the air is a
   belly flop and a double jump a somersault for Siv and Majsan's cards; a plain hop is a swan dive.
+- **The diving tower** (free roam, §10.20): E at the ladder's foot ("E Klättra upp") and on the
+  platform ("E Klättra ner"); off the board J in the air is the stomp, a cannonball into the water
+  (after julafton a held J glides, as everywhere).
 - **The horn** (free roam, §10.9): H in a car makes pedestrians ahead hop aside and the nearest of
   the gang answer; in a mission it is only the sound. The grisbil's horn is a grunt everywhere.
 - **The nap** (free roam, §10.10): E at Stig's bed in room 107 ("E Kvarta en stund") sleeps on to
@@ -1158,7 +1164,7 @@ standing there faces. `y` (optional) = absolute height for collectible spots on 
 
 | block (i,j) | type → builder (owner, file) | content | landmarks: `id` (lx, lz, yaw[, y]) | named / parked cars |
 |---|---|---|---|---|
-| (3,3) | `flamenco` → `hotelFlamenco` (C1, hotels.js) | 7-storey white slab x [−26, 26], z [−27, −14] with balcony rows, terracotta accents, `HOTEL FLAMENCO` roof sign; open reception porch (canopy, desk, plastic Christmas tree `julgran` prop, `RECEPCIÓN`; Phase 3 r2: `HOTEL FLAMENCO · RECEPCIÓN` stands on a terracotta panel above the pergola's fascia, where it no longer fills the top of the chase frame, and the garland runs across the fascia's face) at the slab's south face; ground-floor room patios along the south face (Stig & Ole's room west, room 113 east) with a visible 1st-floor balcony above 113; terracotta piers at the bay lines, solid (Phase 3 r2); pool deck south with a **walkable shallow pool** (flat blue slab at CURB+0.02 + `box(..., CURB, 'water')`, sign "TRE METER DJUPT I ENA ÄNDEN, / EN METER I DEN ANDRA. / BARNVÄNLIG!" (three lines) [F*] (the bungalow seller's line, relocated)); poolbar with straw parasols (`BAR PISCINA · SVENSKT KAFFE`); the julafton party `julgran` on the pool deck at (2.2, 16), in the party and sunset-duet shots (Phase 3); room numbers: a closed room's centred above its own glass door, an open room's (107, 113) on its right-hand pier (Phase 3); parking lot on the west (its eight painted 2.8 × 5 m bays exported as `flamencoBays`, feature 20, §10.17); the parking signs here and at SunTrip's lot are a blue `P` plate over a name strip (`HOTEL FLAMENCO`, `SUNTRIP`) on a post that stops under them (Phase 3 r2: one two-line plate had shrunk the P to the name's size, and the post ran through both faces); **PEPES BODEGA**: small whitewashed annex x [4, 12], z [−31, −27] on the north side with a green door, barrels, sign `PEPES BODEGA · VINOS · RON` facing north (`worldHooks.bodegaLit(on)` lights it after julafton) | `flamenco` (−4, −8, π) (faces the hotel, so the views/cutaway camera stands on the pool deck; Phase 2) · `flamencoRecepcion` (2, −10, 0) · `flamencoPatio` (−18, −11, 0) · `rum113` (18, −11, 0) · `flamencoBalcony` (18, −8, π) · `flamencoPool` (−3, 18, π) · cut anchors (Phase 3; a cut stands `dist` m behind one, looking the way it faces): `rum107Cam` (−18, −11, π) = `flamencoPatio` turned round (looks into room 107), `recepcionCam` (2, −10, π) = `flamencoRecepcion` turned round (the desk from the porch front) · `flamencoDeck` (−4, −2.5, 0) (the island spawn: approachSpot puts the player on the pool deck at (−4, −1) facing the hotel, the chase camera over the pool rather than under the pergola slats; Phase 2) · `flamencoBar` (16, 12, −π/2) · `flamencoDrive` (−26, 22, π) · `flamencoBack` (−6, −33.5, 0) · `bodega` (8, −33.5, 0) · `fena_flamenco` (−3, 7, 0, 0.35) · `flamencoBoard` (−14.1, 7, π/2) (the middle of the diving board's bounce pad, facing out over the deep end: the judged board and the anchor of the sisters' spots at the pool's edge; not a standing spot; §10.8) · `stigSang` (−19.75, −20.35, 0) (the middle of Stig's turquoise bed in room 107, the way a sleeper on his back faces: the nap's E spot and the anchor of Ole's and Stig's places; not a standing spot, `teleport` puts him on the 0.70 mattress; §10.10) · `flamencoRing` (2, 8, 0) (the middle of the pool fest's ring in the shallow end, 2.5 m east of the circling fin's path; Lasse's place; the ring's places and Stig's gap are round it; §10.13) | `hyrbil` (sedan `0xf4f4f0`) at `flamencoDrive` — default `getInCar` car and test car |
+| (3,3) | `flamenco` → `hotelFlamenco` (C1, hotels.js) | 7-storey white slab x [−26, 26], z [−27, −14] with balcony rows, terracotta accents, `HOTEL FLAMENCO` roof sign; open reception porch (canopy, desk, plastic Christmas tree `julgran` prop, `RECEPCIÓN`; Phase 3 r2: `HOTEL FLAMENCO · RECEPCIÓN` stands on a terracotta panel above the pergola's fascia, where it no longer fills the top of the chase frame, and the garland runs across the fascia's face) at the slab's south face; ground-floor room patios along the south face (Stig & Ole's room west, room 113 east) with a visible 1st-floor balcony above 113; terracotta piers at the bay lines, solid (Phase 3 r2); pool deck south with a **walkable shallow pool** (flat blue slab at CURB+0.02 + `box(..., CURB, 'water')`, sign "TRE METER DJUPT I ENA ÄNDEN, / EN METER I DEN ANDRA. / BARNVÄNLIG!" (three lines) [F*] (the bungalow seller's line, relocated)); the **10 m diving tower** `TRAMPOLÍN 10 M` [N] at the deep end, on the strip between the hedge and the pool north of the low board (feature 24, §10.20: a white room over the whole footprint x [−17.4, −14.8], z [2.4, 4.8], four posts and two terracotta landings, the railed platform at C + 9.8 = 9.95 (the hotel's fourth floor), the board 1.4 m out over the deep end, the ladder up the north face; its solids `DIVE_TOWER.blocks`, live only between missions); poolbar with straw parasols (`BAR PISCINA · SVENSKT KAFFE`); the julafton party `julgran` on the pool deck at (2.2, 16), in the party and sunset-duet shots (Phase 3); room numbers: a closed room's centred above its own glass door, an open room's (107, 113) on its right-hand pier (Phase 3); parking lot on the west (its eight painted 2.8 × 5 m bays exported as `flamencoBays`, feature 20, §10.17); the parking signs here and at SunTrip's lot are a blue `P` plate over a name strip (`HOTEL FLAMENCO`, `SUNTRIP`) on a post that stops under them (Phase 3 r2: one two-line plate had shrunk the P to the name's size, and the post ran through both faces); **PEPES BODEGA**: small whitewashed annex x [4, 12], z [−31, −27] on the north side with a green door, barrels, sign `PEPES BODEGA · VINOS · RON` facing north (`worldHooks.bodegaLit(on)` lights it after julafton) | `flamenco` (−4, −8, π) (faces the hotel, so the views/cutaway camera stands on the pool deck; Phase 2) · `flamencoRecepcion` (2, −10, 0) · `flamencoPatio` (−18, −11, 0) · `rum113` (18, −11, 0) · `flamencoBalcony` (18, −8, π) · `flamencoPool` (−3, 18, π) · cut anchors (Phase 3; a cut stands `dist` m behind one, looking the way it faces): `rum107Cam` (−18, −11, π) = `flamencoPatio` turned round (looks into room 107), `recepcionCam` (2, −10, π) = `flamencoRecepcion` turned round (the desk from the porch front) · `flamencoDeck` (−4, −2.5, 0) (the island spawn: approachSpot puts the player on the pool deck at (−4, −1) facing the hotel, the chase camera over the pool rather than under the pergola slats; Phase 2) · `flamencoBar` (16, 12, −π/2) · `flamencoDrive` (−26, 22, π) · `flamencoBack` (−6, −33.5, 0) · `bodega` (8, −33.5, 0) · `fena_flamenco` (−3, 7, 0, 0.35) · `flamencoBoard` (−14.1, 7, π/2) (the middle of the diving board's bounce pad, facing out over the deep end: the judged board and the anchor of the sisters' spots at the pool's edge; not a standing spot; §10.8) · `stigSang` (−19.75, −20.35, 0) (the middle of Stig's turquoise bed in room 107, the way a sleeper on his back faces: the nap's E spot and the anchor of Ole's and Stig's places; not a standing spot, `teleport` puts him on the 0.70 mattress; §10.10) · `flamencoRing` (2, 8, 0) (the middle of the pool fest's ring in the shallow end, 2.5 m east of the circling fin's path; Lasse's place; the ring's places and Stig's gap are round it; §10.13) · `hopptorn` (−15.5, 1.55, 0) (the foot of the diving tower's ladder, facing it: KLÄTTRA UPP's E spot, and where KLÄTTRA NER puts him, turned round; §10.20) · `hopptornTopp` (−15.6, 3.15, π/2, 9.95) (on the platform beside the ladder's top, facing along the board: KLÄTTRA NER's E spot and where KLÄTTRA UPP puts him; not a standing spot for `teleport`; §10.20) | `hyrbil` (sedan `0xf4f4f0`) at `flamencoDrive` — default `getInCar` car and test car |
 | (3,2) | `suntrip` → `hotelSunTrip` (C1, hotels.js) | lower U-shaped hotel on red rock; welcome **stage** with SunTrip sun backdrop (red text on yellow sun), accordion/conga props; pool; **friskotek lawn**; SunTrip office porch on the south side facing Flamenco's back; posters `GRISFEST TORSDAG · 800 PTA`, `FRISKOTEKET 9.30`; the free-standing `FRISKOTEKET / VARJE MORGON 9.30` board on the lawn's west edge is solid (Phase 3 r3: only its posts were, so he walked through it and the chase eye stood behind it) | `suntrip` (−14, 24, π) (faces the office porch; Phase 2) · `scen` (0, −14, 0) · `friskotek` (−10, 8, 0) · `suntripPool` (14, 4, π) · `suntripLot` (24, 22, π) · `fena_suntrip` (14, 8, 0, 0.35) · `berraSolstol` (17.4, 2.2, 0) (the pool lounger Berra naps on, on its prop, facing its backrest end; §10.6) | — |
 | (1,2) | `kasbah` → `kasbah` (C2, centre.js) | **Centro La Medina** (fictional; internal id `kasbah`): two-level nightlife courtyard centre: arcade, stairs (ramp) to a roof terrace (top ≈ 6.0) with a balustrade above the bottom three steps and a sloped wall collider along it (Phase 3: the way on is over those three steps), neon signs `CENTRO LA MEDINA`, `VIKING BAR` (horned helmet), `TONGA TONGA` (mirror ball), `BAR SVENSKA · SMÖRGÅSAR` | `kasbah` (0, 22, π) · `vikingbar` (−16, 18, π) · `tongatonga` (14, 18, π) · `tongaLot` (20, 27, π) · `tongaSlump` (16.3, 17.4, 0.5) (where Berra slumps after Tonga Tonga and is picked up, at the right of the group in the street shot; Phase 3 r3) · `pryl_poolpen` (8, −6, 0, 7.2) · `angerudBil` (−7, 32.75, −π/2) (Angerud's hire car on the south sidewalk between missions, feature 20, §10.17) | — |
 | (4,2) | `cita` → `cita` (C2, centre.js) | **Centro Nórdico** (fictional; internal id `cita`) strip mall, sign `CENTRO NÓRDICO`: `SUPERMERCADO`, `FERRETERÍA`, `FARMACIA`, `ESTANCO`, `TELÉFONOS · HYTT 1·2·3`, `SOUVENIRS`, `SVENSKT KAFFE`, `CAMBIO · 1 KR = 17 PTA` (Phase 3: the north shop row and its canopy fit the courtyard between the wings, x ±11; `SOUVENIRS · REGALOS` and `FARMACIA` with its green cross sit on the wings' courtyard faces) | `cita` (0, 22, π) · `supermercado` (−18, 18, π) · `ferreteria` (18, 18, π) · `telefon` (0, 8, π) | — |
@@ -3275,7 +3281,10 @@ the end on the pool deck are the film's.
   ever (§10.3). Landing in a `pool` (the hotel and lot pools, §6.4) the first time ever: Lasse on
   the radio, "Från fjärde våningen? Ner i poolen? Ring kliniken." [F*] (his phone call in the film,
   research-plot.md:292; only "ring kliniken" was used before, island.js:231 and the fins' first
-  line, so this is its third and only once: the marker `glidPlask` in the saved unlocks). Ole
+  line, so this is its third and only once: the marker `glidPlask` in the saved unlocks). Not
+  when the diving tower's first dive has said the line this session (feature 24, §10.20:
+  `tower.radioSaid`); then the marker stays unset and a later session's first pool landing says it.
+  `glide.radioSaid` is the session's own, which the tower reads in turn. Ole
   within `oleR` = 18 m after `oleAfter` = 0.5 s of a glide, at most once a glide and every
   `oleEvery` = 30 s: "Det er flyging!" [F*] (his Concorde dream on the plane, flight.js:321) as a
   bubble. His home under the Flamenco pergola is 16 m from the diving board's glide.
@@ -4372,6 +4381,83 @@ every stall stopped his car dead; five of them now go to pieces under it, the fr
   other yellow-and-orange stalls repainted plum; the seller has no collision (the car can pass
   through her, but she never stands in its way).
 
+### 10.20 Från fjärde våningen – the diving tower at Flamenco's pool (free roam; feature 24, 2026-10-16)
+
+`game/diveTower.js` (`DiveTower`, owned by Game as `tower`), config `TOWER` in content/island.js,
+the tower in world/blocks/hotels.js (`diveTower`, `DIVE_TOWER`). Lasse's phone call in the film,
+"Från fjärde våningen? Ner i poolen? Ring kliniken." (research-plot.md:292), had only ever had its
+second half used; now Stig climbs a 10 m tower at the deep end, says Levander's mantra with his arms
+out and comes down in the pool. The tower, the cannonball and the belly flop are [N] (§1.6).
+
+- **The tower** (§6.3 (3,3)): on the strip between the hedge (x −17.6) and the pool's coping
+  (x −14.8), north of the low board. A white room with a teal foot over the whole footprint x [−17.4,
+  −14.8], z [2.4, 4.8] (to C + 3.0), four posts and two terracotta landings (C + 3.0, C + 6.4), the
+  platform slab with a teal mat at `DIVE_TOWER.top` = C + 9.8 = 9.95 (the hotel's fourth floor,
+  Y1 + 2 FH, counting the ground floor as the first), railed (two chrome rails, 1.0 m) on all four
+  sides but at the board, which reaches 1.4 m (x −14.8 to −13.4, 1.0 m wide) out over the deep end.
+  The steel ladder runs up the north face at x −15.5 and stands 0.9 m over the platform as grips. The
+  signs `TRAMPOLÍN 10 M` [N] (§1.3) on the room's pool side and `TRAMPOLÍN / 10 M` beside the ladder.
+  It is static geometry (no random draws: the rest of the world builds as before) and shows in every
+  shot that looks that way (the title orbit, the julafton party, the sunset duet and the pool intros
+  at the frame's left edge).
+- **Its solids** (`DIVE_TOWER.blocks`, kind `'tower'`): the tower with its ladder (x [−17.4, −14.8],
+  z [2.12, 4.8], top 9.95: the platform's floor), the board (top 9.95) and six railing strips (top
+  11.05: walls up there; the ladder's gap is 0.6 m, narrower than he is). Collision is footprints,
+  so the tower is solid from the ground up (the room shows it) and the board an unseen pillar in the
+  water under it, as the low board's step is. Each block's `dead` is a getter, `!DIVE_TOWER.live()`,
+  and `tower` sets `live` to `level === 'island' && missions.state === 'idle'`. **So no mission sees
+  the tower:** in any other state `queryBlocks`, `groundAt`, `spotFree`, `freeSpot`, `footReach`,
+  the cars, the camera and calibrate's walker meet the strip as before (grisfest's flowers spawn
+  round `flamenco` within 40 m, which takes it in), and no stage's world, timer, fixture or
+  calibration pool changes. In a mission he walks through where the tower stands.
+- **The ladder.** Two interactables (§14.3): `hopptorn:upp` at the landmark `hopptorn` (−15.5, 1.55),
+  `promptUp` "<b>E</b> Klättra upp" [N], and `hopptorn:ner` at `hopptornTopp` (−15.6, 3.15, y 9.95),
+  `promptDown` "<b>E</b> Klättra ner" [N]; `r` = 1.3, and the ±2.5 m height rule of
+  `bestInteractable` keeps each to its own level. Both only when `canClimb()`: on the island, idle, no
+  climb under way, no dialogue, on foot and on the ground, not carrying, no bust freeze or PANIK, not
+  in the pool fest's ring or on the baggage belt. E: `inDialog` holds his keys and the camera, a
+  black fade (`hud.fade`, `fadeSecs` = 0.35 s), then he is `put` (by hand: `teleport` snaps to
+  ground-level floors only) on the platform facing along the board (yaw π/2), or at the foot turned
+  away from the ladder; the camera behind him (`cam.yaw`, `snapNext`), `holdSecs` = 0.2 s, the fade
+  lifts. The railing keeps him up there: the board is the only way off (and R, which puts him on the
+  road as anywhere).
+- **The dive.** On the platform or the board (`groundInfo.block` one of the tower's, y at the top)
+  `fromTop` is set; airborne and 0.4 m under the top, the dive starts: `anim.leap` (§14.6: Levander's
+  arms straight out as `wings`, shaking a little, tipping forward as the fall gathers speed, so he
+  comes down flat; only a look, his wish and air control are untouched) and the mantra
+  (`S.mantraLine` "Jag kan flyga, jag är inte rädd." [F*], the exercise at the clinic,
+  research-plot.md:122–123, through `game.say`). J in the air is the stomp (§3): `anim.bomb` instead
+  (knees up, arms round them). After julafton a held J glides (§10.7) and the glide takes the dive
+  over (no tower landing). A change of state, a car or a landing `onLand` did not hear ends it.
+- **The landing.** `game.onLand(ch, v, y)` calls `tower.onLand(v, y)` first (then the judges', §10.8).
+  A dive that ends on a `water` floor (`waterAt`, not on a car roof) splashes through
+  `game.waterSplash(x, z, v, bomb)` (§14.3) instead of the dust:
+  - a stomp: **the cannonball** (`last.kind` `'bomb'`): the biggest splash (a column of water), the
+    boom, the camera shaken (1.4 off the top), and the stomp's own crash and `areaHit` (§3);
+  - anything else: **the belly flop** (`'magplask'`): the wide splash, `flop(flopSecs = 1.6)` (face
+    down along his facing), and "Oj." [N] when he is up (at most every `ojAgain` = 8 s).
+  - The session's first dive into the water: `radioAt` = 1.2 s later Lasse on the radio, the whole
+    line, `radio` "Från fjärde våningen? Ner i poolen? Ring kliniken." [F*] (his phone call,
+    relocated: now it is about Stig). Not when the glide's pool landing has said it this session
+    (`glide.radioSaid`); the glide in turn holds its once-ever line back after the tower's
+    (`tower.radioSaid`, §10.7). "Ring kliniken" is Lasse's dry joke: no clinic, no ambulance, no
+    injury text (§1.2).
+  - On dry ground (off the board's side onto the coping) it is an ordinary hard landing (dust).
+  Walked off the board he lands about 4–5 m out, x ≈ −9.4 to −8.6, in the deep end (v ≈ 21.6 m/s, 26.8
+  with the stomp, measured by `hopptorn`).
+- **A mission start** (any state but `idle`) or the other level: the solids go (above), the dive and
+  the queued radio line are dropped, and if he is up there (within 1.5 m of the top over the tower or
+  the board) he is `put` at the foot first, so he never falls. Nothing is saved; `tower.last` ({ kind:
+  'bomb' | 'magplask' | 'dry', x, z, v, t, secs }) and `tower.climbs` are for tests. Scenario
+  `hopptorn` (§16.4).
+- **Not done / changed** (deviations from the idea): the ladder is two E points with a fade, not a
+  climb; the "two landings" are the tower's look (nobody stands on them); the tower is solid only
+  between missions (the idea's own alternative), so it stands in every mission's shots but a player
+  in a mission walks through it; no score for the biggest cannonball (the splash is the reward); the
+  sisters do not judge the tower (only the low board's hops, §10.8). Any other hard landing in water
+  splashes now too (`waterSplash`, built once for this and the later roof jumps), in missions as
+  well: a look only.
+
 ## 11. HUD / UI strings (Swedish; `src/strings.js` owned by WP-H, created by Phase 0)
 
 `strings.js` exports `S` (flat object) and `fmt(key, vars)`. Engine code uses `S.key` only.
@@ -4648,7 +4734,8 @@ Scheduler fixes (Phase 0): catch-up guard `if (next < ctx.currentTime) next = ct
 | `ambulance()` | distant two-tone 960/770 Hz sine fading in and out over 4 s |
 | `baa()` | tone slide 420 → 300 Hz with vibrato |
 | `oink()` | the grisbil's horn (feature 5, §10.9): two nasal grunts 0.22 s apart, each a 190 → 120 Hz sawtooth and a band-passed noise burst; `honk.update` plays it on H and every 0.75 s while H is held, and `updateAudio` keeps `horn` off in the grisbil |
-| `thud()`, `crash()`, `coin()`, `pickup()`, `splash()` | existing |
+| `thud()`, `crash()`, `coin()`, `pickup()` | existing |
+| `splash(k = 0)` | water (existing at k 0: a band-passed noise burst and a sweep down); feature 24 (§10.20): `k` 0..2 lengthens, lowers and lifts it (`game.waterSplash`: 1 a fall from the 10 m tower, 1–2 a stomp's cannonball), and over 1 a 75 → 38 Hz sine boom under it |
 | `pip()` | Ole's calculator alarm (feature 30, §10.10): PIP-PIP-PIP twice, 2794 Hz square pips of 0.06 s 0.12 s apart, the second three 0.55 s on; the nap plays it twice |
 | `whirr(secs = 1.2)` | Herr Storch's film camera (feature 6, §10.11): the clockwork motor, 18 soft clicks a second (0.016 s band-passed noise bursts at 2.6 kHz) over a faint 118 → 112 Hz sawtooth hum; when he films (2.1 s), on a viewfinder (1.2 s) and for the film night (2.4 s) |
 | `glide()` | feature 3 (§10.7), arms out: two soft band-passed noise sweeps up, 450 → 1500 Hz (0.7 s) and 900 → 2400 Hz (0.5 s, +0.15 s) |
@@ -4744,7 +4831,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/strings.js` | new | **H** | `S`, `fmt()` (§11) |
 | `src/content/index.js` | new | none | merges `HOMES`, `MAP_LABELS`, `LEVEL_OUTFITS`, re-exports all content |
 | `src/content/flight.js` | new | **F** | `HOMES_GATE`, `HOMES_FLIGHT`, `MAP_LABELS_FLIGHT`, `CHATTER_FLIGHT`, `OLE_STATS`, `LEVEL_OUTFITS_GATE`, `LEVEL_OUTFITS_FLIGHT` |
-| `src/content/island.js` | new | **G** | `HOMES_ISLAND`, `MAP_LABELS_ISLAND`, `CHATTER`, `OUCH`, `GETUP`, `CARJACK`, `NPC_KICKED` (+ the `_OLE` / `_LOCAL` tables, `LOCAL_CAST`, `BARKS`: Phase 3 r2, §14.10; `STIG_SORRY`: feature 11, §10.14; `PIG_TRUCK`: feature 15, §10.15; `BAGGAGE_BELT`: feature 25, §10.16; `LAPPLISA`: feature 20, §10.17; `GRISFEST_FREE`: feature 21, §10.18; `FRUKTSTAND`: feature 28, §10.19), `COLLECTIBLES`, `UNLOCKS`, `NAMED_CARS`, `LEVEL_OUTFITS_ISLAND` |
+| `src/content/island.js` | new | **G** | `HOMES_ISLAND`, `MAP_LABELS_ISLAND`, `CHATTER`, `OUCH`, `GETUP`, `CARJACK`, `NPC_KICKED` (+ the `_OLE` / `_LOCAL` tables, `LOCAL_CAST`, `BARKS`: Phase 3 r2, §14.10; `STIG_SORRY`: feature 11, §10.14; `PIG_TRUCK`: feature 15, §10.15; `BAGGAGE_BELT`: feature 25, §10.16; `LAPPLISA`: feature 20, §10.17; `GRISFEST_FREE`: feature 21, §10.18; `FRUKTSTAND`: feature 28, §10.19; `TOWER`: feature 24, §10.20), `COLLECTIBLES`, `UNLOCKS`, `NAMED_CARS`, `LEVEL_OUTFITS_ISLAND` |
 | `src/game/missions/index.js` | new | none | `MISSIONS = [...FLIGHT_MISSIONS, ...ISLAND_MISSIONS]`, `MissionRunner` re-export |
 | `src/game/missions/runner.js` | new (from missions.js) | none | `MissionRunner` (§9.4) |
 | `src/game/missions/kinds/core.js` | new | **none** (frozen after Phase 0) | getInCar goto pickup dropoff follow rabbits race destroy grab scene |
@@ -4770,12 +4857,13 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/lapplisa.js` | new (feature 20, 2026-10-15) | — | `Lapplisa` (`game.lapp`): Lapplisan Majsan in free roam: the ticket and the tow for a car Stig leaves on the sidewalk, Angerud's hire car outside Centro La Medina and the film's first meeting with the GRÚA truck, Majsan's praise for a car straight in a Flamenco bay (§10.17); not `live` during the grisfest's evening (feature 21) |
 | `src/game/grisfestFree.js` | new (feature 21, 2026-10-15) | — | `GrisfestFree` (`game.party`): Grisfest varje torsdag in free roam: the host's 800 pesetas at the farm's gate, the evening (the clock held at night, the vals, the band and tourists of its own, the cast on and round the floor, the host's round), the tourist's refusal and Majsan's invitation, the dance by her, Fru Storch's coffee, the morning after (§10.18) |
 | `src/game/fruitStands.js` | new (feature 28, 2026-10-15) | — | `FruitStands` (`game.stands`): Rakt genom fruktståndet in free roam: when his car may break a market fruit stall, the fruit seller beside the wreck, the souvenir seller's swear, the stalls back at a mission start (§10.19) |
+| `src/game/diveTower.js` | new (feature 24, 2026-10-16) | — | `DiveTower` (`game.tower`): Från fjärde våningen in free roam: the tower's solids live between missions, the ladder's two E points and fades, the dive off the platform (the mantra, the poses), the cannonball and the belly flop into the water, Lasse's line (§10.20) |
 | `src/game/hud.js` | edit | **H** | map sources, meter, strings, legend, ring, blips, zone bar, markers; `renderPortrait` restores the model transform (§14.8) |
 | `src/game/camera.js` | edit | **A1** | profile, frameOne, cutTo, `clampZ` |
-| `src/game/fx.js` | edit | **A1** | `snow`, `steam`, `meterPuff` (rename of `shame`) |
+| `src/game/fx.js` | edit | **A1** | `snow`, `steam`, `meterPuff` (rename of `shame`); `splash`'s `up` (feature 24, §10.20) |
 | `src/game/markers.js` | unchanged | none | |
 | `src/gfx.js` | edit | none | `setSkyPalette`, `setCloudsVisible`, `setShadows`, `MAT.sky`, `MAT.water` sea colour |
-| `src/audio.js` | edit | **H** | §12 API |
+| `src/audio.js` | edit | **H** | §12 API; `splash(k)`'s size (feature 24, §10.20) |
 | `src/input.js` | edit | none | pad Start → `pause` |
 | `src/util.js` | unchanged | none | |
 | `src/world/frame.js` | new (from town.js) | none | `Frame` (`prop(…, opts)` passes `opts` to `placeProp`: feature 28) |
@@ -4786,14 +4874,14 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/world/props.js` | edit | **B** | `TYPES` (§6.8), flags, `reviveProps`, `propsOfType`; the `frutas` stall, its flags, the debris palette, `spawnShreds` and the signs (feature 28, §10.19) |
 | `src/world/collision.js` | edit | none | `segmentBlocked` nearest hit |
 | `src/world/blocks/index.js` | new | none | `BLOCK_BUILDERS` merge |
-| `src/world/blocks/hotels.js` | new | **C1** | `flamenco`, `suntrip`; `flamencoBays` (feature 20, §10.17) |
+| `src/world/blocks/hotels.js` | new | **C1** | `flamenco`, `suntrip`; `flamencoBays` (feature 20, §10.17); the diving tower `diveTower` and its solids `DIVE_TOWER` (feature 24, §10.20) |
 | `src/world/blocks/centre.js` | new | **C2** | `kasbah`, `cita`, `plaza`, `marknad`, `kyrka`, `bensin`, `guardia`; the market's five fruit stalls as `frutas` props (feature 28, §10.19) |
 | `src/world/blocks/nature.js` | new | **D1** | `tomat`, `grisfest`, `fataga`, `golf`, `bungalow`, `bygge`, `dyner` |
 | `src/world/blocks/coast.js` | new | **D2** | `flygplats`, `dromplan`, `fyren`, `playa`, `hamn`; `BELT` (feature 25, §10.16) |
 | `src/world/cabin.js` | new | **A1** | §5 interior, collision, seats, trolley, turbulence, fear, interactables, blockers, `CAM_CABIN`, `FLIGHT_PALETTES`, `FEAR`; calls `buildFlightScenery` |
 | `src/world/flightScenery.js` | new | **A2** | §5.6 visuals: gate-set visuals, airframe, animated scenery per phase, `buildFlightScenery`, `buildPlaneExterior` |
 | `src/world/rio.js` | new | **B** | `buildRioCard` (P1) |
-| `src/actors/models.js` | edit | **E** | `CHARS`, `CAST`, new def fields, anim flags, `buildBustGeo`, `outfitDef`, `randomPed` palette; the `ticket` flag and its `lappblock`/`penna` props (feature 20, §10.17) |
+| `src/actors/models.js` | edit | **E** | `CHARS`, `CAST`, new def fields, anim flags, `buildBustGeo`, `outfitDef`, `randomPed` palette; the `ticket` flag and its `lappblock`/`penna` props (feature 20, §10.17); the `leap` and `bomb` poses (feature 24, §10.20) |
 | `src/actors/character.js` | edit | **E** | `setDef`, `hidden`, `seatAt`, `standAt`, new anim flag defaults |
 | `src/actors/car.js` | edit | **E** | §6.6 types/flags, `registerCarType`, `build`/`noWheels`/`noSpeedo`/`noExplode`/`livery`; the grisbil's pig meshes `PIG_SLOTS`, `pigMesh`, `car.pigs`, `setPig`, `pigWorld` (feature 15, §10.15); `car.lift`, the nose raised on the tow truck's hook (feature 20, §10.17); a prop is known by its block's `ref`, `game.breakProp` may refuse, `def.slow` (feature 28, §10.19) |
 | `src/actors/pickups.js` | edit | **E** | `COLLECT_KINDS`, `registerCollectKind`, `Collectible` table, `Rabbit` meshes, coin value 25 |
@@ -4833,7 +4921,7 @@ Init: `initGfx` → `input.init` → `hud.init` → `fx.init` → fonts (Luckies
 → peds (34) → NPC `Character`s (one per `CHARS` key except `stig`, the radio-only keys `levander
 kapten pa guardia pax telefonist` and the cabin-owned `vardinna2`; `key` field; hidden until placed, §2.3) →
 player `Character(CHARS.stig)` (`key = 'stig'`) → collectibles (`COLLECTIBLES`) → markers → `Shame`
-→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `Eslov` (feature 7, §10.12; registers the rollerskier's interactable) → `PoolFest` (feature 8, §10.13) → `StigSorry` (feature 11, §10.14) → `PigTruck` (feature 15, §10.15) → `BaggageBelt` (feature 25, §10.16) → `Lapplisa` (feature 20, §10.17) → `GrisfestFree` (feature 21, §10.18; registers the gate's and the tourists' interactables) → `FruitStands` (feature 28, §10.19) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
+→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `DiveTower` (feature 24, §10.20; registers the ladder's two interactables, sets `DIVE_TOWER.live`) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `Eslov` (feature 7, §10.12; registers the rollerskier's interactable) → `PoolFest` (feature 8, §10.13) → `StigSorry` (feature 11, §10.14) → `PigTruck` (feature 15, §10.15) → `BaggageBelt` (feature 25, §10.16) → `Lapplisa` (feature 20, §10.17) → `GrisfestFree` (feature 21, §10.18; registers the gate's and the tourists' interactables) → `FruitStands` (feature 28, §10.19) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
 `placeNpcs(true)` → spawn the player → portraits for every key in `CAST` (`renderPortrait`
 restores each model's parent and transform, so seated cast members stay in their seats) →
 `applySaveToWorld()` →
@@ -4845,7 +4933,7 @@ mantra/hold, AI, cars, people (`glide.step` → the player's step → `glide.aft
 traffic/peds skipped when `!levelDef.sim.*`) → `syncAll` (also
 writes `ch.x/y/z` from `car.seatWorld(ch.seatSide)` for every car-seated character, player
 included, so framing, bubbles and distance checks see where they really are) → `missions.update` →
-`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `stands.update` (feature 28) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
+`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `tower.update` (feature 24) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `stands.update` (feature 28) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
 pickups/collectibles → props → `fx.tick` → `tickTown` → markers → camera → sun/sky → HUD → audio →
 traffic recycling (island) → autosave. `loop` then renders, and when `film.grabNow` is set calls
 `film.grab()` in the same task (Herr Storch's still from the frame's buffer, feature 6, §10.11).
@@ -4867,6 +4955,8 @@ game.carrying;     // null | { item } | { who } (the free-roam Berra job's { who
 game.stomping;     // bool: a stomp is on its way down (onLand slams); the glide clears it (§10.7)
 game.glide;        // Glide (feature 3, §10.7): the free-roam glide after julafton
 game.judges;       // PoolJudges (feature 4, §10.8): the sisters judge his dives at Flamenco's pool
+game.tower;        // DiveTower (feature 24, §10.20): the 10 m diving tower at Flamenco's pool; tower.live,
+                   // canClimb(), climb(up), put(up), dive, fromTop, radioSaid, last, climbs
 game.records;      // { simhopp?: n, eslov?: s } free-roam bests, saved (§10.5)
 game.honk;         // Honk (feature 5, §10.9): the island hears the horn in free roam
 game.hornAt;       // null | { x, z, yaw, t, pigs }: the last free-roam horn press (§10.9)
@@ -4902,7 +4992,11 @@ game.breakProp(p, vx, vz, car) -> p | null   // car.js's smash: null when refuse
 game.outfitOverrides; // { key: outfit } from UNLOCKS[name].outfit, merged over the island set by applyOutfits (§10.3)
 game.witnessOverride; // null | UNLOCKS[name].witness, merged over the witness rule's config on the island (§7.2)
 game.onBounce(ch, b);   // Character.step: ch bounced on trampoline block b (the boing; the judges, §10.8; film.trick('studs'))
-game.onLand(ch, v, y);  // Character.step: ch landed at v m/s (> 6) on floor height y (the stomp; the judges; film.onLand)
+game.onLand(ch, v, y);  // Character.step: ch landed at v m/s (> 6) on floor height y (tower.onLand(v, y), then the
+                        // judges; film.onLand; any other landing in water waterSplash's for the dust; the stomp)
+game.waterSplash(x, z, v, bomb = false);   // water thrown up by a hard landing at v m/s in a pool or pond: the
+                        // drops (fx.splash) and audio.splash(k) grow with k = (v − 6) / 16 (clamped 0..1); a
+                        // bomb (a stomp) adds a column and a boom and shakes the camera to 0.6 + 0.8 k (feature 24)
 game.bumpedT;      // > 0 for 0.4 s after a trolley bowl / turbulence fall
 game.inDialog;  game.autoDialog;  game.dialogSpeed (55, TEST 220);
 game.closure;      // null | a race's closed course { nodes: Set<nodeId>, update(), closed(nodeId) }
@@ -5192,6 +5286,11 @@ only.
 slips on a card back, 0.17 × 0.24) held up in the left hand at the chest (L (−1.15, 0, −0.5)), the
 `penna` prop (a blue pen) scribbling over it in the right (R about (−1.25, 0, 0.5) with an 11/s and
 7/s wobble), her head bent to it (neck 0.32); `heldPose` counts it as busy.
+`leap` (feature 24, §10.20): off the 10 m tower, Levander's arms straight out as `wings` (R (0, 0,
+−1.55), a 9/s shake of 0.06), the legs together (0.08, 0, ∓0.03), the body tipping forward 1.3 × k
+and the chin up 0.15 + 0.45 k, k = −vy / 20 (0..1), so he comes down flat. `bomb` (feature 24): the
+cannonball, knees up (legs (−1.55, 0, ∓0.12)), arms round them (R (−1.05, 0, 0.42)), body 0.3
+forward, chin down 0.25. Both only looks (they steer nothing); only `game.tower` sets them.
 
 **character.js**: `ch.setDef(def)` (rebuild model under the same parent; keep x/y/z/yaw/state;
 `height` updated); state `'hidden'` (step no-op, `root.visible = false`, skipped by
@@ -5282,6 +5381,9 @@ export function sidewalkAt(x, z) -> null | { along: 'x' | 'z', road, side: ±1, 
 //   `ring` false on the outer ring (no corners). In a block corner the nearer road wins.
 // world/blocks/hotels.js: flamencoBays [{ x, z, hw: 1.4, hd: 2.5, yaw }] (feature 20): Flamenco's
 //   eight painted bays in world space, filled when the block is built.
+// world/blocks/hotels.js: DIVE_TOWER { top: 9.95, blocks: [8 solids, kind 'tower'], live() } (feature
+//   24, §10.20): the diving tower's solids, filled when the block is built; each block's `dead` is a
+//   getter, !live() (DiveTower sets live: the island with missions.state === 'idle').
 export const BLOCK_MAP_COLORS = { flamenco: '#f4efe6', ... }  // minimap lot colours per MAP type
 
 // world/landmarks-island.js
@@ -5554,6 +5656,14 @@ shame.paint (PaintShop, §7.2): configure(cfg) from configure(); onPursuit() fro
 //   canBreak(car) and onBroken(p, car) from Game.breakProp; vendorSpot(p, car); showVendor /
 //   hideVendor; carIn(p); posed(key) read by syncAll; stalls; vendor; vendorT; swearT; swearing; last
 // syncAll: posed also when stands.posed(k) (the souvenir seller swearing at a smashed stall)
+// diveTower.js (feature 24, §10.20): game.tower = new DiveTower(game) after the judges (sets
+//   DIVE_TOWER.live; registers hopptorn:upp and hopptorn:ner); onLand(v, y) from game.onLand before
+//   the judges' (true: a dive splashed into the water, so no dust); update(dt) after judges.update
+//   (not live: him down from the top, the dive and the radio dropped; the radio line, "Oj.", the dive
+//   off the top and its poses); live; canClimb(); onTower(); climb(up); put(up); start(); end(); dive;
+//   fromTop; busy; flopped; radioSaid; radioAt; last { kind, x, z, v, t, secs }; climbs
+// glide.js: radioSaid (its once-ever pool line said this session; held back after the tower's)
+// hotels.js: DIVE_TOWER { top, blocks, live() } (the tower's solids, `dead` = !live())
 // areaHit: props with def.carOnly are skipped (a kick never breaks a fruit stall)
 // collision.js: waterAt(x, z, y) -> the `water` block he stands in at that height, or null
 //   (feature 4; moved from glide.js)
@@ -5561,9 +5671,12 @@ shame.paint (PaintShop, §7.2): configure(cfg) from configure(); onPursuit() fro
 // fx.js
 fx.snow(x, y, z);  fx.steam(x, y, z);  fx.meterPuff(x, y, z, color, n)   // (fx.shame removed)
 fx.spill(x, y, z, color, n);  fx.wisp(x, y, z)   // A1: trolley juice spill, smokers' wisp
-fx.splash(x, z, n = 16, sp = 3)   // n drops thrown out at sp m/s; the fin's default, the glide's
+fx.splash(x, z, n = 16, sp = 3, up = 4)   // n drops thrown out at sp m/s and up at up..2·up m/s (life
+                                  // 0.8 s + 0.12 s a m/s of up over 4); the fin's default, the glide's
                                   // pool landing 28 at 4.5 (feature 3), a judged dive 28 at 4.5
-                                  // and a belly flop 44 at 5.5 (feature 4)
+                                  // and a belly flop 44 at 5.5 (feature 4); game.waterSplash's
+                                  // (16 + 34 k) at 3 + 3.5 k, up 4 + k, and a bomb's column
+                                  // (30 + 50 k) at 1.4 + k, up 7 + 3 k (feature 24)
 
 // WP-H additions (all additive):
 // hud.panic(secs); hud.labelLayout (big-map label layout, cached on labels + crop); body classes
@@ -6126,6 +6239,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `torsdag` [feature 21] | Grisfest varje torsdag (§10.18): at index 11 no pay prompt at the host; at index 12 Stig coming up to the host: "Är det torsdag i dag?" then the host's answer; within 2.6 m the prompt `E Betala grisfesten (800 pta)`; E with 650 pta: "Åttahundra, señor. Inte en peseta mindre.", nothing paid, no evening; E with 2 000: 1 200 left, the black fade, 21:00 held (`day.hold`, still 21:00 after 2.5 s with the clock running), `night`, the `vals`; held: Berra, Fru Storch, Herr Storch, Majsan, Robban, Siv and the host (no Ole before julafton is done, no Angerud at the farm); the band of three on the bandstand at 1.0 (accordion, congas), the five tourists dancing on the floor at 0.4; Stig on the drive at (0, 20); Berra, Siv, Robban dance, Majsan does not; shots of the evening, the floor and the band; the host walks his round with a cup and says "Sangrian, grabbar."; Fru Storch's "Finns det svenskt kaffe på grisfesten?" once, no "Norsk, da?" without Ole; a kick (`areaHit`) bowls a tourist over and she goes back to her place; by a solo tourist the prompt `E Bjud upp`, E: she turns her back on him, Majsan within 1.4 m of him in the two-shot, both dance, his line then "Jag är skraj att de ska nobba." in order; afterwards standing still by her he dances, no ask prompt, a step (S held 0.7 s) stops it; out of the gate: the morning after at 08:00 (`day` palette, the hold off), nobody held, no extras, the tune `sol`, Majsan, Siv, the Storches at home and free, Berra and Robban home or napping again (the Berra job), the host at his post |
 | `torsdagOle` [feature 21] | at index 13 with julafton's unlock: Ole at the evening, in `gris`, dancing (a shot), no Angerud; Fru Storch's question then Ole's "Norsk, da?", and his "Heia Norge!"; out of the gate his outfit back; at index 12 a mission start (julafton) two frames into the talk: no evening, nobody held, no extras, the hold off; the mission runs by day (the clock's morning cut) without the vals |
 | `frukt`, `fruktFore` [feature 28] | Rakt genom fruktståndet (§10.19). `frukt`, at index 9 (free roam, after asnan): the five fruit stalls are `frutas` props (kind `stall`, top 2.55, at their §6.3 places, the FRUTAS board on rad A's west); a kick and his car at 3 m/s leave rad C's standing (the car stopped at the counter); at 11 m/s from the front it breaks: the seller up beside it (within 4.5 m, not ahead of the car), flailing, "¡Mis tomates!", Stig's `stand` line 0.35–0.75 s after, the souvenir seller's "Jävla smålänningar!" 1.25–1.6 s after, +10.8 SKANDAL, coins; she is gone after 4 s; an AI car's `game.breakProp` refused; FRUTAS from the west at 12 m/s: stall and board gone, no swear (40 m off); the lone stall within 60 s: the seller there, her cry, no swear; a broken stall stays down with him near and with a car in its footprint, and is back with neither (him 150 m off); a mission start (ropavieja): all five up, the board up, a car in the lone stall's footprint moved out; in the mission his car at 11 m/s stops at rad C's counter, no seller. `fruktFore`, at index 6: it breaks, her cry, the souvenir seller at his stand within 25 m, no swear. Shots `frukt_rad`, `_frutas`, `_krasch`, `_mis_tomates`, `_smalanningar`, `_frutas_krasch`, `_uppdrag` |
+| `hopptorn` [feature 24] | Från fjärde våningen (§10.20), at index 13: the tower's 8 solids live (`DIVE_TOWER.top` 9.95; the platform and the board are floors at 9.95, the foot no free spot); at `hopptorn` the prompt "Klättra upp", E fades to black and puts him on the platform facing the board (`climbs` 1, prompt "Klättra ner"); S, A and D held 1.2 s each: the railing keeps him up; walked off the board: `leap` on the way down, the mantra, a belly flop in the deep end (v > 18, in the pool), face down, Lasse's whole line on the radio once, "Oj." when he is up; with J tapped under 8.5 m: `bomb` on the way down, a cannonball (no flop, `waterSplash` with bomb, v > 24, shake ≥ 1.3), no second radio line, no "Oj."; E on the platform: at the foot (`climbs` 5); after `bodega` a held J off the board is the glide's (no tower landing; the glide into the pool, at `speed` 3 for the test), and its radio line waits (`glide.radioSaid` false, no `glidPlask`); at index 9, up the tower, `missions.begin()`: he is down with no landing over 6 m/s, no tower solid in `queryBlocks`, the floor at 0.15, `spotFree` and `footReach` from `flamenco` true there, no `hopptorn` prompt, and in the running mission he walks through where it stands. Shots `hopptorn_daeck`, `_fot`, `_topp`, `_fall`, `_magplask`, `_lasse`, `_bombfall`, `_bomb` |
 | `talk` [Phase 0] | `autoDialog = false`, walk to Ole at `gateQueue`, E, Space twice |
 | `fullstory` [Phase 0b] | swaps the literal §8 missions (`tools/fixtures/full-missions.js`) into `MISSIONS` and plays all 13 per §16.3 (`FROM`/`TO` as `story`); must end `#13 idle`, `RESULT: PASS` |
 | `kinds` [Phase 0b] | fixture data checks; haggle misses fail; follow `minDist` fails; smooth/fragile bars (teleports never count); carry spill; checkpoint retry re-applies night + `vals` and revives plates at `dansgolv`; destroy default spawn; grab at the wreck; scene `exitCar`; Phase 3: follow shows no bar before the start and a head-on quarry does not fail it, `retryCar` (the last car reused, a typed named car, `park`), getInCar `atHome` and a wrecked `missionCar` failing, a frame-only scene stopping the car dead, a scene cutting a `collect` guest's bubbles (3 frames in: no bubble over the guest or Stig, no empty one) and keeping his placement |
@@ -6204,6 +6318,7 @@ fatagaDukar golf bungalow bygge dromplan airport hittegods busBay bagageband dyn
 + the pool fest's ring `flamencoRing` (feature 8, §10.13)
 + the pig delivery's stop and the piglet pen `grisfalla grisfallaIn` (feature 15, §10.15)
 + Angerud's hire car on the sidewalk `angerudBil` (feature 20, §10.17)
++ the diving tower's ladder foot and platform `hopptorn hopptornTopp` (feature 24, §10.20)
 + collectibles `pryl_klocka pryl_poolpen pryl_kalkylator pryl_kniv pryl_kamera pryl_glasogon
 pryl_pung fena_flamenco fena_suntrip fena_plaza fena_golf fena_bungalow fena_hamn fena_hav` + Rio
 `rioBoat rioCam`.
@@ -6228,7 +6343,7 @@ faar blomma gris`. **Collectible sets**: `prylar fenor`. **Unlocks**: `grisbil s
 carry mantra timeline scene haggle smash`.
 
 **Anim flags**: `wings cupUp cupHeld push planeSeat hold flail oath dance laugh slump shoeOff mirror film
-giraffe butterKnife carryOver glide swan calc ski groda ticket` (+ existing `kick talk wave cheer sprint spin
+giraffe butterKnife carryOver glide swan calc ski groda ticket leap bomb` (+ existing `kick talk wave cheer sprint spin
 look`, the glide's numeric `bank`, feature 3, the judges' `card`, feature 4, and the pool fest's
 numeric `hop`, feature 8; `groda` is 1 | 2 | 3, §14.6).
 
@@ -7815,3 +7930,22 @@ the fixer's group.
   all five back (a car in a footprint moved out), so no mission, stage kind, timer, fixture or
   calibration pool changed. Deviations: no Ole line (needs "Ole åker med"), no tomato stains, only his
   car, cube debris. Scenarios `frukt`, `fruktFore` (§16.4).
+- Feature 24, "Från fjärde våningen" (`features/implemented/fran_fjarde_vaningen.md`, 2026-10-16): the
+  10 m diving tower at Flamenco's deep end in free roam (§10.20; new `src/game/diveTower.js`, `TOWER`
+  in content/island.js; §1.6, §3, §6.3, §10.7, §14.1–14.3, §14.6, §14.8, §12 `splash(k)`, §16.4,
+  Appendix A). World (§6.3): the tower `TRAMPOLÍN 10 M` [N] on the strip between the hedge and the
+  pool (hotels.js `diveTower`: a white room over the footprint, posts, two landings, the railed
+  platform at 9.95, the hotel's fourth floor, the board 1.4 m out, the ladder up the north face) and
+  the landmarks `hopptorn`, `hopptornTopp`. Its solids (`DIVE_TOWER.blocks`) are live only on the
+  island with `missions.state === 'idle'` (each block's `dead` is a getter), so no mission stage meets
+  it: no stage's world, timer, fixture or calibration pool changed (grisfest's flowers spawn within
+  40 m of `flamenco`, which takes the strip in). E at the ladder's foot and on the platform climb with
+  a black fade; off the board his arms go out (`anim.leap`) with the mantra [F*]; a stomp is a
+  cannonball (`anim.bomb`, the biggest splash, the camera shaken), anything else a belly flop and
+  "Oj." [N]; the session's first dive into the water brings Lasse's whole "Från fjärde våningen? Ner i
+  poolen? Ring kliniken." [F*] on the radio, held back after the glide's (and the glide's once-ever
+  line after the tower's, `radioSaid`). A mission start with him up there puts him at the foot. Engine:
+  `game.onLand` calls `tower.onLand(v, y)` first and splashes any other hard landing in water with the
+  new `game.waterSplash(x, z, v, bomb)` instead of the dust (in missions too, a look only); the
+  stomp's shake no longer lowers a bigger one; `fx.splash(…, up)`, `audio.splash(k)`. Scenario
+  `hopptorn` (§16.4).

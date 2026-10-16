@@ -140,7 +140,7 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   luften: han sträcker ut armarna som hos Levander, säger mantrat och singlar stelt nedåt och
   framåt, och W A S D svänger honom lite. Ett kort tryck på J stampar som förut. Varje landning
   slutar i en kullerbytta, och landar han i en pool blir det plask (och Lasse ringer, en gång).
-  Prova från drömplanets vinge eller hopptornets trampolin vid Flamencos pool. Står Ole i närheten
+  Prova från drömplanets vinge, trampolinen eller hopptornet vid Flamencos pool. Står Ole i närheten
   ropar han "Det er flyging!".
 - **Siv och Majsan sätter poäng**: studsa på trampolinen vid Flamencos pool. Första gången säger
   Stig "Mina ögon tål inte klor.", och systrarna går fram till poolkanten. Varje hopp som slutar i
@@ -148,6 +148,12 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   dubbelhopp en volt (Siv ger nio, mer blir det aldrig) och stampar du i luften (J) blir det ett
   magplask och minuspoäng. Majsan håller alltid upp en tia. Resultatet visas längst ned, och ditt
   bästa hopp sparas som rekord.
+- **Från fjärde våningen**: vid djupa änden av Flamencos pool står ett tio meter högt hopptorn,
+  TRAMPOLÍN 10 M. Tryck E vid stegens fot för att klättra upp, så står Stig på plattformen i höjd med
+  hotellets fjärde våning (E där uppe tar honom ned igen). Gå ut över brädans kant: han sträcker ut
+  armarna och säger mantrat på vägen ned. Trycker du J i luften blir det en bomb med ett jätteplask,
+  annars ett magplask, och Stig reser sig och säger "Oj.". Första gången ringer Lasse: "Från fjärde
+  våningen? Ner i poolen? Ring kliniken." Under uppdragen kan du inte klättra upp.
 - **Tutan**: utanför uppdragen hör ön när du tutar (H). Fotgängare framför bilen hoppar undan, och
   gänget i närheten svarar, om de ser bilen: Ole vinkar och påminner om att det är farligare att
   köra bil än att flyga, Lasse ropar "Hä-pååre!", Angerud ska tala med platschefen och Berra och
@@ -281,6 +287,8 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
 - att bilen kör rakt genom marknadens fruktstånd, att försäljerskan ropar "¡Mis tomates!" och att
   souvenirförsäljaren svär "Jävla smålänningar!" åt det (i filmen svär han när Ole prutar ner åsnan,
   och ingen bil kör genom marknaden)
+- hopptornet vid Flamencos pool, mantrat på väg ned, bomben och magplasket, och att Lasse ringer om
+  det (i filmen upprepar Lasse en gästs samtal i telefonen, och ingen hoppar)
 - fårrusningen i Fataga, kappkörningen mot nattbussen och porslinskrosset på tid
 - att samla ihop julfestgästerna
 - Oles prylar och hajfenorna som samlarföremål, utspridda över ön
@@ -377,13 +385,14 @@ src/game/baggageBelt.js         Åk bagageband in free roam: the belt at Gando c
 src/game/lapplisa.js            Lapplisan Majsan in free roam: the ticket and the tow, Angerud's hire car and the film scene, the bay praise
 src/game/grisfestFree.js        Grisfest varje torsdag in free roam: 800 pesetas at the gate, the evening, Majsan's invitation
 src/game/fruitStands.js         Rakt genom fruktståndet in free roam: his car through the market's fruit stalls, the seller, the swear
+src/game/diveTower.js           Från fjärde våningen in free roam: the 10 m diving tower, the ladder, the cannonball, the belly flop
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
 tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, meter, kinds, perf,
                                 paintshop, berra, glide, simhopp, tuta, dygn, super8, eslov, grodorna,
-                                artig, grisar, bagage, lapplisa, torsdag, frukt, calibrate,
-                                calibflight)
+                                artig, grisar, bagage, lapplisa, torsdag, frukt, hopptorn,
+                                calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
 tools/pool.mjs                  re-derives every random stage's timer from the ledger
@@ -426,6 +435,7 @@ node tools/shot.mjs bagage               # the baggage belt: carried, sitting on
 node tools/shot.mjs lapplisa lappfilm    # Majsan's tickets and tows, the bay praise; Angerud's hire car and the film scene
 node tools/shot.mjs torsdag torsdagOle   # the grisfest's evening for 800 pta: the gate, the band, Majsan's invitation, the morning after
 node tools/shot.mjs frukt fruktFore      # the fruit stalls: kick and slow car hold, 11 m/s through, the seller, the swear, the comeback
+node tools/shot.mjs hopptorn             # the diving tower: the ladder, the railing, the belly flop, Lasse, the cannonball, a mission start
 node tools/shot.mjs fullstory kinds      # the literal §8 missions and the stage-kind checks
 node tools/shot.mjs calibrate calibflight  # timer and FLYGRÄDSLA calibration (slow; see DESIGN §8, §16.4)
 node tools/pool.mjs                      # random-stage timers from the raw runs in notes/calibration-samples.md
