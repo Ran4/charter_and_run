@@ -49,6 +49,12 @@ export const pedLoops = [];     // sidewalk loops for pedestrians
 export const animated = [];     // objects with tick(t)
 export const lamps = [];
 export const bouncers = [];     // trampoline ('bounce') blocks
+// Every bungalowR lot (Fin hund…, feature 31, DESIGN §10.21: game/dogs.js picks the watchdogs'
+// lots from it): { ox, oz, yaw (the lot's frame: the street at local z 0, the lot back to +z),
+// w, d, door: [x, z] (the front door), house: [x, z, w, d] (the cube), drive: [x, z] | null (the
+// parked car's spot), tramp: [x, z] | null (the trampoline's middle), corner } in lot-local metres.
+// Filled as the lots are built, with no random draws of its own: the world builds as before.
+export const dogLots = [];
 export const frameRamps = [];   // half-built frames: { x, z, yaw, top } = the foot of ramp 1, deck 1 height
 // Lit after dark (§13.3): the street lamps' lantern panes and star centres go into one unlit mesh
 // that draws only while the sky is dark, as the hotels' lit windows do. The block builders run
@@ -367,12 +373,14 @@ function bungalowLot(f, LW, LD, r, corner = false) {
   // Back yard: pool / trampoline / laundry / sunbeds.
   const by = front + hd + 1.5;
   const roll = r();
-  if (roll < 0.125 && by + 4 < LD - 1) trampoline(f, hx + R(-2, 2, r), Math.min(LD - 3, by + 3.2));
+  let tramp = null;
+  if (roll < 0.125 && by + 4 < LD - 1) { tramp = [hx + R(-2, 2, r), Math.min(LD - 3, by + 3.2)]; trampoline(f, tramp[0], tramp[1]); }
   else if (roll < 0.45 && by + 4.5 < LD - 0.5) {
     pool(f, hx, Math.min(LD - 3.2, by + 2.6), 6, 3.2);
     if (r() < 0.7) f.prop('solstol', hx + 4.6, Math.min(LD - 3.2, by + 2.6), Math.PI);
   } else if (roll < 0.8) laundry(f, hx, Math.min(LD - 2, by + 2.5), 5.5);
   else { f.prop('parasoll', hx - 2, by + 2.5); f.prop('solstol', hx, by + 2.5, Math.PI / 2); }
+  dogLots.push({ ox: f.ox, oz: f.oz, yaw: f.yaw, w: LW, d: LD, door: [dx, front], house: [hx, cz, hw, hd], drive: car ? [carX, 3.4] : null, tramp, corner });
 }
 
 // ---------------------------------------------------------------------------------------------

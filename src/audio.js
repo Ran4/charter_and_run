@@ -353,6 +353,25 @@ export const audio = {
   oink() {
     for (const d of [0, 0.22]) { this.tone(190, 0.16, 'sawtooth', 0.07, 120, d); this.noise(0.12, 0.06, 600, 'bandpass', d, 3); }
   },
+  // A watchdog (Fin hund…, §10.21): `n` short rough barks, a sawtooth jumping up and falling through a
+  // mouth-like band-pass with a breath of noise on each; `size` 1 a medium dog, under 1 yaps higher (the
+  // poodle 0.72), over 1 lower; `vol` 0..1 for the distance.
+  woof(size = 1, n = 2, vol = 1) {
+    if (!ctx) return;
+    for (let k = 0; k < n; k++) {
+      const d = k * 0.23 + Math.random() * 0.03, t = ctx.currentTime + d, f0 = (300 + Math.random() * 50) / size;
+      const o = ctx.createOscillator(), f = ctx.createBiquadFilter(), g = ctx.createGain();
+      o.type = 'sawtooth';
+      o.frequency.setValueAtTime(f0 * 0.8, t); o.frequency.exponentialRampToValueAtTime(f0 * 1.2, t + 0.03); o.frequency.exponentialRampToValueAtTime(f0 * 0.55, t + 0.15);
+      f.type = 'bandpass'; f.frequency.value = 950 / size; f.Q.value = 1.4;
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.17 * vol, t + 0.012); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.17);
+      o.connect(f).connect(g).connect(sfx);
+      o.start(t); o.stop(t + 0.22);
+      this.noise(0.08, 0.07 * vol, 1500 / size, 'bandpass', d, 1.5);
+    }
+  },
+  // A dog's owner whistling it home from the house (§10.21): a short note up, then a long one sliding down.
+  whistle() { this.tone(1700, 0.14, 'sine', 0.07, 2400); this.tone(2350, 0.36, 'sine', 0.07, 1500, 0.2); },
   helanGar() { this.trad('helanGar'); },
 
   // Public-domain traditional cue (§12.1): a one-shot accordion melody with an oom-pah under it,

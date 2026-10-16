@@ -109,6 +109,17 @@ spot free and in `footReach` from `flamenco`). The tower's geometry draws no ran
 rest of the world builds as before. Any other hard landing in water now splashes instead of raising
 dust (`game.waterSplash`, a look only). Every pool below stands and no timer changed.
 
+**Feature 31 (Fin hund…, 2026-10-17) touches no pool.** It added watchdogs in 12 bungalowR lots and in
+the finca's yard on vischan (block (0,1), block-local x [−30.1, −2.6], z [−30.1, −14.8]), live only on
+the island with `missions.state === 'idle'` (DESIGN §10.21): in every mission state they are hidden
+and act on nothing, so no mission stage, its world or its actors change. town.js and nature.js only
+export the lots' data (the trampoline's place is the draw it always was), so the world builds as
+before. Eslövloppet, the one free-roam pool, runs on the roads round block (0,1), 4.5 m outside the
+yard's canes: Chispa can come no nearer than the inside of the canes (solid, 2.4 m), never touches
+Stig there and says nothing for him; only her bark bubbles and sound reach the run. Its walker ran on
+this feature's tree (`f31-1` below) as in its pool, so the rows join it; every pool stands and no
+timer changed.
+
 ## `friskotekBalls` · §8.7 s1 · six fleeing beach balls · on foot: timer = ceil(1.25 × (p75 + 6 × 0.5))
 
 Phase 3 r2 island-staging placed everyone for the intro's group shot (Stig, Lasse, the sisters, the
@@ -345,7 +356,7 @@ from `KÖR!` to the line). Sample ids: `f7` feature 7 (`-1` its first probe, `-8
 the default runs on the final tree). The stage code was uncommitted on 1b3b561 (feature 7's commit is
 the first with it).
 
-Current pool: `walker-r1r2/1b3b561`: n 27, median 28.18 → T_ref 30.68 → timer ceil(1.25 × 30.68) = **39** (90 % range 39–39).
+Current pool: `walker-r1r2/1b3b561`: n 30, median 28.18 → T_ref 30.68 → timer ceil(1.25 × 30.68) = **39** (90 % range 39–39).
 
 | sample | date | code | pool | env | n | raw times (s, run order) | excluded (reason) |
 |---|---|---|---|---|---|---|---|
@@ -357,3 +368,4 @@ Current pool: `walker-r1r2/1b3b561`: n 27, median 28.18 → T_ref 30.68 → time
 | f7-F4 | 2026-10-15 | 1b3b561 + uncommitted: feature 7, the final tree (its commit) | `walker-r1r2/1b3b561` | default (ESLOV_RUNS=3) | 3 | 28.18 28.18 28.18 | none (falls 0) |
 | f7-F5 | 2026-10-15 | 1b3b561 + uncommitted: feature 7, the final tree (its commit) | `walker-r1r2/1b3b561` | default (ESLOV_RUNS=3) | 3 | 28.18 28.18 28.18 | none (falls 0) |
 | f7-F6 | 2026-10-15 | 1b3b561 + uncommitted: feature 7, the final tree (its commit) | `walker-r1r2/1b3b561` | default (ESLOV_RUNS=3) | 3 | 28.18 28.18 28.18 | none (falls 0) |
+| f31-1 | 2026-10-17 | bf18146 + uncommitted: feature 31's code (`src/game/dogs.js`, `DOGS`, town.js `dogLots`, nature.js `FARM_YARD`, the `placate` pose, `audio.woof`/`whistle`, main.js), its final code; the race, the walker and the course unchanged; Chispa in the yard by the course | `walker-r1r2/1b3b561` | default (ESLOV_RUNS=3) | 3 | 28.18 28.18 28.18 | none (falls 0) |

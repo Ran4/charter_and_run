@@ -230,6 +230,16 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   åsneköpet svär souvenirförsäljaren "Jävla smålänningar!" om det händer nära hans stånd. En spark
   eller en lätt knuff rår inte på ett stånd, och under uppdrag är de lika fasta som förut. Ett trasigt
   stånd står där igen när du har varit borta en stund.
+- **Fin hund…**: i bungalowkvarteren har tolv tomter en vakthund (alla som har studsmatta och några
+  med bil på uppfarten), och gården på vischan har en gul byracka. Hunden ligger vid ytterdörren och
+  skäller på dig bakom muren när du går förbi på trottoaren. Går du in genom grinden rusar den fram
+  och står och skäller en bit ifrån dig, och Stig håller upp händerna och mumlar "Fin hund… fin
+  hund…". Den biter aldrig och lämnar aldrig tomten, så det räcker att gå ut genom grinden igen.
+  Roligare är att ta sig upp på något: ett biltak, muren, studsmattan bakom huset eller vattentankens
+  kant på gården. Där förhandlar Stig ("Snälla hund… sitt!") och säger mantrat med utsträckta armar,
+  tills ägaren visslar inifrån huset utan att synas ("¡Bobi! Hit!") och hunden lunkar hem. Sedan får
+  du vara i fred en stund. Varje hund har sitt eget namn och sitt eget skall, och under uppdragen
+  syns inga hundar.
 
 ## Vad är påhittat?
 
@@ -289,6 +299,9 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
   och ingen bil kör genom marknaden)
 - hopptornet vid Flamencos pool, mantrat på väg ned, bomben och magplasket, och att Lasse ringer om
   det (i filmen upprepar Lasse en gästs samtal i telefonen, och ingen hoppar)
+- vakthundarna på bungalowtomterna och gården på vischan, ägarna som visslar hem dem och att Stig
+  säger "Fin hund…" och mantrat till dem (i filmen nosar en narkotikahund på Stigs paket vid
+  bagagekontrollen på Arlanda, och någon säger "Fin hund.")
 - fårrusningen i Fataga, kappkörningen mot nattbussen och porslinskrosset på tid
 - att samla ihop julfestgästerna
 - Oles prylar och hajfenorna som samlarföremål, utspridda över ön
@@ -386,12 +399,13 @@ src/game/lapplisa.js            Lapplisan Majsan in free roam: the ticket and th
 src/game/grisfestFree.js        Grisfest varje torsdag in free roam: 800 pesetas at the gate, the evening, Majsan's invitation
 src/game/fruitStands.js         Rakt genom fruktståndet in free roam: his car through the market's fruit stalls, the seller, the swear
 src/game/diveTower.js           Från fjärde våningen in free roam: the 10 m diving tower, the ladder, the cannonball, the belly flop
+src/game/dogs.js                Fin hund… in free roam: the watchdogs in the bungalow gardens and at the farm, Stig's hands and lines
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
 tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, meter, kinds, perf,
                                 paintshop, berra, glide, simhopp, tuta, dygn, super8, eslov, grodorna,
-                                artig, grisar, bagage, lapplisa, torsdag, frukt, hopptorn,
+                                artig, grisar, bagage, lapplisa, torsdag, frukt, hopptorn, hund,
                                 calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
@@ -436,6 +450,7 @@ node tools/shot.mjs lapplisa lappfilm    # Majsan's tickets and tows, the bay pr
 node tools/shot.mjs torsdag torsdagOle   # the grisfest's evening for 800 pta: the gate, the band, Majsan's invitation, the morning after
 node tools/shot.mjs frukt fruktFore      # the fruit stalls: kick and slow car hold, 11 m/s through, the seller, the swear, the comeback
 node tools/shot.mjs hopptorn             # the diving tower: the ladder, the railing, the belly flop, Lasse, the cannonball, a mission start
+node tools/shot.mjs hund                 # the watchdogs: the wall, the rush, the hands up, the trampoline and the tank, the owner's call
 node tools/shot.mjs fullstory kinds      # the literal §8 missions and the stage-kind checks
 node tools/shot.mjs calibrate calibflight  # timer and FLYGRÄDSLA calibration (slow; see DESIGN §8, §16.4)
 node tools/pool.mjs                      # random-stage timers from the raw runs in notes/calibration-samples.md

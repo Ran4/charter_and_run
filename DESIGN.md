@@ -215,7 +215,11 @@ smålänningar!" at it (free roam, §10.19; in the film the seller swears when O
 down, and no car goes through the market); the 10 m diving tower at Flamenco's deep end, the
 mantra with his arms out off its platform, the cannonball and the belly flop, and Lasse's phone call
 about it on the radio (free roam, §10.20; in the film Lasse repeats a guest's call at the SunTrip
-desk, nobody dives, and the depth sign is the bungalow seller's line).
+desk, nobody dives, and the depth sign is the bungalow seller's line); the watchdogs in the bungalow
+gardens and the farmyard on vischan, Stig with his hands up murmuring "Fin hund… fin hund…", talking
+to one from a car roof, a garden wall, the tank's rim or a trampoline with the mantra and his arms out,
+and its owner whistling it home unseen (free roam, §10.21; in the film a drug dog sniffs at Stig's
+parcel at Arlanda's baggage check and somebody says "Fin hund.").
 The film's flight has **no turbulence** and **no in-flight toilet scene**: both toilet scenes are
 at Arlanda (we keep them there). The plane's toilets are only an invented hideout.
 
@@ -1173,7 +1177,7 @@ standing there faces. `y` (optional) = absolute height for collectible spots on 
 | (3,1) | `kyrka` → `kyrka` (C2, centre.js) | **Templo Ecuménico**: white rationalist church (flat planes, bell slab), palm plaza, crèche, small fountain; sign `ES UNA IGLESIA` / `DET ÄR EN KYRKA.` [F*] (the sisters' language record, relocated; uppercase since Phase 3 r2, §1.3) | `kyrka` (0, 18, π) | — |
 | (4,3) | `bensin` → `bensin` (C2, centre.js) | gas station: canopy, `GASOLINA` (no brand), prices in pesetas, kiosk; `gaspump` props explode; the workshop's two open bays (`TALLER · NEUMÁTICOS · LAVADO`) are the free-roam paint shop (§7.2): `PINTURA` on the pillar between them, paint tins and a brush by the left bay, a yellow 4 × 7 m box in front of it, the cone moved to the pillar and the parked yellow hatch to the east gable (29.5, −20), out of the painted car's way to the road | `bensin` (0, 16, π) · `pintura` (11.25, −8, 0) (the paint zone in front of the left bay, facing out of it) · cut anchor `pinturaCam` (11.25, −9.6, π) (the bay seen from the forecourt) | — |
 | (5,3) | `guardia` → `cuartel` (C2, centre.js) | ochre barracks, red-yellow-red flag mast beside the path at x 4.6 (Phase 3: off the axis to the `CASA CUARTEL` plaque), `CASA CUARTEL`; two parked green Land Rovers | `guardia` (0, 20, π) | `guardia1`, `guardia2` (type `guardia`, locked) |
-| (1,0), (3,0), (0,1) | `tomat` → `tomatfalt` (D1, nature.js) | rows of low tomato bushes (one merged mesh, walls a car drives through: no solids, or tops ≤ 0.6), packing shed `TOMATES · EXPORTACIÓN` / `EMPAQUETADO`, `tomatlada` props, dirt tracks | on (0,1): `vischan` (6, 24, π) · cut anchor `vischanCam` (5.7, 22.7, −0.14) (on the gravel track north of the vischan scene, looking back south at the road and the `CAMINO SIN ASFALTAR` sign; Phase 3 r2) · `eslovVag` (27.5, 24, 0) (the rollerskier on the Eslöv lane, 6 m up from the z −120 road and facing it; Phase 3 r2, was (28, 4, −π/2) mid-lane, 33 m off the vischan drive) — on (3,0): `packhus` (0, 10, π) | — |
+| (1,0), (3,0), (0,1) | `tomat` → `tomatfalt` (D1, nature.js) | rows of low tomato bushes (one merged mesh, walls a car drives through: no solids, or tops ≤ 0.6), packing shed `TOMATES · EXPORTACIÓN` / `EMPAQUETADO`, `tomatlada` props, dirt tracks; on (0,1) the finca's yard is `FARM_YARD` (feature 31, §10.21: the yard dog's rectangle x [−30.1, −2.6], z [−30.1, −14.8], its door and spot, the finca and the tank with its ramp as its walls; data only) | on (0,1): `vischan` (6, 24, π) · cut anchor `vischanCam` (5.7, 22.7, −0.14) (on the gravel track north of the vischan scene, looking back south at the road and the `CAMINO SIN ASFALTAR` sign; Phase 3 r2) · `eslovVag` (27.5, 24, 0) (the rollerskier on the Eslöv lane, 6 m up from the z −120 road and facing it; Phase 3 r2, was (28, 4, −π/2) mid-lane, 33 m off the vischan drive) — on (3,0): `packhus` (0, 10, π) | — |
 | (2,0) | `grisfest` → `grisgard` (D1, nature.js) | farm: white barn (roof top ≈ 5), pergola deck with long tables under string lights, spit-roast pig, bandstand, dance-floor platform (deck top 0.4), piglet pen, gate on the **south** road; **12 `tallrikar` prop stacks** on the tables (smash stage; `placeProp(..., baseY = table top)`, §14.7) | `grisfest` (0, 26, π) · `grisfestGate` world (−80, −204, π/2) (on the south road at the farm gate, the `follow` endpoint) · `dansgolv` (0, 0, 0) · `pryl_pung` (−18, −14, 0, 5.4) · `grisfalla` (−11, 20.5, −π/2) and `grisfallaIn` (−18.5, 20.6, −π/2) (the pig delivery's stop by the piglet pen and the pen's middle, feature 15, §10.15) | — |
 | (0,0) | `fataga` → `fataga` (D1, nature.js) | white village houses, tile roofs, narrow lanes, date palms, small church, embroidered tablecloths on lines (`MANTELES · DUKAR`), sheepfold (fence solids, gap gate); six ochre crags along the north edge, solid along their length (Phase 3 r3: rock()'s 1 m circle plus a box 0.85·sx × 0.53·sz on the long axis, the mesh's widest section; the circle alone let the player and the chase eye 2–3 m into the rock, also in the fold's back under the shelter) | `fataga` (0, 18, π) · `fatagaBus` world (−240, −204, −π/2) (westbound kerb of the z = −200 road, the `follow` endpoint) · `fatagaFold` (−18, −12, 0) · `fatagaDukar` (8, 4, π) · cut anchor `dukarCam` (8, 4, 0) = `fatagaDukar` turned round (the stall from the square; Phase 3) · `pryl_kniv` (0, 0, 0, 1.2) | — |
 | (4,0) | `golf` → `golf` (D1, nature.js) | fairway, bunkers (sand slabs), **pond** (`water` circle + flat blue), flag 18, small clubhouse `CAMPO DE GOLF` | `golf` (0, 22, π) · `fena_golf` (−10, −6, 0, 0.35) | — |
@@ -1236,7 +1240,10 @@ Copacabana beach with palms, a small orchestra of busts (five on the wheelhouse 
 - `bungalowR` lots: one-storey whitewashed cube (solid top 99) with a flat or terracotta roof,
   white garden wall (`mur` props), sometimes a small shallow pool, a bougainvillea bush (magenta
   `#c2307a`), `butano` bottles by the door; ~1 in 8 lots keeps a trampoline (`bounce`) as a hotel
-  "studsmatta".
+  "studsmatta". Every lot goes into `dogLots` (feature 31, §10.21: its frame, front and back door,
+  the house's box, the parked car's spot, the trampoline's middle), with no random draw of its own (the
+  trampoline's place is the draw it always was), so the lots build as before; 12 of them keep a
+  watchdog in free roam.
 - `lagenhet` lots: 2 of the 3 lots per side become a 4–7 storey apartment-hotel slab (solid top 99)
   with balcony stripes and coloured awnings and towels; the third is a **half-finished concrete
   frame** (ramps, girder deck) or a pool courtyard. One sign per hotel from a pool of invented
@@ -4458,6 +4465,88 @@ out and comes down in the pool. The tower, the cannonball and the belly flop are
   splashes now too (`waterSplash`, built once for this and the later roof jumps), in missions as
   well: a look only.
 
+### 10.21 Fin hund… – the watchdogs in the bungalow gardens and at the farm (free roam; feature 31, 2026-10-17)
+
+`game/dogs.js` (`Dogs`, owned by Game as `dogs`), config `DOGS` in content/island.js, the lots from
+world/town.js (`dogLots`) and world/blocks/nature.js (`FARM_YARD`). At Arlanda's baggage check a drug
+dog sniffs at Stig's parcel and somebody says "Fin hund." (research-plot.md:162; the speaker is not
+known); now Stig says it, hands up, to the watchdogs of the island's gardens, and talks to one from out
+of its reach with the mantra and his arms out until its owner whistles it home. The dogs, their owners
+and their calls are [N] (§1.6).
+
+- **The dogs.** 12 of the 48 `bungalowR` lots (§6.5) and the finca's yard on vischan keep one each.
+  `build()` (on the first update in free roam) takes the lots with a trampoline first (all 7), then
+  those with a parked car, then the rest, each group in an order of its own seeded draws
+  (`mulberry32(31)`: the town's draws are spent as before), at most `perBlock` = 2 a block, up to
+  `lots` = 12, and gives out the `pack` in that order: Bobi, Bijou, Rufo, Kasper, Lola, Pirre, Trofast
+  (the trampoline lots), Tango, Ludde, Pelusa, Canelo, Sickan (car lots). Each has a look (`brun`,
+  `gul`, `svart`, `flack`, `pudel`, `gra`: six looks built in dogs.js from coloured primitives, a body,
+  a head, a tail and four legs on pivots of their own, at 0.72–1.18 × a medium dog of 0.6 m at the
+  shoulder), a bark bubble ("VOFF! VOFF!", the small ones "VIFF! VIFF!", the Spanish-named ones
+  "¡Guau! ¡Guau!") and its owner's call. Bijou is a small white poodle, the breed of the dog on
+  Angerud's portrait (research-characters.md:279), not named Chérie. The farm's dog is Chispa, a
+  yellow mutt. They are not cast and not characters: in no NPC list and no `allChars`, so no kick,
+  stomp, car or stage reaches them, and they add no SKANDAL (§1.2).
+- **Its lot.** A bungalow dog keeps its lot from the front wall (local z 0.75) to the back wall, and
+  `reach` = 2 m into a neighbour's garden beside it (the front gardens are open between the lots, in
+  front of the dividers), never out over the front wall (it stays `wallIn` = 1.35 m in), the back wall
+  or onto a side street. The farm dog keeps the yard x [−30.1, −2.6], z [−30.1, −14.8] (block-local:
+  from the canes on the west and north to the fields; not the track at x 6, where the vischan scene
+  parks the car) and 2 m round it. It runs round its lot's walls (the house; at the farm the finca,
+  and the tank with its ramp as one box) by the shortest way over their corners 1.2 m out (clear of
+  the bougainvillea at a bungalow's front corner), slides off anything else over `climb` = 0.45 m above
+  its feet and off water, never stands higher than 0.45 m over its yard (so no ramp takes it up the
+  tank) and is pushed out of any car's box; a car coming at it faster than 2 m/s makes it hop aside
+  (the pigs' rule, §10.15).
+- **Home and the wall.** It lies by the front door (`rest`; the farm's by the finca's), its head
+  turned to him when he is within 14 m. Stig (on foot or in his car) within `hearR` = 9 m of its lot,
+  outside it: it runs to the inside of its wall opposite him (`alert`, `alertSpeed` 4.2 m/s) and
+  barks; `alertHold` = 2.5 s after he has gone it trots home (`trot` 2.4 m/s). His car in its lot: it
+  barks from `carR` = 4.5 m off.
+- **In its lot.** Stig on foot and on his feet inside the lot: it rushes at him (`rush`, `speed`
+  6.5 m/s) and stops `stopR` = 1.3 m off (`bay`), barking every `barkGap` 0.9–1.5 s (the bubble,
+  `barkSecs` 0.9 s; `audio.woof` within `barkHear` = 35 m), its head jerking up each time; as he moves
+  it keeps 1.3 m from him at a walk. He cannot walk through it: it stands its ground and he is pushed
+  off it. When no nearer for `stuck` = 0.7 s (against a car, a wall, a trampoline) it stays where it
+  is. Out through the gate (or past `reach` into the next garden) it stops at its edge (`back`), barks
+  after him for `backSecs` = 2.2 s and trots home.
+- **Stig.** While it is at him within `poseR` = 5 m his hands are up by his head, palms out, trembling,
+  his eyes on it (`anim.placate` 1, §14.6; only a look). Its first arrival within `firstR` = 3.2 m:
+  "Fin hund… fin hund…" [F*](t); then every `lineGap` = 3.4 s while it bays at him on the ground
+  "Lugn… lugn nu…" [N], "Jag går nu. Jag går." [N] and "Fin hund… fin hund…" in turn (each only when
+  he is saying nothing else).
+- **Up out of its reach.** He is up when standing at least `upH` = 0.8 m over its yard (a car roof, a
+  garden wall, the tank's rim, a tomato crate) or on a trampoline (where he bounces as on any; a jump
+  is not up). It runs as near as it gets (round the house to the trampoline; for him on the tank to
+  the side of the tank's box nearer him, the yard's side on a near-tie) and stands rearing up at him,
+  barking. Stig: "Snälla hund… sitt!" [N] (0.4 s after he is up), then the mantra `S.mantraLine` "Jag
+  kan flyga, jag är inte rädd." [F*] (Levander's exercise, research-plot.md:176, relocated) with his
+  arms straight out (`placate` 2 for `mantraSecs` = 2.6 s: a look, not `wings`, which would stop him),
+  then "Fin hund… fin hund…", in turn.
+- **The call.** After `callAfter` = 7 s up (or `groundCall` = 18 s in its lot on the ground, so nobody
+  is barked at for ever) the owner whistles from the house (`audio.whistle`) and calls it, unseen: a
+  bubble (`callSecs` 2.6 s) at the door nearer Stig (the back door when he is on the trampoline behind
+  the house), "¡Bobi! Hit!" [N] (the idea's), "Bijou! Kom till matte!", "¡Rufo! ¡Ven aquí!", "Kasper!
+  Hit med dig!", "¡Lola! ¡A casa!", "Pirre! Kom nu!", "Trofast! Ligg!", "¡Tango! ¡Basta ya!", "Ludde!
+  Kom hit!", "¡Pelusa! ¡Aquí!", "¡Canelo! ¡Ven!", "Sickan! Hit, sa jag!", at the farm "¡Chispa! ¡Ven
+  aquí!" (all [N]). It trots home wagging and lies down, deaf to him for `restSecs` = 40 s (`called`,
+  `calm`). `thanksAt` = 1.6 s after the call, if he is on foot within 25 m of that door: "Tack… tack
+  så mycket!" [N]. Nobody is ever seen: there are no owners on the lots and no farmer at the finca.
+- **Only in free roam.** `live` is the island with `missions.state === 'idle'`; otherwise (`release`)
+  every dog is hidden at home and his hands come down, so no mission stage, timer, fixture or
+  calibration pool meets a dog. Eslövloppet (§10.12, the one free-roam pool) runs on the roads round
+  block (0,1), 4.5 m outside the yard's canes, where Chispa can only bark from inside; its walker ran
+  28.18 s three times on this feature's tree, as in its pool. A dog further than `farR` = 75 m from
+  him (or his car) is put away (hidden at home, lying); with at most 2 a block and the blocks 80 m
+  apart, rarely more than two are awake at once.
+- `dogs.events` ({ t, name, kind: alert | rush | up | call | back }), `dogs.enc` and each dog's
+  `mode`, `calm` and `lot` are for tests; nothing is saved. Scenario `hund` (§16.4).
+- **Not done / changed** (deviations from the idea): 12 dogs, picked by trampoline and car rather than
+  every fourth lot; they bark at him from inside the wall rather than only being heard from the
+  sidewalk; the farm's dog is Chispa (Bobi, with the idea's "¡Bobi! Hit!", is the first bungalow dog);
+  the owner calls after 18 s on the ground too; the dogs do not react to other people, the horn or the
+  night; the call bubble stands at a door, with nobody there.
+
 ## 11. HUD / UI strings (Swedish; `src/strings.js` owned by WP-H, created by Phase 0)
 
 `strings.js` exports `S` (flat object) and `fmt(key, vars)`. Engine code uses `S.key` only.
@@ -4734,6 +4823,8 @@ Scheduler fixes (Phase 0): catch-up guard `if (next < ctx.currentTime) next = ct
 | `ambulance()` | distant two-tone 960/770 Hz sine fading in and out over 4 s |
 | `baa()` | tone slide 420 → 300 Hz with vibrato |
 | `oink()` | the grisbil's horn (feature 5, §10.9): two nasal grunts 0.22 s apart, each a 190 → 120 Hz sawtooth and a band-passed noise burst; `honk.update` plays it on H and every 0.75 s while H is held, and `updateAudio` keeps `horn` off in the grisbil |
+| `woof(size = 1, n = 2, vol = 1)` | a watchdog (feature 31, §10.21): `n` barks 0.23 s apart, each a sawtooth (300–350 Hz ÷ `size`) jumping up 1.2× and falling to 0.55× in 0.15 s through a band-pass at 950 Hz ÷ `size`, with a band-passed noise breath; `size` the dog's (the poodle's 0.72 yaps higher), `vol` 0..1 for the distance |
+| `whistle()` | a dog's owner whistling it home (feature 31, §10.21): a sine 1700 → 2400 Hz (0.14 s), then 2350 → 1500 Hz (0.36 s) |
 | `thud()`, `crash()`, `coin()`, `pickup()` | existing |
 | `splash(k = 0)` | water (existing at k 0: a band-passed noise burst and a sweep down); feature 24 (§10.20): `k` 0..2 lengthens, lowers and lifts it (`game.waterSplash`: 1 a fall from the 10 m tower, 1–2 a stomp's cannonball), and over 1 a 75 → 38 Hz sine boom under it |
 | `pip()` | Ole's calculator alarm (feature 30, §10.10): PIP-PIP-PIP twice, 2794 Hz square pips of 0.06 s 0.12 s apart, the second three 0.55 s on; the nap plays it twice |
@@ -4831,7 +4922,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/strings.js` | new | **H** | `S`, `fmt()` (§11) |
 | `src/content/index.js` | new | none | merges `HOMES`, `MAP_LABELS`, `LEVEL_OUTFITS`, re-exports all content |
 | `src/content/flight.js` | new | **F** | `HOMES_GATE`, `HOMES_FLIGHT`, `MAP_LABELS_FLIGHT`, `CHATTER_FLIGHT`, `OLE_STATS`, `LEVEL_OUTFITS_GATE`, `LEVEL_OUTFITS_FLIGHT` |
-| `src/content/island.js` | new | **G** | `HOMES_ISLAND`, `MAP_LABELS_ISLAND`, `CHATTER`, `OUCH`, `GETUP`, `CARJACK`, `NPC_KICKED` (+ the `_OLE` / `_LOCAL` tables, `LOCAL_CAST`, `BARKS`: Phase 3 r2, §14.10; `STIG_SORRY`: feature 11, §10.14; `PIG_TRUCK`: feature 15, §10.15; `BAGGAGE_BELT`: feature 25, §10.16; `LAPPLISA`: feature 20, §10.17; `GRISFEST_FREE`: feature 21, §10.18; `FRUKTSTAND`: feature 28, §10.19; `TOWER`: feature 24, §10.20), `COLLECTIBLES`, `UNLOCKS`, `NAMED_CARS`, `LEVEL_OUTFITS_ISLAND` |
+| `src/content/island.js` | new | **G** | `HOMES_ISLAND`, `MAP_LABELS_ISLAND`, `CHATTER`, `OUCH`, `GETUP`, `CARJACK`, `NPC_KICKED` (+ the `_OLE` / `_LOCAL` tables, `LOCAL_CAST`, `BARKS`: Phase 3 r2, §14.10; `STIG_SORRY`: feature 11, §10.14; `PIG_TRUCK`: feature 15, §10.15; `BAGGAGE_BELT`: feature 25, §10.16; `LAPPLISA`: feature 20, §10.17; `GRISFEST_FREE`: feature 21, §10.18; `FRUKTSTAND`: feature 28, §10.19; `TOWER`: feature 24, §10.20; `DOGS`: feature 31, §10.21), `COLLECTIBLES`, `UNLOCKS`, `NAMED_CARS`, `LEVEL_OUTFITS_ISLAND` |
 | `src/game/missions/index.js` | new | none | `MISSIONS = [...FLIGHT_MISSIONS, ...ISLAND_MISSIONS]`, `MissionRunner` re-export |
 | `src/game/missions/runner.js` | new (from missions.js) | none | `MissionRunner` (§9.4) |
 | `src/game/missions/kinds/core.js` | new | **none** (frozen after Phase 0) | getInCar goto pickup dropoff follow rabbits race destroy grab scene |
@@ -4858,31 +4949,32 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/grisfestFree.js` | new (feature 21, 2026-10-15) | — | `GrisfestFree` (`game.party`): Grisfest varje torsdag in free roam: the host's 800 pesetas at the farm's gate, the evening (the clock held at night, the vals, the band and tourists of its own, the cast on and round the floor, the host's round), the tourist's refusal and Majsan's invitation, the dance by her, Fru Storch's coffee, the morning after (§10.18) |
 | `src/game/fruitStands.js` | new (feature 28, 2026-10-15) | — | `FruitStands` (`game.stands`): Rakt genom fruktståndet in free roam: when his car may break a market fruit stall, the fruit seller beside the wreck, the souvenir seller's swear, the stalls back at a mission start (§10.19) |
 | `src/game/diveTower.js` | new (feature 24, 2026-10-16) | — | `DiveTower` (`game.tower`): Från fjärde våningen in free roam: the tower's solids live between missions, the ladder's two E points and fades, the dive off the platform (the mantra, the poses), the cannonball and the belly flop into the water, Lasse's line (§10.20) |
+| `src/game/dogs.js` | new (feature 31, 2026-10-17) | — | `Dogs` (`game.dogs`): Fin hund… in free roam: the watchdogs' lots (`Lot`), looks and dogs (`Dog`), their rush, bay, call and calm, Stig's hands, lines and thanks (§10.21) |
 | `src/game/hud.js` | edit | **H** | map sources, meter, strings, legend, ring, blips, zone bar, markers; `renderPortrait` restores the model transform (§14.8) |
 | `src/game/camera.js` | edit | **A1** | profile, frameOne, cutTo, `clampZ` |
 | `src/game/fx.js` | edit | **A1** | `snow`, `steam`, `meterPuff` (rename of `shame`); `splash`'s `up` (feature 24, §10.20) |
 | `src/game/markers.js` | unchanged | none | |
 | `src/gfx.js` | edit | none | `setSkyPalette`, `setCloudsVisible`, `setShadows`, `MAT.sky`, `MAT.water` sea colour |
-| `src/audio.js` | edit | **H** | §12 API; `splash(k)`'s size (feature 24, §10.20) |
+| `src/audio.js` | edit | **H** | §12 API; `splash(k)`'s size (feature 24, §10.20); `woof`, `whistle` (feature 31, §10.21) |
 | `src/input.js` | edit | none | pad Start → `pause` |
 | `src/util.js` | unchanged | none | |
 | `src/world/frame.js` | new (from town.js) | none | `Frame` (`prop(…, opts)` passes `opts` to `placeProp`: feature 28) |
 | `src/world/registry.js` | new | none | `worldHooks` |
 | `src/world/layout.js` | edit | **B** | `MAP`, `BLOCK_MAP_COLORS`, `laneSpot` (Phase 0); `sidewalkAt` (feature 20, §10.17) |
 | `src/world/landmarks-island.js` | new | none (Phase 2 applies reported changes) | canonical island landmark table |
-| `src/world/town.js` | edit | **B** | streets, outskirts, residential, dispatch via `BLOCK_BUILDERS` |
+| `src/world/town.js` | edit | **B** | streets, outskirts, residential, dispatch via `BLOCK_BUILDERS`; `dogLots` (feature 31, §10.21) |
 | `src/world/props.js` | edit | **B** | `TYPES` (§6.8), flags, `reviveProps`, `propsOfType`; the `frutas` stall, its flags, the debris palette, `spawnShreds` and the signs (feature 28, §10.19) |
 | `src/world/collision.js` | edit | none | `segmentBlocked` nearest hit |
 | `src/world/blocks/index.js` | new | none | `BLOCK_BUILDERS` merge |
 | `src/world/blocks/hotels.js` | new | **C1** | `flamenco`, `suntrip`; `flamencoBays` (feature 20, §10.17); the diving tower `diveTower` and its solids `DIVE_TOWER` (feature 24, §10.20) |
 | `src/world/blocks/centre.js` | new | **C2** | `kasbah`, `cita`, `plaza`, `marknad`, `kyrka`, `bensin`, `guardia`; the market's five fruit stalls as `frutas` props (feature 28, §10.19) |
-| `src/world/blocks/nature.js` | new | **D1** | `tomat`, `grisfest`, `fataga`, `golf`, `bungalow`, `bygge`, `dyner` |
+| `src/world/blocks/nature.js` | new | **D1** | `tomat`, `grisfest`, `fataga`, `golf`, `bungalow`, `bygge`, `dyner`; `FARM_YARD` (feature 31, §10.21) |
 | `src/world/blocks/coast.js` | new | **D2** | `flygplats`, `dromplan`, `fyren`, `playa`, `hamn`; `BELT` (feature 25, §10.16) |
 | `src/world/cabin.js` | new | **A1** | §5 interior, collision, seats, trolley, turbulence, fear, interactables, blockers, `CAM_CABIN`, `FLIGHT_PALETTES`, `FEAR`; calls `buildFlightScenery` |
 | `src/world/flightScenery.js` | new | **A2** | §5.6 visuals: gate-set visuals, airframe, animated scenery per phase, `buildFlightScenery`, `buildPlaneExterior` |
 | `src/world/rio.js` | new | **B** | `buildRioCard` (P1) |
-| `src/actors/models.js` | edit | **E** | `CHARS`, `CAST`, new def fields, anim flags, `buildBustGeo`, `outfitDef`, `randomPed` palette; the `ticket` flag and its `lappblock`/`penna` props (feature 20, §10.17); the `leap` and `bomb` poses (feature 24, §10.20) |
-| `src/actors/character.js` | edit | **E** | `setDef`, `hidden`, `seatAt`, `standAt`, new anim flag defaults |
+| `src/actors/models.js` | edit | **E** | `CHARS`, `CAST`, new def fields, anim flags, `buildBustGeo`, `outfitDef`, `randomPed` palette; the `ticket` flag and its `lappblock`/`penna` props (feature 20, §10.17); the `leap` and `bomb` poses (feature 24, §10.20); the `placate` pose (feature 31, §10.21) |
+| `src/actors/character.js` | edit | **E** | `setDef`, `hidden`, `seatAt`, `standAt`, new anim flag defaults (`placate`: feature 31) |
 | `src/actors/car.js` | edit | **E** | §6.6 types/flags, `registerCarType`, `build`/`noWheels`/`noSpeedo`/`noExplode`/`livery`; the grisbil's pig meshes `PIG_SLOTS`, `pigMesh`, `car.pigs`, `setPig`, `pigWorld` (feature 15, §10.15); `car.lift`, the nose raised on the tow truck's hook (feature 20, §10.17); a prop is known by its block's `ref`, `game.breakProp` may refuse, `def.slow` (feature 28, §10.19) |
 | `src/actors/pickups.js` | edit | **E** | `COLLECT_KINDS`, `registerCollectKind`, `Collectible` table, `Rabbit` meshes, coin value 25 |
 | `src/actors/peds.js` | edit | **E** | Swedish/Spanish shouts; `dodge`, `startle` (feature 5, §6.7) |
@@ -4921,7 +5013,7 @@ Init: `initGfx` → `input.init` → `hud.init` → `fx.init` → fonts (Luckies
 → peds (34) → NPC `Character`s (one per `CHARS` key except `stig`, the radio-only keys `levander
 kapten pa guardia pax telefonist` and the cabin-owned `vardinna2`; `key` field; hidden until placed, §2.3) →
 player `Character(CHARS.stig)` (`key = 'stig'`) → collectibles (`COLLECTIBLES`) → markers → `Shame`
-→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `DiveTower` (feature 24, §10.20; registers the ladder's two interactables, sets `DIVE_TOWER.live`) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `Eslov` (feature 7, §10.12; registers the rollerskier's interactable) → `PoolFest` (feature 8, §10.13) → `StigSorry` (feature 11, §10.14) → `PigTruck` (feature 15, §10.15) → `BaggageBelt` (feature 25, §10.16) → `Lapplisa` (feature 20, §10.17) → `GrisfestFree` (feature 21, §10.18; registers the gate's and the tourists' interactables) → `FruitStands` (feature 28, §10.19) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
+→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `DiveTower` (feature 24, §10.20; registers the ladder's two interactables, sets `DIVE_TOWER.live`) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `Eslov` (feature 7, §10.12; registers the rollerskier's interactable) → `PoolFest` (feature 8, §10.13) → `StigSorry` (feature 11, §10.14) → `PigTruck` (feature 15, §10.15) → `BaggageBelt` (feature 25, §10.16) → `Lapplisa` (feature 20, §10.17) → `GrisfestFree` (feature 21, §10.18; registers the gate's and the tourists' interactables) → `FruitStands` (feature 28, §10.19) → `Dogs` (feature 31, §10.21) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
 `placeNpcs(true)` → spawn the player → portraits for every key in `CAST` (`renderPortrait`
 restores each model's parent and transform, so seated cast members stay in their seats) →
 `applySaveToWorld()` →
@@ -4933,7 +5025,7 @@ mantra/hold, AI, cars, people (`glide.step` → the player's step → `glide.aft
 traffic/peds skipped when `!levelDef.sim.*`) → `syncAll` (also
 writes `ch.x/y/z` from `car.seatWorld(ch.seatSide)` for every car-seated character, player
 included, so framing, bubbles and distance checks see where they really are) → `missions.update` →
-`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `tower.update` (feature 24) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `stands.update` (feature 28) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
+`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `tower.update` (feature 24) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `stands.update` (feature 28) → `dogs.update` (feature 31) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
 pickups/collectibles → props → `fx.tick` → `tickTown` → markers → camera → sun/sky → HUD → audio →
 traffic recycling (island) → autosave. `loop` then renders, and when `film.grabNow` is set calls
 `film.grab()` in the same task (Herr Storch's still from the frame's buffer, feature 6, §10.11).
@@ -4986,6 +5078,8 @@ game.party;        // GrisfestFree (feature 21, §10.18): the grisfest's evening
                    // band and tourists: allChars, areaHit), party.step(h) (fixedStep), party.last
 game.stands;       // FruitStands (feature 28, §10.19): canBreak(car) (Game.breakProp), onBroken(p, car),
                    // stands.posed(key) (syncAll: the souvenir seller swearing), stalls, vendor, last
+game.dogs;         // Dogs (feature 31, §10.21): the watchdogs in free roam; dogs.live, dogs.dogs (each
+                   // { name, def, lot, mode, calm, x, y, z, root }), up(d), enc, events, cfg
 game.breakProp(p, vx, vz, car) -> p | null   // car.js's smash: null when refused (a fruit stall
                    // outside free roam or under any car but his: the car meets a wall); Stig's sorry
                    // ('stand' for a fruit stall), then stands.onBroken (feature 28)
@@ -5291,6 +5385,11 @@ slips on a card back, 0.17 × 0.24) held up in the left hand at the chest (L (�
 and the chin up 0.15 + 0.45 k, k = −vy / 20 (0..1), so he comes down flat. `bomb` (feature 24): the
 cannonball, knees up (legs (−1.55, 0, ∓0.12)), arms round them (R (−1.05, 0, 0.42)), body 0.3
 forward, chin down 0.25. Both only looks (they steer nothing); only `game.tower` sets them.
+`placate` (feature 31, §10.21), a number: 1 to a watchdog barking at him, both hands up by his head,
+palms out (R (−2.4, 0, −0.5), L (−2.4, 0, 0.5), a 17/s and 19/s tremble of 0.05), leaning back 0.07,
+his eyes on it (neck 0.22); 2 up out of its reach with the mantra, the arms straight out as `wings`
+(R (0, 0, −1.55), a 9/s shake of 0.05) without `wings`' stop. Before `flail`, which wins. Only a look
+(it steers nothing); only `game.dogs` sets it; `heldPose` counts it as busy.
 
 **character.js**: `ch.setDef(def)` (rebuild model under the same parent; keep x/y/z/yaw/state;
 `height` updated); state `'hidden'` (step no-op, `root.visible = false`, skipped by
@@ -5656,6 +5755,14 @@ shame.paint (PaintShop, §7.2): configure(cfg) from configure(); onPursuit() fro
 //   canBreak(car) and onBroken(p, car) from Game.breakProp; vendorSpot(p, car); showVendor /
 //   hideVendor; carIn(p); posed(key) read by syncAll; stalls; vendor; vendorT; swearT; swearing; last
 // syncAll: posed also when stands.posed(k) (the souvenir seller swearing at a smashed stall)
+// dogs.js (feature 31, §10.21): game.dogs = new Dogs(game) after the stands; update(dt) after
+//   stands.update (not live: release(), every dog hidden at home, placate 0; else build() once from
+//   town.js dogLots and nature.js FARM_YARD, and per dog within farR: think (the modes, the rush, the
+//   call), shove (Stig off it), sync (the look); then talk (Stig's lines, pose and thanks)); live;
+//   up(d); dogs; enc; pose; held; events
+// world/town.js: dogLots [{ ox, oz, yaw, w, d, door, house, drive, tramp, corner }] (feature 31):
+//   every bungalowR lot, filled as built; world/blocks/nature.js: FARM_YARD { ox, oz, yaw, x0, z0,
+//   x1, z1, door, home, walls } (feature 31), the finca's yard, filled by tomatVischan
 // diveTower.js (feature 24, §10.20): game.tower = new DiveTower(game) after the judges (sets
 //   DIVE_TOWER.live; registers hopptorn:upp and hopptorn:ner); onLand(v, y) from game.onLand before
 //   the judges' (true: a dive splashed into the water, so no dust); update(dt) after judges.update
@@ -5894,6 +6001,12 @@ grisfest: torsdag` [N].
 Feature 28: the fruit stalls' lines (`FRUKTSTAND`, content/island.js, game/fruitStands.js, §10.19),
 bubbles: the fruit seller's "¡Mis tomates!" [N], the souvenir seller's "Jävla smålänningar!" [F*]
 (asnan's, relocated) and Stig's `STIG_SORRY.stand` "Oj… förlåt… jag ersätter naturligtvis!" [N].
+
+Feature 31: the watchdogs' lines (`DOGS`, content/island.js, game/dogs.js, §10.21), bubbles: the dogs'
+barks "VOFF! VOFF!", "VIFF! VIFF!", "¡Guau! ¡Guau!" [N]; the owners' twelve calls and Chispa's, from a
+door ("¡Bobi! Hit!" … "¡Chispa! ¡Ven aquí!") [N]; Stig's "Fin hund… fin hund…" [F*](t) (Arlanda's
+baggage check, its speaker unknown, relocated), "Lugn… lugn nu…", "Jag går nu. Jag går.", "Snälla
+hund… sitt!" [N], the mantra `S.mantraLine` [F*] and "Tack… tack så mycket!" [N].
 
 ---
 
@@ -6240,6 +6353,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `torsdagOle` [feature 21] | at index 13 with julafton's unlock: Ole at the evening, in `gris`, dancing (a shot), no Angerud; Fru Storch's question then Ole's "Norsk, da?", and his "Heia Norge!"; out of the gate his outfit back; at index 12 a mission start (julafton) two frames into the talk: no evening, nobody held, no extras, the hold off; the mission runs by day (the clock's morning cut) without the vals |
 | `frukt`, `fruktFore` [feature 28] | Rakt genom fruktståndet (§10.19). `frukt`, at index 9 (free roam, after asnan): the five fruit stalls are `frutas` props (kind `stall`, top 2.55, at their §6.3 places, the FRUTAS board on rad A's west); a kick and his car at 3 m/s leave rad C's standing (the car stopped at the counter); at 11 m/s from the front it breaks: the seller up beside it (within 4.5 m, not ahead of the car), flailing, "¡Mis tomates!", Stig's `stand` line 0.35–0.75 s after, the souvenir seller's "Jävla smålänningar!" 1.25–1.6 s after, +10.8 SKANDAL, coins; she is gone after 4 s; an AI car's `game.breakProp` refused; FRUTAS from the west at 12 m/s: stall and board gone, no swear (40 m off); the lone stall within 60 s: the seller there, her cry, no swear; a broken stall stays down with him near and with a car in its footprint, and is back with neither (him 150 m off); a mission start (ropavieja): all five up, the board up, a car in the lone stall's footprint moved out; in the mission his car at 11 m/s stops at rad C's counter, no seller. `fruktFore`, at index 6: it breaks, her cry, the souvenir seller at his stand within 25 m, no swear. Shots `frukt_rad`, `_frutas`, `_krasch`, `_mis_tomates`, `_smalanningar`, `_frutas_krasch`, `_uppdrag` |
 | `hopptorn` [feature 24] | Från fjärde våningen (§10.20), at index 13: the tower's 8 solids live (`DIVE_TOWER.top` 9.95; the platform and the board are floors at 9.95, the foot no free spot); at `hopptorn` the prompt "Klättra upp", E fades to black and puts him on the platform facing the board (`climbs` 1, prompt "Klättra ner"); S, A and D held 1.2 s each: the railing keeps him up; walked off the board: `leap` on the way down, the mantra, a belly flop in the deep end (v > 18, in the pool), face down, Lasse's whole line on the radio once, "Oj." when he is up; with J tapped under 8.5 m: `bomb` on the way down, a cannonball (no flop, `waterSplash` with bomb, v > 24, shake ≥ 1.3), no second radio line, no "Oj."; E on the platform: at the foot (`climbs` 5); after `bodega` a held J off the board is the glide's (no tower landing; the glide into the pool, at `speed` 3 for the test), and its radio line waits (`glide.radioSaid` false, no `glidPlask`); at index 9, up the tower, `missions.begin()`: he is down with no landing over 6 m/s, no tower solid in `queryBlocks`, the floor at 0.15, `spotFree` and `footReach` from `flamenco` true there, no `hopptorn` prompt, and in the running mission he walks through where it stands. Shots `hopptorn_daeck`, `_fot`, `_topp`, `_fall`, `_magplask`, `_lasse`, `_bombfall`, `_bomb` |
+| `hund` [feature 31] | Fin hund… (§10.21), at index 13: 12 bungalow dogs (the 7 trampoline lots among them) and Chispa at the farm, 13 names, each lying in its own lot, the ones beyond 75 m hidden; at the dog with the most others within 70 m, 2 or more awake at ≥ 45 fps; on Bobi's sidewalk `alert` inside the wall (lot-local z 1.3–3) and "VOFF! VOFF!"; through the gate (W 1.1 s) `bay` 1.1–1.8 m off, `placate` 1, "Fin hund… fin hund…"; walked at, it stands its ground (> 0.6 m); out through the gate again it never comes nearer the street than z 1.3, barks after him (`back`) and his hands come down; on the trampoline behind the house it gets round the house to under him (< 3.6 m), rears up, `placate` 2 with the mantra: Stig's first line "Snälla hund… sitt!", then the mantra, the owner's "¡Bobi! Hit!" from a door, "Tack… tack så mycket!", `calm` > 30 s, his hands down and no rush when he walks in again; up the farm tank's ramp (W 1.4 s) he is up at 1.95 and Chispa bays below him (< 5 m, on the ground), "¡Guau! ¡Guau!", the mantra pose, then "¡Chispa! ¡Ven aquí!"; on the roof of the car in Tango's drive he is up and Tango at him; Kasper with `groundCall` 4 s: a kick and a stomp at him change nothing (SKANDAL not up), then the call; at index 9 Pirre at him, `missions.begin()`: no dog visible, `placate` 0, `held` false; at index 0 (the flight level) no dog visible. Shots `hund_trottoar`, `_fin`, `_studsmatta`, `_visslar`, `_gard`, `_biltak`, `_kasper`, `_pudel` |
 | `talk` [Phase 0] | `autoDialog = false`, walk to Ole at `gateQueue`, E, Space twice |
 | `fullstory` [Phase 0b] | swaps the literal §8 missions (`tools/fixtures/full-missions.js`) into `MISSIONS` and plays all 13 per §16.3 (`FROM`/`TO` as `story`); must end `#13 idle`, `RESULT: PASS` |
 | `kinds` [Phase 0b] | fixture data checks; haggle misses fail; follow `minDist` fails; smooth/fragile bars (teleports never count); carry spill; checkpoint retry re-applies night + `vals` and revives plates at `dansgolv`; destroy default spawn; grab at the wreck; scene `exitCar`; Phase 3: follow shows no bar before the start and a head-on quarry does not fail it, `retryCar` (the last car reused, a typed named car, `park`), getInCar `atHome` and a wrecked `missionCar` failing, a frame-only scene stopping the car dead, a scene cutting a `collect` guest's bubbles (3 frames in: no bubble over the guest or Stig, no empty one) and keeping his placement |
@@ -7949,3 +8063,19 @@ the fixer's group.
   new `game.waterSplash(x, z, v, bomb)` instead of the dust (in missions too, a look only); the
   stomp's shake no longer lowers a bigger one; `fx.splash(…, up)`, `audio.splash(k)`. Scenario
   `hopptorn` (§16.4).
+- Feature 31, "Fin hund…" (`features/implemented/fin_hund.md`, 2026-10-17): the watchdogs in the
+  bungalow gardens and the farmyard on vischan in free roam (§10.21; new `src/game/dogs.js`, `DOGS`
+  in content/island.js; §1.6, §6.3, §6.5, §12 `woof`/`whistle`, §14.1–14.3, §14.6, §14.8, §14.10,
+  §16.4). World data: town.js exports `dogLots` (every bungalowR lot's frame, doors, house, car spot
+  and trampoline; the trampoline's place is kept from the draw it always was) and nature.js
+  `FARM_YARD` (the finca's yard and walls); no draw is added, so the world builds as before. 12
+  bungalow dogs (the 7 trampoline lots, then car lots, at most 2 a block) and Chispa at the farm,
+  six looks of their own: they lie by the door, bark at him from inside the wall, rush at him in
+  their lot and stop 1.3 m off, never bite or leave the lot, and are no characters (no kick, stomp,
+  car or SKANDAL). Stig's hands go up (the new anim flag `placate` 1) with "Fin hund… fin hund…"
+  [F*](t); up out of reach (a car roof, a garden wall, the tank's rim, a trampoline) "Snälla hund…
+  sitt!" [N] and the mantra [F*] with his arms out (`placate` 2), until the owner whistles unseen
+  from a door ("¡Bobi! Hit!" [N] and twelve other calls) and the dog trots home, deaf to him for
+  40 s; his "Tack… tack så mycket!" [N]. Only on the island with `missions.state === 'idle'`; dogs
+  over 75 m off are put away. No mission, stage kind, timer, fixture or calibration pool changed
+  (Eslövloppet's walker 28.18 s three times, as its pool). Scenario `hund` (§16.4).

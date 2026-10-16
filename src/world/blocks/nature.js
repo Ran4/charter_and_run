@@ -346,6 +346,14 @@ function tomatfalt(f, W, ctx) {
   else tomatFields(f, rnd);
 }
 
+// The farmyard on vischan (Fin hund…, feature 31, DESIGN §10.21): the finca's yard dog keeps to
+// it (game/dogs.js). Lot-shaped, as town.js `dogLots`: { ox, oz, yaw (the block's frame), x0, z0,
+// x1, z1 (the yard, block-local: from the canes on the west and north to the fields on the south and
+// past the tank on the east, not the track at x 6), door: [x, z] (the finca's), home: [x, z] (the
+// dog's spot by it), walls: [[x0, z0, x1, z1]] (what it runs round: the finca; the tank with its
+// ramp) }. Filled by tomatVischan.
+export const FARM_YARD = {};
+
 // (0,1): the gravel track Stig-Helmer refuses to drive on, and the lane by the field where Berra
 // shouts "Heja Eslöv!" at a rollerskier.
 function tomatVischan(f, rnd) {
@@ -358,6 +366,8 @@ function tomatVischan(f, rnd) {
   for (let k = 0; k < 9; k++) f.flat(0xa07e50, 6 + (k % 2 ? 1.2 : -1.2), 28 - k * 5.5, 0.6, 3.2, CURB + 0.03);
   finca(f, -22, -25, 'e');
   estanque(f, -7, -26, 2.8);
+  Object.assign(FARM_YARD, { ox: f.ox, oz: f.oz, yaw: f.yaw, x0: -30.1, z0: -30.1, x1: -2.6, z1: -14.8, door: [-17.5, -23.5], home: [-16.4, -21.9],
+    walls: [[-26.5, -28.5, -17.5, -21.5], [-14.2, -28.8, -4.2, -23.2]] });
   postSign(f, 'CAMINO SIN ASFALTAR', 1.4, 29.2, 3.8, 0.9, 1.6, 0, { bg: '#f4efe6', fg: '#d8321e' });   // [N]
   // The Eslöv lane: a narrow asphalt strip down the east side of the block.
   f.flat(0x55555c, 27.5, 0, 6, 60, CURB + 0.025);

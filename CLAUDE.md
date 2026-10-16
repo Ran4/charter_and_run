@@ -63,7 +63,9 @@ opens with a summary of the rounds and the timer changes.
     stalls, the seller's "¡Mis tomates!", the souvenir seller's swear after asnan, the stalls back at a
     mission start, DESIGN §10.19), `hopptorn` (Från fjärde våningen, the 10 m diving tower at Flamenco's
     deep end: the ladder's E points, the dive with the mantra, the belly flop and the cannonball,
-    Lasse's line; its solids only between missions, DESIGN §10.20)
+    Lasse's line; its solids only between missions, DESIGN §10.20), `hund` (Fin hund…, the watchdogs
+    in the bungalow gardens and at the farm on vischan: the wall, the rush, Stig's hands up, the
+    trampoline, the tank and the car roof, the owner's call from the house, a mission start, DESIGN §10.21)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

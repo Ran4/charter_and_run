@@ -37,6 +37,7 @@ import { BaggageBelt } from './game/baggageBelt.js';
 import { Lapplisa } from './game/lapplisa.js';
 import { GrisfestFree } from './game/grisfestFree.js';
 import { FruitStands } from './game/fruitStands.js';
+import { Dogs } from './game/dogs.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
 import { LEVELS, ISLAND_PALETTES } from './level.js';
@@ -186,6 +187,7 @@ class Game {
     this.lapp = new Lapplisa(this);       // free roam: Majsan tickets a car on the sidewalk, Angerud's tow (§10.17)
     this.party = new GrisfestFree(this);  // free roam after the grisfest: 800 pesetas at the farm's gate, the evening (§10.18)
     this.stands = new FruitStands(this);  // free roam: his car goes through the market's fruit stalls (§10.19)
+    this.dogs = new Dogs(this);           // free roam: the watchdogs in the bungalow gardens and at the farm (§10.21)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -1473,6 +1475,7 @@ class Game {
     this.lapp.update(dt);
     this.party.update(dt);
     this.stands.update(dt);
+    this.dogs.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);

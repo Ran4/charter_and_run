@@ -995,7 +995,7 @@ function heldPose(m, st, t, place = false) {
   const h = m.def.held;
   if (!h || !PROP_GEO[h]) return;
   const [R, L] = m.arms;
-  const busy = st.wings || st.cupUp || st.cupHeld || st.push || st.hold || st.flail || st.oath || st.dance || st.laugh || st.mirror || st.film || st.giraffe || st.butterKnife || st.ticket || st.carryOver || st.shoeOff || st.calc || st.groda || st.cheer || st.wave || st.kick > 0;
+  const busy = st.wings || st.cupUp || st.cupHeld || st.push || st.hold || st.flail || st.oath || st.dance || st.laugh || st.mirror || st.film || st.giraffe || st.butterKnife || st.ticket || st.carryOver || st.shoeOff || st.calc || st.groda || st.placate || st.cheer || st.wave || st.kick > 0;
   const pose = !place && !busy;
   const moving = st.speed > 0.3;
   switch (h) {
@@ -1153,6 +1153,19 @@ function poseFlags(m, st, t) {
     R.rotation.set(-1.05, 0, 0.42); L.rotation.set(-1.05, 0, -0.42);
     m.body.rotation.x = 0.3;
     m.neck.rotation.x = 0.25;
+  }
+  if (st.placate) {
+    // A watchdog barking at him (game/dogs.js, §10.21). 1: "Fin hund…": both hands up by his head,
+    // palms out, trembling, leaning back, his eyes on the dog; 2: up out of its reach, the mantra
+    // with his arms straight out (as `wings`, which would stop him). Only a look: it steers nothing.
+    if (st.placate === 2) {
+      R.rotation.set(0, 0, -1.55 + Math.sin(t * 9) * 0.05); L.rotation.set(0, 0, 1.55 - Math.sin(t * 9) * 0.05);
+      m.neck.rotation.x = -0.15;
+    } else {
+      R.rotation.set(-2.4 + Math.sin(t * 17) * 0.05, 0, -0.5); L.rotation.set(-2.4 - Math.sin(t * 19) * 0.05, 0, 0.5);
+      if (!st.seated) m.body.rotation.x = -0.07;
+      m.neck.rotation.x = 0.22;
+    }
   }
   if (st.flail) {
     R.rotation.set(Math.sin(t * 14) * 0.8, 0, -1.9 - Math.sin(t * 11) * 0.5);

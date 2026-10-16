@@ -6,8 +6,9 @@
 // tricks and his film night, the rollerskier's training, his answer to the horn and his race, the
 // pool fest after the end (Små grodorna in Flamenco's pool, Stig hopping with them in his suit),
 // Majsan ticketing cars on the island, the tow and her praise for a car parked straight (§10.17), and
-// the grisfest's evening bought again at the farm's gate with a tourist's refusal (§10.18), and
-// the market's fruit stalls his car goes through, with their seller's cry (§10.19).
+// the grisfest's evening bought again at the farm's gate with a tourist's refusal (§10.18), the
+// market's fruit stalls his car goes through, with their seller's cry (§10.19), and the watchdogs in
+// the bungalow gardens and the farmyard on vischan, with their owners' calls (§10.21).
 
 export const HOMES_ISLAND = {
   ole: ['flamenco', 2.0, 1.0, 0],     // yaw 0: under the pergola, facing the pool (flamenco faces π)
@@ -807,6 +808,55 @@ export const FRUKTSTAND = {
 };
 
 // Speedo names for named and mission cars (§11.4); unnamed cars show their type's Swedish name.
+// Fin hund… – the watchdogs (free roam, DESIGN §10.21; game/dogs.js). `lots` of the 48 bungalowR
+// lots (the ones with a trampoline first, then those with a car, at most `perBlock` a block) and the
+// farmyard on vischan keep a dog each, the `pack` in that order and `farm`. It lies by the front door
+// and barks at him on the sidewalk (within `hearR` m of its lot) from inside the wall. Stig in its lot
+// on foot: it rushes at him (`speed` m/s) and stops `stopR` m off, barking: it never bites, never
+// leaves its lot by more than `reach` m (never out through the front wall) and is never kicked, run
+// over or worth SKANDAL. Out of reach (`upH` m over the yard, standing: a car roof, a garden wall, the
+// tank's rim, a crate, the trampoline) he talks to it; after `callAfter` s up there (or `groundCall` s
+// in its lot) the owner whistles from the house unseen with the dog's `call`, and it trots home and
+// lies down for `restSecs` s. Dogs further than `farR` m from him are put away. Invented (§1.6): the
+// dogs, their owners and their calls; "Fin hund." is the film's (at Arlanda's baggage check, its
+// speaker unknown), relocated to Stig, and the mantra is the clinic's (S.mantraLine).
+export const DOGS = {
+  lots: 12, perBlock: 2,
+  speed: 6.5, trot: 2.4, alertSpeed: 4.2, reach: 2, wallIn: 1.35, dogR: 0.3,
+  stopR: 1.3, stopUp: 0.55, stuck: 0.7, carR: 4.5, hearR: 9, upH: 0.8, climb: 0.45,
+  callAfter: 7, groundCall: 18, restSecs: 40, backSecs: 2.2, alertHold: 2.5,
+  barkGap: [0.9, 1.5], barkSecs: 0.9, barkHear: 35,
+  lineGap: 3.4, firstR: 3.2, poseR: 5, mantraSecs: 2.6, thanksAt: 1.6, callSecs: 2.6,
+  farR: 75,
+  pack: [
+    { name: 'Bobi', look: 'brun', bark: 'VOFF! VOFF!', call: '¡Bobi! Hit!' },                 // [N] (the idea's)
+    { name: 'Bijou', look: 'pudel', bark: 'VIFF! VIFF!', call: 'Bijou! Kom till matte!' },    // [N] the poodle of Angerud's portrait, not named Chérie
+    { name: 'Rufo', look: 'svart', bark: '¡Guau! ¡Guau!', call: '¡Rufo! ¡Ven aquí!' },        // [N]
+    { name: 'Kasper', look: 'flack', bark: 'VOFF! VOFF!', call: 'Kasper! Hit med dig!' },     // [N]
+    { name: 'Lola', look: 'gul', bark: '¡Guau! ¡Guau!', call: '¡Lola! ¡A casa!' },            // [N]
+    { name: 'Pirre', look: 'gra', bark: 'VIFF! VIFF!', call: 'Pirre! Kom nu!' },              // [N]
+    { name: 'Trofast', look: 'brun', bark: 'VOFF! VOFF!', call: 'Trofast! Ligg!' },           // [N]
+    { name: 'Tango', look: 'svart', bark: '¡Guau! ¡Guau!', call: '¡Tango! ¡Basta ya!' },      // [N]
+    { name: 'Ludde', look: 'flack', bark: 'VOFF! VOFF!', call: 'Ludde! Kom hit!' },           // [N]
+    { name: 'Pelusa', look: 'gra', bark: '¡Guau! ¡Guau!', call: '¡Pelusa! ¡Aquí!' },          // [N]
+    { name: 'Canelo', look: 'gul', bark: '¡Guau! ¡Guau!', call: '¡Canelo! ¡Ven!' },           // [N]
+    { name: 'Sickan', look: 'brun', bark: 'VOFF! VOFF!', call: 'Sickan! Hit, sa jag!' },      // [N]
+  ],
+  farm: { name: 'Chispa', look: 'gul', bark: '¡Guau! ¡Guau!', call: '¡Chispa! ¡Ven aquí!' },  // [N]
+  first: 'Fin hund… fin hund…',   // [F*](t) "Fin hund." at Arlanda's baggage check (research-plot.md:162; speaker unknown), relocated to Stig
+  ground: [
+    'Fin hund… fin hund…',        // [F*](t)
+    'Lugn… lugn nu…',             // [N]
+    'Jag går nu. Jag går.',       // [N]
+  ],
+  up: [
+    'Snälla hund… sitt!',         // [N]
+    null,                         // the mantra with his arms out: S.mantraLine [F*] (Levander's clinic, relocated)
+    'Fin hund… fin hund…',        // [F*](t)
+  ],
+  thanks: 'Tack… tack så mycket!',   // [N] to the owner nobody sees
+};
+
 export const NAMED_CARS = {
   buss17: 'SunTrips buss 17', hyrbil: 'Hyrbilen', grisbil: 'Grisbilen', nattbuss: 'Nattbussen', joseBil: 'Josés bil', guardiaJeep: 'Guardia-jeepen',
   grisbilFollow: 'Grisbilen', utflyktsbuss: 'Utflyktsbussen',   // [N]
