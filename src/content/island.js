@@ -7,8 +7,10 @@
 // pool fest after the end (Små grodorna in Flamenco's pool, Stig hopping with them in his suit),
 // Majsan ticketing cars on the island, the tow and her praise for a car parked straight (§10.17), and
 // the grisfest's evening bought again at the farm's gate with a tourist's refusal (§10.18), the
-// market's fruit stalls his car goes through, with their seller's cry (§10.19), and the watchdogs in
-// the bungalow gardens and the farmyard on vischan, with their owners' calls (§10.21).
+// market's fruit stalls his car goes through, with their seller's cry (§10.19), the watchdogs in
+// the bungalow gardens and the farmyard on vischan, with their owners' calls (§10.21), and the
+// bathers on the sun loungers, their burn and the fly-off, Berra waking for five minutes more
+// (§10.22).
 
 export const HOMES_ISLAND = {
   ole: ['flamenco', 2.0, 1.0, 0],     // yaw 0: under the pergola, facing the pool (flamenco faces π)
@@ -805,6 +807,50 @@ export const FRUKTSTAND = {
     hat: 'scarf', hatC: 0xd8321e, shirt: 0xf4f0e6, dress: 0x2f5a9a, apron: 0xf7c31b, pants: 0x2f5a9a, legsC: 0x6a4a3a, shoes: 0x2a2a2a, voice: 380 },
   swearFrom: 8, swearR: 25, swearGap: 60, swearAt: 1.4, swearSecs: 2.4,
   swearLine: 'Jävla smålänningar!',   // [F*] the souvenir seller's when Ole haggles the donkey down (research-plot.md:302–304; asnan's win), relocated
+};
+
+// Badgäster på solstolarna (free roam; feature 32, DESIGN §10.22; game/bathers.js). On the island with
+// no mission running (`missions.state === 'idle'`), by day (the clock's `dayHours`), tourists lie on
+// the sun loungers nearest him: a `share` of the loungers is taken (a draw per lounger, new every
+// morning), and of those at most `max`, the nearest within `r` m, have a body (kept to `out` m; one
+// taken lounger nearer by `swap` m takes the furthest's). A body appears or goes only while its
+// lounger is out of the camera's view or `seenR` m off, or for `cutSecs` s after a cut. They turn red
+// with the time on the lounger: pink after `burn[0]` s, lobster red after `burn[1]` s (`skins`, one
+// of each set by the lounger's draw), rebuilt only while out of view or `seenR` m off. A kick or a car
+// through a taken lounger (the props' smash and SKANDAL, nothing more): the bather goes off it
+// backwards over the backrest (a somersault at `flip` rad/s, `back` m/s plus `push` of the kick's or
+// `carK` of the car's speed, `up` m/s up) with an OUCH bark, gets up with a GETUP one (within
+// `getUpR` m), stands, and goes once unseen (or `out` m off). A lounger back after its smash
+// (tickProps) has someone new on it, pale. `stekt`: from missions index `from` to `to` (friskotek or
+// asnan next: after buss17, before the bodega) Berra and Robban lie lobster red (`stekt` outfit) on
+// the two pool-deck loungers by BAR PISCINA (landmarks `berra`, `robban`), asleep (`slump`), claimed
+// and handed back only unseen (`clearR` m or out of view); a mission start or the other level sends
+// them home at once in their own skin. Within `snoreR` m a snore every `snoreEvery` s, by turns. E
+// on Berra (`wake.r` m, `wake.prompt`): Stig's `wake.stig`, `wake.liftAt` s later Berra lifts his
+// head for `wake.liftSecs` s with `wake.berra`, then Robban's `wake.robban` in his sleep, `wake.gap`
+// s after. Their lounger smashed: off it as a bather, asleep on the ground until it is back.
+// Invented (§1.6): the bathers, their burn and the fly-off; Berra and Robban asleep in the sun are
+// the film's (scene 7.8, notes/research-plot.md:296).
+export const BATHERS = {
+  max: 10, r: 40, out: 48, swap: 6, share: 0.4, seenR: 24, cutSecs: 1.2, seed: 3201,
+  burn: [150, 360],
+  skins: [[0xf6d3c0, 0xf2c9a8, 0xf4dcc8], [0xf7947a, 0xf28c74, 0xf9a086], [0xf0705a, 0xec6852, 0xf47a62]],
+  flip: -11, back: 3.2, push: 0.25, carK: 0.5, up: 6.5, getUpR: 30,
+  stekt: {
+    from: 6, to: 8, berra: 'stektBerra', robban: 'stektRobban', clearR: 50,
+    snoreR: 30, snoreEvery: 4.5,
+    snore: {
+      berra: ['Zzz…' /* [N] */, 'Zzz… Pepes Bodega… zzz…' /* [N] */],
+      robban: ['Zzz…' /* [N] */],
+    },
+    wake: {
+      r: 2.4, liftAt: 1.6, liftSecs: 2.4, gap: 0.9,
+      prompt: '<b>E</b> Väck Berra',                     // [N]
+      stig: 'Ursäkta… ni bränner er.',                   // [N]
+      berra: 'Fem minuter till…',                        // [N]
+      robban: 'Fan, vad jag är törstig…',                // [F*] Robban's on the countryside walk (research-plot.md:318), said in his sleep, relocated
+    },
+  },
 };
 
 // Speedo names for named and mission cars (§11.4); unnamed cars show their type's Swedish name.

@@ -1,6 +1,7 @@
 // A walking body: capsule-ish physics on the town's blocks, standing on low things, bouncing on
 // trampolines, getting flung by cars and lying there for a bit. States: normal | flung | down |
-// seated (in a car via game.seat, or in a plane seat via seatAt) | hidden (no step, invisible).
+// seated (in a car via game.seat, or in a plane seat via seatAt) | lying (on a sun lounger via lieAt,
+// game/bathers.js) | hidden (no step, invisible).
 // `tumble(secs, roll)`: a forward roll onto his back, then down (the glide's landing, game/glide.js).
 // `flop(secs)`: flat on his belly, then up (the belly flop into the pool, game/poolJudges.js).
 // `wade`: metres the standing model is sunk below his feet (waist-deep in the pool, game/poolFest.js).
@@ -25,17 +26,19 @@ export class Character {
     this.y = opts.y ?? groundAt(this.x, this.z, 0.2, 0.6);
     this.vx = 0; this.vz = 0; this.vy = 0;
     this.r = def.kind === 'monster' ? 0.55 : def.kind === 'adult' ? 0.36 : 0.32;
-    this.state = 'normal';   // normal | flung | down | seated | hidden
+    this.state = 'normal';   // normal | flung | down | seated | lying | hidden
     this.onGround = true;
     this.timer = 0;
     this.wishX = 0; this.wishZ = 0;
     this.faceWish = true;
-    this.anim = { speed: 0, air: false, vy: 0, kick: 0, talk: false, seated: false, flung: false, down: false, t: Math.random() * 10, spin: 0, look: 0, wave: false, cheer: false, sprint: false, yell: false, hop: 0 };
+    this.anim = { speed: 0, air: false, vy: 0, kick: 0, talk: false, seated: false, flung: false, down: false, lie: null, t: Math.random() * 10, spin: 0, look: 0, wave: false, cheer: false, sprint: false, yell: false, hop: 0 };
     for (const f of ANIM_FLAGS) this.anim[f] = false;
     this.car = null;
     this.spin = 0; this.spinRate = 0;
     this.tumbleT = null; this.tumbleRoll = 0;
     this.flopped = false;
+    this.liePose = null;     // lying: { x, y, z (the hips), yaw, lean, arms, tilt, lift }
+    this.flip = false;       // flung with a somersault about his own right axis (fling's `flip`)
     this.height = this.model.height;
     this.floats = def.kind === 'wizard' || def.kind === 'ghost';
     this.solid = true;
@@ -78,6 +81,17 @@ export class Character {
     this.root.rotation.set(0, yaw, 0);
     this.root.visible = true;
   }
+  // On a sun lounger: the hips at (x, y, z), facing yaw (down the bed), leaning back `lean` (the
+  // backrest's slope, negative) about them; no physics until something flings him or places him.
+  // The anim pose reads the rest of `pose` (arms 'side' | 'belly', tilt, lift; models.js).
+  lieAt(pose) {
+    this.state = 'lying';
+    this.flip = false;
+    this.vx = this.vz = this.vy = 0;
+    this.x = pose.x; this.y = pose.y; this.z = pose.z; this.yaw = pose.yaw;
+    this.liePose = pose;
+    this.sync(0);
+  }
   standAt(x, z, yaw = this.yaw) {
     this.state = 'normal';
     this.anim.planeSeat = false;
@@ -99,13 +113,21 @@ export class Character {
     return true;
   }
 
-  fling(vx, vy, vz) {
+  // `flip`: a somersault about his own right axis at that rate (rad/s, negative: backwards), from
+  // the lean he had (a sunbather off his lounger, game/bathers.js); otherwise the tumble about the
+  // world's X axis every flung body has.
+  fling(vx, vy, vz, flip = 0) {
     if (this.state === 'seated' || this.state === 'hidden' || this.invulnerable) return false;
+    const lean = this.state === 'lying' ? this.liePose.lean : 0;
     this.state = 'flung';
-    if (this.tumbleT != null || this.flopped) { this.tumbleT = null; this.flopped = false; this.root.rotation.order = 'XYZ'; }
+    this.liePose = null;
+    if (this.tumbleT != null || this.flopped) { this.tumbleT = null; this.flopped = false; }
+    this.root.rotation.order = 'XYZ';
     this.vx = vx; this.vy = vy; this.vz = vz;
     this.onGround = false;
-    this.spinRate = (Math.random() < 0.5 ? -1 : 1) * (8 + Math.random() * 8);
+    this.flip = !!flip;
+    this.spin = flip ? lean : this.spin;
+    this.spinRate = flip || (Math.random() < 0.5 ? -1 : 1) * (8 + Math.random() * 8);
     this.bounces = 0;
     return true;
   }
@@ -133,7 +155,7 @@ export class Character {
   }
 
   step(dt, game) {
-    if (this.state === 'seated' || this.state === 'hidden') return;
+    if (this.state === 'seated' || this.state === 'hidden' || this.state === 'lying') return;
     if (this.state === 'down') {
       this.timer -= dt;
       if (this.tumbleT != null) {
@@ -166,6 +188,7 @@ export class Character {
         } else {
           this.state = 'down'; this.timer = 1.6 + Math.random() * 0.8;
           this.vx = this.vz = this.vy = 0;
+          if (this.flip) { this.flip = false; this.root.rotation.order = 'XYZ'; }
         }
       }
       return;
@@ -233,13 +256,30 @@ export class Character {
     a.flung = this.state === 'flung';
     a.down = this.state === 'down';
     a.seated = this.state === 'seated';
+    a.lie = this.state === 'lying' ? this.liePose : null;
     if (a.kick > 0) a.kick = Math.max(0, a.kick - dt * 3.2);
     animateCharacter(this.model, a, dt);
     if (this.state === 'seated') return;
+    if (a.lie) {
+      // The hips at the pose's point: the root sits legLen below them along his leaned up axis (YXZ).
+      const L = a.lie, r = this.root, ll = this.model.legLen, sl = Math.sin(L.lean);
+      r.rotation.order = 'YXZ';
+      r.rotation.set(L.lean, L.yaw, 0);
+      r.position.set(L.x - ll * sl * Math.sin(L.yaw), L.y - ll * Math.cos(L.lean), L.z - ll * sl * Math.cos(L.yaw));
+      this.model.body.position.y = 0;
+      r.visible = true;
+      return;
+    }
+    if (this.root.rotation.order === 'YXZ' && this.tumbleT == null && !this.flopped && !this.flip) this.root.rotation.order = 'XYZ';
     this.root.visible = true;
     this.root.position.set(this.x, this.y - (this.state === 'normal' ? this.wade : 0), this.z);
     this.root.rotation.set(0, this.yaw, 0);
-    if (this.state === 'flung') {
+    if (this.state === 'flung' && this.flip) {
+      this.root.rotation.order = 'YXZ';
+      this.root.rotation.set(this.spin, this.yaw, 0);
+      this.root.position.y += this.height * 0.4;
+      this.model.body.position.y = -this.height * 0.4;
+    } else if (this.state === 'flung') {
       this.root.rotation.x = this.spin;
       this.root.position.y += this.height * 0.4;
       this.model.body.position.y = -this.height * 0.4;

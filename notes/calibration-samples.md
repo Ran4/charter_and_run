@@ -120,6 +120,16 @@ Stig there and says nothing for him; only her bark bubbles and sound reach the r
 this feature's tree (`f31-1` below) as in its pool, so the rows join it; every pool stands and no
 timer changed.
 
+**Feature 32 (Badgäster på solstolarna, 2026-10-17) touches no pool.** Its bathers on the sun loungers
+and Berra and Robban asleep on two Flamenco loungers exist only on the island with
+`missions.state === 'idle'` (DESIGN §10.22): any other state hides every bather and sends the two
+home at once in their own outfit, before a mission's intro is framed. No world geometry, prop, solid,
+landmark a stage uses, car or timer changed; the new Character state `lying` and `fling`'s `flip` are
+used by nobody else, and the bathers off their loungers (the only new people in `allChars` and
+`areaHit`) exist only in free roam. Scenario `badgaster` checks that a mission start leaves no bather
+and that none is made in the mission; `stekt` that the two stand at their homes, unchanged, at a
+mission start. Every pool below stands and no timer changed.
+
 ## `friskotekBalls` · §8.7 s1 · six fleeing beach balls · on foot: timer = ceil(1.25 × (p75 + 6 × 0.5))
 
 Phase 3 r2 island-staging placed everyone for the intro's group shot (Stig, Lasse, the sisters, the

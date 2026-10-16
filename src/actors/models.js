@@ -25,6 +25,9 @@ import { mulberry32, pick } from '../util.js';
 const SV = 0xf2c9a8, ES = 0xc99a6e;   // default skins: Swedish tourist, Spanish local
 const A = (o) => ({ kind: 'adult', scale: 1, skin: SV, shoes: 0x2a2a2a, brows: 0x3a2a1e, nose: 'small', ...o });
 const NO_SUIT = { suit: null, tie: null, bowtie: null, coat: null, vest: null };
+// Berra's and Robban's island looks; `stekt` is the same, lobster red from the sun (game/bathers.js).
+const BERRA_SOL = { hat: 'cap', hatC: 0xffffff }, ROBBAN_SOL = { shirt: 0x1f2f6a, print: [0xffd23f], printStyle: 'dots', collar: 0xffd23f, hat: 'cap', hatC: 0xf4f4f0, peakC: 0x2a4fa0 };
+export const STEKT_SKIN = 0xf0705a;
 
 // Invented look details beyond §2.1 and the research (§1.6): Stig's arlanda scarf, Fru Storch's
 // white dress.
@@ -63,10 +66,11 @@ export const CHARS = {
     outfits: {
       arlanda: { shirt: 0xf0ead8, stripe: 0x4a3a2a, stripes: true, longSleeves: true, vest: null, collar: true },
       flyg: {},
-      sol: { hat: 'cap', hatC: 0xffffff },
+      sol: BERRA_SOL,
+      stekt: { ...BERRA_SOL, skin: STEKT_SKIN },
     } }),
   robban: A({ name: 'Robban', wide: 1.25, belly: true, hair: 'short', thin: true, hairC: 0x6a5a48, glasses: 0x2a2a2a, shirt: 0xf07a1e, pants: 0x4a4a52, voice: 235, ring: '#fff8e6',
-    outfits: { flyg: { shirt: 0xf07a1e, collar: 0x1f2f6a }, sol: { shirt: 0x1f2f6a, print: [0xffd23f], printStyle: 'dots', collar: 0xffd23f, hat: 'cap', hatC: 0xf4f4f0, peakC: 0x2a4fa0 } } }),
+    outfits: { flyg: { shirt: 0xf07a1e, collar: 0x1f2f6a }, sol: ROBBAN_SOL, stekt: { ...ROBBAN_SOL, skin: STEKT_SKIN } } }),
   // Dark suit, blue shirt, red tie; at Arlanda a camel coat and a brown fur hat over it.
   angerud: A({ name: 'Gösta Angerud', wide: 1.35, belly: true, skin: 0xf0b8a0, hair: 'balding', hairC: 0x5a4a3a, brows: 0x5a4a3a, nose: 'big',
     shirt: 0x3a3a44, longSleeves: true, suit: 0x8ab0d8, tie: 0xc8202a, pants: 0x3a3a44, voice: 200, ring: '#fff8e6',
@@ -888,6 +892,7 @@ export function buildCharacter(d) {
 // ---------------------------------------------------------------------------------------------
 // Pose the model for this frame.
 //   st: { speed, air, vy, kick (0..1), talk, seated, flung, down, wave, cheer, t, sprint, yell,
+//         lie ({ lean, arms, tilt, lift } on a sun lounger, else null),
 //         + the anim flags (character.js ANIM_FLAGS) }
 
 const _v = new THREE.Vector3(), _w = new THREE.Vector3(), DOWN = new THREE.Vector3(0, -1, 0);
@@ -913,6 +918,19 @@ export function animateCharacter(m, st, dt) {
     for (const l of legs) l.rotation.set(st.planeSeat ? -1.18 : -1.45, 0, 0);
     arms[0].rotation.set(-1.15 + Math.sin(t * 3) * 0.04, 0, 0.18);
     arms[1].rotation.set(-1.15 - Math.sin(t * 3) * 0.04, 0, -0.18);
+  } else if (st.lie) {
+    // On a sun lounger (Character.lieAt): the root leans back `lean` on the backrest, the legs lie
+    // straight along the bed, toes up; the arms at his sides or the hands on his belly, the head
+    // tipped `tilt` to a side (asleep, `slump`: lolling, the mouth open). `lift` (0..1) raises the
+    // head off the backrest.
+    const L = st.lie, k = -Math.PI / 2 - L.lean, br = Math.sin(t * 1.4) * 0.012;
+    m.body.position.y = 0;
+    m.hips.rotation.x = br;
+    legs[0].rotation.set(k, 0, -0.06); legs[1].rotation.set(k + 0.03, 0, 0.07);
+    if (L.arms === 'belly') { arms[0].rotation.set(-0.72, 0, 0.32); arms[1].rotation.set(-0.72, 0, -0.32); }   // the hands folded on the belly
+    else { arms[0].rotation.set(0.12, 0, -0.3); arms[1].rotation.set(0.12, 0, 0.3); }
+    const lift = L.lift || 0;
+    m.neck.rotation.set(-0.1 - br + 0.55 * lift, 0, ((st.slump ? 0.45 : 0) + (L.tilt || 0)) * (1 - lift));
   } else if (st.flung) {
     m.body.position.y = 0;
     legs[0].rotation.set(-0.6 + Math.sin(t * 20) * 0.4, 0, -0.5);
@@ -1238,7 +1256,7 @@ function poseFlags(m, st, t) {
     inHand(m, p, 0, 0, 0.02, 0);
     cardFace(p, st.card);
   }
-  if (st.slump) {
+  if (st.slump && !st.lie) {   // lying asleep: the lounger's pose has the head (animateCharacter)
     if (st.seated) {
       // Passed out: head lolling, arms hanging, legs loose.
       m.neck.rotation.set(0.45, 0, 0.5 + Math.sin(t * 0.9) * 0.08);

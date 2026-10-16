@@ -37,7 +37,8 @@ opens with a summary of the rounds and the timer changes.
   - scenery: `phases sceneryPeek flightseq dc8`
   - island: `smash foot propsheet riocard endcard islandstats islandtour`
   - cast: `castsheet cars heads` · meter/UI: `ui skandal carbust` (`carbust`: SKANDAL's gain and
-    delay and the in-car bust rules, DESIGN §7.2) · `perf` (fails below 45 fps)
+    delay and the in-car bust rules, DESIGN §7.2) · `perf` (fails below 45 fps; its island views
+    include the main beach with its bathers)
   - free roam: `pintura dalasheet` (the paint shop at Gasolina, DESIGN §7.2), `berra` (Bärra hem
     Berra after the grisfest, DESIGN §10.6), `glide` (Jag kan flyga, the glide after julafton,
     DESIGN §10.7), `simhopp` (Siv och Majsan sätter poäng, the diving judges at Flamenco's pool,
@@ -65,7 +66,10 @@ opens with a summary of the rounds and the timer changes.
     deep end: the ladder's E points, the dive with the mantra, the belly flop and the cannonball,
     Lasse's line; its solids only between missions, DESIGN §10.20), `hund` (Fin hund…, the watchdogs
     in the bungalow gardens and at the farm on vischan: the wall, the rush, Stig's hands up, the
-    trampoline, the tank and the car roof, the owner's call from the house, a mission start, DESIGN §10.21)
+    trampoline, the tank and the car roof, the owner's call from the house, a mission start, DESIGN §10.21),
+    `badgaster stekt` (Badgäster på solstolarna, the bathers on the island's sun loungers by day, their
+    burn and the fly-off from a kicked or smashed lounger; Berra and Robban fried and asleep on
+    Flamenco's deck between buss17 and the bodega, and the wake, DESIGN §10.22)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

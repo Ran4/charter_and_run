@@ -56,12 +56,12 @@ export const SCENARIOS = {
     await T.sleep(800);
     out.push(await measure(T, 'gate spawn'));
 
-    // Island: the spawn, the plaza and the market on foot, a drive through the centre with
-    // traffic, and the high view over the whole town.
+    // Island: the spawn, the plaza and the market on foot, the main beach (its bathers, §10.22), a
+    // drive through the centre with traffic, and the high view over the whole town.
     await T.fresh('&mission=6');
     await T.sleep(800);
     out.push(await measure(T, 'island spawn'));
-    for (const name of ['plaza', 'marknad', 'kasbah']) {
+    for (const name of ['plaza', 'marknad', 'kasbah', 'playa']) {
       await T.ev((n) => { const g = __game, s = g.approachSpot(n); g.player.teleport(s.x, s.z, s.yaw); g.cam.yaw = s.yaw; g.cam.snapNext = true; }, name);
       await T.sleep(1000);
       out.push(await measure(T, 'island ' + name));

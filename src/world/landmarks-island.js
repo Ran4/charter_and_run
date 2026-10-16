@@ -28,6 +28,11 @@ export const ISLAND_LANDMARKS = {
   // the chase camera over the pool, not under the pergola slats.
   flamencoDeck: { b: [3, 3], at: [-4, -2.5], yaw: 0 },
   flamencoBar: { b: [3, 3], at: [16, 12], yaw: -PI / 2 },
+  // Badgäster på solstolarna (free roam, §10.22): the two pool-deck sun loungers 7–8 m from BAR
+  // PISCINA (their `solstol` props, hotels.js flamencoPool; yaw = the prop's facing, the backrest
+  // end), where Berra and Robban lie and sleep in the sun after buss17. Not standing spots.
+  stektBerra: { b: [3, 3], at: [8.2, 21.6], yaw: 0 },
+  stektRobban: { b: [3, 3], at: [6.6, 21.6], yaw: 0 },
   flamencoDrive: { b: [3, 3], at: [-26, 22], yaw: PI },
   flamencoBack: { b: [3, 3], at: [-6, -33.5], yaw: 0 },
   bodega: { b: [3, 3], at: [8, -33.5], yaw: 0 },

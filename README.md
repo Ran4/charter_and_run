@@ -240,6 +240,14 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   tills ägaren visslar inifrån huset utan att synas ("¡Bobi! Hit!") och hunden lunkar hem. Sedan får
   du vara i fred en stund. Varje hund har sitt eget namn och sitt eget skall, och under uppdragen
   syns inga hundar.
+- **Badgäster på solstolarna**: på dagen ligger turister på solstolarna närmast Stig, på stränderna
+  och vid hotellens pooler, och de blir rödare ju längre de ligger: först bleka, sedan rosa, till sist
+  hummerröda. Sparka en solstol (eller kör över den) där någon ligger, så slår badgästen en baklänges
+  kullerbytta över ryggstödet och klagar ("Jag ska tala med platschefen!"), reser sig och muttrar om
+  solen. Det ger inte mer SKANDAL än en tom solstol. När solstolen står där igen ligger någon ny och
+  blek där, och varje morgon kommer en ny skara. Mellan buss 17 och bodegan ligger Berra och Robban
+  hummerröda och snarkar på två solstolar på Flamencos pooldäck. Tryck E vid Berra: Stig säger
+  "Ursäkta… ni bränner er.", Berra lyfter huvudet, "Fem minuter till…", och Robban pratar i sömnen.
 
 ## Vad är påhittat?
 
@@ -302,6 +310,9 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
 - vakthundarna på bungalowtomterna och gården på vischan, ägarna som visslar hem dem och att Stig
   säger "Fin hund…" och mantrat till dem (i filmen nosar en narkotikahund på Stigs paket vid
   bagagekontrollen på Arlanda, och någon säger "Fin hund.")
+- badgästerna som bränns på solstolarna och flyger av en sparkad solstol, och att Berra vaknar för
+  "Fem minuter till…" (i filmen somnar Berra och Robban i solen och bränner sig, men ingen sparkar en
+  solstol)
 - fårrusningen i Fataga, kappkörningen mot nattbussen och porslinskrosset på tid
 - att samla ihop julfestgästerna
 - Oles prylar och hajfenorna som samlarföremål, utspridda över ön
@@ -400,12 +411,14 @@ src/game/grisfestFree.js        Grisfest varje torsdag in free roam: 800 pesetas
 src/game/fruitStands.js         Rakt genom fruktståndet in free roam: his car through the market's fruit stalls, the seller, the swear
 src/game/diveTower.js           Från fjärde våningen in free roam: the 10 m diving tower, the ladder, the cannonball, the belly flop
 src/game/dogs.js                Fin hund… in free roam: the watchdogs in the bungalow gardens and at the farm, Stig's hands and lines
+src/game/bathers.js             Badgäster på solstolarna in free roam: bathers on the loungers, their burn, the fly-off, Berra and Robban fried
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
 tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, meter, kinds, perf,
                                 paintshop, berra, glide, simhopp, tuta, dygn, super8, eslov, grodorna,
                                 artig, grisar, bagage, lapplisa, torsdag, frukt, hopptorn, hund,
+                                badgaster,
                                 calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
@@ -451,6 +464,7 @@ node tools/shot.mjs torsdag torsdagOle   # the grisfest's evening for 800 pta: t
 node tools/shot.mjs frukt fruktFore      # the fruit stalls: kick and slow car hold, 11 m/s through, the seller, the swear, the comeback
 node tools/shot.mjs hopptorn             # the diving tower: the ladder, the railing, the belly flop, Lasse, the cannonball, a mission start
 node tools/shot.mjs hund                 # the watchdogs: the wall, the rush, the hands up, the trampoline and the tank, the owner's call
+node tools/shot.mjs badgaster stekt      # bathers on the loungers: the burn, the kick and the car, the newcomer, night; Berra and Robban fried, the wake
 node tools/shot.mjs fullstory kinds      # the literal §8 missions and the stage-kind checks
 node tools/shot.mjs calibrate calibflight  # timer and FLYGRÄDSLA calibration (slow; see DESIGN §8, §16.4)
 node tools/pool.mjs                      # random-stage timers from the raw runs in notes/calibration-samples.md

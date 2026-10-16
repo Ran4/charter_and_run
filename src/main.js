@@ -38,6 +38,7 @@ import { Lapplisa } from './game/lapplisa.js';
 import { GrisfestFree } from './game/grisfestFree.js';
 import { FruitStands } from './game/fruitStands.js';
 import { Dogs } from './game/dogs.js';
+import { Bathers } from './game/bathers.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
 import { LEVELS, ISLAND_PALETTES } from './level.js';
@@ -188,6 +189,7 @@ class Game {
     this.party = new GrisfestFree(this);  // free roam after the grisfest: 800 pesetas at the farm's gate, the evening (§10.18)
     this.stands = new FruitStands(this);  // free roam: his car goes through the market's fruit stalls (§10.19)
     this.dogs = new Dogs(this);           // free roam: the watchdogs in the bungalow gardens and at the farm (§10.21)
+    this.bathers = new Bathers(this);     // free roam: tourists on the sun loungers, Berra and Robban fried (§10.22)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -763,6 +765,7 @@ class Game {
     if (this.levelDef.sim.peds) for (const p of this.peds) out.push(p.char);
     for (const k in this.npcs) out.push(this.npcs[k]);
     out.push(...this.party.extras);   // the grisfest's band and tourists (§10.18)
+    out.push(...this.bathers.loose);  // bathers off their loungers (§10.22)
     return out;
   }
 
@@ -927,10 +930,12 @@ class Game {
     if (b && stall) this.stands.onBroken(p, car);
     return b;
   }
+  // A taken sun lounger throws its bather off (§10.22): no SKANDAL beyond the lounger's own.
   onPropBroken(p, vx, vz) {
     audio.smash();
     if (p.def.coins) burstCoins(p.x, 0.4, p.z, p.def.coins, vx, vz);
     this.shame.add(p.def.shame * (this.playerCar ? 1.2 : 0.7));
+    this.bathers.onPropBroken(p, vx, vz);
     if (p.def.splash) for (let k = 0; k < 6; k++) fx.splash(p.x, p.z);
     if (p.def.explode === 'big') fx.explosion(p.x, 0.5, p.z);
     else if (p.def.explode === 'small') { fx.sparks(p.x, 0.6, p.z, 10); fx.smoke(p.x, 0.6, p.z, true); }
@@ -984,7 +989,9 @@ class Game {
     if (byPlayer) { this.shame.add(ch.key ? 14 : 18); this.sorry.offence('hit'); }
     if (Math.random() < 0.8) this.say(ch, this.bark(ch, 'ouch'), 1.6);
   }
+  // A bather off his lounger always mutters (§10.22).
   onGetUp(ch) {
+    if (this.bathers.onGetUp(ch)) return;
     if (ch !== this.player && Math.random() < 0.35 && dist(ch.x, ch.z, this.player.x, this.player.z) < 30) this.say(ch, this.bark(ch, 'getUp'), 1.8);
   }
   // A bark from the speaker's own table (§14.10): Ole's Norwegian one, the local one for the Spanish
@@ -1476,6 +1483,7 @@ class Game {
     this.party.update(dt);
     this.stands.update(dt);
     this.dogs.update(dt);
+    this.bathers.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);
@@ -1674,6 +1682,7 @@ class Game {
       n.step(h, this);
     }
     this.party.step(h);   // the grisfest's band and tourists (§10.18)
+    this.bathers.step(h); // bathers off their loungers (§10.22)
     this.carsVsPeople();
   }
 
@@ -1683,8 +1692,8 @@ class Game {
     let broke = null, bowled = false;
     // A fruit stall is the car's only (`carOnly`, §10.19).
     for (const prop of propsNear(x, z, r)) { if (prop.def.carOnly) continue; const b = breakProp(prop, dx * 8, dz * 8, this); if (b && !broke?.def.explode) broke = b; }
-    // Pedestrians, and the grisfest's band and tourists (§10.18).
-    const people = (this.levelDef.sim.peds ? this.peds.map((ped) => ped.char) : []).concat(this.party.extras);
+    // Pedestrians, the grisfest's band and tourists (§10.18) and bathers off their loungers (§10.22).
+    const people = (this.levelDef.sim.peds ? this.peds.map((ped) => ped.char) : []).concat(this.party.extras, this.bathers.loose);
     for (const c of people) {
       if (c.state !== 'normal' || Math.abs(c.y - y) > 1.6 || dist(c.x, c.z, x, z) > r + 0.4) continue;
       c.fling(dx * 7 + (c.x - x) * 2, 5, dz * 7 + (c.z - z) * 2);
@@ -1724,7 +1733,8 @@ class Game {
     const hit = {};
     const chars = this.allChars();
     for (const ch of chars) {
-      if (ch.state === 'seated' || ch.state === 'hidden' || ch.solid === false) continue;
+      // A body lying on a sun lounger (§10.22) is the lounger's: the car meets that.
+      if (ch.state === 'seated' || ch.state === 'hidden' || ch.state === 'lying' || ch.solid === false) continue;
       for (const car of this.cars) {
         if (Math.abs(car.x - ch.x) > car.radius + 1 || Math.abs(car.z - ch.z) > car.radius + 1) continue;
         if (ch.y > car.y + car.height - 0.3) continue;
