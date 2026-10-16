@@ -248,6 +248,15 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   blek där, och varje morgon kommer en ny skara. Mellan buss 17 och bodegan ligger Berra och Robban
   hummerröda och snarkar på två solstolar på Flamencos pooldäck. Tryck E vid Berra: Stig säger
   "Ursäkta… ni bränner er.", Berra lyfter huvudet, "Fem minuter till…", och Robban pratar i sömnen.
+- **Bränsletillägg tillkommer – SunTrip-butiken**: på SunTrip-kontorets veranda står en gul disk
+  mellan uppdragen, och bakom den står reseförsäljaren. Där kan Stig köpa filmens vita SunTrip-hatt,
+  solglasögon, en prickig skjorta och ett nässkydd. Skylten säger 100 pta för hatten, men kvittot
+  växer rad för rad med högsäsong, avbeställningsskydd, reseförsäkring och bränsletillägg, och Stig
+  suckar "Det var en väldigt massa tillägg…". Hatten säljs bara på SunTrips Trapp Trull-konto: en
+  tredjedel nu och två avbetalningar som dras senare, mitt i något annat. Går han därifrån utan
+  strandväskan ropar försäljaren "Paketet!" efter honom, och nässkyddet är gratis, plus
+  bränsletillägg. Det han köper har han på sig direkt mellan uppdragen, även efter omstart, och vid
+  disken kan han ta av och på sig sakerna igen. Under uppdragen är disken borta.
 
 ## Vad är påhittat?
 
@@ -313,6 +322,10 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
 - badgästerna som bränns på solstolarna och flyger av en sparkad solstol, och att Berra vaknar för
   "Fem minuter till…" (i filmen somnar Berra och Robban i solen och bränner sig, men ingen sparkar en
   solstol)
+- SunTrip-butiken på ön och att Stig handlar där, tilläggen på varje kvitto, Trapp Trull-kontots
+  avbetalningar, strandväskan och "Paketet!" vid disken, och Oles kommentar om hatten (i filmen säljer
+  en resebyrå i Stockholm tilläggen, kontot och nässkyddet till paret Storch, och det är oklart vem
+  som köper nässkyddet)
 - fårrusningen i Fataga, kappkörningen mot nattbussen och porslinskrosset på tid
 - att samla ihop julfestgästerna
 - Oles prylar och hajfenorna som samlarföremål, utspridda över ön
@@ -412,13 +425,14 @@ src/game/fruitStands.js         Rakt genom fruktståndet in free roam: his car t
 src/game/diveTower.js           Från fjärde våningen in free roam: the 10 m diving tower, the ladder, the cannonball, the belly flop
 src/game/dogs.js                Fin hund… in free roam: the watchdogs in the bungalow gardens and at the farm, Stig's hands and lines
 src/game/bathers.js             Badgäster på solstolarna in free roam: bathers on the loungers, their burn, the fly-off, Berra and Robban fried
+src/game/suntripShop.js         Bränsletillägg tillkommer in free roam: SunTrip-butiken, the receipts, the Trapp Trull account, his bought look
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
 tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, meter, kinds, perf,
                                 paintshop, berra, glide, simhopp, tuta, dygn, super8, eslov, grodorna,
                                 artig, grisar, bagage, lapplisa, torsdag, frukt, hopptorn, hund,
-                                badgaster,
+                                badgaster, butik,
                                 calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
@@ -465,6 +479,7 @@ node tools/shot.mjs frukt fruktFore      # the fruit stalls: kick and slow car h
 node tools/shot.mjs hopptorn             # the diving tower: the ladder, the railing, the belly flop, Lasse, the cannonball, a mission start
 node tools/shot.mjs hund                 # the watchdogs: the wall, the rush, the hands up, the trampoline and the tank, the owner's call
 node tools/shot.mjs badgaster stekt      # bathers on the loungers: the burn, the kick and the car, the newcomer, night; Berra and Robban fried, the wake
+node tools/shot.mjs butik butikbil       # SunTrip-butiken: the receipts, the Trapp Trull account, "Paketet!", the look, a mission start; the look in every car
 node tools/shot.mjs fullstory kinds      # the literal §8 missions and the stage-kind checks
 node tools/shot.mjs calibrate calibflight  # timer and FLYGRÄDSLA calibration (slow; see DESIGN §8, §16.4)
 node tools/pool.mjs                      # random-stage timers from the raw runs in notes/calibration-samples.md

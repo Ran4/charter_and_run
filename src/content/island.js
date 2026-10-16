@@ -909,3 +909,76 @@ export const NAMED_CARS = {
 };
 
 export const LEVEL_OUTFITS_ISLAND = { ole: 'sol', berra: 'sol', robban: 'sol', angerud: 'sol', majsan: 'sol', siv: 'sol', lasse: 'sol' };
+
+// Bränsletillägg tillkommer – SunTrip-butiken (free roam, DESIGN §10.23; game/suntripShop.js). On the
+// island with no mission running (`missions.state === 'idle'`) a yellow counter stands on the SunTrip
+// office's porch by the east shop window (world/blocks/hotels.js SUNTRIP_SHOP; gone, solids and all,
+// in any mission and on the other level), and the film's travel agent (`clerk`, a figure of the
+// module's own) stands behind it with four `items`. E at a ware (`r` m, Stig on foot) buys it at the
+// sign's `base` price plus its `add`-ons: the receipt is a toast whose lines come one by one
+// (`lineSecs` s apart), the clerk's `sell` line goes with it and Stig's `sigh` follows the total. The
+// purse must hold what is paid now (`addCoins`, never `game.pay`: Ole does not pay); short of it, the
+// clerk's `short` (under `poorBelow` pta, the fuel surcharge, `poor`). The hat goes only on SunTrip's Trapp Trull
+// account: a third of its total now and `trapp.parts` − 1 instalments of the same, each after
+// `trapp.every` s of free roam (`trapp.retry` s later when the purse is short), as a toast; and the
+// account's beach bag waits by the counter until E takes it: walk `leaveR` m off without it and the
+// clerk calls `paketet` after him (once each time, again after he has been back within `backR` m).
+// What he buys he wears at once, as a layer of its `look` over his outfit (`setPlayerOutfit`), and
+// keeps in free roam after a restart (saved, §10.5); E at an owned ware takes it off or puts it on
+// again (prompt names: `name` to buy, `the` ?? `name` to take off or put on). Never in a mission (the layer comes off when one starts and back when it ends), never over
+// the Rio end card's `rio`, never in the flight level. The clerk greets him within `greetR` m once a
+// session; the hat bought (or put on again) Ole says his `ole` line when he next comes within `oleR` m. Invented (§1.6):
+// the shop on the island and Stig buying there; the add-ons, the Trapp Trull account, the bag, the
+// nose guard and "Paketet!" are the film's Stockholm travel agency (research-plot.md:133–142).
+export const BUTIK = {
+  r: 1.25, lineSecs: 0.45, sighAt: 0.5, sellSecs: 2.6, sighSecs: 2.6, toastSecs: 7.5,
+  leaveR: 8, backR: 4, greetR: 4.5, oleR: 7, poorBelow: 50,
+  trapp: { parts: 3, every: 150, retry: 15 },
+  clerk: { kind: 'adult', name: 'Reseförsäljaren', scale: 1.02, skin: 0xf2c9a8, hair: 'short', hairC: 0x7a5432, brows: 0x6a4a2a, nose: 'small',
+    mustache: 0x6a4a2a, stache: 'thin', shirt: 0xf8f8f4, stripe: 0xf7c31b, bib: 'SUNTRIP', bibC: '#d8321e', pants: 0x2f4a7a, shoes: 0x2a2a2a, voice: 290 },
+  items: [
+    { id: 'hatt', name: 'solhatten', base: 100, trapp: true,
+      add: [['högsäsong', 25], ['avbeställningsskydd', 25], ['reseförsäkring', 25], ['bränsletillägg', 50]],
+      look: { hat: 'bucket', hatC: 0xf4f1e8, hatBand: 0xd8321e, hatSun: true },
+      receipt: 'solhatt',                                                                  // [N]
+      sell: 'Solhatten säljer vi bara på SunTrips Trapp Trull-konto. Strandväskan ingår!',   // [F*] the agency's offer (research-plot.md:140)
+      sigh: 'Det var en väldigt massa tillägg…' },                                         // [F*](t) the agency scene (research-plot.md:139; speaker unknown)
+    { id: 'glas', name: 'solglasögonen', base: 150,
+      add: [['högsäsong', 25], ['avbeställningsskydd', 25], ['reseförsäkring', 25], ['bränsletillägg', 50]],
+      look: { shades: 0x2a2a2a, glasses: null },
+      receipt: 'solglasögon',                                                              // [N]
+      sell: 'Solglasögon. Med solfilter, för en blygsam merkostnad.',                      // [F*] the bungalow seller's "för en blygsam merkostnad" (research-plot.md:291)
+      sigh: 'Det var en väldigt massa tillägg…' },                                         // [F*](t)
+    { id: 'skjorta', name: 'den prickiga skjortan', base: 200,
+      add: [['högsäsong', 50], ['avbeställningsskydd', 25], ['reseförsäkring', 25], ['bränsletillägg', 50]],
+      look: { suit: null, tie: null, bowtie: null, coat: null, vest: null, shirt: 0xf6f3ea, print: [0x2f6ad8], printStyle: 'dots', longSleeves: false, collar: true },
+      receipt: 'prickig skjorta',                                                          // [N]
+      sell: 'Vad den kostar? Det beror på var du bor.',                                    // [F*] the agent's answer to the Storches (research-plot.md:136)
+      sigh: 'Det var en väldigt massa tillägg…' },                                         // [F*](t)
+    { id: 'nasa', name: 'ett nässkydd', the: 'nässkyddet', base: 0,
+      add: [['bränsletillägg', 50]],
+      look: { noseGuard: 0xfafaf6 },
+      receipt: 'nässkydd',                                                                 // [N]
+      sell: 'Nässkydd – det får du också gratis.',                                         // [F*] the agency scene (research-plot.md:142)
+      sigh: 'Gratis… plus bränsletillägg.' },                                              // [N]
+  ],
+  prompt: {
+    buy: '<b>E</b> Köp {name} ({n} pta)',        // [N]
+    free: '<b>E</b> Ta {name} (gratis)',         // [N]
+    off: '<b>E</b> Ta av {name}',                // [N]
+    on: '<b>E</b> Ta på {name}',                 // [N]
+    bag: '<b>E</b> Ta strandväskan',             // [N]
+  },
+  // The receipt: KVITTO, a line per entry ("solhatt 100", "+ högsäsong 25"…), the total; on the
+  // Trapp Trull account a line of what is paid now.
+  receiptHead: 'Kvitto · SunTrip',                                       // [N]
+  receiptTrapp: 'Trapp Trull-konto: {n} pta nu, resten i {k} avbetalningar',   // [F*] the agency's account (research-plot.md:140)
+  instalment: 'Trapp Trull-kontot: avbetalning {i} av {k}, {n} pta',     // [N]
+  instalmentLast: 'Trapp Trull-kontot är betalt. Tack för att du reser med SunTrip!',   // [N]
+  short: 'Med alla tillägg blir det {n} pta, tyvärr.',                   // [N] the clerk
+  poor: 'Det räcker inte ens till bränsletillägget.',                    // [N] the clerk
+  greet: 'Välkommen till SunTrip-butiken! Bränsletillägg tillkommer.',   // [N] (the title screen's fine print)
+  paketet: 'Paketet!',                                                   // [F*] the film's running gag at the clinic and the agency (research-plot.md:133)
+  bagTaken: 'Paketet. Ja. Tack.',                                        // [N] Stig
+  ole: 'Nå ser du ut som en ekte sydenturist, Stig-Helmer!',             // [N] Ole
+};

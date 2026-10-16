@@ -8,10 +8,11 @@
 //   stache ('thin'|'thick'|'big'|'walrus'), beard, sideburns, glasses (frame colour) + glassesBig +
 //   lens (tinted lens colour) + aviator, shades (filled lens colour), hat ('trilby'|'pilot'|'tricorn'|
 //   'bucket'|'sunhat'|'tomte'|'scarf'|'cap'|'fur') + hatC + capStyle ('flat') + peakC (the cap's
-//   peak), hairFlower,
+//   peak) + hatBand (the bucket's band) + hatSun (SunTrip's sun on the bucket's front), hairFlower,
+//   noseGuard (a tourist's plastic nose shield over the nose),
 //   shirt, longSleeves, print [c1, c2, c3] + printStyle ('confetti'|'dots'|'floral'|'check') (under
 //   a suit or a vest only on the shirt in front), skirtPrint (the dress's dots if not the print's),
-//   stripe (one band) + stripes (several) + bib (text printed on the one band's front), sash, scarf (neck), apron, belly, collar, suit (colour of
+//   stripe (one band) + stripes (several) + bib (text printed on the one band's front) + bibC, sash, scarf (neck), apron, belly, collar, suit (colour of
 //   the shirt seen in the jacket's V), coat (long coat tails), tie, bowtie, vest, epaulets, badge,
 //   chain, belt, dress (cone skirt) + pinafore (the dress also covers the torso), pants, shorts +
 //   baggy + shortsHem (a band at the hem), legsC (stockings), shoes, hands (gloves/mittens) +
@@ -182,6 +183,13 @@ function headParts(g, d, R, lo = false) {
   const nose = { button: [0.24, 0.22, 0.26], small: [0.26, 0.28, 0.32], big: [0.38, 0.46, 0.5], pointy: [0.24, 0.3, 0.5], long: [0.24, 0.36, 0.52] }[d.nose || 'small'];
   const nz = d.nose === 'long' ? R * 0.95 : R * 0.92;
   g.sphere(d.nose === 'big' ? shade(skin, 0.97) : skin, 0, -0.1 * R, nz, R * nose[0] * 2, R * nose[1] * 2, R * nose[2] * 2, d.nose === 'big' || d.nose === 'long' ? 0.25 : 0);
+  // The nose guard (Bränsletillägg tillkommer, §10.23): a white plastic shell over the whole nose,
+  // its own shape grown a little and drawn out to a beak in front, and a tab up to the bridge.
+  if (d.noseGuard) {
+    const tip = d.nose === 'big' || d.nose === 'long' ? 0.25 : 0, f = R * 0.08;
+    g.sphere(d.noseGuard, 0, -0.1 * R - Math.sin(tip) * f, nz + Math.cos(tip) * f, R * nose[0] * 2.5, R * nose[1] * 2.3, R * nose[2] * 2.6, tip);
+    g.box(d.noseGuard, 0, R * 0.2, R * 0.9, R * 0.16, R * 0.2, R * 0.08);
+  }
   // Eyes and brows.
   for (const s of [-1, 1]) {
     g.sphere(0xffffff, s * R * 0.36, R * 0.22, R * 0.8, R * 0.38, R * 0.46, R * 0.22);
@@ -386,7 +394,14 @@ function hat(g, d, R) {
       fru(g, c, 0, R * 0.98, -R * 0.02, R * 0.86, R * 1.04, R * 0.72, 14);
       g.sphere(c, 0, R * 1.32, -R * 0.02, R * 1.72, R * 0.2, R * 1.72);
       fru(g, c, 0, R * 0.52, -R * 0.02, R * 1.06, R * 1.5, R * 0.26, 16);
-      fru(g, dark, 0, R * 0.72, -R * 0.02, R * 1.03, R * 1.05, R * 0.12, 14);
+      fru(g, d.hatBand ?? dark, 0, R * 0.72, -R * 0.02, R * 1.03, R * 1.05, R * 0.12, 14);
+      // SunTrip's logo (§10.23; red text on a yellow sun, research-characters.md:36): a yellow disc
+      // on the crown's front, laid on its slope, with a red bar across it for the letters.
+      if (d.hatSun) {
+        const sl = Math.atan(0.18 / 0.72), y = R * 1.04, z = -R * 0.02 + R * 0.95 + R * 0.04;
+        g.cyl(0xf7c31b, 0, y, z, R * 0.3, R * 0.05, 14, Math.PI / 2 - sl, 0, 0);
+        g.box(0xd8321e, 0, y + R * 0.01, z + R * 0.03, R * 0.44, R * 0.1, R * 0.03, 0, -sl);
+      }
       break;
     case 'sunhat':
       g.cyl(c, 0, R * 0.6, -R * 0.02, R * 2.0, R * 0.07, 20, 0.08);
@@ -510,14 +525,16 @@ function torsoParts(g, d, T, lo = false, pg = g) {
 
 // The text on a single band's front (`bib`: the rollerskier's ESLÖV): a strip of the band's elliptic
 // cylinder just outside it, `BIB_ARC` rad round the front, the letters on a transparent canvas and
-// unlit, like the town's signs (no outline). One texture per text.
+// unlit, like the town's signs (no outline). One texture per text and colour (`bibC`, default blue;
+// the travel agent's SUNTRIP is red, §10.23).
 const BIB_H = 0.2, BIB_ARC = 1.9;
 const _bibTex = {};
 function bibMesh(d, T) {
   const { H, W, D } = T;
-  let tex = _bibTex[d.bib];
+  const fg = d.bibC ?? '#1b3a8a', key = d.bib + fg;
+  let tex = _bibTex[key];
   if (!tex) {
-    tex = _bibTex[d.bib] = new THREE.CanvasTexture(textCanvas(d.bib, 0.46, 0.12, { bg: null, fg: '#1b3a8a', border: null, scale: 0.86, ppm: 640 }));
+    tex = _bibTex[key] = new THREE.CanvasTexture(textCanvas(d.bib, 0.46, 0.12, { bg: null, fg, border: null, scale: 0.86, ppm: 640 }));
     tex.colorSpace = THREE.SRGBColorSpace;
     tex.anisotropy = 4;
   }

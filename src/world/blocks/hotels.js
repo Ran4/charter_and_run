@@ -1126,6 +1126,7 @@ function suntripOffice(f, glow) {
   f.ceiling(-14.5, 22.0, 14.2, 3.2, C + 2.45, C + 3.4);   // the chase camera stays under the awning (valance bottom)
   f.prop('bank', -19.6, 22.0, PI);
   f.prop('vykort', -6.8, 22.6);
+  suntripShop(f);
   // North wall, facing the friskotek lawn.
   for (let x = -23; x <= -7; x += 4) { f.box(GLASS, x, C + 1.1, z0 - 0.03, 1.3, 1.2, 0.06); f.box(TRIM, x, C + 1.0, z0 - 0.1, 1.6, 0.1, 0.2); }
   f.sign('SUNTRIP · FRISKOTEK', -15, C + 2.55, z0 - 0.14, 6, 0.6, PI, { bg: '#f7c31b', fg: '#d8321e', border: '#d8321e', scale: 0.62 });   // [N]
@@ -1141,6 +1142,93 @@ function suntripOffice(f, glow) {
   f.solid(-24, 30.3, 9, 0.6, 99, 'wall');
   f.sign('HOTEL SUNTRIP', -24, C + 0.8, 30.62, 7.5, 0.95, 0, { bg: '#f7c31b', fg: '#d8321e', border: '#d8321e', scale: 0.7 });
   f.sign('HOTEL SUNTRIP', -24, C + 0.8, 29.98, 7.5, 0.95, PI, { bg: '#f7c31b', fg: '#d8321e', border: '#d8321e', scale: 0.7 });
+}
+
+// Bränsletillägg tillkommer (free roam, §10.23): SunTrip-butiken, a yellow counter on the porch by
+// the east shop window, x [-11.9, -8.5] from the window to z 22.2, under the awning and 4–6 m east of
+// Lasse at `suntrip` (-14, 24). On it, west to east, the white SunTrip hat, the sunglasses, the
+// folded dotted shirt and a box of nose guards; SUNTRIP-BUTIKEN over it on two posts, BRÄNSLETILLÄGG
+// TILLKOMMER on its front, the price board west of it, turned to the counter's front; the beach bag
+// of the Trapp Trull account on the porch at its west end (its own mesh, shown by the shop). It all
+// goes in its own group, which game/suntripShop.js shows only between missions on the island, and
+// its solids (the counter, to the window, so nobody walks behind it; the board) are live only then
+// (`dead` asks SUNTRIP_SHOP.live()): no mission stage sees any of it, so no stage's world and no
+// calibration pool changes. The travel agent stands behind it at `clerk`; Stig's spot in front of
+// its middle is the landmark `butik`. World positions of the wares go out in SUNTRIP_SHOP.
+export const SUNTRIP_SHOP = { group: null, bag: null, blocks: [], wares: {}, clerk: null, live: () => true };
+function suntripShop(f) {
+  const X0 = -11.9, X1 = -8.5, Z0 = 20.5, ZF = 22.2, cx = (X0 + X1) / 2, TOP = C + 1.0;
+  const G = new GeoBuilder(), B = new GeoBuilder(), grp = new THREE.Group();
+  f.scene.add(grp);
+  const W = SUNTRIP_SHOP.wares;
+  const ware = (id, lx, lz, y) => { W[id] = { x: f.wx(lx, lz), z: f.wz(lx, lz), y }; };
+  // The counter: a yellow body with a red top, a darker plinth, the front 0.6 m deep.
+  f.box(SUN, cx, C, (ZF - 0.6 + ZF) / 2, X1 - X0, TOP - C - 0.06, 0.6, 0, G);
+  f.box(0x9a7a12, cx, C, ZF - 0.28, X1 - X0 - 0.1, 0.12, 0.62, 0, G);
+  f.box(RED, cx, TOP - 0.06, ZF - 0.32, X1 - X0 + 0.08, 0.08, 0.72, 0, G);
+  for (const x of [X0 + 0.05, X1 - 0.05]) f.box(SUN, x, C, (Z0 + ZF - 0.6) / 2, 0.1, TOP - C - 0.06, ZF - 0.6 - Z0, 0, G);   // side panels to the window
+  // SUNTRIP-BUTIKEN on two white posts at the counter's back corners, over the clerk's head and just
+  // under the awning (its slats are at C + 2.87 there).
+  for (const x of [X0 + 0.15, X1 - 0.15]) f.box(TRIM, x, TOP, ZF - 0.55, 0.07, 1.8, 0.07, 0, G);
+  f.box(TRIM, cx, TOP + 1.3, ZF - 0.55, X1 - X0 - 0.2, 0.5, 0.05, 0, G);
+  grp.add(f.sign('SUNTRIP-BUTIKEN', cx, TOP + 1.55, ZF - 0.52, X1 - X0 - 0.3, 0.44, 0, { bg: '#f7c31b', fg: '#d8321e', border: '#d8321e', scale: 0.72, ppm: 160 }));   // [N]
+  grp.add(f.sign('BRÄNSLETILLÄGG TILLKOMMER', cx, C + 0.58, ZF + 0.012, 2.7, 0.36, 0, { bg: '#fff8e6', fg: '#d8321e', border: null, scale: 0.7, ppm: 220 }));   // [N] the title screen's fine print
+  // The wares, from the west: the hat (white, the red band and SunTrip's sun), the sunglasses on a
+  // little stand, the folded shirt with blue dots, a box of white nose guards.
+  const wz = ZF - 0.32, T = TOP + 0.02;
+  {
+    const x = -11.4;
+    f.cyl(0xf4f1e8, x, T + 0.02, wz, 0.24, 0.04, 16, 0, 0, G);
+    f.cyl(0xf4f1e8, x, T + 0.13, wz, 0.15, 0.2, 14, 0, 0, G);
+    f.cyl(RED, x, T + 0.07, wz, 0.155, 0.05, 14, 0, 0, G);
+    f.cyl(SUN, x, T + 0.14, wz + 0.15, 0.06, 0.015, 12, PI / 2, 0, G);
+    ware('hatt', x, wz, T);
+  }
+  {
+    const x = -10.65;
+    f.box(STEEL, x, T, wz, 0.05, 0.16, 0.05, 0, G);
+    f.box(STEEL, x, T, wz, 0.16, 0.02, 0.12, 0, G);
+    for (const s of [-1, 1]) f.cyl(INK, x + s * 0.075, T + 0.18, wz + 0.03, 0.06, 0.015, 12, PI / 2, 0, G);
+    f.box(INK, x, T + 0.2, wz + 0.03, 0.06, 0.015, 0.015, 0, G);
+    ware('glas', x, wz, T);
+  }
+  {
+    const x = -9.9;
+    f.box(0xf6f3ea, x, T, wz, 0.42, 0.07, 0.34, 0, G);
+    f.box(0xe8e2d4, x, T + 0.07, wz + 0.1, 0.42, 0.02, 0.1, 0, G);   // the folded collar
+    for (const [u, v] of [[-0.14, -0.1], [0.02, -0.04], [0.15, -0.12], [-0.06, 0.06], [0.12, 0.04], [-0.16, 0.1]]) f.cyl(0x2f6ad8, x + u, T + 0.072, wz + v, 0.022, 0.005, 6, 0, 0, G);
+    ware('skjorta', x, wz, T);
+  }
+  {
+    const x = -9.15;
+    f.box(0x2f8ad8, x, T, wz, 0.32, 0.1, 0.24, 0, G);
+    f.box(0xf4f4f0, x, T + 0.1, wz, 0.32, 0.005, 0.24, 0, G);
+    for (const [u, v] of [[-0.08, -0.05], [0.07, 0.04], [-0.02, 0.06]]) f.cyl(0xfafaf6, x + u, T + 0.13, wz + v, 0.035, 0.07, 8, 0.5, 0, G);
+    ware('nasa', x, wz, T);
+  }
+  // The price board on two legs west of the counter, turned to its front (§1.3: uppercase).
+  {
+    const bx = -12.75, bz = 21.85, by = 0.38;
+    for (const s of [-1, 1]) f.box(WOOD_D, bx + s * 0.5 * Math.cos(by), C, bz - s * 0.5 * Math.sin(by), 0.06, 1.1, 0.06, by, G);
+    f.box(WOOD_D, bx, C + 0.65, bz, 1.3, 1.3, 0.06, by, G);
+    grp.add(f.sign('PRISER I PTA\nSOLHATT 100*\nSOLGLASÖGON 150\nPRICKIG SKJORTA 200\nNÄSSKYDD 0\n*TRAPP TRULL-KONTO', bx + Math.sin(by) * 0.04, C + 1.3, bz + Math.cos(by) * 0.04, 1.18, 1.18, by, { bg: '#fff8e6', fg: '#1d1426', border: '#f7c31b', scale: 0.58, ppm: 360 }));   // [N] · the account [F*]
+    SUNTRIP_SHOP.blocks.push(f.solid(bx, bz, 1.3, 0.3, C + 1.95, 'sign'));
+  }
+  // The beach bag (the Trapp Trull account's) by the counter's west end: striped, two handles.
+  {
+    const x = -11.7, z = 22.55;
+    f.box(SUN, x, C, z, 0.5, 0.36, 0.2, 0.2, B);
+    for (const y of [0.1, 0.24]) f.box(RED, x, C + y, z, 0.51, 0.05, 0.21, 0.2, B);
+    for (const s of [-1, 1]) f.boxC(RED, x + s * 0.12 * Math.cos(0.2), C + 0.45, z - s * 0.12 * Math.sin(0.2), 0.03, 0.2, 0.03, 0.2, 0, s * 0.35, B);
+    ware('bag', x, z, C);
+  }
+  grp.add(toonMesh(G.build(), { outline: 0.03 }));
+  SUNTRIP_SHOP.bag = toonMesh(B.build(), { outline: 0.03 });
+  grp.add(SUNTRIP_SHOP.bag);
+  SUNTRIP_SHOP.group = grp;
+  SUNTRIP_SHOP.clerk = { x: f.wx(cx, 21.05), z: f.wz(cx, 21.05), yaw: f.yaw };
+  SUNTRIP_SHOP.blocks.push(f.solid(cx, (Z0 + ZF) / 2, X1 - X0, ZF - Z0, TOP + 0.02, 'counter'));
+  for (const b of SUNTRIP_SHOP.blocks) Object.defineProperty(b, 'dead', { get: () => !SUNTRIP_SHOP.live(), set() {}, configurable: true });
 }
 
 function suntripLot(f, glow) {

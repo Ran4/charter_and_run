@@ -222,7 +222,12 @@ and its owner whistling it home unseen (free roam, §10.21; in the film a drug d
 parcel at Arlanda's baggage check and somebody says "Fin hund."); tourists on the sun loungers
 going pink and lobster red, flying off a kicked lounger backwards with a charter complaint, and
 Berra waking for "Fem minuter till…" (free roam, §10.22; in the film Berra and Robban fall asleep in
-the sun and wake burnt, and nobody kicks a lounger).
+the sun and wake burnt, and nobody kicks a lounger); SunTrip-butiken on the office porch on the island,
+Stig buying the white SunTrip hat, the sunglasses, the dotted shirt and the nose guard there, every
+receipt's add-ons, the Trapp Trull account's instalments, the beach bag left by the counter with the
+travel agent's "Paketet!" after him, and Ole's line about the hat (free roam, §10.23; in the film the
+add-ons, the account, the nose guard and "Paketet!" are a Stockholm travel agency's, and who buys the
+nose guard is unknown).
 The film's flight has **no turbulence** and **no in-flight toilet scene**: both toilet scenes are
 at Arlanda (we keep them there). The plane's toilets are only an invented hideout.
 
@@ -1175,7 +1180,7 @@ standing there faces. `y` (optional) = absolute height for collectible spots on 
 | block (i,j) | type → builder (owner, file) | content | landmarks: `id` (lx, lz, yaw[, y]) | named / parked cars |
 |---|---|---|---|---|
 | (3,3) | `flamenco` → `hotelFlamenco` (C1, hotels.js) | 7-storey white slab x [−26, 26], z [−27, −14] with balcony rows, terracotta accents, `HOTEL FLAMENCO` roof sign; open reception porch (canopy, desk, plastic Christmas tree `julgran` prop, `RECEPCIÓN`; Phase 3 r2: `HOTEL FLAMENCO · RECEPCIÓN` stands on a terracotta panel above the pergola's fascia, where it no longer fills the top of the chase frame, and the garland runs across the fascia's face) at the slab's south face; ground-floor room patios along the south face (Stig & Ole's room west, room 113 east) with a visible 1st-floor balcony above 113; terracotta piers at the bay lines, solid (Phase 3 r2); pool deck south with a **walkable shallow pool** (flat blue slab at CURB+0.02 + `box(..., CURB, 'water')`, sign "TRE METER DJUPT I ENA ÄNDEN, / EN METER I DEN ANDRA. / BARNVÄNLIG!" (three lines) [F*] (the bungalow seller's line, relocated)); the **10 m diving tower** `TRAMPOLÍN 10 M` [N] at the deep end, on the strip between the hedge and the pool north of the low board (feature 24, §10.20: a white room over the whole footprint x [−17.4, −14.8], z [2.4, 4.8], four posts and two terracotta landings, the railed platform at C + 9.8 = 9.95 (the hotel's fourth floor), the board 1.4 m out over the deep end, the ladder up the north face; its solids `DIVE_TOWER.blocks`, live only between missions); poolbar with straw parasols (`BAR PISCINA · SVENSKT KAFFE`); the julafton party `julgran` on the pool deck at (2.2, 16), in the party and sunset-duet shots (Phase 3); room numbers: a closed room's centred above its own glass door, an open room's (107, 113) on its right-hand pier (Phase 3); parking lot on the west (its eight painted 2.8 × 5 m bays exported as `flamencoBays`, feature 20, §10.17); the parking signs here and at SunTrip's lot are a blue `P` plate over a name strip (`HOTEL FLAMENCO`, `SUNTRIP`) on a post that stops under them (Phase 3 r2: one two-line plate had shrunk the P to the name's size, and the post ran through both faces); **PEPES BODEGA**: small whitewashed annex x [4, 12], z [−31, −27] on the north side with a green door, barrels, sign `PEPES BODEGA · VINOS · RON` facing north (`worldHooks.bodegaLit(on)` lights it after julafton) | `flamenco` (−4, −8, π) (faces the hotel, so the views/cutaway camera stands on the pool deck; Phase 2) · `flamencoRecepcion` (2, −10, 0) · `flamencoPatio` (−18, −11, 0) · `rum113` (18, −11, 0) · `flamencoBalcony` (18, −8, π) · `flamencoPool` (−3, 18, π) · cut anchors (Phase 3; a cut stands `dist` m behind one, looking the way it faces): `rum107Cam` (−18, −11, π) = `flamencoPatio` turned round (looks into room 107), `recepcionCam` (2, −10, π) = `flamencoRecepcion` turned round (the desk from the porch front) · `flamencoDeck` (−4, −2.5, 0) (the island spawn: approachSpot puts the player on the pool deck at (−4, −1) facing the hotel, the chase camera over the pool rather than under the pergola slats; Phase 2) · `flamencoBar` (16, 12, −π/2) · `stektBerra` (8.2, 21.6, 0) · `stektRobban` (6.6, 21.6, 0) (the pool deck's two sun loungers in the north row where Berra and Robban lie fried, §10.22; their props, not standing spots) · `flamencoDrive` (−26, 22, π) · `flamencoBack` (−6, −33.5, 0) · `bodega` (8, −33.5, 0) · `fena_flamenco` (−3, 7, 0, 0.35) · `flamencoBoard` (−14.1, 7, π/2) (the middle of the diving board's bounce pad, facing out over the deep end: the judged board and the anchor of the sisters' spots at the pool's edge; not a standing spot; §10.8) · `stigSang` (−19.75, −20.35, 0) (the middle of Stig's turquoise bed in room 107, the way a sleeper on his back faces: the nap's E spot and the anchor of Ole's and Stig's places; not a standing spot, `teleport` puts him on the 0.70 mattress; §10.10) · `flamencoRing` (2, 8, 0) (the middle of the pool fest's ring in the shallow end, 2.5 m east of the circling fin's path; Lasse's place; the ring's places and Stig's gap are round it; §10.13) · `hopptorn` (−15.5, 1.55, 0) (the foot of the diving tower's ladder, facing it: KLÄTTRA UPP's E spot, and where KLÄTTRA NER puts him, turned round; §10.20) · `hopptornTopp` (−15.6, 3.15, π/2, 9.95) (on the platform beside the ladder's top, facing along the board: KLÄTTRA NER's E spot and where KLÄTTRA UPP puts him; not a standing spot for `teleport`; §10.20) | `hyrbil` (sedan `0xf4f4f0`) at `flamencoDrive` — default `getInCar` car and test car |
-| (3,2) | `suntrip` → `hotelSunTrip` (C1, hotels.js) | lower U-shaped hotel on red rock; welcome **stage** with SunTrip sun backdrop (red text on yellow sun), accordion/conga props; pool; **friskotek lawn**; SunTrip office porch on the south side facing Flamenco's back; posters `GRISFEST TORSDAG · 800 PTA`, `FRISKOTEKET 9.30`; the free-standing `FRISKOTEKET / VARJE MORGON 9.30` board on the lawn's west edge is solid (Phase 3 r3: only its posts were, so he walked through it and the chase eye stood behind it) | `suntrip` (−14, 24, π) (faces the office porch; Phase 2) · `scen` (0, −14, 0) · `friskotek` (−10, 8, 0) · `suntripPool` (14, 4, π) · `suntripLot` (24, 22, π) · `fena_suntrip` (14, 8, 0, 0.35) · `berraSolstol` (17.4, 2.2, 0) (the pool lounger Berra naps on, on its prop, facing its backrest end; §10.6) | — |
+| (3,2) | `suntrip` → `hotelSunTrip` (C1, hotels.js) | lower U-shaped hotel on red rock; welcome **stage** with SunTrip sun backdrop (red text on yellow sun), accordion/conga props; pool; **friskotek lawn**; SunTrip office porch on the south side facing Flamenco's back; posters `GRISFEST TORSDAG · 800 PTA`, `FRISKOTEKET 9.30`; the free-standing `FRISKOTEKET / VARJE MORGON 9.30` board on the lawn's west edge is solid (Phase 3 r3: only its posts were, so he walked through it and the chase eye stood behind it); SunTrip-butiken (feature 34, §10.23: hotels.js `suntripShop`, `SUNTRIP_SHOP`): a yellow counter on the porch by the east window, x [−11.9, −8.5] from the window to z 22.2, top C + 1.0, with `SUNTRIP-BUTIKEN` over it, `BRÄNSLETILLÄGG TILLKOMMER` on its front, the price board west of it and the four wares, in its own group shown only between missions on the island, its two solids (the counter, the board) live only then | `suntrip` (−14, 24, π) (faces the office porch; Phase 2) · `butik` (−10.2, 22.95, π) (Stig's spot in front of the counter's middle, facing it; feature 34, §10.23) · `scen` (0, −14, 0) · `friskotek` (−10, 8, 0) · `suntripPool` (14, 4, π) · `suntripLot` (24, 22, π) · `fena_suntrip` (14, 8, 0, 0.35) · `berraSolstol` (17.4, 2.2, 0) (the pool lounger Berra naps on, on its prop, facing its backrest end; §10.6) | — |
 | (1,2) | `kasbah` → `kasbah` (C2, centre.js) | **Centro La Medina** (fictional; internal id `kasbah`): two-level nightlife courtyard centre: arcade, stairs (ramp) to a roof terrace (top ≈ 6.0) with a balustrade above the bottom three steps and a sloped wall collider along it (Phase 3: the way on is over those three steps), neon signs `CENTRO LA MEDINA`, `VIKING BAR` (horned helmet), `TONGA TONGA` (mirror ball), `BAR SVENSKA · SMÖRGÅSAR` | `kasbah` (0, 22, π) · `vikingbar` (−16, 18, π) · `tongatonga` (14, 18, π) · `tongaLot` (20, 27, π) · `tongaSlump` (16.3, 17.4, 0.5) (where Berra slumps after Tonga Tonga and is picked up, at the right of the group in the street shot; Phase 3 r3) · `pryl_poolpen` (8, −6, 0, 7.2) · `angerudBil` (−7, 32.75, −π/2) (Angerud's hire car on the south sidewalk between missions, feature 20, §10.17) | — |
 | (4,2) | `cita` → `cita` (C2, centre.js) | **Centro Nórdico** (fictional; internal id `cita`) strip mall, sign `CENTRO NÓRDICO`: `SUPERMERCADO`, `FERRETERÍA`, `FARMACIA`, `ESTANCO`, `TELÉFONOS · HYTT 1·2·3`, `SOUVENIRS`, `SVENSKT KAFFE`, `CAMBIO · 1 KR = 17 PTA` (Phase 3: the north shop row and its canopy fit the courtyard between the wings, x ±11; `SOUVENIRS · REGALOS` and `FARMACIA` with its green cross sit on the wings' courtyard faces) | `cita` (0, 22, π) · `supermercado` (−18, 18, π) · `ferreteria` (18, 18, π) · `telefon` (0, 8, π) | — |
 | (2,3) | `plaza` → `plaza` (C2, centre.js) | palms, fountain (shallow walkable pool), restaurant terraces; the north row's arcade (12 arches), shops `CAFETERÍA EL SOL` · `HELADERÍA LA PALMERA` · `CORREOS · TELÉGRAFOS` · `BANCO · CAMBIO` · `PELUQUERÍA` (Phase 3 r3: each name on a 3.5 × 0.8 m board on the arcade's front above its arch's crown (4.09), y 4.1–4.9, two lines where needed; on the shop wall at 3.62 the 5.6–6.6 m signs hung behind the 3.93 m arches, which showed only their middle third) and the arcade café tables keep to x [−19, 29], clear of the west row (x [−29, −19]) that stands on the north row's west end (Phase 3 r2: two arches, the café sign and two tables were inside it); **CASA LOLA** (`CASA LOLA · COMIDA CANARIA`, fictional; internal id `grillpaco`) terrace on the SE corner (Phase 3 r2: the bougainvillea along its eave sits above the pergola's camera cap, west of the name board; Phase 3 r3: the string lights hang from the cross beams' underside (3.08) with a 0.15 sag, the lowest bulb at 2.72, and the pergola's camera ceiling is under 2.72: capped at 2.6 under lights sagging to 2.44, a bulb sat over his head) | `plaza` (0, 6.8, π) (south of the fountain rim, facing it: the fountain column stands at (0, 0); Phase 2) · `grillpaco` (20, 22, π) · `grillpacoMamma` (25, 24, π) · `grillpacoCurb` world (−60, 36, −π/2) (westbound kerb of the z = 40 road, the `follow` endpoint) · `fena_plaza` (0, 0, 0, 0.35) · `berraBank` (0, 8.6, 0) (the bench south of the fountain Berra naps on, on its prop, facing away from the fountain; §10.6) | — |
@@ -3099,6 +3104,11 @@ COLLECTIBLES = {
   "Jeg spanderer!" [N] + toast `Ole betalade ${n} pta.` [N]) and nothing is deducted. Fines and
   the panic fee are **not** paid by Ole (they just floor at 0).
 - **Free-roam pay**: Robban pays 25–100 pta for each Berra carried home (§10.6).
+- **Free-roam spending** (feature 34, §10.23): SunTrip-butiken's four wares at the sign's price plus
+  their add-ons: the hat 225 (100 + 25 + 25 + 25 + 50) on the Trapp Trull account, 75 now and two
+  instalments of 75 later; the sunglasses 275; the dotted shirt 350; the nose guard 50 (0 + the fuel
+  surcharge). The purse must hold what is paid now (`addCoins`; Ole does not pay); an instalment
+  waits until it holds 75.
 - Big-map flavour sign at Centro Nórdico (`cita`): `CAMBIO · 1 KR = 17 PTA`.
 
 ### 10.3 Unlocks (`UNLOCKS`, content/island.js; generic `game.unlock(name)`, Phase 0)
@@ -3148,6 +3158,13 @@ island with an unlock's `outfit` merged over it (`outfitOverrides`: `lasse` `jul
 roam between buss17 and the bodega `berra` and `robban` wear `stekt` (their island looks, lobster red)
 while they lie asleep by Flamenco's pool (feature 32, §10.22; back to their own look the moment it
 ends). Cut fallback: no swaps.
+**SunTrip-butiken's layer** (feature 34, §10.23): what he bought there and wears (`shop.worn`) is a
+look shallow-merged over his outfit by `setPlayerOutfit` (`shop.dress(def, name)`): the hat, the
+sunglasses (`glasses` off), the dotted shirt (the suit's parts off) and the nose guard, over `kostym`
+or `hawaii` alike. Only on the island with `missions.state === 'idle'`, never over `rio`: a mission
+start takes it off (buss17's change to `hawaii` and every cutscene see his own outfit), the runner
+going idle puts it back on; in a car it waits until he is on foot. `player.outfit` stays the
+outfit's name.
 **Re-application (review fix 1):** `placeNpcs(true)` re-applies the home set's outfits
 (`applyOutfits`) whenever the runner is not in `outro`, so the gate → flight set follows
 `missions.index` without a level change, a cue outfit lasts through its mission's outro and reverts
@@ -3162,7 +3179,8 @@ Key **`charter-and-run-v1`** (localStorage):
 ```js
 { v: 1, mission: index, coins, collected: { prylar: [ids], fenor: [ids] },
   unlocked: ['grisbil', ...], outfit: 'kostym' | 'hawaii', tune: 'sol' | 'samba',
-  records: { simhopp: n, eslov: s } }
+  records: { simhopp: n, eslov: s },
+  shop: { owned: ['hatt', 'glas', 'skjorta', 'nasa'], off: [ids], trapp: 0..2, trappT: s, bag: bool } }
 ```
 
 `load()` clamps `mission ≤ MISSIONS.length`; `?mission=N` overrides; `?fresh` skips loading.
@@ -3171,7 +3189,11 @@ Berra job (§10.6) is not saved. `unlocked` also holds the glide's `glid` (its t
 marker `glidPlask` (Lasse's pool line said; saved at once), §10.7. `records` holds the free-roam
 bests (`game.records`; a missing key is no record yet): `simhopp`, the diving judges' best total,
 saved at once when beaten (feature 4, §10.8); `eslov`, Eslövloppet's best time in seconds (two
-decimals), saved at once with a win that beats it (feature 7, §10.12). The free-roam clock (§10.10) is not saved: every
+decimals), saved at once with a win that beats it (feature 7, §10.12). `shop` (feature 34, §10.23):
+SunTrip-butiken's purchases (`owned`), the ones taken off at the counter (`off`), the Trapp Trull
+account's instalments still to pay (`trapp`) and its free-roam seconds towards the next (`trappT`,
+whole), and the beach bag taken (`bag`); saved at once with every purchase, change and instalment; a
+save without it is nothing bought. The free-roam clock (§10.10) is not saved: every
 session's island starts at 15:00. Herr Storch's stills (feature 6, §10.11) have their own key,
 **`charter-and-run-film-v1`**: a JSON array of up to 8 `data:image/jpeg` URLs (320×180, quality
 0.75, about 10–15 kB each), written when a still is kept, read at start unless `?fresh`, and
@@ -4651,6 +4673,102 @@ burn and the fly-off are [N] (§1.6).
   bather is reached through his lounger, not as a person in `allChars` (he joins it once off it); Stig
   pink after the bodega (the idea's cheap extra) is not built.
 
+### 10.23 Bränsletillägg tillkommer – SunTrip-butiken (free roam; feature 34, 2026-10-17)
+
+`game/suntripShop.js` (`SuntripShop`, owned by Game as `shop`), config `BUTIK` in content/island.js,
+the counter in world/blocks/hotels.js (`suntripShop`, `SUNTRIP_SHOP`). The film's travel agency in
+Stockholm sells the Storches high season, cancellation cover, travel insurance and the fuel surcharge,
+"SunTrips Trapp Trull-konto" with a sun hat and a beach bag, and a nose guard "också gratis"
+(research-plot.md:135–142); later on Gran Canaria Stig-Helmer wears a white SunTrip bucket hat,
+sunglasses and a light short-sleeved shirt with small dots (research-characters.md:111–112). Here the
+agency's counter stands on the island and Stig pays the add-ons; the shop and his buying there are
+[N] (§1.6), its lines the agency's, relocated.
+
+- **When.** `live`: on the island with `missions.state === 'idle'`. Then the counter's group
+  (`SUNTRIP_SHOP.group`: the counter, its signs, the wares, the price board) is shown and its two solids
+  (`SUNTRIP_SHOP.blocks`: the counter from the window to its front, kind `'counter'`, top C + 1.02, so
+  nobody walks behind it; the price board, kind `'sign'`) are live (each block's `dead` is a getter,
+  `!SUNTRIP_SHOP.live()`), and the travel agent stands behind it. In any other state or on the other
+  level all of it is gone at once (the group hidden, the solids dead, the clerk hidden, the queued
+  lines dropped), so no mission stage, cutscene, timer, fixture or calibration pool sees any of it
+  (friskotek's balls are blown about within 30 m of `friskotek`, which takes the porch in). No free-roam
+  race runs near it (Eslövloppet is on vischan).
+- **The counter** (§6.3): yellow with a red top, x [−11.9, −8.5] local, 0.6 m deep at its front (z
+  [21.6, 22.2]) and closed to the window by side panels; `SUNTRIP-BUTIKEN` [N] on two posts over the
+  clerk's head, just under the awning; `BRÄNSLETILLÄGG TILLKOMMER` [N] (the title screen's fine print)
+  on its front; west of it the price board on two legs, turned 0.38 rad to the counter's front:
+  `PRISER I PTA / SOLHATT 100* / SOLGLASÖGON 150 / PRICKIG SKJORTA 200 / NÄSSKYDD 0 / *TRAPP
+  TRULL-KONTO` [N] (the account [F*]). On the counter from the west: the white hat with its red band
+  and SunTrip's sun, the sunglasses on a stand, the folded dotted shirt, a box of nose guards
+  (`SUNTRIP_SHOP.wares`, world positions). The beach bag (`SUNTRIP_SHOP.bag`, its own mesh, yellow
+  with red stripes and handles) stands on the porch at the counter's west end while the account's bag
+  waits. Lasse at `suntrip` is 3–5 m west; his missions are given elsewhere (friskotek, the airport),
+  so his talk never takes the counter's E.
+- **The travel agent** (`clerk`, "Reseförsäljaren", the film's uncredited agent, research-
+  characters.md:504–507): a figure of the module's own (not in `CHARS`, not in `allChars`: no kick,
+  car or SKANDAL), short brown hair, a thin moustache, a white T-shirt with a yellow band and a red
+  `SUNTRIP` printed on it (`bib`, `bibC` '#d8321e'), at `SUNTRIP_SHOP.clerk` (local (−10.2, 21.05),
+  facing the street). He turns to the focus within 10 m, else back; his mouth goes with his bubble. Not
+  Gabbe (the idea's first choice): Gabbe's home is the stage, and after the end he plays in the pool
+  fest's ring (§10.13).
+- **Greeting.** Once a session, him within `greetR` = 4.5 m on foot: "Välkommen till SunTrip-butiken!
+  Bränsletillägg tillkommer." [N].
+- **The wares** (`items`; E at `r` = 1.25 m from a ware, Stig on foot, standing, carrying nothing, no
+  dialogue). Prompt: `<b>E</b> Köp {name} ({n} pta)` [N] with the sign's price, the nose guard `<b>E</b>
+  Ta ett nässkydd (gratis)` [N]:
+
+  | id | name | base | add-ons (högsäsong, avbeställningsskydd, reseförsäkring, bränsletillägg) | total | paid now | sell line | Stig |
+  |---|---|---|---|---|---|---|---|
+  | `hatt` | solhatten | 100 | 25, 25, 25, 50 | 225 | 75 (Trapp Trull) | "Solhatten säljer vi bara på SunTrips Trapp Trull-konto. Strandväskan ingår!" [F*] | "Det var en väldigt massa tillägg…" [F*](t) |
+  | `glas` | solglasögonen | 150 | 25, 25, 25, 50 | 275 | 275 | "Solglasögon. Med solfilter, för en blygsam merkostnad." [F*] (the bungalow seller's words) | the same sigh |
+  | `skjorta` | den prickiga skjortan | 200 | 50, 25, 25, 50 | 350 | 350 | "Vad den kostar? Det beror på var du bor." [F*] (the agent's answer to the Storches) | the same sigh |
+  | `nasa` | ett nässkydd | 0 | –, –, –, 50 | 50 | 50 | "Nässkydd – det får du också gratis." [F*] | "Gratis… plus bränsletillägg." [N] |
+
+  Bought: the purse goes down by what is paid now (`addCoins(−n)`, `audio.coin`; never `game.pay`, so
+  Ole never pays), he turns to the clerk, the clerk says the sell line, and the receipt is a toast
+  (class `receipt`, 7.5 s): `Kvitto · SunTrip` [N], then a line per entry, `solhatt 100` [N], `+ högsäsong
+  25` …, `= <b>225 pta</b>`, each `lineSecs` = 0.45 s after the last (a CSS fade per line, style.css);
+  on the account a last line `Trapp Trull-konto: 75 pta nu, resten i 2 avbetalningar` [F*]. A bell
+  (`audio.pling`) with the total, and Stig's line `sighAt` = 0.5 s after it. Short of what is paid now:
+  the clerk's "Med alla tillägg blir det {total} pta, tyvärr." [N], or under `poorBelow` = 50 pta (the
+  fuel surcharge) "Det räcker inte ens till bränsletillägget." [N]; nothing is paid or bought.
+- **His look.** What he owns and has not taken off is worn at once (`shop.worn`, ids in item order) as
+  a layer over his outfit (`setPlayerOutfit` → `shop.dress`, §10.4): the hat `{ hat: 'bucket', hatC:
+  0xf4f1e8, hatBand: 0xd8321e, hatSun: true }`, the sunglasses `{ shades: 0x2a2a2a, glasses: null }`,
+  the shirt `{ shirt: 0xf6f3ea, print: [0x2f6ad8], printStyle: 'dots', longSleeves: false, collar: true }`
+  with the suit's parts off (over `kostym` his brown trousers stay, over `hawaii` the shorts), the nose
+  guard `{ noseGuard: 0xfafaf6 }` (the new look fields, §14.6). E at a ware he owns takes it off (`<b>E</b>
+  Ta av {the}` [N]; the nose guard's `the` "nässkyddet") or puts it on again (`<b>E</b> Ta på {the}`
+  [N]), free. The layer is only `live` and never over `rio`; out of `live` (a mission start: the runner
+  leaves `idle`) it comes off at once, and back when the runner is idle again; in a car a change waits
+  until he is on foot, so no car seat holds a model scaled for another head (`seat` shrinks him by the
+  hat, as by any head: in every enterable car type the hat stays under `roofY` and the brim within the
+  body, `butikbil`). The flight level never sees it. Kept after a restart (§10.5).
+- **SunTrip's Trapp Trull account** (the hat only, `trapp`: `parts` = 3): a third of the total now (75),
+  and `parts` − 1 instalments of the same, each after `every` = 150 s of free roam (the account's
+  clock runs only while `live` and out of dialogue): a toast "Trapp Trull-kontot: avbetalning {i} av
+  {k}, {n} pta" [N] (`audio.coin`), the last with "Trapp Trull-kontot är betalt. Tack för att du reser
+  med SunTrip!" [N]. With less than 75 in the purse it waits `retry` = 15 s and tries again (nothing
+  floors at 0, nothing is owed further). Saved (`trapp`, `trappT`).
+- **The beach bag and "Paketet!"** The account's bag waits by the counter (`bagWaiting`: the hat owned,
+  the bag not taken). E at it (`<b>E</b> Ta strandväskan` [N]): Stig's "Paketet. Ja. Tack." [N], and it
+  is gone (saved, `bag`). Walking or driving `leaveR` = 8 m from `butik` while it waits, after having
+  been within `backR` = 4 m: the clerk calls "Paketet!" [F*] (the film's running gag, research-
+  plot.md:133) (`yell`), once per departure; back within 4 m arms it again.
+- **Ole sees the hat.** Bought, or put on again at the counter, the hat makes Ole's next sight of it
+  (`oleDue`) a line: him within `oleR` = 7 m of Ole (shown, `honk.free('ole')`, not busy or in a car,
+  saying nothing): "Nå ser du ut som en ekte sydenturist, Stig-Helmer!" [N] (3 s; his chatter waits
+  8–12 s). Not saved: a restart does not repeat it.
+- `shop.last` ({ kind: 'buy' | 'short' | 'toggle' | 'bag' | 'paketet' | 'instalment' | 'ole', id?,
+  total?, paid?, lines?, need?, coins?, on?, i?, n?, d?, t }) is for tests. Scenarios `butik` and
+  `butikbil` (§16.4).
+- **Not done / changed** (deviations from the idea): the clerk is the film's travel agent, a new
+  figure, not Gabbe; the bag goes into his luggage (no bag in his hand), and taking it is a prompt of
+  its own; an instalment falls due after 150 s of free roam, not after missions; owned wares can be
+  taken off and put on again at the counter; Ole's line is said in person, not on the radio; the
+  SunTrip T-shirt for 15 kr is not sold; the layer is worn in free roam only (the idea's "behåller det
+  i free roam", and the binding free-roam rule), so missions and their cutscenes show his own outfit.
+
 ## 11. HUD / UI strings (Swedish; `src/strings.js` owned by WP-H, created by Phase 0)
 
 `strings.js` exports `S` (flat object) and `fmt(key, vars)`. Engine code uses `S.key` only.
@@ -5055,6 +5173,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/diveTower.js` | new (feature 24, 2026-10-16) | — | `DiveTower` (`game.tower`): Från fjärde våningen in free roam: the tower's solids live between missions, the ladder's two E points and fades, the dive off the platform (the mantra, the poses), the cannonball and the belly flop into the water, Lasse's line (§10.20) |
 | `src/game/dogs.js` | new (feature 31, 2026-10-17) | — | `Dogs` (`game.dogs`): Fin hund… in free roam: the watchdogs' lots (`Lot`), looks and dogs (`Dog`), their rush, bay, call and calm, Stig's hands, lines and thanks (§10.21) |
 | `src/game/bathers.js` | new (feature 32, 2026-10-17) | — | `Bathers` (`game.bathers`): Badgäster på solstolarna in free roam: tourists on the sun loungers nearest him by day, their burn (pale, pink, lobster red), the fly-off from a kicked or smashed lounger, a newcomer on a lounger back; Berra and Robban fried and asleep on two Flamenco loungers between buss17 and the bodega, their snores and the wake (§10.22) |
+| `src/game/suntripShop.js` | new (feature 34, 2026-10-17) | — | `SuntripShop` (`game.shop`): Bränsletillägg tillkommer in free roam: SunTrip-butiken's counter shown and its solids live between missions, the travel agent, the wares' and the bag's interactables, the receipts, the Trapp Trull account's instalments, "Paketet!", Ole's line; his bought look as a layer over his outfit (`dress`), saved (§10.23) |
 | `src/game/hud.js` | edit | **H** | map sources, meter, strings, legend, ring, blips, zone bar, markers; `renderPortrait` restores the model transform (§14.8) |
 | `src/game/camera.js` | edit | **A1** | profile, frameOne, cutTo, `clampZ` |
 | `src/game/fx.js` | edit | **A1** | `snow`, `steam`, `meterPuff` (rename of `shame`); `splash`'s `up` (feature 24, §10.20) |
@@ -5071,7 +5190,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/world/props.js` | edit | **B** | `TYPES` (§6.8), flags, `reviveProps`, `propsOfType`; the `frutas` stall, its flags, the debris palette, `spawnShreds` and the signs (feature 28, §10.19) |
 | `src/world/collision.js` | edit | none | `segmentBlocked` nearest hit |
 | `src/world/blocks/index.js` | new | none | `BLOCK_BUILDERS` merge |
-| `src/world/blocks/hotels.js` | new | **C1** | `flamenco`, `suntrip`; `flamencoBays` (feature 20, §10.17); the diving tower `diveTower` and its solids `DIVE_TOWER` (feature 24, §10.20) |
+| `src/world/blocks/hotels.js` | new | **C1** | `flamenco`, `suntrip`; `flamencoBays` (feature 20, §10.17); the diving tower `diveTower` and its solids `DIVE_TOWER` (feature 24, §10.20); SunTrip-butiken's counter `suntripShop` and `SUNTRIP_SHOP` (feature 34, §10.23) |
 | `src/world/blocks/centre.js` | new | **C2** | `kasbah`, `cita`, `plaza`, `marknad`, `kyrka`, `bensin`, `guardia`; the market's five fruit stalls as `frutas` props (feature 28, §10.19) |
 | `src/world/blocks/nature.js` | new | **D1** | `tomat`, `grisfest`, `fataga`, `golf`, `bungalow`, `bygge`, `dyner`; `FARM_YARD` (feature 31, §10.21) |
 | `src/world/blocks/coast.js` | new | **D2** | `flygplats`, `dromplan`, `fyren`, `playa`, `hamn`; `BELT` (feature 25, §10.16) |
@@ -5101,6 +5220,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `tools/scenarios/lapplisa.mjs` | new (feature 20) | — | lapplisa, lappfilm |
 | `tools/scenarios/torsdag.mjs` | new (feature 21) | — | torsdag, torsdagOle |
 | `tools/scenarios/badgaster.mjs` | new (feature 32) | — | badgaster, stekt |
+| `tools/scenarios/butik.mjs` | new (feature 34) | — | butik, butikbil |
 | `tools/story/flight.mjs` | new | **F** | `M_FLIGHT` (M[0..4]) |
 | `tools/story/island.mjs` | new | **G** | `M_ISLAND` (M[5..12]) |
 
@@ -5119,7 +5239,7 @@ Init: `initGfx` → `input.init` → `hud.init` → `fx.init` → fonts (Luckies
 → peds (34) → NPC `Character`s (one per `CHARS` key except `stig`, the radio-only keys `levander
 kapten pa guardia pax telefonist` and the cabin-owned `vardinna2`; `key` field; hidden until placed, §2.3) →
 player `Character(CHARS.stig)` (`key = 'stig'`) → collectibles (`COLLECTIBLES`) → markers → `Shame`
-→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `DiveTower` (feature 24, §10.20; registers the ladder's two interactables, sets `DIVE_TOWER.live`) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `Eslov` (feature 7, §10.12; registers the rollerskier's interactable) → `PoolFest` (feature 8, §10.13) → `StigSorry` (feature 11, §10.14) → `PigTruck` (feature 15, §10.15) → `BaggageBelt` (feature 25, §10.16) → `Lapplisa` (feature 20, §10.17) → `GrisfestFree` (feature 21, §10.18; registers the gate's and the tourists' interactables) → `FruitStands` (feature 28, §10.19) → `Dogs` (feature 31, §10.21) → `Bathers` (feature 32, §10.22; registers the wake's interactable) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
+→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `DiveTower` (feature 24, §10.20; registers the ladder's two interactables, sets `DIVE_TOWER.live`) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `Eslov` (feature 7, §10.12; registers the rollerskier's interactable) → `PoolFest` (feature 8, §10.13) → `StigSorry` (feature 11, §10.14) → `PigTruck` (feature 15, §10.15) → `BaggageBelt` (feature 25, §10.16) → `Lapplisa` (feature 20, §10.17) → `GrisfestFree` (feature 21, §10.18; registers the gate's and the tourists' interactables) → `FruitStands` (feature 28, §10.19) → `Dogs` (feature 31, §10.21) → `Bathers` (feature 32, §10.22; registers the wake's interactable) → `SuntripShop` (feature 34, §10.23; registers the four wares' and the bag's interactables, sets `SUNTRIP_SHOP.live`) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
 `placeNpcs(true)` → spawn the player → portraits for every key in `CAST` (`renderPortrait`
 restores each model's parent and transform, so seated cast members stay in their seats) →
 `applySaveToWorld()` →
@@ -5131,7 +5251,7 @@ mantra/hold, AI, cars, people (`glide.step` → the player's step → `glide.aft
 traffic/peds skipped when `!levelDef.sim.*`) → `syncAll` (also
 writes `ch.x/y/z` from `car.seatWorld(ch.seatSide)` for every car-seated character, player
 included, so framing, bubbles and distance checks see where they really are) → `missions.update` →
-`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `tower.update` (feature 24) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `stands.update` (feature 28) → `dogs.update` (feature 31) → `bathers.update` (feature 32) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
+`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `tower.update` (feature 24) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `stands.update` (feature 28) → `dogs.update` (feature 31) → `bathers.update` (feature 32) → `shop.update` (feature 34) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
 pickups/collectibles → props → `fx.tick` → `tickTown` → markers → camera → sun/sky → HUD → audio →
 traffic recycling (island) → autosave. `loop` then renders, and when `film.grabNow` is set calls
 `film.grab()` in the same task (Herr Storch's still from the frame's buffer, feature 6, §10.11).
@@ -5190,6 +5310,9 @@ game.bathers;      // Bathers (feature 32, §10.22): tourists on the sun lounger
                    // bathers.loose (the bathers off their loungers: allChars, areaHit), step(h)
                    // (fixedStep), onPropBroken(p, vx, vz) (from onPropBroken, after the lounger's own
                    // SKANDAL), onGetUp(ch) (onGetUp: true for a bather, his line said), held, last
+game.shop;         // SuntripShop (feature 34, §10.23): SunTrip-butiken in free roam; shop.live,
+                   // dress(def, name) (setPlayerOutfit: his bought look over the outfit), worn,
+                   // owned, off, trapp, trappT, bag, clerk, saveData()/loadData(s) (save's `shop`), last
 game.breakProp(p, vx, vz, car) -> p | null   // car.js's smash: null when refused (a fruit stall
                    // outside free roam or under any car but his: the car meets a wall); Stig's sorry
                    // ('stand' for a fruit stall), then stands.onBroken (feature 28)
@@ -5436,6 +5559,11 @@ shapes. Phase 3: `skirtPrint` (the dress's dots, else `print`), `mittenBand`, `s
 (a cap's peak), hat `'fur'`. Feature 7: `bib` (text printed on a single `stripe`'s front, the band
 then 0.2 × torso high: the rollerskier's `ESLÖV`, #1b3a8a on a transparent canvas, an unlit strip of
 the band's elliptic cylinder 1.9 rad round the front, no outline; shown in the cast sheets too).
+Feature 34 (§10.23): `bibC` (the `bib` text's colour, default #1b3a8a; one texture per text and
+colour), `hatBand` (the bucket's band, default its colour × 0.62), `hatSun` (SunTrip's sun on the
+bucket's front: a yellow disc on the crown's slope with a red bar for the letters), `noseGuard` (a
+white plastic shell over the nose, its own ellipsoid grown 1.25 × 1.15 × 1.3 and 0.08 R forward, and
+a tab up to the bridge).
 Prints (shirt and dress) are a second mesh without an outline (one extra
 draw call on printed models; the cabin and Rio busts keep them merged); under a `suit` or a `vest`
 the shirt print is a few dots in the V or the vest's opening only. An outfit clears a base field with
@@ -5610,6 +5738,10 @@ export function sidewalkAt(x, z) -> null | { along: 'x' | 'z', road, side: ±1, 
 // world/blocks/hotels.js: DIVE_TOWER { top: 9.95, blocks: [8 solids, kind 'tower'], live() } (feature
 //   24, §10.20): the diving tower's solids, filled when the block is built; each block's `dead` is a
 //   getter, !live() (DiveTower sets live: the island with missions.state === 'idle').
+// world/blocks/hotels.js: SUNTRIP_SHOP { group, bag, blocks: [the price board 'sign', the counter
+//   'counter'], wares: { hatt, glas, skjorta, nasa, bag: { x, z, y } }, clerk: { x, z, yaw }, live() }
+//   (feature 34, §10.23): SunTrip-butiken, filled when the block is built; its group (counter, signs,
+//   wares, board) and the bag's mesh are shown by SuntripShop, each block's `dead` is !live().
 export const BLOCK_MAP_COLORS = { flamenco: '#f4efe6', ... }  // minimap lot colours per MAP type
 
 // world/landmarks-island.js
@@ -5912,6 +6044,15 @@ shame.paint (PaintShop, §7.2): configure(cfg) from configure(); onPursuit() fro
 //   the lounger is what a car meets); onPropBroken: bathers.onPropBroken after the lounger's own SKANDAL
 // character.js: state 'lying', lieAt(pose), liePose, fling's `flip`; models.js: anim.lie, the
 //   outfits berra.stekt and robban.stekt, STEKT_SKIN
+// suntripShop.js (feature 34, §10.23): game.shop = new SuntripShop(game) after the bathers (sets
+//   SUNTRIP_SHOP.live; registers butik:hatt, butik:glas, butik:skjorta, butik:nasa (prompt getters)
+//   and butik:bag); update(dt) after bathers.update (not live: the group and the bag hidden, the clerk
+//   hidden, the queue dropped, the layer off; live: the clerk shown and turned, the layer refreshed,
+//   the queued bell and sigh, the greeting, "Paketet!", the instalments, Ole's line); live;
+//   bagWaiting; canUse(); prompt(it); dress(def, name); wanted(); refresh(); use(it); takeBag();
+//   saveData(); loadData(s); last
+// main.js: setPlayerOutfit builds outfitDef(stig, name) through shop.dress (none before the shop
+//   exists); save() writes shop.saveData() as `shop`, load() reads it (§10.5)
 // collision.js: waterAt(x, z, y) -> the `water` block he stands in at that height, or null
 //   (feature 4; moved from glide.js)
 
@@ -5928,7 +6069,8 @@ fx.splash(x, z, n = 16, sp = 3, up = 4)   // n drops thrown out at sp m/s and up
 // WP-H additions (all additive):
 // hud.panic(secs); hud.labelLayout (big-map label layout, cached on labels + crop); body classes
 //   pursuit / panik / in-dialog; banner classes multa (bust) and fear; toast classes witness and
-//   alert (Phase 3 r3: TURBULENS! in a stage); HUD
+//   alert (Phase 3 r3: TURBULENS! in a stage) and receipt (feature 34, §10.23: SunTrip-butiken's
+//   receipt, its spans fading in one by one by their inline animation-delay, style.css); HUD
 //   elements #vignette #sirenlights #panik. hud.say: one bubble per speaker (a new line replaces
 //   it; hud.unsay(target) takes it down, Phase 3) and overlapping bubbles stack upwards, the
 //   newer above (Phase 2), with a tail to its speaker behind the older one (cls lead, Phase 3 r3);
@@ -6494,6 +6636,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `frukt`, `fruktFore` [feature 28] | Rakt genom fruktståndet (§10.19). `frukt`, at index 9 (free roam, after asnan): the five fruit stalls are `frutas` props (kind `stall`, top 2.55, at their §6.3 places, the FRUTAS board on rad A's west); a kick and his car at 3 m/s leave rad C's standing (the car stopped at the counter); at 11 m/s from the front it breaks: the seller up beside it (within 4.5 m, not ahead of the car), flailing, "¡Mis tomates!", Stig's `stand` line 0.35–0.75 s after, the souvenir seller's "Jävla smålänningar!" 1.25–1.6 s after, +10.8 SKANDAL, coins; she is gone after 4 s; an AI car's `game.breakProp` refused; FRUTAS from the west at 12 m/s: stall and board gone, no swear (40 m off); the lone stall within 60 s: the seller there, her cry, no swear; a broken stall stays down with him near and with a car in its footprint, and is back with neither (him 150 m off); a mission start (ropavieja): all five up, the board up, a car in the lone stall's footprint moved out; in the mission his car at 11 m/s stops at rad C's counter, no seller. `fruktFore`, at index 6: it breaks, her cry, the souvenir seller at his stand within 25 m, no swear. Shots `frukt_rad`, `_frutas`, `_krasch`, `_mis_tomates`, `_smalanningar`, `_frutas_krasch`, `_uppdrag` |
 | `hopptorn` [feature 24] | Från fjärde våningen (§10.20), at index 13: the tower's 8 solids live (`DIVE_TOWER.top` 9.95; the platform and the board are floors at 9.95, the foot no free spot); at `hopptorn` the prompt "Klättra upp", E fades to black and puts him on the platform facing the board (`climbs` 1, prompt "Klättra ner"); S, A and D held 1.2 s each: the railing keeps him up; walked off the board: `leap` on the way down, the mantra, a belly flop in the deep end (v > 18, in the pool), face down, Lasse's whole line on the radio once, "Oj." when he is up; with J tapped under 8.5 m: `bomb` on the way down, a cannonball (no flop, `waterSplash` with bomb, v > 24, shake ≥ 1.3), no second radio line, no "Oj."; E on the platform: at the foot (`climbs` 5); after `bodega` a held J off the board is the glide's (no tower landing; the glide into the pool, at `speed` 3 for the test), and its radio line waits (`glide.radioSaid` false, no `glidPlask`); at index 9, up the tower, `missions.begin()`: he is down with no landing over 6 m/s, no tower solid in `queryBlocks`, the floor at 0.15, `spotFree` and `footReach` from `flamenco` true there, no `hopptorn` prompt, and in the running mission he walks through where it stands. Shots `hopptorn_daeck`, `_fot`, `_topp`, `_fall`, `_magplask`, `_lasse`, `_bombfall`, `_bomb` |
 | `hund` [feature 31] | Fin hund… (§10.21), at index 13: 12 bungalow dogs (the 7 trampoline lots among them) and Chispa at the farm, 13 names, each lying in its own lot, the ones beyond 75 m hidden; at the dog with the most others within 70 m, 2 or more awake at ≥ 45 fps; on Bobi's sidewalk `alert` inside the wall (lot-local z 1.3–3) and "VOFF! VOFF!"; through the gate (W 1.1 s) `bay` 1.1–1.8 m off, `placate` 1, "Fin hund… fin hund…"; walked at, it stands its ground (> 0.6 m); out through the gate again it never comes nearer the street than z 1.3, barks after him (`back`) and his hands come down; on the trampoline behind the house it gets round the house to under him (< 3.6 m), rears up, `placate` 2 with the mantra: Stig's first line "Snälla hund… sitt!", then the mantra, the owner's "¡Bobi! Hit!" from a door, "Tack… tack så mycket!", `calm` > 30 s, his hands down and no rush when he walks in again; up the farm tank's ramp (W 1.4 s) he is up at 1.95 and Chispa bays below him (< 5 m, on the ground), "¡Guau! ¡Guau!", the mantra pose, then "¡Chispa! ¡Ven aquí!"; on the roof of the car in Tango's drive he is up and Tango at him; Kasper with `groundCall` 4 s: a kick and a stomp at him change nothing (SKANDAL not up), then the call; at index 9 Pirre at him, `missions.begin()`: no dog visible, `placate` 0, `held` false; at index 0 (the flight level) no dog visible. Shots `hund_trottoar`, `_fin`, `_studsmatta`, `_visslar`, `_gard`, `_biltak`, `_kasper`, `_pudel` |
+| `butik`, `butikbil` [feature 34] | Bränsletillägg tillkommer – SunTrip-butiken (§10.23). `butik`, at index 6 (free roam, hawaii): the counter's group shown, its two solids live (the counter a wall), the clerk behind it, the greeting; E at the hat with 30 pta "Det räcker inte ens till bränsletillägget.", with 60 the total 225 and nothing paid; with the purse the hat on the Trapp Trull account (75 paid, 2 instalments, the receipt's 7 lines one by one, its text, the sell line, Stig's sigh after the total, the hat with `hatSun` on him, headTop up, the bag shown); "Paketet!" walking 8 m off, once a departure, again after coming back; E at the bag; no call once taken; the glasses 275, the shirt 350, the nose guard 50 (its receipt, "Nässkydd – det får du också gratis.", "Gratis… plus bränsletillägg."); the full look (`worn` `hatt glas skjorta nasa`, shades, no glasses, dots, the nose guard, no suit); E takes the glasses off (his own back, free) and on; the instalments held back while short, then 2 of 3 and 3 of 3 (75 each, the account paid); Ole's line within 7 m; the save's `shop` and a reload (not fresh): all of it on him, Ole silent; a mission start (friskotek): group, bag and clerk gone, solids dead, his own hawaii look; an abort: back; `rio` takes no layer, the island outfit takes it again. `butikbil`, at index 9 with the full look: seated in hatch, sedan, taxi, wagon, pickup, grisbil, van, icecream, guardia and bus, the head with the hat under `roofY` and its x extent within the body's half width, a shot of each from the driver's side; on foot again with the look |
 | `badgaster`, `stekt` [feature 32] | Badgäster på solstolarna (§10.22). `badgaster`, at index 6 (free roam): bodies only on taken sun loungers, their hips on the seat, at most `max` (10), none on Berra's or Robban's; on the main beach no taken lounger within `r` left empty nearer than the bodies (shot `badgaster_strand`); one rebuilt body's ms logged. The burn: three loungers in the z 250 row; a bather lain past `burn[0]` stays pale while in view within `seenR` and is pink once out of view; past `burn[1]` lobster red (skins from `skins`; shot `badgaster_stadier`). A kick at a free lounger and at a taken one give the same SKANDAL; the bather off it in a backward somersault (`flip` < 0) along the lounger's facing (vz > 2), an OUCH bark, a GETUP bark on his feet (shots `badgaster_kullerbytta`, `badgaster_upp`), gone once Stig is 30 m off; no `onCharHit`, no "hit" sorry. His car at 10 m/s through a taken lounger: SKANDAL 1 × 1.2 × gain only, the bather off along the car (vz > 5; shot `badgaster_bil`). The lounger back after its smash (respawn 0, him 100 m off): `n` + 1, a new seed, stage 0, a pale newcomer on it. At 22:00 nobody (after a cut); at 10:00 `dayN` + 1 and a new crowd. A mission start (friskotek) takes every body away at once, none in the mission; the flight level (index 2) makes none. `stekt`, at index 6: Berra and Robban `lying` on their loungers, outfit `stekt` (skin `STEKT_SKIN`), `slump`, busy, spot `stekt`; both snore within 9.5 s (shots `stekt_bar`, `stekt`); the E point `stekt:wake` at Berra's feet: Stig's line, then Berra's with `lift` > 0.6 (shot `stekt_fem_minuter`), then Robban's, in that order, and `lift` back under 0.1; a kick at Berra's lounger: `flung`, then `down` with his timer held (> 100), still `stekt`, only snores from him (shot `stekt_sparkad`); the lounger back with him 100 m off: on it again. A mission start (friskotek): both `normal`, outfit `sol`, no slump, within 2.5 m of their homes at the bar. Index 7: on their loungers; 5 and 8: not |
 | `talk` [Phase 0] | `autoDialog = false`, walk to Ole at `gateQueue`, E, Space twice |
 | `fullstory` [Phase 0b] | swaps the literal §8 missions (`tools/fixtures/full-missions.js`) into `MISSIONS` and plays all 13 per §16.3 (`FROM`/`TO` as `story`); must end `#13 idle`, `RESULT: PASS` |
@@ -6575,6 +6718,7 @@ fatagaDukar golf bungalow bygge dromplan airport hittegods busBay bagageband dyn
 + Angerud's hire car on the sidewalk `angerudBil` (feature 20, §10.17)
 + the diving tower's ladder foot and platform `hopptorn hopptornTopp` (feature 24, §10.20)
 + Berra's and Robban's sun loungers `stektBerra stektRobban` (feature 32, §10.22)
++ SunTrip-butiken's counter front `butik` (feature 34, §10.23)
 + collectibles `pryl_klocka pryl_poolpen pryl_kalkylator pryl_kniv pryl_kamera pryl_glasogon
 pryl_pung fena_flamenco fena_suntrip fena_plaza fena_golf fena_bungalow fena_hamn fena_hav` + Rio
 `rioBoat rioCam`.
@@ -8243,3 +8387,24 @@ the fixer's group.
   bather and sends the two home at once in their own skin, so no mission, cutscene, stage kind, timer,
   fixture or calibration pool changed. `perf` gained the island view `playa` (the beach's bathers).
   Scenarios `badgaster`, `stekt` (§16.4).
+- Feature 34, "Bränsletillägg tillkommer – SunTrip-butiken" (`features/implemented/bransletillagg_butiken.md`,
+  2026-10-17): SunTrip-butiken on the SunTrip office's porch in free roam (§10.23; new
+  `src/game/suntripShop.js`, `BUTIK` in content/island.js; §1.6, §6.3, §10.2, §10.4, §10.5, §14.1–14.3,
+  §14.6–14.8, §16.4, Appendix A). World (§6.3): hotels.js `suntripShop` builds a yellow counter by the
+  office's east window (`SUNTRIP-BUTIKEN`, `BRÄNSLETILLÄGG TILLKOMMER`, the price board, the four wares,
+  the beach bag) in its own group, and `SUNTRIP_SHOP` exports it; the group is shown and its two solids
+  live only on the island with `missions.state === 'idle'`, so no mission stage, cutscene, timer,
+  fixture or calibration pool sees it; the landmark `butik`. The film's travel agent (a figure of the
+  module's own, a white T-shirt with SUNTRIP in red on a yellow band) sells the white SunTrip hat (100 +
+  högsäsong, avbeställningsskydd, reseförsäkring, bränsletillägg = 225, on the Trapp Trull account: 75
+  now and two instalments of 75 after 150 s of free roam each), the sunglasses (275), the dotted shirt
+  (350) and the nose guard (0 + 50); the purse must hold it (`addCoins`, Ole does not pay); the receipt
+  is a toast (class `receipt`) whose lines come one by one, with the agency's lines [F*] and Stig's
+  "Det var en väldigt massa tillägg…" [F*](t); the account's beach bag waits by the counter, and
+  walking off without it brings "Paketet!" [F*]; Ole's "Nå ser du ut som en ekte sydenturist,
+  Stig-Helmer!" [N] at the new hat. What he buys is a layer over his outfit (`setPlayerOutfit` →
+  `shop.dress`; §10.4), in free roam only and never over `rio`, taken off and on at the counter, saved
+  in the save's new `shop` field (§10.5). Models (§14.6): `hatBand`, `hatSun`, `noseGuard`, `bibC`. In
+  every enterable car the hat stays under the roof (`seat` shrinks him as before). Deviations: a new
+  clerk instead of Gabbe, the instalments after free-roam time, Ole in person, no SunTrip T-shirt.
+  Scenarios `butik`, `butikbil` (§16.4).

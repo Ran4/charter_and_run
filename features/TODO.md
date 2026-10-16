@@ -2,7 +2,6 @@
 # flytta den till "färdiga features"-sektionen nedan)
 # markörer: ⟨par N⟩ = de två raderna med samma N körs samtidigt (var sin worktree/gren, sedan rebase på main och push), ⟨solo⟩ = körs ensam; ta grupperna uppifrån och ned
 - features/g17_brodrostar.md – 33. Kontrollerad av G17 – öns brödrostar [M] ⟨par 4⟩
-- features/bransletillagg_butiken.md – 34. Bränsletillägg tillkommer – SunTrip-butiken [M] ⟨par 4⟩
 - features/smorj_in_majsan.md – 35. Smörj in Majsans rygg – SOLKRÄM-mätaren [S] ⟨par 5⟩
 - features/rum_107_troferum.md – 38. Rum 107 fylls med resans minnen [S] ⟨par 5⟩
 - features/skjortbytet.md – 36. Skjortbytet – Guardia letar efter ”el de la camisa” [M] ⟨solo⟩
@@ -71,3 +70,4 @@
 - features/implemented/fran_fjarde_vaningen.md – 24. Från fjärde våningen – hopptornet vid Flamencopoolen [M]
 - features/implemented/fin_hund.md – 31. Fin hund… – vakthundarna som jagar Stig [M]
 - features/implemented/badgaster_pa_solstolarna.md – 32. Badgäster på solstolarna – och stekta Berra och Robban [M]
+- features/implemented/bransletillagg_butiken.md – 34. Bränsletillägg tillkommer – SunTrip-butiken [M]

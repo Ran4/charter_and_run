@@ -59,6 +59,9 @@ export const ISLAND_LANDMARKS = {
   stigSang: { b: [3, 3], at: [-19.75, -20.35], yaw: 0 },
   // (3,2) Hotel SunTrip
   suntrip: { b: [3, 2], at: [-14, 24], yaw: PI },     // faces the office porch (C1)
+  // Bränsletillägg tillkommer (free roam, §10.23): Stig's spot in front of the middle of SunTrip-
+  // butiken's counter on the office porch (hotels.js suntripShop), facing it.
+  butik: { b: [3, 2], at: [-10.2, 22.95], yaw: PI },
   scen: { b: [3, 2], at: [0, -14], yaw: 0 },
   friskotek: { b: [3, 2], at: [-10, 8], yaw: 0 },
   suntripPool: { b: [3, 2], at: [14, 4], yaw: PI },

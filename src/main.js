@@ -39,6 +39,7 @@ import { GrisfestFree } from './game/grisfestFree.js';
 import { FruitStands } from './game/fruitStands.js';
 import { Dogs } from './game/dogs.js';
 import { Bathers } from './game/bathers.js';
+import { SuntripShop } from './game/suntripShop.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
 import { LEVELS, ISLAND_PALETTES } from './level.js';
@@ -190,6 +191,7 @@ class Game {
     this.stands = new FruitStands(this);  // free roam: his car goes through the market's fruit stalls (§10.19)
     this.dogs = new Dogs(this);           // free roam: the watchdogs in the bungalow gardens and at the farm (§10.21)
     this.bathers = new Bathers(this);     // free roam: tourists on the sun loungers, Berra and Robban fried (§10.22)
+    this.shop = new SuntripShop(this);    // free roam: SunTrip-butiken on the office porch, its add-ons and his look (§10.23)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -898,9 +900,11 @@ class Game {
     n.outfit = name ?? null;
     if (this.portraitsReady) hud.portraits[key] = renderPortrait(renderer, n.model);
   }
+  // In free roam on the island what he bought at SunTrip-butiken is a layer over it (§10.23,
+  // `shop.dress`; never over `rio`).
   setPlayerOutfit(name, { persist = true } = {}) {
     const p = this.player;
-    p.setDef(outfitDef(PLAYER_KEY, name));
+    p.setDef(this.shop ? this.shop.dress(outfitDef(PLAYER_KEY, name), name) : outfitDef(PLAYER_KEY, name));
     p.outfit = name ?? null;
     if (persist && this.level === 'island') this.islandOutfit = name;
     if (this.portraitsReady) hud.portraits[PLAYER_KEY] = renderPortrait(renderer, p.model);
@@ -1386,6 +1390,7 @@ class Game {
         v: 1, mission: this.missions.index, coins: this.coins,
         collected: { prylar: [...this.collected.prylar], fenor: [...this.collected.fenor] },
         unlocked: [...this.unlocked], outfit: this.islandOutfit, tune: this.islandTune, records: this.records,
+        shop: this.shop.saveData(),
       }));
     } catch (e) { /* private mode: progress just won't persist */ }
   }
@@ -1402,6 +1407,7 @@ class Game {
           this.records = { ...s.records };
           this.islandOutfit = s.outfit || 'kostym';
           this.islandTune = s.tune === 'samba' && this.unlocked.has('samba') ? 'samba' : 'sol';
+          this.shop.loadData(s.shop);   // SunTrip-butiken's purchases and the Trapp Trull account (§10.23)
         }
       } catch (e) { /* corrupt save: start fresh */ }
     }
@@ -1484,6 +1490,7 @@ class Game {
     this.stands.update(dt);
     this.dogs.update(dt);
     this.bathers.update(dt);
+    this.shop.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);

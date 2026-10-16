@@ -69,7 +69,10 @@ opens with a summary of the rounds and the timer changes.
     trampoline, the tank and the car roof, the owner's call from the house, a mission start, DESIGN §10.21),
     `badgaster stekt` (Badgäster på solstolarna, the bathers on the island's sun loungers by day, their
     burn and the fly-off from a kicked or smashed lounger; Berra and Robban fried and asleep on
-    Flamenco's deck between buss17 and the bodega, and the wake, DESIGN §10.22)
+    Flamenco's deck between buss17 and the bodega, and the wake, DESIGN §10.22), `butik butikbil`
+    (Bränsletillägg tillkommer, SunTrip-butiken on the office porch: the receipts' add-ons, the Trapp
+    Trull account's instalments, "Paketet!", his bought look as a layer in free roam only, saved; the
+    look seated in every car, DESIGN §10.23)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)
