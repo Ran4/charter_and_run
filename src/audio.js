@@ -242,6 +242,9 @@ export const audio = {
   talk(pitch) { this.tone(pitch * (0.82 + Math.random() * 0.36), 0.055, 'triangle', 0.07); },
   checkpoint() { this.tone(784, 0.1, 'square', 0.08); this.tone(1175, 0.18, 'square', 0.08, null, 0.08); },
   tick() { this.tone(1500, 0.03, 'square', 0.05); },
+  // The G17 toasters (§10.24): the lever going down with a clack, the bread popping up.
+  toasterDown() { this.noise(0.05, 0.18, 1800, 'bandpass', 0, 2); this.tone(170, 0.07, 'square', 0.07, 110); },
+  pop() { this.noise(0.04, 0.26, 2600, 'bandpass', 0, 3); this.tone(380, 0.1, 'sine', 0.16, 900); },
   horn(on) {
     if (!ctx) return;
     if (on && !hornNodes) {

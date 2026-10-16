@@ -208,9 +208,60 @@ function fin(g) {        // inflatable shark fin on a float ring
   g.add(PRIM.torus(), 0xffffff, mat(0, -0.03, 0, Math.PI / 2, 0, 0, 1.7, 1.7, 0.25));
 }
 
+// A 1979 chrome pop-up toaster (the G17 toasters, COLLECTIBLES.brodrostar, §10.24), a little over
+// life size so it reads on a counter: bakelite base and ends, two slots, a red lever on the front's
+// right, a browning knob on its left, no maker's name (§1.5). Built facing +z standing on y = 0, with
+// the parts game/toasters.js moves (`setToaster`): `lever`, `bread` (two slices in three looks,
+// `pale`, `golden`, `burnt`; down in the slots at up 0, sticking out at 1) and `label`, the yellow
+// KONTROLLERAD AV G17 on the front, hidden until the toaster passes.
+export const TOASTER = { top: 0.225, breadUp: 0.1, leverUp: 0.165, leverDown: 0.075 };
+const BREAD = { pale: [0xf0dcaa, 0xcfa868], golden: [0xd88c2a, 0x9a5a1a], burnt: [0x2e231c, 0x161210] };
+function toaster() {
+  const BK = 0x1d1d22, SLOT = 0x0c0c10;
+  const m = shared('brodrost', (g) => {
+    g.boxB(BK, 0, 0, 0, 0.42, 0.035, 0.24);
+    g.boxB(CHROME, 0, 0.035, 0, 0.38, 0.13, 0.22);
+    g.add(PRIM.cyl(16), CHROME, mat(0, 0.165, 0, 0, 0, Math.PI / 2, 0.12, 0.38, 0.22));   // the rounded top
+    for (const s of [-1, 1]) g.box(BK, s * 0.195, 0.115, 0, 0.025, 0.16, 0.226);
+    for (const z of [-0.045, 0.045]) g.box(SLOT, 0, 0.222, z, 0.3, 0.014, 0.036);
+    g.box(SLOT, 0.15, 0.12, 0.111, 0.024, 0.12, 0.006);                                    // the lever's slot
+    g.cyl(BK, -0.15, 0.1, 0.112, 0.024, 0.022, 10, Math.PI / 2);
+  }, 0.012);
+  const lever = shared('brodrost_lever', (g) => g.box(0xd8321e, 0, 0, 0.022, 0.05, 0.028, 0.044), 0.008);
+  lever.name = 'lever';
+  lever.position.set(0.15, TOASTER.leverUp, 0.111);
+  const bread = new THREE.Group();
+  bread.name = 'bread';
+  for (const [k, [c, crust]] of Object.entries(BREAD)) {
+    const s = shared('brodrost_' + k, (g) => { for (const z of [-0.045, 0.045]) { g.boxB(c, 0, 0, z, 0.27, 0.17, 0.026); g.sphere(crust, 0, 0.17, z, 0.14, 0.03, 0.015); } }, 0.008);
+    s.name = k;
+    s.visible = k === 'pale';
+    bread.add(s);
+  }
+  bread.position.y = TOASTER.breadUp;
+  const lab = label('KONTROLLERAD\nAV G17', 0.21, 0.08, { bg: '#f7c31b', fg: '#1d1426', border: '#1d1426', ppm: 1800, scale: 0.8 });   // [F*] the film's label
+  lab.name = 'label';
+  lab.position.set(0, 0.1, 0.1125);
+  lab.visible = false;
+  m.add(lever, bread, lab);
+  m.userData.toaster = { lever, bread, label: lab };
+  return m;
+}
+// o: { bread?: 'pale' | 'golden' | 'burnt', up?: 0..1+ (the bread), lever?: 0 (down) .. 1 (up), label?: bool }.
+export function setToaster(mesh, o) {
+  const t = mesh.userData.toaster;
+  if (!t) return;
+  if (o.bread) for (const s of t.bread.children) s.visible = s.name === o.bread;
+  if (o.up != null) t.bread.position.y = o.up * TOASTER.breadUp;
+  if (o.lever != null) t.lever.position.y = TOASTER.leverDown + (TOASTER.leverUp - TOASTER.leverDown) * o.lever;
+  if (o.label != null) t.label.visible = o.label;
+}
+
 export const COLLECT_KINDS = {
   pryl: { motion: 'spin', beam: true, build: (id) => shared('pryl_' + (PRYL[id] ? id : 'klocka'), PRYL[id] || PRYL.klocka) },
   fena: { motion: 'circle', build: () => shared('fena', fin, 0.025) },
+  // A kept kind's `mark(mesh)` dresses it once collected (Collectible.mark): the label goes on.
+  brodrost: { motion: 'none', build: toaster, mark: (m) => setToaster(m, { bread: 'golden', up: 1, lever: 1, label: true }) },
   // A rolling liquor bottle (axis along z, so it rolls across the aisle when turned).
   flaska: { motion: 'roll', build: () => shared('flaska', (g) => {
     g.cyl(0x4a7a3a, 0, 0, 0, 0.12, 0.34, 12, Math.PI / 2);
@@ -292,16 +343,18 @@ export const COLLECT_KINDS = {
 export function registerCollectKind(kind, def) { COLLECT_KINDS[kind] = def; }
 
 export class Collectible {
-  // opts: { motion, beam, scale }
+  // opts: { motion, beam, scale, yaw (a standing one's facing) }
   constructor(scene, kind, id, x, y, z, opts = {}) {
     this.kind = kind; this.id = id; this.x = x; this.y = y; this.z = z;
     this.alive = true;
+    this.marked = false;
     const def = COLLECT_KINDS[kind];
     this.motion = opts.motion ?? def?.motion ?? 'spin';
     this.mesh = def ? def.build(id) : geoMesh((g) => g.box(0xffd23f, 0, 0, 0, 0.6, 0.6, 0.6));
     const sc = opts.scale ?? def?.scale;
     if (sc) this.mesh.scale.setScalar(sc);
     this.mesh.position.set(x, y, z);
+    if (opts.yaw != null) this.mesh.rotation.y = opts.yaw;
     if (opts.beam ?? def?.beam) {
       const beam = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 6, 10, 1, true), new THREE.MeshBasicMaterial({ color: 0xffe7b8, transparent: true, opacity: 0.2, depthWrite: false }));
       beam.position.y = 3;
@@ -329,6 +382,12 @@ export class Collectible {
   remove() {
     this.alive = false;
     this.mesh.visible = false;
+  }
+  // Collected but kept where it stands (a set's `keep`: the G17 toasters keep their label on).
+  mark() {
+    this.alive = false;
+    this.marked = true;
+    COLLECT_KINDS[this.kind]?.mark?.(this.mesh);
   }
 }
 

@@ -50,6 +50,9 @@ body:not(.playing) #hud { opacity: 0; }
 .fena-icon { width: 22px; height: 20px; background: linear-gradient(var(--sea) 0 0) 0 100% / 100% 4px no-repeat, linear-gradient(160deg, transparent 0 46%, #5a6a7a 47%); clip-path: polygon(10% 100%, 62% 0, 90% 100%); display: inline-block; flex: none; }
 .lg-pryl { color: var(--orange); }
 .lg-fena { color: #7fc8f0; }
+/* A G17 toaster (§10.24): chrome body on a black base, two golden slices up. */
+.rost-icon { width: 22px; height: 21px; display: inline-block; flex: none; background: linear-gradient(#d88c2a 0 0) 5px 0 / 4px 7px no-repeat, linear-gradient(#d88c2a 0 0) 13px 0 / 4px 7px no-repeat, linear-gradient(var(--ink) 0 0) 0 100% / 100% 4px no-repeat, linear-gradient(180deg, #f4f6f8, #a8adb6) 1px 5px / 20px 13px no-repeat; }
+.lg-rost { color: #d8dce0; }
 
 /* ---------------------------------------------------------------- the meter (FLYGRÄDSLA / SKANDAL) */
 #shame { position: absolute; top: 18px; right: 24px; width: 300px; }
@@ -119,7 +122,7 @@ body.panik #app canvas { filter: saturate(1.5) contrast(1.08); }
 .obj-bar-fill { height: 100%; background: var(--teal); transition: width 0.2s; }
 .obj-bar-label { position: absolute; inset: 0; font: 900 12px/16px var(--body); letter-spacing: 1px; }
 .obj-zone { position: absolute; top: 0; bottom: 0; background: rgba(30, 154, 160, 0.45); border-left: 2px solid var(--teal); border-right: 2px solid var(--teal); display: none; }
-.obj-marker { position: absolute; top: -3px; bottom: -3px; width: 4px; margin-left: -2px; background: var(--ink); display: none; }
+.obj-marker { position: absolute; top: -3px; bottom: -3px; width: 4px; margin-left: -2px; background: var(--ink); display: none; box-shadow: 0 0 0 1.5px #fff8e6; }   /* the cream edge: seen over the G17 toasters' burnt end (§10.24) */
 
 /* ---------------------------------------------------------------- minimap & speedo */
 #minimap-wrap { position: absolute; left: 22px; bottom: 22px; width: 220px; height: 220px; filter: drop-shadow(4px 5px 0 rgba(29, 20, 38, 0.45)); }

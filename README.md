@@ -113,6 +113,14 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   grisfestladans tak. Varje pryl får en replik av Ole. Alla sju: bonus och samba i pausmenyn.
 - **Hajfenor** (7): uppblåsbara hajfenor cirklar i poolerna, fontänen, golfdammen, hamnen och
   havet. Spring i och sparka (eller kör igenom).
+- **G17-brödrostar** (7): krombrödrostar står runt ön där en brödrost hör hemma – på färglådan
+  utanför FERRETERÍA, på bardisken vid Flamencopoolen, bland radioapparaterna på marknadens
+  elektronikstånd, på portierns disk, i en fruktlåda vid SUPERMERCADO, på ett bord hos Casa Lola och
+  på hittegodsets disk på flygplatsen. Mellan uppdragen: tryck E vid en rost, så trycker Stig ner
+  spaken och mätaren går från blekt till bränt. Tryck E igen när brödet är gyllenbrunt: "Gyllenbrun.
+  Godkänd!", och rosten får etiketten KONTROLLERAD AV G17. För tidigt blir det blekt, för sent bränt
+  (och kanske en kommentar från någon av systrarna), men du kan försöka igen direkt. Mätaren går lite
+  fortare för varje godkänd rost. Alla sju: bonus och ett radiosamtal från Majsan.
 - **Pesetas**: mynten i gatorna, i trasiga prylar och i vrak är värda 25 pta styck. De går åt
   till grisfesten (800), julafton (100), åsnan, hittelön, böter (¡MULTA!: 20 % av kassan,
   250–1500), PANIK (−50), portiern (500) och målarverkstaden (1 000). Har du inte råd betalar Ole – men inte
@@ -326,6 +334,8 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
   avbetalningar, strandväskan och "Paketet!" vid disken, och Oles kommentar om hatten (i filmen säljer
   en resebyrå i Stockholm tilläggen, kontot och nässkyddet till paret Storch, och det är oklart vem
   som köper nässkyddet)
+- brödrostarna runt ön, provrostningen och etiketten KONTROLLERAD AV G17 som Stig sätter på en
+  godkänd rost (i filmen är G17 bara det han skryter om för Majsan vid poolen, och ingen rostar bröd)
 - fårrusningen i Fataga, kappkörningen mot nattbussen och porslinskrosset på tid
 - att samla ihop julfestgästerna
 - Oles prylar och hajfenorna som samlarföremål, utspridda över ön
@@ -426,13 +436,14 @@ src/game/diveTower.js           Från fjärde våningen in free roam: the 10 m d
 src/game/dogs.js                Fin hund… in free roam: the watchdogs in the bungalow gardens and at the farm, Stig's hands and lines
 src/game/bathers.js             Badgäster på solstolarna in free roam: bathers on the loungers, their burn, the fly-off, Berra and Robban fried
 src/game/suntripShop.js         Bränsletillägg tillkommer in free roam: SunTrip-butiken, the receipts, the Trapp Trull account, his bought look
+src/game/toasters.js            Kontrollerad av G17 in free roam: the seven toasters, the timing game, the label, the sisters' line
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
 tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, meter, kinds, perf,
                                 paintshop, berra, glide, simhopp, tuta, dygn, super8, eslov, grodorna,
                                 artig, grisar, bagage, lapplisa, torsdag, frukt, hopptorn, hund,
-                                badgaster, butik,
+                                badgaster, butik, brodrost,
                                 calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
@@ -480,6 +491,7 @@ node tools/shot.mjs hopptorn             # the diving tower: the ladder, the rai
 node tools/shot.mjs hund                 # the watchdogs: the wall, the rush, the hands up, the trampoline and the tank, the owner's call
 node tools/shot.mjs badgaster stekt      # bathers on the loungers: the burn, the kick and the car, the newcomer, night; Berra and Robban fried, the wake
 node tools/shot.mjs butik butikbil       # SunTrip-butiken: the receipts, the Trapp Trull account, "Paketet!", the look, a mission start; the look in every car
+node tools/shot.mjs brodrost rostar      # the G17 toasters: pale, burnt, golden, the label, 7/7 and Majsan, the save; the seven spots
 node tools/shot.mjs fullstory kinds      # the literal §8 missions and the stage-kind checks
 node tools/shot.mjs calibrate calibflight  # timer and FLYGRÄDSLA calibration (slow; see DESIGN §8, §16.4)
 node tools/pool.mjs                      # random-stage timers from the raw runs in notes/calibration-samples.md

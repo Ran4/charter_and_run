@@ -235,6 +235,9 @@ export const hud = {
         this.objZone.style.display = 'block';
         this.objZone.style.left = `${o.zone[0] * 100}%`;
         this.objZone.style.width = `${Math.max(0, o.zone[1] - o.zone[0]) * 100}%`;
+        // A card's own field: zoneColor [fill, edges] (the G17 toasters' golden field), else teal.
+        this.objZone.style.background = o.zoneColor?.[0] || '';
+        this.objZone.style.borderColor = o.zoneColor?.[1] || '';
       } else this.objZone.style.display = 'none';
       if (o.marker != null) {
         this.objMarker.style.display = 'block';
@@ -726,6 +729,9 @@ function drawMarker(c, m, clamped, scale = 1) {
     c.fillStyle = '#f07a1e'; c.beginPath(); c.arc(0, 0, 4, 0, Math.PI * 2); c.fill();
   } else if (m.type === 'fena') {
     c.fillStyle = '#1c7fb8'; c.strokeStyle = '#fff'; c.lineWidth = 1; c.beginPath(); c.arc(0, 0, 4, 0, Math.PI * 2); c.fill(); c.stroke();
+  } else if (m.type === 'rost') {   // a G17 toaster (§10.24): a chrome block, two slices up
+    c.fillStyle = '#d88c2a'; c.fillRect(-3.5, -6, 2.4, 3); c.fillRect(1.1, -6, 2.4, 3);
+    c.fillStyle = '#d8dce0'; c.strokeStyle = '#1d1426'; c.lineWidth = 1.5; c.fillRect(-5, -3.5, 10, 7); c.strokeRect(-5, -3.5, 10, 7);
   } else if (m.type === 'item') {
     c.fillStyle = '#ffffff'; c.strokeStyle = '#1d1426'; c.lineWidth = 2;
     c.beginPath(); c.arc(0, 0, 5, 0, Math.PI * 2); c.fill(); c.stroke();

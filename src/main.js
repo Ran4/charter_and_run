@@ -40,6 +40,7 @@ import { FruitStands } from './game/fruitStands.js';
 import { Dogs } from './game/dogs.js';
 import { Bathers } from './game/bathers.js';
 import { SuntripShop } from './game/suntripShop.js';
+import { Toasters } from './game/toasters.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
 import { LEVELS, ISLAND_PALETTES } from './level.js';
@@ -97,7 +98,7 @@ class Game {
     this.timeScale = TEST ? (params.has('ts') ? +params.get('ts') : 3) : 1;
     this.level = null;
     this.levelDef = null;
-    this.collected = { prylar: new Set(), fenor: new Set() };
+    this.collected = Object.fromEntries(Object.keys(COLLECTIBLES).map((k) => [k, new Set()]));   // prylar, fenor, brodrostar (§10.1)
     this.unlocked = new Set();
     this.records = {};            // free-roam bests, saved: `simhopp` (the diving judges' best total, §10.8)
     this.homeOverrides = {};
@@ -192,6 +193,7 @@ class Game {
     this.dogs = new Dogs(this);           // free roam: the watchdogs in the bungalow gardens and at the farm (§10.21)
     this.bathers = new Bathers(this);     // free roam: tourists on the sun loungers, Berra and Robban fried (§10.22)
     this.shop = new SuntripShop(this);    // free roam: SunTrip-butiken on the office porch, its add-ons and his look (§10.23)
+    this.toasters = new Toasters(this);   // free roam: the G17 toasters' timing game (§10.24)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -495,7 +497,8 @@ class Game {
         const l = landmarks[it.lm];
         if (!l) { console.warn('collectible: missing landmark', it.lm); return null; }
         const y = l.y ?? groundAt(l.x, l.z, 0.2, 0.6) + 1.2;
-        const c = new Collectible(scene, set.kind, it.id, l.x, y, l.z, { motion: set.motion, beam: set.beam });
+        // A standing one (motion 'none': the G17 toasters) faces its landmark's yaw.
+        const c = new Collectible(scene, set.kind, it.id, l.x, y, l.z, { motion: set.motion, beam: set.beam, yaw: set.motion === 'none' ? l.yaw : undefined });
         c.set = setName;
         c.item = it;
         return c;
@@ -1388,7 +1391,7 @@ class Game {
     try {
       localStorage.setItem(SAVE_KEY, JSON.stringify({
         v: 1, mission: this.missions.index, coins: this.coins,
-        collected: { prylar: [...this.collected.prylar], fenor: [...this.collected.fenor] },
+        collected: Object.fromEntries(Object.entries(this.collected).map(([k, ids]) => [k, [...ids]])),
         unlocked: [...this.unlocked], outfit: this.islandOutfit, tune: this.islandTune, records: this.records,
         shop: this.shop.saveData(),
       }));
@@ -1401,8 +1404,8 @@ class Game {
         if (s && s.v === 1) {
           this.missions.index = Math.min(MISSIONS.length, s.mission || 0);
           this.coins = s.coins || 0;
-          this.collected.prylar = new Set(s.collected?.prylar || []);
-          this.collected.fenor = new Set(s.collected?.fenor || []);
+          // Every set in COLLECTIBLES; a save from before a set has none of it (still v 1).
+          for (const k of Object.keys(COLLECTIBLES)) this.collected[k] = new Set(s.collected?.[k] || []);
           this.unlocked = new Set(s.unlocked || []);
           this.records = { ...s.records };
           this.islandOutfit = s.outfit || 'kostym';
@@ -1416,7 +1419,9 @@ class Game {
     if (params.has('mission') && this.missions.index > 5) this.islandOutfit = 'hawaii';
   }
   applySaveToWorld() {
-    for (const [setName, list] of Object.entries(this.collectibles)) for (const c of list) if (this.collected[setName]?.has(c.id)) c.remove();
+    for (const [setName, list] of Object.entries(this.collectibles)) {
+      for (const c of list) if (this.collected[setName]?.has(c.id)) { if (COLLECTIBLES[setName].keep) c.mark(); else c.remove(); }
+    }
     for (const u of this.unlocked) this.applyUnlock(u);
     if (this.homeOverrides && Object.keys(this.homeOverrides).length) this.placeNpcs(true);
   }
@@ -1491,6 +1496,7 @@ class Game {
     this.dogs.update(dt);
     this.bathers.update(dt);
     this.shop.update(dt);
+    this.toasters.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);
@@ -1856,23 +1862,26 @@ class Game {
         const d = dist(mp.x, mp.z, f.x, f.z);
         if (set.pickup === 'touch') {
           if (d < (this.playerCar ? 2.6 : 1.4) && Math.abs(mp.y - (f.y + 1)) < 1.8) this.collect(setName, c);
-        } else if (this.playerCar && d < 2.8 && mp.y < f.y + this.playerCar.height + 1.2) this.collect(setName, c);
+        } else if (set.pickup === 'squash' && this.playerCar && d < 2.8 && mp.y < f.y + this.playerCar.height + 1.2) this.collect(setName, c);
+        // 'inspect' (the G17 toasters): game/toasters.js collects one that passes.
       }
     }
   }
 
-  // A collectible picked up (or a fin squashed): +250 pta, HUD, radio, set bonus, save.
+  // A collectible picked up (or a fin squashed, a toaster passed): +250 pta, HUD, radio, set bonus,
+  // save. A `keep` set's one stays where it stands, marked (the G17 toasters' label); the set's
+  // `splash` and `sparkle` colour are its effects.
   collect(setName, c) {
     if (!c.alive) return;
     const set = COLLECTIBLES[setName];
     const mp = c.mesh.position;
-    c.remove();
+    if (set.keep) c.mark(); else c.remove();
     this.collected[setName].add(c.id);
     const n = this.collected[setName].size, total = set.items.length;
     this.addCoins(250);
     if (set.jingle === 'pryl') audio.jingle('pryl'); else audio[set.jingle]?.();
-    if (setName === 'fenor') fx.splash(mp.x, mp.z);
-    fx.sparkle(mp.x, mp.y, mp.z, setName === 'fenor' ? 0x9fdcff : 0xf07a1e, 20);
+    if (set.splash) fx.splash(mp.x, mp.z);
+    fx.sparkle(mp.x, mp.y + (set.keep ? 0.3 : 0), mp.z, set.sparkle ?? 0xf07a1e, 20);
     hud.showCollect(`<span class="${set.icon}"></span> ${set.label} <b>${n}/${total}</b>`);
     if (c.item?.line) this.radio('ole', c.item.line);
     if (n === 1 && set.first) setTimeout(() => this.radio(set.first[0], set.first[1]), 1800);
@@ -1908,7 +1917,8 @@ class Game {
     if (!all) {
       const f = this.focus();
       for (const [setName, list] of Object.entries(this.collectibles)) {
-        const type = COLLECTIBLES[setName].marker;
+        const { marker: type, idle } = COLLECTIBLES[setName];
+        if (idle && ms.state !== 'idle') continue;   // only while they can be used (the G17 toasters)
         for (const c of list) if (c.alive && dist(c.x, c.z, f.x, f.z) < 45) out.push({ type, x: c.x, z: c.z });
       }
     }
@@ -1985,8 +1995,9 @@ class Game {
 
   updateHud() {
     // No mission running: the paint shop's wet-paint card (§7.2), the Berra job's (§10.6),
-    // Eslövloppet's (§10.12) or the grisbil's pigs' (§10.15), if any.
-    hud.setObjective(this.missions.objective() || this.shame.paint.objective() || this.berraJob.objective() || this.eslov.objective() || this.pigs.objective());
+    // Eslövloppet's (§10.12), the grisbil's pigs' (§10.15) or a G17 toaster's scale (§10.24), if any.
+    hud.setObjective(this.missions.objective() || this.shame.paint.objective() || this.berraJob.objective() || this.eslov.objective() || this.pigs.objective()
+      || this.toasters.objective());
     hud.setSpeedo(this.playerCar);
     if (this.missions.state !== 'failed') {
       let prompt = '';

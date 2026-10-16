@@ -163,6 +163,15 @@ export const ISLAND_LANDMARKS = {
   hamn: { b: [5, 6], at: [0, 0], yaw: PI },
   fena_hamn: { b: [5, 6], at: [-8, 10], yaw: 0, y: 0.35 },
   pryl_glasogon: { b: [5, 6], at: [12, 28], yaw: 0, y: 1.2 },
+  // The G17 toasters (feature 33, §10.24), on things that were there, with no collider of their own:
+  // `y` is the top a toaster stands on, `yaw` the side Stig checks it from (its front).
+  brodrost_ferreteria: { b: [4, 2], at: [25.6, 13.0], yaw: 0, y: 0.65 },          // FERRETERÍA's paint-can crate
+  brodrost_poolbar: { b: [3, 3], at: [18.0, 15.45], yaw: -PI / 2, y: 1.33 },      // BAR PISCINA's counter, its south end
+  brodrost_marknad: { b: [2, 1], at: [-11.186, -6.4], yaw: 0, y: 1.08 },          // stall K's counter, among the radios
+  brodrost_portier: { b: [3, 3], at: [3.75, -11.2], yaw: 0, y: 1.28 },            // the porter's desk, east of the bell
+  brodrost_supermercado: { b: [4, 2], at: [-24.15, 13.0], yaw: 0, y: 0.6 },       // SUPERMERCADO's east fruit crate
+  brodrost_grillpaco: { b: [2, 3], at: [15.0, 19.0], yaw: PI / 2, y: 0.945 },     // a café table on Casa Lola's terrace
+  brodrost_hittegods: { b: [6, 0], at: [-17.4, 7.35], yaw: 0, y: 1.23 },          // the lost-and-found counter
 };
 
 export const blockCentre = (i, j) => ({ x: -HALF + P / 2 + P * i, z: -HALF + P / 2 + P * j });

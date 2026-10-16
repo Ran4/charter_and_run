@@ -279,13 +279,55 @@ export const COLLECTIBLES = {
     ],
   },
   fenor: {
-    kind: 'fena', motion: 'circle', pickup: 'squash', jingle: 'squeak',
+    kind: 'fena', motion: 'circle', pickup: 'squash', jingle: 'squeak', splash: true, sparkle: 0x9fdcff,
     label: 'Hajfenor', marker: 'fena', icon: 'fena-icon', bonus: 1000,
     first: ['lasse', 'Hajar i poolen igen? Ring kliniken!'],                           // [F*] Lasse's film line, adapted
     complete: ['lasse', 'Inga fler hajar i poolerna. Berra lovar att sluta dricka. Till lunch.'], // [N]
     items: ['fena_flamenco', 'fena_suntrip', 'fena_plaza', 'fena_golf', 'fena_bungalow', 'fena_hamn', 'fena_hav']
       .map((lm) => ({ id: lm, lm })),
   },
+  // Kontrollerad av G17 (feature 33, §10.24): seven chrome toasters on counters, crates and a table.
+  // `inspect`: no pickup by touch; game/toasters.js runs the timing game (BRODROST) and collects one
+  // that passes. `keep`: a collected one stays where it stands, labelled (Collectible.mark). `idle`:
+  // on the minimap only while no mission runs (they work only then).
+  brodrostar: {
+    kind: 'brodrost', motion: 'none', pickup: 'inspect', keep: true, idle: true, jingle: 'pling', sparkle: 0xf7c31b,
+    label: 'G17-brödrostar', marker: 'rost', icon: 'rost-icon', bonus: 1000,                       // [N]
+    complete: ['majsan', 'Så det är du som är G17! Nu vågar jag köpa en brödrost.'],              // [N]
+    items: ['ferreteria', 'poolbar', 'marknad', 'portier', 'supermercado', 'grillpaco', 'hittegods']
+      .map((id) => ({ id, lm: 'brodrost_' + id })),
+  },
+};
+
+// The G17 toasters' timing game (free roam; feature 33, §10.24; game/toasters.js, invented §1.6).
+// E by one pushes the lever down: the objective card shows the haggle's bar as a scale from pale
+// (left) to burnt (right) and the marker crosses it once in `secs` s (× `speedUp` for each toaster
+// already passed); the golden field is `zone` wide, its left edge drawn in `zoneAt` each try. E again
+// pops the bread: in the field the toaster passes, before it the bread is pale, after it (or at the
+// right end) burnt. A miss is tried again with E after `restSecs`; a try is off when he is over
+// `cancelR` m away, in a car, in a dialogue, or a mission or a pursuit starts.
+export const BRODROST = {
+  r: 1.3, priority: -1, cancelR: 3, restSecs: 0.6,
+  secs: 3.2, speedUp: 0.92, zone: 0.22, zoneAt: [0.48, 0.6], tick: 0.4,
+  prompt: '<b>E</b> Kontrollera brödrosten',                                      // [N]
+  promptPop: '<b>E</b> Upp med brödet!',                                          // [N]
+  title: 'Kontrollerad av G17',                                                   // [F*] the label, research-plot.md:61
+  text: 'Tryck E när brödet är gyllenbrunt',                                      // [N]
+  barColor: 'linear-gradient(90deg, #f6ecc8 0%, #ecd08a 35%, #d88c2a 62%, #8a4a1a 82%, #2e231c 100%)',
+  zoneColor: ['rgba(255, 214, 90, 0.45)', '#fff8e6'],                             // the golden field and its edges
+  lines: {
+    ok: 'Gyllenbrun. Godkänd!',                                                   // [N]
+    pale: 'Blekt. Underkänd.',                                                    // [N]
+    burnt: 'Det här hade aldrig gått igenom på lagret.',                          // [N]
+  },
+  toasts: {
+    pale: 'För blekt. Tryck E för en ny provrostning.',                           // [N]
+    burnt: 'Bränt! Underkänd. Tryck E för en ny provrostning.',                   // [N]
+  },
+  cheerSecs: 1.6, flailSecs: 1.4,
+  // A burnt one with a sister near: one of them says it (the source does not say which, §10.24).
+  sister: { keys: ['siv', 'majsan'], r: 25, at: 1.2, gap: 45, secs: 2.6,
+    line: 'Bara de inte är ingenjörer.' },                                        // [F*] said on the plane (research-plot.md:199)
 };
 
 export const UNLOCKS = {

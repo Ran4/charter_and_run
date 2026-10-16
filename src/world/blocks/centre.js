@@ -407,7 +407,7 @@ function stall(f, x, z, w, d, face1, o) {
     fr.box(c, u, top - 0.14, 0.12, w / n, 0.14, d + 0.5);
     fr.box(c, u, top - 0.48, hd + 0.36, w / n, 0.34, 0.05);
   }
-  goods(fr, o.goods, w, hd);
+  goods(fr, o.goods, w, hd, o.gap);
   const sopt = { bg: o.signBg ?? '#fff8e6', fg: o.signFg ?? '#1d1426', border: '#1d1426', scale: 0.62 };
   if (o.signLow) fr.sign(o.signLow, 0, top - 0.48, hd + 0.42, w - 0.6, 0.36, 0, { ...sopt, border: null, scale: 0.8 });
   if (o.sign) {
@@ -417,8 +417,9 @@ function stall(f, x, z, w, d, face1, o) {
   f.solid(x, z, w, d, top, 'stall');
 }
 
-// What lies on a stall's counter (y = CURB + 0.93, z ≈ hd - 0.45) and hangs from its front.
-function goods(fr, type, w, hd) {
+// What lies on a stall's counter (y = CURB + 0.93, z ≈ hd - 0.45) and hangs from its front. `gap`:
+// the radio left out (stall K's place for a G17 toaster, feature 33).
+function goods(fr, type, w, hd, gap = -1) {
   const y = CURB + 0.93, z = hd - 0.45, n = Math.floor((w - 0.8) / 0.5);
   const at = (k) => -w / 2 + 0.6 + k * ((w - 1.2) / Math.max(1, n - 1));
   if (type === 'fruit') for (let k = 0; k < n; k++) {
@@ -444,7 +445,7 @@ function goods(fr, type, w, hd) {
     fr.box(DARK, 0, y, z - 0.25, w - 1.2, 0.7, 0.06);
     for (let k = 0; k < n; k++) {
       if (type === 'sunglasses') fr.box(DARK, at(k), y + 0.35, z - 0.2, 0.3, 0.08, 0.04, 0, fr.F);
-      else { fr.box(k % 2 ? 0xd8d0c0 : 0x4a4a52, at(k), y, z + 0.05, 0.36, 0.22, 0.18); fr.box(0xe8e4dc, at(k), y, z + 0.25, 0.14, 0.03, 0.22, 0, fr.F); }
+      else if (k !== gap) { fr.box(k % 2 ? 0xd8d0c0 : 0x4a4a52, at(k), y, z + 0.05, 0.36, 0.22, 0.18); fr.box(0xe8e4dc, at(k), y, z + 0.25, 0.14, 0.03, 0.22, 0, fr.F); }
     }
   } else if (type === 'flowers') for (let k = 0; k < n; k++) {
     fr.cyl(0x5a6a7a, at(k), y + 0.15, z, 0.15, 0.3, 8);
@@ -809,10 +810,11 @@ function cita(f) {
   f.ceiling(-20, 12.7, 17.4, 1.4, 2.74, 3.6);   // the chase camera stays under the awning (valance bottom)
   board(sm, 'SUPERMERCADO', 0, 4.0, 11, 0.85, { bg: '#d8321e', fg: '#ffffff', scale: 0.74, back: false }); // [N]
   for (const [u, t] of [[-5.5, 'OFERTAS'], [-2.4, 'LECHE · PAN · VINO'], [6, 'FRUTA FRESCA']]) sm.sign(t, u, 2.0, 0.12, 2.6, 0.7, 0, { bg: '#f7c31b', fg: '#d8321e', border: null, scale: 0.6 }); // [N]
+  // The east crate holds a G17 toaster instead of fruit (brodrost_supermercado, feature 33).
   for (let k = 0; k < 4; k++) {
     const x = -27.6 + k * 1.15;
     f.box(0xb88a52, x, CURB, 13.0, 0.95, 0.45, 0.7);
-    for (let m = 0; m < 4; m++) sph(f, [0xf07a1e, 0xf7c31b, 0xd8321e, 0x6ab04a][k], x + (m % 2 - 0.5) * 0.4, CURB + 0.55, 13.0 + ((m >> 1) - 0.5) * 0.3, 0.26);
+    if (k < 3) for (let m = 0; m < 4; m++) sph(f, [0xf07a1e, 0xf7c31b, 0xd8321e, 0x6ab04a][k], x + (m % 2 - 0.5) * 0.4, CURB + 0.55, 13.0 + ((m >> 1) - 0.5) * 0.3, 0.26);
   }
   f.solid(-25.9, 13.0, 4.6, 0.7, CURB + 0.6, 'crate');
   const ce = face(f, 'E', -11, 2);
@@ -827,8 +829,9 @@ function cita(f) {
   f.ceiling(20, 12.7, 17.4, 1.4, 2.74, 3.6);
   board(fe, 'FERRETERÍA · PINTURAS', 0, 4.0, 12, 0.85, { bg: '#8a3a1a', fg: '#fff8e6', scale: 0.74, back: false }); // [N]
   {
+    // Paint cans on the crate, its east end left for a G17 toaster (brodrost_ferreteria, feature 33).
     f.box(WOOD, 24.6, CURB, 13.0, 3.0, 0.5, 0.75);
-    for (let k = 0; k < 12; k++) f.cyl([RED, BLUE, SUN, GREEN, WHITE2, 0xf07a1e][k % 6], 23.4 + (k % 6) * 0.48, CURB + 0.68 + (k >= 6 ? 0.36 : 0), 13.0 + (k >= 6 ? -0.12 : 0.12), 0.19, 0.34, 10);
+    for (let k = 0; k < 12; k++) if (k % 6 < 4) f.cyl([RED, BLUE, SUN, GREEN, WHITE2, 0xf07a1e][k % 6], 23.4 + (k % 6) * 0.48, CURB + 0.68 + (k >= 6 ? 0.36 : 0), 13.0 + (k >= 6 ? -0.12 : 0.12), 0.19, 0.34, 10);
     f.solid(24.6, 13.0, 3.0, 0.75, CURB + 1.2, 'crate');
     for (const s of [-0.3, 0.3]) f.boxC(0xc8a050, 27.6 + s, 1.6, 12.35, 0.08, 3.0, 0.08, 0, -0.18);
     for (let k = 0; k < 7; k++) { const y = 0.45 + k * 0.4; f.boxC(0xc8a050, 27.6, y, 12.35 - 0.182 * (y - 1.6), 0.62, 0.06, 0.06); }
@@ -1080,8 +1083,9 @@ function marknad(f) {
   fruit(18.5, -7.75, 1);   // 3.5 deep, not 4: its counter in line with its neighbour's
   stall(f, 24.5, -8, 5, 4, 1, { colors: SCH[2], goods: 'pots' });
 
-  // K: the electronics stall whose awning carries pryl_kalkylator (y 3.4 = 0.85 above the top).
-  stall(f, -12, -8, 5, 4, 1, { colors: [0x2f5a9a, SUN], goods: 'radios', signLow: 'RELOJES · RADIOS · CALCULADORAS', signBg: '#2f5a9a', signFg: '#f7c31b' }); // [N]
+  // K: the electronics stall whose awning carries pryl_kalkylator (y 3.4 = 0.85 above the top); a G17
+  // toaster stands in its radios' gap 5 (brodrost_marknad, feature 33).
+  stall(f, -12, -8, 5, 4, 1, { colors: [0x2f5a9a, SUN], goods: 'radios', gap: 5, signLow: 'RELOJES · RADIOS · CALCULADORAS', signBg: '#2f5a9a', signFg: '#f7c31b' }); // [N]
   // Route 1: crate steps on K's east side (top 1.0 → 1.8 → awning 2.55).
   crate(f, -8.7, -5.1, 1.1, 0.85);
   crate(f, -8.7, -6.25, 1.1, 0.85);
