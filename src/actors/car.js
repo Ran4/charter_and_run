@@ -503,6 +503,8 @@ export class Car {
     this.hp = spec.hp;
     this.dead = false;
     this.air = false;
+    this.airT = 0;           // s in the air since it left the ground at airFrom { x, z, y } (the stunt jumps, §10.27)
+    this.airFrom = null;
     this.mass = spec.mass;
     this.inertia = (spec.mass * (spec.len * spec.len + spec.wid * spec.wid)) / 12;
     this.ctrl = { throttle: 0, brake: 0, steer: 0, handbrake: false, park: true };
@@ -553,6 +555,7 @@ export class Car {
     this.x = x; this.z = z; this.yaw = yaw; this.vx = this.vz = this.vy = this.w = 0;
     this.y = groundAt(x, z, 0.2, 0.6);
     this.air = false;
+    this.airFrom = null;
     this.updateObb();
   }
 
@@ -606,14 +609,18 @@ export class Car {
     this.wheelSpin += (vf * dt) / s.wheelR;
     this.revs = damp(this.revs, Math.min(1, Math.abs(vf) / maxSpeed) * 0.85 + (c.throttle > 0 && driven ? 0.2 : 0), 6, dt);
 
-    // Vertical: follow the ground, launch off ramp ends, land with a thump.
+    // Vertical: follow the ground, launch off ramp ends, land with a thump. The flight is timed
+    // (airT from the take-off at airFrom), and every landing, a soft one too, is reported to
+    // onCarAirEnd (the stunt jumps' judge, §10.27) before its damage.
     const gh = groundAt(this.x, this.z, this.y, 0.6);
     if (this.air) {
+      this.airT += dt;
       this.vy -= 22 * dt;
       this.y += this.vy * dt;
       if (this.y <= gh) {
         const impact = -this.vy;
         this.y = gh; this.vy = 0; this.air = false;
+        game?.onCarAirEnd(this, impact);
         if (impact > 4) {
           this.bump = Math.min(0.35, impact * 0.03);
           game?.onCarLanded(this, impact);
@@ -622,6 +629,8 @@ export class Car {
       }
     } else if (gh < this.y - 0.35) {
       this.air = true;
+      this.airT = 0;
+      this.airFrom = { x: this.x, z: this.z, y: this.y };
     } else {
       this.vy = clamp((gh - this.y) / dt, -6, 12);
       this.y = gh;

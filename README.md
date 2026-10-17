@@ -249,6 +249,16 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   åsneköpet svär souvenirförsäljaren "Jävla smålänningar!" om det händer nära hans stånd. En spark
   eller en lätt knuff rår inte på ett stånd, och under uppdrag är de lika fasta som förut. Ett trasigt
   stånd står där igen när du har varit borta en stund.
+- **Stunthopp med G17-stämpel**: mellan uppdragen mäts varje riktigt hopp med bilen. LUFTTID tickar
+  medan bilen är i luften, och när den har landat och kört vidare en sekund slår en röd stämpel ner:
+  KONTROLLERAD AV G17 (GODKÄND före Fataga). Slår bilen i något under hoppet eller strax efter, eller
+  kvaddas den, blir det UNDERKÄND. Flaggskeppet är en ny planka i östra änden av byggets första
+  våning: kör uppför uppfarten från gatan i väster, sakta in och sväng ut på den smala remsan längs
+  kanten, gasa och flyg ut över vägen mot drömplanet medan Stig mumlar "Jag kan flyga, jag är inte
+  rädd.". Kliv ur vid planet så står han med armarna ute. Den gula rampen på byggets gård kräver fart
+  (runt 70 km/h, annars slår bilen i uppfarten), och de halvbyggda garagens däck räknas också. Varje
+  namngivet hopp ger 100 pta första gången det blir godkänt och sedan 25 pta för ett nytt rekord
+  (längden sparas).
 - **Fin hund…**: i bungalowkvarteren har tolv tomter en vakthund (alla som har studsmatta och några
   med bil på uppfarten), och gården på vischan har en gul byracka. Hunden ligger vid ytterdörren och
   skäller på dig bakom muren när du går förbi på trottoaren. Går du in genom grinden rusar den fram
@@ -347,6 +357,9 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
 - att bilen kör rakt genom marknadens fruktstånd, att försäljerskan ropar "¡Mis tomates!" och att
   souvenirförsäljaren svär "Jävla smålänningar!" åt det (i filmen svär han när Ole prutar ner åsnan,
   och ingen bil kör genom marknaden)
+- stunthoppen med LUFTTID och stämpeln KONTROLLERAD AV G17 eller UNDERKÄND, hoppens rekord och
+  pesetas, plankan på byggets första våning och Stigs armar ute vid drömplanet (i filmen står G17 på
+  hans brödrostar, och drömplanet är en syn i dimma; ingen bil flyger)
 - hopptornet vid Flamencos pool, mantrat på väg ned, bomben och magplasket, och att Lasse ringer om
   det (i filmen upprepar Lasse en gästs samtal i telefonen, och ingen hoppar)
 - vakthundarna på bungalowtomterna och gården på vischan, ägarna som visslar hem dem och att Stig
@@ -470,6 +483,7 @@ src/game/suntripShop.js         Bränsletillägg tillkommer in free roam: SunTri
 src/game/toasters.js            Kontrollerad av G17 in free roam: the seven toasters, the timing game, the label, the sisters' line
 src/game/room107.js             Rum 107 fylls med resans minnen in free roam: the keepsake shelf, the giraffe, the boombox
 src/game/solkram.js             Smörj in Majsans rygg in free roam: the SOLKRÄM meter, Siv's cards, the cream running
+src/game/stunts.js              Stunthopp med G17-stämpel in free roam: his car's jumps measured, LUFTTID, the stamp, the records
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
@@ -477,7 +491,7 @@ tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, 
                                 paintshop, berra, glide, simhopp, tuta, dygn, super8, eslov, grodorna,
                                 artig, grisar, bagage, lapplisa, torsdag, frukt, hopptorn, hund,
                                 badgaster, butik, brodrost, rum107, solkram, skjortbyte,
-                                calibrate, calibflight)
+                                stunthopp, calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
 tools/pool.mjs                  re-derives every random stage's timer from the ledger
@@ -527,6 +541,7 @@ node tools/shot.mjs butik butikbil       # SunTrip-butiken: the receipts, the Tr
 node tools/shot.mjs brodrost rostar      # the G17 toasters: pale, burnt, golden, the label, 7/7 and Majsan, the save; the seven spots
 node tools/shot.mjs rum107 troferum      # room 107: the shelf and Ole's count, the giraffe, the boombox's samba, the save; the room from the patio, the nap
 node tools/shot.mjs solkram              # Majsan's sun cream: the ask, the meter held, 7/6/5, early, over from behind, the record and Siv's chatter, the save
+node tools/shot.mjs stunthopp stuntzoner # the stunt jumps: the plank to the dream plane, the stamp, the pay and the record, UNDERKÄND; the yellow ramp, a garage deck, GODKÄND
 node tools/shot.mjs skjortbyte garderob  # room 107's wardrobe in a pursuit: the change, busted in there, the officer walking past, back to the shirt; shots
 node tools/shot.mjs fullstory kinds      # the literal §8 missions and the stage-kind checks
 node tools/shot.mjs calibrate calibflight  # timer and FLYGRÄDSLA calibration (slow; see DESIGN §8, §16.4)

@@ -55,7 +55,7 @@ export const bouncers = [];     // trampoline ('bounce') blocks
 // parked car's spot), tramp: [x, z] | null (the trampoline's middle), corner } in lot-local metres.
 // Filled as the lots are built, with no random draws of its own: the world builds as before.
 export const dogLots = [];
-export const frameRamps = [];   // half-built frames: { x, z, yaw, top } = the foot of ramp 1, deck 1 height
+export const frameRamps = [];   // half-built frames: { x, z, yaw, top, top2, deck: { x, z, w, d } } = the foot of ramp 1, deck heights, deck 1's centre and size (w across the lot, d deep; the stunt jumps' take-off, §10.27)
 // Lit after dark (§13.3): the street lamps' lantern panes and star centres go into one unlit mesh
 // that draws only while the sky is dark, as the hotels' lit windows do. The block builders run
 // inside buildTown and may add their own night lights here (world coordinates); buildTown makes
@@ -514,7 +514,7 @@ function frameLot(f, LW, LD, r) {
   const r1x = -w / 2 + 2.4, r2x = w / 2 - 2.2, L1 = 7.6, L2 = d - d2;
   f.S.add(makeWedge(), C.concrete2, mat(f.wx(r1x, front - L1 / 2), CURB, f.wz(r1x, front - L1 / 2), 0, f.yaw, 0, 3.2, t1 - CURB, L1));
   ramp(f.wx(r1x, front - L1 / 2), f.wz(r1x, front - L1 / 2), f.yaw, 3.2, L1, CURB, t1);
-  frameRamps.push({ x: f.wx(r1x, front - L1 - 1), z: f.wz(r1x, front - L1 - 1), yaw: f.yaw, top: t1, top2: t2 });
+  frameRamps.push({ x: f.wx(r1x, front - L1 - 1), z: f.wz(r1x, front - L1 - 1), yaw: f.yaw, top: t1, top2: t2, deck: { x: f.wx(0, cz), z: f.wz(0, cz), w, d } });
   f.S.add(makeWedge(), C.concrete2, mat(f.wx(r2x, front + L2 / 2), t1, f.wz(r2x, front + L2 / 2), 0, f.yaw, 0, 2.8, t2 - t1, L2));
   ramp(f.wx(r2x, front + L2 / 2), f.wz(r2x, front + L2 / 2), f.yaw, 2.8, L2, t1, t2);
   // Site clutter: sand pile, cement bags, the mixer, cones, a barrier and the sign.

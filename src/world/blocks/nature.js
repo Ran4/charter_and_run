@@ -959,6 +959,19 @@ function bygge(f, W, ctx) {
   // Ramp 1st -> 2nd floor on the slab: x [-6, 2], z [-16, -12], rising east to the 2nd slab.
   rampL(f, -2, -14, PI / 2, 4, 8, S1, S2, 0x8a8f99);
   for (let k = 0; k < 8; k++) f.box(0xd86a1a, -5.5 + k, S1 + (S2 - S1) * (k + 0.5) / 8 + 0.02, -14, 0.25, 0.05, 4.0);
+  // The plank at the 1st floor's east end (Stunthopp med G17-stämpel, feature 40, §10.27): the 3 m
+  // strip between the 2nd floor's block and the rail runs onto it, and a car leaves it over the road
+  // at x 200 towards the dream plane (landmark `stunt_planka`). A board on cement bags with the
+  // yellow ramp's stripes at its end, x [19.2, 22], z [-2.7, -0.1] (clear of the column at (22, -3));
+  // its collider is the ramp under the board.
+  {
+    const PL = 2.8, PH = 0.9, PW = 2.6, pz = -1.4, a = Math.atan2(PH, PL);
+    ramp(f.wx(20.6, pz), f.wz(20.6, pz), f.yaw + PI / 2, PW, PL, S1, S1 + PH);
+    f.boxC(WOOD, 20.6, S1 + PH / 2 - 0.04, pz, Math.hypot(PL, PH), 0.08, PW, 0, 0, a);
+    for (let k = 0; k < 5; k++) f.boxC(k % 2 ? INK : YELLOW, 21.55, S1 + PH * (21.55 - 19.2) / PL + 0.01, pz - 1.04 + k * 0.52, 0.5, 0.08, 0.52, 0, 0, a);
+    f.box(0xd8d0c0, 21.72, S1, pz, 0.45, 0.6, 2.3); f.box(0xc8c0b0, 21.72, S1 + 0.6, pz, 0.4, 0.04, 2.1);
+    f.box(0xb85a3a, 20.3, S1, pz, 0.4, 0.18, 1.8);
+  }
   // 3rd floor over the back half of the 2nd: x [12, 22], z [-18, -8], top 10.35 (out of reach;
   // brick infill under it, so it is a wall on the 2nd floor), then bare columns for the 4th.
   const S3 = CURB + 10.2;

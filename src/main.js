@@ -41,6 +41,7 @@ import { Dogs } from './game/dogs.js';
 import { Bathers } from './game/bathers.js';
 import { SuntripShop } from './game/suntripShop.js';
 import { Toasters } from './game/toasters.js';
+import { Stunts } from './game/stunts.js';
 import { Room107 } from './game/room107.js';
 import { Solkram } from './game/solkram.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
@@ -198,6 +199,7 @@ class Game {
     this.toasters = new Toasters(this);   // free roam: the G17 toasters' timing game (§10.24)
     this.room107 = new Room107(this);     // free roam: room 107's keepsake shelf, the giraffe and the boombox (§10.25)
     this.solkram = new Solkram(this);     // free roam: the SOLKRÄM meter at Majsan's back by the pool (§10.26)
+    this.stunts = new Stunts(this);       // free roam: his car's jumps judged, the G17 stamp (§10.27)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -969,8 +971,11 @@ class Game {
         else if (!other.isTarget && !other.locked) this.shame.add(Math.min(9, impact * 0.55));
       }
       this.pigs.jolt(pc, 'crash', impact);   // the grisbil's pigs tumble off in free roam (§10.15)
+      this.stunts.onImpact();                // a jump in the air or just landed: UNDERKÄND (§10.27)
     }
   }
+  // Every landing of every car, soft ones too (car.js; the stunt jumps' judge, §10.27).
+  onCarAirEnd(car, impact) { this.stunts.onLand(car, impact); }
   onCarLanded(car, impact) {
     if (car === this.playerCar) { audio.thud(); this.cam.shake = Math.min(1, this.cam.shake + impact * 0.03); }
     fx.dust(car.x, car.z, 6);
@@ -982,6 +987,7 @@ class Game {
     burstCoins(car.x, 1, car.z, 8);
     if (car === this.playerCar) {
       const c = car;
+      this.stunts.onWreck();   // a jump under way: UNDERKÄND after KVADDAD! (§10.27)
       for (const p of car.passengers.slice()) { this.unseat(p); p.fling((Math.random() - 0.5) * 6, 6, (Math.random() - 0.5) * 6); }
       this.exitCar(true);
       this.player.fling(-Math.sin(c.yaw) * 3 + (Math.random() - 0.5) * 4, 7, -Math.cos(c.yaw) * 3);
@@ -1510,6 +1516,7 @@ class Game {
     this.toasters.update(dt);
     this.room107.update(dt);
     this.solkram.update(dt);
+    this.stunts.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);

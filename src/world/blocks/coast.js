@@ -776,7 +776,9 @@ function dromplan(f, W) {
   }
   cardon(f, -26, -24, 1.1); cardon(f, 27, 4, 0.9); cardon(f, -27, 26, 0.8);
   agave(f, 10, 26); agave(f, -22, 12, 1.2); agave(f, 26, -8);
-  f.tree(-24, -2, 0.9, 'palm');
+  // The palm stands south of the wing tip, out of the plank jump's run-out from the road at x 200
+  // (it was at (-24, -2), in its lane: feature 40, §10.27).
+  f.tree(-24, 6, 0.9, 'palm');
   // Road-side sign (AERÓDROMO) and the joke plate.
   postSign(f, 'AERÓDROMO', -14, 27.5, 0, 6, 1.4, CURB + 3.4, { bg: '#e8e2d4', fg: '#8a3a30' });
   f.sign('PROHIBIDO SUBIR AL AVIÓN\nKLÄTTRING FÖRBJUDEN', -14, CURB + 2.1, 27.66, 4.2, 0.9, 0, { bg: '#fbf6ec', fg: '#d8321e', scale: 0.62, double: true });

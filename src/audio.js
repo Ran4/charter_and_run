@@ -247,6 +247,9 @@ export const audio = {
   pop() { this.noise(0.04, 0.26, 2600, 'bandpass', 0, 3); this.tone(380, 0.1, 'sine', 0.16, 900); },
   // The sun cream (§10.26): a squeeze of the bottle while E is held, and too much landing on her back.
   squirt() { this.noise(0.07, 0.12, 900 + Math.random() * 300, 'bandpass', 0, 4); this.tone(240, 0.06, 'sine', 0.04, 170); },
+  // The G17 stamp coming down on a jump (§10.27): a rubber thump on paper; UNDERKÄND adds a low buzz.
+  stamp() { this.noise(0.05, 0.36, 1500, 'bandpass', 0, 1.1); this.tone(96, 0.16, 'sine', 0.38, 52); this.noise(0.14, 0.2, 420, 'lowpass', 0.02, 1.3); },
+  stampFail() { this.stamp(); this.tone(196, 0.32, 'square', 0.05, 98, 0.1); this.tone(147, 0.36, 'square', 0.04, 74, 0.12); },
   splat() { this.noise(0.22, 0.3, 600, 'lowpass', 0, 1.2); this.sweep(0.3, 0.1, 1400, 400, 'bandpass', 2, 0.03); },
   horn(on) {
     if (!ctx) return;

@@ -288,7 +288,7 @@ export const hud = {
     const b = this.banner, W = window.innerWidth;
     const wide = !cls.includes('intro') && W / 2 + b.offsetWidth / 2 + 12 > W - 24 - Math.min(430, W * 0.4);
     b.classList.toggle('wide', wide);
-    if (wide) root.style.setProperty('--banner-drop', `${Math.round(b.offsetHeight / 2 + b.offsetWidth / 2 * (cls.includes('multa') ? 0.13 : 0.04) + 12)}px`);
+    if (wide) root.style.setProperty('--banner-drop', `${Math.round(b.offsetHeight / 2 + b.offsetWidth / 2 * (cls.includes('multa') || cls.includes('stamp') ? 0.13 : 0.04) + 12)}px`);
     if (ms) this._bannerT = setTimeout(() => this.hideBanner(), ms);
   },
   // Keeps the cls while it fades, so it fades where it stood (an intro title card in the top bar
@@ -333,6 +333,19 @@ export const hud = {
     this._scoreT = setTimeout(() => e.classList.remove('show'), secs * 1000);
   },
   hideScore() { clearTimeout(this._scoreT); this.scoreEl.classList.remove('show'); },
+  // A live line in the same place (the stunt jump's LUFTTID while his car is in the air, §10.27): the
+  // text changes without the pop-in; up `secs` s after the last call, or until hideScore.
+  liveScore(main, secs = 1.2) {
+    const e = this.scoreEl, m = e.querySelector('.score-main'), t = upper(main);
+    if (m.textContent !== t) m.textContent = t;
+    if (!e.classList.contains('show') || e.querySelector('.score-sub').textContent) {
+      e.querySelector('.score-sub').textContent = '';
+      e.classList.remove('record');
+      e.classList.add('show');
+    }
+    clearTimeout(this._scoreT);
+    this._scoreT = setTimeout(() => e.classList.remove('show'), secs * 1000);
+  },
 
   // The pool fest's hop counter (game/poolFest.js, §10.13), top right under the meter while Stig is
   // in the ring: `text` ("I TAKT 6 / 8"), null hides it; `flash` 'miss' (red) or 'goal' (teal) for

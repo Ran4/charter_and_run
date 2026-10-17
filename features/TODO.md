@@ -2,7 +2,6 @@
 # flytta den till "färdiga features"-sektionen nedan)
 # markörer: ⟨par N⟩ = de två raderna med samma N körs samtidigt (var sin worktree/gren, sedan rebase på main och push), ⟨solo⟩ = körs ensam; ta grupperna uppifrån och ned
 - features/prata_med_ganget.md – 39. Prata med gänget [M] ⟨par 6⟩
-- features/stunthopp.md – 40. Stunthopp med G17-stämpel [M] ⟨par 6⟩
 - features/hoppet_mellan_hotelltaken.md – 41. Hoppet mellan hotelltaken [M] ⟨solo⟩
 - features/faglar_som_lyfter.md – 43. Fåglarna som lyfter – och storken i La Charca [M] ⟨par 7⟩
 - features/mikrofonen_pa_scenen.md – 44. Mikrofonen på scenen – Stig läser Lasses utrop [M] ⟨par 7⟩
@@ -71,3 +70,4 @@
 - features/implemented/rum_107_troferum.md – 38. Rum 107 fylls med resans minnen [S]
 - features/implemented/smorj_in_majsan.md – 35. Smörj in Majsans rygg – SOLKRÄM-mätaren [S]
 - features/implemented/skjortbytet.md – 36. Skjortbytet – Guardia letar efter ”el de la camisa” [M]
+- features/implemented/stunthopp.md – 40. Stunthopp med G17-stämpel [M]

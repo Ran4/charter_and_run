@@ -660,6 +660,49 @@ export const TOWER = {
   radio: ['lasse', 'Från fjärde våningen? Ner i poolen? Ring kliniken.'],   // [F*] Lasse's phone call in the film (research-plot.md:292), now about Stig
 };
 
+// Stunthopp med G17-stämpel – his car's jumps judged (free roam, DESIGN §10.27; game/stunts.js, the
+// plank in world/blocks/nature.js `bygge`). A flight of his car (car.js `air`: the ground more than
+// 0.35 m below it) is a jump when its first flight lasts `minAir` s and goes `minDist` m (the
+// yellow ramp's 0.42 s and 8 m count, a kerb does not lift a car); hops within `settle` s of a
+// landing add to it. The result line shows `live` from `showAt` s in the air; `settle` s after the
+// last landing the stamp comes down for `stampSecs` s, `stampG17` from mission index `g17From`
+// (after fataga, whose intro has the film's boast) and `stampOk` before, and the card for `cardSecs`
+// s. An impact of his car (main.js onCarImpact) in the air or the settle, or the car wrecked, is
+// `stampFail` (Stig's `failLine` `lineAt` s later, at most every `failGap` s). A named jump (its
+// take-off `r` m round a landmark or over a half-built garage's deck 1 and `pad` m past its edge;
+// `yMin` the lowest take-off height) pays `pay.first` the first time it passes, then `pay.record` for a new
+// record (its distance, more than `recordBy` m over the best; saved in `records.stunts`). Off the
+// plank Stig says the mantra in the air, and at the stamp `dreamLine`; out of the car within
+// `arms.window` s and `arms.r` m of `arms.lm` he stands with his arms out to the plane for
+// `arms.secs` s. The dunes lift no car (a car follows the ground unless it drops 0.35 m in a 60 Hz
+// step, and their slip faces slope 0.46: 45 m/s), so they are not a named jump. Invented (§1.6):
+// the judging, the stamp and the plank.
+export const STUNTHOPP = {
+  minAir: 0.35, minDist: 6, showAt: 0.15, settle: 1.0, recordBy: 0.5, g17From: 11,
+  stampSecs: 2.2, cardSecs: 4.5, lineAt: 0.45, failGap: 20,
+  pay: { first: 100, record: 25 },
+  jumps: [
+    { id: 'planka', name: 'Bygget – drömplanet', lm: 'stunt_planka', r: 3, yMin: 4.0, mantra: true, dream: true },   // [N]
+    { id: 'gula', name: 'Gula rampen', lm: 'stunt_gula', r: 3.5, yMin: 1.2 },                                       // [N]
+    { id: 'garage', name: 'Garagedäcket', frames: true, pad: 1, yMin: 3.0 },                                        // [N]
+  ],
+  live: 'LUFTTID {t} S',                         // [N]
+  card: 'LUFTTID {t} S · {d} M',                 // [N]
+  cardPay: ' · +{n} PTA',
+  newRecord: 'NYTT REKORD: {name}',              // [N]
+  record: '{name} · REKORD {d} M',               // [N]
+  stampOk: 'GODKÄND',                            // [N]
+  stampG17: 'KONTROLLERAD AV G17',               // [F*] the label on his toasters (research-plot.md:61), as a stamp on a jump
+  stampFail: 'UNDERKÄND',                        // [N]
+  dreamLine: {
+    g17: 'Godkänd av G17. Det är ju jag.',       // [N]
+    pre: 'Jag flög. Jag flög faktiskt.',         // [N]
+  },
+  failLine: 'Det där får jag kontrollera en gång till.',   // [N]
+  wreckAt: 1.0,
+  arms: { lm: 'stunt_landning', face: 'pryl_kamera', r: 24, window: 20, secs: 3 },
+};
+
 // Tutan som folk reagerar på – the horn the island hears (free roam, DESIGN §10.9; game/honk.js).
 // H pressed in a car with no mission running: pedestrians within `pedR` m ahead of the car (no
 // further aside than `pedLat` + `pedCone` × their distance ahead) hop aside as from a speeding car

@@ -240,7 +240,11 @@ Majsan's sun cream as a SOLKRÄM meter Stig fills with E and lets go in the gree
 in the film the two lines are pool talk, with no score and nothing spilt); the wardrobe in room 107 as
 a hideout from Guardia Civil, Stig changing back into his suit there, the officer on the patio asking
 for "el de la camisa" and Stig's "Buenas tardes." (free roam, §7.2; in the film Ole makes him change
-out of the suit into the shirt in that room, and nobody chases him).
+out of the suit into the shirt in that room, and nobody chases him); his car's jumps judged in free
+roam, LUFTTID in the air, the rubber stamp KONTROLLERAD AV G17 (GODKÄND before fataga) or UNDERKÄND,
+the jumps' records and pesetas, the plank off the bygge's first floor over the road to the dream
+plane, the mantra in the air and Stig's arms out by the plane (free roam, §10.27; in the film G17 is
+the label on his toasters, and the dream plane is a vision in fog, no car flies).
 The film's flight has **no turbulence** and **no in-flight toilet scene**: both toilet scenes are
 at Arlanda (we keep them there). The plane's toilets are only an invented hideout.
 
@@ -1213,8 +1217,8 @@ standing there faces. `y` (optional) = absolute height for collectible spots on 
 | (0,0) | `fataga` → `fataga` (D1, nature.js) | white village houses, tile roofs, narrow lanes, date palms, small church, embroidered tablecloths on lines (`MANTELES · DUKAR`), sheepfold (fence solids, gap gate); six ochre crags along the north edge, solid along their length (Phase 3 r3: rock()'s 1 m circle plus a box 0.85·sx × 0.53·sz on the long axis, the mesh's widest section; the circle alone let the player and the chase eye 2–3 m into the rock, also in the fold's back under the shelter) | `fataga` (0, 18, π) · `fatagaBus` world (−240, −204, −π/2) (westbound kerb of the z = −200 road, the `follow` endpoint) · `fatagaFold` (−18, −12, 0) · `fatagaDukar` (8, 4, π) · cut anchor `dukarCam` (8, 4, 0) = `fatagaDukar` turned round (the stall from the square; Phase 3) · `pryl_kniv` (0, 0, 0, 1.2) | — |
 | (4,0) | `golf` → `golf` (D1, nature.js) | fairway, bunkers (sand slabs), **pond** (`water` circle + flat blue), flag 18, small clubhouse `CAMPO DE GOLF` | `golf` (0, 22, π) · `fena_golf` (−10, −6, 0, 0.35) | — |
 | (5,0) | `bungalow` → `bungalowTomt` (D1, nature.js) | Angerud's show bungalow: one-storey white cube, pool, plot fence, `SE VENDE · BUNGALOW · 4 RUM OCH KÖK` | `bungalow` (0, 22, π) · `fena_bungalow` (6, −4, 0, 0.35) | — |
-| (5,1) | `bygge` → `bygge` (D1, nature.js) | half-built hotel frame, crane, girder deck with ramp (Bigmouth construction reworked), `PRÓXIMAMENTE · HOTEL NUEVA ESTOCOLMO II`, cones/barrels; the storeys under the 2nd- and 3rd-floor slabs are closed (dark core, brick infill on the faces the floor below walks along), since their colliders are solid from the ground (Phase 3) | `bygge` (0, 22, π) · `pryl_klocka` (6, −6, 0, 7.6) | — |
-| (6,1) | `dromplan` → `dromplan` (D2, coast.js) | **the old propeller "drömplanet"**: faded red 4-engine prop plane (DC-7-like) on a dirt lot by the road, wing reachable via a crate ramp, windsock, sign `AERÓDROMO` | `dromplan` (0, 20, π) · `pryl_kamera` (−4, −2, 0, 3.6) (on the wing) | — |
+| (5,1) | `bygge` → `bygge` (D1, nature.js) | half-built hotel frame, crane, girder deck with ramp (Bigmouth construction reworked), `PRÓXIMAMENTE · HOTEL NUEVA ESTOCOLMO II`, cones/barrels; the storeys under the 2nd- and 3rd-floor slabs are closed (dark core, brick infill on the faces the floor below walks along), since their colliders are solid from the ground (Phase 3); the plank at the 1st floor's east end, local x [19.2, 22], z [−2.7, −0.1], up to S1 + 0.9 (feature 40, §10.27) | `bygge` (0, 22, π) · `pryl_klocka` (6, −6, 0, 7.6) · `stunt_planka` (22, −1.4, π/2, 4.45), `stunt_gula` (−16, 4, π, 1.95) (the stunt jumps' take-offs, §10.27) | — |
+| (6,1) | `dromplan` → `dromplan` (D2, coast.js) | **the old propeller "drömplanet"**: faded red 4-engine prop plane (DC-7-like) on a dirt lot by the road, wing reachable via a crate ramp, windsock, sign `AERÓDROMO`; its scraggly palm at (−24, 6), out of the plank jump's run-out (it was at (−24, −2); feature 40, §10.27) | `dromplan` (0, 20, π) · `pryl_kamera` (−4, −2, 0, 3.6) (on the wing) · `stunt_landning` (−26, −1.4, π/2) (the plank jump's run-out, §10.27) | — |
 | (6,0) | `flygplats` → `gando` (D2, coast.js) | low terminal with open arrivals canopy `LLEGADAS · ANKOMST`, baggage carousel (animated ring of suitcases; its belt carries Stig in free roam, §10.16: the belt a `carousel` floor at CURB + 0.64, the centre island its own stepped floor, the sign's post a pole), `OBJETOS PERDIDOS · HITTEGODS` desk with a wall of suitcase silhouettes, bus bay `BUSS 17`; **the parked DC-8** (`buildPlaneExterior`) **outside the bound wall at (240, −335)** — WP-B clears the tree ring **and the hills** in that sector (§6.4) | `airport` (0, 22, π) · `hittegods` (−14, 6, 0) · `busBay` (16, 24, −π/2) · `bagageband` (6, 11, π) (south of the carousel, facing it, so the views camera stands on the forecourt; Phase 3) · `brodrost_hittegods` (−17.4, 7.35, 0, 1.23) (a G17 toaster on the lost-and-found counter, 4 m from the clerk; §10.24; not a standing spot) | `buss17` (bus, livery `suntrip`) at `busBay`; `taxiAirport` (taxi, locked) |
 | (0,4), (0,5) | `dyner` → `dyner` (D1, nature.js) | large sand dunes (ramps), palm grove, lagoon pond; behind them, beyond the west bound, a row of big visual-only dunes from town.js (§6.4, Phase 3 r2) | `dyner` (0, 0, π − 0.4) on (0,4) (faces the arch, so the views camera stands on the sand south of it, clear of the boardwalk palms; Phase 3) | — |
 | (0,6) | `fyren` → `fyren` (D2, coast.js) | **Faro de Maspalomas**: ~55 m grey-blue stone tower (tallest landmark, visible from everywhere), keeper's house (roof top ≈ 4.0, reachable by a dune ramp) | `fyren` (0, 10, π) (coin arc on the keeper's-house roof) | — |
@@ -1291,6 +1295,12 @@ car.js; `Car.step` uses `boost = game && game.playerCar === this ? PLAYER_BOOST 
 pull ×1.2, reverse and brake impulses ×1.2, drag /1.2). Bigmouth's ×2 was a debugging speed-up;
 `notes/engine-actors.md` §0 item 2 still describes that old value. Every drive timer is calibrated
 against ×1.2 (§8 "Timers and difficulty").
+
+**The flight** (feature 40, §10.27): a car leaves the ground when the ground under its centre is more
+than 0.35 m below it (as Bigmouth); it then sets `airT` = 0 and `airFrom` = { x, z, y }, counts `airT`
+in the air, and every landing calls `game.onCarAirEnd(car, impact)` before the old `onCarLanded`
+(impact > 4, the bump) and the landing damage (impact > 13, (impact − 13) × 2.5). `place` clears
+`airFrom`. Measurement only: no physics number changed.
 
 | key | speedo name | base / flags | colour | where |
 |---|---|---|---|---|
@@ -3301,7 +3311,7 @@ Key **`charter-and-run-v1`** (localStorage):
 ```js
 { v: 1, mission: index, coins, collected: { prylar: [ids], fenor: [ids], brodrostar: [ids] },
   unlocked: ['grisbil', ...], outfit: 'kostym' | 'hawaii', tune: 'sol' | 'samba',
-  records: { simhopp: n, eslov: s, solkram: n },
+  records: { simhopp: n, eslov: s, solkram: n, stunts: { planka: m, gula: m, garage: m } },
   shop: { owned: ['hatt', 'glas', 'skjorta', 'nasa'], off: [ids], trapp: 0..2, trappT: s, bag: bool } }
 ```
 
@@ -3316,7 +3326,8 @@ bests (`game.records`; a missing key is no record yet): `simhopp`, the diving ju
 saved at once when beaten (feature 4, §10.8); `eslov`, Eslövloppet's best time in seconds (two
 decimals), saved at once with a win that beats it (feature 7, §10.12); `solkram`, the sun cream's
 best points (5–7), saved at once when beaten (feature 35, §10.26), whose once-ever marker
-`solkramFilm` is in `unlocked`. `shop` (feature 34, §10.23):
+`solkramFilm` is in `unlocked`; `stunts`, the named car jumps' best distances in metres (one
+decimal), saved at once with a new record (feature 40, §10.27; a jump with none is not yet passed). `shop` (feature 34, §10.23):
 SunTrip-butiken's purchases (`owned`), the ones taken off at the counter (`off`), the Trapp Trull
 account's instalments still to pay (`trapp`) and its free-roam seconds towards the next (`trappT`,
 whole), and the beach bag taken (`bag`); saved at once with every purchase, change and instalment; a
@@ -5122,6 +5133,96 @@ no sunburn and no swimsuit: Majsan keeps her dress, and the shots stay on Stig's
   behind her right side with Stig a step back; no Ole's chlorine goggles (no goggles model); by day
   only, so after the end it is the morning before the pool fest's hours.
 
+### 10.27 Stunthopp med G17-stämpel – his car's jumps judged (free roam; feature 40, 2026-10-17)
+
+`game/stunts.js` (`Stunts`, owned by Game as `stunts`), config `STUNTHOPP` in content/island.js, the
+plank in world/blocks/nature.js `bygge`. The island had jumps (the bygge's yellow ramp, the
+half-built garages' decks) and nothing measured them. Now every real jump of his car gets a counter
+in the air and a rubber stamp when it is over, and the flagship is a new plank off the bygge's first
+floor, over the road at x 200 to the dream plane. The judging, the stamp and the plank are invented
+(§1.6); the stamp's text is the label on his toasters in the film (research-plot.md:61), and the
+run-out ends before the plane he stands before with his arms out in the film's dream
+(research-plot.md:126).
+
+- **The flight** (car.js, every car): leaving the ground (the ground more than 0.35 m below it, as
+  before) sets `airT` 0 and `airFrom` { x, z, y }; `airT` counts the seconds in the air; every
+  landing, a soft one too, calls `game.onCarAirEnd(car, impact)` before the old `onCarLanded`
+  (impact > 4) and the landing damage (impact > 13). `place` clears `airFrom`. No physics changed.
+- **When.** `live`: on the island with `missions.state === 'idle'`. Only his car (`playerCar`).
+  A jump begins when his car is seen in the air (`update`) or, for a flight shorter than a frame, at
+  its landing. Its first flight counts if it lasts `minAir` 0.35 s and goes `minDist` 6 m (the
+  take-off to the touchdown, flat); a shorter one is dropped without a word. A flight that starts in
+  the `settle` 1.0 s after a landing goes on with the jump: the air times and the distances add up
+  (the yellow ramp's flight onto the big ramp and off its far side is one jump of two flights).
+- **In the air** (from `showAt` 0.15 s): the result line (`hud.liveScore`, §11.4) shows `LUFTTID
+  {t} S` [N] (one decimal, a decimal comma), the air time so far.
+- **The verdict.**
+  - `settle` 1.0 s after the last landing with no impact: **passed**. The stamp comes down for
+    `stampSecs` 2.2 s (the banner, cls `stamp`, §11.4): `KONTROLLERAD AV G17` [F*] from mission
+    index `g17From` 11 (fataga done: its intro is where the film's boast is first heard, island.js),
+    `GODKÄND` [N] before it; `audio.stamp`, the camera shaken to 0.35. The card (`hud.showScore`,
+    `cardSecs` 4.5 s): `LUFTTID {t} S · {d} M` [N] (whole metres), ` · +{n} PTA` when it pays, over
+    `NYTT REKORD: {name}` [N] (teal) or `{name} · REKORD {d} M` [N] for a named jump, nothing for
+    another.
+  - An impact of his car (main.js `onCarImpact`, his car `involved`: a wall at over 2.5 m/s, a car
+    at over 2) in the air or in the settle: **UNDERKÄND** [N] at once (cls `stamp fail`, tilted the
+    other way; `audio.stampFail`), the card with the air time and distance so far and the jump's
+    name. His car wrecked (`onCarDestroyed`): the engine's KVADDAD! first and the stamp `wreckAt`
+    1.0 s later. Stig's `failLine` "Det där får jag kontrollera en gång till." [N] `lineAt` 0.45 s
+    after the stamp, at most every `failGap` 20 s. The verdict never rests on damage: the plank's
+    landing at about 15 m/s down costs the hire car about 5 hp.
+  - **Off** with no verdict: out of the car, another car, a teleport (`place`), wrecked as nobody's,
+    busted (`frozenT`), a dialogue, a mission start or the other level (`reset`: the result line
+    down, the queued line and the arms dropped).
+- **Named jumps** (`jumps`): the take-off point inside a square `r` m round a landmark, or over a
+  half-built garage's deck 1 and `pad` m past its edge (town.js `frameRamps[].deck`), at `yMin` or
+  higher:
+  - `planka` **Bygget – drömplanet** [N]: `stunt_planka` (block (5,1) local (22, −1.4), the plank's
+    end), r 3, yMin 4.0; the mantra and the dream (below).
+  - `gula` **Gula rampen** [N]: `stunt_gula` ((5,1) (−16, 4), the yellow ramp's crest), r 3.5, yMin
+    1.2.
+  - `garage` **Garagedäcket** [N]: every frame lot's deck 1 (13 m × lot width − 4), pad 1, yMin 3.0.
+  A named jump pays `pay.first` 100 pta the first time it passes and after that only a new record,
+  `pay.record` 25 pta: its distance more than `recordBy` 0.5 m over the best. The best is
+  `records.stunts[id]` (metres, one decimal), saved at once (§10.5). Another jump is judged and
+  stamped, with no pay and no record.
+- **The plank** (nature.js `bygge`): at the 1st floor's east end, local x [19.2, 22], z [−2.7, −0.1]
+  (clear of the column at (22, −3)), a board rising east from the deck (S1 3.55) to S1 + 0.9 = 4.45
+  at the floor's edge, on cement bags under its high end and a brick under its middle, with the
+  yellow ramp's yellow and black stripes across its end; its collider is a `ramp` (2.6 × 2.8) under
+  the board. The way to it: up the big ramp from the west road, then onto the 3 m strip between the
+  2nd floor's block (from x 2) and the deck's south edge, whose orange rail is only a look. A route
+  follower (scenario `stunthopp`: in along the big ramp's south edge at 9 m/s, round the S at 3.5 m/s,
+  flat out along the strip) leaves the plank at 17.6 m/s (63 km/h): 0.93 s in the air, 16.4 m, 5.1 m
+  over the road at the top, down on the road at x 198.6 and on into the dream plane's lot. Off the
+  plank Stig says the mantra (S.mantraLine, [F*] here) in his bubble from `showAt`; at a pass
+  `dreamLine` "Godkänd av G17. Det är ju jag." [N] (`g17From` on) or "Jag flög. Jag flög faktiskt."
+  [N] before, `lineAt` s after the stamp (it may replace the mantra's bubble, nothing else). Out of
+  the car within `arms.window` 20 s of that pass and `arms.r` 24 m of `stunt_landning` ((6,1) local
+  (−26, −1.4), the run-out west of the wing tip), he stands with his arms out (`wings`) facing the
+  plane (`pryl_kamera`, on the wing) for `arms.secs` 3 s (cannot walk meanwhile; a car or a fall ends
+  it). The dream plane lot's palm moved from (−24, −2) to (−24, 6): it stood in the run-out's lane 17 m
+  past the landing, so nearly every plank jump hit it within the settle (UNDERKÄND). Past the palm's
+  old place the wing tip at x 223 is the run-out's end: brake, or meet it after the stamp.
+- **The yellow ramp** (5 × 8 m, up to CURB + 1.8 northwards, inside the yard: the hoarding closes the
+  street side, so the run-up is from the gate or the yard): at 20 m/s (73 km/h) the car flies 8.4 m
+  in 0.42 s onto the big ramp's surface (1.85 there), crosses it and drops off its far side (0.40 s,
+  8.7 m): one jump, 0.82 s, 17.2 m. At 16–17 m/s it comes down short of the big ramp and hits its side:
+  UNDERKÄND. At 6 m/s it is a 0.47 s hop of 3.6 m: no jump.
+- **A garage deck**: off deck 1's front edge at 14 m/s, 0.55 s and 7.4 m into the forecourt.
+- **The dunes lift no car**, so they are not a named jump: a car follows the ground unless it drops
+  0.35 m in a 60 Hz step, and their slip faces slope 0.46 (2.6 m over 5.6), so a car would need
+  about 45 m/s to leave one (the windward faces and the ends slope 0.2, §6.4).
+- `stunts.last` ({ kind: 'pass' | 'fail', id, air, dist, flights, pay, record, best, stamp, reason:
+  'krock' | 'kvaddad', t }) is for tests. Scenarios `stunthopp` and `stuntzoner` (§16.4).
+- **Not done / changed** (deviations from the idea): no slow motion at the top of the jump (it would
+  scale the game's clock, which the missions' measured timers and the other free-roam features share);
+  the dunes are not a named jump (above); the dream plane lot's palm moved out of the run-out; the
+  verdict on a wreck waits for KVADDAD!; a jump only pays once more for a record beaten by over half a
+  metre; the arms out by the plane come only if he gets out there; no applause (the idea "Applåder
+  eller tomater") and no dream scene ("Drömsynen vid drömplanet"): the judge (`stunts.last`, the
+  verdict) is there for them to share.
+
 ## 11. HUD / UI strings (Swedish; `src/strings.js` owned by WP-H, created by Phase 0)
 
 `strings.js` exports `S` (flat object) and `fmt(key, vars)`. Engine code uses `S.key` only.
@@ -5180,7 +5281,16 @@ mutes without touching the button, which then said `Ljud: på` while muted).
 prompt at 178 px), a cream card with the dive and its sum in Luckiest Guy over the record line
 (terracotta, teal for `NYTT REKORD!`). `hud.showScore(main, sub, record, secs = 4.5)` pops it in
 (uppercased, §1.3); `hud.hideScore()` takes it down (the judges' `reset`). The sun cream's result
-uses it too (feature 35, §10.26: `SOLKRÄM 7 P` over the record, `FÖR MYCKET! –1 P`, `FÖR LITE!`).
+uses it too (feature 35, §10.26: `SOLKRÄM 7 P` over the record, `FÖR MYCKET! –1 P`, `FÖR LITE!`),
+and the stunt jumps (feature 40, §10.27): `hud.liveScore(main, secs = 1.2)` keeps `LUFTTID 0,6 S` up
+while his car is in the air, the text changed in place with no pop (up `secs` after the last call),
+and the verdict's card is a `showScore`.
+
+**The stamp** (feature 40, §10.27): the banner with cls `stamp`: its main a rubber stamp in red
+Luckiest Guy (34–64 px), letter-spaced, in an 8 px red double rule on a cream ground, the banner
+tilted −8° (cls `stamp fail`, UNDERKÄND: +6°), and the stamp coming down from 2.6 × in 0.2 s
+(`stampDown` on the main; the banner itself does not grow in, and goes in 0.08 s). `--banner-drop`
+counts its tilt as `multa`'s.
 
 **The hop counter** (feature 8, §10.13): `#takt`, top right under the meter (top 88 px, right 24 px),
 a cream card in Luckiest Guy 26 px, while Stig is in the pool fest's ring: `I TAKT {n} / 8`, `OTAKT!`
@@ -5199,7 +5309,7 @@ wins when both show).
   7×40 px at 1280×720, 115×40 px at 1024×576). **Under a wide banner** (Phase 3 r2): while a
   banner whose layout box reaches the column (`W/2 + width/2 + 12 > W − 24 − min(430, 0.4 W)`;
   never the `intro` card in the top bar) shows, `hud.showBanner` gives it cls `wide` and sets
-  `--banner-drop` on `#hud` (half its height + its tilt's reach, 4 %, 13 % for `multa`, of half its
+  `--banner-drop` on `#hud` (half its height + its tilt's reach, 4 %, 13 % for `multa` and `stamp`, of half its
   width + 12 px), and the column starts at `32 % + --banner-drop` (`40 % + …` with the objective
   card), `transition: top 0.25s`. ¡GUARDIA CIVIL!, UPPDRAG KLART!, KVADDAD!, TURBULENS! and
   SKANDALEN TYSTAD covered the radio toasts' portraits and names (~3 900 px² each at 1280×720).
@@ -5403,6 +5513,7 @@ Scheduler fixes (Phase 0): catch-up guard `if (next < ctx.currentTime) next = ct
 | `whistle()` | a dog's owner whistling it home (feature 31, §10.21): a sine 1700 → 2400 Hz (0.14 s), then 2350 → 1500 Hz (0.36 s) |
 | `thud()`, `crash()`, `coin()`, `pickup()` | existing |
 | `toasterDown()`, `pop()` | a G17 toaster (feature 33, §10.24): the lever going down (a band-passed noise clack and a 170 → 110 Hz square), the bread popping up (a short 2.6 kHz noise burst and a 380 → 900 Hz sine) |
+| `stamp()`, `stampFail()` | the stunt jumps' stamp (feature 40, §10.27): a rubber thump on paper (a 1.5 kHz noise slap, a 96 → 52 Hz sine, a low noise tail); UNDERKÄND adds a falling two-tone square buzz (196 → 98, 147 → 74 Hz) |
 | `squirt()`, `splat()` | the sun cream (feature 35, §10.26): a squeeze of the bottle every 0.28 s while E is held (a 0.07 s band-passed noise at 0.9–1.2 kHz and a 240 → 170 Hz sine), too much landing on her back (a 0.22 s low-passed noise and a 1.4 kHz → 400 Hz sweep) |
 | `splash(k = 0)` | water (existing at k 0: a band-passed noise burst and a sweep down); feature 24 (§10.20): `k` 0..2 lengthens, lowers and lifts it (`game.waterSplash`: 1 a fall from the 10 m tower, 1–2 a stomp's cannonball), and over 1 a 75 → 38 Hz sine boom under it |
 | `pip()` | Ole's calculator alarm (feature 30, §10.10): PIP-PIP-PIP twice, 2794 Hz square pips of 0.06 s 0.12 s apart, the second three 0.55 s on; the nap plays it twice |
@@ -5500,7 +5611,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/strings.js` | new | **H** | `S`, `fmt()` (§11) |
 | `src/content/index.js` | new | none | merges `HOMES`, `MAP_LABELS`, `LEVEL_OUTFITS`, re-exports all content |
 | `src/content/flight.js` | new | **F** | `HOMES_GATE`, `HOMES_FLIGHT`, `MAP_LABELS_FLIGHT`, `CHATTER_FLIGHT`, `OLE_STATS`, `LEVEL_OUTFITS_GATE`, `LEVEL_OUTFITS_FLIGHT` |
-| `src/content/island.js` | new | **G** | `HOMES_ISLAND`, `MAP_LABELS_ISLAND`, `CHATTER`, `OUCH`, `GETUP`, `CARJACK`, `NPC_KICKED` (+ the `_OLE` / `_LOCAL` tables, `LOCAL_CAST`, `BARKS`: Phase 3 r2, §14.10; `STIG_SORRY`: feature 11, §10.14; `PIG_TRUCK`: feature 15, §10.15; `BAGGAGE_BELT`: feature 25, §10.16; `LAPPLISA`: feature 20, §10.17; `GRISFEST_FREE`: feature 21, §10.18; `FRUKTSTAND`: feature 28, §10.19; `TOWER`: feature 24, §10.20; `DOGS`: feature 31, §10.21; `BATHERS`: feature 32, §10.22; `RUM107`: feature 38, §10.25; `SOLKRAM`: feature 35, §10.26), `COLLECTIBLES`, `UNLOCKS`, `NAMED_CARS`, `LEVEL_OUTFITS_ISLAND` |
+| `src/content/island.js` | new | **G** | `HOMES_ISLAND`, `MAP_LABELS_ISLAND`, `CHATTER`, `OUCH`, `GETUP`, `CARJACK`, `NPC_KICKED` (+ the `_OLE` / `_LOCAL` tables, `LOCAL_CAST`, `BARKS`: Phase 3 r2, §14.10; `STIG_SORRY`: feature 11, §10.14; `PIG_TRUCK`: feature 15, §10.15; `BAGGAGE_BELT`: feature 25, §10.16; `LAPPLISA`: feature 20, §10.17; `GRISFEST_FREE`: feature 21, §10.18; `FRUKTSTAND`: feature 28, §10.19; `TOWER`: feature 24, §10.20; `DOGS`: feature 31, §10.21; `BATHERS`: feature 32, §10.22; `RUM107`: feature 38, §10.25; `SOLKRAM`: feature 35, §10.26; `STUNTHOPP`: feature 40, §10.27), `COLLECTIBLES`, `UNLOCKS`, `NAMED_CARS`, `LEVEL_OUTFITS_ISLAND` |
 | `src/game/missions/index.js` | new | none | `MISSIONS = [...FLIGHT_MISSIONS, ...ISLAND_MISSIONS]`, `MissionRunner` re-export |
 | `src/game/missions/runner.js` | new (from missions.js) | none | `MissionRunner` (§9.4) |
 | `src/game/missions/kinds/core.js` | new | **none** (frozen after Phase 0) | getInCar goto pickup dropoff follow rabbits race destroy grab scene |
@@ -5532,6 +5643,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/toasters.js` | new (feature 33, 2026-10-17) | — | `Toasters` (`game.toasters`): Kontrollerad av G17 in free roam: the seven toasters' interactables, the timing game and its card, the pop and its three results, the sister's line, the reset at a mission start (§10.24) |
 | `src/game/room107.js` | new (feature 38, 2026-10-17) | — | `Room107` (`game.room107`): Rum 107 fylls med resans minnen in free roam: the shelf's, the giraffe's and the boombox's interactables, Stig's lines and Ole's count on the radio, the giraffe held and put back, the reset (§10.25) |
 | `src/game/solkram.js` | new (feature 35, 2026-10-17) | — | `Solkram` (`game.solkram`): Smörj in Majsans rygg in free roam: Majsan's interactable, the scene (the ask, her back turned, the meter's card and the held E, the result's shots, cards and bubbles), the bottle and the cream, the record and `sjuPoang`, the reset (§10.26) |
+| `src/game/stunts.js` | new (feature 40, 2026-10-17) | — | `Stunts` (`game.stunts`): Stunthopp med G17-stämpel in free roam: his car's jumps measured (from car.js `airT`/`airFrom`), LUFTTID in the air, the settle and the verdict, the stamp and the card, the named jumps' take-offs, pay and records, the mantra off the plank, Stig's lines, his arms out by the dream plane, the reset (§10.27) |
 | `src/game/bathers.js` | new (feature 32, 2026-10-17) | — | `Bathers` (`game.bathers`): Badgäster på solstolarna in free roam: tourists on the sun loungers nearest him by day, their burn (pale, pink, lobster red), the fly-off from a kicked or smashed lounger, a newcomer on a lounger back; Berra and Robban fried and asleep on two Flamenco loungers between buss17 and the bodega, their snores and the wake (§10.22) |
 | `src/game/suntripShop.js` | new (feature 34, 2026-10-17) | — | `SuntripShop` (`game.shop`): Bränsletillägg tillkommer in free roam: SunTrip-butiken's counter shown and its solids live between missions, the travel agent, the wares' and the bag's interactables, the receipts, the Trapp Trull account's instalments, "Paketet!", Ole's line; his bought look as a layer over his outfit (`dress`), saved (§10.23) |
 | `src/game/hud.js` | edit | **H** | map sources, meter, strings, legend, ring, blips, zone bar, markers; `renderPortrait` restores the model transform (§14.8) |
@@ -5539,27 +5651,27 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/fx.js` | edit | **A1** | `snow`, `steam`, `meterPuff` (rename of `shame`); `splash`'s `up` (feature 24, §10.20) |
 | `src/game/markers.js` | unchanged | none | |
 | `src/gfx.js` | edit | none | `setSkyPalette`, `setCloudsVisible`, `setShadows`, `MAT.sky`, `MAT.water` sea colour |
-| `src/audio.js` | edit | **H** | §12 API; `splash(k)`'s size (feature 24, §10.20); `woof`, `whistle` (feature 31, §10.21); `toasterDown`, `pop` (feature 33, §10.24); `squirt`, `splat` (feature 35, §10.26) |
+| `src/audio.js` | edit | **H** | §12 API; `splash(k)`'s size (feature 24, §10.20); `woof`, `whistle` (feature 31, §10.21); `toasterDown`, `pop` (feature 33, §10.24); `squirt`, `splat` (feature 35, §10.26); `stamp`, `stampFail` (feature 40, §10.27) |
 | `src/input.js` | edit | none | pad Start → `pause` |
 | `src/util.js` | unchanged | none | |
 | `src/world/frame.js` | new (from town.js) | none | `Frame` (`prop(…, opts)` passes `opts` to `placeProp`: feature 28) |
 | `src/world/registry.js` | new | none | `worldHooks` |
 | `src/world/layout.js` | edit | **B** | `MAP`, `BLOCK_MAP_COLORS`, `laneSpot` (Phase 0); `sidewalkAt` (feature 20, §10.17) |
 | `src/world/landmarks-island.js` | new | none (Phase 2 applies reported changes) | canonical island landmark table |
-| `src/world/town.js` | edit | **B** | streets, outskirts, residential, dispatch via `BLOCK_BUILDERS`; `dogLots` (feature 31, §10.21) |
+| `src/world/town.js` | edit | **B** | streets, outskirts, residential, dispatch via `BLOCK_BUILDERS`; `dogLots` (feature 31, §10.21); `frameRamps[].deck` (feature 40, §10.27) |
 | `src/world/props.js` | edit | **B** | `TYPES` (§6.8), flags, `reviveProps`, `propsOfType`; the `frutas` stall, its flags, the debris palette, `spawnShreds` and the signs (feature 28, §10.19) |
 | `src/world/collision.js` | edit | none | `segmentBlocked` nearest hit |
 | `src/world/blocks/index.js` | new | none | `BLOCK_BUILDERS` merge |
 | `src/world/blocks/hotels.js` | new | **C1** | `flamenco`, `suntrip`; `flamencoBays` (feature 20, §10.17); the diving tower `diveTower` and its solids `DIVE_TOWER` (feature 24, §10.20); SunTrip-butiken's counter `suntripShop` and `SUNTRIP_SHOP` (feature 34, §10.23); room 107's keepsake shelf, `roomKeepsakes`, `ROOM107` and `worldHooks.rum107` (feature 38, §10.25) |
 | `src/world/blocks/centre.js` | new | **C2** | `kasbah`, `cita`, `plaza`, `marknad`, `kyrka`, `bensin`, `guardia`; the market's five fruit stalls as `frutas` props (feature 28, §10.19); room for three G17 toasters (two paint cans a row, a fruit crate's fruit, stall K's radio 5 via `stall`'s `gap`; feature 33, §10.24) |
-| `src/world/blocks/nature.js` | new | **D1** | `tomat`, `grisfest`, `fataga`, `golf`, `bungalow`, `bygge`, `dyner`; `FARM_YARD` (feature 31, §10.21) |
-| `src/world/blocks/coast.js` | new | **D2** | `flygplats`, `dromplan`, `fyren`, `playa`, `hamn`; `BELT` (feature 25, §10.16) |
+| `src/world/blocks/nature.js` | new | **D1** | `tomat`, `grisfest`, `fataga`, `golf`, `bungalow`, `bygge`, `dyner`; `FARM_YARD` (feature 31, §10.21); the bygge's plank (feature 40, §10.27) |
+| `src/world/blocks/coast.js` | new | **D2** | `flygplats`, `dromplan`, `fyren`, `playa`, `hamn`; `BELT` (feature 25, §10.16); the dream plane lot's palm moved (feature 40, §10.27) |
 | `src/world/cabin.js` | new | **A1** | §5 interior, collision, seats, trolley, turbulence, fear, interactables, blockers, `CAM_CABIN`, `FLIGHT_PALETTES`, `FEAR`; calls `buildFlightScenery` |
 | `src/world/flightScenery.js` | new | **A2** | §5.6 visuals: gate-set visuals, airframe, animated scenery per phase, `buildFlightScenery`, `buildPlaneExterior` |
 | `src/world/rio.js` | new | **B** | `buildRioCard` (P1) |
 | `src/actors/models.js` | edit | **E** | `CHARS`, `CAST`, new def fields, anim flags, `buildBustGeo`, `outfitDef`, `randomPed` palette; the `ticket` flag and its `lappblock`/`penna` props (feature 20, §10.17); the `leap` and `bomb` poses (feature 24, §10.20); the `placate` pose (feature 31, §10.21); the `lie` pose, the `stekt` outfits and `STEKT_SKIN` (feature 32, §10.22); the `rub` pose (feature 35, §10.26) |
 | `src/actors/character.js` | edit | **E** | `setDef`, `hidden`, `seatAt`, `standAt`, new anim flag defaults (`placate`: feature 31; `rub`: feature 35); the state `lying`, `lieAt`, `fling`'s `flip` (feature 32, §10.22) |
-| `src/actors/car.js` | edit | **E** | §6.6 types/flags, `registerCarType`, `build`/`noWheels`/`noSpeedo`/`noExplode`/`livery`; the grisbil's pig meshes `PIG_SLOTS`, `pigMesh`, `car.pigs`, `setPig`, `pigWorld` (feature 15, §10.15); `car.lift`, the nose raised on the tow truck's hook (feature 20, §10.17); a prop is known by its block's `ref`, `game.breakProp` may refuse, `def.slow` (feature 28, §10.19) |
+| `src/actors/car.js` | edit | **E** | §6.6 types/flags, `registerCarType`, `build`/`noWheels`/`noSpeedo`/`noExplode`/`livery`; the grisbil's pig meshes `PIG_SLOTS`, `pigMesh`, `car.pigs`, `setPig`, `pigWorld` (feature 15, §10.15); `car.lift`, the nose raised on the tow truck's hook (feature 20, §10.17); a prop is known by its block's `ref`, `game.breakProp` may refuse, `def.slow` (feature 28, §10.19); the flight's `airT`, `airFrom` and `game.onCarAirEnd` (feature 40, §10.27) |
 | `src/actors/pickups.js` | edit | **E** | `COLLECT_KINDS`, `registerCollectKind`, `Collectible` table, `Rabbit` meshes, coin value 25; the `brodrost` kind, `TOASTER`, `setToaster`, `Collectible.mark` and the `yaw` option (feature 33, §10.24); `PRYL_IDS` exported (feature 38, §10.25) |
 | `src/actors/peds.js` | edit | **E** | Swedish/Spanish shouts; `dodge`, `startle` (feature 5, §6.7) |
 | `src/actors/drivers.js` | Phase 2 edit | none | (accepts duck-typed paths); an AI bus's lane path starts its turns 11 m from the junction centre instead of 8.5 (left-turn radius 13.75 m > the bus's ≈ 12 m minimum), so the excursion bus no longer swings into the grisfest farm wall; right turns stay too tight for buses (mission bus routes turn left only); traffic holds short of a closed race junction (`game.closure`, §9.2 race) |
@@ -5582,6 +5694,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `tools/scenarios/torsdag.mjs` | new (feature 21) | — | torsdag, torsdagOle |
 | `tools/scenarios/badgaster.mjs` | new (feature 32) | — | badgaster, stekt |
 | `tools/scenarios/butik.mjs` | new (feature 34) | — | butik, butikbil |
+| `tools/scenarios/stunthopp.mjs` | new (feature 40) | — | stunthopp, stuntzoner |
 | `tools/story/flight.mjs` | new | **F** | `M_FLIGHT` (M[0..4]) |
 | `tools/story/island.mjs` | new | **G** | `M_ISLAND` (M[5..12]) |
 
@@ -5600,19 +5713,19 @@ Init: `initGfx` → `input.init` → `hud.init` → `fx.init` → fonts (Luckies
 → peds (34) → NPC `Character`s (one per `CHARS` key except `stig`, the radio-only keys `levander
 kapten pa guardia pax telefonist` and the cabin-owned `vardinna2`; `key` field; hidden until placed, §2.3) →
 player `Character(CHARS.stig)` (`key = 'stig'`) → collectibles (`COLLECTIBLES`) → markers → `Shame`
-→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `DiveTower` (feature 24, §10.20; registers the ladder's two interactables, sets `DIVE_TOWER.live`) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `Eslov` (feature 7, §10.12; registers the rollerskier's interactable) → `PoolFest` (feature 8, §10.13) → `StigSorry` (feature 11, §10.14) → `PigTruck` (feature 15, §10.15) → `BaggageBelt` (feature 25, §10.16) → `Lapplisa` (feature 20, §10.17) → `GrisfestFree` (feature 21, §10.18; registers the gate's and the tourists' interactables) → `FruitStands` (feature 28, §10.19) → `Dogs` (feature 31, §10.21) → `Bathers` (feature 32, §10.22; registers the wake's interactable) → `SuntripShop` (feature 34, §10.23; registers the four wares' and the bag's interactables, sets `SUNTRIP_SHOP.live`) → `Toasters` (feature 33, §10.24; registers the seven toasters' interactables) → `Room107` (feature 38, §10.25; registers room 107's three interactables) → `Solkram` (feature 35, §10.26; registers Majsan's interactable) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
+→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `DiveTower` (feature 24, §10.20; registers the ladder's two interactables, sets `DIVE_TOWER.live`) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `Eslov` (feature 7, §10.12; registers the rollerskier's interactable) → `PoolFest` (feature 8, §10.13) → `StigSorry` (feature 11, §10.14) → `PigTruck` (feature 15, §10.15) → `BaggageBelt` (feature 25, §10.16) → `Lapplisa` (feature 20, §10.17) → `GrisfestFree` (feature 21, §10.18; registers the gate's and the tourists' interactables) → `FruitStands` (feature 28, §10.19) → `Dogs` (feature 31, §10.21) → `Bathers` (feature 32, §10.22; registers the wake's interactable) → `SuntripShop` (feature 34, §10.23; registers the four wares' and the bag's interactables, sets `SUNTRIP_SHOP.live`) → `Toasters` (feature 33, §10.24; registers the seven toasters' interactables) → `Room107` (feature 38, §10.25; registers room 107's three interactables) → `Solkram` (feature 35, §10.26; registers Majsan's interactable) → `Stunts` (feature 40, §10.27) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
 `placeNpcs(true)` → spawn the player → portraits for every key in `CAST` (`renderPortrait`
 restores each model's parent and transform, so seated cast members stay in their seats) →
 `applySaveToWorld()` →
 loop → `window.__ready = true` → `start()` in test mode.
 
 Frame (`update`): hooks → one-shots (incl. E/J/R while seated) → fixed steps (player intent incl.
-mantra/hold, AI, cars, people (`glide.step` → the player's step → `glide.after`, feature 3 →
+mantra/hold, AI, cars (a landing calls `onCarAirEnd`, feature 40), people (`glide.step` → the player's step → `glide.after`, feature 3 →
 `belt.carry`, feature 25 → the NPCs → `party.step`, feature 21 → `bathers.step`, feature 32) —
 traffic/peds skipped when `!levelDef.sim.*`) → `syncAll` (also
 writes `ch.x/y/z` from `car.seatWorld(ch.seatSide)` for every car-seated character, player
 included, so framing, bubbles and distance checks see where they really are) → `missions.update` →
-`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `tower.update` (feature 24) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `stands.update` (feature 28) → `dogs.update` (feature 31) → `bathers.update` (feature 32) → `shop.update` (feature 34) → `toasters.update` (feature 33) → `room107.update` (feature 38) → `solkram.update` (feature 35) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
+`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `tower.update` (feature 24) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `stands.update` (feature 28) → `dogs.update` (feature 31) → `bathers.update` (feature 32) → `shop.update` (feature 34) → `toasters.update` (feature 33) → `room107.update` (feature 38) → `solkram.update` (feature 35) → `stunts.update` (feature 40) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
 pickups/collectibles → props → `fx.tick` → `tickTown` → markers → camera → sun/sky → HUD → audio →
 traffic recycling (island) → autosave. `loop` then renders, and when `film.grabNow` is set calls
 `film.grab()` in the same task (Herr Storch's still from the frame's buffer, feature 6, §10.11).
@@ -5677,6 +5790,11 @@ game.solkram;      // Solkram (feature 35, §10.26): Majsan's sun cream and the 
                    // meter, phase (null | intro | ready | hold | result), canUse(), start(), judge(),
                    // reset(), objective() (updateHud, first of the free-roam cards), fill, zone, mid,
                    // tries, restT, last, bottle, dab, drops, cfg (SOLKRAM)
+game.stunts;       // Stunts (feature 40, §10.27): his car's jumps judged; stunts.live, jump ({ car, zone, air,
+                   // dist, phase: 'air' | 'settle', settleT, flights } | null), onLand(car) (onCarAirEnd),
+                   // onImpact() (onCarImpact, his car), onWreck() (onCarDestroyed, his car), zoneAt(p),
+                   // reset(), last, cfg (STUNTHOPP)
+game.onCarAirEnd(car, impact); // car.js: every landing of every car, soft ones too (stunts.onLand, §10.27)
 game.bathers;      // Bathers (feature 32, §10.22): tourists on the sun loungers, Berra and Robban fried;
                    // bathers.loose (the bathers off their loungers: allChars, areaHit), step(h)
                    // (fixedStep), onPropBroken(p, vx, vz) (from onPropBroken, after the lounger's own
@@ -6112,8 +6230,9 @@ export class Frame { constructor(S, F, ox, oz, yaw = 0, scene) ...  mark(name, l
 // CURB+0.01 or higher.
 
 // world/town.js (WP-B): lamps, animated, pedLoops, DC8_SPOT, parkedCars, bouncers (the trampoline
-//   'bounce' blocks), frameRamps [{ x, z, yaw, top, top2 }] (foot of each half-built frame's ramp 1,
-//   both deck heights). world/rio.js: RIO_X (= −3000).
+//   'bounce' blocks), frameRamps [{ x, z, yaw, top, top2, deck: { x, z, w, d } }] (foot of each
+//   half-built frame's ramp 1, both deck heights, deck 1's centre and size: w across the lot, d deep;
+//   feature 40, §10.27). world/rio.js: RIO_X (= −3000).
 //   all Bigmouth Frame methods; sign() adds to this.scene; car(type, lx, lz, ly = 0, extra)
 
 // world/layout.js
@@ -6476,7 +6595,9 @@ fx.splash(x, z, n = 16, sp = 3, up = 4)   // n drops thrown out at sp m/s and up
 //   shown objective card (Phase 3). hud.toast(text, cls,
 //   secs?) (by length, ≤ 3 at once), hud.clearToasts() (runDialog calls it), hideBanner() drops
 //   only `show` (Phase 3, §11.4, §11.7). hud.showScore(main, sub, record, secs = 4.5) /
-//   hud.hideScore(): the diving judges' result line #score (feature 4, §10.8).
+//   hud.hideScore(): the diving judges' result line #score (feature 4, §10.8); hud.liveScore(main,
+//   secs = 1.2): the same line kept up without the pop (feature 40, §10.27); banner cls stamp (and
+//   stamp fail) for the stunt jumps' stamp (feature 40).
 // shame.inScene (getter: inDialog || inCutaway); shame.hideoutT; steer state; a teleports debug
 //   counter; hideout interactable id 'hideout:<landmark>' (registered in configure());
 //   shame.tuneBefore (a mission tune to restore after the pursuit, else null; Phase 3, §7.2).
@@ -7039,6 +7160,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `rum107`, `troferum` [feature 38] | Rum 107 fylls med resans minnen (§10.25). `rum107`, at index 9 (free roam): the room bare on a fresh save (7 gadget, 7 fin and 3 julafton meshes built, none shown); E at the shelf with nothing found: "Inget att kontrollera.", he faces it, the card `Oles prylar 0/7 · Hajfenor 0/7`, Ole's "Hylla er tom…"; four gadgets and three fins collected (`collect`) show at once, each gadget in its own place 0.5 m apart standing on the shelf's 2.75; no prompt for `gap` s, then "Kontrollerad av G17.", 4/7 · 3/7 and "Fire av sju! Snart er hylla full."; before the unlocks the nap answers at the giraffe's spot and no boombox; all seven: the samba unlock, "Spela samba" sets and saves the samba with Ole's "Ja, det er fint! Samba!", no prompt while it plays, back with the sol tune; after `unlock('bodega')` the suitcase, the giraffe and the pack; E at the giraffe: held, the bed's hidden, "Precis en sån…", the prompt "Ställ tillbaka giraffen", back after `holdSecs`, at once 3 m off and with E; the nap beside his bed; a full shelf's "Alle sju! Nå er hylla full."; a reload dresses the room; at index 12 a mission start leaves none usable and the giraffe back; the flight level inert. `troferum`, at index 13: the room from the patio (`rum107Cam` at 5.5 and 7.5 m, buss17's and julafton's cuts) bare, mid-trip and after julafton, close shots of the shelf, the pile and the beds, Stig at the shelf, Stig with the giraffe, and the nap with the giraffe by his head |
 | `solkram` [feature 35] | Smörj in Majsans rygg (§10.26). At index 10 (fataga waiting, Majsan its giver at the pool) the talk and no SOLKRÄM; at index 11 beside Majsan "Smörj in ryggen", none at 22:00 or with Siv 5 m off her spot; E: the film's pair in a dialogue (and the marker `solkramFilm`), then her back turned (yaw π/2), Stig 0.97 m behind her facing her with `rub` 1 and his hands 0–0.2 m over her shoulder pivots and 0.03–0.2 m behind her middle, both sisters `busy`, the bottle, no prompt, the card (SOLKRÄM, `Håll E · släpp i det gröna`, `Majsans rygg`, the field `w0` wide with its middle in `at`, the marker) with no letterbox; E held (a real key) 0.6 s: the fill at 1/`secs` a second (0.6–1.3 ×), `rub` 2, `Håll… håll…`; let go in the stripe: 7, a record, Siv's `7` card, `SOLKRÄM 7 P` / `NYTT REKORD!`, `records.solkram` 7 in the save, then her three lines in order and at the end the camera, the sisters and the pose back, no bottle, `sjuPoang` (Siv's chatter, the toast, both markers saved); again: one of `again`, the field × `shrink`, 6 with "Sex, tycker jag." and the record kept (`REKORD 7 P`); the field's edge: 5 and "Giraffen, då? Fem."; short of it: early, no card, `FÖR LITE!`, "Var det allt?"; held to the end: over at 1, Siv's `–1` and laugh, Stig flailing 1.42 m behind her, the cream running, the shot from behind, three drops at 1.1 s, back to the front shot for Siv, the lines, the flail and the cream gone; no hold: "Jaha. Då får jag väl göra det själv."; six tries; a mission start with Siv's card up: the card down and the intro's cinematic kept; a reload: the record 7, `sjuPoang`, Siv's chatter and no film pair again; at index 13 after `unlock('bodega')` at 15:00 the pool fest's ring has Majsan (none), at 08:00 she is home and it is there; the flight level inert. Shots `solkram_0_prompt`, `_1_ready`, `_1b_hold`, `_2_sju`, `_3_after`, `_4_over`, `_5_minus` |
 | `skjortbyte`, `garderob` [feature 36] | Skjortbytet (§7.2). `skjortbyte`, at index 6 (free roam, the shirt): on foot with both Land Rovers chasing for 9 s, no `onRam` (their wall hits are no rams on him, `main.onCarImpact`); no prompt at the wardrobe without a pursuit; in one (the officer 40 m off on the pool deck): `Byt till kostymen`, the `friend` marker, the shirt taunt among the `taunts`; E: frozen 2.5 s, the wardrobe open with the suit, "De letar ju efter skjortan…", he faces it, no second prompt; then the suit, `islandOutfit` hawaii, no pursuit, no fine, the cooldown, the shirt on the hanger, the banner, the doors shut; the officer walks onto the patio (within 1 m of the spot), "¿Dónde está el de la camisa?", the scene (cinematic and cut), "Buenas tardes.", the scene over as he walks on, no back prompt meanwhile, out of sight, Ole's "Du kan ikke gå sånn her nede! …", one line only; the save keeps hawaii; a pursuit in the suit: no hideout, no back, no shirt taunt, no marker; back: `Byt till hawaiiskjortan`, the shirt on the hanger, "Är den inte lite skrikig?", the shirt, Ole's "sterke farger"; the cooldown (the porter's untouched); the officer on the walk 6 m off: busted in the wardrobe, fined, still in the shirt, the doors shut; under the dotted shirt (bought, `shop.refresh`): no hideout, no shirt taunt, and without it again; the officer 20.6 m off on the pool deck (placed and E in one frame): he makes it, and the officer comes on from where he was; a mission start while he walks off: the shirt back on, the officer gone, neither prompt; index 5 (the suit): no prompt, no shirt taunt; the flight level: no wardrobe. `garderob`: shots of the wardrobe shut from the patio and with Stig at it, open with the suit (from the room and the patio), the change done, the officer looking, "Buenas tardes." in the scene, the officer walking off with Ole's radio, back to the shirt |
+| `stunthopp`, `stuntzoner` [feature 40] | Stunthopp med G17-stämpel (§10.27), driven by a route follower in his car's `ai` (pure pursuit, as calibrate's), the peds and traffic near the bygge sent away. `stunthopp`, at index 11 (free roam): `stunt_planka` at (182, −161.4); the plank's ground 4.42 at its end, 3.6 near its foot, the ground past it; the route up the big ramp, round the S at 3.5 m/s, flat out along the strip: off the plank's end (`airFrom` y over 4.3, zone `planka`), `LUFTTID 0,n S` on the result line with no sub, the mantra said in the air; the verdict: passed, one flight, 0.85–1.05 s and 14.5–20 m (0.93 s, 16.4 m), the banner KONTROLLERAD AV G17 (cls `stamp`, not `fail`), the card `LUFTTID 0,9 S · 16 M · +100 PTA` / `NYTT REKORD: BYGGET – DRÖMPLANET` (record), +100 pta, `records.stunts.planka` its distance, no SKANDAL, "Godkänd av G17. Det är ju jag."; stopped on the dream plane's lot (x 205–222) with over 80 hp; out of the car: arms out facing `pryl_kamera`, down after 3 s; the plank again: passed, no pay, the card's `REKORD 16 M`; the best set to 10: a record, +25; the save (v 1, `records.stunts`) and a reload keep it; a parked car at (205, −161.4): UNDERKÄND (`krock`, cls `stamp fail`), the card with the name, no pay, the fail line. `stuntzoner`: the yellow ramp at 20 m/s from the yard: `gula`, two flights, over 0.7 s and 14 m, +100; at 16 m/s into the big ramp's side: UNDERKÄND; at 6 m/s a hop under 6 m: no verdict, no line; off deck 1's front edge of `frameRamps[0]` at 14 m/s: `garage`, +100; a mission started (`T.startMission`): not `live`, no jump, no line, no verdict; at index 9 (before fataga) the yellow ramp's stamp GODKÄND; the flight level inert. Shots `stunt_planka_luft`, `_stampel`, `stunt_dromplanet`, `stunt_underkand`, `stunt_gula_luft`, `_stampel`, `stunt_garage`, `stunt_godkand` |
 | `badgaster`, `stekt` [feature 32] | Badgäster på solstolarna (§10.22). `badgaster`, at index 6 (free roam): bodies only on taken sun loungers, their hips on the seat, at most `max` (10), none on Berra's or Robban's; on the main beach no taken lounger within `r` left empty nearer than the bodies (shot `badgaster_strand`); one rebuilt body's ms logged. The burn: three loungers in the z 250 row; a bather lain past `burn[0]` stays pale while in view within `seenR` and is pink once out of view; past `burn[1]` lobster red (skins from `skins`; shot `badgaster_stadier`). A kick at a free lounger and at a taken one give the same SKANDAL; the bather off it in a backward somersault (`flip` < 0) along the lounger's facing (vz > 2), an OUCH bark, a GETUP bark on his feet (shots `badgaster_kullerbytta`, `badgaster_upp`), gone once Stig is 30 m off; no `onCharHit`, no "hit" sorry. His car at 10 m/s through a taken lounger: SKANDAL 1 × 1.2 × gain only, the bather off along the car (vz > 5; shot `badgaster_bil`). The lounger back after its smash (respawn 0, him 100 m off): `n` + 1, a new seed, stage 0, a pale newcomer on it. At 22:00 nobody (after a cut); at 10:00 `dayN` + 1 and a new crowd. A mission start (friskotek) takes every body away at once, none in the mission; the flight level (index 2) makes none. `stekt`, at index 6: Berra and Robban `lying` on their loungers, outfit `stekt` (skin `STEKT_SKIN`), `slump`, busy, spot `stekt`; both snore within 9.5 s (shots `stekt_bar`, `stekt`); the E point `stekt:wake` at Berra's feet: Stig's line, then Berra's with `lift` > 0.6 (shot `stekt_fem_minuter`), then Robban's, in that order, and `lift` back under 0.1; a kick at Berra's lounger: `flung`, then `down` with his timer held (> 100), still `stekt`, only snores from him (shot `stekt_sparkad`); the lounger back with him 100 m off: on it again. A mission start (friskotek): both `normal`, outfit `sol`, no slump, within 2.5 m of their homes at the bar. Index 7: on their loungers; 5 and 8: not |
 | `talk` [Phase 0] | `autoDialog = false`, walk to Ole at `gateQueue`, E, Space twice |
 | `fullstory` [Phase 0b] | swaps the literal §8 missions (`tools/fixtures/full-missions.js`) into `MISSIONS` and plays all 13 per §16.3 (`FROM`/`TO` as `story`); must end `#13 idle`, `RESULT: PASS` |
@@ -8899,3 +9021,29 @@ the fixer's group.
   comes on the radio after the officer has gone, and the change back has the film's "Är den inte lite
   skrikig?" / "sterke farger" pair. No mission, stage kind, timer, fixture or calibration pool changed
   (no solid). Scenarios `skjortbyte`, `garderob` (§16.4).
+- Feature 40, "Stunthopp med G17-stämpel" (`features/implemented/stunthopp.md`, 2026-10-17): his car's
+  jumps judged in free roam (§10.27; new `src/game/stunts.js`, `STUNTHOPP` in content/island.js; §1.6,
+  §6.3, §6.6, §10.5, §11.4, §12, §14.1, §14.3, §14.7, §16.4). car.js measures every flight (`airT`,
+  `airFrom`) and reports every landing, soft ones too, to `game.onCarAirEnd` (no physics number
+  changed); main.js `onCarImpact` (his car) and `onCarDestroyed` (his car) tell the judge. On the
+  island with `missions.state === 'idle'`, a flight of his car of 0.35 s and 6 m is a jump (hops in
+  the 1.0 s settle after a landing add to it): `LUFTTID {t} S` on the result line in the air
+  (`hud.liveScore`), then the stamp (banner cls `stamp`, `audio.stamp`): KONTROLLERAD AV G17 [F*] from
+  index 11 (after fataga), GODKÄND [N] before, or UNDERKÄND [N] (cls `stamp fail`, `audio.stampFail`)
+  on an impact in the air or the settle, or a wreck (after KVADDAD!), with the card `LUFTTID {t} S ·
+  {d} M`. Named jumps (Bygget – drömplanet, Gula rampen, Garagedäcket) pay 100 pta the first time and
+  25 for a new record (over 0.5 m better), saved in `records.stunts` (v 1). World: the plank at the
+  bygge's 1st floor east end (nature.js, a `ramp` up to S1 + 0.9; landmarks `stunt_planka`,
+  `stunt_gula`), and the dream plane lot's palm moved from (−24, −2) to (−24, 6) (coast.js), out of
+  the plank jump's run-out (the run-out's lane met it 17 m past the landing, within the settle);
+  landmark `stunt_landning`; town.js `frameRamps[].deck`. Neither is on a road or anywhere a mission
+  stage goes: no stage is placed in (5,1) or (6,1), no calibrated drive passes the bygge's first
+  floor or the lot's inside, and the jeep chase flees along the road graph (its chaser follows it on
+  the road), so no mission, stage kind, timer, fixture or calibration pool changed. Off the plank (a
+  route follower: 17.6 m/s, 0.93 s, 16.4 m, down on the road at x 198.6) Stig says the mantra in the
+  air and at the stamp "Godkänd av G17. Det är ju jag." [N] ("Jag flög. Jag flög faktiskt." [N]
+  before fataga); out of the car by the plane within 20 s, his arms out to it for 3 s. Deviations
+  from the idea: no slow motion (the game's clock is the missions'); the dunes are not a named jump
+  (they lift no car: their slip faces slope 0.46, a car would need about 45 m/s); the palm moved; the
+  verdict on a wreck waits for KVADDAD!; a record pays only when over half a metre better; no
+  applause or dream scene (the other ideas). Scenarios `stunthopp`, `stuntzoner` (§16.4).

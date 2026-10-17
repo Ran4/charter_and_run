@@ -82,7 +82,11 @@ opens with a summary of the rounds and the timer changes.
     `skjortbyte garderob` (Skjortbytet, room 107's wardrobe as a SKANDAL hideout in free roam: the
     change into the suit with the officer coming, busted in there, the officer walking past and his
     scene, the way back to the shirt, the shirt taunt, a mission start; and the Land Rovers' wall hits
-    that are no rams on foot, DESIGN §7.2)
+    that are no rams on foot, DESIGN §7.2), `stunthopp stuntzoner` (Stunthopp med G17-stämpel, his car's
+    jumps judged: the plank off the bygge's first floor to the dream plane, LUFTTID, the stamp
+    KONTROLLERAD AV G17 or UNDERKÄND, the pay, the record and the save, his arms out by the plane; the
+    yellow ramp, a hop too small, a garage deck, GODKÄND before fataga, nothing in a mission, DESIGN
+    §10.27)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

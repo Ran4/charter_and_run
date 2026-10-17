@@ -155,9 +155,14 @@ export const ISLAND_LANDMARKS = {
   // (5,1) building site
   bygge: { b: [5, 1], at: [0, 22], yaw: PI },
   pryl_klocka: { b: [5, 1], at: [6, -6], yaw: 0, y: 7.6 },
+  // The stunt jumps' take-offs (§10.27; not spots to stand on): the plank's end on the 1st floor and
+  // the yellow ramp's crest.
+  stunt_planka: { b: [5, 1], at: [22, -1.4], yaw: PI / 2, y: 4.45 },
+  stunt_gula: { b: [5, 1], at: [-16, 4], yaw: PI, y: 1.95 },
   // (6,1) the old dream plane
   dromplan: { b: [6, 1], at: [0, 20], yaw: PI },
   pryl_kamera: { b: [6, 1], at: [-4, -2], yaw: 0, y: 3.6 },
+  stunt_landning: { b: [6, 1], at: [-26, -1.4], yaw: PI / 2 },   // the plank jump's run-out, west of the wing tip (§10.27)
   // (6,0) Gando airport
   airport: { b: [6, 0], at: [0, 22], yaw: PI },
   hittegods: { b: [6, 0], at: [-14, 6], yaw: 0 },
