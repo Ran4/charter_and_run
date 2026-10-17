@@ -62,6 +62,7 @@ export const hud = {
       <div id="letterbox"><div class="lb-top"></div><div class="lb-bot"></div></div>
       <div id="viewfinder"><div class="vf-title"></div><div class="vf-gate"><div class="vf-flicker"></div><div class="vf-dust"></div><div class="vf-label"></div></div><div class="vf-perf l"></div><div class="vf-perf r"></div><div class="vf-line"></div></div>
       <div id="filmnight"></div>
+      <div id="kikare"><svg class="kk-glass" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><defs><mask id="kk-holes" maskUnits="userSpaceOnUse" x="-6000" y="-6000" width="13600" height="12900"><rect x="-6000" y="-6000" width="13600" height="12900" fill="#fff"/><circle cx="578" cy="440" r="392" fill="#000"/><circle cx="1022" cy="440" r="392" fill="#000"/></mask><radialGradient id="kk-shade" cx="800" cy="440" r="520" gradientUnits="userSpaceOnUse"><stop offset="0.72" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="0.42"/></radialGradient></defs><rect x="-6000" y="-6000" width="13600" height="12900" fill="url(#kk-shade)"/><rect x="-6000" y="-6000" width="13600" height="12900" fill="#0d0b10" mask="url(#kk-holes)"/><circle class="kk-aim" cx="800" cy="440" r="46"/><circle class="kk-fill" cx="800" cy="440" r="46" pathLength="100"/></svg><div class="kk-list"><div class="kk-title"></div><div class="kk-rows"></div></div><div class="kk-line"></div><div class="kk-bar"><span class="kk-count"></span><span class="kk-new"></span></div><div class="kk-keys"></div></div>
       <div id="dialog"><div class="dlg-portrait"><img alt=""></div><div class="dlg-body"><div class="dlg-name"></div><div class="dlg-text"></div></div><div class="dlg-next">${S.dialogNext}</div></div>
       <div id="flash"></div>
       <div id="dreamwash"></div>
@@ -99,6 +100,8 @@ export const hud = {
     this.kaffeEl = $('kaffe');
     this.vfEl = $('viewfinder');
     this.fnEl = $('filmnight');
+    this.kkEl = $('kikare');
+    this.kkFill = root.querySelector('.kk-fill');
     this.flash = $('flash');
     this.dreamEl = $('dream');
     this.washEl = $('dreamwash');
@@ -463,6 +466,33 @@ export const hud = {
     e.querySelector('.vf-line').innerHTML = o.line ? `<span>${o.who}:</span> – ${o.line}` : '';
     e.classList.toggle('live', !!o.live);
     e.classList.add('show');
+  },
+  // The lifeguard's binoculars (game/binoculars.js, §10.48) over everything: two round glasses cut out of
+  // black, o = { title, rows: [{ label, found }], bar, news, line, who, keys } or null. The list on the
+  // left (a found one checked), the bar under the glasses (`bar`, then `news` in red while it is new),
+  // Stig's `line` over it, the keys in the corner. Touches the DOM only on a change.
+  setKikare(o) {
+    const e = this.kkEl, key = o ? JSON.stringify(o) : null;
+    if (key === this._kkKey) return;
+    this._kkKey = key;
+    if (!o) { e.classList.remove('show'); this.kikareRing(null); return; }
+    e.querySelector('.kk-title').textContent = upper(o.title);
+    const box = e.querySelector('.kk-rows');
+    box.textContent = '';
+    for (const r of o.rows) el('div', 'kk-row' + (r.found ? ' found' : ''), box).textContent = r.label;
+    e.querySelector('.kk-count').textContent = upper(o.bar);
+    e.querySelector('.kk-new').textContent = o.news ? upper(o.news) : '';
+    e.querySelector('.kk-line').innerHTML = o.line ? `<span>${o.who}:</span> – ${o.line}` : '';
+    e.querySelector('.kk-keys').innerHTML = o.keys || '';
+    e.classList.add('show');
+  },
+  // The aim ring in the middle: k (0..1) of the hold on a target, null hides it. Only on a change.
+  kikareRing(k) {
+    const v = k == null ? null : Math.round(k * 50) / 50;
+    if (v === this._kkRing) return;
+    this._kkRing = v;
+    this.kkEl.classList.toggle('aim', v != null);
+    if (v != null) this.kkFill.style.strokeDashoffset = String(100 - v * 100);
   },
   // His film night: o = { title, sub, who, week: [labels], weekLine, stills: [data URLs], label,
   // julLine } or null. The black week shows at once; filmNightStep('l1' | 'jul' | 'l2') brings in his

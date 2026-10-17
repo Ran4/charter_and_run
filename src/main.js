@@ -63,6 +63,7 @@ import { StreetRace } from './game/streetRace.js';
 import { PhoneBooth } from './game/phoneBooth.js';
 import { MarketRoofs } from './game/marketRoofs.js';
 import { Hitch } from './game/hitch.js';
+import { Binoculars } from './game/binoculars.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
 import { LEVELS, ISLAND_PALETTES } from './level.js';
@@ -241,6 +242,7 @@ class Game {
     this.fiske = new Fishing(this);       // free roam: the rod at the pier's end, the float, the catches and the FÅNGST card (§10.45)
     this.awnings = new MarketRoofs(this); // the coin trail over the market's awnings; free roam: the souvenir seller's no and swear at Stig on his roof (§10.46)
     this.hitch = new Hitch(this);         // free roam: hitch-hiking on the country roads, standing in a grisbil's bed into town (§10.47)
+    this.kikare = new Binoculars(this);   // free roam: the lifeguard's binoculars on the beach's tower, eight things to spot (§10.48)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -676,6 +678,7 @@ class Game {
   debugWarp(x, z, yaw = 0) {
     if (this.player.seatId) this.standPlayer();
     this.hitch.reset('warp');   // off a hitch truck's bed, the truck gone (§10.47)
+    if (this.kikare.busy) this.kikare.end('down');   // the binoculars down (§10.48)
     if (this.playerCar) this.playerCar.place(x, z, yaw);
     else this.player.teleport(x, z, yaw);
     this.cam.snapNext = true;
@@ -1602,6 +1605,7 @@ class Game {
     this.fiske.update(dt);
     this.awnings.update(dt);
     this.hitch.update(dt);
+    this.kikare.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);

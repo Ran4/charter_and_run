@@ -1026,16 +1026,19 @@ function playaMain(f) {
     for (const a of [0, PI / 2, PI, -PI / 2]) f.box(0xf4f4f0, x + Math.sin(a) * 0.95, CURB, z + Math.cos(a) * 0.95, 0.42, 0.45, 0.42);
     f.circ(x, z, 0.55, CURB + 0.78, 'table');
   }
-  // Lifeguard tower: platform at 2.6 reached by a plank ramp from the north; red flag; life ring.
-  const lx = 17, lz = 18, PT = CURB + 2.6;
+  // Lifeguard tower: platform at 2.6 reached by a plank ramp from the north; red flag; life ring. The roof
+  // RH over the platform: the cast stand 2.0–2.6 m with their heads, and at 2.0 Stig's went through it
+  // (feature 108, §10.48).
+  const lx = 17, lz = 18, PT = CURB + 2.6, RH = 2.75;
   for (const sx of [-1, 1]) for (const sz of [-1, 1]) f.boxC(0xf4f4f0, lx + sx * 1.1, CURB + 1.3, lz + sz * 1.1, 0.16, 2.7, 0.16, 0, sz * 0.06, -sx * 0.06);
   f.box(WOOD, lx, PT - 0.15, lz, 2.8, 0.15, 2.8);
   f.solid(lx, lz, 2.8, 2.8, PT, 'deck');
   for (const [x, z, w, d] of [[lx, lz + 1.35, 2.8, 0.1], [lx - 1.35, lz, 0.1, 2.8], [lx + 1.35, lz, 0.1, 2.8]]) { f.box(RED, x, PT, z, w, 0.9, d); f.solid(x, z, w, d, PT + 0.9, 'rail'); }
-  for (const sx of [-1, 1]) for (const sz of [-1, 1]) f.box(0xf4f4f0, lx + sx * 1.3, PT, lz + sz * 1.3, 0.1, 2.0, 0.1);
-  f.box(RED, lx, PT + 2.0, lz, 3.2, 0.15, 3.2);
-  f.cyl(0xf4f4f0, lx - 1.3, PT + 3.0, lz + 1.3, 0.05, 2.0, 6);
-  f.box(RED, lx - 1.3 + 0.55, PT + 3.4, lz + 1.3, 1.1, 0.7, 0.04);
+  for (const sx of [-1, 1]) for (const sz of [-1, 1]) f.box(0xf4f4f0, lx + sx * 1.3, PT, lz + sz * 1.3, 0.1, RH, 0.1);
+  f.box(RED, lx, PT + RH, lz, 3.2, 0.15, 3.2);
+  f.ceiling(lx, lz, 3.2, 3.2, PT + RH, PT + RH + 0.15);   // the chase camera stays under the roof (§10.48: it stood over it)
+  f.cyl(0xf4f4f0, lx - 1.3, PT + RH + 1.0, lz + 1.3, 0.05, 2.0, 6);
+  f.box(RED, lx - 1.3 + 0.55, PT + RH + 1.4, lz + 1.3, 1.1, 0.7, 0.04);
   f.S.add(PRIM.torus(), RED, mat(f.wx(lx + 1.42, lz - 0.2), PT + 0.5, f.wz(lx + 1.42, lz - 0.2), 0, PI / 2, 0, 1.3, 1.3, 1.3));
   rampUp(f, WOOD, lx, lz - 3.6, 0, 1.0, 4.4, CURB, PT);
   f.sign('SOCORRISTA', lx, PT + 0.55, lz + 1.42, 2.4, 0.42, 0, { bg: '#d8321e', fg: '#ffffff', border: null, scale: 0.7 });

@@ -347,6 +347,32 @@ body.in-dialog #minimap-wrap, body.in-dialog #speedo, body.in-dialog #prompt { o
 .vf-line span, .fn-line span { color: #c9b994; font-size: 0.78em; }
 body.film-live #app canvas { filter: sepia(0.42) saturate(0.8) contrast(1.06) brightness(1.04); }
 
+/* ---------------------------------------------------------------- The lifeguard's binoculars (§10.48) */
+/* Two round glasses cut out of black (an SVG mask, sized by the height), a soft shade towards their
+   edges, the aim ring in the middle while a target is held; the list in the top left corner, the bar
+   under the glasses, Stig's line over it, the keys in the bottom right corner. Over everything in the HUD
+   (z-index 4, as Herr Storch's viewfinder). */
+#kikare { position: absolute; inset: 0; display: none; z-index: 4; pointer-events: none; }
+#kikare.show { display: block; animation: vfIn 0.25s ease-out; }
+.kk-glass { position: absolute; inset: 0; width: 100%; height: 100%; }
+.kk-aim, .kk-fill { fill: none; opacity: 0; transition: opacity 0.15s; }
+.kk-aim { stroke: rgba(255, 248, 230, 0.5); stroke-width: 3; }
+.kk-fill { stroke: var(--sun); stroke-width: 7; stroke-linecap: round; stroke-dasharray: 100; stroke-dashoffset: 100; transform: rotate(-90deg); transform-box: fill-box; transform-origin: center; }
+#kikare.aim .kk-aim, #kikare.aim .kk-fill { opacity: 1; }
+.kk-list { position: absolute; left: 20px; top: 18px; color: #f4e7c4; }
+.kk-title { font: 20px/1 var(--display); letter-spacing: 1px; margin-bottom: 7px; color: var(--sun); }
+.kk-row { font: 800 14px/1.6 var(--body); color: rgba(244, 231, 196, 0.45); white-space: nowrap; }
+.kk-row::before { content: ""; display: inline-block; width: 9px; height: 9px; margin-right: 7px; border: 2px solid currentColor; border-radius: 3px; vertical-align: -1px; }
+.kk-row.found { color: #f4e7c4; }
+.kk-row.found::before { background: var(--sun); border-color: var(--sun); box-shadow: inset 0 0 0 2px #0d0b10; }
+.kk-bar { position: absolute; left: 50%; bottom: 1.5vh; transform: translateX(-50%); background: var(--cream); border: 3px solid var(--ink); border-radius: 12px; padding: 6px 18px 3px; font: clamp(17px, 3vh, 24px)/1.1 var(--display); letter-spacing: 1px; color: var(--ink); white-space: nowrap; box-shadow: 3px 4px 0 rgba(0, 0, 0, 0.5); }
+.kk-new { color: var(--red); }
+.kk-new:not(:empty)::before { content: " · "; color: var(--ink); }
+.kk-line { position: absolute; left: 0; right: 0; bottom: 11vh; text-align: center; font: 800 clamp(17px, 3vh, 24px) var(--body); color: #fff; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.85), 0 0 2px #000; }
+.kk-line span { color: #f4e7c4; font-size: 0.78em; }
+.kk-keys { position: absolute; right: 20px; bottom: 18px; font: 700 13px/1.6 var(--body); color: rgba(244, 231, 196, 0.85); text-align: right; white-space: nowrap; }
+.kk-keys b { background: var(--sun); color: var(--ink); border-radius: 5px; padding: 1px 5px 0; font: 13px/1.2 var(--display); font-weight: 400; box-shadow: 0 2px 0 #b8860b; }
+
 /* ---------------------------------------------------------------- Stig's daydream (§10.33) */
 /* The beach dream: a soft, warm picture with white edges, and DAGDRÖM in a pale script at the top;
    the white wash over everything for the fades and the flash back. */

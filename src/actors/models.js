@@ -711,6 +711,7 @@ const PROP_GEO = {
   // A pole: the grip at the origin, the shaft down -y to the hard tip `POLE_LEN` below it.
   poleR: skiPole, poleL: skiPole,
   metspo: fishingRod,   // Stig's rod at the pier's end (anim.fish, game/fishing.js)
+  kikare: binoculars,   // the lifeguard's binoculars on the tower (anim.kikare, game/binoculars.js)
 };
 function rollerski(g) {
   g.box(0xd8321e, 0, -0.025, 0.02, 0.075, 0.03, 0.74);
@@ -740,6 +741,20 @@ export function fishingRod(g) {
   g.cyl(0xd8b868, 0, 1.6, 0, 0.0075, 1.0, 6);
   for (const y of [0.75, 1.35, 1.85]) g.sphere(0xd8dce0, 0, y, 0.022, 0.018, 0.018, 0.018);
   g.sphere(0xd8dce0, 0, ROD_LEN, 0, 0.02, 0.02, 0.02);
+}
+// The lifeguard's binoculars (Livräddarens kikare, game/binoculars.js, §10.48): two black barrels along
+// +z (the objectives forward, a glint of blue glass in each), the eyecups at the back, the bridge and
+// its focus wheel between; the origin between the barrels, where both hands hold them. Also the pair
+// lying on the tower's south railing when nobody uses them.
+export function binoculars(g) {
+  for (const sx of [-1, 1]) {
+    g.cyl(0x2a2a30, sx * 0.046, 0, 0.005, 0.034, 0.15, 12, Math.PI / 2);
+    g.cyl(0x8a8f99, sx * 0.046, 0, 0.083, 0.038, 0.02, 12, Math.PI / 2);
+    g.cyl(0x6aa0d0, sx * 0.046, 0, 0.094, 0.03, 0.004, 12, Math.PI / 2);
+    g.cyl(0x1d1d22, sx * 0.046, 0, -0.083, 0.025, 0.03, 10, Math.PI / 2);
+  }
+  g.box(0x1d1d22, 0, 0, -0.03, 0.06, 0.028, 0.09);
+  g.cyl(0x8a8f99, 0, 0.02, -0.045, 0.013, 0.026, 8, 0, 0, Math.PI / 2);
 }
 const _propCache = {};
 // The number on a score card (`anim.card`, a string such as '10' or '–1'): a plane on each side of
@@ -1074,7 +1089,7 @@ function heldPose(m, st, t, place = false) {
   const h = m.def.held;
   if (!h || !PROP_GEO[h]) return;
   const [R, L] = m.arms;
-  const busy = st.wings || st.cupUp || st.cupHeld || st.push || st.rub || st.hold || st.flail || st.oath || st.dance || st.laugh || st.mirror || st.film || st.camShow || st.giraffe || st.butterKnife || st.ticket || st.carryOver || st.shoeOff || st.calc || st.groda || st.placate || st.tap || st.scratch || st.point || st.cheer || st.wave || st.fish || st.thumb || st.ride || st.kick > 0;
+  const busy = st.wings || st.cupUp || st.cupHeld || st.push || st.rub || st.hold || st.flail || st.oath || st.dance || st.laugh || st.mirror || st.film || st.camShow || st.giraffe || st.butterKnife || st.ticket || st.carryOver || st.shoeOff || st.calc || st.groda || st.placate || st.tap || st.scratch || st.point || st.cheer || st.wave || st.fish || st.thumb || st.ride || st.kikare || st.kick > 0;
   const pose = !place && !busy;
   const moving = st.speed > 0.3;
   switch (h) {
@@ -1430,6 +1445,14 @@ function poseFlags(m, st, t) {
     sock.scale.setScalar(s);
   }
   if (st.fish) fishPose(m, st, t);
+  if (st.kikare) {
+    // The lifeguard's binoculars on the tower (game/binoculars.js, §10.48): up at his eyes in both
+    // hands ('eyes'), or lowered to his chest ('low'), his head up from them.
+    const up = st.kikare === 'eyes';
+    R.rotation.set(up ? -2.55 : -1.25, 0, up ? 0.3 : 0.45); L.rotation.set(up ? -2.55 : -1.25, 0, up ? -0.3 : -0.45);
+    m.neck.rotation.x = up ? 0.0 : -0.08;
+    between(m, prop(m, 'kikare'), 0, up ? 0.04 : 0.02, up ? -0.02 : 0.02);
+  }
   if (st.thumb) {
     // Hitch-hiking at the kerb (game/hitch.js, §10.47): the left arm out towards the traffic coming
     // from his left, a little forward and up, the fist wagging; his head turned up the road.

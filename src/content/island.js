@@ -24,7 +24,8 @@
 // and the boat trip with PALOMA from the marina's kiosk to the lighthouse and back (§10.41), and the pool
 // bar open after friskoteket, its bartender, the Swedish coffee's sprint and the cup for Fru Storch (§10.44),
 // and the fishing at the marina's pier end, its catches and the FÅNGST card (§10.45), and Stig
-// hitch-hiking on the country roads, standing in the farmer's grisbil bed into town (§10.47).
+// hitch-hiking on the country roads, standing in the farmer's grisbil bed into town (§10.47), and the
+// lifeguard's binoculars on the beach's tower, the eight things to spot and their list (§10.48).
 
 export const HOMES_ISLAND = {
   ole: ['flamenco', 2.0, 1.0, 0],     // yaw 0: under the pergola, facing the pool (flamenco faces π)
@@ -2382,4 +2383,60 @@ export const LIFTA = {
   sick: 'Jag har lite anlag för åksjuka.',                                         // [F*](t) Stig's line from the bus (research-plot.md:248), relocated
   thanks: 'Jättefint! Tack.',                                                      // [F*](t) his thanks for Ole's tablets on the bus (research-plot.md:248), relocated
   adios: '¡Adiós, señor!',                                                         // [N] the farmer
+};
+
+// Livräddarens kikare (free roam; feature 108, DESIGN §10.48; game/binoculars.js). The lifeguard's
+// binoculars lie on the SOCORRISTA tower's south railing (`rest`: [left, forward, height] from the `lm`
+// landmark `kikare`, the middle of the platform at deck height). On the island with no mission running
+// (`missions.state === 'idle'`), on foot on the platform within `r` m of its middle, with no dialogue,
+// carry, pursuit, bust, PANIK or other free-roam hold: `prompt`. E stands Stig in the middle with the
+// binoculars at his eyes (`inDialog`) and the view is theirs: the eye `eye` m over his feet and `ahead` m
+// before his face, `fov`° high, turned by the mouse (`turn` rad a pixel) or the keys (`keyTurn` rad/s;
+// W/S up and down, A/D round), the pitch within `pitch` (rad, + up) from `pitch0`, round the whole
+// horizon. A target whose middle (or any of its points) stays within `aim`° of the middle of the view
+// (widened by the angle its `size` m takes at its distance, at most `aimMax`°) for `hold` s is found:
+// checked on the list, `pay` pesetas, Stig's `line` under the picture and the target's `name` on the
+// bar, saved in `records.kikare` (a list of ids). The kinds: `pts` (fixed world points [x, y, z]), `npc`
+// (a cast member's chest, `dy` over his feet; Herr Storch turns to the tower and films it while he is
+// watched, if free at his place), `fin` (a collectible's live mesh; one already taken counts as found)
+// and `tower` (Faro de Maspalomas, `dy` up its axis). E or Q lowers the binoculars. The first look of a
+// session starts with `warn` (Ole's warning, in Stig's mouth); a look with all eight found with
+// `allLine`. The eighth find, `allAfter` s on: the view cuts to `shot` (from the sand: `eye` and `look`
+// [left, forward] from the landmark at a world height), Stig with the binoculars at his chest facing the
+// sea says `allLine` (the toast `allToast`), and `outSecs` s on he is free. Invented (§1.6): the binoculars, the hunt and its list; Ole's warning is the film's
+// (research-plot.md:281) and the lens cap's line the julfest's (research-plot.md:370), both relocated.
+export const KIKARE = {
+  lm: 'kikare', r: 1.5, rest: [0, 1.35, 0.935],
+  eye: 2.3, ahead: 0.45, fov: 12,
+  turn: 0.0006, keyTurn: 0.55, pitch: [-0.62, 0.32], pitch0: -0.03,
+  aim: 2.0, aimMax: 4.5, hold: 1.0, pay: 25,
+  lineSecs: 3.4, newSecs: 2.6, allAfter: 2.6, outSecs: 3.6,
+  shot: { eye: [-3.0, 6.8, 4.1], look: [0, 0, 4.55] },
+  prompt: '<b>E</b> Ta kikaren',                                                   // [N]
+  title: 'Spaning',                                                                // [N] the list's head
+  bar: 'Kikaren · hittat {n} / {total}',                                           // [N]
+  allBar: 'Alla åtta!',                                                            // [N]
+  keys: '<b>MUS</b>/<b>WASD</b> Spana · <b>E</b> Sänk kikaren',                    // [N]
+  who: 'Stig-Helmer',
+  warn: 'Underströmmar, solsting och hajar…',                                      // [F*] Ole's warning at the beach (research-plot.md:281; his "Understrømmer, solstikk og haier.", research-characters.md:186), in Stig's mouth
+  allLine: 'Inga hajar. Bara svenskar.',                                           // [N] Stig
+  allToast: '<span><b>Kikaren:</b> alla åtta hittade!</span>',                     // [N] (one flex item in the toast)
+  targets: [
+    { id: 'fena', name: 'Hajfena!', label: 'Hajfena', fin: ['fenor', 'fena_hav'], dy: 0.3, size: 0.8,     // [N]
+      line: 'En haj! Innanför linan!… Nej. Den är uppblåsbar.' },                                         // [N]
+    { id: 'storch', name: 'Herr Storch', label: 'Herr Storch', npc: 'herrStorch', dy: 1.45, size: 0.9,    // [N]
+      line: 'Du måste ta av objektivlocket!… Han hör inte.' },                                            // [F*](t) the julfest's line to Herr Storch (research-plot.md:370), relocated to the tower
+    { id: 'flotte', name: 'Flotten', label: 'Flotten', pts: [[-10, 0.55, 324]], size: 2.2,                // [N]
+      line: 'En flotte. Ingen haj på den heller.' },                                                      // [N]
+    { id: 'trampbat', name: 'Trampbåtar', label: 'Trampbåtarna', pts: [[6, 0.75, 328], [72, 0.75, 322], [84, 0.75, 320]], size: 1.6,   // [N]
+      line: 'Trampbåtar vid linan. Tvåhundra pesetas timmen.' },                                          // [N]
+    { id: 'farja', name: 'Färjan', label: 'Färjan', pts: [[200, 3.5, 590]], size: 16,                     // [N]
+      line: 'Färjan till Teneriffa. Full med svenskar, säkert.' },                                        // [N]
+    { id: 'fiskebat', name: 'Fiskebåten', label: 'Fiskebåten', pts: [[380, 1.6, 460]], size: 4,           // [N]
+      line: 'En fiskebåt. De fiskar nog inte haj.' },                                                     // [N]
+    { id: 'fyr', name: 'Fyren', label: 'Fyren', tower: true, dy: 28, size: 22,                            // [N]
+      line: 'Fyren. Där uppe finns det i alla fall inga hajar.' },                                        // [N]
+    { id: 'handdukar', name: 'Reserverat!', label: 'RESERVADO-raden', pts: [[22, 1.45, 246.7], [19.75, 0.6, 250.3], [23.85, 0.6, 250.3]], size: 1.4,   // [N]
+      line: 'RESERVADO-raden. En handduk på varje solstol, sen i morse.' },                               // [N] the towel gag (research-setting §3)
+  ],
 };

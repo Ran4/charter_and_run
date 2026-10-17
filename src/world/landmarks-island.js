@@ -216,6 +216,9 @@ export const ISLAND_LANDMARKS = {
   fyrGalleri: { b: [0, 6], at: [2.4 * Math.SQRT1_2, -8 - 2.4 * Math.SQRT1_2], yaw: PI * 0.75, y: 51.3 },
   // (3,6) beach, (5,6) harbour
   playa: { b: [3, 6], at: [0, 10], yaw: 0 },
+  // Livräddarens kikare (free roam, §10.48): the middle of the lifeguard tower's platform (deck 2.75,
+  // the plank ramp up from the north), facing the sea (E: the binoculars on the south railing).
+  kikare: { b: [3, 6], at: [17, 18], yaw: 0, y: 2.75 },
   fena_hav: { world: [0, 304], yaw: 0, y: 0.35 },
   hamn: { b: [5, 6], at: [0, 0], yaw: PI },
   fena_hamn: { b: [5, 6], at: [-8, 10], yaw: 0, y: 0.35 },

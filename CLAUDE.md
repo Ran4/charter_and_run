@@ -186,7 +186,13 @@ opens with a summary of the rounds and the timer changes.
     farmer's answer, the hop into the bed, Stig 'seated' on the truck's tilt with the chase camera on the
     truck, A/D's lean against its pull and ÅKSJUKA, the drop behind Hotel Flamenco with "Jättefint!
     Tack."; the fall and the farmer's "¡Adiós, señor!", walking off, E's step and jump, a debug warp, a
-    traffic knock, a mission start mid-ride, DESIGN §10.47)
+    traffic knock, a mission start mid-ride, DESIGN §10.47), `kikare kikareshots` (Livräddarens kikare,
+    E up on the SOCORRISTA tower's platform between missions: the binoculars at Stig's eyes, the camera's
+    `scope` at 12°, the round glasses, the list SPANING and the bar, Ole's warning in Stig's mouth, the
+    turn by keys, Herr Storch filming the tower; a target held in the middle 1 s (the ring) found, 25 pta,
+    his line, `records.kikare`; E or Q down, a taken fin counted, all eight and the cut to him with "Inga
+    hajar. Bara svenskar.", no prompt in a car, a pursuit or a mission, a mission start mid-look; the
+    tower's raised roof and its camera ceiling; every target through the binoculars, DESIGN §10.48)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

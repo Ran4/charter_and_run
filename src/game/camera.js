@@ -47,6 +47,7 @@ export class CamRig {
     this.shake = 0;
     this.fov = 62;
     this.cine = null; // { pos, look } for dialogue framing and cutaways
+    this.scope = null; // { pos, yaw, pitch, fov }: the lifeguard's binoculars (§10.48), the eye exactly there
     this.snapNext = true;
     this.slide = 0;           // the side slide's lateral offset (m, + = his right; §14.5)
     this.slideT = 0;          // seconds since the slide took its side
@@ -69,6 +70,18 @@ export class CamRig {
   update(dt, focus, look, cars = []) {
     const cam = this.cam;
     const pf = this.profile;
+    // The binoculars (game/binoculars.js, §10.48): the eye at Stig's, looking along the scope's yaw and
+    // pitch (+ up) through its narrow view, with no easing (the mouse turns it directly). Over a cine.
+    if (this.scope) {
+      const s = this.scope, cp = Math.cos(s.pitch);
+      this.pos.copy(s.pos);
+      this.look.set(s.pos.x + Math.sin(s.yaw) * cp * 10, s.pos.y + Math.sin(s.pitch) * 10, s.pos.z + Math.cos(s.yaw) * cp * 10);
+      this.fov = s.fov;
+      cam.position.copy(this.pos);
+      cam.lookAt(this.look);
+      cam.fov = this.fov; cam.updateProjectionMatrix();
+      return;
+    }
     if (this.cine) {
       if (this.snapNext) { this.pos.copy(this.cine.pos); this.look.copy(this.cine.look); this.snapNext = false; }
       this.pos.lerp(this.cine.pos, 1 - Math.exp(-4 * dt));

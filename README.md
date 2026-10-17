@@ -44,7 +44,7 @@ Samma tangenter i båda nivåerna; nivån bestämmer vad de gör.
 | Shift | spring | | skynda – men det ökar rädslan |
 | Space | hoppa, i luften igen för dubbelhopp | handbroms (sladd!) | **håll i dig**: ta tag i närmaste stolsrygg vid turbulens |
 | J / klick | sparka, i luften: stampa (efter julafton: **håll in i luften** för att glidflyga) | | **håll in**: "Jag kan flyga, jag är inte rädd" – sänker FLYGRÄDSLA |
-| E | prata (med uppdragsgivaren, och mellan uppdragen med gänget), kliv in, sno en bil, kvarta en stund i Stigs säng i rum 107, titta i herr Storchs kamera, heja på rullskidåkaren, dansa med i poolen, smörja in Majsans rygg (**håll in** och släpp i det gröna), byta om i garderoben i rum 107, söka skydd i kyrkan, ringa efter en bil från hytt 2, meta från piren (och **dra upp** när flötet dyker), lifta på landsvägen (på flaket: hoppa av) | kliv ur (i fart: rulla ur) | prata, **sätt dig / res dig**, lås in dig på toaletten, anropsknappen, serveringsvagnen |
+| E | prata (med uppdragsgivaren, och mellan uppdragen med gänget), kliv in, sno en bil, kvarta en stund i Stigs säng i rum 107, titta i herr Storchs kamera, heja på rullskidåkaren, dansa med i poolen, smörja in Majsans rygg (**håll in** och släpp i det gröna), byta om i garderoben i rum 107, söka skydd i kyrkan, ringa efter en bil från hytt 2, meta från piren (och **dra upp** när flötet dyker), lifta på landsvägen (på flaket: hoppa av), ta livräddarens kikare (och sänka den igen) | kliv ur (i fart: rulla ur) | prata, **sätt dig / res dig**, lås in dig på toaletten, anropsknappen, serveringsvagnen |
 | H | | tuta (utanför uppdragen hör folk den; i den lånade Guardia-jeepen: sirenen) | |
 | B | | titta bakåt | |
 | M / Tab | stor karta | stor karta | plan över gaten/kabinen |
@@ -59,7 +59,8 @@ Stig-Helmer glidflyga: tryck J i luften och håll in (ett kort tryck stampar som
 också: A hopp/handbroms, B spring, X sparka/mantra, Y prata, Start paus, triggrarna kör. I telefonens
 bilmeny väljer W/S (pilarna, styrkorsets upp och ner), E ringer och Q (Backspace, B) lägger på. När
 Stig metar lägger Q ner spöt medan han väntar. Står han på grisflaket när han liftar lutar A/D honom
-emot i kurvorna.
+emot i kurvorna. Med livräddarens kikare vrider musen eller W/A/S/D (pilarna) kikaren, och E eller Q
+sänker den.
 
 Vägen visas av den gula pilen över Stig-Helmers huvud, ljuskäglan och ringen vid målet och
 stjärnan på kartan. På Arlanda och i planet går pilen runt bänkar, väggar och stolsrader i
@@ -301,6 +302,17 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   full ramlar han av, och grisbilen kör vidare: "¡Adiós, señor!". Kommer han ända fram kliver han av med
   ett "Jättefint! Tack." **E** hoppar av på vägen. Ingen SKANDAL, ingen bil som behöver kapas. Lifta går
   bara mellan uppdragen.
+- **Livräddarens kikare**: på stranden står livräddartornet SOCORRISTA, och på räcket uppe på plattformen
+  ligger livräddarens kikare. Gå uppför rampen och tryck **E**: Stig sätter kikaren för ögonen och skärmen
+  blir två runda kikarglas med kraftig zoom. Ole har varnat honom för stranden, så Stig spanar efter
+  faror ("Underströmmar, solsting och hajar…"). Vrid kikaren med musen eller **W**/**A**/**S**/**D**. Åtta
+  saker står på listan uppe till vänster: hajfenan innanför bojlinan, herr Storch (som vänder sig mot
+  tornet och filmar, med linsskyddet på), flotten, trampbåtarna, färjan, fiskebåten, fyren och
+  RESERVADO-raden. Håll kikaren stilla på en av dem tills ringen i mitten har fyllts, så bockas den av,
+  Stig säger något och du får 25 pesetas. Palmerna på strandpromenaden skymmer en del, så man får vrida
+  och leta. När alla åtta är hittade sänker Stig kikaren: "Inga hajar. Bara svenskar." **E** eller **Q**
+  sänker kikaren när du vill. Listan sparas. Kikaren finns bara mellan uppdragen. Tornets tak sitter nu
+  högre, så att Stig får plats under det.
 - **Små grodorna i poolen** (efter slutet): julfesten är inte riktigt över. Varje gång du kommer in
   på Flamencos pooldäck (mellan nio på morgonen och elva på kvällen) vadar SunTrip-gänget ut i den
   grunda änden och ställer sig i ring runt Lasse i tomteluva. Affe spelar Små grodorna på dragspelet,
@@ -558,6 +570,9 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
 - studsmarkisen och myntspåret över marknadens markiser, och souvenirförsäljarens "¡No, no, no!" och
   svordom åt Stig på hans tak (i filmen svär han "Jävla smålänningar!" när Ole prutar ner åsnan, och
   ingen klättrar upp på något stånd)
+- livräddarens kikare, spaningen och listan med åtta saker att hitta (i filmen varnar Ole för stranden
+  med sin statistik om underströmmar, solsting och hajar, och linsskyddet upptäcks på julfesten:
+  "Du måste ta av objektivlocket.")
 - poolfesten efter slutet: ringen runt Lasse, portierns promenad, att Stig hoppar med och
   takträknaren (i filmen dansar de andra Små grodorna i poolen på julfesten medan Stig-Helmer och Ole
   öppnar knäckebrödet, och Stig-Helmer dansar aldrig)
@@ -764,6 +779,7 @@ src/game/poolBar.js             Poolbaren öppnar in free roam after friskoteket
 src/game/fishing.js             Meta från piren in free roam: the rod at the pier's end, the cast, the float's dive, the catches, the FÅNGST card
 src/game/marketRoofs.js         Pesetas på marknadstaken: the coin trail over the market's awnings (minY), the roof's coins after asnan, the seller's "¡No, no, no!" and swear
 src/game/hitch.js               Vi liftar in free roam: the hitch-hiking spots, the grisbil that stops, Stig standing in its bed, the lean and ÅKSJUKA, the fall, the drop behind Flamenco
+src/game/binoculars.js          Livräddarens kikare in free roam: the lifeguard tower's binoculars, the 12° view (the camera's scope), the eight targets, the list, "Inga hajar. Bara svenskar."
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
@@ -774,7 +790,7 @@ tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, 
                                 stunthopp, prata, takhopp, mikrofon, faglar, gags, strandkyssen,
                                 guardiajeep, fyren, klader, ringklocka, kyrkfrid, gatlopp, skidor,
                                 golfbil, battur, balkong, hytt, kaffe, meta, marknadstak, lifta,
-                                calibrate, calibflight)
+                                kikare, calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
 tools/pool.mjs                  re-derives every random stage's timer from the ledger
@@ -820,6 +836,7 @@ node tools/shot.mjs kaffe kaffestorch    # the pool bar after friskoteket: the c
 node tools/shot.mjs meta                 # fishing at the pier's end: the cast, the dive, E in time, the four catches, the FÅNGST card, early, late, Q
 node tools/shot.mjs marknadstak marknadstakFore   # the market's awnings: the shade, the coin trail run as a player, the seller's no and swear
 node tools/shot.mjs lifta liftaFall      # hitch-hiking: the thumb, the stop, the hop up, the ride leaning, the drop; the fall, E off, a warp, a knock, a mission start
+node tools/shot.mjs kikare kikareshots   # the lifeguard's binoculars: the prompt up on the tower, the view, a find, all eight and the end shot, the locks; every target through them
 node tools/shot.mjs grodorna grodtakt    # the pool fest after the end: the ring, the porter, Stig in the ring, eight on the beat
 node tools/shot.mjs artig                # Stig says sorry: kicks, run over, a pump, bins, carjackings and the driver's "Nej."
 node tools/shot.mjs grisar               # the grisbil's pigs: the falls, the catch on foot and by creeping, Lasse, the pen
