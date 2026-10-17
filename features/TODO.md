@@ -1,7 +1,6 @@
 # Gör dessa grejer (flytta filen till features/implemented/ och uppdatera den när du är klar, och
 # flytta den till "färdiga features"-sektionen nedan)
 # markörer: ⟨par N⟩ = de två raderna med samma N körs samtidigt (var sin worktree/gren, sedan rebase på main och push), ⟨solo⟩ = körs ensam; ta grupperna uppifrån och ned
-- features/lana_rullskidorna.md – 71. Låna rullskidorna – åk fort på asfalt [L] ⟨solo⟩
 - features/golfbilen.md – 74. Golfbilen – pip-pip! [M] ⟨solo⟩
 - features/battur_rio.md – 76. Båtturen med PALOMA – slutbilden, fast på riktigt [M] ⟨par 10⟩
 - features/balkonglivet.md – 77. Balkongerna lever – grannar, siesta och ”havsutsikt” [M] ⟨par 10⟩
@@ -71,3 +70,4 @@
 - features/implemented/ringklockan_och_kon.md – 59. Ringklockan i receptionen – ”Och när ska vi lämna rummen?” [M]
 - features/implemented/kyrkfrid.md – 60. Kyrkfrid i Templo Ecuménico [M]
 - features/implemented/pizza_racern.md – 69. Gatlopp mot pizza-racern – mamma åker med [L]
+- features/implemented/lana_rullskidorna.md – 71. Låna rullskidorna – åk fort på asfalt [L] [färdig: 2026-10-17 17:42]

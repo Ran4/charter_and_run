@@ -26,6 +26,7 @@ export const RULES = {
   grisfestTonga: { q: 0.5, extra: 0.5, mult: 1.2 },
   julaftonGuests: { q: 0.5, extra: 0, mult: 1.2 },
   eslovLopp: { q: 0.5, extra: 2.5, mult: 1.25 },   // feature 7: Eslövloppet (free roam, DESIGN §10.12)
+  eslovRundan: { q: 0.5, extra: 0, mult: 1.2 },    // feature 71: Eslövrundan's "i dag" from the clean ski runs (free roam, DESIGN §10.39)
 };
 
 export function readLedger(file = path.join(ROOT, 'notes', 'calibration-samples.md')) {

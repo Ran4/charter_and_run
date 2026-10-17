@@ -794,6 +794,7 @@ export function buildCharacter(d) {
   const R = (d.headR || 0.25) * s;
   const neckH = 0.12 * s * (d.neckK || 1);
   const T = { H: torsoH, W: torsoW, D: torsoD, s };
+  m.T = T;
 
   const hips = new THREE.Group();
   hips.position.y = legLen;
@@ -995,7 +996,7 @@ export function animateCharacter(m, st, dt) {
     heldPose(m, st, t);
     poseFlags(m, st, t);
     heldPose(m, st, t, true);
-  }
+  } else if (st.ski) skiFallen(m);
   for (const k in m.props) if (!m.props[k].userData.used) m.props[k].visible = false;
   // Eyes shut (Levander's "Slut ögonen.", the exercise on the lighthouse gallery, game/lighthouse.js):
   // the lids are made the first time they are wanted, then shown or hidden.
@@ -1406,24 +1407,41 @@ function poseFlags(m, st, t) {
 // the ground (or `lift` over it) from where the hand is: from the hand's height over his soles the
 // horizontal reach of a POLE_LEN pole follows, laid back and a little out (standing: forward and
 // out, the hands resting on the grips). The waving hand (`wave`, the base pose) holds its pole up.
+// Stig on the borrowed skis (game/rollerskis.js, §10.39) sets `skiMode`: 'pole' double-poles at
+// POLE_HZ whatever his speed (from a standstill too); 'glide' rolls leaning in, the arms back and the
+// tips trailing off the ground; 'wobble' (off the asphalt, ploughing) flails with both arms up and
+// out, the poles along them, rocking. A body without a printed band of its own wears the ESLÖV bib.
+const POLE_HZ = 1.25;
 function skiPose(m, st) {
-  const [R, L] = m.arms, legs = m.legs, s = m.s;
-  const a = Math.min(1, st.speed / 2.5), u = ((m.phase * 0.5) / (Math.PI * 2)) % 1;
+  const [R, L] = m.arms, legs = m.legs, s = m.s, mode = st.skiMode;
+  if (!m.def.bib) skiBib(m);
+  if (mode === 'wobble') {
+    const t = st.t, w = Math.sin(t * 7.5), w2 = Math.sin(t * 5.3 + 1);
+    m.hips.rotation.set(0.1, 0, w * 0.07);
+    m.body.position.y = SKI_LIFT * s;
+    m.neck.rotation.x = 0.2;
+    legs[0].rotation.set(0.06 * w2, 0, -0.13);
+    legs[1].rotation.set(-0.06 * w2, 0, 0.13);
+    R.rotation.set(-0.3 + w * 0.45, 0, -2.45 - w2 * 0.3);
+    L.rotation.set(-0.3 - w * 0.45, 0, 2.45 + w2 * 0.3);
+    skiFeet(m);
+    for (let i = 0; i < 2; i++) alongArm(m, i, prop(m, i ? 'poleL' : 'poleR'));
+    return;
+  }
+  const glide = mode === 'glide';
+  const a = mode === 'pole' ? Math.max(0.65, Math.min(1, st.speed / 2.5)) : glide ? 1 : Math.min(1, st.speed / 2.5);
+  const u = mode === 'pole' ? (st.t * POLE_HZ) % 1 : glide ? 0.62 : ((m.phase * 0.5) / (Math.PI * 2)) % 1;
   const push = u < 0.42, k = push ? u / 0.42 : (u - 0.42) / 0.58, e = (1 - Math.cos(Math.PI * k)) / 2;
   const bend = push ? Math.sin(Math.PI * k) : 0;
-  const lean = a * (0.18 + 0.42 * bend);
+  const lean = glide ? 0.34 : a * (0.18 + 0.42 * bend);
   m.hips.rotation.x = lean;
   m.body.position.y = (SKI_LIFT - a * 0.06 * bend) * s;
   legs[0].rotation.set(-0.06 * a * bend, 0, -0.05);
   legs[1].rotation.set(-0.06 * a * bend, 0, 0.05);
-  const arm = -0.42 + ((push ? -1.25 + 1.8 * e : 0.55 - 1.8 * e) + 0.42) * a;
+  const arm = glide ? 0.45 : -0.42 + ((push ? -1.25 + 1.8 * e : 0.55 - 1.8 * e) + 0.42) * a;
   R.rotation.set(arm, 0, -0.2);
   if (!st.wave) L.rotation.set(arm, 0, 0.2);
-  for (let i = 0; i < 2; i++) {
-    const sk = prop(m, i ? 'skiL' : 'skiR', legs[i]);
-    sk.position.set(0, -m.legLen - 0.015 * s, 0.06 * s);
-    sk.rotation.set(-legs[i].rotation.x, 0, -legs[i].rotation.z);
-  }
+  skiFeet(m);
   const lp = POLE_LEN * s, c = Math.cos(lean), sn = Math.sin(lean);
   for (let i = 0; i < 2; i++) {
     const sx = i ? 1 : -1, p = prop(m, i ? 'poleL' : 'poleR');
@@ -1432,7 +1450,7 @@ function skiPose(m, st) {
     if (i === 1 && st.wave) _w.set(0.3, 0.92, -0.25);
     else {
       const hh = m.body.position.y + m.legLen + _v.y * c - _v.z * sn;
-      const lift = push ? 0 : 0.35 * Math.sin(Math.PI * k) * a;
+      const lift = glide ? 0.3 : push ? 0 : 0.35 * Math.sin(Math.PI * k) * a;
       const v = Math.min(lp * 0.98, Math.max(0.2, hh - lift)), reach = Math.sqrt(lp * lp - v * v);
       let hx = sx * (0.45 + (0.22 - 0.45) * a), hz = 0.89 + (-0.97 - 0.89) * a;
       const hl = Math.hypot(hx, hz) || 1;
@@ -1444,6 +1462,51 @@ function skiPose(m, st) {
     _w.set(_w.x, y * c + z * sn, -y * sn + z * c).normalize();
     p.quaternion.setFromUnitVectors(DOWN, _w);
   }
+}
+// A rollerski under each shoe, level in the hips' frame whatever the legs do (lying on his back
+// after a fall that is straight up: the skis in the air).
+function skiFeet(m) {
+  const legs = m.legs, s = m.s;
+  for (let i = 0; i < 2; i++) {
+    const sk = prop(m, i ? 'skiL' : 'skiR', legs[i]);
+    sk.position.set(0, -m.legLen - 0.015 * s, 0.06 * s);
+    sk.rotation.set(-legs[i].rotation.x, 0, -legs[i].rotation.z);
+  }
+}
+// Pole p in hand i, pointing on along the arm (shoulder to hand).
+function alongArm(m, i, p) {
+  hand(m, i, _v);
+  p.position.copy(_v);
+  _w.copy(_v).sub(m.arms[i].position).normalize();
+  p.quaternion.setFromUnitVectors(DOWN, _w);
+}
+// Flung or down on the skis (§10.39): they stay on his feet, the poles out along his arms.
+function skiFallen(m) {
+  skiFeet(m);
+  for (let i = 0; i < 2; i++) alongArm(m, i, prop(m, i ? 'poleL' : 'poleR'));
+  if (!m.def.bib) skiBib(m);
+}
+// The ESLÖV bib over Stig's own shirt (anim.ski on a body without a `bib`): a white race number
+// with a red edge on a strip of the torso's elliptic cylinder, like `bibMesh`; made the first time,
+// then shown and hidden with the props.
+const SKI_BIB_ARC = 1.5;
+let _skiBibTex = null;
+function skiBib(m) {
+  let b = m.props.skiBib;
+  if (!b) {
+    if (!_skiBibTex) {
+      _skiBibTex = new THREE.CanvasTexture(textCanvas('ESLÖV', 0.5, 0.2, { bg: '#fbfaf2', fg: '#1b3a8a', border: '#d8321e', borderW: 0.09, scale: 0.66, ppm: 640 }));
+      _skiBibTex.colorSpace = THREE.SRGBColorSpace;
+      _skiBibTex.anisotropy = 4;
+    }
+    const { H, W, D } = m.T;
+    b = m.props.skiBib = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 1, 16, 1, true, -SKI_BIB_ARC / 2, SKI_BIB_ARC), new THREE.MeshBasicMaterial({ map: _skiBibTex }));
+    b.position.y = H * 0.58;
+    b.scale.set(W * 1.08, H * 0.3, D * 1.14);
+    m.hips.add(b);
+  }
+  b.visible = true;
+  b.userData.used = true;
 }
 
 // ---------------------------------------------------------------------------------------------

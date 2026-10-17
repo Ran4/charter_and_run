@@ -136,7 +136,13 @@ opens with a summary of the rounds and the timer changes.
     SALIDA · START grid in the hire car with José and his mother in his blue hatch, the race kind run
     outside the runner, the prize and `records.gatlopp`, a loss, a wreck, José's drive back and walk
     home, a mission start, the sisters' six; `gatloppkal` measures the courses' balance with calibrate's
-    autopilot: a clean run wins by a few seconds, one crash loses, DESIGN §10.38)
+    autopilot: a clean run wins by a few seconds, one crash loses, DESIGN §10.38), `skidor
+    eslovrundan eslovrundankal` (Låna rullskidorna, the rollerskier's skis after Pepes Bodega: E at his
+    rest by the sign (Stig waiting there brings him back), Stig poling on asphalt, wobbling on the
+    sidewalk, falling off a kerb, into a car or a person, on his back on the sand, "Heja Eslöv!" at the
+    bib and "Jag är från Stockholm, egentligen…", the return, back by themselves in a car, a pursuit or
+    a mission; Eslövrundan on the skis with its result list, first, second and third; `eslovrundankal`
+    measures the skier's two times with the ski pilot, `ESLOVRUNDAN_RUNS`, DESIGN §10.39)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

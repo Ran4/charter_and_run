@@ -50,6 +50,7 @@ export const hud = {
       <div id="speedo"><div class="sp-num">0</div><div class="sp-unit">${S.speedUnit}</div><div class="sp-hp"><div class="sp-hp-fill"></div></div><div class="sp-name"></div></div>
       <div id="prompt"></div>
       <div id="score"><div class="score-main"></div><div class="score-sub"></div></div>
+      <div id="results"><div class="res-title"></div><div class="res-rows"></div><div class="res-caption"></div></div>
       <div id="fade"></div>
       <div id="takt"></div>
       <div id="toasts"></div>
@@ -88,6 +89,7 @@ export const hud = {
     this.clockEl = $('klocka');
     this.fadeEl = $('fade');
     this.scoreEl = $('score');
+    this.resultsEl = $('results');
     this.taktEl = $('takt');
     this.vfEl = $('viewfinder');
     this.fnEl = $('filmnight');
@@ -340,6 +342,27 @@ export const hud = {
     this._scoreT = setTimeout(() => e.classList.remove('show'), secs * 1000);
   },
   hideScore() { clearTimeout(this._scoreT); this.scoreEl.classList.remove('show'); },
+  // A result list like the television's ski results (Eslövrundan, game/rollerskis.js, §10.39): the
+  // `title`, then one row a competitor ({ rank, name, club, time, me }: `me` is highlighted), then
+  // the `caption` line, for `secs` s.
+  showResults(title, rows, caption = '', secs = 6) {
+    const e = this.resultsEl;
+    e.querySelector('.res-title').textContent = upper(title);
+    const box = e.querySelector('.res-rows');
+    box.textContent = '';
+    for (const r of rows) {
+      const row = el('div', 'res-row' + (r.me ? ' me' : ''), box);
+      el('span', 'res-rank', row, `${r.rank}.`);
+      el('span', 'res-name', row, r.name);
+      el('span', 'res-club', row, upper(r.club || ''));
+      el('span', 'res-time', row, r.time);
+    }
+    e.querySelector('.res-caption').textContent = caption;
+    e.classList.remove('show'); void e.offsetWidth; e.classList.add('show');
+    clearTimeout(this._resT);
+    this._resT = setTimeout(() => e.classList.remove('show'), secs * 1000);
+  },
+  hideResults() { clearTimeout(this._resT); this.resultsEl.classList.remove('show'); },
   // A live line in the same place (the stunt jump's LUFTTID while his car is in the air, §10.27): the
   // text changes without the pop-in; up `secs` s after the last call, or until hideScore.
   liveScore(main, secs = 1.2) {

@@ -49,8 +49,9 @@ const besideSkier = (T, side = 2) => T.ev((side) => {
 }, side);
 const prompt = (T) => T.ev(() => document.getElementById('prompt').textContent);
 // Cheer him on foot and take his offer: Eslövloppet starts (`timer`: the clock for this race only).
+// While he skis: at index 9, past the bodega, E at his rest is the loan of his skis (§10.39).
 async function enterRace(T, timer = null) {
-  await T.until(() => ['rest', 'ski'].includes(__game.eslov.mode) && __game.time - __game.eslov.hejaT >= 8, 30000);
+  await T.until(() => __game.eslov.mode === 'ski' && __game.time - __game.eslov.hejaT >= 8, 30000);
   await T.ev((timer) => { __game.eslov.timer = timer ?? undefined; }, timer);
   await besideSkier(T, 2);
   await T.tap('KeyE');
@@ -162,7 +163,7 @@ export const SCENARIOS = {
 
     // 3. On foot: E beside him, the cheer (another reply), he stops and offers the race.
     await T.ev(() => __game.exitCar(true));
-    await T.until(() => __game.time - __game.eslov.hejaT >= 8 && ['rest', 'ski'].includes(__game.eslov.mode), 20000);
+    await T.until(() => __game.time - __game.eslov.hejaT >= 8 && __game.eslov.mode === 'ski', 20000);   // at his rest E is the loan (§10.39)
     await besideSkier(T, 2);
     await T.frames(3);
     const p0 = await prompt(T);
@@ -280,7 +281,7 @@ export const SCENARIOS = {
     await release(T);
 
     // 8. After a win he greets the runner.
-    await T.until(() => __game.time - __game.eslov.hejaT >= 8 && ['rest', 'ski'].includes(__game.eslov.mode), 30000);
+    await T.until(() => __game.time - __game.eslov.hejaT >= 8 && __game.eslov.mode === 'ski', 30000);
     await besideSkier(T, 2);
     await resetSaid(T);
     await T.tap('KeyE');

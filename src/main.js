@@ -29,6 +29,7 @@ import { DiveTower } from './game/diveTower.js';
 import { Honk } from './game/honk.js';
 import { DayClock } from './game/dayClock.js';
 import { Eslov } from './game/eslov.js';
+import { Rollerskis } from './game/rollerskis.js';
 import { StorchFilm } from './game/storchFilm.js';
 import { PoolFest } from './game/poolFest.js';
 import { StigSorry } from './game/stigSorry.js';
@@ -196,6 +197,7 @@ class Game {
     this.day = new DayClock(this);        // free roam: the island's clock, evenings, the nap (§10.10)
     this.film = new StorchFilm(this);     // free roam: Herr Storch films his tricks, the film night (§10.11)
     this.eslov = new Eslov(this);         // free roam: the rollerskier trains, the horn, Eslövloppet (§10.12)
+    this.skis = new Rollerskis(this);     // free roam after the bodega: Stig on the rollerskier's skis, Eslövrundan (§10.39)
     this.fest = new PoolFest(this);       // free roam after the end: Små grodorna in Flamenco's pool (§10.13)
     this.sorry = new StigSorry(this);     // free roam: Stig says sorry for what he does (§10.14)
     this.pigs = new PigTruck(this);       // free roam: the grisbil's pigs tumble off, the pen at the farm (§10.15)
@@ -665,6 +667,7 @@ class Game {
     if (!this.levelDef.verbs.enterCars || car.noEnter) { if (this.level === 'flight') hud.toast(S.noCars); return; }
     if (car.locked) { hud.toast(S.carBusy); return; }
     if (this.player.seatId) this.standPlayer();
+    this.skis.giveBack('car');   // the borrowed rollerskis go back to the skier (§10.39)
     this.jeep.onEnter(car);   // the Guardia jeep at the barracks: the loan, SKANDAL (§10.34)
     if (car.driverBust) {
       // Carjacking: the driver tumbles out and is not happy about it.
@@ -1399,17 +1402,19 @@ class Game {
       return { type: 'stand' };
     }
     if (p.state !== 'normal') return null;
-    const top = this.bestInteractable((i) => !i.whileSeated && (i.priority || 0) >= 100);
+    // On the borrowed rollerskis (§10.39) only their own (`skis: true`), a mission's giver and the cars.
+    const skis = this.skis.on;
+    const top = this.bestInteractable((i) => !i.whileSeated && (i.priority || 0) >= 100 && (!skis || i.skis));
     if (top) return { type: 'it', it: top };
     // Not with Berra on his shoulders (§10.6): the carry would follow him into the mission.
     if (ms.state === 'idle' && ms.current && ms.current.level === this.level && !this.carrying) {
       const g = this.npcs[ms.current.giver];
       if (g && g.state !== 'hidden' && dist(g.x, g.z, p.x, p.z) < 3.4 && Math.abs(g.y - p.y) < 2) return { type: 'talk', who: g };
     }
-    const it = this.bestInteractable((i) => !i.whileSeated);
+    const it = this.bestInteractable((i) => !i.whileSeated && (!skis || i.skis));
     if (it) return { type: 'it', it };
     // Someone in the gang to talk to (free roam, §10.28): after every interactable, before the cars.
-    const who = this.chat.nearest();
+    const who = skis ? null : this.chat.nearest();
     if (who) return { type: 'chat', who };
     if (!this.levelDef.verbs.enterCars || this.carrying?.who) return null;
     let best = null, bd = 2.2;
@@ -1539,6 +1544,7 @@ class Game {
     this.day.update(dt);
     this.film.update(dt);
     this.eslov.update(dt);
+    this.skis.update(dt);
     this.fest.update(dt);
     this.sorry.update(dt);
     this.pigs.update(dt);
@@ -1645,7 +1651,7 @@ class Game {
     if (input.pressed('attack') && verbs.kick && !this.mantraMode && this.kickT <= 0) {
       // After julafton the glide takes the air press: a quick release still stomps (§10.7).
       if (!p.onGround && p.y > groundAt(p.x, p.z, p.y, 0.45) + 0.8) { if (!this.glide.press()) this.stomp(); }
-      else { p.anim.kick = 1; this.kickT = 0.38; this.kickHitT = 0.11; audio.kick(); }
+      else if (!this.skis.on) { p.anim.kick = 1; this.kickT = 0.38; this.kickHitT = 0.11; audio.kick(); }   // no kick on the rollerskis (§10.39)
     }
     if (input.pressed('interact')) this.interact();
   }
@@ -1747,10 +1753,13 @@ class Game {
     for (const c of this.cars) if (simTraffic || !c.traffic) c.step(h, this);
     const cars = this.cars;
     for (let i = 0; i < cars.length; i++) for (let j = i + 1; j < cars.length; j++) collideCars(cars[i], cars[j], this);
-    // People. The glide (§10.7) steers and eases his fall around his step.
+    // People. The glide (§10.7) steers and eases his fall around his step, and so do the borrowed
+    // rollerskis his rolling (§10.39).
     this.glide.step(h);
+    this.skis.step(h);
     if (!this.playerCar) p.step(h, this);
     this.glide.after(h);
+    this.skis.after(h);
     this.belt.carry(h);   // standing on the baggage belt, it carries him (§10.16)
     if (def.sim.peds) for (const ped of this.peds) { ped.update(h, this); ped.char.step(h, this); }
     for (const k in this.npcs) {
@@ -1986,7 +1995,7 @@ class Game {
       const g = this.npcs[ms.current.giver];
       if (g) out.push({ type: 'mission', x: g.x, z: g.z, edge: true });
     }
-    const t = ms.target() || this.berraJob.target() || this.eslov.target() || this.pigs.target() || this.gatlopp.target();
+    const t = ms.target() || this.berraJob.target() || this.eslov.target() || this.skis.target() || this.pigs.target() || this.gatlopp.target();
     if (t && !t.follow) out.push({ type: 'objective', x: t.x, z: t.z, edge: true });
     if (t && t.follow) out.push({ type: ms.stage?.car?.isTarget ? 'enemy' : 'friend', x: t.x, z: t.z, edge: true });
     out.push(...ms.markers());
@@ -1996,6 +2005,7 @@ class Game {
     out.push(...this.shame.church.markers());
     out.push(...this.berraJob.markers());
     out.push(...this.eslov.markers());
+    out.push(...this.skis.markers());
     out.push(...this.pigs.markers());
     out.push(...this.gatlopp.markers());
     const o = this.shame.officer;
@@ -2054,9 +2064,9 @@ class Game {
       this.bang.fadeBeam(nearFade(g.x, g.z));
       if (dist(g.x, g.z, f.x, f.z) > 25) target = { x: g.x, z: g.z };
     } else this.bang.show(false);
-    // Or the free-roam Berra job's (§10.6), Eslövloppet's (§10.12), the grisbil's pigs' (§10.15), José's
-    // street race's (§10.38).
-    const t = ms.target() || this.berraJob.target() || this.eslov.target() || this.pigs.target() || this.gatlopp.target();
+    // Or the free-roam Berra job's (§10.6), Eslövloppet's (§10.12), Eslövrundan's (§10.39), the grisbil's
+    // pigs' (§10.15), José's street race's (§10.38).
+    const t = ms.target() || this.berraJob.target() || this.eslov.target() || this.skis.target() || this.pigs.target() || this.gatlopp.target();
     if (t) {
       target = t;
       const y = t.follow ? groundAt(t.x, t.z, 0.2, 0.6) + 2.5 : groundAt(t.x, t.z, 0.2, 0.6);
@@ -2085,9 +2095,9 @@ class Game {
   updateHud() {
     // No mission running: the SOLKRÄM meter (§10.26; first, as its scene holds him), the paint
     // shop's wet-paint card (§7.2), the church's while Guardia Civil waits outside (§7.2), the Berra
-    // job's (§10.6), Eslövloppet's (§10.12), the grisbil's pigs' (§10.15), a G17 toaster's scale
+    // job's (§10.6), Eslövloppet's (§10.12), Eslövrundan's (§10.39), the grisbil's pigs' (§10.15), a G17 toaster's scale
     // (§10.24) or José's street race's (§10.38), if any.
-    hud.setObjective(this.missions.objective() || this.solkram.objective() || this.shame.paint.objective() || this.shame.church.objective() || this.berraJob.objective() || this.eslov.objective()
+    hud.setObjective(this.missions.objective() || this.solkram.objective() || this.shame.paint.objective() || this.shame.church.objective() || this.berraJob.objective() || this.eslov.objective() || this.skis.objective()
       || this.pigs.objective() || this.toasters.objective() || this.gatlopp.objective());
     hud.setSpeedo(this.playerCar);
     if (this.missions.state !== 'failed') {

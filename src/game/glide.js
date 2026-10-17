@@ -52,7 +52,7 @@ export class Glide {
   get unlocked() { return this.g.unlocked.has('bodega'); }
   allowed() {
     const g = this.g, p = g.player;
-    return g.level === 'island' && this.unlocked && g.missions.state === 'idle' && !g.playerCar && !g.carrying
+    return g.level === 'island' && this.unlocked && g.missions.state === 'idle' && !g.playerCar && !g.carrying && !g.skis?.on
       && !g.inDialog && !(g.frozenT > 0) && !(g.shame.panicT > 0) && !g.mantraMode && p.state === 'normal';
   }
 

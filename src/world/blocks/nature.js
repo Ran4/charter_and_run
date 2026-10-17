@@ -369,8 +369,10 @@ function tomatVischan(f, rnd) {
   Object.assign(FARM_YARD, { ox: f.ox, oz: f.oz, yaw: f.yaw, x0: -30.1, z0: -30.1, x1: -2.6, z1: -14.8, door: [-17.5, -23.5], home: [-16.4, -21.9],
     walls: [[-26.5, -28.5, -17.5, -21.5], [-14.2, -28.8, -4.2, -23.2]] });
   postSign(f, 'CAMINO SIN ASFALTAR', 1.4, 29.2, 3.8, 0.9, 1.6, 0, { bg: '#f4efe6', fg: '#d8321e' });   // [N]
-  // The Eslöv lane: a narrow asphalt strip down the east side of the block.
+  // The Eslöv lane: a narrow asphalt strip down the east side of the block, on over the sidewalk to
+  // the road at each end (a kerb cut: the borrowed rollerskis roll it as asphalt, §10.39; no solid).
   f.flat(0x55555c, 27.5, 0, 6, 60, CURB + 0.025);
+  for (const z of [-32.25, 32.25]) f.flat(0x55555c, 27.5, z, 6, 4.5, CURB + 0.025);
   for (let z = -27; z < 30; z += 6) f.flat(0xf4f4f0, 27.5, z, 0.14, 2.6, CURB + 0.032);
   for (const z of [-29, -10, 10, 29]) { f.box(0xf4efe6, 24.2, CURB, z, 0.3, 0.6, 0.3); f.box(RED, 24.2, CURB + 0.6, z, 0.32, 0.12, 0.32); }
   postSign(f, 'ESLÖV 3 900 KM', 23.8, 16, 3.6, 0.9, 1.7, PI / 2, { bg: '#2f6a4a', fg: '#ffffff', border: '#ffffff' });   // [N] road-sign gag (≈ 3 880 km as the crow flies)

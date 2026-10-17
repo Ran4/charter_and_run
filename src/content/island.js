@@ -1502,6 +1502,97 @@ export const ESLOV = {
   },
 };
 
+// Låna rullskidorna – åk fort på asfalt (free roam, DESIGN §10.39; game/rollerskis.js). On the island
+// with `missions.state === 'idle'`, once `after` (Pepes Bodega) is done, the rollerskier standing at
+// his place (ESLOV.at: his rest between laps, and all night) lends Stig his skis, poles and an ESLÖV
+// bib: E within `lend.r` m of him (`lend.prompt`), Stig's `lend.ask`, his `lend.yes`, the `lend.hint`
+// toast the first time a session. Stig on foot within `lend.waitR` m of the place brings him back
+// there (on the north leg he stops and turns) and keeps him standing. Lent, he stands `lend.stand`
+// ([dx, dz] from the place) without them, and E there (`back.prompt`) gives them back (`back.stig`
+// and his `back.clean`, `back.fell` or `back.sand` by the loan's falls). They go back to him by
+// themselves (`back.auto`) when Stig gets into a car, a mission or a SKANDAL pursuit starts, he sits
+// down or leaves the island; never saved. On the skis camera-relative WASD sets the heading he
+// turns to: at `turn.max` rad/s standing, at most `turn.lat` m/s² sideways under way (`turn.air` ×
+// in the air). Pushing within `poleArc` rad of the heading poles him up to `speed` m/s (1.5 × the
+// sprint) at `accel` m/s² on asphalt: the road grid, the Eslöv lane `lane` ([dx0, dz0, dx1, dz1] from
+// ESLOV.at, its kerb crossings too) and the west stub. Pushing more than `plogArc` rad against it
+// ploughs at `plog` m/s² (there is no brake); else he rolls, slowing at `roll` m/s². Off the asphalt
+// (`kerb`: sidewalks, lots, decks) he wobbles with his arms up at `kerb.speed` m/s (slowed to it at
+// `kerb.decel` m/s², turning at `kerb.turn`); on sand (the beaches, the dunes, the sand round the
+// town, a sand pile) he shuffles at `sand.speed`. Falls: onto sand faster than `sand.fallV` (on his
+// back, the skis in the air, `fall.sand`), off the asphalt faster than `fall.kerbV`, into a wall or a
+// car faster than `fall.wallV` keeping under `fall.keep` of his speed, into a person faster than
+// `fall.wallV` (bowled over as by a kick); up again, `fall.getUp`. Berra and Swedish tourists within
+// `heja.r` m as he passes faster than `heja.minV`: `heja.shout`, Stig's `heja.answer` `heja.answerAt`
+// s later; a shout every `heja.gap` s at most, each shouter every `heja.every` s. Eslövrundan
+// (`trial`): E on the skis at the start line (`trial.prompt`, within `trial.r` m of `trial.start`
+// from ESLOV.at), a black cut and the countdown, then Eslövloppet's course (ESLOV.race: its
+// checkpoints and line) on the skis; the card shows the time and the skier's `times` (measured,
+// §8 "Timers and difficulty"); the result list (`trial.list`) ranks Stig's time among them,
+// `trial.place[rank]` after this session's `ords[n]` run; first place wins `prize` pta, the best
+// time is kept (`game.records.eslovSkidor`). A car, R, the skis off or `cap` s end it (`abort`).
+// Invented (§1.6): Stig on the skis, the falls, his answer and Eslövrundan; Berra's "Heja Eslöv!" is
+// the film's, the result line the captain's "Stenmark ligger trea efter första åket." without the name.
+export const SKIDOR = {
+  after: 'bodega',
+  lend: {
+    r: 3, waitR: 4.5, stand: [-2.4, 0.4],
+    prompt: '<b>E</b> Får jag låna skidorna?',                                      // [N]
+    ask: 'Får jag… låna dem en liten stund?',                                       // [N]
+    yes: 'Ta dem du. Men håll dig på asfalten.',                                    // [N]
+    hint: 'Rullskidor: W stakar, S plogar – broms finns inte. Håll dig på asfalten!',   // [N]
+  },
+  back: {
+    r: 3,
+    prompt: '<b>E</b> Lämna tillbaka skidorna',                                     // [N]
+    stig: 'Tack för lånet!',                                                         // [N]
+    clean: 'Du har ju talang!',                                                      // [N]
+    fell: 'Det tar ett tag att få in stavtaget.',                                    // [N]
+    sand: 'Sand är inget för rullskidor.',                                           // [N]
+    auto: 'Skidorna gick tillbaka till rullskidåkaren.',                             // [N]
+  },
+  speed: 13.2, accel: 3.2, roll: 0.45, plog: 3.0, poleArc: 1.2, plogArc: 2.2,
+  turn: { max: 2.4, lat: 8, air: 0.4 },
+  kerb: { speed: 2.2, decel: 9, turn: 3.0 },
+  sand: { speed: 1.0, fallV: 1.6 },
+  lane: [-3, -58.5, 3, 10.5],
+  fall: {
+    kerbV: 7, wallV: 5.5, keep: 0.45,
+    sand: 'Jaha… de rullar visst inte på sand.',                                     // [N]
+    getUp: ['Det måste vara värmen.' /* [F*] Stig's getting-up line (GETUP) */, 'Det är kombinationen av sol och…' /* [F*] */],
+  },
+  heja: {
+    r: 9, minV: 5, gap: 6, every: 25, answerAt: 1.1,
+    shout: 'Heja Eslöv!',                                                            // [F*] Berra's shout at the rollerskier (research-plot.md:318), at the ESLÖV bib
+    answer: 'Jag är från Stockholm, egentligen…',                                    // [N]
+  },
+  trial: {
+    r: 3.5, start: [0, -6.5],
+    prompt: '<b>E</b> Eslövrundan – ett varv på skidor',                             // [N]
+    title: 'Eslövrundan',                                                            // [N]
+    text: 'Tid {t} · att slå: {a} och {b}',                                          // [N]
+    best: 'Rekord {t}',                                                              // [N]
+    cp: 'KONTROLL {i}/{n}',                                                          // [N]
+    // Measured (DESIGN §8 "Races and chases" and "Timers and difficulty", §10.39; scenario
+    // `eslovrundankal`): the ski pilot's median clean run T_ref 28.62 s, with one fall T_1 32.97, with
+    // two 37.95. His best is a race's, ceil((T_ref + T_1) / 2) = 31: a clean run wins by a few seconds,
+    // one fall loses it; today's a drive's timer, ceil(1.2 × T_ref) = 35: one fall is second, two are
+    // third (pool `eslovRundan` in notes/calibration-samples.md).
+    times: [31, 35], prize: 100, cap: 120, fadeSecs: 0.6, count: 3.5,
+    list: { title: 'Eslövrundan · resultat', skier: ['Rullskidåkaren, pers', 'Rullskidåkaren, i dag'], club: 'ESLÖV',   // [N]
+      stig: 'Stig-Helmer', stigClub: 'STOCKHOLM' },                                  // [N]
+    place: ['Stig-Helmer leder efter {ord} åket.', 'Stig-Helmer ligger tvåa efter {ord} åket.',   // [N] the captain's "Stenmark ligger trea efter första åket." (research-plot.md:206), Stig in the name's place
+      'Stig-Helmer ligger trea efter {ord} åket.'],                                  // [N] as above
+    ords: ['första', 'andra', 'tredje', 'fjärde', 'femte', 'sjätte', 'sjunde', 'åttonde', 'nionde', 'tionde'],
+    ordN: '{n}:e',
+    lines: ['Där rök mitt pers! På mina egna skidor.' /* [N] */, 'Inte illa för en stockholmare!' /* [N] */,
+      'Nästa åk går bättre.' /* [N] */],
+    record: 'Eslövrundan på skidor: {t} – nytt rekord!',                             // [N]
+    toast: 'Rullskidåkaren gav dig {n} pta.',                                        // [N]
+    abort: 'Eslövrundan avbruten.',                                                  // [N]
+  },
+};
+
 // Gatlopp mot pizza-racern – mamma åker med (free roam, DESIGN §10.38; game/streetRace.js). On the
 // island with `missions.state === 'idle'`, once `after` (Gamla kläder) is done, José free at his place
 // (`who`) has a "!" (`bang`, and the minimap's friend dot) while a race is left, and E within `r` m

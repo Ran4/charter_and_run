@@ -188,7 +188,10 @@ stills he takes after julafton and his film night, and the witness rule turning 
 looks through his camera, and there is no film night); the rollerskier training up and down the
 Eslöv lane, his answer to the horn ("Bara 390 mil kvar!"), his "Spår!", Stig's cheer and Eslövloppet
 round the tomato fields (free roam, §10.12; in the film he only passes Berra and Robban on the
-country road, and "Heja Eslöv!" is Berra's); the pool fest after the end: the SunTrip lot dancing
+country road, and "Heja Eslöv!" is Berra's); Stig on the rollerskier's borrowed skis with an ESLÖV
+bib, his falls off the kerbs and on the sand, "Heja Eslöv!" shouted at the bib and Stig's "Jag är från
+Stockholm, egentligen…", and Eslövrundan with its result list (free roam, §10.39; the result line
+winks at the captain's Stenmark announcement); the pool fest after the end: the SunTrip lot dancing
 Små grodorna in Flamenco's pool in free roam, the ring round Lasse, the porter's walk out, Stig
 hopping with them in his suit and the hop counter (free roam, §10.13; in the film the others dance
 in the pool at the julfest while Stig-Helmer and Ole open the crispbread, and Stig-Helmer never
@@ -339,7 +342,7 @@ with existing fields so nothing blocks.
 | `saljare` | Bungalowförsäljaren | sells Angerud the plot | 310 | `#fff8e6` | white suit `0xf4f0e6` longSleeves, hair `swoop` fair `0xe0c890`, `shades`† |
 | `souvenir` | Souvenirförsäljaren | the donkey seller | 225 | `#d8321e` | `wide` 1.2, shirt `0xe8d8a8`, mustache, `hat:'sunhat'`† straw |
 | `stadare` | Städerskan | cleaner (cameo) | 260 | `#d8321e` | tall, `hat:'scarf'`† (headscarf), `dress`† black + stripe pink `0xf0a0c0` (apron), `held:'broom'`† green |
-| `eslov` | Rullskidåkaren | "Heja Eslöv!"; trains on the Eslöv lane in free roam (§10.12) | 320 | `#fff8e6` | blue ski suit `0x2a4fa0` + stripe yellow `0xffd23f` with `bib` `ESLÖV` (feature 7), `hat:'cap'`†; skis and poles with the `ski` anim flag |
+| `eslov` | Rullskidåkaren | "Heja Eslöv!"; trains on the Eslöv lane in free roam (§10.12), lends Stig his skis after the bodega (§10.39) | 320 | `#fff8e6` | blue ski suit `0x2a4fa0` + stripe yellow `0xffd23f` with `bib` `ESLÖV` (feature 7), `hat:'cap'`†; skis and poles with the `ski` anim flag |
 | `grisbonde` | Grisbonden | pig-truck driver (bust/NPC) | 200 | `#d8321e` | shirt `0x6a5a3a`, `hat:'sunhat'`† |
 | `varden` | Grisfestvärden | grisfest host (unnamed) | 210 | `#d8321e` | `wide` 1.3, white shirt, red sash stripe, mustache |
 | `guardia` | Guardia Civil | pursuer officer + vehicle busts | 210 | `#3d5a3a` | green uniform `0x3d5a3a` shirt+pants longSleeves, `hat:'tricorn'`† black gloss, mustache |
@@ -478,7 +481,13 @@ Physical keys are unchanged from Bigmouth. The level config turns verbs on and o
   filmen", his film night.
 - **The rollerskier** (free roam, §10.12): H in a car within 22 m of him is Stig's "Heja Eslöv!"; on
   foot "E Heja Eslöv!" does the same, he stops, and for 9 s "E Eslövloppet – ett varv runt fälten"
-  starts the race. The race is on foot: a car or R ends it.
+  starts the race. The race is on foot: a car or R ends it. After Pepes Bodega, E at him standing at
+  his place is "E Får jag låna skidorna?" (§10.39).
+- **The borrowed rollerskis** (free roam after Pepes Bodega, §10.39): the move keys (camera-relative,
+  as on foot) set the heading; along it he poles (slowly up to 1.5 × the sprint on asphalt), against
+  it (S) he ploughs, else he rolls; off the asphalt he wobbles at a crawl. No sprint, kick or glide
+  on them; E reaches only "E Lämna tillbaka skidorna" at the skier, "E Eslövrundan – ett varv på
+  skidor" at the start line by the sign, a mission's giver and the cars.
 - **The pool fest** (free roam after the end, §10.13): at the gap marked on the water in the dancers'
   ring "E Dansa med" puts Stig in the ring; there Space is a small hop judged against the ring's beat,
   J does nothing, and "E Kliv ur ringen" or a step (any move key) takes him out.
@@ -1273,7 +1282,7 @@ standing there faces. `y` (optional) = absolute height for collectible spots on 
 | (3,1) | `kyrka` → `kyrka` (C2, centre.js) | **Templo Ecuménico**: white rationalist church (flat planes, bell slab), palm plaza, crèche, small fountain; sign `ES UNA IGLESIA` / `DET ÄR EN KYRKA.` [F*] (the sisters' language record, relocated; uppercase since Phase 3 r2, §1.3), read aloud by the officer in kyrkfrid (feature 60, §7.2); the door's open right leaf (the dark church behind it) is game/church.js's mesh, shown only while Stig goes in or peeks out | `kyrka` (0, 18, π) · `kyrkaPuerta` (0.8, 2.2, 0) (before the door's right leaf under the portico, facing out: kyrkfrid's E spot and the anchor of its scene's spots; feature 60, §7.2) · cut anchor `kyrkaCam` (−2, 9, π) (the door and the sisters' sign from the plaza: the wait's shot, 12 m behind it, 3 m up) | — |
 | (4,3) | `bensin` → `bensin` (C2, centre.js) | gas station: canopy, `GASOLINA` (no brand), prices in pesetas, kiosk; `gaspump` props explode; the workshop's two open bays (`TALLER · NEUMÁTICOS · LAVADO`) are the free-roam paint shop (§7.2): `PINTURA` on the pillar between them, paint tins and a brush by the left bay, a yellow 4 × 7 m box in front of it, the cone moved to the pillar and the parked yellow hatch to the east gable (29.5, −20), out of the painted car's way to the road | `bensin` (0, 16, π) · `pintura` (11.25, −8, 0) (the paint zone in front of the left bay, facing out of it) · cut anchor `pinturaCam` (11.25, −9.6, π) (the bay seen from the forecourt) | — |
 | (5,3) | `guardia` → `cuartel` (C2, centre.js) | ochre barracks, red-yellow-red flag mast beside the path at x 4.6 (Phase 3: off the axis to the `CASA CUARTEL` plaque), `CASA CUARTEL`; two parked green Land Rovers | `guardia` (0, 20, π) | `guardia1`, `guardia2` (type `guardia`, locked; feature 51: `guardia1` open between missions after the bodega, §10.34) |
-| (1,0), (3,0), (0,1) | `tomat` → `tomatfalt` (D1, nature.js) | rows of low tomato bushes (one merged mesh, walls a car drives through: no solids, or tops ≤ 0.6), packing shed `TOMATES · EXPORTACIÓN` / `EMPAQUETADO`, `tomatlada` props, dirt tracks; on (0,1) the finca's yard is `FARM_YARD` (feature 31, §10.21: the yard dog's rectangle x [−30.1, −2.6], z [−30.1, −14.8], its door and spot, the finca and the tank with its ramp as its walls; data only) | on (0,1): `vischan` (6, 24, π) · cut anchor `vischanCam` (5.7, 22.7, −0.14) (on the gravel track north of the vischan scene, looking back south at the road and the `CAMINO SIN ASFALTAR` sign; Phase 3 r2) · `eslovVag` (27.5, 24, 0) (the rollerskier on the Eslöv lane, 6 m up from the z −120 road and facing it; Phase 3 r2, was (28, 4, −π/2) mid-lane, 33 m off the vischan drive) — on (3,0): `packhus` (0, 10, π) | — |
+| (1,0), (3,0), (0,1) | `tomat` → `tomatfalt` (D1, nature.js) | rows of low tomato bushes (one merged mesh, walls a car drives through: no solids, or tops ≤ 0.6), packing shed `TOMATES · EXPORTACIÓN` / `EMPAQUETADO`, `tomatlada` props, dirt tracks; on (0,1) the finca's yard is `FARM_YARD` (feature 31, §10.21: the yard dog's rectangle x [−30.1, −2.6], z [−30.1, −14.8], its door and spot, the finca and the tank with its ramp as its walls; data only); the Eslöv lane's asphalt runs on over the sidewalk to the roads at both ends (a kerb cut, paint only; feature 71, §10.39) | on (0,1): `vischan` (6, 24, π) · cut anchor `vischanCam` (5.7, 22.7, −0.14) (on the gravel track north of the vischan scene, looking back south at the road and the `CAMINO SIN ASFALTAR` sign; Phase 3 r2) · `eslovVag` (27.5, 24, 0) (the rollerskier on the Eslöv lane, 6 m up from the z −120 road and facing it; Phase 3 r2, was (28, 4, −π/2) mid-lane, 33 m off the vischan drive) — on (3,0): `packhus` (0, 10, π) | — |
 | (2,0) | `grisfest` → `grisgard` (D1, nature.js) | farm: white barn (roof top ≈ 5), pergola deck with long tables under string lights, spit-roast pig, bandstand, dance-floor platform (deck top 0.4), piglet pen, gate on the **south** road; **12 `tallrikar` prop stacks** on the tables (smash stage; `placeProp(..., baseY = table top)`, §14.7) | `grisfest` (0, 26, π) · `grisfestGate` world (−80, −204, π/2) (on the south road at the farm gate, the `follow` endpoint) · `dansgolv` (0, 0, 0) · `pryl_pung` (−18, −14, 0, 5.4) · `grisfalla` (−11, 20.5, −π/2) and `grisfallaIn` (−18.5, 20.6, −π/2) (the pig delivery's stop by the piglet pen and the pen's middle, feature 15, §10.15) | — |
 | (0,0) | `fataga` → `fataga` (D1, nature.js) | white village houses, tile roofs, narrow lanes, date palms, small church, embroidered tablecloths on lines (`MANTELES · DUKAR`), sheepfold (fence solids, gap gate); six ochre crags along the north edge, solid along their length (Phase 3 r3: rock()'s 1 m circle plus a box 0.85·sx × 0.53·sz on the long axis, the mesh's widest section; the circle alone let the player and the chase eye 2–3 m into the rock, also in the fold's back under the shelter) | `fataga` (0, 18, π) · `fatagaBus` world (−240, −204, −π/2) (westbound kerb of the z = −200 road, the `follow` endpoint) · `fatagaFold` (−18, −12, 0) · `fatagaDukar` (8, 4, π) · cut anchor `dukarCam` (8, 4, 0) = `fatagaDukar` turned round (the stall from the square; Phase 3) · `pryl_kniv` (0, 0, 0, 1.2) | — |
 | (4,0) | `golf` → `golf` (D1, nature.js) | fairway, bunkers (sand slabs), **pond** (`water` circle + flat blue), flag 18, small clubhouse `CAMPO DE GOLF` | `golf` (0, 22, π) · `fena_golf` (−10, −6, 0, 0.35) | — |
@@ -3498,7 +3507,7 @@ Key **`charter-and-run-v1`** (localStorage):
 { v: 1, mission: index, coins, collected: { prylar: [ids], fenor: [ids], brodrostar: [ids] },
   unlocked: ['grisbil', ...], outfit: 'kostym' | 'arlanda' | 'hawaii' | 'rio', tune: 'sol' | 'samba',
   records: { simhopp: n, eslov: s, solkram: n, stunts: { planka: m, gula: m, garage: m }, stork: true,
-             gatlopp: { won: 0..3, sex: true } },
+             gatlopp: { won: 0..3, sex: true }, eslovSkidor: s },
   shop: { owned: ['hatt', 'glas', 'skjorta', 'nasa'], off: [ids], trapp: 0..2, trappT: s, bag: bool },
   gags: ['kamera', 'viking'] }
 ```
@@ -3514,7 +3523,9 @@ Berra job (§10.6) is not saved. `unlocked` also holds the glide's `glid` (its t
 marker `glidPlask` (Lasse's pool line said; saved at once), §10.7. `records` holds the free-roam
 bests (`game.records`; a missing key is no record yet): `simhopp`, the diving judges' best total,
 saved at once when beaten (feature 4, §10.8); `eslov`, Eslövloppet's best time in seconds (two
-decimals), saved at once with a win that beats it (feature 7, §10.12); `solkram`, the sun cream's
+decimals), saved at once with a win that beats it (feature 7, §10.12); `eslovSkidor`, Eslövrundan's
+best time on the skis in seconds (two decimals), saved at once with any finished run that beats it
+(feature 71, §10.39; the skis themselves are never saved); `solkram`, the sun cream's
 best points (5–7), saved at once when beaten (feature 35, §10.26), whose once-ever marker
 `solkramFilm` is in `unlocked`; `stunts`, the named car jumps' best distances in metres (one
 decimal), saved at once with a new record (feature 40, §10.27; a jump with none is not yet passed);
@@ -4049,7 +4060,11 @@ landmark, and in a mission he stands there as before.
   his line (knocked off it, he skis back first). Every `restEvery` = 2nd lap, and at night
   (`day.dark`), he brakes to a stop at the south leg's end and stands `restSecs` = 5 s facing the road
   (at night until it is day; with Stig within 10 m `syncAll` turns him to Stig instead). Each free
-  roam starts with a rest at his place.
+  roam starts with a rest at his place. After Pepes Bodega (feature 71, §10.39) Stig on foot within
+  4.5 m of his place makes a stop there due, brakes him on the north leg and turns him back
+  (`comeBack`), and keeps the rest going while Stig stays: there E is the loan of his skis. Lent, he
+  is in the mode `lent`: no skis, standing at the lane's west edge (`walkTo`), not posed; with them
+  back he walks to his rest and skis on.
 - **"Spår!"** Stig on foot in his track (`inTrack`: a point of the track −1.5…`spar.ahead` = 7 m
   ahead along the loop, so the half circles count as he will ski them, level with Stig and within
   `spar.pass` = 1.5 m of his swerved line): he swerves to pass Stig 1.5 m off (2.4 m/s sideways,
@@ -4129,6 +4144,8 @@ landmark, and in a mission he stands there as before.
     tools/pool.mjs eslovLopp`), T_ref 30.68, timer = ceil(1.25 × 30.68) = **39**. The walker's clean
     lap keeps 28 % of the clock, a run at T_ref 21 % (the 0.5 s per target and × 1.25, as on every
     on-foot stage).
+- **The loan** (feature 71, §10.39): from index 9, E at him resting at his place is
+  `skidor:lan` (priority 1 over `eslov`), so "E Heja Eslöv!" and the race offer are for him skiing.
 - `eslov.last` ({ kind: 'heja', by: 'horn' | 'foot', t, reply } | { kind: 'spar', t, hop } |
   { kind: 'race', result: 'win' | 'lose' | 'abort', t, T, cps, at, record? }) is for tests;
   `eslov.timer` overrides the next race's clock in a test. The rest is session state; only the best
@@ -6483,6 +6500,139 @@ plane's, relocated [F*](t), and two of the mother's radio lines are her chatter 
   again); the sisters' six is a one-time exchange in bubbles, not a CHATTER line (Siv's chatter is
   the sun cream's after `sjuPoang`).
 
+### 10.39 Låna rullskidorna – åk fort på asfalt (free roam; feature 71, 2026-10-17)
+
+`game/rollerskis.js` (`Rollerskis`, owned by Game as `skis`), config `SKIDOR` in content/island.js,
+hooks in main.js (`step` before the player's `Character.step` and `after` after it in `fixedStep`,
+`update` after `eslov.update`, the card, target and markers after Eslövloppet's, the interactable
+filter, no kick on the skis, `enterCar`), eslov.js (the skier lent, and back to his place when Stig
+waits there), glide.js (no glide on the skis) and models.js (Stig's ski poses, the bib, the skis on
+a fallen body). The rollerskier (§10.12) lends Stig his skis, poles and an ESLÖV bib, and free roam
+gets a way to move that is neither walking nor driving, where the island's surfaces matter: asphalt
+is fast, kerbs are dangerous and sand stops him dead. Stig on rollerskis, the falls, his answer and
+Eslövrundan are ours [N] (§1.6); the shout "Heja Eslöv!" is Berra's in the film [F*]
+(research-plot.md:318), now at the bib; the result line winks at the captain's "Jag kan även
+meddela att Stenmark ligger trea efter första åket." (research-plot.md:206, flight.js) without the
+name (§1.5). No line is from Snowroller.
+
+- **When.** On the island with `missions.state === 'idle'`, from the index after `after` = Pepes
+  Bodega (`missions.index` ≥ 9) to the end. The skis are never saved.
+- **The loan.** The skier standing at his place (his `rest` between laps, and all night; ours,
+  `spot` 'eslov'): the interactable `skidor:lan` at him (r `lend.r` 3, priority 1 over his `eslov`,
+  whose rest it is, so at index 9 and on E at his rest is the loan and "Heja Eslöv!" is for him
+  skiing; no dialogue, car, carry, pursuit, freeze or PANIK; Stig standing on the ground): `<b>E</b>
+  Får jag låna skidorna?` [N]. Stig's "Får jag… låna dem en liten stund?" [N] and 1.3 s later his
+  "Ta dem du. Men håll dig på asfalten." [N]; the skis are Stig's at once, and the first loan of a
+  session shows the toast `Rullskidor: W stakar, S plogar – broms finns inte. Håll dig på asfalten!`
+  [N]. **Waiting for him**: Stig on foot (no skis, no car) within `lend.waitR` 4.5 m of his place
+  makes his next stop there due (`restDue`) and, on the north leg, brakes him and turns him back
+  (`comeBack`: `turnBack` once stopped), and keeps his rest going while Stig stays (§10.12).
+- **Lent** (eslov.js mode `lent`): no skis on him (`anim.ski` off), he walks (1.4 m/s) to `lend.stand`
+  [−2.4, 0.4] from his place (the lane's west edge, off the race line) and stands facing the lane;
+  not posed, so he turns to Stig, waves and chatters as anyone; no "Heja Eslöv!", offer or race. E at
+  him on the skis (`skidor:tillbaka`, r 3): `<b>E</b> Lämna tillbaka skidorna` [N], Stig's "Tack för
+  lånet!" [N] and 1.1 s later, by the loan's falls, "Du har ju talang!" (none), "Det tar ett tag att
+  få in stavtaget." (a fall) or "Sand är inget för rullskidor." (one on sand) [N]. They go back **by
+  themselves** (`keep`), with the toast `Skidorna gick tillbaka till rullskidåkaren.` [N]: Stig gets
+  into a car (`enterCar` hands them back before the seat), a mission starts (a giver's E works on
+  the skis), a SKANDAL pursuit starts, he sits, lies or is hidden, he carries someone, sits on the
+  baggage belt or joins the pool fest's ring, or the level changes. The skier has them on again at
+  once (`rest`, walking back to his place first) and skis on.
+- **On the skis** (`step`, each 60 Hz step before his `Character.step`, which then only integrates):
+  the keys are read as on foot (camera-relative WASD) as a heading he turns to, at most
+  `turn.max` 2.4 rad/s, and under way at most `turn.lat` 8 m/s² sideways (13.2 m/s: a 22 m radius,
+  0.6 rad/s), × `turn.air` 0.4 in the air. Within `poleArc` 1.2 rad of his heading he poles up to
+  the surface's speed at `accel` 3.2 m/s² (0 → 13.2 m/s in 4.1 s); more than `plogArc` 2.2 rad
+  against it he ploughs at `plog` 3 m/s² and keeps his heading until he is under 1.5 m/s (no brake);
+  between, or with no key, he rolls, slowing at `roll` 0.45 m/s². His facing is the heading
+  (`faceWish` off), sprint does nothing, J does not kick (a stomp in the air stays) and the glide is
+  off (`glide.allowed`). Frozen (a dialogue, `frozenT`) he stops. While on the skis E reaches only
+  their own interactables (`skis: true`), a mission's giver and the cars: no gang talk, no ladder,
+  stairs, hideout or shop.
+- **The surfaces** (`skiSurface`): **asphalt**, `speed` 13.2 m/s (1.5 × the sprint): the road grid
+  (`isRoad` at road height), the Eslöv lane `lane` [−3, −58.5, 3, 10.5] from `eslovVag` (world x
+  −215.5…−209.5, z −194.5…−125.5: on over the sidewalk to the roads at both ends, where nature.js now
+  draws the lane's asphalt as a kerb cut, no solid) and the west stub. **Kerb** (everything else at
+  kerb height, and every floor over 0.45 m: sidewalks, lots, plazas, decks, roofs): he wobbles at
+  `kerb.speed` 2.2 m/s with his arms up (slowed to it at `kerb.decel` 9 m/s², turning at
+  `kerb.turn` 3 rad/s). **Sand** (the sand round the town and the beach past the outer sidewalk; in
+  the beach blocks south of the paseo off the boardwalk; the dunes off theirs; the lighthouse's block
+  off its plazas; a solid of kind `sand`, the bygge's pile): he shuffles at `sand.speed` 1 m/s.
+- **Falls** (`fall`, `Character.fling`, then 'down' for its 1.6–2.4 s): onto sand faster than
+  `sand.fallV` 1.6 m/s (pitched on at 0.35 × his speed: he lands on his back with the skis straight
+  up in the air, and says "Jaha… de rullar visst inte på sand." [N] lying there); off the asphalt
+  faster than `fall.kerbV` 7 m/s (flung on at 0.6 × his speed); into a wall or a car faster than
+  `fall.wallV` 5.5 m/s keeping less than `fall.keep` 0.45 of his speed (flung back; a glancing hit
+  slides him on along the wall at what it left him); into a person ahead faster than 5.5 m/s (`after`,
+  before the push-apart): a pedestrian or an extra is flung on (+9 SKANDAL, "Aj!"-class ouch, as a
+  kick), the cast only barks `kicked`, Stig's sorry follows (§10.14), and he falls back. Up again
+  after anything but sand: "Det måste vara värmen." or "Det är kombinationen av sol och…" [F*]
+  (Stig's GETUP lines). A teleport (R, a cut) only stops him. Knocked over by a car he gets up on the
+  skis, as on foot.
+- **"Heja Eslöv!"** (`cheers`): passing at `heja.minV` 5 m/s or more within `heja.r` 9 m of Berra (free,
+  not posed, on his feet) or a Swedish tourist (a pedestrian not `local`): his or her "Heja Eslöv!"
+  [F*], and `heja.answerAt` 1.1 s later Stig's "Jag är från Stockholm, egentligen…" [N]; one shout
+  every `heja.gap` 6 s at most, each shouter every `heja.every` 25 s. "Herre jävlar!" gets no new use.
+- **The look** (models.js `skiPose`, §14.6): the skier's red skis and poles on Stig (`anim.ski`) and
+  the `skiMode` flag: `pole` double-poles at 1.25 Hz whatever the speed, `glide` rolls leaning in,
+  arms back, the tips trailing; `wobble` (off the asphalt, and ploughing) flails both arms up with the
+  poles along them. A body without its own `bib` wears `skiBib`: a white ESLÖV race number with a red
+  edge on a strip of the torso's cylinder (`m.T`, the torso's size, is kept for it). Flung or down
+  on the skis (`skiFallen`), they stay on his feet, level in the hips' frame (on his back: straight
+  up), the poles out along his arms; the skier keeps his skis in a fall too.
+- **Eslövrundan** (`trial`): on the skis, standing (under 2 m/s), E within `trial.r` 3.5 m of the
+  start (`trial.start` [0, −6.5] from `eslovVag`: the lane's middle a metre south of the line at the
+  sign): `<b>E</b> Eslövrundan – ett varv på skidor` [N] (`skidor:runda`). A black cut 0.3 s on
+  (`fadeSecs` 0.6) puts him there facing north, the camera behind him, `frozenT` through the
+  countdown (`count` 3.5: `3`, `2`, `1`, `KÖR!`, as Eslövloppet). Then Eslövloppet's course
+  (`eslov.course()`, §10.12: the four checkpoints, radius 6, in order, then the line at z −144 going
+  north within 3.6 m of the lane's middle) on the skis, the clock `game.time` from KÖR!. The card:
+  `ESLÖVRUNDAN` [N], `Tid {t} · att slå: {a} och {b}` [N] (the time so far and his two times, m:ss,d;
+  `· Rekord {t}` once there is one), the bar `KONTROLL i/5` [N] in sun yellow; the guide, the Beacon
+  and the minimap star show the next checkpoint, the minimap the one after it. R (any jump over 3 m in
+  a frame), the skis off (a car), a mission start or `cap` 120 s end it: `Eslövrundan avbruten.` [N].
+- **The result list** (`hud.showResults`, §11.4): a navy board low in the middle for 6.5 s, the
+  television's ski results: `ESLÖVRUNDAN · RESULTAT`, three rows ranked by time — "Rullskidåkaren,
+  pers" ESLÖV, "Rullskidåkaren, i dag" ESLÖV (his `times`) and "Stig-Helmer" STOCKHOLM (his time, the
+  row in sun yellow) [N] — and under it `trial.place[rank]`: "Stig-Helmer leder efter {ord} åket.",
+  "Stig-Helmer ligger tvåa efter {ord} åket." or "Stig-Helmer ligger trea efter {ord} åket." [N],
+  `{ord}` this session's finished runs ("första" … "tionde", then "11:e"). First: `prize` 100 pta and
+  the toast `Rullskidåkaren gav dig {n} pta.` [N]; a new best is saved at once
+  (`game.records.eslovSkidor`, s, §10.5) with the toast `Eslövrundan på skidor: {t} – nytt rekord!`
+  [N]; the jingle 'complete', 'pryl' (second) or 'fail' (third). 1.2 s on the skier's line: "Där rök
+  mitt pers! På mina egna skidor.", "Inte illa för en stockholmare!" or "Nästa åk går bättre." [N].
+- **His times are measured** (§8 "Races and chases" and "Timers and difficulty"; scenario
+  `eslovrundankal`): a ski autopilot that holds only the keys a player would (a heading for the
+  stick) rides a racing line (up the lane, round each crossing's inner corner on an arc of 8 m, into
+  and out of the lane, or 9.5 m at the west road, 1–3.5 m from its checkpoint; arcs at √(7.2 × r),
+  braking at 2.8 m/s² by ploughing on the straights). Three clean runs 28.62, 28.63, 28.62 s (T_ref
+  28.62); three with one fall halfway along the z −200 road 33.52, 32.82, 32.97 (T_1 32.97; the down
+  time is random); three with two (and halfway along the z −120 road) 37.95, 37.78, 38.35 (T_2
+  37.95). His best is a race's (`times[0]` = ceil((T_ref + T_1) / 2) = **31**: a clean run wins by
+  2.4 s, one fall loses first place by 2.0 s), today's a drive's timer (`times[1]` = ceil(1.2 ×
+  T_ref) = **35**: a clean run keeps 18 % of it, one fall is second by 2.0 s, two are third by 3.0
+  s). The raw runs are in `notes/calibration-samples.md` (pool `eslovRundan`, the clean runs; the
+  falls' runs beside it). On this course of four corners the skis are about as fast as running
+  (Eslövloppet's walker 28.18 s): they win on the long roads, where 13.2 m/s tells.
+- **A mission start or the other level**: the skis back (as above), a trial ended without a result,
+  the skier at his place with his skis (§10.12 `reset`). So no mission, stage kind, mission timer,
+  fixture or existing calibration pool changes; Eslövloppet (`eslovLopp`) is untouched (its race, walker and
+  course are the same; the kerb cuts are paint).
+- **Tests**: `skis.on`, `v`, `yaw`, `surf`, `mode`, `fallen`, `falls`, `sandFalls`, `trial`, `runs`,
+  `last` ({ kind: 'lend' | 'back' (by: e | car | mission | pursuit | auto, falls, sand) | 'fall'
+  (fall: sand | kerb | wall | person, v) | 'heja' (by: berra | ped) | 'trial' (result: done | abort,
+  t, place, caption, record, falls, run) }), `auto` (a function returning `{ yaw }` or null in place
+  of the keys), `canLend()`, `waiting()`, `startSpot()`, `skiSurface(x, z, y, lane)`. Scenarios
+  `skidor`, `eslovrundan`, `eslovrundankal` (§16.4).
+- **Not done / changed** (deviations from the idea): the loan is at his rest at his place, not E on
+  him anywhere (E on him skiing stays feature 7's "Heja Eslöv!" and its race offer), and he comes back
+  there when Stig waits; on sand Stig lands on his back with the skis in the air (the sketch's pose,
+  not "framlänges"), and his get-up line there is the sand line; there is a weak plough (S) but no
+  brake; people are obstacles at speed (he and they fall); Berra shouts only where he stands near a
+  road (between missions he is at the pool bar); the skier's times are two ("pers", "i dag") from the
+  measurement, and Eslövrundan has no clock that fails it, only the result list and a 120 s cap; the
+  pedestrians do not jump aside for the skis.
+
 ## 11. HUD / UI strings (Swedish; `src/strings.js` owned by WP-H, created by Phase 0)
 
 `strings.js` exports `S` (flat object) and `fmt(key, vars)`. Engine code uses `S.key` only.
@@ -6535,7 +6685,7 @@ mutes without touching the button, which then said `Ljud: på` while muted).
 | dialogue next | `E ▸` |
 | minimap rim badge | `N` (island) / `FRAM` (flight) |
 | big-map legend | from `game.mapLegend()` (§10.1) |
-| prompts | `<b>E</b> Prata med {name}` (a giver, and since feature 39 anyone in the gang between missions, §10.28) · `<b>E</b> Kliv in` · `<b>E</b> Ta bilen` · `<b>E</b> Sätt dig` · `<b>E</b> Res dig` · `<b>E</b> Lås in dig` · `<b>E</b> Ta en juice` · `<b>E</b> Kvarta en stund` (Stig's bed, §10.10) · `<b>E</b> Titta i kameran` / `<b>E</b> Se filmen` (Herr Storch, §10.11) · `<b>E</b> Heja Eslöv!` / `<b>E</b> Eslövloppet – ett varv runt fälten` (the rollerskier, §10.12) · `<b>E</b> Dansa med` / `<b>E</b> Kliv ur ringen` (the pool fest's gap, §10.13) · `<b>E</b> Kontrollera brödrosten` / `<b>E</b> Upp med brödet!` (a G17 toaster, §10.24) · `<b>E</b> Kontrollera hyllan` · `<b>E</b> Ta upp giraffen` / `<b>E</b> Ställ tillbaka giraffen` · `<b>E</b> Spela samba` (room 107, §10.25) · `<b>E</b> Bergsprängaren` · `<b>E</b> Stäng av sambaen` · `<b>E</b> Byt kläder` (room 107, §10.36) · `<b>E</b> Smörj in ryggen` (Majsan's sun cream, §10.26) · `<b>E</b> Ta trappan upp` / `<b>E</b> Ta trappan ner` (the hotel roofs' stairs, §10.29) · `<b>E</b> Läs ett utrop` (the SunTrip stage's microphone, §10.30) · `<b>E</b> Gå upp i fyren` / `<b>E</b> Gå ner` (the lighthouse, §10.35) · `<b>E</b> Plinga på klockan` (the reception's bell, §10.37) · `<b>SPACE</b> Håll i dig!` · `<b>J</b> håll: Jag kan flyga!` (the `<b>` keycap is Luckiest Guy: uppercase; since feature 52 shown on the lighthouse's gallery, after E's prompt when there is one). Order (`updateHud`): talk (a giver's or the gang's), then `Håll i dig!` while the cabin is turbulent and he stands without holding on (Phase 3 r3, §5.7), then the car, interactable (seats, toilets…) and stand prompts; then `fyren.prompt` adds the J hint up there |
+| prompts | `<b>E</b> Prata med {name}` (a giver, and since feature 39 anyone in the gang between missions, §10.28) · `<b>E</b> Kliv in` · `<b>E</b> Ta bilen` · `<b>E</b> Sätt dig` · `<b>E</b> Res dig` · `<b>E</b> Lås in dig` · `<b>E</b> Ta en juice` · `<b>E</b> Kvarta en stund` (Stig's bed, §10.10) · `<b>E</b> Titta i kameran` / `<b>E</b> Se filmen` (Herr Storch, §10.11) · `<b>E</b> Heja Eslöv!` / `<b>E</b> Eslövloppet – ett varv runt fälten` (the rollerskier, §10.12) · `<b>E</b> Får jag låna skidorna?` / `<b>E</b> Lämna tillbaka skidorna` / `<b>E</b> Eslövrundan – ett varv på skidor` (his skis, §10.39) · `<b>E</b> Dansa med` / `<b>E</b> Kliv ur ringen` (the pool fest's gap, §10.13) · `<b>E</b> Kontrollera brödrosten` / `<b>E</b> Upp med brödet!` (a G17 toaster, §10.24) · `<b>E</b> Kontrollera hyllan` · `<b>E</b> Ta upp giraffen` / `<b>E</b> Ställ tillbaka giraffen` · `<b>E</b> Spela samba` (room 107, §10.25) · `<b>E</b> Bergsprängaren` · `<b>E</b> Stäng av sambaen` · `<b>E</b> Byt kläder` (room 107, §10.36) · `<b>E</b> Smörj in ryggen` (Majsan's sun cream, §10.26) · `<b>E</b> Ta trappan upp` / `<b>E</b> Ta trappan ner` (the hotel roofs' stairs, §10.29) · `<b>E</b> Läs ett utrop` (the SunTrip stage's microphone, §10.30) · `<b>E</b> Gå upp i fyren` / `<b>E</b> Gå ner` (the lighthouse, §10.35) · `<b>E</b> Plinga på klockan` (the reception's bell, §10.37) · `<b>SPACE</b> Håll i dig!` · `<b>J</b> håll: Jag kan flyga!` (the `<b>` keycap is Luckiest Guy: uppercase; since feature 52 shown on the lighthouse's gallery, after E's prompt when there is one). Order (`updateHud`): talk (a giver's or the gang's), then `Håll i dig!` while the cabin is turbulent and he stands without holding on (Phase 3 r3, §5.7), then the car, interactable (seats, toilets…) and stand prompts; then `fyren.prompt` adds the J hint up there |
 
 **The result line** (feature 4, §10.8): `#score`, low in the middle (bottom 92 px, under the
 prompt at 178 px), a cream card with the dive and its sum in Luckiest Guy over the record line
@@ -6545,6 +6695,13 @@ uses it too (feature 35, §10.26: `SOLKRÄM 7 P` over the record, `FÖR MYCKET! 
 and the stunt jumps (feature 40, §10.27): `hud.liveScore(main, secs = 1.2)` keeps `LUFTTID 0,6 S` up
 while his car is in the air, the text changed in place with no pop (up `secs` after the last call),
 and the verdict's card is a `showScore`.
+
+**The result list** (feature 71, §10.39): `#results`, low in the middle (bottom 96 px, at least
+min(460 px, 86 vw) wide), a navy board (`#1b2f6b`) with an ink edge like the cards, as the
+television's ski results: the title in yellow Luckiest Guy, one row a competitor (rank, name, club in
+Luckiest Guy, time; tabular figures), the row with `me` in sun yellow, then an italic caption line.
+`hud.showResults(title, rows, caption, secs = 6)` (rows `{ rank, name, club, time, me }`) pops it in
+as `#score` does; `hud.hideResults()` takes it down. Eslövrundan's is the only one.
 
 **The stamp** (feature 40, §10.27): the banner with cls `stamp`: its main a rubber stamp in red
 Luckiest Guy (34–64 px), letter-spaced, in an 8 px red double rule on a cream ground, the banner
@@ -6912,6 +7069,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/guardiaJeep.js` | new (feature 51, 2026-10-17) | — | `GuardiaJeep` (`game.jeep`): Låna Guardia-jeepen in free roam: `guardia1` open between missions after the bodega, the loan and its SKANDAL, his after the pursuit, the bust scene and the tow, the respawn, the siren on H (the lamp, the corners, `game.sirenYield`), Stig's surprise, Angerud's outburst, the reset (§10.34); `lampMesh(car)` exported (the church's waiting Land Rovers, feature 60, §7.2) |
 | `src/game/lighthouse.js` | new (feature 52, 2026-10-17) | — | `Lighthouse` (`game.fyren`): Uppför fyren in free roam: the keeper's door and the gallery door with their fades and banners, the clock on to the evening by day, the gallery's three cameras and the vertigo, the exercise against the lantern with his eyes shut, the long blink to the night, `leave`, a mission start with him up there (§10.35) |
 | `src/game/receptionBell.js` | new (feature 59, 2026-10-17) | — | `ReceptionBell` (`game.bell`): Ringklockan i receptionen in free roam: the queue of three departing guests at Hotel Flamenco's porter's desk with their suitcases (solid only while out), their question and the porter's answer, the desk bell's mesh, its interactable and plings, the tenth pling's call (the porter's phone, Lasse on the radio, the guest's question, Stig's sorry, the bell under the desk), the bell's return with the hotel's card, the reset at a mission start (§10.37) |
+| `src/game/rollerskis.js` | new (feature 71, 2026-10-17) | — | `Rollerskis` (`game.skis`): Låna rullskidorna in free roam after Pepes Bodega: the loan at the rollerskier's rest and the return, the skis' rolling (`step`/`after` around the player's step: the heading, poling, ploughing, rolling, the surfaces `skiSurface`), the falls, "Heja Eslöv!" at the bib and Stig's answer, Eslövrundan (the countdown, the card, the result list, the record `records.eslovSkidor`), the skis back by themselves (§10.39) |
 | `src/game/streetRace.js` | new (feature 69, 2026-10-17) | — | `StreetRace` (`game.gatlopp`): Gatlopp mot pizza-racern in free roam after Gamla kläder: José's "!" and challenge, the grid in the hire car behind a fade, the three courses run on the mission kind `race` outside the runner, the start and finish banners, the result, the prize and `records.gatlopp`, José's drive back and the walk to his place with his mother, the bet at the chalkboard by Berra and Robban, the sisters' six, the reset at a mission start (§10.38) |
 | `src/game/church.js` | new (feature 60, 2026-10-17) | — | `Church` (`shame.church`): Kyrkfrid i Templo Ecuménico in free roam: the church door's interactable and its open doorway mesh, the walk in and the slam, the plaza shot and the card, the waiting Land Rovers with their lamps, the meter in the wait, the officer's walk to the sign and his lines and scratch, the give-up, the peek and the step out, Stig's line and the banner, the officer into his Land Rover, the interruptions and the map marker (§7.2) |
 | `src/game/beachDream.js` | new (feature 57, 2026-10-17) | — | `BeachDream` (`game.dream`): Strandkyssen i bränningen in free roam: the towel and its interactable, the scene's clock (lying down, the white wash, the dream with Majsan's double, the foam and the camera's glide, the flash, the wave and its splashes, the lines), the visitor on the sand and her way home, the drips, the reset (§10.33) |
@@ -7005,12 +7163,12 @@ restores each model's parent and transform, so seated cast members stay in their
 loop → `window.__ready = true` → `start()` in test mode.
 
 Frame (`update`): hooks → one-shots (incl. E/J/R while seated) → fixed steps (player intent incl.
-mantra/hold, AI, cars (a landing calls `onCarAirEnd`, feature 40), people (`glide.step` → the player's step → `glide.after`, feature 3 →
+mantra/hold, AI, cars (a landing calls `onCarAirEnd`, feature 40), people (`glide.step` → `skis.step`, feature 71 → the player's step → `glide.after` → `skis.after`, feature 3, 71 →
 `belt.carry`, feature 25 → the NPCs → `party.step`, feature 21 → `bathers.step`, feature 32 → `mic.step`, feature 44 → `bell.step`, feature 59) —
 traffic/peds skipped when `!levelDef.sim.*`) → `syncAll` (also
 writes `ch.x/y/z` from `car.seatWorld(ch.seatSide)` for every car-seated character, player
 included, so framing, bubbles and distance checks see where they really are) → `missions.update` →
-`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `tower.update` (feature 24) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `stands.update` (feature 28) → `dogs.update` (feature 31) → `bathers.update` (feature 32) → `shop.update` (feature 34) → `toasters.update` (feature 33) → `room107.update` (feature 38) → `solkram.update` (feature 35) → `stunts.update` (feature 40) → `chat.update` (feature 39) → `roofs.update` (feature 41) → `mic.update` (feature 44) → `birds.update` (feature 43) → `dream.update` (feature 57) → `jeep.update` (feature 51) → `fyren.update` (feature 52) → `bell.update` (feature 59) → `gatlopp.update` (feature 69) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
+`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `tower.update` (feature 24) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `skis.update` (feature 71) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `stands.update` (feature 28) → `dogs.update` (feature 31) → `bathers.update` (feature 32) → `shop.update` (feature 34) → `toasters.update` (feature 33) → `room107.update` (feature 38) → `solkram.update` (feature 35) → `stunts.update` (feature 40) → `chat.update` (feature 39) → `roofs.update` (feature 41) → `mic.update` (feature 44) → `birds.update` (feature 43) → `dream.update` (feature 57) → `jeep.update` (feature 51) → `fyren.update` (feature 52) → `bell.update` (feature 59) → `gatlopp.update` (feature 69) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
 pickups/collectibles → props → `fx.tick` → `tickTown` → markers → camera → sun/sky → HUD → audio →
 traffic recycling (island) → autosave. `loop` then renders, and when `film.grabNow` is set calls
 `film.grab()` in the same task (Herr Storch's still from the frame's buffer, feature 6, §10.11).
@@ -7034,7 +7192,7 @@ game.glide;        // Glide (feature 3, §10.7): the free-roam glide after julaf
 game.judges;       // PoolJudges (feature 4, §10.8): the sisters judge his dives at Flamenco's pool
 game.tower;        // DiveTower (feature 24, §10.20): the 10 m diving tower at Flamenco's pool; tower.live,
                    // canClimb(), climb(up), put(up), dive, fromTop, radioSaid, last, climbs
-game.records;      // { simhopp?: n, eslov?: s, solkram?: n } free-roam bests, saved (§10.5)
+game.records;      // { simhopp?: n, eslov?: s, solkram?: n, eslovSkidor?: s, … } free-roam bests, saved (§10.5)
 game.honk;         // Honk (feature 5, §10.9): the island hears the horn in free roam
 game.hornAt;       // null | { x, z, yaw, t, pigs }: the last free-roam horn press (§10.9)
 game.day;          // DayClock (feature 30, §10.10): day.h (Spanish time, 0–24), day.run (moves by
@@ -7043,6 +7201,10 @@ game.day;          // DayClock (feature 30, §10.10): day.h (Spanish time, 0–2
 game.film;         // StorchFilm (feature 6, §10.11): Herr Storch films Stig's tricks in free roam,
                    // his viewfinder, the stills and the film night after the end
 game.eslov;        // Eslov (feature 7, §10.12): the rollerskier in free roam, the horn, Eslövloppet
+game.skis;         // Rollerskis (feature 71, §10.39): Stig on the rollerskier's skis after the bodega;
+                   // skis.on, v, yaw, surf, mode, fallen, falls, trial, runs, canLend(), waiting(),
+                   // lend(), giveBack(kind), step(h), after(), update(dt), fall(kind), startTrial(),
+                   // objective(), target(), markers(), auto (tests), last, cfg (SKIDOR)
 game.fest;         // PoolFest (feature 8, §10.13): Små grodorna in Flamenco's pool after the end;
                    // fest.joined (Stig in the ring: handleOneShots gives Space to fest.hop(), no kick;
                    // fixedStep zeroes his wish), fest.posed(key), fest.visit, fest.phase, fest.last
@@ -7199,8 +7361,10 @@ game.standPlayer()                        // to the seat's aisle spot; player.se
 
 // ---- interactables ----
 game.addInteractable({ id, x, z, y = 0.15, pos?(g) -> { x, z, y? }, r = 1.2, prompt, priority = 0,
-                       whileSeated = false, enabled?(g), use(g) }) -> remove()
+                       whileSeated = false, skis = false, enabled?(g), use(g) }) -> remove()
 // pos (if given) is evaluated every frame and overrides x/z/y (moving anchors such as the trolley).
+// skis: offered while Stig is on the borrowed rollerskis (feature 71, §10.39); on them no other
+// interactable and no gang talk is (a mission's giver and the cars still are).
 // nearestInteractable order, standing: interactables with priority ≥ 100 (haggle bid) > mission
 // giver talk (idle, < 3.4 m, not while game.carrying: feature 2, §10.6) > other interactables (enabled, in range) by priority then distance >
 // the gang's talk ({ type: 'chat', who }: chat.nearest(), < 3.0 m, free roam on the island, §10.28) >
@@ -7437,8 +7601,18 @@ front (−1.25) to back (0.55), bending at the hips up to 0.6 and dipping, then 
 blended in by speed up to 2.5 m/s. Each pole is aimed so its tip reaches the ground (in the
 recovery up to 0.35 m over it) from the hand's height over his soles, laid back and a little out;
 standing, the poles rest forward and out with the hands on the grips. With `wave` (the base pose's
-left arm up) the left pole is held up. Only `game.eslov` sets it (on the island, always), so the
-cast sheets show the base look.
+left arm up) the left pole is held up. `game.eslov` sets it on the skier (on the island, always,
+but while Stig has them, §10.39), so the cast sheets show the base look; `game.skis` sets it on
+Stig while he has them. Then `skiMode` (feature 71) picks Stig's poses: `pole` double-poles at
+`POLE_HZ` 1.25 Hz whatever his speed (at least 0.65 of the full stroke, from a standstill too),
+`glide` rolls with the hips leaned 0.34, the arms back (0.45) and the tips trailing 0.3 m off the
+ground, `wobble` flails both arms up and out (z ±2.45, swinging) with the poles along them, rocking;
+none (the skier) is the stride above. A body without a `bib` of its own wears `skiBib` (a prop-like
+mesh in `m.props`, hidden with them): a white ESLÖV race number with a red edge on a 1.5 rad strip of
+the torso's elliptic cylinder at 0.58 of its height (`m.T` keeps the torso's size from
+`buildCharacter`). Flung or down (`skiFallen`) the skis stay on his feet, level in the hips' frame
+(lying on his back: straight up in the air) and the poles point on along his arms; before feature 71
+a fall hid the skier's kit.
 `groda` (feature 8, §10.13; not a boolean: false, or the variant): Små grodorna in the pool. 1
 "öron", both arms straight up beside the head (R (−0.22, 0, −2.75), L mirrored); 2 "svansar", the
 hands behind at the seat (R (0.85, 0, −0.32)); both crouched (the legs apart and forward (−0.38, 0,
@@ -7832,7 +8006,17 @@ shame.chase(car) (feature 60): a Land Rover's chase AI with the catch-up band (s
 //   berraJob.objective() in updateHud; markers() in mapMarkers; steer() (npc.steer); loop; at(s);
 //   nearestS(x, z); vWant(); inTrack(from, to, ref, w); heja(stigAt, replyAt); cheer(); spar();
 //   course(); pathAt(s); startRace(); endRace(kind, el); place(); timer (a test's clock for the next
-//   race); race; back; last { kind: 'heja' | 'spar' | 'race', … }; raceClock(t) (exported: 0:38,4)
+//   race); race; back; last { kind: 'heja' | 'spar' | 'race', … }; raceClock(t) (exported: 0:38,4);
+//   the mode `lent`, comeBack and walkTo (feature 71, §10.39: skis.on and skis.waiting() read in
+//   update and ski())
+// rollerskis.js (feature 71, §10.39): game.skis = new Rollerskis(game) after the skier (it registers
+//   the interactables `skidor:lan`, `skidor:tillbaka` and `skidor:runda`); step(h) before and after()
+//   after the player's Character.step in fixedStep; update(dt) after eslov.update (giveBack while
+//   not keep(); the lines; the fall's lines; cheers(); tickTrial()); giveBack('car') from enterCar
+//   before the seat; nearestInteractable keeps only `skis` interactables (and the giver and the
+//   cars) while skis.on; handleOneShots gives no ground kick and glide.allowed() is false while on;
+//   target() after eslov.target() in updateMarkers and mapMarkers; objective() after
+//   eslov.objective() in updateHud; markers() in mapMarkers; skiSurface(x, z, y, lane) exported
 // audio.js: whirr(secs) (the film camera)
 // poolFest.js (feature 8, §10.13): game.fest = new PoolFest(game) after the skier (it registers the
 //   interactable `poolFest` and adds its marks to the scene); update(dt) after eslov.update (reset()
@@ -8049,7 +8233,8 @@ fx.splash(x, z, n = 16, sp = 3, up = 4)   // n drops thrown out at sp m/s and up
 //   only `show` (Phase 3, §11.4, §11.7). hud.showScore(main, sub, record, secs = 4.5) /
 //   hud.hideScore(): the diving judges' result line #score (feature 4, §10.8); hud.liveScore(main,
 //   secs = 1.2): the same line kept up without the pop (feature 40, §10.27); banner cls stamp (and
-//   stamp fail) for the stunt jumps' stamp (feature 40).
+//   stamp fail) for the stunt jumps' stamp (feature 40). hud.showResults(title, rows, caption, secs
+//   = 6) / hud.hideResults(): the result list #results (Eslövrundan, feature 71, §10.39).
 // shame.inScene (getter: inDialog || inCutaway); shame.hideoutT; steer state; a teleports debug
 //   counter; hideout interactable id 'hideout:<landmark>' (registered in configure());
 //   shame.tuneBefore (a mission tune to restore after the pursuit, else null; Phase 3, §7.2).
@@ -8506,7 +8691,7 @@ the gain, which stays P2); witness
 multiplier (feature 6, §10.11, gives Herr Storch a camera that films the tricks and turns the rule
 round after the end, but there is no multiplier); "steady arms" mantra minigame (turbulence drifts a marker, A/D keeps it in the zone);
 Eslöv time trials (done: feature 7, §10.12, Eslövloppet against the rollerskier with a saved best
-time); SunTrip-office hideout; Angerud searching Stig's room
+time; and on his skis, feature 71, §10.39, Eslövrundan with a result list); SunTrip-office hideout; Angerud searching Stig's room
 ("Buenas noches, señor"); piglets falling off the grisbil; sheep flock as Fataga decor; oink horn
 (done: feature 5, §10.9);
 number plates; day cards ("Dag 2"; the free-roam clock and its NÄSTA MORGON before an evening
@@ -8601,6 +8786,9 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `super8` [feature 6] | Lite film. before the end (§10.11), at index 9: a double jump on the boardwalk 16 m south of Herr Storch is taken (`volt`), he goes `notice`, `trot`, `film`, `home`, `settle`, films from about 5 m (3.5–6.2) with "Lite film.", and is back on his home spot within 0.4 m, free, with no SKANDAL and no still; a trick inside the 30 s is let pass; one within 7 m he films from his place without running; a sunbed kicked for real 10 m from him adds 0 SKANDAL with the lens-cap toast, and he takes it (`bus`) and films it; teleported near the sand's north edge with Stig on the road beyond the paseo, he films from no further north than the sand's edge (z ≥ 215.2); E by him (`Titta i kameran`): `inDialog`, `I KAMERAN`, `DAG 4`, the gate `rgb(5, 4, 3)`, no canvas filter, one of his satisfied lines, then the play again after 4.5 s (the chase camera back, he is free at home); trotting off when a mission is talked to, he is at home when it runs, and in it he takes no trick; as friskotek's extra (index 6) he films from his place |
 | `filmkvall` [feature 6] | after the end (index 13, `bodega` unlocked): `witnessOverride.evidence`; a kicked sunbed near him adds SKANDAL with `Linsskyddet är av – nu finns det bevis!`, and his filming keeps a still; a trick 5 m off with Stig standing, then a double jump while he films: at least two takes, one still kept; both saved as jpegs under `charter-and-run-film-v1` (written to the OUT dir as `filmkvall_still{1,2}.jpg`); home again with Stig near, "Vill du se min film?" and `Se filmen`; E: `FILMKVÄLL`, `DAG 1`…`DAG 7`, two stills, "Blir'e inge film?" before the stills and "Lite film." after them, then `seen` 2 and the prompt `Titta i kameran`; E: the live viewfinder (`JULAFTON`, "Nu blir'e film!", a clear gate, the sepia filter on the canvas, off again after); a reload without `?fresh` loads both stills |
 | `eslov` [feature 7] | Heja Eslöv! (§10.12), at index 9 (free roam): he stands at his place with the `ski` look, ours; he skis inside the lane (±3 m of its middle, z −188.5…−134.4) to its north end and back at up to 3.2 m/s; the horn from a car on the z −120 road 9 m east of the lane: `honk.last.eslov`, no island answer from him, "Heja Eslöv!" and "Bara 390 mil kvar!", a wave, no sorry, nothing again within 8 s; on foot the prompt `E Heja Eslöv!`, the cheer and another reply, he stops, the offer and the prompt `E Eslövloppet – ett varv runt fälten`; Stig 6.5 m ahead in his track: "Spår!", "Oj, förlåt!", the hop, the skier passes more than 0.8 m from him; a race with a 20 s clock, Stig at the start: the countdown, the card `ESLÖVLOPPET` at 0:17–0:19 and `2:A · KONTROLL 0/5`, lost, no pesetas, his line at the line, no card after; R and a car end a race; a race won by calibrate's walker at the shipped clock: `DU VANN!` with "nytt rekord", 100 pta, `records.eslov` saved, 10–30 % of the clock left, his and Stig's lines at the line; then the `won` reply; a mission's start puts him at his place, not ours, and he stays there |
+| `skidor` [feature 71] | Låna rullskidorna (§10.39): at index 8 E at the skier's rest is "Heja Eslöv!" and no loan; at index 9 Stig at his place brings him back from the north leg (under 20 s) and he stays; the loan (the prompt, the ask and the yes, the hint toast, Stig with `ski`, the skier `lent` at the lane's edge without them), no glide; on the z −120 road poling to 13.2 m/s at 3.2 m/s², rolling at 0.45, ploughing at about 3 straight on, a wide turn at speed; the sidewalk's wobble at 2.2 m/s; a kerb at 10 m/s: down, up, the heat; at 6 m/s rolling onto it: no fall; sand at 3 m/s: down on his back, the sand line, then a 1 m/s shuffle; a parked car at speed: down; a held pedestrian: flung, SKANDAL up, down; a Swedish tourist and Berra by the road cheer, Stig answers; no gang talk on the skis; E at the skier gives them back (the sand line), the skier skis on; back by themselves into a car, at a pursuit, at a mission's start (the skier at his place with them) |
+| `eslovrundan` [feature 71] | Eslövrundan (§10.39) at index 9: the start line's prompt, the countdown, the card `ESLÖVRUNDAN` / `Tid 0:0x,x · att slå: …` / `KONTROLL 0/5`; the ski pilot clean: first, the result list (`ESLÖVRUNDAN · RESULTAT`, Stig's row first, "Stig-Helmer leder efter första åket."), 100 pta, the record, his best beaten by 1–4 s, the skier's line; one forced fall: second "efter andra åket"; two: third "efter tredje åket", each with his line; R and a car end it (the car takes the skis back), no card after |
+| `eslovrundankal` [feature 71] | Eslövrundan's times (§10.39, §8 "Races and chases"): the ski pilot `ESLOVRUNDAN_RUNS` (3) times clean, with one fall and with two at `&ts=1`; prints `CAL eslovRundan` (T_ref, T_1, T_2 → pers ceil((T_ref + T_1) / 2), i dag ceil(1.2 × T_ref)) and `CAL CHECK` against the shipped times and the order clean < pers < one fall < i dag < two falls; its raw times go into the ledger (`eslovRundan`) |
 | `eslovlopp` [feature 7] | Eslövloppet's timer (§10.12, §8 "Timers and difficulty"): calibrate's walker runs the lap `ESLOV_RUNS` (3) times at `&ts=1` with the clock raised; prints `CAL eslovLopp` (the median + 2.5 s → the timer) and `CAL CHECK` against the shipped timer (the sample's 90 % bootstrap range); its raw times go into the ledger (`eslovLopp`) |
 | `grodorna` [feature 8] | Små grodorna i poolen (§10.13): no fest at index 11 (Lasse at SunTrip in `sol`) nor at index 13 without `bodega`; with it (unlock + forced placement) Lasse wears `jul` and he, Affe, Gabbe and Fru Storch stand at their pool-deck homes, Herr Storch on the beach; at 23.30 no visit; Stig on the deck: all seven ours (`poolFest`, busy, invulnerable, posed), wading 0.5 m in their places facing the middle; the exchange in order, once; round 1 on the audio clock; sampled in the page: in the air 0.17–0.22 s after an even beat with tails (beats 0–7), Affe hopping without `groda`, down at 0.55–0.75 s, ears on 8–11, the chorus higher; the porter at his spot with his line and the head shake, then home and free; on the coping dry with "Dansa med" and the gap marked; E: in the gap, stiff (`groda` 3), wading, `I TAKT 0 / 8`, "Kliv ur ringen"; J no kick; E out onto the coping, dry; in again and a step out; no SKANDAL; round 2 two beats after round 1 (±0.06 s), the pause 12 s (±0.8); a dancer does not answer the horn; off the deck all walk home and are free with their spot ids; julafton's unlock gone mid-visit: home at once. Shots `grodorna_vadar`, `_portier`, `_ring`, `_kanten` |
 | `grodtakt` [feature 8] | the hop counter (§10.13), Space as real key events timed in the page: seven on the beat (`I TAKT 7 / 8`, a shot in the air), the eighth: the goal, `I TAKT 8 / 8` teal, the ring cheers, +50 pta, the toast, "Heia Norge!" then Lasse's line, and Stig's "Hopp… och hopp…"; half a hop off the beat: a miss, `OTAKT!`, Majsan and Ole laugh; a skipped hop beat breaks the row; eight across the gap between two rounds (round 2's beat 0 counts): the goal again, no second coin; the music off: no new cue, judged on the audio clock; no audio clock (`audio.clock` stubbed null): the round on the game clock, judged; a dive off the board: the judges take Siv and Majsan out of the ring and judge it; home again, the fest takes them back. Shots `grodorna_takt`, `_hopp`, `_jubel`, `_otakt` |
@@ -10811,3 +10999,27 @@ the fixer's group.
   course 1 round the hotel rather than the centre, course 3's line 18 m before the sign, always the
   hire car, a fixed bet at the board, no rematches, the sisters' six as bubbles. Scenarios `gatlopp`,
   `gatloppkal` (§16.4).
+- Feature 71, "Låna rullskidorna – åk fort på asfalt" (`features/implemented/lana_rullskidorna.md`,
+  2026-10-17): Stig on the rollerskier's skis in free roam after Pepes Bodega (§10.39; new
+  `src/game/rollerskis.js` (`game.skis`), `SKIDOR` in content/island.js; eslov.js, models.js, hud.js,
+  style.css, main.js, glide.js, nature.js; §1.6, §2, §3, §6.3, §10.5, §10.12, §11.4, §14.1–14.3,
+  §14.6, §14.8, §15.5, §16.4). Only when `missions.state === 'idle'` on the island: E at the skier
+  resting at his place (Stig waiting there brings him back) is "Får jag låna skidorna?" [N]; he stands
+  at the lane's edge without them, and E at him gives them back; they go back by themselves in a car,
+  a mission, a pursuit or a seat, and are never saved. On them the keys set a heading he turns to at
+  most 8 m/s² sideways; along it he poles to 13.2 m/s on asphalt (the road grid, the Eslöv lane with
+  new kerb cuts in paint, the west stub) at 3.2 m/s², against it he ploughs at 3 (no brake), else he
+  rolls; off the asphalt he wobbles at 2.2 m/s, on sand he shuffles at 1. He falls onto sand (on his
+  back, the skis in the air, "Jaha… de rullar visst inte på sand." [N]), off the asphalt above 7 m/s,
+  into a wall, a car or a person above 5.5 m/s (a person is bowled over as by a kick), and gets up
+  with "Det måste vara värmen." [F*]. Berra and Swedish tourists shout "Heja Eslöv!" [F*] at the
+  bib; Stig: "Jag är från Stockholm, egentligen…" [N]. Eslövrundan: Eslövloppet's course on the skis
+  against the skier's measured times (pers 31, i dag 35: scenario `eslovrundankal`, a ski pilot's
+  clean, one-fall and two-fall runs; the race rule for pers, the drive rule for i dag; ledger
+  `eslovRundan`), a television-style result list (`hud.showResults`) with "Stig-Helmer ligger trea
+  efter första åket." [N], 100 pta for first, the best time saved (`records.eslovSkidor`). models.js:
+  `skiMode` poses (`pole`, `glide`, `wobble`), the `skiBib`, the skis kept on a fallen body (the
+  skier's too), `m.T`. Feature 7's `eslov` scenario now cheers the skier while he skis (at index 9 E
+  at his rest is the loan). No mission, stage kind, mission timer, fixture or existing calibration
+  pool changed; Eslövloppet's race and pool are untouched. Scenarios `skidor`, `eslovrundan`,
+  `eslovrundankal` (§16.4).

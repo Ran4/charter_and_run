@@ -386,7 +386,7 @@ from `KÖR!` to the line). Sample ids: `f7` feature 7 (`-1` its first probe, `-8
 the default runs on the final tree). The stage code was uncommitted on 1b3b561 (feature 7's commit is
 the first with it).
 
-Current pool: `walker-r1r2/1b3b561`: n 33, median 28.18 → T_ref 30.68 → timer ceil(1.25 × 30.68) = **39** (90 % range 39–39).
+Current pool: `walker-r1r2/1b3b561`: n 36, median 28.18 → T_ref 30.68 → timer ceil(1.25 × 30.68) = **39** (90 % range 39–39).
 
 | sample | date | code | pool | env | n | raw times (s, run order) | excluded (reason) |
 |---|---|---|---|---|---|---|---|
@@ -401,6 +401,46 @@ Current pool: `walker-r1r2/1b3b561`: n 33, median 28.18 → T_ref 30.68 → time
 | f31-1 | 2026-10-17 | bf18146 + uncommitted: feature 31's code (`src/game/dogs.js`, `DOGS`, town.js `dogLots`, nature.js `FARM_YARD`, the `placate` pose, `audio.woof`/`whistle`, main.js), its final code; the race, the walker and the course unchanged; Chispa in the yard by the course | `walker-r1r2/1b3b561` | default (ESLOV_RUNS=3) | 3 | 28.18 28.18 28.18 | none (falls 0) |
 | f69-1 | 2026-10-17 | f494e34 + uncommitted: feature 69's code (`src/game/streetRace.js`, `GATLOPP`, main.js); the race, the walker and the course unchanged (feature 69's banners show only in its own races) | `walker-r1r2/1b3b561` | default (ESLOV_RUNS=3) | 3 | lost (the scenario passed; its log was filtered to the RESULT lines) | – |
 | f69-2 | 2026-10-17 | f494e34 + uncommitted: feature 69, the final tree (its commit, but for the docs' last lines) | `walker-r1r2/1b3b561` | default (ESLOV_RUNS=3) | 3 | 28.18 28.20 28.18 | none (falls 0; CAL CHECK OK, 90 % range 39–39) |
+| f71-2 | 2026-10-17 | 292e730 + uncommitted: feature 71's code (`src/game/rollerskis.js`, `SKIDOR`, eslov.js's `lent`/`comeBack`/`walkTo`, models.js's ski poses, main.js, nature.js's kerb cuts in paint); the race, the walker and the course unchanged (the walker's `enterRace` waits for him skiing: at index 9 E at his rest is the loan) | `walker-r1r2/1b3b561` | default (ESLOV_RUNS=3) | 3 | 28.18 28.18 28.18 | none (falls 0; CAL CHECK OK, 90 % range 39–39) |
+
+## `eslovRundan` · §10.39 · Eslövrundan on the borrowed rollerskis (free roam, feature 71) · i dag = ceil(1.2 × median clean run); pers = ceil((median clean + median one fall) / 2)
+
+The skier's two times in Eslövrundan, Eslövloppet's course (§10.12) ridden on his skis. Not a
+mission stage (no §8 table row, no fixture): DESIGN §10.39 and `SKIDOR.trial.times` quote them. A
+deterministic course and a deterministic pilot, so the rule is the median. Today's time (`times[1]`)
+is a drive's timer on the clean runs, the pool below (`node tools/pool.mjs eslovRundan`). His best
+(`times[0]`) is a race's (§8 "Races and chases": a clean run wins by a few seconds, one fall loses
+it): ceil((T_ref + T_1) / 2), from this pool's median and the one-fall runs' in the next section
+(not read by `pool.mjs`). Measured by scenario `eslovrundankal` in free roam at index 9 with
+`&ts=1`, the trial's cap raised to 600 s: the ski pilot (`skipilot`, `installSkiPilot` in
+tools/scenarios/skidor.mjs) holds only a heading for the stick and rides a racing line round the
+crossings' inner corners (arcs of 8 and 9.5 m at √(7.2 × r), braking at 2.8 m/s² by ploughing on the
+straights). Times are the trial's own clock (`skis.last.t`: `game.time` from `KÖR!` to the line). A run
+knocked over by anything but its forced falls (`knocks`) is excluded. Sample ids: `f71` feature 71
+(`-1` the first `eslovrundankal` batch, `-G` the pilot runs inside `eslovrundan`). The code was
+uncommitted on 292e730 (feature 71's commit is the first with it).
+
+Current pool: `skipilot/292e730`: n 4, median 28.62 → today's time ceil(1.2 × 28.62) = **35**; with T_1 32.97 his best ceil((28.62 + 32.97) / 2) = **31**.
+
+| sample | date | code | pool | env | n | raw times (s, run order) | excluded (reason) |
+|---|---|---|---|---|---|---|---|
+| f71-t | 2026-10-17 | 292e730 + uncommitted: feature 71's draft skis (accel 2.4, plough 2.2, 6.5 m/s² sideways) and its first pilot (the roads' middles, 6.6 m/s corners) | `skipilot-draft/292e730` | `eslovrundan` and a trace | 3 | lost (34.20 clean; 34.08 and 34.12 with a fall off the kerb at the lane's mouth, from the scenario's log lines) | superseded: the skis' numbers and the pilot changed; not pooled |
+| f71-p | 2026-10-17 | 292e730 + uncommitted: feature 71, the final skis and pilot (a trace run, `skidpilot`, removed) | `skipilot/292e730` | trace | 1 | lost (the trace crossed the line at about 28.6 s; its result line was filtered out) | – |
+| f71-1 | 2026-10-17 | 292e730 + uncommitted: feature 71, the final skis and pilot (times still 30 / 36 placeholders in the content; the run does not read them) | `skipilot/292e730` | ESLOVRUNDAN_RUNS=3 | 3 | 28.62 28.63 28.62 | none (falls 0, knocks 0) |
+| f71-G1 | 2026-10-17 | 292e730 + uncommitted: feature 71, the shipped times 31 / 35 | `skipilot/292e730` | `eslovrundan` (its clean run) | 1 | 28.62 | none (falls 0) |
+
+## Eslövrundan's falls · §10.39 · the ski pilot with forced falls (free roam, feature 71) · not a pool
+
+The runs behind `T_1` and `T_2` (§10.39): the pilot of `eslovRundan` above falls once (`skis.fall('kerb')`)
+halfway along the straight before the west road's crossing (the z −200 road at 13.2 m/s), or twice
+(and halfway along the z −120 road). The down time is random (1.6–2.4 s, `Character`), so the runs
+spread. T_1 is the median of the one-fall runs, which sets his best (above); T_2 must lie above
+today's time (two falls are third). Not read by `tools/pool.mjs` (no stage key).
+
+| sample | date | code | env | one fall (s, run order) | two falls (s, run order) | excluded (reason) |
+|---|---|---|---|---|---|---|
+| f71-1 | 2026-10-17 | as `eslovRundan` f71-1 | ESLOVRUNDAN_RUNS=3 | 33.52 32.82 32.97 | 37.95 37.78 38.35 | none (knocks = falls in every run) |
+| f71-G1 | 2026-10-17 | as `eslovRundan` f71-G1 | `eslovrundan` | 33.27 | 37.97 | none |
 
 ## Gatlopp · §10.38 · José's street races (free roam, feature 69) · race margins, not a timer
 

@@ -30,13 +30,15 @@ export class Eslov {
   constructor(game, cfg = ESLOV) {
     this.g = game;
     this.cfg = cfg;
-    this.mode = null;        // null (not ours) | 'ski' | 'rest' | 'greet' | 'offer' | 'start' | 'race' | 'back' | 'after'
+    this.mode = null;        // null (not ours) | 'ski' | 'rest' | 'greet' | 'offer' | 'start' | 'race' | 'back' | 'after' | 'lent'
     this.t = 0;              // seconds in the mode
     this.s = 0;              // metres along the lane loop
     this.v = 0;              // his speed along it
     this.off = 0;            // the swerve round Stig: metres to his right of the loop
     this.laps = 0;
     this.restDue = false;    // stop at the south end when he gets there
+    this.comeBack = false;   // braking on the north leg to turn back to his place (Stig waits there, §10.39)
+    this.walkTo = null;      // { x, z }: on foot to it standing (lent: to the lane's edge; given back: to his rest)
     this.blockT = 0;
     this.lines = [];         // [{ at, who: 'stig' | 'eslov', text, wave?, then? }] still to say (g.time)
     this.hejaT = -Infinity;
@@ -142,6 +144,8 @@ export class Eslov {
     this.v = 0;
     this.off = 0;
     this.restDue = false;
+    this.comeBack = false;
+    this.walkTo = null;
     this.setMode('rest');
   }
   setMode(m) { this.mode = m; this.t = 0; }
@@ -151,6 +155,8 @@ export class Eslov {
     if (this.mode === 'start') { hud.fade(false); this.g.frozenT = 0; }
     if (this.race) this.endRace(null);
     this.back = null;
+    this.walkTo = null;
+    this.comeBack = false;
     delete n.steer;
     n.invulnerable = false;
     this.mode = null;
@@ -164,6 +170,8 @@ export class Eslov {
       this.race = null;
     }
     this.back = null;
+    this.walkTo = null;
+    this.comeBack = false;
     this.lines.length = 0;
     this.waveUntil = 0;
     if (n && n.spot === MARK) {
@@ -180,10 +188,27 @@ export class Eslov {
   update(dt) {
     const g = this.g, n = this.npc;
     if (!n) return;
-    n.anim.ski = g.level === 'island';
+    // Lent to Stig (§10.39), he stands at the lane's edge without them.
+    const lent = !!g.skis?.on;
+    n.anim.ski = g.level === 'island' && !lent;
     if (!this.active) { if (this.mode || this.race || this.lines.length || n.spot === MARK) this.reset(); return; }
     if (!this.mode) { if (this.canClaim()) this.claim(); else return; }
     if (n.spot !== MARK) { this.drop(); return; }
+    if (lent && this.mode !== 'lent') {
+      if (this.race) this.endRace(null);
+      this.back = null;
+      this.v = 0;
+      const l = this.home, [dx, dz] = g.skis.cfg.lend.stand;
+      this.walkTo = { x: l.x + dx, z: l.z + dz };
+      this.setMode('lent');
+    } else if (!lent && this.mode === 'lent') {
+      // His skis back on: on foot to his rest at the place, then on with his laps.
+      this.s = this.loop.sRest;
+      this.v = 0;
+      this.restDue = false;
+      this.walkTo = this.at(this.s, { ..._p });
+      this.setMode('rest');
+    }
     this.sayDue();
     this.t += dt;
     const c = this.cfg, p = g.player;
@@ -192,7 +217,11 @@ export class Eslov {
     switch (this.mode) {
       case 'rest':
         if (dist(p.x, p.z, n.x, n.z) > 10) face(this.home.yaw, 3);   // nearer, syncAll turns him to Stig
-        if (this.t >= c.restSecs && !g.day?.dark && n.state === 'normal') { this.restDue = false; this.setMode('ski'); }
+        // Stig waiting at his place after the bodega keeps him standing there (the loan, §10.39).
+        if (this.t >= c.restSecs && !g.day?.dark && n.state === 'normal' && !this.walkTo && !g.skis?.waiting()) { this.restDue = false; this.setMode('ski'); }
+        break;
+      case 'lent':
+        if (dist(p.x, p.z, n.x, n.z) > 10 && !this.walkTo) face(this.home.yaw + Math.PI / 2, 3);   // to the lane; nearer, syncAll turns him to Stig
         break;
       case 'ski':
         if (n.state === 'normal') this.ski(dt);
@@ -259,7 +288,17 @@ export class Eslov {
       this.setMode('rest');
       return;
     }
+    // Stig waiting at his place after the bodega (§10.39): he stops at it next time round, and on
+    // the north leg brakes and turns back to it.
+    if (g.skis?.waiting()) {
+      this.restDue = true;
+      if (this.s < this.loop.leg) this.comeBack = true;
+    }
     let want = this.vWant(), offWant = 0;
+    if (this.comeBack) {
+      want = 0;
+      if (this.v < 0.1) { this.comeBack = false; this.turnBack(); }
+    }
     const hit = this.inTrack(-1.5, c.spar.ahead);
     if (hit) {
       offWant = hit.lat >= 0 ? hit.lat - c.spar.pass : hit.lat + c.spar.pass;
@@ -288,6 +327,12 @@ export class Eslov {
   steer() {
     const n = this.npc, r = this.race;
     if (n.state !== 'normal') return null;
+    if (this.walkTo && (this.mode === 'lent' || this.mode === 'rest')) {
+      const ex = this.walkTo.x - n.x, ez = this.walkTo.z - n.z, d = Math.hypot(ex, ez);
+      if (d < 0.12) { this.walkTo = null; return null; }
+      const sp = Math.min(1.4, d * 3) / d;
+      return { x: ex * sp, z: ez * sp };
+    }
     let P, v;
     if (this.mode === 'race' || this.mode === 'back') {
       const q = this.mode === 'race' ? r : this.back;

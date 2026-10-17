@@ -223,6 +223,18 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   skylten. Stig springer, skidåkaren stakar och klockan tickar, och han går i mål precis när tiden
   tar slut. Vinner du får du en slant och din bästa tid sparas. Loppet springs till fots, så en bil
   eller R avbryter det. Står du mitt i hans spår kommer ett "Spår!" bakifrån.
+- **Låna rullskidorna** (efter Pepes Bodega): när rullskidåkaren står still vid sin plats vid
+  skylten (vänta där, så kommer han) frågar Stig med **E**: "Får jag… låna dem en liten stund?" –
+  "Ta dem du. Men håll dig på asfalten." Med skidor, stavar och en nummerlapp med ESLÖV över
+  hawaiiskjortan stakar Stig fram på asfalten i en och en halv gång sprintfarten, men han kommer
+  långsamt upp i fart, svänger brett och har ingen broms (S plogar lite). På trottoaren vinglar han
+  med armarna i luften, en trottoarkant eller en vägg i full fart fäller honom, och på sanden ligger
+  han på rygg med skidorna i vädret: "Jaha… de rullar visst inte på sand." Berra och svenska turister
+  ropar "Heja Eslöv!" efter nummerlappen, och Stig rättar artigt: "Jag är från Stockholm,
+  egentligen…". Vid startlinjen vid skylten startar **Eslövrundan**, samma varv som Eslövloppet men
+  på skidor, mot rullskidåkarens egna tider, med en resultatlista som på tv: "Stig-Helmer ligger trea
+  efter första åket." Skidorna lämnas tillbaka med E, och de går tillbaka av sig själva när Stig
+  sätter sig i en bil eller ett uppdrag börjar.
 - **Små grodorna i poolen** (efter slutet): julfesten är inte riktigt över. Varje gång du kommer in
   på Flamencos pooldäck (mellan nio på morgonen och elva på kvällen) vadar SunTrip-gänget ut i den
   grunda änden och ställer sig i ring runt Lasse i tomteluva. Affe spelar Små grodorna på dragspelet,
@@ -457,6 +469,9 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
   julfest, men i filmen tittar ingen i hans kamera)
 - att rullskidåkaren tränar fram och tillbaka, svarar på tutan, ropar "Spår!" och tävlar med Stig
   runt tomatfälten (i filmen är det Berra som ropar "Heja Eslöv!", och Robban svarar "Herre jävlar!")
+- att Stig lånar rullskidorna, hans fall på trottoarkanter och sand, att folk ropar "Heja Eslöv!"
+  åt hans nummerlapp och Eslövrundan med resultatlistan (raden blinkar åt kaptenens "Stenmark ligger
+  trea efter första åket.")
 - poolfesten efter slutet: ringen runt Lasse, portierns promenad, att Stig hoppar med och
   takträknaren (i filmen dansar de andra Små grodorna i poolen på julfesten medan Stig-Helmer och Ole
   öppnar knäckebrödet, och Stig-Helmer dansar aldrig)
@@ -629,6 +644,7 @@ src/game/honk.js                Tutan som folk reagerar på in free roam: pedest
 src/game/dayClock.js            Dygnet runt in free roam: the island's clock, evenings and nights, Ole's watch, the nap
 src/game/storchFilm.js          Lite film. in free roam: Herr Storch films the tricks, his viewfinder, stills, film night
 src/game/eslov.js               Heja Eslöv! in free roam: the rollerskier trains, answers the horn, Eslövloppet
+src/game/rollerskis.js          Låna rullskidorna in free roam: Stig on the skier's skis (surfaces, falls, "Heja Eslöv!"), Eslövrundan
 src/game/poolFest.js            Små grodorna i poolen after the end: the ring in the pool, the porter, Stig dancing, the counter
 src/game/stigSorry.js           Förlåt, förlåt! in free roam: Stig's sorry for kicks, knock-downs, breakage and carjackings
 src/game/pigTruck.js            Grisarna ramlar av grisbilen in free roam: the pigs tumble off, the catch, the pen at the farm
@@ -662,7 +678,7 @@ tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, 
                                 artig, grisar, bagage, lapplisa, torsdag, frukt, hopptorn, hund,
                                 badgaster, butik, brodrost, rum107, solkram, skjortbyte,
                                 stunthopp, prata, takhopp, mikrofon, faglar, gags, strandkyssen,
-                                guardiajeep, fyren, klader, ringklocka, kyrkfrid, gatlopp,
+                                guardiajeep, fyren, klader, ringklocka, kyrkfrid, gatlopp, skidor,
                                 calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
@@ -699,6 +715,8 @@ node tools/shot.mjs dygn dygnGiver       # the clock in free roam: the sky by th
 node tools/shot.mjs super8 filmkvall     # Herr Storch films the tricks: the trot, the black viewfinder, stills, the film night
 node tools/shot.mjs eslov                # the rollerskier: his lane, the horn, E, "Spår!", Eslövloppet lost, aborted and won
 ESLOV_RUNS=8 node tools/shot.mjs eslovlopp  # measure Eslövloppet's timer with calibrate's walker (DESIGN §10.12)
+node tools/shot.mjs skidor eslovrundan   # the borrowed rollerskis: the loan, speeds, surfaces, falls, the cheers, the return; Eslövrundan's three places
+node tools/shot.mjs eslovrundankal       # measure the skier's two times with the ski pilot (clean, one fall, two; DESIGN §10.39)
 node tools/shot.mjs grodorna grodtakt    # the pool fest after the end: the ring, the porter, Stig in the ring, eight on the beat
 node tools/shot.mjs artig                # Stig says sorry: kicks, run over, a pump, bins, carjackings and the driver's "Nej."
 node tools/shot.mjs grisar               # the grisbil's pigs: the falls, the catch on foot and by creeping, Lasse, the pen
