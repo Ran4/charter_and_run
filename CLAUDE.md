@@ -112,7 +112,12 @@ opens with a summary of the rounds and the timer changes.
     jeepsiren` (Låna Guardia-jeepen, guardia1 at the Casa Cuartel open between missions after the
     bodega: the loan and its SKANDAL, his once shaken off, the bust's "Ursäkta, är det din bil?",
     "Nej." and the tow, the respawn, locked in a mission; the siren on H, its lamp and corners,
-    traffic giving way with no pursuit, Stig's surprise, Angerud's outburst, DESIGN §10.34)
+    traffic giving way with no pursuit, Stig's surprise, Angerud's outburst, DESIGN §10.34), `fyren`
+    (Uppför fyren, the lighthouse's gallery 51.3 m up between missions: the keeper's door and the
+    fade, the clock on to the sunset by day, "Femtio meter …", the gallery's cameras and the vertigo,
+    the closed railing and no jump, J as Levander's exercise against the lantern with his eyes shut,
+    the long blink to the night and the beam, the way down, R, a pursuit, a mission start, DESIGN
+    §10.35; `perf` has two gallery rows)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

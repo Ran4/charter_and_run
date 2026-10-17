@@ -130,6 +130,17 @@ used by nobody else, and the bathers off their loungers (the only new people in 
 and that none is made in the mission; `stekt` that the two stand at their homes, unchanged, at a
 mission start. Every pool below stands and no timer changed.
 
+**Feature 52 (Uppför fyren, 2026-10-17) touches no pool.** It changed Faro de Maspalomas' solids in
+block (0,6) (DESIGN §10.35): the tower's circle (r 3.4 round (−240, 232)) stops at the gallery floor,
+51.3, instead of 99, and the lantern (r 1.75) and a ring of 20 railing walls (r 3.12, top 99) were
+added inside that footprint. From the ground and the keeper's roof terrace (4.0) the tower is a wall as
+before, and every new block lies inside its old footprint, so `queryBlocks`, `groundAt`, `spotFree`,
+`freeSpot`, `footReach`, the cars and calibrate's walker meet the same walls at street level (checked
+by scenario `fyren`). No mission stage, route or pooled stage's world is near the lighthouse (its
+landmark is only a map label), and its geometry draws no random numbers, so the world builds as
+before. The climb moves the free-roam clock (§10.10), which every mission start already sets to the
+day palette. Every pool below stands and no timer changed.
+
 ## `friskotekBalls` · §8.7 s1 · six fleeing beach balls · on foot: timer = ceil(1.25 × (p75 + 6 × 0.5))
 
 Phase 3 r2 island-staging placed everyone for the intro's group shot (Stig, Lasse, the sisters, the

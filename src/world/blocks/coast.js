@@ -60,6 +60,13 @@ function onTick(fn, scene) {
 // the skis are left out).
 export const BELT = { x: 0, z: 0, spin: 0.32, top: 0, r0: 0, r1: 0, block: null, bags: [] };
 
+// Faro de Maspalomas' gallery as Uppför fyren sees it (game/lighthouse.js, §10.35), filled by the
+// fyren builder: the tower's axis (world), the gallery floor's height (`deck`, the tower's solid top),
+// the radii of the lantern's wall (`lantern`) and of the railing's middle (`rail`), the walkway
+// between them for a body's centre (`rIn`, `rOut`: an adult's radius off each, the railing's half
+// depth too), and the gallery door's angle round the axis (`door`, as a yaw: north-east, to the town).
+export const LIGHTHOUSE = { x: 0, z: 0, deck: 0, lantern: 0, rail: 0, rIn: 0, rOut: 0, door: 0, blocks: [] };
+
 // Coins wanted at build time, placed once the pool exists (pickups.initCoins runs after buildTown).
 const pendingCoins = [];
 function coinAt(f, lx, lz, y) {
@@ -834,15 +841,36 @@ function fyren(f, W) {
   for (const y of [HT + 0.2, 14, 24, 34, 44]) f.cyl(0x76828c, TX, y, TZ, rAt(y) + 0.07, 0.45, 20);
   for (let y = HT + 1.6; y < TOP - 0.8; y += 1.6) f.cyl(0x808c96, TX, y, TZ, rAt(y) + 0.025, 0.07, 20);   // stone courses
   for (const y of [10, 18, 28, 38]) for (const dz of [1, -1]) f.boxC(DARK, TX, y, TZ + dz * rAt(y), 0.4, 1.1, 0.12);
-  f.circ(TX, TZ, rAt(0), 99, 'tower');
+  // The tower's solid stops at the gallery floor (DECK, the deck's top): from the ground and the
+  // roof terrace it is a wall as before, up there the floor of Uppför fyren (§10.35). The lantern and
+  // the railing are walls to 99 inside its footprint, so nothing at the foot changes.
+  const DECK = TOP + 1.3, LANT = 1.75, RAIL = 3.12, RAIL_D = 0.2;
+  const L = LIGHTHOUSE;
+  Object.assign(L, { x: f.wx(TX, TZ), z: f.wz(TX, TZ), deck: DECK, lantern: LANT, rail: RAIL, rIn: LANT + 0.38, rOut: RAIL - RAIL_D / 2 - 0.38, door: f.yaw + PI * 0.75 });
+  L.blocks.push(f.circ(TX, TZ, rAt(0), DECK, 'tower'), f.circ(TX, TZ, LANT, 99, 'tower'));
   f.cyl(0xa8b2ba, TX, TOP + 0.5, TZ, 3.0, 1.0, 20);
   for (let k = 0; k < 16; k++) { const a = (k / 16) * PI * 2; f.boxC(0xa8b2ba, TX + Math.sin(a) * 2.75, TOP - 0.25, TZ + Math.cos(a) * 2.75, 0.35, 0.5, 0.35, a); }
   f.cyl(0x9aa4ac, TX, TOP + 1.15, TZ, 3.3, 0.3, 20);
   for (let k = 0; k < 20; k++) { const a = (k / 20) * PI * 2; f.cyl(0x3a4a48, TX + Math.sin(a) * 3.15, TOP + 1.8, TZ + Math.cos(a) * 3.15, 0.04, 1.0, 4); }
-  for (let k = 0; k < 20; k++) { const a = ((k + 0.5) / 20) * PI * 2; f.boxC(0x3a4a48, TX + Math.sin(a) * 3.12, TOP + 2.3, TZ + Math.cos(a) * 3.12, 1.0, 0.07, 0.07, a + PI / 2); }
-  f.cyl(0x3a4a48, TX, TOP + 1.55, TZ, 1.75, 0.5, 16);
+  // The railing: a top and a middle rail, each bar along the ring (yaw a: it was a + PI/2, which
+  // stood the bars out like spokes), and a closed ring of wall boxes along them, each a little
+  // longer than a bar so no gap is left between two.
+  for (let k = 0; k < 20; k++) {
+    const a = ((k + 0.5) / 20) * PI * 2, x = TX + Math.sin(a) * RAIL, z = TZ + Math.cos(a) * RAIL;
+    for (const y of [TOP + 2.3, TOP + 1.8]) f.boxC(0x3a4a48, x, y, z, 1.0, 0.07, 0.07, a);
+    L.blocks.push(ramp(f.wx(x, z), f.wz(x, z), f.yaw + a + PI / 2, RAIL_D, 1.1, 99, 99, 'tower'));
+  }
+  f.cyl(0x3a4a48, TX, TOP + 1.55, TZ, LANT, 0.5, 16);
   f.cyl(0xd8eef0, TX, TOP + 2.95, TZ, 1.6, 2.3, 16);
   for (let k = 0; k < 8; k++) { const a = (k / 8) * PI * 2; f.boxC(0x3a4a48, TX + Math.sin(a) * 1.62, TOP + 2.95, TZ + Math.cos(a) * 1.62, 0.1, 2.3, 0.1, a); }
+  // The gallery door, on the lantern's north-east side (towards the town): a grey-green iron door in
+  // a dark frame, its knob, standing just proud of the lantern's base.
+  {
+    const a = PI * 0.75, dx = Math.sin(a), dz = Math.cos(a), r = LANT + 0.04;
+    f.boxC(0x2a3436, TX + dx * r, DECK + 0.95, TZ + dz * r, 0.92, 1.9, 0.06, a);
+    f.boxC(0x4a6a62, TX + dx * (r + 0.03), DECK + 0.92, TZ + dz * (r + 0.03), 0.74, 1.76, 0.04, a);
+    f.sphere(0xc8a040, TX + dx * (r + 0.07) + dz * 0.26, DECK + 0.95, TZ + dz * (r + 0.07) - dx * 0.26, 0.07);
+  }
   f.cone(0x3a4a48, TX, TOP + 4.75, TZ, 1.8, 1.3, 16);
   f.cyl(0x3a4a48, TX, TOP + 5.7, TZ, 0.06, 0.9, 6);
   f.sphere(0x3a4a48, TX, TOP + 6.2, TZ, 0.3);

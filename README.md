@@ -53,7 +53,8 @@ Samma tangenter i båda nivåerna; nivån bestämmer vad de gör.
 | Esc / P | paus | paus | paus |
 
 Sitter Stig-Helmer ner i planet rör han sig inte; E reser honom upp (eller trycker på knappen
-ovanför stolen), J håller mantrat. På julafton blir J mantrat även på ön, och efter julafton kan
+ovanför stolen), J håller mantrat. På julafton blir J mantrat även på ön, liksom uppe på fyrens
+galleri (där man inte kan hoppa), och efter julafton kan
 Stig-Helmer glidflyga: tryck J i luften och håll in (ett kort tryck stampar som förut). Handkontroll fungerar
 också: A hopp/handbroms, B spring, X sparka/mantra, Y prata, Start paus, triggrarna kör.
 
@@ -372,6 +373,17 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   en riktig våg rullar in över honom. "Blött." Ibland står Siv på sanden och sätter poäng ("Giraffen,
   då? Fyra."), och efter berättelsen står Majsan själv där och frågar om han vill dansa. Stig reser sig
   och droppar en stund. Ingenting av drömmen finns kvar under uppdragen.
+- **Uppför fyren**: vid fyrvaktarbostadens välvda dörr under skylten FARO DE MASPALOMAS · 1890 kan du
+  mellan uppdragen trycka **E** (Gå upp i fyren). Skärmen blir svart, "Många trappsteg senare …", och
+  har det varit dag har eftermiddagen hunnit gå: Stig står på fyrens galleri 51 meter upp i
+  solnedgången med hela stan under sig. "Femtio meter … det är ju nästan som att flyga." Kameran gungar
+  av svindel. Gå runt galleriet med A och D (musen vrider kameran runt tornet), och står han still vid
+  räcket och tittar ut ser du stan som han ser den. Håll **J**: Stig gör Levanders övning med ryggen
+  mot lanterninen, armarna rakt ut och ögonen slutna, säger mantrat och svindeln lägger sig. Står han
+  kvar med övningen medan lanterninen ännu är släckt blir det svart en lång stund, och när han öppnar
+  ögonen är det natt, lanterninen lyser och ljuskäglan sveper förbi över hans huvud. Ner kommer du med
+  **E** vid lanterninens dörr ("… och lika många ner.") eller med R. Räcket är stängt runt om och man
+  kan inte hoppa där uppe. Under en jakt med Guardia Civil är dörren stängd.
 
 ## Vad är påhittat?
 
@@ -478,6 +490,9 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
 - att Stig lånar Guardia-jeepen vid kasernen, sirenen på H som får trafiken att väja, Angeruds utbrott
   och polisens "Ursäkta, är det din bil?" efter en jakt (filmen har ingen Guardia-scen: frågan, svaret,
   bärgningen och Angeruds utbrott hör till trafikvakten vid resebyråns skyltfönster i Stockholm)
+- klättringen upp i Faro de Maspalomas, svindeln på galleriet och Levanders övning mot lanterninen med
+  slutna ögon tills det blir natt (fyren finns på riktigt men är ingen filmplats: övningen gör Stig på
+  flygrädsleklinken, och mantrat säger han till Majsan en varm natt på ön)
 - fårrusningen i Fataga, kappkörningen mot nattbussen och porslinskrosset på tid
 - att samla ihop julfestgästerna
 - Oles prylar och hajfenorna som samlarföremål, utspridda över ön
@@ -590,6 +605,7 @@ src/game/birds.js               Fåglarna som lyfter in free roam: the flocks th
 src/game/gags.js                Gags på E in free roam: Ole's flash at his camera bag, the juice under Viking Bar's lamp, the Gags count
 src/game/beachDream.js          Strandkyssen i bränningen in free roam: the towel, the daydream with Majsan's double, the wave, Siv or Majsan on the sand
 src/game/guardiaJeep.js         Låna Guardia-jeepen in free roam: the loan and its SKANDAL, the bust's question and tow, the siren on H, the traffic giving way
+src/game/lighthouse.js          Uppför fyren in free roam: the stairs up the lighthouse, the gallery's cameras and vertigo, the exercise, the night
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
@@ -598,7 +614,7 @@ tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, 
                                 artig, grisar, bagage, lapplisa, torsdag, frukt, hopptorn, hund,
                                 badgaster, butik, brodrost, rum107, solkram, skjortbyte,
                                 stunthopp, prata, takhopp, mikrofon, faglar, gags, strandkyssen,
-                                guardiajeep, calibrate, calibflight)
+                                guardiajeep, fyren, calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
 tools/pool.mjs                  re-derives every random stage's timer from the ledger
@@ -657,6 +673,7 @@ node tools/shot.mjs faglar storken       # the birds: the four flocks, the lift 
 node tools/shot.mjs gags gagshots        # the two gags on E: the prompts, the lines, shots and poses, the flash, everyone back, the pay, Gags n/2 and the save; every line as seen
 node tools/shot.mjs strandkyssen strandefter  # the towel's daydream: the dream, the wave, Siv on the sand, by night, a mission start; after the end Majsan's invitation
 node tools/shot.mjs guardiajeep jeepsiren     # the borrowed Guardia jeep: the loan, his, the bust's question and tow, a mission start; the siren, the traffic giving way, Angerud
+node tools/shot.mjs fyren                # up the lighthouse: the gallery's solids, the stairs and the clock, the views, the railing, the exercise, the long blink, down, R, a pursuit, a mission start
 node tools/shot.mjs fullstory kinds      # the literal §8 missions and the stage-kind checks
 node tools/shot.mjs calibrate calibflight  # timer and FLYGRÄDSLA calibration (slow; see DESIGN §8, §16.4)
 node tools/pool.mjs                      # random-stage timers from the raw runs in notes/calibration-samples.md

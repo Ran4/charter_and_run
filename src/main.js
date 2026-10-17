@@ -51,6 +51,7 @@ import { Birds } from './game/birds.js';
 import { Gags } from './game/gags.js';
 import { BeachDream } from './game/beachDream.js';
 import { GuardiaJeep } from './game/guardiaJeep.js';
+import { Lighthouse } from './game/lighthouse.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
 import { LEVELS, ISLAND_PALETTES } from './level.js';
@@ -215,6 +216,7 @@ class Game {
     this.dream = new BeachDream(this);    // free roam: the towel at the water's edge, Stig's daydream in the surf (§10.33)
     this.jeep = new GuardiaJeep(this);    // free roam after the bodega: the borrowed Guardia jeep, its siren on H (§10.34)
     this.sirenYield = null;               // the jeep's siren the traffic gives way to: { x, z, fx, fz, r, … } (drivers.js)
+    this.fyren = new Lighthouse(this);    // free roam: up Faro de Maspalomas, the mantra on the gallery 51 m up (§10.35)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -1546,6 +1548,7 @@ class Game {
     this.birds.update(dt);
     this.dream.update(dt);
     this.jeep.update(dt);
+    this.fyren.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);
@@ -1620,7 +1623,8 @@ class Game {
     }
     const verbs = this.levelDef.verbs;
     if (input.pressed('jump')) {
-      if (verbs.jump) {
+      // Not on the lighthouse's gallery, 51 m up behind a railing (§10.35, §1.2).
+      if (verbs.jump && !this.fyren.up) {
         if (p.onGround) { p.jump(8.6); this.jumps = 1; audio.jump(); }
         else if (this.jumps < 2) { p.vy = 8.0; this.jumps = 2; audio.jump(); this.spinT = 0.4; this.film.trick('volt'); }
       } else if (verbs.hold && !this.spaceToastShown) { this.spaceToastShown = true; hud.toast(S.spaceFirst); }
@@ -2080,6 +2084,7 @@ class Game {
         else if (it?.type === 'car') prompt = it.car.locked ? '' : this.jeep.prompt(it.car) || (it.car.driverBust ? S.promptSteal : S.promptGetIn);
         else if (it?.type === 'it') prompt = it.it.prompt || '';
         else if (it?.type === 'stand') prompt = S.promptStand;
+        prompt = this.fyren.prompt(prompt);   // the J hint on the lighthouse's gallery (§10.35)
       }
       if (this.belt.seated && !this.inDialog) prompt = this.belt.cfg.prompt;
       hud.setPrompt(prompt);

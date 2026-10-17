@@ -276,7 +276,11 @@ borrowing it with an apology and SKANDAL at once, the jeep his once he has shake
 and blue lamp on H with the traffic giving way to it, Angerud's outburst at it, and the officer's "Ursäkta,
 är det din bil?" after a bust with it, Stig's "Nej." and the tow back to the barracks (free roam, §10.34;
 the film has no Guardia scene: the question, the answer, the tow and Angerud's outburst are the traffic
-warden's at a Stockholm travel agency's window).
+warden's at a Stockholm travel agency's window); the climb up Faro de Maspalomas between missions to its
+gallery 51 m up, the afternoon the stairs take, Stig's vertigo up there and Levander's exercise against
+the lantern with his eyes shut, held until the night falls and the beam sweeps over his head (free
+roam, §10.35; the lighthouse is the real setting's, research-setting.md:108, not a film scene: the
+exercise is at Levander's clinic, and Stig says the mantra to Majsan on a warm night on the island).
 The film's flight has **no turbulence** and **no in-flight toilet scene**: both toilet scenes are
 at Arlanda (we keep them there). The plane's toilets are only an invented hideout.
 
@@ -428,6 +432,10 @@ Physical keys are unchanged from Bigmouth. The level config turns verbs on and o
 - **The diving tower** (free roam, §10.20): E at the ladder's foot ("E Klättra upp") and on the
   platform ("E Klättra ner"); off the board J in the air is the stomp, a cannonball into the water
   (after julafton a held J glides, as everywhere).
+- **The lighthouse** (free roam, §10.35): E at the keeper's house's door ("E Gå upp i fyren") and at
+  the lantern's door on the gallery ("E Gå ner"). On the gallery J held is the mantra (Levander's
+  exercise against the lantern: no kick), Space does not jump, the mouse turns the gallery's camera
+  round the tower, and W A S D go by that camera (A and D walk him round).
 - **The fried pair** (free roam between buss17 and the bodega, §10.22): E at Berra asleep on his
   lounger ("E Väck Berra") wakes him for five minutes more. A kick at a taken lounger throws its
   bather off.
@@ -1253,7 +1261,7 @@ standing there faces. `y` (optional) = absolute height for collectible spots on 
 | (6,1) | `dromplan` → `dromplan` (D2, coast.js) | **the old propeller "drömplanet"**: faded red 4-engine prop plane (DC-7-like) on a dirt lot by the road, wing reachable via a crate ramp, windsock, sign `AERÓDROMO`; its scraggly palm at (−24, 6), out of the plank jump's run-out (it was at (−24, −2); feature 40, §10.27) | `dromplan` (0, 20, π) · `pryl_kamera` (−4, −2, 0, 3.6) (on the wing) · `stunt_landning` (−26, −1.4, π/2) (the plank jump's run-out, §10.27) | — |
 | (6,0) | `flygplats` → `gando` (D2, coast.js) | low terminal with open arrivals canopy `LLEGADAS · ANKOMST`, baggage carousel (animated ring of suitcases; its belt carries Stig in free roam, §10.16: the belt a `carousel` floor at CURB + 0.64, the centre island its own stepped floor, the sign's post a pole), `OBJETOS PERDIDOS · HITTEGODS` desk with a wall of suitcase silhouettes, bus bay `BUSS 17`; **the parked DC-8** (`buildPlaneExterior`) **outside the bound wall at (240, −335)** — WP-B clears the tree ring **and the hills** in that sector (§6.4) | `airport` (0, 22, π) · `hittegods` (−14, 6, 0) · `busBay` (16, 24, −π/2) · `bagageband` (6, 11, π) (south of the carousel, facing it, so the views camera stands on the forecourt; Phase 3) · `brodrost_hittegods` (−17.4, 7.35, 0, 1.23) (a G17 toaster on the lost-and-found counter, 4 m from the clerk; §10.24; not a standing spot) | `buss17` (bus, livery `suntrip`) at `busBay`; `taxiAirport` (taxi, locked) |
 | (0,4), (0,5) | `dyner` → `dyner` (D1, nature.js) | large sand dunes (ramps), palm grove, lagoon pond (its two herons and a stork are game/birds.js's since feature 43, §10.31); behind them, beyond the west bound, a row of big visual-only dunes from town.js (§6.4, Phase 3 r2) | `dyner` (0, 0, π − 0.4) on (0,4) (faces the arch, so the views camera stands on the sand south of it, clear of the boardwalk palms; Phase 3) | — |
-| (0,6) | `fyren` → `fyren` (D2, coast.js) | **Faro de Maspalomas**: ~55 m grey-blue stone tower (tallest landmark, visible from everywhere), keeper's house (roof top ≈ 4.0, reachable by a dune ramp) | `fyren` (0, 10, π) (coin arc on the keeper's-house roof) | — |
+| (0,6) | `fyren` → `fyren` (D2, coast.js) | **Faro de Maspalomas**: ~55 m grey-blue stone tower (tallest landmark, visible from everywhere), keeper's house (roof top ≈ 4.0, reachable by a dune ramp); the tower's solid stops at its gallery floor (51.3), with the lantern and a closed railing ring as walls up there, and a door on the lantern's north-east side (feature 52, §10.35) | `fyren` (0, 10, π) (coin arc on the keeper's-house roof); `fyrDorr` (0, 1.4, π) before the keeper's door, `fyrGalleri` (1.70, −9.70, 3π/4, y 51.3) on the gallery (§10.35) | — |
 | (1..4,6) | `playa` → `playa` (D2, coast.js) | sand, sunbed rows (`solstol`), parasols, `HELADOS` kiosk, lifeguard tower, pedal boats on the sand, towels on sunbeds | `playa` on (3,6): (0, 10, 0) · `fena_hav` world (0, 304) (sea shallows, y 0.35) | — |
 | (5,6) | `hamn` → `hamn` (D2, coast.js) | small marina: walkable shallow basin (`water` box), pier (deck top 0.55), moored boats | `hamn` (0, 0, π) · `fena_hamn` (−8, 10, 0, 0.35) · `pryl_glasogon` (12, 28, 0, 1.2) (pier end) | — |
 
@@ -3785,6 +3793,9 @@ alarm waking him are [N] (§1.6); the words are the film's (Affe's "kvarta", Ole
 - **Chatter with a time of day** (`DAY.chatter`, filtered in `syncAll` by `day.lineOk` while the
   clock runs): Gabbe's "Natturen går klockan nio!" 17–21, Lasse's "Friskoteket börjar halv tio varje
   morgon." 06–10 and "Klockan är tre spansk tid." 14–16 (that one so he does not say it at midnight).
+- **Others that move it**, through `day.spin`, `day.set` and `day.write` behind their own fades: the
+  grisfest's evening and its morning (feature 21, §10.18), and Uppför fyren (feature 52, §10.35): a
+  climb by day to 19:45, the long blink on the gallery to 22:00.
 - **Not done** (it would make this L): own palettes for the forenoon or the siesta, lights fading
   in (they share `MAT.mouth` and switch at once), night routines for people or cars; traffic and
   pedestrians are the same at night. No day cards (§15.5).
@@ -5949,6 +5960,112 @@ is never said: the car is the Guardia jeep.
   the siren (the horn's reactions are horn lines); Angerud's line also when the jeep only stands with
   the siren on near him.
 
+### 10.35 Uppför fyren – the mantra 51 m up (free roam; feature 52, 2026-10-17)
+
+`game/lighthouse.js` (`Lighthouse`, owned by Game as `fyren`), config `FYREN` in content/island.js, the
+gallery's solids in world/blocks/coast.js (`fyren()`, `LIGHTHOUSE`). Levander's exercise ("Sträck ut
+armarna – rakt ut åt sidorna. Slappna av. Slut ögonen." … "Säg efter mig: Jag kan flyga, jag är inte
+rädd.", research-characters.md:325, research-plot.md:122–123) moves to the top of the coast's highest
+landmark: the man with a fear of flying climbs 51 m of his own accord, gets the vertigo, does as the
+doctor said ("Varje gång du känner tendenser till flygrädsla så gör du övningen.", research-plot.md:124)
+and stands there until it is night. The lighthouse is the real setting's (Faro de Maspalomas, lit 1890,
+research-setting.md:108; §1.5), not a film scene; the climb, the gallery and the vertigo are [N] (§1.6).
+
+- **The tower's solids** (every state; the tower's axis (−240, 232), block (0,6) local (0, −8)):
+  - The tower's circle (r 3.4 = `rAt(0)`, kind `'tower'`) now stops at the gallery floor, `deck` =
+    `TOP` + 1.3 = **51.3** (the deck's top), not 99: from the plaza and from the keeper's roof terrace
+    (4.0) it is a wall as before, up there it is the floor.
+  - The lantern: a circle r `lantern` = 1.75 (its base), top 99, kind `'tower'`.
+  - The railing: a closed ring of 20 wall boxes (`ramp` with both heights 99, kind `'tower'`), 1.1 m
+    along the ring × 0.2 m deep, their middles at r `rail` = 3.12 at the angles (k + ½)/20 · 2π, a
+    little longer than a rail bar so no gap is left (`fyren` checks 720 angles).
+  - All of them lie inside the tower's old r 3.4 footprint and above 51.3 m in effect: nothing at the
+    foot changes (`groundAt`, `spotFree`, `queryBlocks` at street level, the cars, the camera), no
+    mission, stage or route uses the lighthouse (`fyren` is only a map label, §11.6), so no stage's
+    world, timer, fixture or calibration pool changes, and no random draw is added.
+  - `LIGHTHOUSE` = { x, z (the axis), deck, lantern, rail, `rIn` = 2.13 and `rOut` = 2.64 (the walkway
+    for a body's centre: an adult's 0.36 + 0.02 off the lantern, and off the railing's inner face),
+    `door` = 3π/4 (the gallery door's angle as a yaw), `blocks` [tower, lantern, 20 railing walls] }.
+    At the 20-gon's corners a body's centre gets to 2.69; `fyren.update` keeps it inside rOut + 0.05
+    whatever pushed it.
+- **The look** (static): the railing's bars run along the ring (their yaw was a + π/2, which stood them
+  out like spokes: now a), with a middle bar 0.5 m over the deck under the top bar at 1.0 m. On the
+  lantern's north-east side (towards the town) the gallery door: a dark frame 0.92 × 1.9, a grey-green
+  door 0.74 × 1.76 and a brass knob, just proud of the lantern's base. The keeper's house's arched door
+  on its south wall (below `FARO DE MASPALOMAS · 1890`) is the way in.
+- **The stairs.** Two interactables (§14.3), `r` = 1.3, held to their own level by the ±2.5 m height
+  rule of `bestInteractable`: `fyren:upp` at `fyrDorr` (−240, 241.4, facing the door), `promptUp` "<b>E</b>
+  Gå upp i fyren" [N]; `fyren:ner` at `fyrGalleri` (−238.30, 230.30, y 51.3: r 2.4 at the door's
+  angle, facing out), `promptDown` "<b>E</b> Gå ner" [N]. Both only when `canUse`: on the island, idle,
+  no fade under way, no dialogue, on foot and on the ground, not carrying, no bust freeze or PANIK, not
+  in the pool fest's ring or on the baggage belt; up also **no SKANDAL pursuit** (the gallery would be a
+  free hideout where the porter's costs 500 pta, §7.2). E: `inDialog`, the watch drawn `over` the fade
+  (§10.10), a black fade (`fadeSecs` 0.6 s), the banner `MÅNGA TRAPPSTEG SENARE …` / `… OCH LIKA MÅNGA
+  NER.` [N] (`upBanner`, `downBanner`), he is put by hand (`teleport` snaps to ground-level floors only),
+  the clock (below), `holdSecs` 1.0 s, the fade back. Up: on the gallery at `fyrGalleri`, facing out
+  over the town; `arriveAt` 0.4 s later "Femtio meter … det är ju nästan som att flyga." [N]. Down:
+  `outStep` 2.6 m out from the door's E spot, turned away from it (at 1.2 m the chase camera sat at his
+  neck against the house).
+- **The clock** (§10.10; the gallery follows it, the idea's own note). A climb by day (`day.isDay`,
+  07–19) takes the afternoon: the clock spins (`day.spin`, as the nap's) on to `evening` = 19.75, the
+  sunset palette (the lantern still dark until the clock's `lit` at 20:00). At any other hour it stays.
+  The way down leaves it as it is (the idea's "då är det dag igen" was for a fixed sky). In test mode
+  the clock holds at 15:00, so the climb sets 19:45.
+- **On the gallery** (`up`, from the climb until he is off it): `game.mantraMode` is on (J is the
+  mantra, no kick or stomp), **Space does not jump** (main.js `handleOneShots` asks `fyren.up`), and
+  the prompt adds the J hint `S.promptMantra` "<b>J</b> håll: Jag kan flyga!" after whatever E offers
+  (`fyren.prompt(base)`, from `updateHud`). **The vertigo**: the camera's sight line rocks slowly (yaw
+  ±0.04 rad, pitch ±0.025 rad, the eye bobbing ±0.1 m; `sway`, rate 0.9 rad/s), its weight eased in
+  at 0.8/s and out at 1.6/s, 0 while the mantra is held (`mantraOn`, after the wind-up) and for the rest
+  of the visit once it has been held `calmSecs` (below). No shaking legs (no such pose). If after
+  `remind.after` = 10 s he has not done the exercise (and is not talking): "Varje gång du känner
+  tendenser till flygrädsla så gör du övningen…" [F*] (Levander's advice, Stig reciting it), once a visit.
+- **The exercise** (J held, the island's mantra, §3): the engine's `wings` pose (it stops him) and its
+  mantra bubble; `fyren.update` eases him back against the lantern (to rIn + 0.02, rate 8/s) and turns
+  him to face straight out (rate 10/s), and sets `anim.eyesShut` (§14.6). `holdT` counts game seconds
+  (`dt × timeScale`, as a mantra stage's bar) while `mantraOn`, from 0 at each new hold: at `calmSecs`
+  2.5 the vertigo is gone for the visit; at `nightSecs` 6, if the lantern is still dark (`!day.lit()`)
+  and not already this visit, **the long blink**: `inDialog`, black over `blinkSecs` 1.4 s (he keeps
+  the pose, arms out and eyes shut), the clock spun on to `night` = 22:00 and written, `holdSecs`, the
+  fade back over `fadeSecs`: night, the lantern lit and its beam sweeping round at his head's height
+  (the beam's cone starts at the lantern's middle, 52.95 m). Then the pose goes back to the engine
+  (`mantraPose` set: kept while J is held, dropped at its next step if not). Measured by `fyren`: held
+  from the gallery door, his back at r 2.15, the night after 6 s of the mantra.
+- **The cameras** (the chase camera would sit in the lantern: the walkway is 1.3 m wide, §14.5). Up
+  there `fyren` sets `cam.cine` every frame (eased by `CamRig`: the eye at 4/s, the look at 5/s; FOV
+  50) and `cam.yaw` so W A S D go by the view; a change of view is a cut (`cam.cutTo`):
+  - `orbit` (walking, talking): outside the railing at r `orbit.r` = 7.4 at his angle round the axis
+    (plus the mouse's turn, `turn` 0.004 rad/px, ±`max` 1.1 rad), `h` 2.6 m over the deck, looking at
+    him (deck + 1.2). `cam.yaw` from the eye to him: A and D walk him round the tower, S to the railing,
+    W to the lantern.
+  - `pose` (J held): straight out in front of him at r 6.0, deck + 1.4, looking at his chest (deck +
+    1.5): the lantern behind him, the railing in front.
+  - `vista` (standing still, speed under 0.3, facing out within 0.9 rad of his angle, off the lantern
+    by 0.15, not posing and not talking, for `still` 0.8 s): the town as he sees it, from over his
+    head: the eye at r max(lantern + 0.25, his r − 0.45) at his angle, deck + 3.4 (clear of the
+    lantern's roof), looking 34 m out along his yaw (plus the mouse's ±0.6 rad, 0.003 rad/px) and 15 m
+    under the deck. Leaning on the railing with W held keeps it. On arrival he talks, so the first
+    shot is `orbit` with him in it, and the view follows the line.
+- **Off the gallery.** `leave()` (the stairs down, R, anything else that moves him off: `onGallery()`
+  is y over deck − 1.5 and r under rail + 0.5): his eyes open, `mantraMode` off, `cam.release()` and
+  the chase camera snapped behind him. R (`resetPlayer`) takes him to the nearest road as anywhere.
+  **A mission start or the other level** with him up there: a fade under way stops (`abort`), and he is
+  put at the door below (`put(false)`), never a fall; a mission start finds no stage running yet, so
+  clearing `mantraMode` is safe (a mantra stage sets it again for itself). Nothing is saved (the save
+  has no position, §10.5).
+- `fyren.last` ({ kind: 'up' | 'down' | 'night', t, from, to }), `up`, `busy`, `view`, `calm`,
+  `blinked`, `sway`, `holdT`, `climbs` are for tests. Scenario `fyren`, and two `perf` rows (`island
+  fyren view` at the sunset, `island fyren night` with the beam: 60 fps, §16.4).
+- **Not done / changed** (deviations from the idea): the sky follows the clock (feature 30 was built):
+  the climb and the long blink move the clock (to 19:45 by day, to 22:00), not `setSky`, and the way
+  down leaves the time as it is; the gallery's cameras are three views chosen by what he does (round
+  the tower with him, in front of him in the exercise, the view as he sees it), not fixed per sector;
+  the view is from over his head, without him in it (from behind him on a 1.3 m walkway his head was a
+  dark blob over half the frame); the gallery door is on the lantern's north-east side, facing the
+  town; one more line, Levander's advice as a reminder [F*]; the vertigo is the camera only (no pose
+  for shaking legs); the J hint shares the prompt with "Gå ner" at the door; E at the door down works
+  in a pursuit (none can start up there), only the way up is shut.
+
 ## 11. HUD / UI strings (Swedish; `src/strings.js` owned by WP-H, created by Phase 0)
 
 `strings.js` exports `S` (flat object) and `fmt(key, vars)`. Engine code uses `S.key` only.
@@ -6001,7 +6118,7 @@ mutes without touching the button, which then said `Ljud: på` while muted).
 | dialogue next | `E ▸` |
 | minimap rim badge | `N` (island) / `FRAM` (flight) |
 | big-map legend | from `game.mapLegend()` (§10.1) |
-| prompts | `<b>E</b> Prata med {name}` (a giver, and since feature 39 anyone in the gang between missions, §10.28) · `<b>E</b> Kliv in` · `<b>E</b> Ta bilen` · `<b>E</b> Sätt dig` · `<b>E</b> Res dig` · `<b>E</b> Lås in dig` · `<b>E</b> Ta en juice` · `<b>E</b> Kvarta en stund` (Stig's bed, §10.10) · `<b>E</b> Titta i kameran` / `<b>E</b> Se filmen` (Herr Storch, §10.11) · `<b>E</b> Heja Eslöv!` / `<b>E</b> Eslövloppet – ett varv runt fälten` (the rollerskier, §10.12) · `<b>E</b> Dansa med` / `<b>E</b> Kliv ur ringen` (the pool fest's gap, §10.13) · `<b>E</b> Kontrollera brödrosten` / `<b>E</b> Upp med brödet!` (a G17 toaster, §10.24) · `<b>E</b> Kontrollera hyllan` · `<b>E</b> Ta upp giraffen` / `<b>E</b> Ställ tillbaka giraffen` · `<b>E</b> Spela samba` (room 107, §10.25) · `<b>E</b> Smörj in ryggen` (Majsan's sun cream, §10.26) · `<b>E</b> Ta trappan upp` / `<b>E</b> Ta trappan ner` (the hotel roofs' stairs, §10.29) · `<b>E</b> Läs ett utrop` (the SunTrip stage's microphone, §10.30) · `<b>SPACE</b> Håll i dig!` · `<b>J</b> håll: Jag kan flyga!` (the `<b>` keycap is Luckiest Guy: uppercase). Order (`updateHud`): talk (a giver's or the gang's), then `Håll i dig!` while the cabin is turbulent and he stands without holding on (Phase 3 r3, §5.7), then the car, interactable (seats, toilets…) and stand prompts |
+| prompts | `<b>E</b> Prata med {name}` (a giver, and since feature 39 anyone in the gang between missions, §10.28) · `<b>E</b> Kliv in` · `<b>E</b> Ta bilen` · `<b>E</b> Sätt dig` · `<b>E</b> Res dig` · `<b>E</b> Lås in dig` · `<b>E</b> Ta en juice` · `<b>E</b> Kvarta en stund` (Stig's bed, §10.10) · `<b>E</b> Titta i kameran` / `<b>E</b> Se filmen` (Herr Storch, §10.11) · `<b>E</b> Heja Eslöv!` / `<b>E</b> Eslövloppet – ett varv runt fälten` (the rollerskier, §10.12) · `<b>E</b> Dansa med` / `<b>E</b> Kliv ur ringen` (the pool fest's gap, §10.13) · `<b>E</b> Kontrollera brödrosten` / `<b>E</b> Upp med brödet!` (a G17 toaster, §10.24) · `<b>E</b> Kontrollera hyllan` · `<b>E</b> Ta upp giraffen` / `<b>E</b> Ställ tillbaka giraffen` · `<b>E</b> Spela samba` (room 107, §10.25) · `<b>E</b> Smörj in ryggen` (Majsan's sun cream, §10.26) · `<b>E</b> Ta trappan upp` / `<b>E</b> Ta trappan ner` (the hotel roofs' stairs, §10.29) · `<b>E</b> Läs ett utrop` (the SunTrip stage's microphone, §10.30) · `<b>E</b> Gå upp i fyren` / `<b>E</b> Gå ner` (the lighthouse, §10.35) · `<b>SPACE</b> Håll i dig!` · `<b>J</b> håll: Jag kan flyga!` (the `<b>` keycap is Luckiest Guy: uppercase; since feature 52 shown on the lighthouse's gallery, after E's prompt when there is one). Order (`updateHud`): talk (a giver's or the gang's), then `Håll i dig!` while the cabin is turbulent and he stands without holding on (Phase 3 r3, §5.7), then the car, interactable (seats, toilets…) and stand prompts; then `fyren.prompt` adds the J hint up there |
 
 **The result line** (feature 4, §10.8): `#score`, low in the middle (bottom 92 px, under the
 prompt at 178 px), a cream card with the dive and its sum in Luckiest Guy over the record line
@@ -6340,7 +6457,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/strings.js` | new | **H** | `S`, `fmt()` (§11) |
 | `src/content/index.js` | new | none | merges `HOMES`, `MAP_LABELS`, `LEVEL_OUTFITS`, re-exports all content |
 | `src/content/flight.js` | new | **F** | `HOMES_GATE`, `HOMES_FLIGHT`, `MAP_LABELS_FLIGHT`, `CHATTER_FLIGHT`, `OLE_STATS`, `LEVEL_OUTFITS_GATE`, `LEVEL_OUTFITS_FLIGHT` |
-| `src/content/island.js` | new | **G** | `HOMES_ISLAND`, `MAP_LABELS_ISLAND`, `CHATTER`, `OUCH`, `GETUP`, `CARJACK`, `NPC_KICKED` (+ the `_OLE` / `_LOCAL` tables, `LOCAL_CAST`, `BARKS`: Phase 3 r2, §14.10; `STIG_SORRY`: feature 11, §10.14; `PIG_TRUCK`: feature 15, §10.15; `BAGGAGE_BELT`: feature 25, §10.16; `LAPPLISA`: feature 20, §10.17; `GRISFEST_FREE`: feature 21, §10.18; `FRUKTSTAND`: feature 28, §10.19; `TOWER`: feature 24, §10.20; `DOGS`: feature 31, §10.21; `BATHERS`: feature 32, §10.22; `RUM107`: feature 38, §10.25; `SOLKRAM`: feature 35, §10.26; `STUNTHOPP`: feature 40, §10.27; `TALK_ISLAND`: feature 39, §10.28; `TAKHOPP`: feature 41, §10.29; `MIKROFON`: feature 44, §10.30; `BIRDS`: feature 43, §10.31; `GAGS`: feature 47, §10.32; `STRANDKYSSEN`: feature 57, §10.33), `COLLECTIBLES`, `UNLOCKS`, `NAMED_CARS`, `LEVEL_OUTFITS_ISLAND` |
+| `src/content/island.js` | new | **G** | `HOMES_ISLAND`, `MAP_LABELS_ISLAND`, `CHATTER`, `OUCH`, `GETUP`, `CARJACK`, `NPC_KICKED` (+ the `_OLE` / `_LOCAL` tables, `LOCAL_CAST`, `BARKS`: Phase 3 r2, §14.10; `STIG_SORRY`: feature 11, §10.14; `PIG_TRUCK`: feature 15, §10.15; `BAGGAGE_BELT`: feature 25, §10.16; `LAPPLISA`: feature 20, §10.17; `GRISFEST_FREE`: feature 21, §10.18; `FRUKTSTAND`: feature 28, §10.19; `TOWER`: feature 24, §10.20; `DOGS`: feature 31, §10.21; `BATHERS`: feature 32, §10.22; `RUM107`: feature 38, §10.25; `SOLKRAM`: feature 35, §10.26; `STUNTHOPP`: feature 40, §10.27; `TALK_ISLAND`: feature 39, §10.28; `TAKHOPP`: feature 41, §10.29; `MIKROFON`: feature 44, §10.30; `BIRDS`: feature 43, §10.31; `GAGS`: feature 47, §10.32; `STRANDKYSSEN`: feature 57, §10.33; `FYREN`: feature 52, §10.35), `COLLECTIBLES`, `UNLOCKS`, `NAMED_CARS`, `LEVEL_OUTFITS_ISLAND` |
 | `src/game/missions/index.js` | new | none | `MISSIONS = [...FLIGHT_MISSIONS, ...ISLAND_MISSIONS]`, `MissionRunner` re-export |
 | `src/game/missions/runner.js` | new (from missions.js) | none | `MissionRunner` (§9.4) |
 | `src/game/missions/kinds/core.js` | new | **none** (frozen after Phase 0) | getInCar goto pickup dropoff follow rabbits race destroy grab scene |
@@ -6375,6 +6492,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/solkram.js` | new (feature 35, 2026-10-17) | — | `Solkram` (`game.solkram`): Smörj in Majsans rygg in free roam: Majsan's interactable, the scene (the ask, her back turned, the meter's card and the held E, the result's shots, cards and bubbles), the bottle and the cream, the record and `sjuPoang`, the reset (§10.26) |
 | `src/game/stunts.js` | new (feature 40, 2026-10-17) | — | `Stunts` (`game.stunts`): Stunthopp med G17-stämpel in free roam: his car's jumps measured (from car.js `airT`/`airFrom`), LUFTTID in the air, the settle and the verdict, the stamp and the card, the named jumps' take-offs, pay and records, the mantra off the plank, Stig's lines, his arms out by the dream plane, the reset (§10.27) |
 | `src/game/guardiaJeep.js` | new (feature 51, 2026-10-17) | — | `GuardiaJeep` (`game.jeep`): Låna Guardia-jeepen in free roam: `guardia1` open between missions after the bodega, the loan and its SKANDAL, his after the pursuit, the bust scene and the tow, the respawn, the siren on H (the lamp, the corners, `game.sirenYield`), Stig's surprise, Angerud's outburst, the reset (§10.34) |
+| `src/game/lighthouse.js` | new (feature 52, 2026-10-17) | — | `Lighthouse` (`game.fyren`): Uppför fyren in free roam: the keeper's door and the gallery door with their fades and banners, the clock on to the evening by day, the gallery's three cameras and the vertigo, the exercise against the lantern with his eyes shut, the long blink to the night, `leave`, a mission start with him up there (§10.35) |
 | `src/game/beachDream.js` | new (feature 57, 2026-10-17) | — | `BeachDream` (`game.dream`): Strandkyssen i bränningen in free roam: the towel and its interactable, the scene's clock (lying down, the white wash, the dream with Majsan's double, the foam and the camera's glide, the flash, the wave and its splashes, the lines), the visitor on the sand and her way home, the drips, the reset (§10.33) |
 | `src/game/birds.js` | new (feature 43, 2026-10-17) | — | `Birds` (`game.birds`), `KINDS`: Fåglarna som lyfter in free roam: the four kinds' looks and instanced meshes, the flocks on their spots (pecking, steps, turns), the scare (Stig on foot, his car, the horn), the take-off, the circle and the landing, the sounds, Stig's sorry and hands up, the stork's trip to the Storches and the scene, the put-back at a mission start (§10.31) |
 | `src/game/gags.js` | new (feature 47, 2026-10-17) | — | `Gags` (`game.gags`): Gags på E in free roam: the two gags' interactables, who must stand free, the scene line by line (marks, poses, shots, the one sent in), Ole's flash, everyone put back, the pay and the Gags count, saved (§10.32) |
@@ -6401,12 +6519,12 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/world/blocks/hotels.js` | new | **C1** | `flamenco`, `suntrip`; `flamencoBays` (feature 20, §10.17); the diving tower `diveTower` and its solids `DIVE_TOWER` (feature 24, §10.20); SunTrip-butiken's counter `suntripShop` and `SUNTRIP_SHOP` (feature 34, §10.23); room 107's keepsake shelf, `roomKeepsakes`, `ROOM107` and `worldHooks.rum107` (feature 38, §10.25); Ole's camera bag on the patio wall under the pergola (feature 47, §10.32) |
 | `src/world/blocks/centre.js` | new | **C2** | `kasbah`, `cita`, `plaza`, `marknad`, `kyrka`, `bensin`, `guardia`; the market's five fruit stalls as `frutas` props (feature 28, §10.19); room for three G17 toasters (two paint cans a row, a fruit crate's fruit, stall K's radio 5 via `stall`'s `gap`; feature 33, §10.24); the lamp beside Viking Bar's door raised to 2.95 m (feature 47, §10.32) |
 | `src/world/blocks/nature.js` | new | **D1** | `tomat`, `grisfest`, `fataga`, `golf`, `bungalow`, `bygge`, `dyner`; `FARM_YARD` (feature 31, §10.21); the bygge's plank (feature 40, §10.27); La Charca's herons moved out to game/birds.js (feature 43, §10.31) |
-| `src/world/blocks/coast.js` | new | **D2** | `flygplats`, `dromplan`, `fyren`, `playa`, `hamn`; `BELT` (feature 25, §10.16); the dream plane lot's palm moved (feature 40, §10.27) |
+| `src/world/blocks/coast.js` | new | **D2** | `flygplats`, `dromplan`, `fyren`, `playa`, `hamn`; `BELT` (feature 25, §10.16); the dream plane lot's palm moved (feature 40, §10.27); `LIGHTHOUSE`, the tower's solid to its gallery floor, the lantern's and the railing's walls, the rail bars along the ring and the gallery door (feature 52, §10.35) |
 | `src/world/cabin.js` | new | **A1** | §5 interior, collision, seats, trolley, turbulence, fear, interactables, blockers, `CAM_CABIN`, `FLIGHT_PALETTES`, `FEAR`; calls `buildFlightScenery` |
 | `src/world/flightScenery.js` | new | **A2** | §5.6 visuals: gate-set visuals, airframe, animated scenery per phase, `buildFlightScenery`, `buildPlaneExterior` |
 | `src/world/rio.js` | new | **B** | `buildRioCard` (P1) |
-| `src/actors/models.js` | edit | **E** | `CHARS`, `CAST`, new def fields, anim flags, `buildBustGeo`, `outfitDef`, `randomPed` palette; the `ticket` flag and its `lappblock`/`penna` props (feature 20, §10.17); the `leap` and `bomb` poses (feature 24, §10.20); the `placate` pose (feature 31, §10.21); the `lie` pose, the `stekt` outfits and `STEKT_SKIN` (feature 32, §10.22); the `rub` pose (feature 35, §10.26); the `camShow` pose and `cupHeld` raised standing with `cupUp` (feature 47, §10.32); the `lie` pose's `roll`, `turn` and given arms (feature 57, §10.33) |
-| `src/actors/character.js` | edit | **E** | `setDef`, `hidden`, `seatAt`, `standAt`, new anim flag defaults (`placate`: feature 31; `rub`: feature 35; `camShow`: feature 47); the state `lying`, `lieAt`, `fling`'s `flip` (feature 32, §10.22) |
+| `src/actors/models.js` | edit | **E** | `CHARS`, `CAST`, new def fields, anim flags, `buildBustGeo`, `outfitDef`, `randomPed` palette; the `ticket` flag and its `lappblock`/`penna` props (feature 20, §10.17); the `leap` and `bomb` poses (feature 24, §10.20); the `placate` pose (feature 31, §10.21); the `lie` pose, the `stekt` outfits and `STEKT_SKIN` (feature 32, §10.22); the `rub` pose (feature 35, §10.26); the `camShow` pose and `cupHeld` raised standing with `cupUp` (feature 47, §10.32); the `lie` pose's `roll`, `turn` and given arms (feature 57, §10.33); the `eyesShut` lids (feature 52, §10.35) |
+| `src/actors/character.js` | edit | **E** | `setDef`, `hidden`, `seatAt`, `standAt`, new anim flag defaults (`placate`: feature 31; `rub`: feature 35; `camShow`: feature 47; `eyesShut`: feature 52); the state `lying`, `lieAt`, `fling`'s `flip` (feature 32, §10.22) |
 | `src/actors/car.js` | edit | **E** | §6.6 types/flags, `registerCarType`, `build`/`noWheels`/`noSpeedo`/`noExplode`/`livery`; the grisbil's pig meshes `PIG_SLOTS`, `pigMesh`, `car.pigs`, `setPig`, `pigWorld` (feature 15, §10.15); `car.lift`, the nose raised on the tow truck's hook (feature 20, §10.17); a prop is known by its block's `ref`, `game.breakProp` may refuse, `def.slow` (feature 28, §10.19); the flight's `airT`, `airFrom` and `game.onCarAirEnd` (feature 40, §10.27) |
 | `src/actors/pickups.js` | edit | **E** | `COLLECT_KINDS`, `registerCollectKind`, `Collectible` table, `Rabbit` meshes, coin value 25; the `brodrost` kind, `TOASTER`, `setToaster`, `Collectible.mark` and the `yaw` option (feature 33, §10.24); `PRYL_IDS` exported (feature 38, §10.25) |
 | `src/actors/peds.js` | edit | **E** | Swedish/Spanish shouts; `dodge`, `startle` (feature 5, §6.7) |
@@ -6437,6 +6555,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `tools/scenarios/gags.mjs` | new (feature 47) | — | gags, gagshots |
 | `tools/scenarios/strandkyssen.mjs` | new (feature 57) | — | strandkyssen, strandefter |
 | `tools/scenarios/guardiajeep.mjs` | new (feature 51) | — | guardiajeep, jeepsiren |
+| `tools/scenarios/fyren.mjs` | new (feature 52) | — | fyren |
 | `tools/story/flight.mjs` | new | **F** | `M_FLIGHT` (M[0..4]) |
 | `tools/story/island.mjs` | new | **G** | `M_ISLAND` (M[5..12]) |
 
@@ -6455,7 +6574,7 @@ Init: `initGfx` → `input.init` → `hud.init` → `fx.init` → fonts (Luckies
 → peds (34) → NPC `Character`s (one per `CHARS` key except `stig`, the radio-only keys `levander
 kapten pa guardia pax telefonist` and the cabin-owned `vardinna2`; `key` field; hidden until placed, §2.3) →
 player `Character(CHARS.stig)` (`key = 'stig'`) → collectibles (`COLLECTIBLES`) → markers → `Shame`
-→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `DiveTower` (feature 24, §10.20; registers the ladder's two interactables, sets `DIVE_TOWER.live`) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `Eslov` (feature 7, §10.12; registers the rollerskier's interactable) → `PoolFest` (feature 8, §10.13) → `StigSorry` (feature 11, §10.14) → `PigTruck` (feature 15, §10.15) → `BaggageBelt` (feature 25, §10.16) → `Lapplisa` (feature 20, §10.17) → `GrisfestFree` (feature 21, §10.18; registers the gate's and the tourists' interactables) → `FruitStands` (feature 28, §10.19) → `Dogs` (feature 31, §10.21) → `Bathers` (feature 32, §10.22; registers the wake's interactable) → `SuntripShop` (feature 34, §10.23; registers the four wares' and the bag's interactables, sets `SUNTRIP_SHOP.live`) → `Toasters` (feature 33, §10.24; registers the seven toasters' interactables) → `Room107` (feature 38, §10.25; registers room 107's three interactables) → `Solkram` (feature 35, §10.26; registers Majsan's interactable) → `Stunts` (feature 40, §10.27) → `GangTalk` (feature 39, §10.28) → `RoofJump` (feature 41, §10.29; registers the three stair doors, sets `ROOF_JUMP.live`, places the roof coins) → `Mic` (feature 44, §10.30; registers the mic's interactable) → `Birds` (feature 43, §10.31; builds the four kinds' instanced meshes and puts every bird on its spot) → `Gags` (feature 47, §10.32; registers the two gags' interactables) → `BeachDream` (feature 57, §10.33; builds the towel and the foam, registers the towel's interactable) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
+→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `DiveTower` (feature 24, §10.20; registers the ladder's two interactables, sets `DIVE_TOWER.live`) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `Eslov` (feature 7, §10.12; registers the rollerskier's interactable) → `PoolFest` (feature 8, §10.13) → `StigSorry` (feature 11, §10.14) → `PigTruck` (feature 15, §10.15) → `BaggageBelt` (feature 25, §10.16) → `Lapplisa` (feature 20, §10.17) → `GrisfestFree` (feature 21, §10.18; registers the gate's and the tourists' interactables) → `FruitStands` (feature 28, §10.19) → `Dogs` (feature 31, §10.21) → `Bathers` (feature 32, §10.22; registers the wake's interactable) → `SuntripShop` (feature 34, §10.23; registers the four wares' and the bag's interactables, sets `SUNTRIP_SHOP.live`) → `Toasters` (feature 33, §10.24; registers the seven toasters' interactables) → `Room107` (feature 38, §10.25; registers room 107's three interactables) → `Solkram` (feature 35, §10.26; registers Majsan's interactable) → `Stunts` (feature 40, §10.27) → `GangTalk` (feature 39, §10.28) → `RoofJump` (feature 41, §10.29; registers the three stair doors, sets `ROOF_JUMP.live`, places the roof coins) → `Mic` (feature 44, §10.30; registers the mic's interactable) → `Birds` (feature 43, §10.31; builds the four kinds' instanced meshes and puts every bird on its spot) → `Gags` (feature 47, §10.32; registers the two gags' interactables) → `BeachDream` (feature 57, §10.33; builds the towel and the foam, registers the towel's interactable) → `GuardiaJeep` (feature 51, §10.34) → `Lighthouse` (feature 52, §10.35; registers the two doors' interactables) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
 `placeNpcs(true)` → spawn the player → portraits for every key in `CAST` (`renderPortrait`
 restores each model's parent and transform, so seated cast members stay in their seats) →
 `applySaveToWorld()` →
@@ -6467,7 +6586,7 @@ mantra/hold, AI, cars (a landing calls `onCarAirEnd`, feature 40), people (`glid
 traffic/peds skipped when `!levelDef.sim.*`) → `syncAll` (also
 writes `ch.x/y/z` from `car.seatWorld(ch.seatSide)` for every car-seated character, player
 included, so framing, bubbles and distance checks see where they really are) → `missions.update` →
-`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `tower.update` (feature 24) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `stands.update` (feature 28) → `dogs.update` (feature 31) → `bathers.update` (feature 32) → `shop.update` (feature 34) → `toasters.update` (feature 33) → `room107.update` (feature 38) → `solkram.update` (feature 35) → `stunts.update` (feature 40) → `chat.update` (feature 39) → `roofs.update` (feature 41) → `mic.update` (feature 44) → `birds.update` (feature 43) → `dream.update` (feature 57) → `jeep.update` (feature 51) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
+`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `tower.update` (feature 24) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `stands.update` (feature 28) → `dogs.update` (feature 31) → `bathers.update` (feature 32) → `shop.update` (feature 34) → `toasters.update` (feature 33) → `room107.update` (feature 38) → `solkram.update` (feature 35) → `stunts.update` (feature 40) → `chat.update` (feature 39) → `roofs.update` (feature 41) → `mic.update` (feature 44) → `birds.update` (feature 43) → `dream.update` (feature 57) → `jeep.update` (feature 51) → `fyren.update` (feature 52) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
 pickups/collectibles → props → `fx.tick` → `tickTown` → markers → camera → sun/sky → HUD → audio →
 traffic recycling (island) → autosave. `loop` then renders, and when `film.grabNow` is set calls
 `film.grab()` in the same task (Herr Storch's still from the frame's buffer, feature 6, §10.11).
@@ -6561,6 +6680,11 @@ game.dream;        // BeachDream (feature 57, §10.33): the towel at the water's
                    // sivDue(n), posed(key) (npcPosed, honk.free), update(dt), reset(), sc ({ t, ev, H, hy,
                    // dream, wake, wave, variant }), vis (the visitor { key, n, busy, stayUntil, dance }),
                    // dreams, double, towel, foam, T, last, cfg (STRANDKYSSEN)
+game.fyren;        // Lighthouse (feature 52, §10.35): up Faro de Maspalomas to its gallery; fyren.live, up (on
+                   // the gallery: handleOneShots' Space does not jump), busy, view ('orbit' | 'pose' | 'vista'),
+                   // calm, blinked, sway, holdT, canUse(upward), onGallery(), prompt(base) (updateHud: the J
+                   // hint after E's prompt), stairs(upward), put(upward), blink(), leave(), update(dt), last,
+                   // climbs, cfg (FYREN)
 game.npcPosed(key) -> bool   // an NPC held in a pose of its own: §9.4 idleAnim or a free-roam module's
                    // (berraJob, judges, film, eslov, fest, lapp, party, stands, mic, birds, gags, dream); syncAll gives it no
                    // wave, turn or chatter, and the gang's talk leaves it be (§10.28)
@@ -6905,6 +7029,10 @@ his eyes on it (neck 0.22); 2 up out of its reach with the mantra, the arms stra
 0.1), L (−1.47, 0, −0.1)), the hands 0.1 m over her shoulder pivots; 2 rubbing the sun cream in, both
 hands side to side together (z ± 0.1 at 8/s). Only a look; only `game.solkram` sets it; `heldPose`
 counts it as busy.
+`eyesShut` (feature 52, §10.35): the eyelids down: skin domes over the eyes (headParts' whites and
+pupils, R × (0.42, 0.5, 0.26) at (±0.36, 0.22, 0.84) R) with a dark lash line across their lower half,
+built the first time the flag is set (`lids(m)`, a child of the head, no outline) and shown while it
+is. Only a look; only `game.fyren` sets it (Levander's "Slut ögonen." on the lighthouse's gallery).
 `lie` (feature 32, §10.22; not a flag: `anim.lie` is the lying pose, `{ lean, arms, tilt, lift }`,
 set by `sync` in state `lying`, else null): on a sun lounger the root leans back `lean` (the
 backrest's −0.75) about the hips, so the legs are laid straight along the bed (x = −π/2 − lean,
@@ -7045,6 +7173,10 @@ export const BUILDERS = { type: (f, W, ctx) => void };   // ctx = { i, j, scene,
 // coast.js (feature 25, §10.16): BELT = { x, z, spin, top, r0, r1, block, bags: [{ k, a, top, out }] },
 //   the baggage belt as the free-roam ride sees it, filled by the flygplats builder (the ring's
 //   rotation.y is t × BELT.spin; a ring-local angle a is the world angle a + t × spin at (sin, cos))
+// coast.js (feature 52, §10.35): LIGHTHOUSE = { x, z, deck, lantern, rail, rIn, rOut, door, blocks },
+//   Faro de Maspalomas' gallery, filled by the fyren builder: the axis, the gallery floor (the tower's
+//   solid top, 51.3), the lantern's and the railing's radii, the walkway for a body's centre, the
+//   gallery door's angle (a yaw), and [tower, lantern, 20 railing walls]
 
 // world/props.js
 placeProp(type, x, z, yaw, baseY = CURB, { sign }?);  finalizeProps(scene);   // unknown type → console.warn, skipped
@@ -7373,6 +7505,11 @@ shame.closet (Closet, §7.2; feature 36): configure(h) from setupHideouts (h = t
 //   makeHis(); tickBust / tow / endBust; tickSiren / tickOath / setSiren; loan; loanT; hisCar; bust;
 //   yielded; known; last { t, kind, … }
 // hud.js (feature 51): sirenLights(on) (body.siren); drivers.js: AIDriver.yieldK, yieldCfg
+// lighthouse.js (feature 52, §10.35): game.fyren = new Lighthouse(game) after the jeep (registers
+//   fyren:upp, fyren:ner); update(dt) after jeep.update (not live with him up there: abort() the fade,
+//   put(false) at the door below; off the gallery: leave(); up there: the walkway's guard, the
+//   exercise's place, eyesShut, holdT, calm, the long blink, the vertigo, the reminder, camera(dt));
+//   main.js asks fyren.up before a jump and fyren.prompt(base) in updateHud
 // town.js: ROOF_JUMP { lots, roofs: { atl, sol: { name, minX, maxX, minZ, maxZ, floor, blocks } }, gap
 //   { x0, x1, z0, z1 }, jz, coins [[x, y, z]], live() } (feature 41; the roofs' blocks `dead` =
 //   !live(), the slabs' body and stair tower and the gap's two palms `dead` = live(), each palm with a
@@ -8022,6 +8159,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `gags`, `gagshots` [feature 47] | Gags på E (§10.32). `gags`, at index 9 (free roam): at `gagKamera` the prompt "Titta på Oles kameraväska" with Ole at home; none 2.5 m off; none with Ole hidden, again once he is placed home. E: the lines (Ole's four, Stig's "Ja." and "Fast det är blixt.", "Si omelett!") in order, a dialogue and the letterbox at each, Ole and Stig on their marks, Ole posed throughout, `camShow` in the shot `two` for the first five lines, `film` in the shot `ole` for the last; after it a white flash and one `shutter`. Then Ole on the spot he stood on with his `busy` and `spot`, no pose, not posed; Stig on `gagKamera` facing −π/2; no letterbox, dialogue or cutaway; no prompt (rest); +100, the collect card and the legend "Gags 1/2", the save `["kamera"]`; the chase eye 5.8 m from his head and in no solid, and a 24-yaw sweep round him with no eye in a solid (nearest 2.1 m); after `rest` E again: the six lines, no pay, still 1/2. At `gagViking` "Beställ en juice": Angerud's order and Stig's in the shot `bar` (Stig's cup out, `cupHeld`, for his), Carmencita there for both and gone for the lamp, the shot `lamp` with Stig facing the lamp, `cupHeld` + `cupUp`, Angerud posed; no flash; then Angerud and Carmencita on their spots (`busy`, `spot`, shown), Stig on `gagViking` facing π with the cup down, +100, "Gags 2/2", `["kamera","viking"]`; the eye 5.8 m behind him, in no solid; the sweep with no eye in a solid (nearest 0.92 m with the camera between him and the wall or an arcade pillar: the arcade's camera residue, §14.5, HANDOFF §4.4). In a pursuit no prompt, back after it; after a mission start none (`canPlay` false). A reload keeps 2/2. Index 7 (Ole asnan's giver at `flamenco`): the bag's gag plays, Ole is back on the giver's spot and his talk is the prompt beside him. Index 13 after `unlock('bodega')`: Angerud hidden, no Viking prompt, the bag's still there. Index 2: not `live`, nothing playable. `gagshots`: the bag's prompt, the bag up close, the lamp's prompt; each line of both scenes held (`autoDialog` off), the flash's white frame, each scene's after (the collect card); with `SHOTS=1` also eight yaws of the chase camera at each end mark. Shots `gag_bag_prompt`, `gag_bag_close`, `gag_lamp_prompt`, `gag_kamera_0`–`_5`, `gag_kamera_flash`, `gag_kamera_after`, `gag_viking_0`–`_3`, `gag_viking_after`, `gag_sweep_<lm>_0`–`_7` |
 | `guardiajeep`, `jeepsiren` [feature 51] | Låna Guardia-jeepen (§10.34). `guardiajeep`, at index 8 (before the bodega): every line in `GUARDIA_JEEP` tagged in the file, no "Land Rover"; both jeeps locked, no prompt, E "Den är upptagen!"; `unlock('grisbil')`: the grisbil's toast and the `open` toast, `guardia1` open, `guardia2` locked; "E Låna jeepen" at its bay (beside and in front), "E Kliv in" 25 m off; E: in, Stig's borrow line, no SKANDAL yet (`loanT` > 0.8); then the pursuit at 100, `loan`, ¡GUARDIA CIVIL!, the speedo's "Guardia-jeepen"; the meter emptied: the escape, his, the `his` toast, SKANDALEN TYSTAD; out and in at the bay: "E Kliv in", no SKANDAL after 2 s; on the x = 120 road a later pursuit and `busted()`: the officer's "Ursäkta, är det din bil?" at 1.5–2.6 s, Stig's "Nej." 0.7 s or more later and before 3.8 s, no "¡Documentación!", the fade with `inDialog`, then the jeep in its bay, not his, `last.dark` and `inCar`, the tow toast, no "Friskotek" radio, the officer hidden; the loan again ("E Låna jeepen"), the jeep left on the road, Stig 90 m off, `busted()`: the scene, the tow without the fade; the loan again and the porter bribed: his; the jeep removed with Stig 120 m off: a new car (new id) in its bay, open, not his, `last` `respawn`; `startMission()`: locked, no prompt, E "Den är upptagen!". `jeepsiren`, at index 9 with the jeep his: on the z = −40 road a traffic car placed 18 m ahead in his lane (others on that stretch removed) drives on at over 6 m/s in its lane without the siren; with H held: `sirenOn`, `audio.sirenOn`, `body.siren` and `#sirenlights` shown, the lamp seen on and off in 8 samples 0.11 s apart, no `hornAt`, no honk press; after about 2.3 s the car under 6 m/s, `yieldK` 1, 0.4 m or more to the right; followed 15 m behind for 2.5 s more: 1.0–1.4 m to the right; Stig's "Oj… de släpper fram mig!"; let go: all off, and 2.2 s later back in its lane (under 0.45 m) at over 6 m/s; the surprise not again; in a pursuit (forced, its jeeps parked) H: no `sirenYield`, `yieldK` 0, the siren on; the jeep in the lane nearest Angerud at Viking Bar (19 m): one of his two lines with `anim.oath`, none again within 40 s, the oath down later; a night shot; another car's H: the horn (`hornAt`, a honk press, no siren); `startMission()`: the jeep locked, `enterCar` refused, no siren. Shots `guardiajeep_0_lana` … `_5_barnad`, `jeepsiren_1_siren`, `_2_vajer`, `_3_angerud`, `_4_natt` |
 | `strandkyssen`, `strandefter` [feature 57] | Strandkyssen i bränningen (§10.33). `strandkyssen`, at index 7 (asnan: Ole the giver, Siv free at home): every line in `STRANDKYSSEN` tagged in the file; the towel at (−30, 300.9), in the scene, no collider (`spotFree` on it); no prompt 2.6 m off, "E Lägg dig i vattenbrynet" 1.2 m off, none in a SKANDAL pursuit or a car; E: lying (`lying`) at once with the letterbox and `inDialog`; at 1.2 s the white wash over 0.5; at 2.6 s the dream: `sky` `sunset`, `body.dream` with the canvas blur, `#dream` shown with DAGDRÖM, the tune `vals`, Majsan's double `lying` 0.62 m to his left, him flat (lean −π/2), the real Majsan unmoved and unheld, the foam's front at z 302–306; at 9.3 s the camera 1.2 m or more higher than at 2.6 s; at 10.3 s the wake: the palette, the tune and the picture as before E, the double hidden, Stig still lying, the wave on its way; three splashes by 12.9 s; then free roam (`normal`, no `inDialog`, letterbox or cutaway, `last.ended` `done`) beside the towel (0.6 m to its left, 1.7 m landward), dripping; said: the double's "Då kanske vi ses…" and Stig's "Blött."; nobody on the sand at the first dream. The second: Siv on the sand (`variant` `siv`), "Giraffen, då? Fyra.", posed (`npcPosed`, not `honk.free`, `busy`, `spot` `strand`) within 4 m of the towel; still there 2.5 s after the scene; Stig warped 48 m off: she is home (her home spot, not busy, not posed). The third: nobody. A fifth (`dreams` set to 4) at 01:00: the night before, the sunset in the dream, the night at the wake and after, no Siv. Then a dream with `missions.begin()` at 3.2 s: the scene gone at once (`ended` `reset`), no sunset, no waltz, no `body.dream`, no `#dream`, the double hidden, Stig standing, the foam hidden, the mission under way; once it runs: no `inDialog`, no dream filter, the wash clear. `strandefter`, at index 13 after `unlock('bodega')`: the dream as above, then Majsan herself on the sand (`variant` `after`): her "Vill du dansa med mig?" then Stig's "Ja.", she dances (`anim.dance`), posed, `spot` `strand`, within 4 m; still there 1.5 s later; Stig warped 48 m off: she is home (her home spot, not dancing, not busy, not posed); with Majsan held (`busy`) nobody comes; index 2 (the flight level): not `live`, no `canUse()`. Shots `strandkyssen_0_handduk`, `strandkyssen_1_ligger` … `_9_efter`, `strandsiv_*` (`_8_besok1`, `_8_besok2`), `strandnatt_*`, `strandefter_*`, `strandefter_dans` |
+| `fyren` [feature 52] | Uppför fyren (§10.35), at index 6 (friskotek's idle, the clock held at 15:00). The world: `LIGHTHOUSE.deck` 51.3, the tower's circle (r 3.4, kind `tower`) topped there, the lantern to 99, 20 railing walls; at 720 angles a body of Stig's radius just outside the walkway meets a railing wall (no gap); `groundAt` beside the axis from 0.2 is the ground, from 4.0 and 20 the roof terrace (4.0), from 51 the gallery (51.3); no free spot there. The door: "E Gå upp i fyren" at `fyrDorr` by day (shot `fyren_dorr`); E: the fade at once, the banner `MÅNGA TRAPPSTEG SENARE …`; up on the gallery at `fyrGalleri` (51.3) facing out, `climbs` 1, the clock 15 → 19.75, `sunset`, not lit, `mantraMode`, `cam.cine`, view `orbit`, the prompt "E Gå ner" with "J håll: Jag kan flyga!"; "Femtio meter … det är ju nästan som att flyga." with the view still `orbit` (shot `fyren_galleri`), then `vista` within 9 s: the sight line north-east (within 0.35 rad of 3π/4) and more than 0.3 rad down, the vertigo's weight over 0.9 and the sight line moving by more than 0.004 rad in 0.9 s (shot `fyren_utsikt`). Held S+D, W+A, D and S+A+Shift (12 samples each): r within rIn − 0.05 … rOut + 0.06 and y 51.3 throughout; Space: no jump (y, vy, onGround over 8 samples). Levander's advice ("Varje gång du känner tendenser till flygrädsla så gör du övningen…") once he waits, with the view `orbit`. J held at r 2.5 by the door: `mantraOn`, `wings`, `eyesShut`, view `pose`, his back at rIn + 0.02 (±0.05), facing out (±0.1); `calm`, the vertigo under 0.3 (shot `fyren_ovning`), the mantra in a bubble; held on: the long blink (`busy`, the fade, still `wings` and `eyesShut`), then 22:00, lit, `night`, `beaconLit`, `last.kind` `night` from 19.75, still in the exercise with the fade gone (shot `fyren_natt`); J let go: arms down, eyes open; a second long hold at 19:45: no second blink. "E Gå ner" at `fyrGalleri`: the banner `… OCH LIKA MÅNGA NER.`, 2.6 m out from `fyrDorr` turned away from it, `climbs` 2, no `mantraMode`, no `cine`, still 22:00 and `night` (shot `fyren_ner`). A climb at 22:00 keeps the clock (`last.from` = `last.to` = 22); R from the gallery: on the road, not up, no `mantraMode`, `cine` or `eyesShut`. A SKANDAL pursuit: no "Gå upp" prompt, E no climb. At index 6 again, up there, `missions.begin()`: at the door below (y under 0.5), no landing over 6 m/s, no `mantraMode`; in the running mission no `fyren:upp` at the door |
 | `badgaster`, `stekt` [feature 32] | Badgäster på solstolarna (§10.22). `badgaster`, at index 6 (free roam): bodies only on taken sun loungers, their hips on the seat, at most `max` (10), none on Berra's or Robban's; on the main beach no taken lounger within `r` left empty nearer than the bodies (shot `badgaster_strand`); one rebuilt body's ms logged. The burn: three loungers in the z 250 row; a bather lain past `burn[0]` stays pale while in view within `seenR` and is pink once out of view; past `burn[1]` lobster red (skins from `skins`; shot `badgaster_stadier`). A kick at a free lounger and at a taken one give the same SKANDAL; the bather off it in a backward somersault (`flip` < 0) along the lounger's facing (vz > 2), an OUCH bark, a GETUP bark on his feet (shots `badgaster_kullerbytta`, `badgaster_upp`), gone once Stig is 30 m off; no `onCharHit`, no "hit" sorry. His car at 10 m/s through a taken lounger: SKANDAL 1 × 1.2 × gain only, the bather off along the car (vz > 5; shot `badgaster_bil`). The lounger back after its smash (respawn 0, him 100 m off): `n` + 1, a new seed, stage 0, a pale newcomer on it. At 22:00 nobody (after a cut); at 10:00 `dayN` + 1 and a new crowd. A mission start (friskotek) takes every body away at once, none in the mission; the flight level (index 2) makes none. `stekt`, at index 6: Berra and Robban `lying` on their loungers, outfit `stekt` (skin `STEKT_SKIN`), `slump`, busy, spot `stekt`; both snore within 9.5 s (shots `stekt_bar`, `stekt`); the E point `stekt:wake` at Berra's feet: Stig's line, then Berra's with `lift` > 0.6 (shot `stekt_fem_minuter`), then Robban's, in that order, and `lift` back under 0.1; a kick at Berra's lounger: `flung`, then `down` with his timer held (> 100), still `stekt`, only snores from him (shot `stekt_sparkad`); the lounger back with him 100 m off: on it again. A mission start (friskotek): both `normal`, outfit `sol`, no slump, within 2.5 m of their homes at the bar. Index 7: on their loungers; 5 and 8: not |
 | `talk` [Phase 0] | `autoDialog = false`, walk to Ole at `gateQueue`, E, Space twice |
 | `fullstory` [Phase 0b] | swaps the literal §8 missions (`tools/fixtures/full-missions.js`) into `MISSIONS` and plays all 13 per §16.3 (`FROM`/`TO` as `story`); must end `#13 idle`, `RESULT: PASS` |
@@ -8033,7 +8171,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `endcard` [Phase 2] | `game.playEndCard()`: Stig on the Rio deck in `rio`, Ole in `rio`, sunset, letterbox, frozen input, `RIO…?`; then back within 2.5 m of `flamencoPool` in island clothes, free roam, `NUEVA ESTOCOLMO KLARAT!` |
 | `calibrate` [G, Phase 2] | island timer calibration and difficulty checks (§8 "Timers and difficulty"): a headless autopilot in the player's car (env `CAL=id,…` from buss17 asnan vischan jeep home flowers plates tonga race guests balls sheep follow pursuit haggle; `RUNS` = 3, `JEEP_RUNS` = 12, `HOME_RUNS` = 2 (per spot), `FOOT_RUNS` = 4 (balls, sheep, flowers), `PLATE_RUNS` = 6, `RACE_RUNS` = 2 (+ 2 with one crash; every car-car impact of the player's car or the bus is logged, and a run whose car was lost counts as lost), `PURSUIT_RUNS` = 3, `RACE_SWEEP`, `JEEP`, `RACE_CAR`); medians of clean runs (the plates' fixed layout too) / 75th percentiles, on-foot A* walker (round static solids and stopped cars; it tracks its place on the route, measures progress along it (12 s without 1 m of it, or 30 s without getting 1 m closer along the route, is stuck and fails the run), re-plans at once on a new target, and backs out along its trail from a spot the grid cannot leave; walk results log `falls` and `wedges`), crash injection; the default run is a regression check, and a random stage's timer comes from its pool in `notes/calibration-samples.md` (`node tools/pool.mjs`); `CAL CHECK` compares each measured timer with the shipped one and, for a random stage (jeep, balls, sheep, flowers), says whether the shipped timer lies inside this sample's 90 % bootstrap range of the timer (`timerRange` in `tools/lib.mjs`; §8 "Timers and difficulty"); checks: deterministic shipped timers ≥ T_ref, a clean race wins and a crashed one loses, a clean SKANDAL escape is possible, follows stay in band; prints the timer table. `story` supports `SHOTS=1` (key-scene screenshots; every mission script slows the dialogue, which a `FROM` reload resets, and a shot wait gives up once the mission reaches the stage it names in `before`, so a missed line never holds the script while a timed stage runs; Phase 3 r2) |
 | `calibflight` [Phase 2] | flight timer calibration and FLYGRÄDSLA balance (env `FLIGHT=gate/sprint,…`, `SPRIT_RUNS` = 5, `DEBUG_SPRIT=1` traces the player, the trolley and the bottles twice a second, `DIALOG_CPS` = 55 the dialogue's typing speed, 20 for a player who reads every line: Phase 3 r3, FLYGRÄDSLA must not depend on it, §5.9): careful vs careless autopilots at timeScale 1; the landning round-up logs where the trolley stands at its start and end (Phase 3 r3); the sprit sweeper waits for bottles in the aisle clear of the trolley (2.4 m moving, 1.7 m stopped), steps into a free row only in turbulence and holds Space only while it shakes (not through the 1.5 s warning; Phase 3 r2); `CALF CHECK sprit[0]` compares with the shipped timer and the sample's 90 % bootstrap range; checks that careful players never panic (and the sprit sweeper is never bowled over and never falls) and careless ones do in missions 1, 2 and 5; the gate dawdler's failed dash is retried from the statistics and the retried dash must start within 2 of the first attempt's fear (Phase 3 r3 repair, §8.1 [2] `retryFear`) |
-| `perf` [Phase 2] | frame rate (2 s of play) plus the mean `game.update` ms and the GPU-synced `renderer.render` ms in the cabin in every phase (seated in 14B and from the aisle), at the gate, and on the island (spawn, plaza, marknad, kasbah, playa (the main beach and its bathers, feature 32), a drive through the centre, the high view); fails below 45 fps or above 1000/45 ms per frame. Phase 2: worst cabin 7.2 ms, worst island 9.0 ms (marknad, ~810 calls, 3.3 M triangles), all at 60 fps |
+| `perf` [Phase 2] | frame rate (2 s of play) plus the mean `game.update` ms and the GPU-synced `renderer.render` ms in the cabin in every phase (seated in 14B and from the aisle), at the gate, and on the island (spawn, plaza, marknad, kasbah, playa (the main beach and its bathers, feature 32), a drive through the centre, the high view, and the lighthouse's gallery: `island fyren view` at the sunset and `island fyren night` in the exercise under the lit lantern and its beam, feature 52, §10.35); fails below 45 fps or above 1000/45 ms per frame. Phase 2: worst cabin 7.2 ms, worst island 9.0 ms (marknad, ~810 calls, 3.3 M triangles), all at 60 fps |
 
 ---
 
@@ -8111,6 +8249,7 @@ brodrost_supermercado brodrost_grillpaco brodrost_hittegods` (feature 33, §10.2
 + the hotel roofs' stairs and view `takSolLobby takSolTopp takAtlTopp takAtlLobby takUtsikt` (feature 41,
 §10.29)
 + the SunTrip stage's microphone `mikrofon` (feature 44, §10.30)
++ the lighthouse's doors `fyrDorr fyrGalleri` (feature 52, §10.35)
 + collectibles `pryl_klocka pryl_poolpen pryl_kalkylator pryl_kniv pryl_kamera pryl_glasogon
 pryl_pung fena_flamenco fena_suntrip fena_plaza fena_golf fena_bungalow fena_hamn fena_hav` + Rio
 `rioBoat rioCam`.
@@ -8137,8 +8276,8 @@ feature 28).
 carry mantra timeline scene haggle smash`.
 
 **Anim flags**: `wings cupUp cupHeld push planeSeat hold flail oath dance laugh slump shoeOff mirror film
-camShow giraffe butterKnife carryOver glide swan calc ski groda ticket leap bomb` (+ existing `kick talk wave cheer sprint spin
-look`, the glide's numeric `bank`, feature 3, the judges' `card`, feature 4, and the pool fest's
+camShow giraffe butterKnife carryOver glide swan calc ski groda ticket leap bomb placate rub eyesShut` (`eyesShut`:
+feature 52, §14.6) (+ existing `kick talk wave cheer sprint spin look`, the glide's numeric `bank`, feature 3, the judges' `card`, feature 4, and the pool fest's
 numeric `hop`, feature 8; `groda` is 1 | 2 | 3, §14.6; and `lie`, the lying pose, feature 32).
 **Character states**: `normal flung down seated lying hidden` (`lying`: feature 32, §14.6).
 
@@ -10068,3 +10207,29 @@ the fixer's group.
   grisbil, locked in missions; the SKANDAL 1.2 s after his line; a fade for the tow; the wardrobe and
   an escape count as well as the porter; his for the session; no pedestrians hopping for the siren.
   Scenarios `guardiajeep`, `jeepsiren` (§16.4).
+- Feature 52, "Uppför fyren – mantrat på 51 meters höjd" (`features/implemented/fyren_mantrat.md`,
+  2026-10-17): the lighthouse's gallery (§10.35; new `src/game/lighthouse.js`, `FYREN` in
+  content/island.js; §1.6, §3, §6.3, §10.10, §14.1–§14.3, §14.6–§14.8, §16.4, Appendix A). coast.js
+  `fyren()`: the tower's solid (r 3.4) stops at the gallery floor 51.3 instead of 99, the lantern (r
+  1.75) and a closed ring of 20 railing walls (top 99) stand on it, all inside the old footprint, so
+  nothing at the foot changes; the rail bars run along the ring (yaw a, not a + π/2: they stood out like
+  spokes) with a middle bar added; a gallery door on the lantern's north-east side; `LIGHTHOUSE`
+  exported. Landmarks `fyrDorr` and `fyrGalleri`. Between missions, no pursuit: "E Gå upp i fyren" [N]
+  at the keeper's door, a fade with "MÅNGA TRAPPSTEG SENARE …" [N], by day the clock spun on to 19:45
+  (the sunset), and he stands outside the lantern's door facing out: "Femtio meter … det är ju nästan
+  som att flyga." [N]; the vertigo rocks the camera; if he waits, Levander's "Varje gång du känner
+  tendenser till flygrädsla så gör du övningen…" [F*]. Up there J is the mantra (`mantraMode`), Space
+  does not jump (main.js), the prompt adds the J hint; J held: his back to the lantern, facing out, eyes
+  shut (the new anim flag `eyesShut`, models.js `lids`), the mantra, the vertigo gone after 2.5 s; held
+  6 s with the lantern dark, the long blink: the clock spun on to 22:00, the lantern lit and its beam
+  over his head. Three gallery cameras (`cam.cine` each frame): round the tower with him (the mouse
+  turns it), in front of him in the exercise, and the town as he sees it when he stands still facing
+  out. "E Gå ner" [N] at the lantern's door ("… OCH LIKA MÅNGA NER." [N]) or R; the clock goes on as it
+  is; a mission start with him up there puts him at the door below. main.js: `fyren` after `jeep`,
+  `fyren.update` after `jeep.update`, the jump rule, the prompt. Only the map label uses the
+  lighthouse: no mission, stage, timer, fixture or calibration pool changed (no pooled stage's world is
+  touched); nothing saved. `perf` has two gallery rows (60 fps). Deviations from the idea: the sky
+  follows the clock (feature 30), so the climb and the blink move the clock and the way down leaves it;
+  three views chosen by what he does instead of fixed ones per sector; the view without him in it; the
+  door on the lantern's north-east side; Levander's advice added; no shaking legs. Scenario `fyren`
+  (§16.4).

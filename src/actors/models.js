@@ -997,6 +997,10 @@ export function animateCharacter(m, st, dt) {
     heldPose(m, st, t, true);
   }
   for (const k in m.props) if (!m.props[k].userData.used) m.props[k].visible = false;
+  // Eyes shut (Levander's "Slut ögonen.", the exercise on the lighthouse gallery, game/lighthouse.js):
+  // the lids are made the first time they are wanted, then shown or hidden.
+  if (st.eyesShut && !m.lids) m.lids = lids(m);
+  if (m.lids) m.lids.visible = !!st.eyesShut;
   m.neck.rotation.y += st.look || 0;
   // The big mouth.
   if (m.mouth) {
@@ -1005,6 +1009,19 @@ export function animateCharacter(m, st, dt) {
     if (st.slump && !st.talk) target = 0.55;
     m.mouth.scale.y += (target - m.mouth.scale.y) * Math.min(1, dt * 25);
   }
+}
+
+// Shut eyelids over the eyes (headParts' whites and pupils): a skin dome over each, with a dark
+// lash line across its lower half; a child of the head, built only for a body that shuts its eyes.
+function lids(m) {
+  const d = m.def, R = m.R, g = new CharBuilder();
+  for (const s of [-1, 1]) {
+    g.sphere(d.skin, s * R * 0.36, R * 0.22, R * 0.84, R * 0.42, R * 0.5, R * 0.26);
+    g.box(INK, s * R * 0.36, R * 0.14, R * 0.97, R * 0.34, R * 0.05, R * 0.04, 0, 0, s * 0.12);
+  }
+  const mesh = toonMesh(g.build(), { outline: 0, material: MAT.toon, cast: false });
+  m.head.add(mesh);
+  return mesh;
 }
 
 // Hand position (hips frame) of arm i, into out.

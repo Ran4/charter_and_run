@@ -187,6 +187,11 @@ export const ISLAND_LANDMARKS = {
   dyner: { b: [0, 4], at: [0, 0], yaw: PI - 0.4 },    // faces the arch: views camera on the sand south of it, clear of the boardwalk palms (Phase 3)
   // (0,6) lighthouse
   fyren: { b: [0, 6], at: [0, 10], yaw: PI },
+  // Uppför fyren (free roam, §10.35): before the keeper's house's arched door on its south wall,
+  // facing it (E: up the tower), and on the gallery 51.3 m up, outside the lantern's door on its
+  // north-east side, facing out over the town (E: down again). Block-local: the tower's axis is (0, -8).
+  fyrDorr: { b: [0, 6], at: [0, 1.4], yaw: PI },
+  fyrGalleri: { b: [0, 6], at: [2.4 * Math.SQRT1_2, -8 - 2.4 * Math.SQRT1_2], yaw: PI * 0.75, y: 51.3 },
   // (3,6) beach, (5,6) harbour
   playa: { b: [3, 6], at: [0, 10], yaw: 0 },
   fena_hav: { world: [0, 304], yaw: 0, y: 0.35 },

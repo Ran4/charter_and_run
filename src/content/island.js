@@ -949,6 +949,39 @@ export const TAKHOPP = {
   view: { lm: 'takUtsikt', r: 2.2, line: 'Nu har jag havsutsikt.' },   // [N] (his "Kallar ni det här för havsutsikt?" answered at last, research-plot.md:252)
 };
 
+// Uppför fyren – the mantra 51 m up (free roam, DESIGN §10.35; game/lighthouse.js, the gallery's
+// solids in world/blocks/coast.js `LIGHTHOUSE`). E at the keeper's house's door (`door`, within `r` m)
+// climbs the tower, E at the lantern's door on the gallery (`gallery`) climbs down: a black fade of
+// `fadeSecs` s with `upBanner` or `downBanner`, held `holdSecs` s. By day (the clock's day hours) the
+// climb takes the clock on to `evening` (the sunset palette), spun as the nap's; at any other hour it
+// stays. Down, he steps out `outStep` m from the door's E spot, turned away from it; the clock goes on
+// as it is. Up there, `arriveAt` s after the fade lifts, `arrive`; the vertigo rocks the camera
+// (`sway`); if he has not started the exercise `remind.after` s in, `remind.line` once a visit. J held
+// (the island's mantra, game.mantraMode) is the exercise: his back to the lantern, arms out, eyes shut,
+// the mantra; held `calmSecs` s (game seconds, as a mantra stage's) the vertigo is gone for the visit,
+// held `nightSecs` s while the lantern is dark it is the long blink: black over `blinkSecs` s, the
+// clock spun on to `night`, and he opens his eyes under the lit lantern and its beam. `cam`: the
+// gallery's cameras (DESIGN §10.35). Invented (§1.6): the climb, the gallery, the vertigo.
+export const FYREN = {
+  door: 'fyrDorr', gallery: 'fyrGalleri', r: 1.3, outStep: 2.6,
+  fadeSecs: 0.6, holdSecs: 1.0, blinkSecs: 1.4,
+  promptUp: '<b>E</b> Gå upp i fyren',                                                // [N]
+  promptDown: '<b>E</b> Gå ner',                                                      // [N]
+  upBanner: 'Många trappsteg senare …',                                               // [N]
+  downBanner: '… och lika många ner.',                                                // [N]
+  evening: 19.75, night: 22,
+  arriveAt: 0.4,
+  arrive: 'Femtio meter … det är ju nästan som att flyga.',                           // [N]
+  remind: { after: 10, line: 'Varje gång du känner tendenser till flygrädsla så gör du övningen…' },   // [F*] Levander's advice (research-plot.md:124), Stig reciting it to himself
+  calmSecs: 2.5, nightSecs: 6,
+  sway: { yaw: 0.04, pitch: 0.025, bob: 0.1, rate: 0.9, in: 0.8, out: 1.6 },
+  cam: {
+    orbit: { r: 7.4, h: 2.6, look: 1.2, turn: 0.004, max: 1.1 },
+    pose: { r: 6.0, h: 1.4, look: 1.5 },
+    vista: { back: 0.45, side: 0, h: 3.4, out: 34, down: 15, still: 0.8, face: 0.9, turn: 0.003, max: 0.6 },
+  },
+};
+
 // Mikrofonen på scenen – Stig reads Lasse's announcements (free roam, DESIGN §10.30; game/mic.js).
 // Places are block-local to `block` (Hotel SunTrip, as in world/blocks/hotels.js). On the island
 // with no mission running, Stig on foot on the welcome stage (over `stageY`) within `r` m of the mic

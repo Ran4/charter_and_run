@@ -57,7 +57,8 @@ export const SCENARIOS = {
     out.push(await measure(T, 'gate spawn'));
 
     // Island: the spawn, the plaza and the market on foot, the main beach (its bathers, §10.22), a
-    // drive through the centre with traffic, and the high view over the whole town.
+    // drive through the centre with traffic, the high view over the whole town and the lighthouse's
+    // gallery.
     await T.fresh('&mission=6');
     await T.sleep(800);
     out.push(await measure(T, 'island spawn'));
@@ -74,6 +75,16 @@ export const SCENARIOS = {
     await T.sleep(800);
     out.push(await measure(T, 'island high'));
     await T.ev(() => __game.cam.release());
+    // Up Faro de Maspalomas (§10.35): the whole town from the gallery at the sunset, and the exercise
+    // under the lit lantern and its beam at night.
+    await T.ev(() => { const g = __game; if (g.playerCar) g.exitCar(true); const l = __lm('fyrDorr'); g.debugWarp(l.x, l.z, l.yaw); g.fyren.stairs(true); });
+    await T.until(() => __game.fyren.up && !__game.fyren.busy, 10000);
+    await T.until(() => __game.fyren.view === 'vista', 9000);
+    await T.sleep(600);
+    out.push(await measure(T, 'island fyren view'));
+    await T.ev(() => __game.day.set(22));
+    await T.page.keyboard.down('KeyJ');
+    try { await T.sleep(1500); out.push(await measure(T, 'island fyren night')); } finally { await T.page.keyboard.up('KeyJ'); }
 
     const slow = out.filter((m) => m.fps < FLOOR_FPS || m.update + m.render > 1000 / FLOOR_FPS);
     T.log('perf worst', JSON.stringify(out.reduce((a, b) => (b.update + b.render > a.update + a.render ? b : a))));
