@@ -45,7 +45,7 @@ Samma tangenter i båda nivåerna; nivån bestämmer vad de gör.
 | Space | hoppa, i luften igen för dubbelhopp | handbroms (sladd!) | **håll i dig**: ta tag i närmaste stolsrygg vid turbulens |
 | J / klick | sparka, i luften: stampa (efter julafton: **håll in i luften** för att glidflyga) | | **håll in**: "Jag kan flyga, jag är inte rädd" – sänker FLYGRÄDSLA |
 | E | prata (med uppdragsgivaren, och mellan uppdragen med gänget), kliv in, sno en bil, kvarta en stund i Stigs säng i rum 107, titta i herr Storchs kamera, heja på rullskidåkaren, dansa med i poolen, smörja in Majsans rygg (**håll in** och släpp i det gröna), byta om i garderoben i rum 107 | kliv ur (i fart: rulla ur) | prata, **sätt dig / res dig**, lås in dig på toaletten, anropsknappen, serveringsvagnen |
-| H | | tuta (utanför uppdragen hör folk den) | |
+| H | | tuta (utanför uppdragen hör folk den; i den lånade Guardia-jeepen: sirenen) | |
 | B | | titta bakåt | |
 | M / Tab | stor karta | stor karta | plan över gaten/kabinen |
 | N | ljud av | ljud av | ljud av |
@@ -147,8 +147,18 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   bilen röd med blommor som en dalahäst, och Guardia Civil känner inte igen den. Men bara en gång
   per bil, och krockar du innan färgen har torkat känner de igen den igen. Och gör du något dumt
   nära Herr Storch: ingen fara, linsskyddet sitter på.
-- **Upplåsningar**: grisbilen (parkerad vid Hotell Flamenco efter uppdrag 9), samba-musik (alla
-  prylar) och Pepes Bodega på hotellets baksida (efter julafton).
+- **Upplåsningar**: grisbilen (parkerad vid Hotell Flamenco efter uppdrag 9) och samtidigt den ena
+  Guardia-jeepen vid kasernen (se nedan), samba-musik (alla prylar) och Pepes Bodega på hotellets
+  baksida (efter julafton).
+- **Låna Guardia-jeepen**: efter uppdrag 9 står den västra av de två gröna jeeparna vid Guardia Civils
+  kasern olåst mellan uppdragen. Tryck **E** (Låna jeepen), så kliver Stig in och säger artigt "Jag
+  lånar den bara en liten stund…" – och sedan slår SKANDAL i taket och jakten börjar. Skakar du av dig
+  poliserna (eller mutar portiern eller byter om i garderoben) är jeepen din resten av spelomgången.
+  Håll **H** i den, så tjuter sirenen, blåljuset på taket blinkar och bilar framför dig åt samma håll
+  saktar in och glider åt höger (men inte under en jakt). Första gången blir Stig själv förvånad, och
+  kör du förbi Viking Bar med sirenen på får Angerud ett utbrott. Åker du fast med jeepen frågar polisen
+  "Ursäkta, är det din bil?", Stig svarar ärligt "Nej.", och jeepen bärgas tillbaka till kasernen.
+  Under uppdragen är den låst som förut.
 - **Bärra hem Berra**: efter grisfesten somnar Berra då och då, på bänken vid fontänen på plazan
   eller på en solstol vid SunTrips pool, och Robban står bredvid och vinkar. Prata med Robban, så
   lyfter Stig upp Berra på axlarna och bär honom till receptionen på Hotell Flamenco. Gå, spring
@@ -465,6 +475,9 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
 - handduken i vattenbrynet och Stigs dagdröm där om strandkyssen med Majsan, vågen som väcker honom med
   "Blött.", Siv som sätter poäng på sanden och Majsan som efter berättelsen bjuder upp honom där (i
   filmen dagdrömmer han om kyssen i Stockholm, efter bärgningen, och ingen våg väcker honom)
+- att Stig lånar Guardia-jeepen vid kasernen, sirenen på H som får trafiken att väja, Angeruds utbrott
+  och polisens "Ursäkta, är det din bil?" efter en jakt (filmen har ingen Guardia-scen: frågan, svaret,
+  bärgningen och Angeruds utbrott hör till trafikvakten vid resebyråns skyltfönster i Stockholm)
 - fårrusningen i Fataga, kappkörningen mot nattbussen och porslinskrosset på tid
 - att samla ihop julfestgästerna
 - Oles prylar och hajfenorna som samlarföremål, utspridda över ön
@@ -576,6 +589,7 @@ src/game/mic.js                 Mikrofonen på scenen in free roam: Lasse's anno
 src/game/birds.js               Fåglarna som lyfter in free roam: the flocks that lift and land, Stig's sorry, the stork's trip and scene
 src/game/gags.js                Gags på E in free roam: Ole's flash at his camera bag, the juice under Viking Bar's lamp, the Gags count
 src/game/beachDream.js          Strandkyssen i bränningen in free roam: the towel, the daydream with Majsan's double, the wave, Siv or Majsan on the sand
+src/game/guardiaJeep.js         Låna Guardia-jeepen in free roam: the loan and its SKANDAL, the bust's question and tow, the siren on H, the traffic giving way
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
@@ -584,7 +598,7 @@ tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, 
                                 artig, grisar, bagage, lapplisa, torsdag, frukt, hopptorn, hund,
                                 badgaster, butik, brodrost, rum107, solkram, skjortbyte,
                                 stunthopp, prata, takhopp, mikrofon, faglar, gags, strandkyssen,
-                                calibrate, calibflight)
+                                guardiajeep, calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
 tools/pool.mjs                  re-derives every random stage's timer from the ledger
@@ -642,6 +656,7 @@ node tools/shot.mjs mikrofon utrop       # the SunTrip stage's mic: the five ann
 node tools/shot.mjs faglar storken       # the birds: the four flocks, the lift on foot, by car and by the horn, the landing, a mission start; the stork's trip and the Storch scene
 node tools/shot.mjs gags gagshots        # the two gags on E: the prompts, the lines, shots and poses, the flash, everyone back, the pay, Gags n/2 and the save; every line as seen
 node tools/shot.mjs strandkyssen strandefter  # the towel's daydream: the dream, the wave, Siv on the sand, by night, a mission start; after the end Majsan's invitation
+node tools/shot.mjs guardiajeep jeepsiren     # the borrowed Guardia jeep: the loan, his, the bust's question and tow, a mission start; the siren, the traffic giving way, Angerud
 node tools/shot.mjs fullstory kinds      # the literal §8 missions and the stage-kind checks
 node tools/shot.mjs calibrate calibflight  # timer and FLYGRÄDSLA calibration (slow; see DESIGN §8, §16.4)
 node tools/pool.mjs                      # random-stage timers from the raw runs in notes/calibration-samples.md

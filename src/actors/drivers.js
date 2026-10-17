@@ -124,6 +124,7 @@ export class AIDriver {
     this.rubber = opts.rubber || null;    // () => speed multiplier
     this.onArrive = opts.onArrive || null;
     this.arrived = false;
+    this.yieldK = 0;                      // 0..1: giving way to the player's siren (traffic, §10.34)
     this.t = Math.random() * 10;
     if (!this.path && this.mode === 'traffic') this.setPath(new LanePath(startNodes(car), { wander: true }));
     else if (this.path) this.setPath(this.path);
@@ -176,7 +177,7 @@ export class AIDriver {
       this.setPath(pathTo(car, best));
     }
 
-    let aimX, aimZ, targetSpeed = this.cruise;
+    let aimX, aimZ, targetSpeed = this.cruise, turning = false;
     if (direct) {
       aimX = direct.x; aimZ = direct.z;
       targetSpeed = car.spec.maxSpeed * 0.95;
@@ -195,6 +196,7 @@ export class AIDriver {
       while (k < p.pts.length - 1 && Math.hypot(p.pts[k].x - car.x, p.pts[k].z - car.z) < look) q = p.pts[++k];
       if (!q) { c.throttle = 0; c.brake = 1; return; }
       aimX = q.x; aimZ = q.z;
+      turning = !!q.turn;
       // Slow for bends: compare heading with a point further along.
       const far = p.pts[Math.min(p.pts.length - 1, k + 3)];
       const bend = Math.abs(angleDiff(car.yaw, yawTo(far.x - car.x, far.z - car.z)));
@@ -212,6 +214,22 @@ export class AIDriver {
       return;
     }
     if (this.rubber) targetSpeed *= this.rubber();
+    // Traffic gives way to the player's siren (the borrowed Guardia jeep in free roam, §10.34; never
+    // the pursuit's jeeps): with it close behind, going the same way, slow down and keep to the right
+    // (not through a turn's curve), eased in and out over `ease` s.
+    const sy = this.mode === 'traffic' && car.traffic ? game.sirenYield : null;
+    if (sy) this.yieldCfg = sy;
+    let want = false;
+    if (sy) {
+      const dx = car.x - sy.x, dz = car.z - sy.z, along = dx * sy.fx + dz * sy.fz;
+      want = along > 0 && along < sy.r && Math.abs(dz * sy.fx - dx * sy.fz) < sy.lat && fx * sy.fx + fz * sy.fz > sy.cos;
+    }
+    if (want || this.yieldK > 0) {
+      const y = this.yieldCfg;
+      this.yieldK = clamp(this.yieldK + (want ? dt : -dt) / y.ease, 0, 1);
+      targetSpeed += (Math.min(targetSpeed, y.slow) - targetSpeed) * this.yieldK;
+      if (!turning) { aimX += -fz * y.aside * this.yieldK; aimZ += fx * y.aside * this.yieldK; }
+    }
     // A closed course (a race, game.closure): stop about 11 m short of a closed junction's centre
     // (the nose clear of the crossing road), braking at ≈ 5 m/s², and park there: the coasting
     // throttle below crept a held car on at 1.2 m/s into the junction.

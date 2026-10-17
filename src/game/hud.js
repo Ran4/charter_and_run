@@ -200,6 +200,9 @@ export const hud = {
     this._meterHot = this._meterPursuit = undefined;
     document.body.classList.remove('pursuit');
   },
+  // The borrowed Guardia jeep's siren (§10.34): the pursuit's blue corners (#sirenlights) while H is
+  // held in it.
+  sirenLights(on) { document.body.classList.toggle('siren', !!on); },
   // FLYGRÄDSLA 0..1: the --fear CSS variable (the red vignette grows from 0.5 up) and body.fear-hot
   // (>= 0.7: the vignette pulses with the heartbeat).
   setFear(v01) {

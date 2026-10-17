@@ -96,9 +96,10 @@ body:not(.playing) #hud { opacity: 0; }
 body.fear-hot #vignette::after { animation: pulse 0.8s infinite; }
 @keyframes pulse { 0%, 45%, 100% { opacity: 0; } 12% { opacity: 1; } 28% { opacity: 0.6; } }
 
-/* Guardia Civil pursuit: blue lamps flashing in the top corners, alternating with the siren. */
+/* Guardia Civil pursuit: blue lamps flashing in the top corners, alternating with the siren (and
+   while H holds the borrowed jeep's siren, body.siren, §10.34). */
 #sirenlights { position: absolute; inset: 0; display: none; pointer-events: none; }
-body.pursuit #sirenlights { display: block; }
+body.pursuit #sirenlights, body.siren #sirenlights { display: block; }
 #sirenlights > div { position: absolute; top: 0; width: 46vw; height: 42vh; opacity: 0; animation: lamp2 0.9s steps(1) infinite; }
 .sl-l { left: 0; background: radial-gradient(ellipse at 0 0, rgba(40, 110, 255, 0.62), rgba(40, 110, 255, 0.18) 45%, transparent 70%); }
 .sl-r { right: 0; background: radial-gradient(ellipse at 100% 0, rgba(40, 110, 255, 0.62), rgba(40, 110, 255, 0.18) 45%, transparent 70%); animation-delay: 0.45s !important; }

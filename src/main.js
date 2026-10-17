@@ -50,6 +50,7 @@ import { Mic } from './game/mic.js';
 import { Birds } from './game/birds.js';
 import { Gags } from './game/gags.js';
 import { BeachDream } from './game/beachDream.js';
+import { GuardiaJeep } from './game/guardiaJeep.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
 import { LEVELS, ISLAND_PALETTES } from './level.js';
@@ -212,6 +213,8 @@ class Game {
     this.birds = new Birds(this);         // free roam: the flocks that lift, the stork in La Charca (§10.31)
     this.gags = new Gags(this);           // free roam: E at Ole's camera bag and Viking Bar's lamp, two film gags (§10.32)
     this.dream = new BeachDream(this);    // free roam: the towel at the water's edge, Stig's daydream in the surf (§10.33)
+    this.jeep = new GuardiaJeep(this);    // free roam after the bodega: the borrowed Guardia jeep, its siren on H (§10.34)
+    this.sirenYield = null;               // the jeep's siren the traffic gives way to: { x, z, fx, fz, r, … } (drivers.js)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -656,6 +659,7 @@ class Game {
     if (!this.levelDef.verbs.enterCars || car.noEnter) { if (this.level === 'flight') hud.toast(S.noCars); return; }
     if (car.locked) { hud.toast(S.carBusy); return; }
     if (this.player.seatId) this.standPlayer();
+    this.jeep.onEnter(car);   // the Guardia jeep at the barracks: the loan, SKANDAL (§10.34)
     if (car.driverBust) {
       // Carjacking: the driver tumbles out and is not happy about it.
       car.tilt.remove(car.driverBust);
@@ -1541,6 +1545,7 @@ class Game {
     this.mic.update(dt);
     this.birds.update(dt);
     this.dream.update(dt);
+    this.jeep.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);
@@ -1589,8 +1594,9 @@ class Game {
       return;
     }
     if (this.playerCar) {
-      // The horn as an event in free roam (§10.9); updateAudio plays it everywhere.
-      if (input.pressed('horn')) this.honk.press();
+      // The horn as an event in free roam (§10.9); updateAudio plays it everywhere. In the borrowed
+      // Guardia jeep H is its siren instead (§10.34).
+      if (input.pressed('horn') && !this.jeep.hasSiren(this.playerCar)) this.honk.press();
       if (input.pressed('interact')) this.exitCar();
       return;
     }
@@ -2071,7 +2077,7 @@ class Game {
         const hold = this.level === 'flight' && this.cabin.turbulent && p.state === 'normal' && !this.holding;
         if (it?.type === 'talk' || it?.type === 'chat') prompt = fmt('promptTalk', { name: it.who.def.name });
         else if (hold) prompt = S.promptHold;
-        else if (it?.type === 'car') prompt = it.car.locked ? '' : it.car.driverBust ? S.promptSteal : S.promptGetIn;
+        else if (it?.type === 'car') prompt = it.car.locked ? '' : this.jeep.prompt(it.car) || (it.car.driverBust ? S.promptSteal : S.promptGetIn);
         else if (it?.type === 'it') prompt = it.it.prompt || '';
         else if (it?.type === 'stand') prompt = S.promptStand;
       }
@@ -2091,7 +2097,8 @@ class Game {
     if (c && !c.dead) {
       audio.engine(true, c.revs, c.ctrl.throttle);
       audio.skid(c.air ? 0 : c.skidAmt);
-      audio.horn(input.down('horn') && !c.spec.pigs);   // the grisbil grunts instead (honk.update, §10.9)
+      // The grisbil grunts instead (honk.update, §10.9); the borrowed Guardia jeep's H is its siren (§10.34).
+      audio.horn(input.down('horn') && !c.spec.pigs && !this.jeep.hasSiren(c));
       if (c.skidAmt > 0.3 && !c.air) {
         this.skidT = (this.skidT || 0) - 1;
         if (this.skidT <= 0) {
@@ -2116,6 +2123,10 @@ class Game {
     } else if (this.lowpassOn !== false) { audio.setMusicLowpass(null); this.heartT = 0; }
     this.lowpassOn = sh.mode === 'panic' && sh.v >= (sh.cfg.hot ?? 70);
     audio.duckMusic(sh.pursuit ? 0.5 : 1);
+    // The siren (§7.2, §10.34): a pursuit's (shame.js turns it on and off and sets its loudness by the
+    // nearest pursuer), or the borrowed Guardia jeep's while H is held, at full loudness.
+    audio.siren((sh.pursuit && !!sh.cfg.siren) || this.jeep.sirenOn);
+    if (this.jeep.sirenOn) audio.sirenNear(0);
   }
 
   // Replace traffic that has been wrecked or wandered off far away.

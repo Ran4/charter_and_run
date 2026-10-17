@@ -108,7 +108,11 @@ opens with a summary of the rounds and the timer changes.
     strandefter` (Strandkyssen i bränningen, the towel at the water's edge below Flamenco: Stig's
     daydream with Majsan's double in the surf, the sunset, DAGDRÖM and the waltz, the camera gliding
     away, the white flash and the real wave, "Blött.", Siv's score on the sand, by night, a mission
-    start mid-dream; after the end Majsan asking him to dance, DESIGN §10.33)
+    start mid-dream; after the end Majsan asking him to dance, DESIGN §10.33), `guardiajeep
+    jeepsiren` (Låna Guardia-jeepen, guardia1 at the Casa Cuartel open between missions after the
+    bodega: the loan and its SKANDAL, his once shaken off, the bust's "Ursäkta, är det din bil?",
+    "Nej." and the tow, the respawn, locked in a mission; the siren on H, its lamp and corners,
+    traffic giving way with no pursuit, Stig's surprise, Angerud's outburst, DESIGN §10.34)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

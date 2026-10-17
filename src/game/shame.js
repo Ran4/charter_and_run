@@ -245,6 +245,7 @@ export class Shame {
     audio.siren(false);
     audio.setTune(this.tuneBefore || g.levelTune?.() || g.levelDef?.tune || 'sol');
     this.tuneBefore = null;
+    g.jeep?.onPursuitEnd();   // the loan's pursuit shaken off: the Guardia jeep is his (§10.34)
     if (!caught) {
       const [main, sub] = this.cfg.bannerEscape || ['', ''];
       hud.showBanner(main, sub, 'good', 2200);
@@ -260,6 +261,9 @@ export class Shame {
     hud.setCoins(g.coins);
     this.v = 0;
     this.caughtT = 2.2;
+    // Busted with the borrowed Guardia jeep (free roam, §10.34): its question, Stig's answer and the
+    // tow instead of the bust line and the radio. Asked before he is pulled out of it.
+    const jeep = !!g.jeep?.onBusted();
     if (g.playerCar) g.exitCar(true);
     const f = g.focus();
     fx.meterPuff(f.x, f.y + 1, f.z, 0x3d5a3a, 30);
@@ -279,12 +283,13 @@ export class Shame {
     o.wishX = o.wishZ = 0;
     o.yaw = yawTo(p.x - o.x, p.z - o.z);
     o.sync(0);
-    // His line after the stamp (the banner is drawn over bubbles); he lingers bustFreeze s.
-    this.officerLinger = c.bustFreeze ?? 3;
-    g.wait?.(1.8).then(() => { if (o.state !== 'hidden' && this.officerLinger > 0) g.say(o, c.bustLine || '¡Documentación!', 1.2); });
+    // His line after the stamp (the banner is drawn over bubbles); he lingers bustFreeze s (the
+    // jeep's scene: to its tow).
+    this.officerLinger = jeep ? g.jeep.cfg.linger : c.bustFreeze ?? 3;
+    if (!jeep) g.wait?.(1.8).then(() => { if (o.state !== 'hidden' && this.officerLinger > 0) g.say(o, c.bustLine || '¡Documentación!', 1.2); });
     // P1 flavour: Lasse on the radio, once the freeze is over; free roam only (never after a bust
     // that fails or interrupts a mission).
-    if (c.bustRadio && g.wait && g.missions.state === 'idle') g.wait((c.bustFreeze ?? 3) + 0.3).then(() => { if (g.level === 'island' && g.missions.state === 'idle') g.radio(c.bustRadio[0], c.bustRadio[1]); });
+    if (c.bustRadio && !jeep && g.wait && g.missions.state === 'idle') g.wait((c.bustFreeze ?? 3) + 0.3).then(() => { if (g.level === 'island' && g.missions.state === 'idle') g.radio(c.bustRadio[0], c.bustRadio[1]); });
     this.closet.onBusted();
     g.missions.onBusted?.();
   }

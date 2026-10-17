@@ -271,7 +271,12 @@ a towel at the water's edge below Flamenco, Stig's daydream on it of Majsan and 
 the famous beach kiss in the surf (the sunset, the soft picture, DAGDRÖM and the waltz), the real wave
 over him with his "Blött.", and Siv with her score or, after the end, Majsan asking him to dance on the
 sand (free roam, §10.33; in the film he daydreams of the kiss in Stockholm, after the tow, and no wave
-wakes him).
+wakes him); the bodega's unlock leaving one of the Guardia jeeps at the Casa Cuartel open, Stig
+borrowing it with an apology and SKANDAL at once, the jeep his once he has shaken them off, its siren
+and blue lamp on H with the traffic giving way to it, Angerud's outburst at it, and the officer's "Ursäkta,
+är det din bil?" after a bust with it, Stig's "Nej." and the tow back to the barracks (free roam, §10.34;
+the film has no Guardia scene: the question, the answer, the tow and Angerud's outburst are the traffic
+warden's at a Stockholm travel agency's window).
 The film's flight has **no turbulence** and **no in-flight toilet scene**: both toilet scenes are
 at Arlanda (we keep them there). The plane's toilets are only an invented hideout.
 
@@ -1238,7 +1243,7 @@ standing there faces. `y` (optional) = absolute height for collectible spots on 
 | (2,1) | `marknad` → `marknad` (C2, centre.js) | rows of striped stall awnings (some `bounce` awnings as climb pads); the five fruit stalls are `frutas` props (§6.8; feature 28, §10.19): rad A's west end (−24.5, −25.25, `FRUTAS` board) and east end (24.5, −25.25), rad A2 (12.5, −16.75, facing −z), rad C (6.5, 9.75) and the lone one (18.5, −7.75; 3.5 m deep, its counter in line with its 4 m neighbour's), all with the yellow-and-orange awning, which no other stall has (the old `SCH[2]` [SUN, orange] scheme is plum and white, 0x7a3a6a); souvenir stand with painted donkeys `BURROS 500 PTA`, postcard racks, plastic giraffes; the `MERCADILLO · MARKNAD` board on two legs over the south path hangs at 3.85–4.95, above the chase eye (Phase 3 r3: at 2.35–3.45 it covered him walking in from the south road) | `marknad` (0, 22, π) · `asnestand` (6, 2, π) · `pryl_kalkylator` (−12, −8, 0, 3.4) (on an awning roof) · `brodrost_marknad` (−11.186, −6.4, 0, 1.08) (a G17 toaster on stall K's counter in its radios' gap 5, `stall`'s `gap`; §10.24; not a standing spot) | — |
 | (3,1) | `kyrka` → `kyrka` (C2, centre.js) | **Templo Ecuménico**: white rationalist church (flat planes, bell slab), palm plaza, crèche, small fountain; sign `ES UNA IGLESIA` / `DET ÄR EN KYRKA.` [F*] (the sisters' language record, relocated; uppercase since Phase 3 r2, §1.3) | `kyrka` (0, 18, π) | — |
 | (4,3) | `bensin` → `bensin` (C2, centre.js) | gas station: canopy, `GASOLINA` (no brand), prices in pesetas, kiosk; `gaspump` props explode; the workshop's two open bays (`TALLER · NEUMÁTICOS · LAVADO`) are the free-roam paint shop (§7.2): `PINTURA` on the pillar between them, paint tins and a brush by the left bay, a yellow 4 × 7 m box in front of it, the cone moved to the pillar and the parked yellow hatch to the east gable (29.5, −20), out of the painted car's way to the road | `bensin` (0, 16, π) · `pintura` (11.25, −8, 0) (the paint zone in front of the left bay, facing out of it) · cut anchor `pinturaCam` (11.25, −9.6, π) (the bay seen from the forecourt) | — |
-| (5,3) | `guardia` → `cuartel` (C2, centre.js) | ochre barracks, red-yellow-red flag mast beside the path at x 4.6 (Phase 3: off the axis to the `CASA CUARTEL` plaque), `CASA CUARTEL`; two parked green Land Rovers | `guardia` (0, 20, π) | `guardia1`, `guardia2` (type `guardia`, locked) |
+| (5,3) | `guardia` → `cuartel` (C2, centre.js) | ochre barracks, red-yellow-red flag mast beside the path at x 4.6 (Phase 3: off the axis to the `CASA CUARTEL` plaque), `CASA CUARTEL`; two parked green Land Rovers | `guardia` (0, 20, π) | `guardia1`, `guardia2` (type `guardia`, locked; feature 51: `guardia1` open between missions after the bodega, §10.34) |
 | (1,0), (3,0), (0,1) | `tomat` → `tomatfalt` (D1, nature.js) | rows of low tomato bushes (one merged mesh, walls a car drives through: no solids, or tops ≤ 0.6), packing shed `TOMATES · EXPORTACIÓN` / `EMPAQUETADO`, `tomatlada` props, dirt tracks; on (0,1) the finca's yard is `FARM_YARD` (feature 31, §10.21: the yard dog's rectangle x [−30.1, −2.6], z [−30.1, −14.8], its door and spot, the finca and the tank with its ramp as its walls; data only) | on (0,1): `vischan` (6, 24, π) · cut anchor `vischanCam` (5.7, 22.7, −0.14) (on the gravel track north of the vischan scene, looking back south at the road and the `CAMINO SIN ASFALTAR` sign; Phase 3 r2) · `eslovVag` (27.5, 24, 0) (the rollerskier on the Eslöv lane, 6 m up from the z −120 road and facing it; Phase 3 r2, was (28, 4, −π/2) mid-lane, 33 m off the vischan drive) — on (3,0): `packhus` (0, 10, π) | — |
 | (2,0) | `grisfest` → `grisgard` (D1, nature.js) | farm: white barn (roof top ≈ 5), pergola deck with long tables under string lights, spit-roast pig, bandstand, dance-floor platform (deck top 0.4), piglet pen, gate on the **south** road; **12 `tallrikar` prop stacks** on the tables (smash stage; `placeProp(..., baseY = table top)`, §14.7) | `grisfest` (0, 26, π) · `grisfestGate` world (−80, −204, π/2) (on the south road at the farm gate, the `follow` endpoint) · `dansgolv` (0, 0, 0) · `pryl_pung` (−18, −14, 0, 5.4) · `grisfalla` (−11, 20.5, −π/2) and `grisfallaIn` (−18.5, 20.6, −π/2) (the pig delivery's stop by the piglet pen and the pen's middle, feature 15, §10.15) | — |
 | (0,0) | `fataga` → `fataga` (D1, nature.js) | white village houses, tile roofs, narrow lanes, date palms, small church, embroidered tablecloths on lines (`MANTELES · DUKAR`), sheepfold (fence solids, gap gate); six ochre crags along the north edge, solid along their length (Phase 3 r3: rock()'s 1 m circle plus a box 0.85·sx × 0.53·sz on the long axis, the mesh's widest section; the circle alone let the player and the chase eye 2–3 m into the rock, also in the fold's back under the shelter) | `fataga` (0, 18, π) · `fatagaBus` world (−240, −204, −π/2) (westbound kerb of the z = −200 road, the `follow` endpoint) · `fatagaFold` (−18, −12, 0) · `fatagaDukar` (8, 4, π) · cut anchor `dukarCam` (8, 4, 0) = `fatagaDukar` turned round (the stall from the square; Phase 3) · `pryl_kniv` (0, 0, 0, 1.2) | — |
@@ -1348,7 +1353,7 @@ in the air, and every landing calls `game.onCarAirEnd(car, impact)` before the o
 | `guagua` | Guagua | `bus` + `livery: 'guagua'` | green `0x2f8a4a` | traffic, at most one bus in traffic |
 | `icecream` | Glassbil | `icecream`, sign `HELADOS` | `0xfafafa` | traffic, rare |
 | `taxi` | Taxi | sedan + flag `taxi` (cream body, roof `TAXI` box with a green LIBRE lamp) | `0xe8dcb8` | traffic ×1, `taxiAirport` |
-| `guardia` | Guardia Civil | new: `tall`, len 4.2, wid 1.9, bodyH 1.45, cabinH 0, wheelR 0.4, maxSpeed 30, accel 12, grip 9, steer .58, mass 2000, hp 160; flag `guardia` (white roof, blue lamp, white door band, spare wheel on the bonnet) | `0x2e5e3e` | pursuit, `guardia1/2` parked |
+| `guardia` | Guardia Civil | new: `tall`, len 4.2, wid 1.9, bodyH 1.45, cabinH 0, wheelR 0.4, maxSpeed 30, accel 12, grip 9, steer .58, mass 2000, hp 160; flag `guardia` (white roof, blue lamp, white door band, spare wheel on the bonnet) | `0x2e5e3e` | pursuit, `guardia1/2` parked (`guardia1` borrowable between missions after the bodega, its lamp blinking on H: feature 51, §10.34) |
 | `grisbil` | Grisbilen | pickup + flag `pigs` (slatted rack + 3 pink pig blobs: one at −0.15 L, the back two across the bed snout to snout at −0.41/−0.425 L, scale 0.72, wholly inside the rack — Phase 3 r2, they faced aft and their snouts stuck ~0.2 m out over the tailgate; the bed-rider slots at −0.3 L stay free; since feature 15 each pig is its own outlined mesh, `PIG_SLOTS` / `car.pigs`, so one can tumble off in free roam, §10.15, same look), maxSpeed 34, accel 14 | rust `0xa8442a` | bodega mission, unlock |
 | `trolley` | Serveringsvagn | registered by cabin.js (§5.8) | `0xc8ccd2` | cabin only |
 
@@ -1546,7 +1551,8 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
   when all pursuer cars are wrecked and the officer is gone. `forced` (stage `shame: true`) → no
   decay.
 - **At 100**: `startPursuit()`: banner, siren (two-tone 650/500 Hz square, alternating 0.45 s, while
-  pursuit), music → `skandal`, flash `rgba(60,110,70,.45)`. Two `guardia` Land Rovers spawn on the
+  pursuit; since feature 51 `main.updateAudio` keeps it on while a pursuit runs or H is held in the
+  borrowed jeep, §10.34), music → `skandal`, flash `rgba(60,110,70,.45)`. Two `guardia` Land Rovers spawn on the
   streets `spawnDist` (40–80 m) away: on any block edge, 12 m past a junction or mid-block, in the
   right-hand lane, heading towards him, ≥ 30 m apart, never in the cone ahead of a moving player
   (a head-on bust in the first seconds) (`vehicle` from config),
@@ -1599,8 +1605,8 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
   (`Guardia Civil tog {n} pesetas i böter`, `{n}` with thin-space thousands, `pta()`; 1.8 s), flash;
   the player is **pulled out of the car** (if in one) and frozen `bustFreeze` = 3 s beside the
   officer, who bubbles "¡Documentación!" once the stamp is gone (1.8 s in, for 1.2 s; the banner is
-  drawn over bubbles and hid it) (in timed stages the bust costs time); `endPursuit(true)`, then `missions.onBusted()` (fails only
-  `bustFails` missions). The 500-pta porter bribe beats the fine once the purse is ≈ 2 500 pta. P1 flavour: radio `lasse` "Friskotek i morgon bitti, Olsson!" [N] (`bustRadio`), only for a bust in free roam (no mission running, then or 3.3 s later).
+  drawn over bubbles and hid it; a bust with the borrowed jeep has its own question instead, §10.34) (in timed stages the bust costs time); `endPursuit(true)`, then `missions.onBusted()` (fails only
+  `bustFails` missions). The 500-pta porter bribe beats the fine once the purse is ≈ 2 500 pta. P1 flavour: radio `lasse` "Friskotek i morgon bitti, Olsson!" [N] (`bustRadio`), only for a bust in free roam (no mission running, then or 3.3 s later), and not after a bust with the borrowed jeep (§10.34).
 - **Escape**: banner SKANDALEN TYSTAD + `complete` jingle. **Music after a pursuit** (escape, bust
   or bribe): the tune that played when it started if that was a mission's (the night grisfest's
   `vals`, the julafton party's `jul`; `shame.tuneBefore`), else `game.levelTune()` read at the end
@@ -1700,6 +1706,19 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
   `poor`). Balance: the escape still has to come first (35 m clear of both Land Rovers), it costs
   twice the porter, the cooldown is shared, a knock in the first 12 s undoes it, and a painted car
   is known for good.
+- **The borrowed jeep** (free roam; feature 51 "Låna Guardia-jeepen", 2026-10-17; `game/guardiaJeep.js`,
+  owned by Game as `jeep`, §10.34). After the bodega `guardia1` at the Casa Cuartel is open between
+  missions (locked as before in a mission). Getting in within 20 m of its bay is a loan: 1.2 s later
+  `add(100)` (× `gain`: the top) and an ordinary pursuit (the witness rule holds: with Herr Storch's
+  lens cap on there is none, and the jeep is his at once). Shaken off (an escape, the porter, the
+  wardrobe: `endPursuit` → `jeep.onPursuitEnd()`), the jeep is his for the session: no SKANDAL when he
+  gets in again. `busted()` asks `jeep.onBusted()` before he is pulled out: busted in the jeep, or in
+  the loan's pursuit, the officer lingers 4.4 s instead of `bustFreeze` and asks "Ursäkta, är det din
+  bil?" [F*] at 1.8 s instead of `bustLine`, Stig answers "Nej." [F*] at 2.9 s, there is no
+  `bustRadio`, and the jeep is towed back to its bay at 3.9 s (behind a black fade when it is within
+  60 m of him). The fine, the freeze, `carBust`, the bands and the spawn are unchanged. Its siren on H
+  makes traffic give way only with no pursuit, and the pursuit's own jeeps never do, so the measured
+  balance above holds.
 - **Witness rule** (P1): an offence within 20 m of `herrStorch` adds **0** SKANDAL (no evidence:
   the lens cap is on) and shows the toast `Ingen fara: linsskyddet sitter på.` (≤ once per 60 s;
   offences inside the cooldown still add 0). In a mission he lifts his camera where he stands with
@@ -3314,7 +3333,12 @@ from the next forced placement (`placeNpcs(true)`: the runner's `complete()`, th
 after the end Lasse keeps his Santa outfit. The toast shows on the first unlock only;
 `game.unlock(name, { holdToast: true })` (Phase 3 r3) applies and saves the unlock but returns the
 toast (or null) instead of showing it, for the runner to show after the end card (§9.4 item 8).
-P2: `guardiaJeep` (buyable Land Rover that halves SKANDAL gain).
+P2: `guardiaJeep` (buyable Land Rover that halves SKANDAL gain). Feature 51 (§10.34) is a variant
+with the opposite effect, and the buyable jeep stays P2: `grisbil` also leaves `guardia1` at the Casa
+Cuartel open between missions, a loan that brings the Guardia. `game.jeep` reads
+`unlocked.has('grisbil')` (so a save from before the feature has it too) and adds its own toast, "Vid
+Guardia Civils kasern står en jeep olåst…" [N], after the grisbil's the first time (not for a loaded
+save); the grisbil's toast is unchanged.
 
 ### 10.4 Outfits
 
@@ -5849,6 +5873,82 @@ kiss.
   the second, by day; after the end Stig answers "Ja." and she dances; the towel is offered by night
   too; it has no landmark.
 
+### 10.34 Låna Guardia-jeepen – "Ursäkta, är det din bil?" (free roam; feature 51, 2026-10-17)
+
+`game/guardiaJeep.js` (`GuardiaJeep`, owned by Game as `jeep`), config `GUARDIA_JEEP` in
+content/island.js, hooks in shame.js (`busted`, `endPursuit`, §7.2), main.js (`enterCar`, the prompt,
+H, `updateAudio`) and the traffic's `AIDriver` (drivers.js), `hud.sirenLights` (style.css
+`body.siren`). Hit & Run's classic reward, the police car, for the island's most bewildered man: he
+does not steal it, he borrows it, says so and is surprised when the traffic lets him through. The film
+has no Guardia scene (the pursuit, ¡MULTA! and the jeep chase are the game's, §1.6); the question and
+the answer are its first act, at the travel agency's window: the warden Majsan asks Stig-Helmer
+"Ursäkta, är det din bil?", he answers "Nej.", and it is Angerud's car she has towed
+(research-plot.md:94–97). Here the officer asks [F*], and Stig's "Nej." is just as true. "Land Rover"
+is never said: the car is the Guardia jeep.
+
+- **The jeep.** `guardia1`, the west one of the two at the Casa Cuartel (block (5,3), its bay at
+  (152.8, 8.1), facing the gate); `guardia2` stays locked. Open (`car.locked` false) when the bodega's
+  unlock `grisbil` is in `game.unlocked`, on the island with `missions.state === 'idle'` and no bust
+  scene under way; else locked as before ("Den är upptagen!", no prompt). The module sets `locked`
+  every frame on the jeep he is not in, so a mission never sees it (`T.anyCar` and every stage skip a
+  locked car) and an old save has it with no change to the save. The speedo calls it Guardia-jeepen
+  (`NAMED_CARS.guardia1`). After the unlock's first time (not a loaded save's) its own toast `open`
+  "Vid Guardia Civils kasern står en jeep olåst…" [N] follows the grisbil's.
+- **The loan.** On foot by the open jeep within `loanR` = 20 m of its bay and not his, the car prompt
+  is `<b>E</b> Låna jeepen` [N] (else "E Kliv in"). E (`enterCar` → `jeep.onEnter`): he gets in, says
+  "Jag lånar den bara en liten stund…" [N], and `shameAt` = 1.2 s later (after his bubble, which the
+  banner would hide) `shame.add(shame = 100)`: × `gain` 3, the top, and the ordinary pursuit (§7.2).
+  If a pursuit is running then, it is the loan's (`jeep.loan`); if none starts (Herr Storch within
+  20 m with his lens cap on, §7.2), the jeep is his at once.
+- **His.** The loan's pursuit shaken off by anything but a bust (an escape, the porter, the wardrobe:
+  `endPursuit` → `onPursuitEnd`): the jeep is his (`hisCar`, that car object, this session; not
+  saved), with the toast `his` "Guardia-jeepen är din – håll H för sirenen." [N]. Getting in again,
+  at its bay too, is no loan. A loan cleared by a mission start or the other level (`shame.clear`, the
+  reset) makes nothing his.
+- **Busted with it** (`shame.busted` → `jeep.onBusted()`, asked before he is pulled out): in it, or in
+  the loan's pursuit (on foot too, wherever the jeep is), in free roam: the bust scene instead of the
+  officer's `bustLine` and the `bustRadio`: the officer lingers `linger` = 4.4 s (not `bustFreeze`),
+  asks "Ursäkta, är det din bil?" [F*] at `askAt` = 1.8 s, Stig answers "Nej." [F*] at `noAt` = 2.9 s,
+  and at `towAt` = 3.9 s the jeep is towed back to its bay: with it within `seeR` = 60 m of him behind
+  a `fadeSecs` = 0.5 s black fade (`hud.fade`, `inDialog` while it is black, 0.35 s more), else at
+  once; a wreck or a jeep gone is replaced by a new one there (`ensureNamedCar`). The toast `towToast`
+  "Guardia-jeepen är bärgad – tillbaka vid kasernen." [N]. It is no longer his. The fine, the freeze
+  (3 s), the banner and `carBust` are as for any bust. While the scene runs the jeep is locked.
+- **Wrecked and cleared away** (`recycleTraffic` removes a dead unlocked car 20 s on, more than 60 m
+  from him): a new jeep stands in its bay once he is more than `respawnR` = 80 m from it; not his.
+- **The siren.** In the jeep in free roam (`hasSiren`), H is its siren, not the horn: no
+  `audio.horn`, no `honk.press` (no hop, no answers, no `hornAt`). While H is held (`sirenOn`, not in
+  a dialogue): `main.updateAudio` turns the siren on (`audio.siren`: a pursuit's or this one, the rule
+  "on while a pursuit runs or H is held in the jeep"; at full loudness, `sirenNear(0)`); a blinking
+  lamp over the merged blue one on the roof (a `MeshBasicMaterial` dome 0.17 m and an additive halo
+  sprite 1.7 m, built once per car, on and off every `blink` = 0.225 s); the pursuit's blue screen
+  corners (`#sirenlights`, `body.siren`). Let go, out of the jeep or a dialogue: all off.
+- **The traffic gives way** (no pursuit only: in a pursuit `game.sirenYield` is null, so its measured
+  balance is untouched; the pursuers' sirens never count). Every frame of the held siren the module
+  sets `game.sirenYield` { x, z, fx, fz, r, lat, cos, slow, aside, ease }. A `traffic` car in `traffic`
+  mode (`AIDriver`) with the jeep behind it, within `r` = 30 m ahead of the jeep's centre and `lat` =
+  4 m across its heading, going the same way (headings' dot > `cos` = 0.8), eases `yieldK` to 1 over
+  `ease` = 0.5 s (back to 0 as fast once not): its target speed towards `slow` = 4 m/s and its aim
+  point `aside` = 1.25 m to its right (not on a turn's curve points), so it slows and keeps to the right
+  (measured: about 1.2 m right of its lane's line at 4–5 m/s after 3 s; let go, back in its lane and at
+  speed 2.2 s later). The session's first car that gives way: Stig's "Oj… de släpper fram mig!" [N].
+- **Angerud** (`angerud`): free (`honk.free`), shown, within `r` = 30 m of the held siren and in sight
+  (`honk.sees`), at most every `every` = 40 s: "Hederliga bilister ger ni er på…" or "Förbannade
+  förmyndarmentalitet!" [F*] (his outburst at the tow, research-plot.md:99; the other one next), with
+  `anim.oath` for `oath` = 1.6 s, turned to the jeep, his chatter clock restarted.
+- **A mission start or the other level** (`reset`): the siren, the lamp and the corners off, the
+  traffic's way back, Angerud's oath down, a loan forgotten, a bust scene's tow done at once, the jeep
+  locked. So no mission, stage kind, timer, fixture or calibration pool sees any of it; no world random
+  draw and no solid are added, and nothing new is saved. `jeep.last` ({ t, kind: loan | his | bust |
+  tow | respawn, … }), `loan`, `loanT`, `hisCar`, `bust`, `sirenOn`, `car()`, `bay()`, `his(car)`,
+  `isLoan(car)`, `open()` are for tests. Scenarios `guardiajeep` and `jeepsiren` (§16.4).
+- **Not done / changed** (deviations from the idea): the jeep is unlocked by the same unlock as the
+  grisbil (one unlock a mission) and is locked again during missions; the loan's SKANDAL comes 1.2 s
+  after the line, not at once; the bust's tow is a fade, not a truck; the porter is not the only way
+  out (the wardrobe and an escape count too); "his" lasts the session; pedestrians do not hop aside for
+  the siren (the horn's reactions are horn lines); Angerud's line also when the jeep only stands with
+  the siren on near him.
+
 ## 11. HUD / UI strings (Swedish; `src/strings.js` owned by WP-H, created by Phase 0)
 
 `strings.js` exports `S` (flat object) and `fmt(key, vars)`. Engine code uses `S.key` only.
@@ -6129,7 +6229,7 @@ Scheduler fixes (Phase 0): catch-up guard `if (next < ctx.currentTime) next = ct
 | `rattle()` | `noise(0.3, 0.15, 300)` |
 | `flush()` | noise sweep down 2 kHz → 300 Hz, 1.2 s |
 | `squeak()` | fin pop: tone slide 900 → 1400 Hz, 0.12 s |
-| `siren(on)` | two-tone 650/500 Hz square, alternating 0.45 s, gain 0.05 while on |
+| `siren(on)` | two-tone 650/500 Hz square, alternating 0.45 s, gain 0.05 while on; `main.updateAudio` keeps it on while a pursuit runs or H is held in the borrowed jeep (feature 51, §10.34; that one at full loudness) |
 | `laugh()` | crowd: 8 short formant-ish noise bursts |
 | `knock()`, `slap()`, `doorSlam()` | short filtered noise thumps |
 | `ambulance()` | distant two-tone 960/770 Hz sine fading in and out over 4 s |
@@ -6274,6 +6374,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/gangTalk.js` | new (feature 39, 2026-10-17) | — | `GangTalk` (`game.chat`): Prata med gänget in free roam: who can be talked to and which exchange is next, the chain of bubbles with Stig's answers and their poses, the stop, the hush after it (§10.28) |
 | `src/game/solkram.js` | new (feature 35, 2026-10-17) | — | `Solkram` (`game.solkram`): Smörj in Majsans rygg in free roam: Majsan's interactable, the scene (the ask, her back turned, the meter's card and the held E, the result's shots, cards and bubbles), the bottle and the cream, the record and `sjuPoang`, the reset (§10.26) |
 | `src/game/stunts.js` | new (feature 40, 2026-10-17) | — | `Stunts` (`game.stunts`): Stunthopp med G17-stämpel in free roam: his car's jumps measured (from car.js `airT`/`airFrom`), LUFTTID in the air, the settle and the verdict, the stamp and the card, the named jumps' take-offs, pay and records, the mantra off the plank, Stig's lines, his arms out by the dream plane, the reset (§10.27) |
+| `src/game/guardiaJeep.js` | new (feature 51, 2026-10-17) | — | `GuardiaJeep` (`game.jeep`): Låna Guardia-jeepen in free roam: `guardia1` open between missions after the bodega, the loan and its SKANDAL, his after the pursuit, the bust scene and the tow, the respawn, the siren on H (the lamp, the corners, `game.sirenYield`), Stig's surprise, Angerud's outburst, the reset (§10.34) |
 | `src/game/beachDream.js` | new (feature 57, 2026-10-17) | — | `BeachDream` (`game.dream`): Strandkyssen i bränningen in free roam: the towel and its interactable, the scene's clock (lying down, the white wash, the dream with Majsan's double, the foam and the camera's glide, the flash, the wave and its splashes, the lines), the visitor on the sand and her way home, the drips, the reset (§10.33) |
 | `src/game/birds.js` | new (feature 43, 2026-10-17) | — | `Birds` (`game.birds`), `KINDS`: Fåglarna som lyfter in free roam: the four kinds' looks and instanced meshes, the flocks on their spots (pecking, steps, turns), the scare (Stig on foot, his car, the horn), the take-off, the circle and the landing, the sounds, Stig's sorry and hands up, the stork's trip to the Storches and the scene, the put-back at a mission start (§10.31) |
 | `src/game/gags.js` | new (feature 47, 2026-10-17) | — | `Gags` (`game.gags`): Gags på E in free roam: the two gags' interactables, who must stand free, the scene line by line (marks, poses, shots, the one sent in), Ole's flash, everyone put back, the pay and the Gags count, saved (§10.32) |
@@ -6309,8 +6410,8 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/actors/car.js` | edit | **E** | §6.6 types/flags, `registerCarType`, `build`/`noWheels`/`noSpeedo`/`noExplode`/`livery`; the grisbil's pig meshes `PIG_SLOTS`, `pigMesh`, `car.pigs`, `setPig`, `pigWorld` (feature 15, §10.15); `car.lift`, the nose raised on the tow truck's hook (feature 20, §10.17); a prop is known by its block's `ref`, `game.breakProp` may refuse, `def.slow` (feature 28, §10.19); the flight's `airT`, `airFrom` and `game.onCarAirEnd` (feature 40, §10.27) |
 | `src/actors/pickups.js` | edit | **E** | `COLLECT_KINDS`, `registerCollectKind`, `Collectible` table, `Rabbit` meshes, coin value 25; the `brodrost` kind, `TOASTER`, `setToaster`, `Collectible.mark` and the `yaw` option (feature 33, §10.24); `PRYL_IDS` exported (feature 38, §10.25) |
 | `src/actors/peds.js` | edit | **E** | Swedish/Spanish shouts; `dodge`, `startle` (feature 5, §6.7) |
-| `src/actors/drivers.js` | Phase 2 edit | none | (accepts duck-typed paths); an AI bus's lane path starts its turns 11 m from the junction centre instead of 8.5 (left-turn radius 13.75 m > the bus's ≈ 12 m minimum), so the excursion bus no longer swings into the grisfest farm wall; right turns stay too tight for buses (mission bus routes turn left only); traffic holds short of a closed race junction (`game.closure`, §9.2 race) |
-| `index.html`, `style.css` | edit | **H** | §11, §13.4; the beach dream's `body.dream`, `#dream`, `#dreamwash` (feature 57, §10.33) |
+| `src/actors/drivers.js` | Phase 2 edit | none | (accepts duck-typed paths); an AI bus's lane path starts its turns 11 m from the junction centre instead of 8.5 (left-turn radius 13.75 m > the bus's ≈ 12 m minimum), so the excursion bus no longer swings into the grisfest farm wall; right turns stay too tight for buses (mission bus routes turn left only); traffic holds short of a closed race junction (`game.closure`, §9.2 race); feature 51: a `traffic` car gives way to the borrowed jeep's siren (`game.sirenYield`, `yieldK`: slows and keeps to the right, §10.34) |
+| `index.html`, `style.css` | edit | **H** | §11, §13.4; the beach dream's `body.dream`, `#dream`, `#dreamwash` (feature 57, §10.33); `body.siren` shows `#sirenlights` (feature 51, §10.34) |
 | `tools/shot.mjs`, `tools/lib.mjs`, `tools/scenarios/core.mjs`, `tools/story/common.mjs` | edit/new | none (Phase 2) | harness, `T` API, core scenarios `start walk aerial drive traffic title talk missions views transition` + `levels` (boots into both levels) + `api` (Game API smoke test) |
 | `tools/fixtures/full-missions.js`, `tools/scenarios/kinds.mjs` | new (Phase 0b) | none (Phase 2) | the literal §8 missions as a test fixture; scenarios `fullstory` (plays them per §16.3) and `kinds` (option checks) |
 | `notes/calibration-samples.md`, `tools/pool.mjs` | new (Phase 3 r1 repair 2) | none | the raw-sample ledger of the random stages' timers (every run's time, code, autopilot version, exclusions) and the tool that pools it by stage and pool and prints n, median, p75, T_ref, timer and the 90 % range (§8 "Timers and difficulty") |
@@ -6335,6 +6436,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `tools/scenarios/faglar.mjs` | new (feature 43) | — | faglar, storken |
 | `tools/scenarios/gags.mjs` | new (feature 47) | — | gags, gagshots |
 | `tools/scenarios/strandkyssen.mjs` | new (feature 57) | — | strandkyssen, strandefter |
+| `tools/scenarios/guardiajeep.mjs` | new (feature 51) | — | guardiajeep, jeepsiren |
 | `tools/story/flight.mjs` | new | **F** | `M_FLIGHT` (M[0..4]) |
 | `tools/story/island.mjs` | new | **G** | `M_ISLAND` (M[5..12]) |
 
@@ -6365,7 +6467,7 @@ mantra/hold, AI, cars (a landing calls `onCarAirEnd`, feature 40), people (`glid
 traffic/peds skipped when `!levelDef.sim.*`) → `syncAll` (also
 writes `ch.x/y/z` from `car.seatWorld(ch.seatSide)` for every car-seated character, player
 included, so framing, bubbles and distance checks see where they really are) → `missions.update` →
-`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `tower.update` (feature 24) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `stands.update` (feature 28) → `dogs.update` (feature 31) → `bathers.update` (feature 32) → `shop.update` (feature 34) → `toasters.update` (feature 33) → `room107.update` (feature 38) → `solkram.update` (feature 35) → `stunts.update` (feature 40) → `chat.update` (feature 39) → `roofs.update` (feature 41) → `mic.update` (feature 44) → `birds.update` (feature 43) → `dream.update` (feature 57) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
+`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `tower.update` (feature 24) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `stands.update` (feature 28) → `dogs.update` (feature 31) → `bathers.update` (feature 32) → `shop.update` (feature 34) → `toasters.update` (feature 33) → `room107.update` (feature 38) → `solkram.update` (feature 35) → `stunts.update` (feature 40) → `chat.update` (feature 39) → `roofs.update` (feature 41) → `mic.update` (feature 44) → `birds.update` (feature 43) → `dream.update` (feature 57) → `jeep.update` (feature 51) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
 pickups/collectibles → props → `fx.tick` → `tickTown` → markers → camera → sun/sky → HUD → audio →
 traffic recycling (island) → autosave. `loop` then renders, and when `film.grabNow` is set calls
 `film.grab()` in the same task (Herr Storch's still from the frame's buffer, feature 6, §10.11).
@@ -7258,6 +7360,19 @@ shame.closet (Closet, §7.2; feature 36): configure(h) from setupHideouts (h = t
 //   honk.free); spot([dx, y, dz]); at(dx, dz); sc; vis; dreams; double; towel; foam; last
 // hud.js (feature 57): dream(title | null) (the vignette, the title, body.dream; at once),
 //   dreamWash(on, secs), dreamFlash(secs); models.js: the lie pose's roll, turn and [R, L] arms
+// guardiaJeep.js (feature 51, §10.34): game.jeep = new GuardiaJeep(game) after the dream, and
+//   game.sirenYield (null, or { x, z, fx, fz, r, lat, cos, slow, aside, ease } while the jeep's siren
+//   gives way: read by AIDriver in traffic mode); update(dt) after dream.update (the `open` toast once;
+//   not free roam: reset() — siren, lamp, corners off, the loan forgotten, a tow done, the jeep locked;
+//   free roam: `locked` on the jeep he is not in, the loan's SKANDAL, the bust scene, the respawn, the
+//   siren); onEnter(car) from enterCar (before the seat); prompt(car) from updateHud (the loan's
+//   prompt or null); hasSiren(car) (H is the siren: handleOneShots skips honk.press, updateAudio the
+//   horn); sirenOn (updateAudio: audio.siren(pursuit || sirenOn), sirenNear(0)); onBusted() from
+//   shame.busted (true: the jeep's scene, no bustLine or bustRadio, the officer's linger `cfg.linger`);
+//   onPursuitEnd() from shame.endPursuit; active(); open(); car(); bay(); his(car); isLoan(car);
+//   makeHis(); tickBust / tow / endBust; tickSiren / tickOath / setSiren; loan; loanT; hisCar; bust;
+//   yielded; known; last { t, kind, … }
+// hud.js (feature 51): sirenLights(on) (body.siren); drivers.js: AIDriver.yieldK, yieldCfg
 // town.js: ROOF_JUMP { lots, roofs: { atl, sol: { name, minX, maxX, minZ, maxZ, floor, blocks } }, gap
 //   { x0, x1, z0, z1 }, jz, coins [[x, y, z]], live() } (feature 41; the roofs' blocks `dead` =
 //   !live(), the slabs' body and stair tower and the gap's two palms `dead` = live(), each palm with a
@@ -7780,7 +7895,9 @@ Tonga Tonga depend on them); the three static luggage stowers; `smooth`/`fragile
 11. Angerud/Levander cutaways (`cut` cues; fallback: lines without camera cuts).
 12. (replaced: the bodega Guardia jeep is a P0 `destroy` stage; no forced pursuit)
 
-**P2 (only if everything else is done)**: player-driven trolley; Guardia jeep unlock; witness
+**P2 (only if everything else is done)**: player-driven trolley; Guardia jeep unlock (feature 51,
+§10.34, lends one instead: a loan that brings the Guardia, the opposite of the buyable jeep that halves
+the gain, which stays P2); witness
 multiplier (feature 6, §10.11, gives Herr Storch a camera that films the tricks and turns the rule
 round after the end, but there is no multiplier); "steady arms" mantra minigame (turbulence drifts a marker, A/D keeps it in the zone);
 Eslöv time trials (done: feature 7, §10.12, Eslövloppet against the rollerskier with a saved best
@@ -7903,6 +8020,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `mikrofon`, `utrop` [feature 44] | Mikrofonen på scenen (§10.30). `mikrofon`: every line in MIKROFON has its source tag in content/island.js and Ole's have no ä or ö; `clockWords` (tre, halv fyra from a quarter past, fyra from a quarter to, tolv, halv två); at index 9 (free roam, 15:00): no mic prompt from the lawn 2.8 m in front of the stand, at `mikrofon` the prompt "Läs ett utrop" and three guests seated at the terrace; E (a real key): `vatten`, Stig turned to the terrace (within 0.05 rad), the glasses up at once, his line first, three spit lines with the glasses down and `yell`, the camera behind him (`camOff`, within 0.1), no prompt while it plays, no announcement from E in the cooldown; E: `grisfest`, the free gang (Fru Storch, Ole, Robban, Berra, Herr Storch; not Siv, the giver, or Majsan, her extra) and six tourists, the gang `npcPosed`, out of `honk.free`, `spot` `mic`, busy; everyone within 0.8 m of his place, a cheer, then in order Robban's Benidorm, Fru Storch's coffee, "Ja.", "Norsk, da?", "Ja.", and no chatter from Affe or Gabbe meanwhile; E: "Klockan är tre spansk tid…" and Ole's lost watch; with the klocka found at 15:30 "halv fyra" and the watch's line; E: `friskotek`, everyone leaving slumped, the guests slumped (and up again), the tourist's and Berra's lines; the crowd gone: the tourists hidden, the gang free and within 3 m of home; eight bathers forced onto the pool's loungers: E: `hajar`, all eight up, running from the pool flailing (over 3 m further in 1.5 s), "Hjälp!", "En haj!", Lasse's line and Stig's answer, then no flailing and nobody back on those loungers; the fin squashed: the turn skips the shark; the grisfest again, Stig warped 21 m off after Fru Storch's question: no "Ja." or "Norsk, da?"; `missions.begin()` with the crowd on the lawn: no crowd, extras or guests, the gang let go, no prompt. `utrop`: one tourist from each entry's outermost start to a place (under 20 s, within 0.6 m: west 9.6 s, east 14.4 s, south 10.8 s); the guests at 09:00 and 22:30, none at 23:30 or 05:00 (after a cut), at 15:00 again; no prompt in a SKANDAL pursuit; index 6 (friskotek): six tourists only, no question time, the giver and his extras not taken; index 13 after `unlock('bodega')`: none of the pool fest's dancers in the crowd; the flight level (index 2) inert. Shots `mikrofon_1_prompt`, `_2_vatten`, `_3_publiken`, `_4_hurra`, `_5_norsk`, `_6_friskotek`, `_7_hajar`, `utrop_1_friskotek`, `utrop_2_efter_slutet` |
 | `faglar`, `storken` [feature 43] | Fåglarna som lyfter (§10.31). `faglar`, at index 6 (free roam): `live`; the flocks `plaza` 15 `duva`, `kiosk` 8 `mas`, `piren` 9 `mas`, `charca` the two herons and the stork; the herons at (−255, 169.5) and (−249, 179), y 0.15 (where nature.js drew them); every ground spot `spotFree` (no bird a solid); shots of the four flocks; standing still 2.5 m from a pigeon for 2.5 s: no lift; a sprint in from the south: the first lift `plaza`, cause `foot`, the four north pigeons still on the ground; "Oj! Förlåt, förlåt!" and `placate` 1, then 0; at least six pigeons up, the gulls untouched; 14 m off and still: every pigeon back down 22–70 s after the first take-off (37–42 s measured), each within 1.01 m (its steps) of its spot; a pedestrian and a traffic car put among them: no lift; his car west along the beach through the kiosk's sand spots from 40 m: the gulls lift (`car`), no gull still on the ground within 6 m of the moving car (11.6 m at 18–26 m/s), at most two left on the ground; at the quay a standing car: no lift; H: the pier's first lift `horn`, the whole pier up 2 s later; the pigeons up again, then `T.startMission()`: not `live`, every bird on its spot, the stork home; in the mission a sprint among the pigeons: no lift; index 2 (the flight level): not `live`, no lift. `storken`, at index 7 (the Storches on the beach; at 6 the friskotek holds them): `pair()`, the stork home, no `records.stork`; a sprint at the lagoon from the east: the stork `out` (one trip), both herons `fly`; it lands 1.8 m from Fru Storch, farther from Herr Storch, facing her; Stig 9.5 m off: the scene, "Oj, en stork!" then Fru Storch's "Vi heter faktiskt Storch, inte Stork.", Herr Storch `film` and posed, `records.stork` true in the game and the save; `back` with the camera down, then home on its spot (within 0.01 m); a trip nobody follows (`waitSecs` set to 4): home without a stork line; a third, followed: "Oj, en stork!" and the filming but no correction; `T.startMission()` then: the stork home, the camera down, not posed; index 13 after `unlock('bodega')`: no pair, and scared it circles with the herons (`fly`, no trip). Shots `faglar_plaza`, `_kiosk`, `_piren`, `_charca`, `_lyfter`, `_lyfter2`, `_lyfter3`, `_cirklar`, `_landat`, `_bil`, `_tuta`, `_uppdrag`, `storken_flyger`, `_landat`, `_rattelse`, `_filmar` |
 | `gags`, `gagshots` [feature 47] | Gags på E (§10.32). `gags`, at index 9 (free roam): at `gagKamera` the prompt "Titta på Oles kameraväska" with Ole at home; none 2.5 m off; none with Ole hidden, again once he is placed home. E: the lines (Ole's four, Stig's "Ja." and "Fast det är blixt.", "Si omelett!") in order, a dialogue and the letterbox at each, Ole and Stig on their marks, Ole posed throughout, `camShow` in the shot `two` for the first five lines, `film` in the shot `ole` for the last; after it a white flash and one `shutter`. Then Ole on the spot he stood on with his `busy` and `spot`, no pose, not posed; Stig on `gagKamera` facing −π/2; no letterbox, dialogue or cutaway; no prompt (rest); +100, the collect card and the legend "Gags 1/2", the save `["kamera"]`; the chase eye 5.8 m from his head and in no solid, and a 24-yaw sweep round him with no eye in a solid (nearest 2.1 m); after `rest` E again: the six lines, no pay, still 1/2. At `gagViking` "Beställ en juice": Angerud's order and Stig's in the shot `bar` (Stig's cup out, `cupHeld`, for his), Carmencita there for both and gone for the lamp, the shot `lamp` with Stig facing the lamp, `cupHeld` + `cupUp`, Angerud posed; no flash; then Angerud and Carmencita on their spots (`busy`, `spot`, shown), Stig on `gagViking` facing π with the cup down, +100, "Gags 2/2", `["kamera","viking"]`; the eye 5.8 m behind him, in no solid; the sweep with no eye in a solid (nearest 0.92 m with the camera between him and the wall or an arcade pillar: the arcade's camera residue, §14.5, HANDOFF §4.4). In a pursuit no prompt, back after it; after a mission start none (`canPlay` false). A reload keeps 2/2. Index 7 (Ole asnan's giver at `flamenco`): the bag's gag plays, Ole is back on the giver's spot and his talk is the prompt beside him. Index 13 after `unlock('bodega')`: Angerud hidden, no Viking prompt, the bag's still there. Index 2: not `live`, nothing playable. `gagshots`: the bag's prompt, the bag up close, the lamp's prompt; each line of both scenes held (`autoDialog` off), the flash's white frame, each scene's after (the collect card); with `SHOTS=1` also eight yaws of the chase camera at each end mark. Shots `gag_bag_prompt`, `gag_bag_close`, `gag_lamp_prompt`, `gag_kamera_0`–`_5`, `gag_kamera_flash`, `gag_kamera_after`, `gag_viking_0`–`_3`, `gag_viking_after`, `gag_sweep_<lm>_0`–`_7` |
+| `guardiajeep`, `jeepsiren` [feature 51] | Låna Guardia-jeepen (§10.34). `guardiajeep`, at index 8 (before the bodega): every line in `GUARDIA_JEEP` tagged in the file, no "Land Rover"; both jeeps locked, no prompt, E "Den är upptagen!"; `unlock('grisbil')`: the grisbil's toast and the `open` toast, `guardia1` open, `guardia2` locked; "E Låna jeepen" at its bay (beside and in front), "E Kliv in" 25 m off; E: in, Stig's borrow line, no SKANDAL yet (`loanT` > 0.8); then the pursuit at 100, `loan`, ¡GUARDIA CIVIL!, the speedo's "Guardia-jeepen"; the meter emptied: the escape, his, the `his` toast, SKANDALEN TYSTAD; out and in at the bay: "E Kliv in", no SKANDAL after 2 s; on the x = 120 road a later pursuit and `busted()`: the officer's "Ursäkta, är det din bil?" at 1.5–2.6 s, Stig's "Nej." 0.7 s or more later and before 3.8 s, no "¡Documentación!", the fade with `inDialog`, then the jeep in its bay, not his, `last.dark` and `inCar`, the tow toast, no "Friskotek" radio, the officer hidden; the loan again ("E Låna jeepen"), the jeep left on the road, Stig 90 m off, `busted()`: the scene, the tow without the fade; the loan again and the porter bribed: his; the jeep removed with Stig 120 m off: a new car (new id) in its bay, open, not his, `last` `respawn`; `startMission()`: locked, no prompt, E "Den är upptagen!". `jeepsiren`, at index 9 with the jeep his: on the z = −40 road a traffic car placed 18 m ahead in his lane (others on that stretch removed) drives on at over 6 m/s in its lane without the siren; with H held: `sirenOn`, `audio.sirenOn`, `body.siren` and `#sirenlights` shown, the lamp seen on and off in 8 samples 0.11 s apart, no `hornAt`, no honk press; after about 2.3 s the car under 6 m/s, `yieldK` 1, 0.4 m or more to the right; followed 15 m behind for 2.5 s more: 1.0–1.4 m to the right; Stig's "Oj… de släpper fram mig!"; let go: all off, and 2.2 s later back in its lane (under 0.45 m) at over 6 m/s; the surprise not again; in a pursuit (forced, its jeeps parked) H: no `sirenYield`, `yieldK` 0, the siren on; the jeep in the lane nearest Angerud at Viking Bar (19 m): one of his two lines with `anim.oath`, none again within 40 s, the oath down later; a night shot; another car's H: the horn (`hornAt`, a honk press, no siren); `startMission()`: the jeep locked, `enterCar` refused, no siren. Shots `guardiajeep_0_lana` … `_5_barnad`, `jeepsiren_1_siren`, `_2_vajer`, `_3_angerud`, `_4_natt` |
 | `strandkyssen`, `strandefter` [feature 57] | Strandkyssen i bränningen (§10.33). `strandkyssen`, at index 7 (asnan: Ole the giver, Siv free at home): every line in `STRANDKYSSEN` tagged in the file; the towel at (−30, 300.9), in the scene, no collider (`spotFree` on it); no prompt 2.6 m off, "E Lägg dig i vattenbrynet" 1.2 m off, none in a SKANDAL pursuit or a car; E: lying (`lying`) at once with the letterbox and `inDialog`; at 1.2 s the white wash over 0.5; at 2.6 s the dream: `sky` `sunset`, `body.dream` with the canvas blur, `#dream` shown with DAGDRÖM, the tune `vals`, Majsan's double `lying` 0.62 m to his left, him flat (lean −π/2), the real Majsan unmoved and unheld, the foam's front at z 302–306; at 9.3 s the camera 1.2 m or more higher than at 2.6 s; at 10.3 s the wake: the palette, the tune and the picture as before E, the double hidden, Stig still lying, the wave on its way; three splashes by 12.9 s; then free roam (`normal`, no `inDialog`, letterbox or cutaway, `last.ended` `done`) beside the towel (0.6 m to its left, 1.7 m landward), dripping; said: the double's "Då kanske vi ses…" and Stig's "Blött."; nobody on the sand at the first dream. The second: Siv on the sand (`variant` `siv`), "Giraffen, då? Fyra.", posed (`npcPosed`, not `honk.free`, `busy`, `spot` `strand`) within 4 m of the towel; still there 2.5 s after the scene; Stig warped 48 m off: she is home (her home spot, not busy, not posed). The third: nobody. A fifth (`dreams` set to 4) at 01:00: the night before, the sunset in the dream, the night at the wake and after, no Siv. Then a dream with `missions.begin()` at 3.2 s: the scene gone at once (`ended` `reset`), no sunset, no waltz, no `body.dream`, no `#dream`, the double hidden, Stig standing, the foam hidden, the mission under way; once it runs: no `inDialog`, no dream filter, the wash clear. `strandefter`, at index 13 after `unlock('bodega')`: the dream as above, then Majsan herself on the sand (`variant` `after`): her "Vill du dansa med mig?" then Stig's "Ja.", she dances (`anim.dance`), posed, `spot` `strand`, within 4 m; still there 1.5 s later; Stig warped 48 m off: she is home (her home spot, not dancing, not busy, not posed); with Majsan held (`busy`) nobody comes; index 2 (the flight level): not `live`, no `canUse()`. Shots `strandkyssen_0_handduk`, `strandkyssen_1_ligger` … `_9_efter`, `strandsiv_*` (`_8_besok1`, `_8_besok2`), `strandnatt_*`, `strandefter_*`, `strandefter_dans` |
 | `badgaster`, `stekt` [feature 32] | Badgäster på solstolarna (§10.22). `badgaster`, at index 6 (free roam): bodies only on taken sun loungers, their hips on the seat, at most `max` (10), none on Berra's or Robban's; on the main beach no taken lounger within `r` left empty nearer than the bodies (shot `badgaster_strand`); one rebuilt body's ms logged. The burn: three loungers in the z 250 row; a bather lain past `burn[0]` stays pale while in view within `seenR` and is pink once out of view; past `burn[1]` lobster red (skins from `skins`; shot `badgaster_stadier`). A kick at a free lounger and at a taken one give the same SKANDAL; the bather off it in a backward somersault (`flip` < 0) along the lounger's facing (vz > 2), an OUCH bark, a GETUP bark on his feet (shots `badgaster_kullerbytta`, `badgaster_upp`), gone once Stig is 30 m off; no `onCharHit`, no "hit" sorry. His car at 10 m/s through a taken lounger: SKANDAL 1 × 1.2 × gain only, the bather off along the car (vz > 5; shot `badgaster_bil`). The lounger back after its smash (respawn 0, him 100 m off): `n` + 1, a new seed, stage 0, a pale newcomer on it. At 22:00 nobody (after a cut); at 10:00 `dayN` + 1 and a new crowd. A mission start (friskotek) takes every body away at once, none in the mission; the flight level (index 2) makes none. `stekt`, at index 6: Berra and Robban `lying` on their loungers, outfit `stekt` (skin `STEKT_SKIN`), `slump`, busy, spot `stekt`; both snore within 9.5 s (shots `stekt_bar`, `stekt`); the E point `stekt:wake` at Berra's feet: Stig's line, then Berra's with `lift` > 0.6 (shot `stekt_fem_minuter`), then Robban's, in that order, and `lift` back under 0.1; a kick at Berra's lounger: `flung`, then `down` with his timer held (> 100), still `stekt`, only snores from him (shot `stekt_sparkad`); the lounger back with him 100 m off: on it again. A mission start (friskotek): both `normal`, outfit `sol`, no slump, within 2.5 m of their homes at the bar. Index 7: on their loungers; 5 and 8: not |
 | `talk` [Phase 0] | `autoDialog = false`, walk to Ole at `gateQueue`, E, Space twice |
@@ -8000,7 +8118,7 @@ pryl_pung fena_flamenco fena_suntrip fena_plaza fena_golf fena_bungalow fena_ham
 **MAP block types**: `flamenco suntrip kasbah cita plaza marknad kyrka bensin guardia tomat grisfest
 fataga golf bungalow bygge dromplan flygplats dyner fyren playa hamn bungalowR lagenhet`.
 
-**Named cars**: `hyrbil buss17 guardia1 guardia2 taxiAirport grisbil` (unlock) + mission cars
+**Named cars**: `hyrbil buss17 guardia1 guardia2 taxiAirport grisbil` (unlock; `guardia1` open between missions after the bodega, feature 51, §10.34) + mission cars
 `grisbilFollow joseBil utflyktsbuss nattbuss guardiaJeep`.
 
 **Car types**: `sedan hatch wagon van pickup bus guagua icecream taxi guardia grisbil trolley`.
@@ -9923,3 +10041,30 @@ the fixer's group.
   instead of placing the real Majsan; a clock in `update`, not an async method; the bathers' lie pose
   extended, not a new anim flag; Siv every third dream; Stig's "Ja." and her dance after the end; by
   night too; no landmark. Scenarios `strandkyssen`, `strandefter` (§16.4).
+- Feature 51, "Låna Guardia-jeepen – ”Ursäkta, är det din bil?”"
+  (`features/implemented/guardia_jeepen.md`, 2026-10-17): the borrowed Guardia jeep (§10.34; new
+  `src/game/guardiaJeep.js`, `GUARDIA_JEEP` in content/island.js; §1.6, §6.3, §6.6, §7.2, §10.3, §12.3,
+  §14.1–§14.3, §15.5, §16.4, Appendix A). After the bodega (`UNLOCKS.grisbil`, so old saves too, with
+  its own toast "Vid Guardia Civils kasern står en jeep olåst…" [N] after the grisbil's) `guardia1` at
+  the Casa Cuartel is open between missions and locked as before in a mission. At its bay "E Låna
+  jeepen" [N]: Stig's "Jag lånar den bara en liten stund…" [N] and 1.2 s later SKANDAL `add(100)`, the
+  pursuit. Shaken off (an escape, the porter, the wardrobe; shame.js `endPursuit` → `jeep.onPursuitEnd`)
+  it is his for the session ("Guardia-jeepen är din – håll H för sirenen." [N]). Busted with it
+  (shame.js `busted` asks `jeep.onBusted()` before pulling him out): the officer's "Ursäkta, är det din
+  bil?" [F*] instead of "¡Documentación!" (he lingers 4.4 s), Stig's "Nej." [F*], no bust radio, and the
+  jeep towed back to its bay behind a fade, "Guardia-jeepen är bärgad – tillbaka vid kasernen." [N];
+  the fine and the freeze unchanged. H in it is its siren, not the horn (no honk press): `main.updateAudio`
+  turns the siren on while a pursuit runs or H is held (`sirenNear(0)`), a blinking lamp (a basic dome
+  and an additive halo) on its roof, the pursuit's blue screen corners (`hud.sirenLights`, style.css
+  `body.siren`); with no pursuit a traffic car ahead going his way slows to 4 m/s and keeps 1.25 m to the
+  right (drivers.js `yieldK`, `game.sirenYield`; never the pursuit's jeeps), the session's first with
+  Stig's "Oj… de släpper fram mig!" [N]; Angerud at Viking Bar within 30 m: "Hederliga bilister ger ni er
+  på…" / "Förbannade förmyndarmentalitet!" [F*] with his oath, every 40 s at most. A wreck cleared away
+  comes back in its bay. `NAMED_CARS.guardia1` "Guardia-jeepen". Only when `missions.state === 'idle'`
+  on the island: a mission start or the other level resets it all and locks the jeep, so no mission,
+  stage kind, timer, fixture or calibration pool changed; nothing saved, no solid or world random draw
+  added. main.js: `jeep` after `dream`, `jeep.update` after `dream.update`, `game.sirenYield`, the
+  `enterCar` hook, the car prompt, H, the siren rule. Deviations from the idea: the same unlock as the
+  grisbil, locked in missions; the SKANDAL 1.2 s after his line; a fade for the tow; the wardrobe and
+  an escape count as well as the porter; his for the session; no pedestrians hopping for the siren.
+  Scenarios `guardiajeep`, `jeepsiren` (§16.4).

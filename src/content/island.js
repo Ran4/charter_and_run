@@ -17,7 +17,7 @@
 // that flies from La Charca to the Storches on the beach with Fru Storch's correction there (§10.31),
 // two gags on E, Ole's flash at his camera bag and Stig's cup under Viking Bar's lamp (§10.32), and
 // the towel at the water's edge, Stig's daydream in the surf, the wave and the visitors on the sand
-// (§10.33).
+// (§10.33), and the borrowed Guardia jeep, its siren on H and the traffic giving way to it (§10.34).
 
 export const HOMES_ISLAND = {
   ole: ['flamenco', 2.0, 1.0, 0],     // yaw 0: under the pergola, facing the pool (flamenco faces π)
@@ -484,6 +484,44 @@ export const LAPPLISA = {
   paidToast: 'Snyggt parkerat! {n} pta.',                                            // [N]
 };
 
+// Låna Guardia-jeepen – "Ursäkta, är det din bil?" (free roam, DESIGN §10.34; game/guardiaJeep.js).
+// The bodega's unlock (`unlock`, UNLOCKS.grisbil, so an old save has it too) leaves `car`, the west
+// jeep at the Casa Cuartel, open, but only on the island with no mission running (`missions.state
+// === 'idle'`): in a mission it is locked as before, so no mission, stage kind, timer or calibration
+// pool sees it. The unlock's first time (not a loaded save's) adds its own toast, `open`. Getting in
+// within `loanR` m of its bay is the loan (`prompt`): Stig's `borrow`, and `shameAt` s later SKANDAL
+// `shame` (× the meter's gain: the top) and the pursuit. Shaken off (an
+// escape, the porter, the wardrobe), the jeep is his for the session: `his`, and no SKANDAL when he
+// gets in again. Busted in it, or in the loan's pursuit: the officer's `ask` at `askAt` s instead of
+// his bust line (he lingers to `linger` s), Stig's `no` at `noAt`, and at `towAt` the jeep back in
+// its bay (behind a `fadeSecs` s black fade with it within `seeR` m of him) and `towToast`; no bust
+// radio. Wrecked and cleared away, a new one stands in its bay once he is `respawnR` m from it.
+// H in it is the siren, not the horn: the sound, the blue lamp on its roof (on and off every `blink`
+// s) and the screen's blue corners. With no pursuit, traffic ahead going his way (`yield`: within
+// `r` m ahead of him, `lat` m across, heading within acos `cos`) slows to `slow` m/s and keeps
+// `aside` m to the right, eased over `ease` s (drivers.js); the session's first car to give way gets
+// Stig's `surprised`. Angerud free and in sight within `angerud.r` m of the siren: one of
+// `angerud.lines` with his oath, at most every `angerud.every` s.
+// Invented (§1.6): the loan, the siren on H and the traffic giving way. The question and the answer
+// are the film's first meeting at the travel agency's window and Angerud's lines his outburst at the
+// tow there, relocated.
+export const GUARDIA_JEEP = {
+  car: 'guardia1', unlock: 'grisbil', loanR: 20, shame: 100, shameAt: 1.2,
+  prompt: '<b>E</b> Låna jeepen',                                                   // [N]
+  borrow: 'Jag lånar den bara en liten stund…',                                     // [N] Stig, getting in
+  open: 'Vid Guardia Civils kasern står en jeep olåst…',                             // [N] the toast after the unlock's
+  his: 'Guardia-jeepen är din – håll H för sirenen.',                                // [N]
+  ask: 'Ursäkta, är det din bil?',                                                  // [F*] Majsan at the travel agency's window, relocated to the officer
+  no: 'Nej.',                                                                       // [F*] Stig's answer there, relocated
+  askAt: 1.8, noAt: 2.9, towAt: 3.9, fadeSecs: 0.5, linger: 4.4, seeR: 60, respawnR: 80,
+  towToast: 'Guardia-jeepen är bärgad – tillbaka vid kasernen.',                    // [N]
+  blink: 0.225,
+  yield: { r: 30, lat: 4, cos: 0.8, slow: 4, aside: 1.25, ease: 0.5 },
+  surprised: 'Oj… de släpper fram mig!',                                            // [N] Stig, the first car that gives way
+  angerud: { r: 30, every: 40, oath: 1.6,
+    lines: ['Hederliga bilister ger ni er på…' /* [F*] his outburst at the tow, shortened */, 'Förbannade förmyndarmentalitet!' /* [F*] */] },
+};
+
 // Collectible sets (DESIGN §10.1). Generic pickup code lives in main.js.
 export const COLLECTIBLES = {
   prylar: {
@@ -658,6 +696,8 @@ export const SOLKRAM = {
 };
 
 export const UNLOCKS = {
+  // The bodega's unlock also leaves the west Guardia jeep at the Casa Cuartel open between missions,
+  // with a toast of its own (GUARDIA_JEEP, game/guardiaJeep.js, §10.34).
   grisbil: { car: { type: 'grisbil', name: 'grisbil', at: 'flamencoDrive', dx: 4, dz: 0 },
     toast: 'Upplåst: <b>Grisbilen</b> – parkerad vid Hotell Flamenco. Den luktar.' },   // [N]
   samba: { tune: 'samba', toast: 'Upplåst: <b>Musik: samba</b> i pausmenyn' },        // [N] P1
@@ -1559,7 +1599,7 @@ export const DOGS = {
 
 export const NAMED_CARS = {
   buss17: 'SunTrips buss 17', hyrbil: 'Hyrbilen', grisbil: 'Grisbilen', nattbuss: 'Nattbussen', joseBil: 'Josés bil', guardiaJeep: 'Guardia-jeepen',
-  grisbilFollow: 'Grisbilen', utflyktsbuss: 'Utflyktsbussen',   // [N]
+  grisbilFollow: 'Grisbilen', utflyktsbuss: 'Utflyktsbussen', guardia1: 'Guardia-jeepen',   // [N]
 };
 
 export const LEVEL_OUTFITS_ISLAND = { ole: 'sol', berra: 'sol', robban: 'sol', angerud: 'sol', majsan: 'sol', siv: 'sol', lasse: 'sol' };

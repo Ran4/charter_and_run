@@ -1,7 +1,6 @@
 # Gör dessa grejer (flytta filen till features/implemented/ och uppdatera den när du är klar, och
 # flytta den till "färdiga features"-sektionen nedan)
 # markörer: ⟨par N⟩ = de två raderna med samma N körs samtidigt (var sin worktree/gren, sedan rebase på main och push), ⟨solo⟩ = körs ensam; ta grupperna uppifrån och ned
-- features/guardia_jeepen.md – 51. Låna Guardia-jeepen – ”Ursäkta, är det din bil?” [M] ⟨solo⟩
 - features/fyren_mantrat.md – 52. Uppför fyren – mantrat på 51 meters höjd [M] ⟨solo⟩
 
 # Vänta med dessa tills spelaren säger till
@@ -71,3 +70,4 @@
 - features/implemented/faglar_som_lyfter.md – 43. Fåglarna som lyfter – och storken i La Charca [M]
 - features/implemented/gags_sma_filmscener.md – 47. Gags på E – Oles blixt och Angeruds Viking special [S]
 - features/implemented/strandkyssen.md – 57. Strandkyssen i bränningen [M]
+- features/implemented/guardia_jeepen.md – 51. Låna Guardia-jeepen – ”Ursäkta, är det din bil?” [M]
