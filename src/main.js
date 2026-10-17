@@ -1988,6 +1988,7 @@ class Game {
     for (const h of this.shame.pursuers) if (!h.dead) out.push({ type: 'enemy', x: h.x, z: h.z, edge: true });
     out.push(...this.shame.paint.markers());
     out.push(...this.shame.closet.markers());
+    out.push(...this.shame.church.markers());
     out.push(...this.berraJob.markers());
     out.push(...this.eslov.markers());
     out.push(...this.pigs.markers());
@@ -2076,9 +2077,10 @@ class Game {
 
   updateHud() {
     // No mission running: the SOLKRÄM meter (§10.26; first, as its scene holds him), the paint
-    // shop's wet-paint card (§7.2), the Berra job's (§10.6), Eslövloppet's (§10.12), the grisbil's
-    // pigs' (§10.15) or a G17 toaster's scale (§10.24), if any.
-    hud.setObjective(this.missions.objective() || this.solkram.objective() || this.shame.paint.objective() || this.berraJob.objective() || this.eslov.objective()
+    // shop's wet-paint card (§7.2), the church's while Guardia Civil waits outside (§7.2), the Berra
+    // job's (§10.6), Eslövloppet's (§10.12), the grisbil's pigs' (§10.15) or a G17 toaster's scale
+    // (§10.24), if any.
+    hud.setObjective(this.missions.objective() || this.solkram.objective() || this.shame.paint.objective() || this.shame.church.objective() || this.berraJob.objective() || this.eslov.objective()
       || this.pigs.objective() || this.toasters.objective());
     hud.setSpeedo(this.playerCar);
     if (this.missions.state !== 'failed') {

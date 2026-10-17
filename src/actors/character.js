@@ -10,13 +10,14 @@
 // `rub`: 1 the hands on the shoulders of someone shorter in front, 2 rubbing (the sun cream, game/solkram.js).
 // `eyesShut`: the lids down (the exercise on the lighthouse gallery, game/lighthouse.js).
 // `tap`: the right hand down on the bell on a desk, his head bent to it (game/receptionBell.js).
+// `scratch`: the right hand up at the side of his head, scratching it (game/church.js).
 
 import { buildCharacter, animateCharacter } from './models.js';
 import { queryBlocks, circleVsBlock, groundAt, groundInfo, topAt, RAMP } from '../world/collision.js';
 import { dampAngle, yawTo } from '../util.js';
 
 export const STEP = 0.45;
-export const ANIM_FLAGS = ['wings', 'cupUp', 'cupHeld', 'push', 'planeSeat', 'hold', 'flail', 'oath', 'dance', 'laugh', 'slump', 'shoeOff', 'mirror', 'film', 'camShow', 'giraffe', 'butterKnife', 'carryOver', 'glide', 'swan', 'calc', 'ski', 'groda', 'ticket', 'leap', 'bomb', 'placate', 'rub', 'eyesShut', 'tap'];
+export const ANIM_FLAGS = ['wings', 'cupUp', 'cupHeld', 'push', 'planeSeat', 'hold', 'flail', 'oath', 'dance', 'laugh', 'slump', 'shoeOff', 'mirror', 'film', 'camShow', 'giraffe', 'butterKnife', 'carryOver', 'glide', 'swan', 'calc', 'ski', 'groda', 'ticket', 'leap', 'bomb', 'placate', 'rub', 'eyesShut', 'tap', 'scratch'];
 export const GRAV = 24;
 const _blocks = [], _hit = {};
 

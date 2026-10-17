@@ -13,7 +13,8 @@
 //     roam he films them, storchFilm.js). In free roam a car can also be painted like a dalahäst
 //     at Gasolina's workshop (paintshop.js, `this.paint`; the same cooldown), and on foot in the
 //     hawaii shirt Stig can change into his suit in room 107's wardrobe (closet.js, `this.closet`;
-//     its own cooldown).
+//     its own cooldown), or on foot take sanctuary in Templo Ecuménico (church.js, `this.church`; its
+//     own cooldown).
 
 import { Car } from '../actors/car.js';
 import { AIDriver } from '../actors/drivers.js';
@@ -28,6 +29,7 @@ import { yawTo, pick, clamp, dist } from '../util.js';
 import { S, pta } from '../strings.js';
 import { PaintShop } from './paintshop.js';
 import { Closet } from './closet.js';
+import { Church } from './church.js';
 
 const STEER_REPLAN = 0.25;   // s between officer route plans
 const rc = (i) => i * P - HALF;
@@ -85,6 +87,7 @@ export class Shame {
     this.steer = { t: 0, x: 0, z: 0, mode: 'direct', path: [], chkT: 0, chkX: 0, chkZ: 0, sideT: 0, side: 1 };
     this.paint = new PaintShop(this);
     this.closet = new Closet(this);
+    this.church = new Church(this);
   }
 
   get mode() { return this.cfg.mode; }
@@ -217,17 +220,23 @@ export class Shame {
       car.isPursuer = true;
       car.locked = true;
       car.spec.maxSpeed = c.vehicleMaxSpeed ?? 28;
-      // Rubber band (cfg.catchUp [beyond m, × speed]): a Land Rover that has lost touch drives harder
-      // (bends included), so getting away means staying away, not just one good straight.
-      const [farD, farK] = c.catchUp || [Infinity, 1];
-      car.ai = new AIDriver(car, { mode: 'chase', target: () => g.focusTarget(), cruise: (c.vehicleMaxSpeed ?? 28) - 2, aggressive: true, avoid: false,
-        rubber: () => { const ff = g.focus(); return Math.hypot(ff.x - car.x, ff.z - car.z) > farD ? farK : 1; } });
+      this.chase(car);
       car.bust = g.addBust(CHARS[c.pursuerDef || 'guardia'], car);
       g.addCar(car);
       this.pursuers.push(car);
     }
     this.paint.onPursuit();
     this.closet.onPursuit();
+    this.church.onPursuit();
+  }
+
+  // A Land Rover's chase AI (startPursuit; the church hands a waiting one back, church.js). Rubber band
+  // (cfg.catchUp [beyond m, × speed]): one that has lost touch drives harder (bends included), so
+  // getting away means staying away, not just one good straight.
+  chase(car) {
+    const g = this.game, c = this.cfg, [farD, farK] = c.catchUp || [Infinity, 1];
+    car.ai = new AIDriver(car, { mode: 'chase', target: () => g.focusTarget(), cruise: (c.vehicleMaxSpeed ?? 28) - 2, aggressive: true, avoid: false,
+      rubber: () => { const ff = g.focus(); return Math.hypot(ff.x - car.x, ff.z - car.z) > farD ? farK : 1; } });
   }
 
   endPursuit(caught) {
@@ -291,6 +300,7 @@ export class Shame {
     // that fails or interrupts a mission).
     if (c.bustRadio && !jeep && g.wait && g.missions.state === 'idle') g.wait((c.bustFreeze ?? 3) + 0.3).then(() => { if (g.level === 'island' && g.missions.state === 'idle') g.radio(c.bustRadio[0], c.bustRadio[1]); });
     this.closet.onBusted();
+    this.church.onBusted();
     g.missions.onBusted?.();
   }
 
@@ -299,7 +309,10 @@ export class Shame {
     for (const rm of this._hideoutRm) rm();
     this._hideoutRm = [];
     this.closet.configure(null);
+    this.church.configure(null);
     if (cfg.mode !== 'pursuit' || !cfg.hideouts || !this.game.addInteractable) return;
+    // Templo Ecuménico's door (feature 60): sanctuary on foot, free roam only (church.js).
+    if (cfg.kyrkfrid) this._hideoutRm.push(...this.church.configure(cfg.kyrkfrid));
     for (const h of cfg.hideouts) {
       // Room 107's wardrobe (feature 36): a change of clothes, not a bribe (closet.js).
       if (h.outfit) { this._hideoutRm.push(...this.closet.configure(h)); continue; }
@@ -535,6 +548,9 @@ export class Shame {
     if (!this.pursuit) {
       if (this.forced) { this.v = 100; this.startPursuit(); }
       else if (this.sinceOffense > (c.idleDelay ?? 4)) this.v = Math.max(0, this.v - (c.decayIdle ?? 5) * dt);
+    } else if (this.church.holds) {
+      // Stig in the church (free roam, church.js): its scene has the meter, the officer and the Land
+      // Rovers until they give up; no bands, chase, taunts or car bust meanwhile.
     } else {
       const f = g.focus();
       let near = Infinity;
@@ -560,6 +576,7 @@ export class Shame {
     }
     this.paint.update(dt);
     this.closet.update(dt);
+    this.church.update(dt);
     hud.setMeter(this.v, this.v >= (c.hot ?? 70), this.pursuit);
   }
 
@@ -612,5 +629,6 @@ export class Shame {
     if (this.filmWho) { this.filmWho.anim.film = false; this.filmWho = null; this.filmT = 0; }
     this.paint.clear();
     this.closet.clear();
+    this.church.clear();
   }
 }

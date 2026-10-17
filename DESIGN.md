@@ -286,7 +286,12 @@ porter's "Momento.", and the bell on the desk that Stig plings until, at the ten
 rings for the site manager, Lasse answers in the radio box and the next guest asks again at once,
 Stig's "Förlåt…", the bell under the desk and the hotel's card beside it when it is back (free roam,
 §10.37; in the film the guests ask Lasse at the hotel while the plane flies south, and the porter's
-"Momento." is the sea-view scene's).
+"Momento." is the sea-view scene's); kyrkfrid in Templo Ecuménico as a free hideout on foot from
+Guardia Civil, the officer outside reading the sisters' sign ES UNA IGLESIA aloud, spelling out its
+Swedish and scratching his head, the Land Rovers waiting at the street until they give up, and Stig
+peeking out with the sisters' "Hoppas vi inte får användning för det." (free roam, §7.2; in the film
+both lines are the sisters' language record at home, the church is never entered, and the Guardia
+Civil is not in it).
 The film's flight has **no turbulence** and **no in-flight toilet scene**: both toilet scenes are
 at Arlanda (we keep them there). The plane's toilets are only an invented hideout.
 
@@ -1258,7 +1263,7 @@ standing there faces. `y` (optional) = absolute height for collectible spots on 
 | (4,2) | `cita` → `cita` (C2, centre.js) | **Centro Nórdico** (fictional; internal id `cita`) strip mall, sign `CENTRO NÓRDICO`: `SUPERMERCADO`, `FERRETERÍA`, `FARMACIA`, `ESTANCO`, `TELÉFONOS · HYTT 1·2·3`, `SOUVENIRS`, `SVENSKT KAFFE`, `CAMBIO · 1 KR = 17 PTA` (Phase 3: the north shop row and its canopy fit the courtyard between the wings, x ±11; `SOUVENIRS · REGALOS` and `FARMACIA` with its green cross sit on the wings' courtyard faces) | `cita` (0, 22, π) · `supermercado` (−18, 18, π) · `ferreteria` (18, 18, π) · `telefon` (0, 8, π) · `brodrost_ferreteria` (25.6, 13.0, 0, 0.65) (a G17 toaster on the east end of FERRETERÍA's paint-can crate, whose two east cans of each row are gone) · `brodrost_supermercado` (−24.15, 13.0, 0, 0.6) (one on SUPERMERCADO's east fruit crate, its fruit gone; §10.24; not standing spots) | — |
 | (2,3) | `plaza` → `plaza` (C2, centre.js) | palms, fountain (shallow walkable pool), restaurant terraces; the north row's arcade (12 arches), shops `CAFETERÍA EL SOL` · `HELADERÍA LA PALMERA` · `CORREOS · TELÉGRAFOS` · `BANCO · CAMBIO` · `PELUQUERÍA` (Phase 3 r3: each name on a 3.5 × 0.8 m board on the arcade's front above its arch's crown (4.09), y 4.1–4.9, two lines where needed; on the shop wall at 3.62 the 5.6–6.6 m signs hung behind the 3.93 m arches, which showed only their middle third) and the arcade café tables keep to x [−19, 29], clear of the west row (x [−29, −19]) that stands on the north row's west end (Phase 3 r2: two arches, the café sign and two tables were inside it); **CASA LOLA** (`CASA LOLA · COMIDA CANARIA`, fictional; internal id `grillpaco`) terrace on the SE corner (Phase 3 r2: the bougainvillea along its eave sits above the pergola's camera cap, west of the name board; Phase 3 r3: the string lights hang from the cross beams' underside (3.08) with a 0.15 sag, the lowest bulb at 2.72, and the pergola's camera ceiling is under 2.72: capped at 2.6 under lights sagging to 2.44, a bulb sat over his head) | `plaza` (0, 6.8, π) (south of the fountain rim, facing it: the fountain column stands at (0, 0); Phase 2) · `grillpaco` (20, 22, π) · `grillpacoMamma` (25, 24, π) · `grillpacoCurb` world (−60, 36, −π/2) (westbound kerb of the z = 40 road, the `follow` endpoint) · `fena_plaza` (0, 0, 0, 0.35) · `berraBank` (0, 8.6, 0) (the bench south of the fountain Berra naps on, on its prop, facing away from the fountain; §10.6) · `brodrost_grillpaco` (15.0, 19.0, π/2, 0.945) (a G17 toaster on Casa Lola's north-west terrace table; §10.24; not a standing spot) | — |
 | (2,1) | `marknad` → `marknad` (C2, centre.js) | rows of striped stall awnings (some `bounce` awnings as climb pads); the five fruit stalls are `frutas` props (§6.8; feature 28, §10.19): rad A's west end (−24.5, −25.25, `FRUTAS` board) and east end (24.5, −25.25), rad A2 (12.5, −16.75, facing −z), rad C (6.5, 9.75) and the lone one (18.5, −7.75; 3.5 m deep, its counter in line with its 4 m neighbour's), all with the yellow-and-orange awning, which no other stall has (the old `SCH[2]` [SUN, orange] scheme is plum and white, 0x7a3a6a); souvenir stand with painted donkeys `BURROS 500 PTA`, postcard racks, plastic giraffes; the `MERCADILLO · MARKNAD` board on two legs over the south path hangs at 3.85–4.95, above the chase eye (Phase 3 r3: at 2.35–3.45 it covered him walking in from the south road) | `marknad` (0, 22, π) · `asnestand` (6, 2, π) · `pryl_kalkylator` (−12, −8, 0, 3.4) (on an awning roof) · `brodrost_marknad` (−11.186, −6.4, 0, 1.08) (a G17 toaster on stall K's counter in its radios' gap 5, `stall`'s `gap`; §10.24; not a standing spot) | — |
-| (3,1) | `kyrka` → `kyrka` (C2, centre.js) | **Templo Ecuménico**: white rationalist church (flat planes, bell slab), palm plaza, crèche, small fountain; sign `ES UNA IGLESIA` / `DET ÄR EN KYRKA.` [F*] (the sisters' language record, relocated; uppercase since Phase 3 r2, §1.3) | `kyrka` (0, 18, π) | — |
+| (3,1) | `kyrka` → `kyrka` (C2, centre.js) | **Templo Ecuménico**: white rationalist church (flat planes, bell slab), palm plaza, crèche, small fountain; sign `ES UNA IGLESIA` / `DET ÄR EN KYRKA.` [F*] (the sisters' language record, relocated; uppercase since Phase 3 r2, §1.3), read aloud by the officer in kyrkfrid (feature 60, §7.2); the door's open right leaf (the dark church behind it) is game/church.js's mesh, shown only while Stig goes in or peeks out | `kyrka` (0, 18, π) · `kyrkaPuerta` (0.8, 2.2, 0) (before the door's right leaf under the portico, facing out: kyrkfrid's E spot and the anchor of its scene's spots; feature 60, §7.2) · cut anchor `kyrkaCam` (−2, 9, π) (the door and the sisters' sign from the plaza: the wait's shot, 12 m behind it, 3 m up) | — |
 | (4,3) | `bensin` → `bensin` (C2, centre.js) | gas station: canopy, `GASOLINA` (no brand), prices in pesetas, kiosk; `gaspump` props explode; the workshop's two open bays (`TALLER · NEUMÁTICOS · LAVADO`) are the free-roam paint shop (§7.2): `PINTURA` on the pillar between them, paint tins and a brush by the left bay, a yellow 4 × 7 m box in front of it, the cone moved to the pillar and the parked yellow hatch to the east gable (29.5, −20), out of the painted car's way to the road | `bensin` (0, 16, π) · `pintura` (11.25, −8, 0) (the paint zone in front of the left bay, facing out of it) · cut anchor `pinturaCam` (11.25, −9.6, π) (the bay seen from the forecourt) | — |
 | (5,3) | `guardia` → `cuartel` (C2, centre.js) | ochre barracks, red-yellow-red flag mast beside the path at x 4.6 (Phase 3: off the axis to the `CASA CUARTEL` plaque), `CASA CUARTEL`; two parked green Land Rovers | `guardia` (0, 20, π) | `guardia1`, `guardia2` (type `guardia`, locked; feature 51: `guardia1` open between missions after the bodega, §10.34) |
 | (1,0), (3,0), (0,1) | `tomat` → `tomatfalt` (D1, nature.js) | rows of low tomato bushes (one merged mesh, walls a car drives through: no solids, or tops ≤ 0.6), packing shed `TOMATES · EXPORTACIÓN` / `EMPAQUETADO`, `tomatlada` props, dirt tracks; on (0,1) the finca's yard is `FARM_YARD` (feature 31, §10.21: the yard dog's rectangle x [−30.1, −2.6], z [−30.1, −14.8], its door and spot, the finca and the tank with its ramp as its walls; data only) | on (0,1): `vischan` (6, 24, π) · cut anchor `vischanCam` (5.7, 22.7, −0.14) (on the gravel track north of the vischan scene, looking back south at the road and the `CAMINO SIN ASFALTAR` sign; Phase 3 r2) · `eslovVag` (27.5, 24, 0) (the rollerskier on the Eslöv lane, 6 m up from the z −120 road and facing it; Phase 3 r2, was (28, 4, −π/2) mid-lane, 33 m off the vischan drive) — on (3,0): `packhus` (0, 10, π) | — |
@@ -1531,6 +1536,23 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
       back: { prompt: '<b>E</b> Byt till hawaiiskjortan', secs: 1.5, radioAt: 0.6,          // [N]
         line: 'Är den inte lite skrikig?',                                                    // [F*]
         radio: ['ole', 'Du skal ha sterke farger, du som er mørk.'] } } ],                    // [F*]
+  kyrkfrid: {                                      // free roam (feature 60, 2026-10-17; game/church.js); its own clock
+    at: 'kyrkaPuerta', r: 1.8, cooldown: 120,
+    prompt: '<b>E</b> Sök skydd i kyrkan',                                                   // [N]
+    enterSecs: 0.8, secs: 9, floor: 4,
+    cam: { at: 'kyrkaCam', dist: 12, height: 3 }, shotR: 70, shotMargin: 0.05,
+    door: [0, -0.75], leaf: [0, -1.06], out: [0, 4.4],        // offsets [x, z] from `at` (yaw 0: block-local (0.8, 2.2) + [x, z])
+    read: [-5.0, 9.0], sign: [-7.2, 7.4], mid: [-3.0, 10.8], midSouth: 1.5,
+    entry: [-2.3, 27.8], away: [1.8, 12.0], exit: [1.8, 31.3], kerb: [0, 33.4], reach: 30,
+    run: 4.5, walk: 2.2, slowR: 6, comeSecs: 12, leaveSecs: 12,
+    stops: [[11.2, 35.05], [-10.8, 35.05]], stopYaw: -π/2, stopClear: 5.5, blink: 0.3,
+    readLine: 'Es una iglesia…', readSecs: 2.0,                                               // [F*]
+    spell: 'Det… är… en… kyr-ka.', spellSecs: 2.4, scratchSecs: 2.0,                          // [F*]
+    shout: 'De där svenskarna är heltokiga!', shoutSecs: 2.4,                                 // [F*]
+    peekAt: 1.6, peekSecs: 1.3, peekLook: 0.8, stepSecs: 1.6, lineAt: 0.3, lineSecs: 2.6,
+    line: 'Hoppas vi inte får användning för det.',                                           // [F*]
+    card: { title: 'Kyrkfrid', text: 'Guardia Civil väntar utanför' },                        // [N]
+    banner: ['KYRKFRID', 'Guardia Civil gav upp'] },                                           // [N]
   witnessToast: { who: 'herrStorch', r: 20, text: 'Ingen fara: linsskyddet sitter på.', cooldown: 60, // [N] P1; offence adds 0
     say: 'Lite film.' },                             // [F*] (WP-H); toast + filming never during a scene/cutaway (Phase 2)
   bustRadio: ['lasse', 'Friskotek i morgon bitti, Olsson!'],   // [N] (WP-H) after a free-roam bust only (Phase 2)
@@ -1691,6 +1713,60 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
     the trip has given him in turn, saved. In this feature's suit the way back above has the spot; in a
     pursuit only the hideout, and only in the shirt (in the coat, the suit or the Rio jacket he picked
     nobody shouts for the shirt and the wardrobe hides nothing).
+- **Kyrkfrid** (free roam; feature 60 "Kyrkfrid i Templo Ecuménico", 2026-10-17; `game/church.js`, owned
+  by Shame as `shame.church`, config `kyrkfrid`, which `setupHideouts` hands to `church.configure(h)`).
+  Templo Ecuménico's door (landmark `kyrkaPuerta`, before its right leaf under the portico; the scene's
+  spots are offsets from it). Only on the island with `missions.state === 'idle'` (as the wardrobe), so
+  no mission, stage, timer or pool sees it; on foot, `normal`, on the ground, not in a dialogue, not
+  carrying, not frozen, no PANIK.
+  - **In**: during a pursuit, its own `cooldown` (120 s, `church.t`; the porter's and the paint shop's
+    `hideoutT` and the wardrobe's `closet.t` are untouched) out, within `r` 1.8 m: `<b>E</b> Sök skydd
+    i kyrkan` [N] (priority 100). Free. Stig turns to the door, its right leaf opens on the dark church
+    (`audio.door`, the doorway mesh) and he walks into it over `enterSecs` 0.8 s, frozen, while the
+    pursuit goes on: an officer who comes within 1.4 m busts him as anywhere (`busted` →
+    `church.onBusted`: the door shuts with him outside, the fine). At 7 m/s the officer needs about 7 m
+    of head start when E is pressed (scenario `kyrkfrid`: from 3.5 m he is taken, from 8.5 m and 12 m he
+    gets in). Escaped meanwhile (no pursuit): he stays outside.
+  - **The wait**: the door slams (`audio.doorSlam`, a 0.35 shake), Stig hidden, the cut `cam`
+    (`kyrkaCam`, 12 m behind it, 3 m up: the door and the sisters' sign from the plaza), the objective
+    card KYRKFRID / `Guardia Civil väntar utanför` [N] (`church.objective()`, after the paint shop's in
+    `main.updateHud`), `frozenT` held. **Shame.update leaves the pursuit to the scene** while `holds`:
+    no `bands`, no officer chase, no taunts, no car bust; the meter sinks by its start value / `secs`
+    (9 s) a second, held at `floor` 4 until the sign is read (the bands would not move with a pursuer
+    this close); the siren's loudness from the nearest Land Rover. The living Land Rovers out of the
+    shot (the cut's width: its 50° lens at the screen's aspect, `shotMargin` 0.05 rad wider, within
+    `shotR` 70 m, nothing solid between) are put on their `stops` on the street in front of the church (the north lane,
+    facing west, x 12 and −10; a car within `stopClear` 5.5 m moves the stop 7 or 14 m along the lane);
+    those in it stop where they are; all parked (`ai` null, `park`) with the borrowed jeep's blinking
+    blue lamp (guardiaJeep.js `lampMesh`, every `blink` 0.3 s). The officer walks (`run` 4.5 m/s, `walk`
+    2.2 the last `slowR` 6 m) to the sign's east end (`read`): from where he is when he is within
+    `reach` 30 m of it and sees the way (straight when he is south of `mid`, else by `mid`), else on from
+    the plaza's south edge (`entry`), behind the shot; stuck or over `comeSecs` 12 s, out of the shot he
+    is put there. At the sign, facing it: "Es una iglesia…" [F*] (the sisters' language record,
+    relocated) for `readSecs` 2.0 s, "Det… är… en… kyr-ka." [F*] (its Swedish, spelt out) for `spellSecs`
+    2.4, then, facing the door, the new anim flag `scratch` for `scratchSecs` 2.0.
+  - **They give up** once he has scratched his head and `secs` have passed: the waiting Land Rovers
+    taken out of `pursuers`, `v = 0`, `endPursuit(true)` (no fine, no escape banner), `church.t =
+    cooldown`, the card off; the officer, shown again where he stood, shouts "De där svenskarna är
+    heltokiga!" [F*] (the Spaniards at the julfest, one of the `taunts`) and runs off east of the shot's
+    eye (`away`, `exit`) to the waiting Land Rover nearest the exit, its side (`kerb`). `peekAt` 1.6 s
+    later Stig stands in the doorway, facing out, the leaf open (`audio.door`), and looks left and right
+    (`anim.look`, `peekLook` 0.8 rad) for `peekSecs` 1.3 s; then he walks out to `out` (block-local (0.8,
+    6.6), just past the portico) over `stepSecs` 1.6 s, the door shuts, the cut ends with the chase
+    camera behind him facing out (both waiting Land Rovers in view at the street beside his bubble), the
+    freeze ends; `lineAt` 0.3 s later "Hoppas vi inte får användning för det." [F*] (a sister at the
+    record, relocated to Stig) for `lineSecs` 2.6, and when it is down the banner KYRKFRID / `Guardia
+    Civil gav upp` [N] (`good`, 2.6 s), a yellow flash and the `complete` jingle. The officer at his Land
+    Rover (or stuck, or after `leaveSecs` 12 s) is hidden (he is in) and the waiting Land Rovers drive off
+    as traffic, lamps off (`shame.leaving`, 25 s).
+  - **Interrupted**: a new pursuit after the give-up (`church.onPursuit`) makes the officer the chaser
+    again and sends the waiting Land Rovers off; a mission start (in tests mid-scene: Stig cannot start one
+    from inside) stops it where it is (`church.stop`: Stig shown in the doorway, the cut and the card
+    off; a pursuit still on gets its Land Rovers back with `shame.chase(car)`, else they drive off and the
+    officer is gone); the other level removes everything (`church.clear`).
+  - **Map**: a `friend` marker at the door (edge-clamped) while it can be used (`church.markers()`).
+  - Balance: free, but on foot only, at the door 150 m north of the porter, with the officer more than
+    about 7 m behind, a long scene in which Stig does nothing, and twice the porter's cooldown.
 - **Paint shop** (free roam; feature 1 "Coche folcloristico nativo", 2026-10-14; `game/paintshop.js`,
   owned by Shame as `shame.paint`, config `paintshop`). Open only on the island with no mission
   running (`missions.state === 'idle'`, as `bustRadio`): a mission's chase or wreck (the bodega
@@ -6670,7 +6746,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/missions/flight.js` | new | **F** | `FLIGHT_MISSIONS` (indices 0–4) |
 | `src/game/missions/island.js` | new | **G** | `ISLAND_MISSIONS` (indices 5–12) |
 | `src/game/missions.js` | **deleted** | — | |
-| `src/game/shame.js` | edit | **H** | configure/panic/pursuit/walker/hideouts |
+| `src/game/shame.js` | edit | **H** | configure/panic/pursuit/walker/hideouts; `chase(car)` and the church's hold (feature 60, §7.2) |
 | `src/game/closet.js` | new (feature 36, 2026-10-17) | — | `Closet` (`shame.closet`): Skjortbytet in free roam: room 107's wardrobe as a hideout, the change, the officer walking past, the way back, the shirt taunt and the map marker (§7.2) |
 | `src/game/paintshop.js` | new (feature 1, 2026-10-14) | — | `PaintShop` (`shame.paint`): the free-roam paint shop at Gasolina, its scene, wet paint, drive-by and tip (§7.2); `DRIVE_BY` route |
 | `src/game/berraJob.js` | new (feature 2, 2026-10-14) | — | `BerraJob` (`game.berraJob`): Bärra hem Berra in free roam: the naps, Robban's ask, the carry, the drops, the desk and the pay (§10.6) |
@@ -6694,9 +6770,10 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/gangTalk.js` | new (feature 39, 2026-10-17) | — | `GangTalk` (`game.chat`): Prata med gänget in free roam: who can be talked to and which exchange is next, the chain of bubbles with Stig's answers and their poses, the stop, the hush after it (§10.28) |
 | `src/game/solkram.js` | new (feature 35, 2026-10-17) | — | `Solkram` (`game.solkram`): Smörj in Majsans rygg in free roam: Majsan's interactable, the scene (the ask, her back turned, the meter's card and the held E, the result's shots, cards and bubbles), the bottle and the cream, the record and `sjuPoang`, the reset (§10.26) |
 | `src/game/stunts.js` | new (feature 40, 2026-10-17) | — | `Stunts` (`game.stunts`): Stunthopp med G17-stämpel in free roam: his car's jumps measured (from car.js `airT`/`airFrom`), LUFTTID in the air, the settle and the verdict, the stamp and the card, the named jumps' take-offs, pay and records, the mantra off the plank, Stig's lines, his arms out by the dream plane, the reset (§10.27) |
-| `src/game/guardiaJeep.js` | new (feature 51, 2026-10-17) | — | `GuardiaJeep` (`game.jeep`): Låna Guardia-jeepen in free roam: `guardia1` open between missions after the bodega, the loan and its SKANDAL, his after the pursuit, the bust scene and the tow, the respawn, the siren on H (the lamp, the corners, `game.sirenYield`), Stig's surprise, Angerud's outburst, the reset (§10.34) |
+| `src/game/guardiaJeep.js` | new (feature 51, 2026-10-17) | — | `GuardiaJeep` (`game.jeep`): Låna Guardia-jeepen in free roam: `guardia1` open between missions after the bodega, the loan and its SKANDAL, his after the pursuit, the bust scene and the tow, the respawn, the siren on H (the lamp, the corners, `game.sirenYield`), Stig's surprise, Angerud's outburst, the reset (§10.34); `lampMesh(car)` exported (the church's waiting Land Rovers, feature 60, §7.2) |
 | `src/game/lighthouse.js` | new (feature 52, 2026-10-17) | — | `Lighthouse` (`game.fyren`): Uppför fyren in free roam: the keeper's door and the gallery door with their fades and banners, the clock on to the evening by day, the gallery's three cameras and the vertigo, the exercise against the lantern with his eyes shut, the long blink to the night, `leave`, a mission start with him up there (§10.35) |
 | `src/game/receptionBell.js` | new (feature 59, 2026-10-17) | — | `ReceptionBell` (`game.bell`): Ringklockan i receptionen in free roam: the queue of three departing guests at Hotel Flamenco's porter's desk with their suitcases (solid only while out), their question and the porter's answer, the desk bell's mesh, its interactable and plings, the tenth pling's call (the porter's phone, Lasse on the radio, the guest's question, Stig's sorry, the bell under the desk), the bell's return with the hotel's card, the reset at a mission start (§10.37) |
+| `src/game/church.js` | new (feature 60, 2026-10-17) | — | `Church` (`shame.church`): Kyrkfrid i Templo Ecuménico in free roam: the church door's interactable and its open doorway mesh, the walk in and the slam, the plaza shot and the card, the waiting Land Rovers with their lamps, the meter in the wait, the officer's walk to the sign and his lines and scratch, the give-up, the peek and the step out, Stig's line and the banner, the officer into his Land Rover, the interruptions and the map marker (§7.2) |
 | `src/game/beachDream.js` | new (feature 57, 2026-10-17) | — | `BeachDream` (`game.dream`): Strandkyssen i bränningen in free roam: the towel and its interactable, the scene's clock (lying down, the white wash, the dream with Majsan's double, the foam and the camera's glide, the flash, the wave and its splashes, the lines), the visitor on the sand and her way home, the drips, the reset (§10.33) |
 | `src/game/birds.js` | new (feature 43, 2026-10-17) | — | `Birds` (`game.birds`), `KINDS`: Fåglarna som lyfter in free roam: the four kinds' looks and instanced meshes, the flocks on their spots (pecking, steps, turns), the scare (Stig on foot, his car, the horn), the take-off, the circle and the landing, the sounds, Stig's sorry and hands up, the stork's trip to the Storches and the scene, the put-back at a mission start (§10.31) |
 | `src/game/gags.js` | new (feature 47, 2026-10-17) | — | `Gags` (`game.gags`): Gags på E in free roam: the two gags' interactables, who must stand free, the scene line by line (marks, poses, shots, the one sent in), Ole's flash, everyone put back, the pay and the Gags count, saved (§10.32) |
@@ -6727,8 +6804,8 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/world/cabin.js` | new | **A1** | §5 interior, collision, seats, trolley, turbulence, fear, interactables, blockers, `CAM_CABIN`, `FLIGHT_PALETTES`, `FEAR`; calls `buildFlightScenery` |
 | `src/world/flightScenery.js` | new | **A2** | §5.6 visuals: gate-set visuals, airframe, animated scenery per phase, `buildFlightScenery`, `buildPlaneExterior` |
 | `src/world/rio.js` | new | **B** | `buildRioCard` (P1) |
-| `src/actors/models.js` | edit | **E** | `CHARS`, `CAST`, new def fields, anim flags, `buildBustGeo`, `outfitDef`, `randomPed` palette; the `ticket` flag and its `lappblock`/`penna` props (feature 20, §10.17); the `leap` and `bomb` poses (feature 24, §10.20); the `placate` pose (feature 31, §10.21); the `lie` pose, the `stekt` outfits and `STEKT_SKIN` (feature 32, §10.22); the `rub` pose (feature 35, §10.26); the `camShow` pose and `cupHeld` raised standing with `cupUp` (feature 47, §10.32); the `lie` pose's `roll`, `turn` and given arms (feature 57, §10.33); the `eyesShut` lids (feature 52, §10.35); the `tap` pose (feature 59, §10.37) |
-| `src/actors/character.js` | edit | **E** | `setDef`, `hidden`, `seatAt`, `standAt`, new anim flag defaults (`placate`: feature 31; `rub`: feature 35; `camShow`: feature 47; `eyesShut`: feature 52; `tap`: feature 59); the state `lying`, `lieAt`, `fling`'s `flip` (feature 32, §10.22) |
+| `src/actors/models.js` | edit | **E** | `CHARS`, `CAST`, new def fields, anim flags, `buildBustGeo`, `outfitDef`, `randomPed` palette; the `ticket` flag and its `lappblock`/`penna` props (feature 20, §10.17); the `leap` and `bomb` poses (feature 24, §10.20); the `placate` pose (feature 31, §10.21); the `lie` pose, the `stekt` outfits and `STEKT_SKIN` (feature 32, §10.22); the `rub` pose (feature 35, §10.26); the `camShow` pose and `cupHeld` raised standing with `cupUp` (feature 47, §10.32); the `lie` pose's `roll`, `turn` and given arms (feature 57, §10.33); the `eyesShut` lids (feature 52, §10.35); the `tap` pose (feature 59, §10.37); the `scratch` pose (feature 60, §7.2) |
+| `src/actors/character.js` | edit | **E** | `setDef`, `hidden`, `seatAt`, `standAt`, new anim flag defaults (`placate`: feature 31; `rub`: feature 35; `camShow`: feature 47; `eyesShut`: feature 52; `tap`: feature 59; `scratch`: feature 60); the state `lying`, `lieAt`, `fling`'s `flip` (feature 32, §10.22) |
 | `src/actors/car.js` | edit | **E** | §6.6 types/flags, `registerCarType`, `build`/`noWheels`/`noSpeedo`/`noExplode`/`livery`; the grisbil's pig meshes `PIG_SLOTS`, `pigMesh`, `car.pigs`, `setPig`, `pigWorld` (feature 15, §10.15); `car.lift`, the nose raised on the tow truck's hook (feature 20, §10.17); a prop is known by its block's `ref`, `game.breakProp` may refuse, `def.slow` (feature 28, §10.19); the flight's `airT`, `airFrom` and `game.onCarAirEnd` (feature 40, §10.27) |
 | `src/actors/pickups.js` | edit | **E** | `COLLECT_KINDS`, `registerCollectKind`, `Collectible` table, `Rabbit` meshes, coin value 25; the `brodrost` kind, `TOASTER`, `setToaster`, `Collectible.mark` and the `yaw` option (feature 33, §10.24); `PRYL_IDS` exported (feature 38, §10.25) |
 | `src/actors/peds.js` | edit | **E** | Swedish/Spanish shouts; `dodge`, `startle` (feature 5, §6.7) |
@@ -6762,6 +6839,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `tools/scenarios/fyren.mjs` | new (feature 52) | — | fyren |
 | `tools/scenarios/klader.mjs` | new (feature 67) | — | klader, kladshots |
 | `tools/scenarios/ringklocka.mjs` | new (feature 59) | — | ringklocka, ringshots |
+| `tools/scenarios/kyrkfrid.mjs` | new (feature 60) | — | kyrkfrid, kyrkshots |
 | `tools/story/flight.mjs` | new | **F** | `M_FLIGHT` (M[0..4]) |
 | `tools/story/island.mjs` | new | **G** | `M_ISLAND` (M[5..12]) |
 
@@ -7250,6 +7328,10 @@ is. Only a look; only `game.fyren` sets it (Levander's "Slut ögonen." on the li
 `tap` (feature 59, §10.37): a pling on the reception's bell: the right arm forward and down to the
 counter (R (−1.05, 0, 0.16)), his head bent to it (neck 0.26), for `tapSecs` 0.45 s. Only a look; only
 `game.bell` sets it; `heldPose` counts it as busy.
+`scratch` (feature 60, §7.2): scratching his head: the right arm up at the side of the head (R (−0.3,
+0, −2.75), the z rubbing ± 0.08 at 15 rad/s), the head cocked towards it (neck z 0.14, x 0.08). Only a
+look; only `shame.church` sets it (the officer at the church's sign, `scratchSecs` 2.0 s); `heldPose`
+counts it as busy.
 `lie` (feature 32, §10.22; not a flag: `anim.lie` is the lying pose, `{ lean, arms, tilt, lift }`,
 set by `sync` in state `lying`, else null): on a sun lounger the root leans back `lean` (the
 backrest's −0.75) about the hips, so the legs are laid straight along the bed (x = −π/2 − lean,
@@ -7536,6 +7618,16 @@ shame.closet (Closet, §7.2; feature 36): configure(h) from setupHideouts (h = t
   onBusted() from busted(); update(dt) after paint.update; clear() from clear(); taunts(list) (the
   shout about the shirt only while it shows); markers() (read by main.mapMarkers); canHide();
   canBack(); shirt; t (its cooldown); swap; walk { phase come | look | leave, scene, from }; last
+shame.church (Church, §7.2; feature 60): configure(h) from setupHideouts (h = cfg.kyrkfrid or null;
+  returns the remover of its interactable); holds (Stig in the church, the pursuit on: update() leaves
+  the meter, the officer and the Land Rovers to it); onPursuit() from startPursuit(); onBusted() from
+  busted(); update(dt) after closet.update; stop() (free roam over: a pursuit still on gets its Land
+  Rovers back); clear() from clear(); objective() (the card while they wait, read by main.updateHud
+  after the paint shop's); markers() (read by main.mapMarkers); canUse(); inShot(x, z); t (its
+  cooldown); s { phase enter | wait | out, read come | read | spell | scratch | done }; walk { then
+  read | board }; held [{ car, placed, lamp }]; last; said
+shame.chase(car) (feature 60): a Land Rover's chase AI with the catch-up band (startPursuit; the
+  church hands a waiting one back)
 
 // berraJob.js (feature 2, §10.6): game.berraJob = new BerraJob(game) after the runner; update(dt)
 //   from Game.update after shame.update; posed(key) / waving(key) read by syncAll (no wave, turn or
@@ -8385,6 +8477,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `fyren` [feature 52] | Uppför fyren (§10.35), at index 6 (friskotek's idle, the clock held at 15:00). The world: `LIGHTHOUSE.deck` 51.3, the tower's circle (r 3.4, kind `tower`) topped there, the lantern to 99, 20 railing walls; at 720 angles a body of Stig's radius just outside the walkway meets a railing wall (no gap); `groundAt` beside the axis from 0.2 is the ground, from 4.0 and 20 the roof terrace (4.0), from 51 the gallery (51.3); no free spot there. The door: "E Gå upp i fyren" at `fyrDorr` by day (shot `fyren_dorr`); E: the fade at once, the banner `MÅNGA TRAPPSTEG SENARE …`; up on the gallery at `fyrGalleri` (51.3) facing out, `climbs` 1, the clock 15 → 19.75, `sunset`, not lit, `mantraMode`, `cam.cine`, view `orbit`, the prompt "E Gå ner" with "J håll: Jag kan flyga!"; "Femtio meter … det är ju nästan som att flyga." with the view still `orbit` (shot `fyren_galleri`), then `vista` within 9 s: the sight line north-east (within 0.35 rad of 3π/4) and more than 0.3 rad down, the vertigo's weight over 0.9 and the sight line moving by more than 0.004 rad in 0.9 s (shot `fyren_utsikt`). Held S+D, W+A, D and S+A+Shift (12 samples each): r within rIn − 0.05 … rOut + 0.06 and y 51.3 throughout; Space: no jump (y, vy, onGround over 8 samples). Levander's advice ("Varje gång du känner tendenser till flygrädsla så gör du övningen…") once he waits, with the view `orbit`. J held at r 2.5 by the door: `mantraOn`, `wings`, `eyesShut`, view `pose`, his back at rIn + 0.02 (±0.05), facing out (±0.1); `calm`, the vertigo under 0.3 (shot `fyren_ovning`), the mantra in a bubble; held on: the long blink (`busy`, the fade, still `wings` and `eyesShut`), then 22:00, lit, `night`, `beaconLit`, `last.kind` `night` from 19.75, still in the exercise with the fade gone (shot `fyren_natt`); J let go: arms down, eyes open; a second long hold at 19:45: no second blink. "E Gå ner" at `fyrGalleri`: the banner `… OCH LIKA MÅNGA NER.`, 2.6 m out from `fyrDorr` turned away from it, `climbs` 2, no `mantraMode`, no `cine`, still 22:00 and `night` (shot `fyren_ner`). A climb at 22:00 keeps the clock (`last.from` = `last.to` = 22); R from the gallery: on the road, not up, no `mantraMode`, `cine` or `eyesShut`. A SKANDAL pursuit: no "Gå upp" prompt, E no climb. At index 6 again, up there, `missions.begin()`: at the door below (y under 0.5), no landing over 6 m/s, no `mantraMode`; in the running mission no `fyren:upp` at the door |
 | `klader`, `kladshots` [feature 67] | Garderoben och bergsprängaren i rum 107 (§10.36). `klader`: at index 5 (free roam, the suit) the wardrobe holds `kostym,arlanda`; at `rum107Garderob` "Byt kläder" (`rum107:garderob`); E: `swap`, frozen over `secs`, `cam.cine` (the shot), the wardrobe open with `arlanda` on the hanger, still the suit, facing it (yaw −π/2), no prompt; done: `arlanda` on, `islandOutfit` and the save's `outfit` `arlanda`, the suit on the hanger, "Det måste vara värmen.", turned to the shot's eye (within 0.01 rad); after `show`: no `cine`, the doors shut, the prompt again, `cam.yaw` the shot's way. E again: the suit, saved, Ole's "Du kan ikke gå sånn her nede! … Shorts." on the radio. In the coat `missions.begin()`: `kostym` on, `islandOutfit` still `arlanda`, the wardrobe not usable; `abort()`: the coat back on. E then `begin()` mid-change: no `swap`, the doors shut, no freeze, the suit, the shot not the camera's. The boombox at index 5: "Bergsprängaren", E: Ole's "Kvarts og digital.", the tune `sol`, no prompt until `radioT` is out; after `unlock('samba')`: "Spela samba", E: the samba, "Ja, det er fint! Samba!", the prompt "Stäng av sambaen"; E: `sol` (saved), "Spela samba"; E: the samba with `last.line` "Hører du? Samba.". At index 6 `kostym,arlanda,hawaii`: from the shirt round to the suit; to the shirt: "Är den inte lite skrikig?" and Ole's "Du skal ha sterke farger, du som er mørk.". A pursuit in the shirt: Skjortbytet's `hideout:rum107Garderob`; E and the officer's walk past; in its suit (`islandOutfit` `hawaii`): `garderob:rum107Garderob`, its way back, then "Byt kläder" again; in the coat in a pursuit: neither of the three, no shirt taunt. The save and a reload (no `fresh`): the coat at index 6, idle. At index 13 all four; with SunTrip's hat on, E from the shirt: `rio`, saved, Ole's "Og så Rio! Stranda, jentene og samba.", `shop.worn` empty and no bucket hat; E: the suit with the hat again. The flight level (index 2): `room107.live` false, no `rum107:` spot usable, the suit. `kladshots` at index 13: Stig at the wardrobe (`klader_1_stig`), then four changes, each changing (`klader_N_byte`: the next on the hanger beside him) and done (`klader_N_<outfit>`: his front in it, what he took off on the hanger): rio, kostym, arlanda, hawaii; the chase camera after (`klader_6_jaktkamera`); the coat on the patio (`klader_7_rocken_uteplatsen`) and the Rio jacket at the pool (`klader_8_rio_poolen`) |
 | `ringklocka`, `ringshots` [feature 59] | Ringklockan i receptionen (§10.37). `ringklocka`, at index 7 (free roam, Ole the giver at `flamenco`): the queue not out while Stig looks at its spots (hidden by hand, 40 frames), out once he is 30 m off facing away: three guests on their spots (none `local`, nothing held), each facing the one ahead and the first the porter (within 0.01 rad), a suitcase `caseOut` 0.8 m to each one's right, shown and solid, the guests in `allChars`; walking into the middle suitcase for 1.2 s stops him at `caseR` + his radius. At the bell (3.0, −10.3) "E Plinga på klockan" (`ringklocka`) and the bell's mesh on its spot; none 2 m off; in front of the G17 toaster (3.75, −10.3) its own prompt, pressed to the desk in front of the bell the bell's; none with the porter hidden; in a pursuit the porter's bribe (`hideout:flamencoRecepcion`), the bell again after it. Plings 1–9 by real E presses: each counted, `tap` on, `audio.pling`, "*pling*" over the bell and the porter's "Momento."; a second E within `rest` keeps `ringklocka` and is no pling (nor a toaster's try). The 10th: `phase` `call`, the count 0, the porter posed and turned to the key board (yaw over 2.6), one `audio.phone`, the radio `['lasse', "Klockan 12. Ställ väskorna utanför receptionen."]`, the said lines exactly *pling*, Lasse, the guest's "Och när ska vi lämna rummen?" (with the radio toast still up), Stig's "Förlåt…" (no "Momento."); in the call E is the bell's with an empty prompt; then `away`, the bell hidden, the porter free, no bell prompt. 30 m off facing away: the bell back on its spot with the card (`signed`, `signOn`), the prompt again, the count 0. By the desk (3.0, −4.5) a guest asks and the porter's "Momento." follows `replyAt` 1.3 s later (±0.25). A kick (J) at the last guest bowls him over (SKANDAL up), and he is back on his spot within 15 s. `missions.begin()`: the queue hidden, the suitcases' solids dead, the card off, the bell on its spot, `bell` phase, no prompt at the bell. The flight level: not live, no queue. `ringshots`: the queue from the porch, the prompt, the hand on the bell from his right, a pling and "Momento." from the side, the porter on the phone, the guest's question under Lasse's radio box, "Förlåt…", the bell on its way, the empty desk, the bell back, the card close up, the queue along the desk |
+| `kyrkfrid`, `kyrkshots` [feature 60] | Kyrkfrid i Templo Ecuménico (§7.2). `kyrkfrid`, at index 6 (free roam): no prompt at `kyrkaPuerta` without a pursuit, the door shut; in one (the officer 12 m off on the plaza) `Sök skydd i kyrkan` (`kyrka:kyrkaPuerta`) and the `friend` marker at the door; none 2.5 m out. E: `enter`, frozen, the doorway open, the pursuit on, facing the door (yaw π), no second prompt; `in`: hidden, the cut, the door shut, the card KYRKFRID / `Guardia Civil väntar utanför`, both Land Rovers held with their lamps, those placed on the street in front of the church (within 0.6 m of a stop's z, 15 m of its x), the others in the shot; 1.5 s later the meter lower but at or over `floor`, no bust, no fine, the Land Rovers within 3 m of where they stopped. The officer within 1 m of `read`, "Es una iglesia…", "Det… är… en… kyr-ka.", `scratch` on with the pursuit still on and the meter at or over `floor`; `giveUp`: no pursuit, the meter 0, no fine, `t` near `cooldown`, no escape banner, the card gone, `scratch` off, the officer walking to `board`, "De där svenskarna är heltokiga!", Stig still hidden in the cut; `peek`: Stig `normal` in the doorway (within 0.1 m), the door open, the cut, frozen, facing out (yaw 0); `out`: no scene, no cut, the door shut, at `out` (within 0.1 m), the camera's yaw 0, no freeze; "Hoppas vi inte får användning för det.", the banner KYRKFRID / `Guardia Civil gav upp`; the officer gone and the Land Rovers leaving as traffic; the four lines in order, once each. In a new pursuit inside the cooldown no prompt, the porter's `hideoutT` untouched; at `t` 0 the prompt. The officer 3.5 m out: busted at the door (`busted`), fined, Stig `normal` outside, the door shut, no cut. 8.5 m out (placed and E in one frame): `in`, no fine; `stop()`: Stig out, no cut, nothing held. The officer 78 m off (E and the slam in one go): he starts within 2.5 m of `entry`, out of the shot, and reaches `read`. `missions.begin()` while they wait: no scene, Stig `normal`, the door shut, nothing held, no card, no lamp lit, and the pursuit (if still on) with both Land Rovers chasing; the cut over once the mission runs; in it, with a pursuit, no prompt and `canUse()` false. The flight level (index 2): no `church.cfg`, no `kyrka:` interactable. `kyrkshots`: the prompt with the officer coming, Stig into the dark doorway, the plaza shot with the officer walking in, the sign read out, spelt out, the head scratched (and close up), the shout, the peek, his line with both Land Rovers at the street, the banner, the Land Rovers driving off |
 | `badgaster`, `stekt` [feature 32] | Badgäster på solstolarna (§10.22). `badgaster`, at index 6 (free roam): bodies only on taken sun loungers, their hips on the seat, at most `max` (10), none on Berra's or Robban's; on the main beach no taken lounger within `r` left empty nearer than the bodies (shot `badgaster_strand`); one rebuilt body's ms logged. The burn: three loungers in the z 250 row; a bather lain past `burn[0]` stays pale while in view within `seenR` and is pink once out of view; past `burn[1]` lobster red (skins from `skins`; shot `badgaster_stadier`). A kick at a free lounger and at a taken one give the same SKANDAL; the bather off it in a backward somersault (`flip` < 0) along the lounger's facing (vz > 2), an OUCH bark, a GETUP bark on his feet (shots `badgaster_kullerbytta`, `badgaster_upp`), gone once Stig is 30 m off; no `onCharHit`, no "hit" sorry. His car at 10 m/s through a taken lounger: SKANDAL 1 × 1.2 × gain only, the bather off along the car (vz > 5; shot `badgaster_bil`). The lounger back after its smash (respawn 0, him 100 m off): `n` + 1, a new seed, stage 0, a pale newcomer on it. At 22:00 nobody (after a cut); at 10:00 `dayN` + 1 and a new crowd. A mission start (friskotek) takes every body away at once, none in the mission; the flight level (index 2) makes none. `stekt`, at index 6: Berra and Robban `lying` on their loungers, outfit `stekt` (skin `STEKT_SKIN`), `slump`, busy, spot `stekt`; both snore within 9.5 s (shots `stekt_bar`, `stekt`); the E point `stekt:wake` at Berra's feet: Stig's line, then Berra's with `lift` > 0.6 (shot `stekt_fem_minuter`), then Robban's, in that order, and `lift` back under 0.1; a kick at Berra's lounger: `flung`, then `down` with his timer held (> 100), still `stekt`, only snores from him (shot `stekt_sparkad`); the lounger back with him 100 m off: on it again. A mission start (friskotek): both `normal`, outfit `sol`, no slump, within 2.5 m of their homes at the bar. Index 7: on their loungers; 5 and 8: not |
 | `talk` [Phase 0] | `autoDialog = false`, walk to Ole at `gateQueue`, E, Space twice |
 | `fullstory` [Phase 0b] | swaps the literal §8 missions (`tools/fixtures/full-missions.js`) into `MISSIONS` and plays all 13 per §16.3 (`FROM`/`TO` as `story`); must end `#13 idle`, `RESULT: PASS` |
@@ -8501,8 +8594,8 @@ feature 28).
 carry mantra timeline scene haggle smash`.
 
 **Anim flags**: `wings cupUp cupHeld push planeSeat hold flail oath dance laugh slump shoeOff mirror film
-camShow giraffe butterKnife carryOver glide swan calc ski groda ticket leap bomb placate rub eyesShut tap` (`eyesShut`:
-feature 52, `tap`: feature 59, §14.6) (+ existing `kick talk wave cheer sprint spin look`, the glide's numeric `bank`, feature 3, the judges' `card`, feature 4, and the pool fest's
+camShow giraffe butterKnife carryOver glide swan calc ski groda ticket leap bomb placate rub eyesShut tap scratch` (`eyesShut`:
+feature 52, `tap`: feature 59, `scratch`: feature 60, §14.6) (+ existing `kick talk wave cheer sprint spin look`, the glide's numeric `bank`, feature 3, the judges' `card`, feature 4, and the pool fest's
 numeric `hop`, feature 8; `groda` is 1 | 2 | 3, §14.6; and `lie`, the lying pose, feature 32).
 **Character states**: `normal flung down seated lying hidden` (`lying`: feature 32, §14.6).
 
@@ -10508,3 +10601,28 @@ the fixer's group.
   are), out of the Berra scene's way; the bell moved 0.3 m and holding E; the phone call with the
   porter's back turned (no phone mesh); the guests look at Stig from the fourth pling; the card for the
   session, hidden in missions; the queue at every hour. Scenarios `ringklocka`, `ringshots` (§16.4).
+- Feature 60, "Kyrkfrid i Templo Ecuménico" (`features/implemented/kyrkfrid.md`, 2026-10-17): Templo
+  Ecuménico's door as a free hideout on foot in a free-roam SKANDAL pursuit (§7.2 "Kyrkfrid"; new
+  `src/game/church.js` (`shame.church`), `METERS.skandal.kyrkfrid` in §7.1; §1.6, §6.3, §14.1, §14.3,
+  §14.6, §16.4, Appendix A). Only when `missions.state === 'idle'` on the island: "E Sök skydd i kyrkan"
+  [N] at `kyrkaPuerta`; Stig walks into the dark doorway over 0.8 s, frozen, the officer still able to
+  take him (he needs about 7 m of head start); the door slams, Stig hidden, a cut to the plaza
+  (`kyrkaCam`) and the card KYRKFRID / Guardia Civil väntar utanför [N]. **Contract change**:
+  `Shame.update` leaves a pursuit to the church while `church.holds` (no bands, chase, taunts or car
+  bust): the meter sinks over 9 s, held at 4 until the sign is read; the Land Rovers out of the shot
+  are put on two stops on the street in front of the church, the others stop where they are, all
+  parked with the borrowed jeep's blinking lamp (`lampMesh` now exported from guardiaJeep.js); the
+  officer walks to the sisters' sign, reads "Es una iglesia…" [F*], spells "Det… är… en… kyr-ka."
+  [F*] and scratches his head (the new anim flag `scratch`); then they give up: no fine, no escape
+  banner, a 120 s cooldown of its own, his "De där svenskarna är heltokiga!" [F*] as he runs off to his
+  Land Rover; Stig peeks out of the doorway, steps out, the chase camera behind him with the Land Rovers
+  in view, "Hoppas vi inte får användning för det." [F*], the banner KYRKFRID / Guardia Civil gav upp
+  [N]; the Land Rovers drive off as traffic once the officer is in. `startPursuit`'s chase AI is now
+  `shame.chase(car)` (unchanged numbers), which also hands a waiting Land Rover back when free roam
+  ends mid-wait. A `friend` map marker while the door can be used. Landmarks `kyrkaPuerta`, `kyrkaCam`;
+  the door's open leaf is the module's mesh (no collider). No mission, stage, timer, fixture or
+  calibration pool changed (the pursuit's spawn, speeds and bands are as before; nothing in the world is
+  solid that was not); nothing saved. Deviations from the idea: one officer, not two; the Land Rovers
+  are put on the street out of the shot rather than driven there; Stig peeks out in the plaza shot and
+  says his line with the chase camera looking out; the meter holds near zero until the sign is read
+  (the scene, not a clock, ends it). Scenarios `kyrkfrid`, `kyrkshots` (§16.4).

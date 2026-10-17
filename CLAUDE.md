@@ -125,7 +125,12 @@ opens with a summary of the rounds and the timer changes.
     receptionen, the departing guests' queue at Flamenco's desk between missions: out unseen, the
     suitcases solid, "Och när ska vi lämna rummen?" and "Momento.", E at the bell, the toaster beside it
     keeping its front, the tenth pling's call with Lasse on the radio, "Förlåt…", the bell under the desk
-    and back with the card, a mission start, DESIGN §10.37)
+    and back with the card, a mission start, DESIGN §10.37), `kyrkfrid kyrkshots` (Kyrkfrid i Templo
+    Ecuménico, the church door as a SKANDAL hideout on foot between missions: the walk in with the officer
+    still coming, the slam and the plaza shot, the Land Rovers waiting at the street with their lamps, the
+    meter held till the officer has read ES UNA IGLESIA, spelt it out and scratched his head, the give-up
+    and "De där svenskarna är heltokiga!", the peek out and "Hoppas vi inte får användning för det.", the
+    banner, busted at the door, 8.5 m behind, the cooldown, a mission start, DESIGN §7.2)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

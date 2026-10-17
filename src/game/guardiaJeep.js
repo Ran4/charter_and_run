@@ -19,9 +19,10 @@ import { hud } from './hud.js';
 import { dist, pick, yawTo, dampAngle } from '../util.js';
 
 // The blinking lamp over the merged blue one on the roof (car.js guardiaBody: top + 0.25 at the
-// windscreen − 0.35), a bright dome and an additive halo; one material each, shared.
+// windscreen − 0.35), a bright dome and an additive halo; one material each, shared. Also the
+// lamps of the Land Rovers waiting outside the church (game/church.js).
 let lampMat = null, haloMat = null;
-function lampMesh(car) {
+export function lampMesh(car) {
   if (!lampMat) {
     lampMat = new THREE.MeshBasicMaterial({ color: 0x7ab4ff });
     const c = document.createElement('canvas');

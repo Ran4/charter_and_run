@@ -1,18 +1,61 @@
 # 60. Kyrkfrid i Templo Ecuménico
 
+**Implementerat.** Byggt 2026-10-17 som `src/game/church.js` (`Church`, ägd av Shame som `shame.church`)
+med konfigurationen `METERS.skandal.kyrkfrid` i `src/meters.js`, beskrivet i DESIGN §7.2 (”Kyrkfrid”) och
+§7.1. Bara på ön när inget uppdrag pågår (`missions.state === 'idle'`), till fots och under en
+SKANDAL-jakt. Två nya landmärken i `landmarks-island.js`: `kyrkaPuerta` (block-lokalt (0,8, 2,2), framför
+dörrens högra halva under portiken, vänd utåt) och klippankaret `kyrkaCam` (−2, 9, π). Vid dörren:
+”E Sök skydd i kyrkan” [N] (prioritet 100) och en grön markör på kartan. Stig vänder sig mot dörren,
+högra dörrhalvan öppnas mot den mörka kyrkan och han går in på 0,8 s, fryst, medan polisen fortsätter
+komma (hinner han ikapp blir Stig tagen vid dörren som vanligt; det krävs ungefär 7 m försprång).
+Dörren slår igen (`audio.doorSlam`), Stig göms och kameran klipper ut till torget med dörren och
+systrarnas skylt i bild, och kortet KYRKFRID / Guardia Civil väntar utanför [N] visas. Medan han är inne
+lämnar `Shame.update` jakten åt kyrkan (inga avståndsband, ingen jakt, inga tillrop, inget bilgripande):
+mätaren sjunker över 9 s men hålls på 4 tills skylten är läst. Jeeparna utanför bild ställs på två
+stopp på gatan framför kyrkan (norra filen, vända västerut), de i bild stannar där de är, och alla står
+parkerade med den lånade jeepens blinkande blåljus (`lampMesh`, nu exporterad från `guardiaJeep.js`).
+Polisen går till skyltens östra ände, läser ”Es una iglesia…” [F*], stavar sig igenom ”Det… är… en…
+kyr-ka.” [F*] och kliar sig i huvudet (ny anim-flagga `scratch` i `models.js`/`character.js`). Sedan ger
+de upp: inga böter, ingen flyktbanderoll, en egen spärrtid på 120 s (portierns och garderobens rörs
+inte), hans ”De där svenskarna är heltokiga!” [F*] när han springer iväg till sin jeep. Stig kikar ut i
+dörröppningen och tittar åt båda hållen, kliver ut till strax utanför portiken, jaktkameran tar över
+bakom honom med båda jeeparna i bild vid gatan, ”Hoppas vi inte får användning för det.” [F*] och sedan
+banderollen KYRKFRID / Guardia Civil gav upp [N]. När polisen har kommit fram till jeepen kör jeeparna
+iväg som vanlig trafik. Bilarnas jakt-AI i `startPursuit` är nu `shame.chase(car)` (samma siffror), och
+den lämnar också tillbaka en väntande jeep om friläget tar slut mitt i scenen. Dörrens öppna halva är
+modulens egen mesh utan kollision. Inga uppdrag, etapper, timrar, fixturen eller kalibreringspooler
+ändrades, och inget sparas. `main.js` läser kortet (`church.objective()`, efter målarverkstadens) och
+kartmarkören (`church.markers()`).
+
+Avvikelser från idén: en polis i stället för två (kollegan vid dörren i skissen behövs inte). Jeeparna
+körs inte fram genom stan utan ställs på gatan när de inte syns i bild. Kameran står kvar på torget
+när Stig kikar ut, och repliken kommer när han har klivit ut och jaktkameran ser ut mot gatan. Mätaren
+står strax över noll tills polisen har läst skylten, så det är scenen och inte en klocka som avslutar
+jakten. Spärrtiden är 120 s, dubbla portierns.
+
+Verifierat headless (port 8863): nytt scenario `tools/scenarios/kyrkfrid.mjs` med `kyrkfrid` (ingen
+prompt utan jakt, prompten och markören, att han fryser vid dörren, kyrkan, klippet, kortet, jeeparna
+vid gatan med blåljus, mätaren, polisen vid skylten och de tre replikerna i rätt ordning, att de ger upp
+utan böter, titten ut, utklivet, Stigs replik, banderollen, att jeeparna kör, spärrtiden, tagen vid
+dörren med polisen 3,5 m bakom, inne med 8,5 m försprång, polisen som kommer från torgets södra kant,
+ett uppdrag som startar mitt i scenen, inget under ett uppdrag och ingen kyrka i flygnivån) och
+`kyrkshots` (bilder på varje steg). Bilderna är granskade. `story` och `fullstory` gav `RESULT: PASS`,
+liksom `skandal`, `carbust`, `skjortbyte`, `garderob`, `guardiajeep`, `jeepsiren`, `pintura`, `ui`,
+`api` och `missions`.
+
 **Betyg:** 5,3/10 · wow 3 · film 3,7 · Stig-Helmer 3 — *Ett andra gömställe där språkkursens ”Es una iglesia” får sin pointe ger jakten ett val, men repliken är för de inbitna och fristadsläget är mer arbete än det ser ut.*
 
 *Stig är jagad av Guardia Civil, springer in i kyrkan och dörren slår igen. Utanför läser en guardia skylten högt, ”Es una iglesia…”, och kliar sig i huvudet. Efter en stund ger de upp och kör därifrån, och Stig kikar försiktigt ut.*
 
 **Kategori:** Lek och fysik · **Var:** Templo Ecuménico i centrum, kvarter (3,1). Kyrkdörren ligger vid ungefär (0, −159) och skylten ES UNA IGLESIA står på torget framför, vid (−6,4, −150,4). Det är omkring 150 m norr om portiern på Hotel Flamenco. · **Insats:** M – en liten ”fristad” i skandaljakten med en uppställd scen, inte bara en ny rad data som portiermutan
 
-![Templo Ecuménico med stängd dörr och skylten ES UNA IGLESIA](free_roam_bilder/kyrkfrid-1.jpg)
+![Templo Ecuménico med stängd dörr och skylten ES UNA IGLESIA](../free_roam_bilder/kyrkfrid-1.jpg)
 *Bild 1 (nuläge): Kyrkans framsida med dubbeldörren under portiken. Till vänster står skylten ES UNA IGLESIA / DET ÄR EN KYRKA. och till höger MISA 10.00 / GUDSTJÄNST 11.30. Stig står vid dörren, men någon prompt finns inte. Dörren är en del av väggen och skylten är bara dekor, så i dag finns ingenting att göra här.*
 
-![Skiss: guardian läser skylten, jeepen väntar](free_roam_bilder/kyrkfrid-2.jpg)
+![Skiss: guardian läser skylten, jeepen väntar](../free_roam_bilder/kyrkfrid-2.jpg)
 *Bild 2 (SKISS – tillfälligt uppställd i en headless-körning, finns inte i spelet): Stig har gått in och dörren är stängd. En guardia står vid skylten och läser högt, ”Es una iglesia…”, medan kollegan väntar vid dörren och en jeep med blåljus har kört fram. Uppe till höger syns notisen KYRKFRID – Guardia Civil väntar utanför. I skissen står jeepen på torget. I spelet är det enklare att låta jeeparna stanna vid gatan, eftersom palmerna och granarna står i vägen.*
 
-![Skiss: jeeparna kör iväg, Stig kikar ut](free_roam_bilder/kyrkfrid-3.jpg)
+![Skiss: jeeparna kör iväg, Stig kikar ut](../free_roam_bilder/kyrkfrid-3.jpg)
 *Bild 3 (SKISS – tillfälligt uppställd i en headless-körning, finns inte i spelet): Det är över. Jeeparna kör iväg längs gatan, och en guardia ropar över axeln ”De där svenskarna är heltokiga!”. Stig har just klivit ut under portiken, tittar efter dem och mumlar ”Hoppas vi inte får användning för det.”. Notisen har bytts till KYRKFRID – Guardia Civil gav upp.*
 
 **Idén.** När Stig jagas av Guardia Civil till fots i free roam får kyrkdörren en prompt: **E** Sök skydd i kyrkan. Stig slinker in och dörren slår igen. Kameran stannar ute på torget: konstapeln går fram till skylten och stavar sig igenom den, och jeeparna stannar vid gatan med blåljusen på. Efter tio sekunder ungefär tröttnar de. En guardia ropar ”De där svenskarna är heltokiga!”, jeeparna kör iväg, mätaren faller till noll och Stig kikar ut med sin replik. Kyrkan är gratis, till skillnad från portiern som kostar 500 pta, men man måste ta sig dit till fots och den får en längre spärrtid. Då blir jakten ett val: betala vid hotellet eller springa till kyrkan. Belöningen är själva scenen, och sedan blir kyrkan en plats man minns.

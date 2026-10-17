@@ -117,6 +117,11 @@ export const ISLAND_LANDMARKS = {
   pryl_kalkylator: { b: [2, 1], at: [-12, -8], yaw: 0, y: 3.4 },
   // (3,1) Templo Ecuménico
   kyrka: { b: [3, 1], at: [0, 18], yaw: PI },
+  // Kyrkfrid (free roam, §7.2): before the church door's right leaf under the portico, facing out
+  // (the E spot; the scene's spots are offsets from it, METERS.skandal.kyrkfrid), and the cut anchor
+  // of the wait's shot, the door and the sisters' sign seen from the plaza.
+  kyrkaPuerta: { b: [3, 1], at: [0.8, 2.2], yaw: 0 },
+  kyrkaCam: { b: [3, 1], at: [-2, 9], yaw: PI },
   // (4,3) gas station
   bensin: { b: [4, 3], at: [0, 16], yaw: PI },
   // The paint shop (free roam, §7.2): the zone in front of the workshop's left bay, facing out of it
