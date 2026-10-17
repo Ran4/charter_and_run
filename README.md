@@ -44,7 +44,7 @@ Samma tangenter i båda nivåerna; nivån bestämmer vad de gör.
 | Shift | spring | | skynda – men det ökar rädslan |
 | Space | hoppa, i luften igen för dubbelhopp | handbroms (sladd!) | **håll i dig**: ta tag i närmaste stolsrygg vid turbulens |
 | J / klick | sparka, i luften: stampa (efter julafton: **håll in i luften** för att glidflyga) | | **håll in**: "Jag kan flyga, jag är inte rädd" – sänker FLYGRÄDSLA |
-| E | prata (med uppdragsgivaren, och mellan uppdragen med gänget), kliv in, sno en bil, kvarta en stund i Stigs säng i rum 107, titta i herr Storchs kamera, heja på rullskidåkaren, dansa med i poolen, smörja in Majsans rygg (**håll in** och släpp i det gröna), byta om i garderoben i rum 107, söka skydd i kyrkan, ringa efter en bil från hytt 2, meta från piren (och **dra upp** när flötet dyker) | kliv ur (i fart: rulla ur) | prata, **sätt dig / res dig**, lås in dig på toaletten, anropsknappen, serveringsvagnen |
+| E | prata (med uppdragsgivaren, och mellan uppdragen med gänget), kliv in, sno en bil, kvarta en stund i Stigs säng i rum 107, titta i herr Storchs kamera, heja på rullskidåkaren, dansa med i poolen, smörja in Majsans rygg (**håll in** och släpp i det gröna), byta om i garderoben i rum 107, söka skydd i kyrkan, ringa efter en bil från hytt 2, meta från piren (och **dra upp** när flötet dyker), lifta på landsvägen (på flaket: hoppa av) | kliv ur (i fart: rulla ur) | prata, **sätt dig / res dig**, lås in dig på toaletten, anropsknappen, serveringsvagnen |
 | H | | tuta (utanför uppdragen hör folk den; i den lånade Guardia-jeepen: sirenen) | |
 | B | | titta bakåt | |
 | M / Tab | stor karta | stor karta | plan över gaten/kabinen |
@@ -58,7 +58,8 @@ galleri (där man inte kan hoppa), och efter julafton kan
 Stig-Helmer glidflyga: tryck J i luften och håll in (ett kort tryck stampar som förut). Handkontroll fungerar
 också: A hopp/handbroms, B spring, X sparka/mantra, Y prata, Start paus, triggrarna kör. I telefonens
 bilmeny väljer W/S (pilarna, styrkorsets upp och ner), E ringer och Q (Backspace, B) lägger på. När
-Stig metar lägger Q ner spöt medan han väntar.
+Stig metar lägger Q ner spöt medan han väntar. Står han på grisflaket när han liftar lutar A/D honom
+emot i kurvorna.
 
 Vägen visas av den gula pilen över Stig-Helmers huvud, ljuskäglan och ringen vid målet och
 stjärnan på kartan. På Arlanda och i planet går pilen runt bänkar, väggar och stolsrader i
@@ -291,6 +292,15 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   inte nerifrån marken. Försäljaren gillar inte folk på sitt tak: "¡No, no, no!". Efter uppdraget med
   åsnan ligger de sista mynten på hans tak, och när Stig skrapar ihop den sista peseten svär han
   "Jävla smålänningar!" – "Förlåt, förlåt…"
+- **Vi liftar**: vid skylten CAMINO SIN ASFALTAR ute vid tomatfälten, och på vägen vid packhuset, kan
+  Stig lifta. Tryck **E**: han ställer sig vid trottoarkanten med tummen ute, och efter en stund kommer
+  en grisbil och stannar precis förbi honom. "Ursäkta… skulle jag möjligen kunna få åka med en bit?" –
+  "Till stan, señor? Hoppa upp bak!" Stig klättrar upp på flaket bland grisarna, och bonden kör själv in
+  till baksidan av Hotell Flamenco. Du styr inte, men du måste hålla balansen: luta Stig emot i
+  kurvorna med **A**/**D** (och inte för mycket på raksträckorna), annars stiger ÅKSJUKA. Blir mätaren
+  full ramlar han av, och grisbilen kör vidare: "¡Adiós, señor!". Kommer han ända fram kliver han av med
+  ett "Jättefint! Tack." **E** hoppar av på vägen. Ingen SKANDAL, ingen bil som behöver kapas. Lifta går
+  bara mellan uppdragen.
 - **Små grodorna i poolen** (efter slutet): julfesten är inte riktigt över. Varje gång du kommer in
   på Flamencos pooldäck (mellan nio på morgonen och elva på kvällen) vadar SunTrip-gänget ut i den
   grunda änden och ställer sig i ring runt Lasse i tomteluva. Affe spelar Små grodorna på dragspelet,
@@ -753,6 +763,7 @@ src/game/phoneBooth.js          Hytt två! in free roam: booth 2 at Centro Nórd
 src/game/poolBar.js             Poolbaren öppnar in free roam after friskoteket: the bartender, the coffee and its 30 s sprint, Berra's "Ska du ha?", the cup for Fru Storch
 src/game/fishing.js             Meta från piren in free roam: the rod at the pier's end, the cast, the float's dive, the catches, the FÅNGST card
 src/game/marketRoofs.js         Pesetas på marknadstaken: the coin trail over the market's awnings (minY), the roof's coins after asnan, the seller's "¡No, no, no!" and swear
+src/game/hitch.js               Vi liftar in free roam: the hitch-hiking spots, the grisbil that stops, Stig standing in its bed, the lean and ÅKSJUKA, the fall, the drop behind Flamenco
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
@@ -762,8 +773,8 @@ tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, 
                                 badgaster, butik, brodrost, rum107, solkram, skjortbyte,
                                 stunthopp, prata, takhopp, mikrofon, faglar, gags, strandkyssen,
                                 guardiajeep, fyren, klader, ringklocka, kyrkfrid, gatlopp, skidor,
-                                golfbil, battur, balkong, hytt, kaffe, meta, marknadstak, calibrate,
-                                calibflight)
+                                golfbil, battur, balkong, hytt, kaffe, meta, marknadstak, lifta,
+                                calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
 tools/pool.mjs                  re-derives every random stage's timer from the ledger
@@ -808,6 +819,7 @@ node tools/shot.mjs hytt                 # the phone at Centro Nórdico: the men
 node tools/shot.mjs kaffe kaffestorch    # the pool bar after friskoteket: the coffee, its sprint, Berra's glass, the cup for Fru Storch, measured
 node tools/shot.mjs meta                 # fishing at the pier's end: the cast, the dive, E in time, the four catches, the FÅNGST card, early, late, Q
 node tools/shot.mjs marknadstak marknadstakFore   # the market's awnings: the shade, the coin trail run as a player, the seller's no and swear
+node tools/shot.mjs lifta liftaFall      # hitch-hiking: the thumb, the stop, the hop up, the ride leaning, the drop; the fall, E off, a warp, a knock, a mission start
 node tools/shot.mjs grodorna grodtakt    # the pool fest after the end: the ring, the porter, Stig in the ring, eight on the beat
 node tools/shot.mjs artig                # Stig says sorry: kicks, run over, a pump, bins, carjackings and the driver's "Nej."
 node tools/shot.mjs grisar               # the grisbil's pigs: the falls, the catch on foot and by creeping, Lasse, the pen

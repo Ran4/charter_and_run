@@ -23,7 +23,8 @@
 // José's street races with his mother in the car, the bet at the pool bar and the sisters' six (§10.38),
 // and the boat trip with PALOMA from the marina's kiosk to the lighthouse and back (§10.41), and the pool
 // bar open after friskoteket, its bartender, the Swedish coffee's sprint and the cup for Fru Storch (§10.44),
-// and the fishing at the marina's pier end, its catches and the FÅNGST card (§10.45).
+// and the fishing at the marina's pier end, its catches and the FÅNGST card (§10.45), and Stig
+// hitch-hiking on the country roads, standing in the farmer's grisbil bed into town (§10.47).
 
 export const HOMES_ISLAND = {
   ole: ['flamenco', 2.0, 1.0, 0],     // yaw 0: under the pergola, facing the pool (flamenco faces π)
@@ -2323,4 +2324,62 @@ export const FISKE = {
   allToast: '<span><b>Alla fyra!</b> Fisk, sko, hajfena och knäckebröd.</span>',  // [N] (one flex item in the toast)
   allLine: 'Nu finns det inget mer kvar i hela hamnen.',                           // [N] Stig
   allAt: 1.6,
+};
+
+// Vi liftar – tummen upp på vischan (free roam, DESIGN §10.47; game/hitch.js). On the island with no
+// mission running (`missions.state === 'idle'`), Stig on foot within `r` m of a hitch-hiking spot
+// (`spots[].lm`, on a country road's sidewalk, facing it) gets `prompt`. E: he stands on the spot with
+// his thumb out (`waitText` on the card; the camera behind him turned `lookUp` rad up the road), and a
+// grisbil, the `driver`'s bust at the wheel and three pigs in the bed, sets off from `spawn` (a lane
+// spot up the road, out of the shot) along `via` at `cruise` m/s (`wobble`: the farmer's weave). On
+// its lane and heading its way, from `approach` m before its stop it eases to `creep` m/s and stops
+// with its tail `tailPast` m past him. Stig walking `leaveR` m off the spot (or anything else taking
+// him) lets it drive on; none stopped within `waitMax` s: `nobody`. Stopped: the camera cuts across
+// the road (`shot`: `eye`, `look` [left, forward, height] from the spot), Stig asks (`please`, `askAt`
+// s), the farmer answers (`hopIn`, `answerAt` s), and at `climbAt` s Stig hops up (`climbSecs`) into
+// the bed's middle (`bed` × its length behind its middle), standing, and a pig grunts (`oink`). The
+// truck drives itself along `route` into town and stops with the bed beside `drop.lm` (on the lane
+// of `drop.lane`); the camera rides behind it. A/D lean him (`lean.k` 1/s) against the truck's
+// sideways pull (its speed × its turn rate; a full lean is worth `aRef` m/s²). ÅKSJUKA rises `rise`/s
+// per unit of imbalance over `dead` (`over` × that for a lean of his own: against the pull, or with
+// none), falls `decay`/s within it, and rises `brakeK`/s per m/s² of braking over `brake` and `jolt`
+// per m/s of a knock or a landing; his tip is the imbalance × `tip` rad. `stinkAt` s into the ride
+// Stig's `stink`; at `sickAt` % his `sick`. Full: he tumbles off on the side he tips (`fling`: `keep`
+// × the truck's velocity, `out` m/s out, `up` m/s up) and the truck drives on, the farmer's `adios`
+// `adiosAt` s later. E on the way: under `hopSpeed` m/s he steps down to the kerb side (`hopSecs`),
+// faster he jumps (a tumble). At the drop he steps down, says `thanks`, the farmer `adios` `byeAt` s
+// later, and the truck leaves at `departAt` s; a leaving truck is taken away `awayR` m from the
+// camera and out of its view (or `awayFar` m off). No SKANDAL, no pay; after `rideMax` s he steps
+// down (a safety net). Invented (§1.6): Stig hitch-hiking, the farmer stopping, the ride, the lean and
+// the fall; the film's hitch-hikers are Berra and Robban, on foot (research-plot.md:318–319).
+export const LIFTA = {
+  spots: [
+    { id: 'vischan', lm: 'liftaVischan', spawn: { lane: [[2, 2], [1, 2]], t: 30 }, via: [[0, 2]], stop: [[1, 2], [0, 2]], route: [[0, 3], [4, 3]] },
+    { id: 'packhus', lm: 'liftaPackhus', spawn: { lane: [[5, 1], [4, 1]], t: 20 }, via: [[3, 1]], stop: [[4, 1], [3, 1]], route: [[3, 3], [4, 3]] },
+  ],
+  drop: { lm: 'flamencoBack', lane: [[3, 3], [4, 3]] },
+  r: 1.6, driver: 'grisbonde', cruise: 13, wobble: 0.06,
+  approach: 30, creep: 2.2, tailPast: 0.6, bed: 0.3, leaveR: 1.2, waitMax: 30, lookUp: 0.5,
+  shot: { eye: [3.5, 10.5, 2.2], look: [-1.8, 3.4, 1.4] },
+  askAt: 0.3, answerAt: 1.9, climbAt: 4.4, climbSecs: 0.7, hopSecs: 0.55,
+  lean: { k: 7, aRef: 4.25, dead: 0.3, rise: 42, over: 0.35, decay: 5, brake: 4, brakeK: 1.5, jolt: 3, tip: 0.3 },
+  stinkAt: 2.5, sickAt: 50, hopSpeed: 3, rideMax: 120,
+  fling: { keep: 0.55, out: 3.6, up: 4.8 },
+  adiosAt: 0.8, byeAt: 1.4, departAt: 2.6,
+  awayR: 60, awayFar: 160,
+  prompt: '<b>E</b> Lifta',                                                        // [N]
+  keys: '<b>A</b>/<b>D</b> Luta dig · <b>E</b> Hoppa av',                          // [N]
+  title: 'Lifta',                                                                  // [N]
+  waitText: 'Tummen upp – vänta på en bil.',                                       // [N]
+  rideTitle: 'Lifta till stan',                                                    // [N]
+  rideText: 'Håll dig kvar på flaket!',                                            // [N]
+  barLabel: 'ÅKSJUKA',                                                             // the buss17 meter's label (§8.6)
+  nobody: 'Ingen stannade.',                                                       // [N] toast
+  please: 'Ursäkta… skulle jag möjligen kunna få åka med en bit?',                 // [N] Stig
+  hopIn: 'Till stan, señor? Hoppa upp bak!',                                       // [N] the farmer
+  oink: 'NÖFF!',                                                                   // [N] a pig in the bed (PIG_TRUCK's)
+  stink: 'Det luktar lite… lantligt.',                                             // [N] Stig
+  sick: 'Jag har lite anlag för åksjuka.',                                         // [F*](t) Stig's line from the bus (research-plot.md:248), relocated
+  thanks: 'Jättefint! Tack.',                                                      // [F*](t) his thanks for Ole's tablets on the bus (research-plot.md:248), relocated
+  adios: '¡Adiós, señor!',                                                         // [N] the farmer
 };

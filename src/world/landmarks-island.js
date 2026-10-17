@@ -149,6 +149,12 @@ export const ISLAND_LANDMARKS = {
   // the vischan drive passes him (Phase 3 r2: mid-lane at (28, 4) he stood 33 m off the route).
   eslovVag: { b: [0, 1], at: [27.5, 24], yaw: 0 },
   packhus: { b: [3, 0], at: [0, 10], yaw: PI },
+  // Vi liftar (free roam, §10.47): the hitch-hiking spots, on the north sidewalk of a country road,
+  // facing it, with the westbound lane's traffic coming from his left (the east): by the CAMINO SIN
+  // ASFALTAR sign at the vischan track's mouth (the z −120 road), and before the packing shed's yard
+  // (the z −200 road).
+  liftaVischan: { b: [0, 1], at: [7, 33.2], yaw: 0 },
+  liftaPackhus: { b: [3, 0], at: [6, 33.2], yaw: 0 },
   // (2,0) the grisfest farm
   grisfest: { b: [2, 0], at: [0, 26], yaw: PI },
   grisfestGate: { world: [-80, -204], yaw: PI / 2 },

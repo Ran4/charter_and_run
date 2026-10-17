@@ -951,7 +951,8 @@ export function animateCharacter(m, st, dt) {
   m.hips.rotation.set(0, 0, 0);
   m.neck.rotation.set(0, 0, 0);
 
-  if (st.seated) {
+  // Riding in a grisbil's bed (game/hitch.js) is 'seated' without a seat: he stands (`ride` below).
+  if (st.seated && !st.ride) {
     m.body.position.y = 0;
     // Plane seats: legs angled down to the floor (single-segment legs have no knees); car seats: out
     // into the footwell.
@@ -1073,7 +1074,7 @@ function heldPose(m, st, t, place = false) {
   const h = m.def.held;
   if (!h || !PROP_GEO[h]) return;
   const [R, L] = m.arms;
-  const busy = st.wings || st.cupUp || st.cupHeld || st.push || st.rub || st.hold || st.flail || st.oath || st.dance || st.laugh || st.mirror || st.film || st.camShow || st.giraffe || st.butterKnife || st.ticket || st.carryOver || st.shoeOff || st.calc || st.groda || st.placate || st.tap || st.scratch || st.point || st.cheer || st.wave || st.fish || st.kick > 0;
+  const busy = st.wings || st.cupUp || st.cupHeld || st.push || st.rub || st.hold || st.flail || st.oath || st.dance || st.laugh || st.mirror || st.film || st.camShow || st.giraffe || st.butterKnife || st.ticket || st.carryOver || st.shoeOff || st.calc || st.groda || st.placate || st.tap || st.scratch || st.point || st.cheer || st.wave || st.fish || st.thumb || st.ride || st.kick > 0;
   const pose = !place && !busy;
   const moving = st.speed > 0.3;
   switch (h) {
@@ -1429,6 +1430,23 @@ function poseFlags(m, st, t) {
     sock.scale.setScalar(s);
   }
   if (st.fish) fishPose(m, st, t);
+  if (st.thumb) {
+    // Hitch-hiking at the kerb (game/hitch.js, §10.47): the left arm out towards the traffic coming
+    // from his left, a little forward and up, the fist wagging; his head turned up the road.
+    L.rotation.set(-0.35, 0, 1.38 + Math.sin(t * 6) * 0.07);
+    m.neck.rotation.y = 0.55;
+  }
+  if (st.ride) {
+    // Standing in the grisbil's bed (game/hitch.js, §10.47): feet apart, the arms out over the rack
+    // for balance, swinging the more he tips; the body tipped `rideLean` (rad, +: to his right) about
+    // his feet, the head held a little against it.
+    const lean = st.rideLean || 0, sw = Math.sin(t * 9) * Math.min(0.5, Math.abs(lean) * 0.9);
+    legs[0].rotation.set(0, 0, -0.14); legs[1].rotation.set(0, 0, 0.14);
+    R.rotation.set(-0.3, 0, -1.3 + sw); L.rotation.set(-0.3, 0, 1.3 + sw);
+    m.body.rotation.z = lean;
+    m.neck.rotation.z = -lean * 0.5;
+    m.neck.rotation.x = -0.08;
+  }
 }
 
 // Stig fishing at the pier's end (anim.fish, game/fishing.js, §10.45), the rod (`metspo`) in his right

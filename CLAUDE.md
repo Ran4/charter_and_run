@@ -180,7 +180,13 @@ opens with a summary of the rounds and the timer changes.
     (`minY`): no coin from the ground or a car; the route run as a player runs it (bounce, the aisle's
     double jump, the lane, the lone fruit stall, the roof); after asnan the roof's four, the last one's
     "Jävla smålänningar!" and Stig's "Förlåt, förlåt…"; on the roof "¡No, no, no!" once a visit and
-    every 8 s, before asnan too; nothing in a mission, DESIGN §10.46)
+    every 8 s, before asnan too; nothing in a mission, DESIGN §10.46), `lifta liftaFall` (Vi liftar, E
+    at the hitch-hiking spots by the CAMINO SIN ASFALTAR sign and on the packing shed's road between
+    missions: the thumb, a grisbil from up the road stopping just past him, the cut, his question and the
+    farmer's answer, the hop into the bed, Stig 'seated' on the truck's tilt with the chase camera on the
+    truck, A/D's lean against its pull and ÅKSJUKA, the drop behind Hotel Flamenco with "Jättefint!
+    Tack."; the fall and the farmer's "¡Adiós, señor!", walking off, E's step and jump, a debug warp, a
+    traffic knock, a mission start mid-ride, DESIGN §10.47)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

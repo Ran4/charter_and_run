@@ -62,6 +62,7 @@ import { ReceptionBell } from './game/receptionBell.js';
 import { StreetRace } from './game/streetRace.js';
 import { PhoneBooth } from './game/phoneBooth.js';
 import { MarketRoofs } from './game/marketRoofs.js';
+import { Hitch } from './game/hitch.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
 import { LEVELS, ISLAND_PALETTES } from './level.js';
@@ -239,6 +240,7 @@ class Game {
     this.bar = new PoolBar(this);         // free roam after friskoteket: the pool bar's Swedish coffee, its sprint, the cup for Fru Storch (§10.44)
     this.fiske = new Fishing(this);       // free roam: the rod at the pier's end, the float, the catches and the FÅNGST card (§10.45)
     this.awnings = new MarketRoofs(this); // the coin trail over the market's awnings; free roam: the souvenir seller's no and swear at Stig on his roof (§10.46)
+    this.hitch = new Hitch(this);         // free roam: hitch-hiking on the country roads, standing in a grisbil's bed into town (§10.47)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -673,6 +675,7 @@ class Game {
   // Test/debug helper: move whatever the player is controlling (stands up first if seated).
   debugWarp(x, z, yaw = 0) {
     if (this.player.seatId) this.standPlayer();
+    this.hitch.reset('warp');   // off a hitch truck's bed, the truck gone (§10.47)
     if (this.playerCar) this.playerCar.place(x, z, yaw);
     else this.player.teleport(x, z, yaw);
     this.cam.snapNext = true;
@@ -1026,6 +1029,7 @@ class Game {
       this.pigs.jolt(pc, 'crash', impact);   // the grisbil's pigs tumble off in free roam (§10.15)
       this.stunts.onImpact();                // a jump in the air or just landed: UNDERKÄND (§10.27)
     }
+    this.hitch.onImpact(a, b, impact);       // a knock to the hitch truck shakes Stig in its bed (§10.47)
   }
   // Every landing of every car, soft ones too (car.js; the stunt jumps' judge, §10.27).
   onCarAirEnd(car, impact) { this.stunts.onLand(car, impact); }
@@ -1033,6 +1037,7 @@ class Game {
     if (car === this.playerCar) { audio.thud(); this.cam.shake = Math.min(1, this.cam.shake + impact * 0.03); }
     fx.dust(car.x, car.z, 6);
     this.pigs.jolt(car, 'land', impact);
+    this.hitch.onImpact(car, null, impact);
   }
   onCarDestroyed(car) {
     const f = this.focus();
@@ -1596,6 +1601,7 @@ class Game {
     this.bar.update(dt);
     this.fiske.update(dt);
     this.awnings.update(dt);
+    this.hitch.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);
@@ -1611,7 +1617,8 @@ class Game {
     // with the arch post or beam over a speaker.
     const flx = f.x - CABIN_X;
     this.cam.openFloor = this.level === 'flight' && this.cabin.phase === 'gate' && flx > 14 && !(flx > 34.5 && f.z < 10.5);
-    this.cam.update(dt, { ...f, autoTurn: false, lookBack: input.down('lookBack') }, this.inDialog ? null : input.look(), this.cars);
+    // Standing in a hitch truck's bed (§10.47) the chase camera rides behind the truck.
+    this.cam.update(dt, { ...this.hitch.camFocus(f), autoTurn: false, lookBack: input.down('lookBack') }, this.inDialog ? null : input.look(), this.cars);
     // Debug overview. The flight level's fog ends at 300 m (gate), so the camera comes in to ~85 m.
     if (this.aerial) { const k = this.level === 'flight' ? 0.17 : 1; camera.position.set(f.x, 420 * k, f.z + 260 * k); camera.lookAt(f.x, 0, f.z); camera.fov = 50; camera.updateProjectionMatrix(); }
     followSun(f.x, f.z);
@@ -1635,8 +1642,8 @@ class Game {
     if (this.inDialog || this.missions.state === 'failed') return;
     const p = this.player;
     if (input.pressed('reset')) {
-      // Never while busted-frozen or flailing (§14.3 frozenT, §5.9).
-      if (this.frozenT > 0 || this.shame.panicT > 0) return;
+      // Never while busted-frozen or flailing (§14.3 frozenT, §5.9), nor on or by a hitch truck (§10.47).
+      if (this.frozenT > 0 || this.shame.panicT > 0 || this.hitch.onTruck) return;
       this.belt.release(false);   // off his bag on the baggage belt first (§10.16)
       if (p.seatId) { if (this.stageLocksSeat()) return; this.standPlayer(); }
       // A reset spills a carry: R is never a free teleport to a carry goal.
@@ -2127,9 +2134,9 @@ class Game {
     // No mission running: the SOLKRÄM meter (§10.26; first, as its scene holds him), the paint
     // shop's wet-paint card (§7.2), the church's while Guardia Civil waits outside (§7.2), the Berra
     // job's (§10.6), Eslövloppet's (§10.12), Eslövrundan's (§10.39), the grisbil's pigs' (§10.15), a G17 toaster's scale
-    // (§10.24) or José's street race's (§10.38), if any.
+    // (§10.24), José's street race's (§10.38) or a hitch's (§10.47), if any.
     hud.setObjective(this.missions.objective() || this.solkram.objective() || this.shame.paint.objective() || this.shame.church.objective() || this.berraJob.objective() || this.eslov.objective() || this.skis.objective()
-      || this.pigs.objective() || this.toasters.objective() || this.gatlopp.objective());
+      || this.pigs.objective() || this.toasters.objective() || this.gatlopp.objective() || this.hitch.objective());
     hud.setSpeedo(this.playerCar);
     if (this.missions.state !== 'failed') {
       let prompt = '';
@@ -2149,7 +2156,7 @@ class Game {
       }
       if (this.belt.seated && !this.inDialog) prompt = this.belt.cfg.prompt;
       // Fishing at the pier's end (§10.45): the wait's hint and the dive's "E Dra upp!".
-      const fh = this.fiske.hint();
+      const fh = this.fiske.hint() ?? this.hitch.hint();   // or the keys in a hitch truck's bed (§10.47)
       if (fh != null) prompt = fh;
       hud.setPrompt(prompt);
     }
@@ -2179,6 +2186,12 @@ class Game {
           if (Math.random() < 0.3) fx.smoke(c.x - fx_ * c.spec.len / 2, 0.3, c.z - fz * c.spec.len / 2);
         }
       }
+    } else if (this.hitch.riding) {
+      // In a hitch truck's bed (§10.47): its engine, never his horn.
+      const r = this.hitch.car;
+      audio.engine(true, r.revs, r.ctrl.throttle);
+      audio.skid(0);
+      audio.horn(false);
     } else {
       audio.engine(false, 0, 0);
       audio.skid(0);
