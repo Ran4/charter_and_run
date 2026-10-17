@@ -64,6 +64,9 @@ export const ISLAND_LANDMARKS = {
   rum107Hylla: { b: [3, 3], at: [-18, -18.9], yaw: PI },
   rum107Giraff: { b: [3, 3], at: [-18.85, -21.05], yaw: -PI / 2 },
   rum107Radio: { b: [3, 3], at: [-18, -20.45], yaw: PI },
+  // Skjortbytet (free roam, §7.2): where Stig stands in front of the wardrobe inside room 107's door
+  // (hotels.js stigOleRoom, its front at x −20.15), facing it: the second hideout's E spot.
+  rum107Garderob: { b: [3, 3], at: [-19.6, -15.6], yaw: -PI / 2 },
   // (3,2) Hotel SunTrip
   suntrip: { b: [3, 2], at: [-14, 24], yaw: PI },     // faces the office porch (C1)
   // Bränsletillägg tillkommer (free roam, §10.23): Stig's spot in front of the middle of SunTrip-

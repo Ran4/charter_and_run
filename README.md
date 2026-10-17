@@ -44,7 +44,7 @@ Samma tangenter i båda nivåerna; nivån bestämmer vad de gör.
 | Shift | spring | | skynda – men det ökar rädslan |
 | Space | hoppa, i luften igen för dubbelhopp | handbroms (sladd!) | **håll i dig**: ta tag i närmaste stolsrygg vid turbulens |
 | J / klick | sparka, i luften: stampa (efter julafton: **håll in i luften** för att glidflyga) | | **håll in**: "Jag kan flyga, jag är inte rädd" – sänker FLYGRÄDSLA |
-| E | prata, kliv in, sno en bil, kvarta en stund i Stigs säng i rum 107, titta i herr Storchs kamera, heja på rullskidåkaren, dansa med i poolen, smörja in Majsans rygg (**håll in** och släpp i det gröna) | kliv ur (i fart: rulla ur) | prata, **sätt dig / res dig**, lås in dig på toaletten, anropsknappen, serveringsvagnen |
+| E | prata, kliv in, sno en bil, kvarta en stund i Stigs säng i rum 107, titta i herr Storchs kamera, heja på rullskidåkaren, dansa med i poolen, smörja in Majsans rygg (**håll in** och släpp i det gröna), byta om i garderoben i rum 107 | kliv ur (i fart: rulla ur) | prata, **sätt dig / res dig**, lås in dig på toaletten, anropsknappen, serveringsvagnen |
 | H | | tuta (utanför uppdragen hör folk den) | |
 | B | | titta bakåt | |
 | M / Tab | stor karta | stor karta | plan över gaten/kabinen |
@@ -137,7 +137,12 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   tar polisen dig när han hinner ikapp; i bil blir du tagen om du står still eller kryper fram
   nära en jeep i fyra sekunder, eller om jeeparna prejar dig två gånger inom fjorton sekunder (en
   gång går bra). Blir du tagen åker du på böter. Under jakten kan du **muta portiern** på Hotell
-  Flamenco (500 pta). Sitter du i en vanlig bil kan du i stället köra till **verkstaden vid
+  Flamenco (500 pta). Mellan uppdragen, till fots och i hawaiiskjortan, kan du också springa hem
+  till **garderoben i rum 107** och byta till kostymen. Bytet tar ett par sekunder, och hinner
+  polisen ikapp dig där inne blir du tagen ändå. Hinner du byta letar han efter skjortan, kommer fram
+  till uteplatsen, frågar "¿Dónde está el de la camisa?" och går förbi medan Stig artigt säger
+  "Buenas tardes.". Ole tycker inte om kostymen. Du byter tillbaka vid garderoben när ingen jagar dig,
+  och nästa uppdrag har du skjortan på dig igen. Sitter du i en vanlig bil kan du i stället köra till **verkstaden vid
   Gasolina** och stanna i den gula rutan när ingen jeep är nära: för 1 000 pta målar Ole och Stig
   bilen röd med blommor som en dalahäst, och Guardia Civil känner inte igen den. Men bara en gång
   per bil, och krockar du innan färgen har torkat känner de igen den igen. Och gör du något dumt
@@ -298,6 +303,9 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
 - "Plocka kulor" som jakt efter vindblåsta badbollar
 - prutning som tajmingspel, SKICK-mätaren för den våta färgen och ÅKSJUKA-mätaren
 - Guardia Civil-jakten, ¡MULTA! och portiermutan som gömställe
+- garderoben i rum 107 som gömställe: Stig byter tillbaka till kostymen, och polisen som letar efter
+  "el de la camisa" går förbi honom (i filmen är det Ole som får honom att byta från kostymen till
+  skjortan i det rummet, och ingen jagar honom)
 - målarverkstaden vid Gasolina, där en dalahästmålad bil lurar Guardia Civil (i filmen är det
   åsnan som Ole och Stig målar röd med blommor)
 - att Berra somnar på stan efter grisfesten och att Stig bär hem honom om och om igen, mot betalt
@@ -440,6 +448,7 @@ src/game/missions/              runner.js (MissionRunner), kinds/ (the stage kin
                                 flight.js (missions 1–5), island.js (missions 6–13), index.js
 src/game/shame.js               the meter: FLYGRÄDSLA/PANIK and SKANDAL/Guardia pursuit, fines, hideouts
 src/game/paintshop.js           the free-roam paint shop at Gasolina: the dalahäst paint job, wet paint, drive-by
+src/game/closet.js              Skjortbytet in free roam: room 107's wardrobe as a hideout, the officer walking past
 src/game/berraJob.js            Bärra hem Berra in free roam: Berra's naps, Robban's ask, the carry, drops and pay
 src/game/glide.js               Jag kan flyga in free roam after julafton: J held in the air glides, the landing roll
 src/game/poolJudges.js          Siv och Majsan sätter poäng in free roam: dives off Flamenco's board, cards, record
@@ -467,7 +476,7 @@ tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statis
 tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, meter, kinds, perf,
                                 paintshop, berra, glide, simhopp, tuta, dygn, super8, eslov, grodorna,
                                 artig, grisar, bagage, lapplisa, torsdag, frukt, hopptorn, hund,
-                                badgaster, butik, brodrost, rum107, solkram,
+                                badgaster, butik, brodrost, rum107, solkram, skjortbyte,
                                 calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
@@ -518,6 +527,7 @@ node tools/shot.mjs butik butikbil       # SunTrip-butiken: the receipts, the Tr
 node tools/shot.mjs brodrost rostar      # the G17 toasters: pale, burnt, golden, the label, 7/7 and Majsan, the save; the seven spots
 node tools/shot.mjs rum107 troferum      # room 107: the shelf and Ole's count, the giraffe, the boombox's samba, the save; the room from the patio, the nap
 node tools/shot.mjs solkram              # Majsan's sun cream: the ask, the meter held, 7/6/5, early, over from behind, the record and Siv's chatter, the save
+node tools/shot.mjs skjortbyte garderob  # room 107's wardrobe in a pursuit: the change, busted in there, the officer walking past, back to the shirt; shots
 node tools/shot.mjs fullstory kinds      # the literal §8 missions and the stage-kind checks
 node tools/shot.mjs calibrate calibflight  # timer and FLYGRÄDSLA calibration (slow; see DESIGN §8, §16.4)
 node tools/pool.mjs                      # random-stage timers from the raw runs in notes/calibration-samples.md

@@ -11,7 +11,9 @@
 //     Flamenco's reception (hideout, 500 pta, 60 s cooldown). Offences near Herr Storch add nothing
 //     (the witness rule: his lens cap is on; after the end it is off and they count, §10.11; in free
 //     roam he films them, storchFilm.js). In free roam a car can also be painted like a dalahäst
-//     at Gasolina's workshop (paintshop.js, `this.paint`; the same cooldown).
+//     at Gasolina's workshop (paintshop.js, `this.paint`; the same cooldown), and on foot in the
+//     hawaii shirt Stig can change into his suit in room 107's wardrobe (closet.js, `this.closet`;
+//     its own cooldown).
 
 import { Car } from '../actors/car.js';
 import { AIDriver } from '../actors/drivers.js';
@@ -25,6 +27,7 @@ import { fx } from './fx.js';
 import { yawTo, pick, clamp, dist } from '../util.js';
 import { S, pta } from '../strings.js';
 import { PaintShop } from './paintshop.js';
+import { Closet } from './closet.js';
 
 const STEER_REPLAN = 0.25;   // s between officer route plans
 const rc = (i) => i * P - HALF;
@@ -81,6 +84,7 @@ export class Shame {
     // Officer steering state (reused; no per-frame allocation).
     this.steer = { t: 0, x: 0, z: 0, mode: 'direct', path: [], chkT: 0, chkX: 0, chkZ: 0, sideT: 0, side: 1 };
     this.paint = new PaintShop(this);
+    this.closet = new Closet(this);
   }
 
   get mode() { return this.cfg.mode; }
@@ -223,6 +227,7 @@ export class Shame {
       this.pursuers.push(car);
     }
     this.paint.onPursuit();
+    this.closet.onPursuit();
   }
 
   endPursuit(caught) {
@@ -280,6 +285,7 @@ export class Shame {
     // P1 flavour: Lasse on the radio, once the freeze is over; free roam only (never after a bust
     // that fails or interrupts a mission).
     if (c.bustRadio && g.wait && g.missions.state === 'idle') g.wait((c.bustFreeze ?? 3) + 0.3).then(() => { if (g.level === 'island' && g.missions.state === 'idle') g.radio(c.bustRadio[0], c.bustRadio[1]); });
+    this.closet.onBusted();
     g.missions.onBusted?.();
   }
 
@@ -287,8 +293,11 @@ export class Shame {
   setupHideouts(cfg) {
     for (const rm of this._hideoutRm) rm();
     this._hideoutRm = [];
+    this.closet.configure(null);
     if (cfg.mode !== 'pursuit' || !cfg.hideouts || !this.game.addInteractable) return;
     for (const h of cfg.hideouts) {
+      // Room 107's wardrobe (feature 36): a change of clothes, not a bribe (closet.js).
+      if (h.outfit) { this._hideoutRm.push(...this.closet.configure(h)); continue; }
       const it = {
         id: 'hideout:' + h.at, r: h.r ?? 2.6, prompt: h.prompt, priority: 100,
         pos: () => landmarks[h.at] || null,
@@ -539,12 +548,13 @@ export class Shame {
         if (this.tauntT <= 0 && near < 40 && c.taunts?.length) {
           this.tauntT = 4 + Math.random() * 3;
           const src = (this.officer && this.officer.state !== 'hidden' && this.officer) || this.pursuers.find((h) => !h.dead);
-          if (src) g.say(src.bust ? { x: src.x, y: src.y, z: src.z, height: 2.6 } : src, pick(c.taunts), 2.2);
+          if (src) g.say(src.bust ? { x: src.x, y: src.y, z: src.z, height: 2.6 } : src, pick(this.closet.taunts(c.taunts)), 2.2);
         }
         if (this.pursuit) this.carBustTick(dt);
       }
     }
     this.paint.update(dt);
+    this.closet.update(dt);
     hud.setMeter(this.v, this.v >= (c.hot ?? 70), this.pursuit);
   }
 
@@ -596,5 +606,6 @@ export class Shame {
     if (this.panicT > 0) { this.panicT = 0; g.player && (g.player.anim.flail = false); hud.panic(0); }
     if (this.filmWho) { this.filmWho.anim.film = false; this.filmWho = null; this.filmT = 0; }
     this.paint.clear();
+    this.closet.clear();
   }
 }

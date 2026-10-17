@@ -1,7 +1,8 @@
 // The two meter configurations (DESIGN §5.9, §7.1), consumed by shame.configure(). Owner: WP-H.
 //   flygradsla: mode 'panic' (flight). At 100: PANIK, never a pursuit.
 //   skandal: mode 'pursuit' (island). At 100: the Guardia Civil. gain and carBust are the user's
-//   balance change (feature SKANDAL), read by shame.js. hideouts (the porter bribe),
+//   balance change (feature SKANDAL), read by shame.js. hideouts (the porter bribe; room 107's
+//   wardrobe, feature 36, read by game/closet.js),
 //   witnessToast (Herr Storch) and bustRadio are P1 polish read by shame.js; paintshop (the
 //   free-roam paint shop at Gasolina) is read by game/paintshop.js.
 
@@ -47,6 +48,27 @@ export const METERS = {
       line: ['portier', '…för 500 pesetas kanske vi kommer överens.'],                              // [F*]
       banner: ['PORTIERN TITTADE BORT', 'Skandalen är som bortblåst'],                             // [N]
       cooldown: 60,                                                                                // s
+    }, {
+      // Skjortbytet (feature 36, free roam only; game/closet.js, §7.2): room 107's wardrobe. In the
+      // shirt (`need`, not under SunTrip-butiken's `cover`) Stig changes into `to` in `secs` s, frozen;
+      // the officer looks for the shirt and walks past him (`passBy`: offsets [x, z] from `at`).
+      at: 'rum107Garderob', r: 1.2, cost: 0, cooldown: 60,                                         // s, its own clock
+      outfit: { need: 'hawaii', to: 'kostym', cover: 'skjorta' },
+      prompt: '<b>E</b> Byt till kostymen',                                                        // [N]
+      secs: 2.5, shutSecs: 0.8, bannerAt: 0.5,                                                     // s
+      line: 'De letar ju efter skjortan… inte efter mig.',                                         // [N] Stig, as he changes
+      banner: ['INGEN KÄNDE IGEN DIG', 'Guardia Civil letar efter skjortan'],                      // [N]
+      taunt: '¡Usted! ¡El de la camisa!',                                                          // shouted only while the shirt shows
+      radio: ['ole', 'Du kan ikke gå sånn her nede! Den buksa og det slipset!'],                   // [F*] room 107 in buss17's outro, shortened, on the radio
+      passBy: { at: 'flamencoPatio', look: [0.5, -0.4], front: [0.5, 1.6], ends: [[-13, 1.6], [10.5, 2]],
+        reach: 25, run: 4.5, walk: 2.2, slowR: 8, comeSecs: 16, leaveSecs: 10,                     // m, m/s, s
+        lookSecs: 3.4, replyAt: 1.5, replyR: 9, radioAt: 1.2,                                       // s, m
+        cam: { at: 'rum107Cam', dist: 7.5, height: 2.4 },                                           // the scene's shot: julafton's knock cut
+        line: '¿Dónde está el de la camisa?',                                                      // [N] the officer on the patio
+        reply: 'Buenas tardes.' },                                                                 // [N] Stig
+      back: { prompt: '<b>E</b> Byt till hawaiiskjortan', secs: 1.5, radioAt: 0.6,                // [N]
+        line: 'Är den inte lite skrikig?',                                                         // [F*] Stig in room 107 (buss17's outro), relocated
+        radio: ['ole', 'Du skal ha sterke farger, du som er mørk.'] },                              // [F*] Ole's answer there, on the radio
     }],
     witnessToast: { who: 'herrStorch', r: 20, text: 'Ingen fara: linsskyddet sitter på.', cooldown: 60, // [N] P1; offence adds 0
       say: 'Lite film.' },                                                                         // [F*] Herr Storch's bubble while he "films"

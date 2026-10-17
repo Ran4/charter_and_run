@@ -237,7 +237,10 @@ counting on the radio (free roam, §10.25; in the film Ole shows his gadgets in 
 no shelf, and the suitcase, the giraffe and the crispbread pack are only the film's own scenes);
 Majsan's sun cream as a SOLKRÄM meter Stig fills with E and lets go in the green, Siv's cards for it
 (5, 6, 7 or –1) and the cream running down Majsan's dress when he holds too long (free roam, §10.26;
-in the film the two lines are pool talk, with no score and nothing spilt).
+in the film the two lines are pool talk, with no score and nothing spilt); the wardrobe in room 107 as
+a hideout from Guardia Civil, Stig changing back into his suit there, the officer on the patio asking
+for "el de la camisa" and Stig's "Buenas tardes." (free roam, §7.2; in the film Ole makes him change
+out of the suit into the shirt in that room, and nobody chases him).
 The film's flight has **no turbulence** and **no in-flight toilet scene**: both toilet scenes are
 at Arlanda (we keep them there). The plane's toilets are only an invented hideout.
 
@@ -1196,7 +1199,7 @@ standing there faces. `y` (optional) = absolute height for collectible spots on 
 
 | block (i,j) | type → builder (owner, file) | content | landmarks: `id` (lx, lz, yaw[, y]) | named / parked cars |
 |---|---|---|---|---|
-| (3,3) | `flamenco` → `hotelFlamenco` (C1, hotels.js) | 7-storey white slab x [−26, 26], z [−27, −14] with balcony rows, terracotta accents, `HOTEL FLAMENCO` roof sign; open reception porch (canopy, desk, plastic Christmas tree `julgran` prop, `RECEPCIÓN`; Phase 3 r2: `HOTEL FLAMENCO · RECEPCIÓN` stands on a terracotta panel above the pergola's fascia, where it no longer fills the top of the chase frame, and the garland runs across the fascia's face) at the slab's south face; ground-floor room patios along the south face (Stig & Ole's room west, room 113 east) with a visible 1st-floor balcony above 113; terracotta piers at the bay lines, solid (Phase 3 r2); pool deck south with a **walkable shallow pool** (flat blue slab at CURB+0.02 + `box(..., CURB, 'water')`, sign "TRE METER DJUPT I ENA ÄNDEN, / EN METER I DEN ANDRA. / BARNVÄNLIG!" (three lines) [F*] (the bungalow seller's line, relocated)); the **10 m diving tower** `TRAMPOLÍN 10 M` [N] at the deep end, on the strip between the hedge and the pool north of the low board (feature 24, §10.20: a white room over the whole footprint x [−17.4, −14.8], z [2.4, 4.8], four posts and two terracotta landings, the railed platform at C + 9.8 = 9.95 (the hotel's fourth floor), the board 1.4 m out over the deep end, the ladder up the north face; its solids `DIVE_TOWER.blocks`, live only between missions); poolbar with straw parasols (`BAR PISCINA · SVENSKT KAFFE`); the julafton party `julgran` on the pool deck at (2.2, 16), in the party and sunset-duet shots (Phase 3); room numbers: a closed room's centred above its own glass door, an open room's (107, 113) on its right-hand pier (Phase 3); parking lot on the west (its eight painted 2.8 × 5 m bays exported as `flamencoBays`, feature 20, §10.17); the parking signs here and at SunTrip's lot are a blue `P` plate over a name strip (`HOTEL FLAMENCO`, `SUNTRIP`) on a post that stops under them (Phase 3 r2: one two-line plate had shrunk the P to the name's size, and the post ran through both faces); **PEPES BODEGA**: small whitewashed annex x [4, 12], z [−31, −27] on the north side with a green door, barrels, sign `PEPES BODEGA · VINOS · RON` facing north (`worldHooks.bodegaLit(on)` lights it after julafton); room 107's keepsake shelf over the print (3.8 m, its top at 2.75, no collider) and the keepsakes on it, on the floor and on the beds, meshes of their own shown by `worldHooks.rum107(collected, unlocked)` (`ROOM107`; feature 38, §10.25) | `flamenco` (−4, −8, π) (faces the hotel, so the views/cutaway camera stands on the pool deck; Phase 2) · `flamencoRecepcion` (2, −10, 0) · `flamencoPatio` (−18, −11, 0) · `rum113` (18, −11, 0) · `flamencoBalcony` (18, −8, π) · `flamencoPool` (−3, 18, π) · cut anchors (Phase 3; a cut stands `dist` m behind one, looking the way it faces): `rum107Cam` (−18, −11, π) = `flamencoPatio` turned round (looks into room 107), `recepcionCam` (2, −10, π) = `flamencoRecepcion` turned round (the desk from the porch front) · `flamencoDeck` (−4, −2.5, 0) (the island spawn: approachSpot puts the player on the pool deck at (−4, −1) facing the hotel, the chase camera over the pool rather than under the pergola slats; Phase 2) · `flamencoBar` (16, 12, −π/2) · `stektBerra` (8.2, 21.6, 0) · `stektRobban` (6.6, 21.6, 0) (the pool deck's two sun loungers in the north row where Berra and Robban lie fried, §10.22; their props, not standing spots) · `brodrost_poolbar` (18.0, 15.45, −π/2, 1.33) (a G17 toaster on BAR PISCINA's counter top, its south end, 3.6 m from `flamencoBar`; facing the deck) · `brodrost_portier` (3.75, −11.2, 0, 1.28) (a G17 toaster on the porter's desk east of the bell; §10.24; not standing spots) · `flamencoDrive` (−26, 22, π) · `flamencoBack` (−6, −33.5, 0) · `bodega` (8, −33.5, 0) · `fena_flamenco` (−3, 7, 0, 0.35) · `flamencoBoard` (−14.1, 7, π/2) (the middle of the diving board's bounce pad, facing out over the deep end: the judged board and the anchor of the sisters' spots at the pool's edge; not a standing spot; §10.8) · `stigSang` (−19.75, −20.35, 0) (the middle of Stig's turquoise bed in room 107, the way a sleeper on his back faces: the nap's E spot and the anchor of Ole's and Stig's places; not a standing spot, `teleport` puts him on the 0.70 mattress; §10.10) · `rum107Hylla` (−18, −18.9, π) · `rum107Giraff` (−18.85, −21.05, −π/2) · `rum107Radio` (−18, −20.45, π) (room 107's E spots, where Stig stands facing the keepsake shelf, the giraffe on his bed and Ole's boombox; §10.25) · `flamencoRing` (2, 8, 0) (the middle of the pool fest's ring in the shallow end, 2.5 m east of the circling fin's path; Lasse's place; the ring's places and Stig's gap are round it; §10.13) · `hopptorn` (−15.5, 1.55, 0) (the foot of the diving tower's ladder, facing it: KLÄTTRA UPP's E spot, and where KLÄTTRA NER puts him, turned round; §10.20) · `hopptornTopp` (−15.6, 3.15, π/2, 9.95) (on the platform beside the ladder's top, facing along the board: KLÄTTRA NER's E spot and where KLÄTTRA UPP puts him; not a standing spot for `teleport`; §10.20) | `hyrbil` (sedan `0xf4f4f0`) at `flamencoDrive` — default `getInCar` car and test car |
+| (3,3) | `flamenco` → `hotelFlamenco` (C1, hotels.js) | 7-storey white slab x [−26, 26], z [−27, −14] with balcony rows, terracotta accents, `HOTEL FLAMENCO` roof sign; open reception porch (canopy, desk, plastic Christmas tree `julgran` prop, `RECEPCIÓN`; Phase 3 r2: `HOTEL FLAMENCO · RECEPCIÓN` stands on a terracotta panel above the pergola's fascia, where it no longer fills the top of the chase frame, and the garland runs across the fascia's face) at the slab's south face; ground-floor room patios along the south face (Stig & Ole's room west, room 113 east) with a visible 1st-floor balcony above 113; terracotta piers at the bay lines, solid (Phase 3 r2); pool deck south with a **walkable shallow pool** (flat blue slab at CURB+0.02 + `box(..., CURB, 'water')`, sign "TRE METER DJUPT I ENA ÄNDEN, / EN METER I DEN ANDRA. / BARNVÄNLIG!" (three lines) [F*] (the bungalow seller's line, relocated)); the **10 m diving tower** `TRAMPOLÍN 10 M` [N] at the deep end, on the strip between the hedge and the pool north of the low board (feature 24, §10.20: a white room over the whole footprint x [−17.4, −14.8], z [2.4, 4.8], four posts and two terracotta landings, the railed platform at C + 9.8 = 9.95 (the hotel's fourth floor), the board 1.4 m out over the deep end, the ladder up the north face; its solids `DIVE_TOWER.blocks`, live only between missions); poolbar with straw parasols (`BAR PISCINA · SVENSKT KAFFE`); the julafton party `julgran` on the pool deck at (2.2, 16), in the party and sunset-duet shots (Phase 3); room numbers: a closed room's centred above its own glass door, an open room's (107, 113) on its right-hand pier (Phase 3); parking lot on the west (its eight painted 2.8 × 5 m bays exported as `flamencoBays`, feature 20, §10.17); the parking signs here and at SunTrip's lot are a blue `P` plate over a name strip (`HOTEL FLAMENCO`, `SUNTRIP`) on a post that stops under them (Phase 3 r2: one two-line plate had shrunk the P to the name's size, and the post ran through both faces); **PEPES BODEGA**: small whitewashed annex x [4, 12], z [−31, −27] on the north side with a green door, barrels, sign `PEPES BODEGA · VINOS · RON` facing north (`worldHooks.bodegaLit(on)` lights it after julafton); room 107's keepsake shelf over the print (3.8 m, its top at 2.75, no collider) and the keepsakes on it, on the floor and on the beds, meshes of their own shown by `worldHooks.rum107(collected, unlocked)` (`ROOM107`; feature 38, §10.25); room 107's wardrobe inside the door with a seam and two knobs on its front, and open (its leaves out into the room over a dark inside, a mirror on one, the suit or the hawaii shirt on a hanger) meshes of their own shown by `worldHooks.wardrobe(hang)` (`WARDROBE`, no collider; feature 36, §7.2) | `flamenco` (−4, −8, π) (faces the hotel, so the views/cutaway camera stands on the pool deck; Phase 2) · `flamencoRecepcion` (2, −10, 0) · `flamencoPatio` (−18, −11, 0) · `rum113` (18, −11, 0) · `flamencoBalcony` (18, −8, π) · `flamencoPool` (−3, 18, π) · cut anchors (Phase 3; a cut stands `dist` m behind one, looking the way it faces): `rum107Cam` (−18, −11, π) = `flamencoPatio` turned round (looks into room 107), `recepcionCam` (2, −10, π) = `flamencoRecepcion` turned round (the desk from the porch front) · `flamencoDeck` (−4, −2.5, 0) (the island spawn: approachSpot puts the player on the pool deck at (−4, −1) facing the hotel, the chase camera over the pool rather than under the pergola slats; Phase 2) · `flamencoBar` (16, 12, −π/2) · `stektBerra` (8.2, 21.6, 0) · `stektRobban` (6.6, 21.6, 0) (the pool deck's two sun loungers in the north row where Berra and Robban lie fried, §10.22; their props, not standing spots) · `brodrost_poolbar` (18.0, 15.45, −π/2, 1.33) (a G17 toaster on BAR PISCINA's counter top, its south end, 3.6 m from `flamencoBar`; facing the deck) · `brodrost_portier` (3.75, −11.2, 0, 1.28) (a G17 toaster on the porter's desk east of the bell; §10.24; not standing spots) · `flamencoDrive` (−26, 22, π) · `flamencoBack` (−6, −33.5, 0) · `bodega` (8, −33.5, 0) · `fena_flamenco` (−3, 7, 0, 0.35) · `flamencoBoard` (−14.1, 7, π/2) (the middle of the diving board's bounce pad, facing out over the deep end: the judged board and the anchor of the sisters' spots at the pool's edge; not a standing spot; §10.8) · `stigSang` (−19.75, −20.35, 0) (the middle of Stig's turquoise bed in room 107, the way a sleeper on his back faces: the nap's E spot and the anchor of Ole's and Stig's places; not a standing spot, `teleport` puts him on the 0.70 mattress; §10.10) · `rum107Hylla` (−18, −18.9, π) · `rum107Giraff` (−18.85, −21.05, −π/2) · `rum107Radio` (−18, −20.45, π) (room 107's E spots, where Stig stands facing the keepsake shelf, the giraffe on his bed and Ole's boombox; §10.25) · `rum107Garderob` (−19.6, −15.6, −π/2) (in front of the wardrobe inside room 107's door, facing it: the second hideout's E spot; §7.2) · `flamencoRing` (2, 8, 0) (the middle of the pool fest's ring in the shallow end, 2.5 m east of the circling fin's path; Lasse's place; the ring's places and Stig's gap are round it; §10.13) · `hopptorn` (−15.5, 1.55, 0) (the foot of the diving tower's ladder, facing it: KLÄTTRA UPP's E spot, and where KLÄTTRA NER puts him, turned round; §10.20) · `hopptornTopp` (−15.6, 3.15, π/2, 9.95) (on the platform beside the ladder's top, facing along the board: KLÄTTRA NER's E spot and where KLÄTTRA UPP puts him; not a standing spot for `teleport`; §10.20) | `hyrbil` (sedan `0xf4f4f0`) at `flamencoDrive` — default `getInCar` car and test car |
 | (3,2) | `suntrip` → `hotelSunTrip` (C1, hotels.js) | lower U-shaped hotel on red rock; welcome **stage** with SunTrip sun backdrop (red text on yellow sun), accordion/conga props; pool; **friskotek lawn**; SunTrip office porch on the south side facing Flamenco's back; posters `GRISFEST TORSDAG · 800 PTA`, `FRISKOTEKET 9.30`; the free-standing `FRISKOTEKET / VARJE MORGON 9.30` board on the lawn's west edge is solid (Phase 3 r3: only its posts were, so he walked through it and the chase eye stood behind it); SunTrip-butiken (feature 34, §10.23: hotels.js `suntripShop`, `SUNTRIP_SHOP`): a yellow counter on the porch by the east window, x [−11.9, −8.5] from the window to z 22.2, top C + 1.0, with `SUNTRIP-BUTIKEN` over it, `BRÄNSLETILLÄGG TILLKOMMER` on its front, the price board west of it and the four wares, in its own group shown only between missions on the island, its two solids (the counter, the board) live only then | `suntrip` (−14, 24, π) (faces the office porch; Phase 2) · `butik` (−10.2, 22.95, π) (Stig's spot in front of the counter's middle, facing it; feature 34, §10.23) · `scen` (0, −14, 0) · `friskotek` (−10, 8, 0) · `suntripPool` (14, 4, π) · `suntripLot` (24, 22, π) · `fena_suntrip` (14, 8, 0, 0.35) · `berraSolstol` (17.4, 2.2, 0) (the pool lounger Berra naps on, on its prop, facing its backrest end; §10.6) | — |
 | (1,2) | `kasbah` → `kasbah` (C2, centre.js) | **Centro La Medina** (fictional; internal id `kasbah`): two-level nightlife courtyard centre: arcade, stairs (ramp) to a roof terrace (top ≈ 6.0) with a balustrade above the bottom three steps and a sloped wall collider along it (Phase 3: the way on is over those three steps), neon signs `CENTRO LA MEDINA`, `VIKING BAR` (horned helmet), `TONGA TONGA` (mirror ball), `BAR SVENSKA · SMÖRGÅSAR` | `kasbah` (0, 22, π) · `vikingbar` (−16, 18, π) · `tongatonga` (14, 18, π) · `tongaLot` (20, 27, π) · `tongaSlump` (16.3, 17.4, 0.5) (where Berra slumps after Tonga Tonga and is picked up, at the right of the group in the street shot; Phase 3 r3) · `pryl_poolpen` (8, −6, 0, 7.2) · `angerudBil` (−7, 32.75, −π/2) (Angerud's hire car on the south sidewalk between missions, feature 20, §10.17) | — |
 | (4,2) | `cita` → `cita` (C2, centre.js) | **Centro Nórdico** (fictional; internal id `cita`) strip mall, sign `CENTRO NÓRDICO`: `SUPERMERCADO`, `FERRETERÍA`, `FARMACIA`, `ESTANCO`, `TELÉFONOS · HYTT 1·2·3`, `SOUVENIRS`, `SVENSKT KAFFE`, `CAMBIO · 1 KR = 17 PTA` (Phase 3: the north shop row and its canopy fit the courtyard between the wings, x ±11; `SOUVENIRS · REGALOS` and `FARMACIA` with its green cross sit on the wings' courtyard faces) | `cita` (0, 22, π) · `supermercado` (−18, 18, π) · `ferreteria` (18, 18, π) · `telefon` (0, 8, π) · `brodrost_ferreteria` (25.6, 13.0, 0, 0.65) (a G17 toaster on the east end of FERRETERÍA's paint-can crate, whose two east cans of each row are gone) · `brodrost_supermercado` (−24.15, 13.0, 0, 0.6) (one on SUPERMERCADO's east fruit crate, its fruit gone; §10.24; not standing spots) | — |
@@ -1444,7 +1447,23 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
   hideouts: [ { at: 'flamencoRecepcion', r: 2.6, cost: 500,                               // P1
     prompt: '<b>E</b> Muta portiern (500 pta)',
     line: ['portier', '…för 500 pesetas kanske vi kommer överens.'],                       // [F*]
-    banner: ['PORTIERN TITTADE BORT', 'Skandalen är som bortblåst'], cooldown: 60 } ],    // [N]
+    banner: ['PORTIERN TITTADE BORT', 'Skandalen är som bortblåst'], cooldown: 60 },      // [N]
+    { at: 'rum107Garderob', r: 1.2, cost: 0, cooldown: 60,      // free roam (feature 36, 2026-10-17; game/closet.js); its own clock
+      outfit: { need: 'hawaii', to: 'kostym', cover: 'skjorta' },
+      prompt: '<b>E</b> Byt till kostymen',                                                  // [N]
+      secs: 2.5, shutSecs: 0.8, bannerAt: 0.5,
+      line: 'De letar ju efter skjortan… inte efter mig.',                                    // [N]
+      banner: ['INGEN KÄNDE IGEN DIG', 'Guardia Civil letar efter skjortan'],                 // [N]
+      taunt: '¡Usted! ¡El de la camisa!',                  // shouted only while the shirt shows
+      radio: ['ole', 'Du kan ikke gå sånn her nede! Den buksa og det slipset!'],              // [F*]
+      passBy: { at: 'flamencoPatio', look: [0.5, -0.4], front: [0.5, 1.6], ends: [[-13, 1.6], [10.5, 2]],
+        reach: 25, run: 4.5, walk: 2.2, slowR: 8, comeSecs: 16, leaveSecs: 10,
+        lookSecs: 3.4, replyAt: 1.5, replyR: 9, radioAt: 1.2,
+        cam: { at: 'rum107Cam', dist: 7.5, height: 2.4 },
+        line: '¿Dónde está el de la camisa?', reply: 'Buenas tardes.' },                      // [N] ×2
+      back: { prompt: '<b>E</b> Byt till hawaiiskjortan', secs: 1.5, radioAt: 0.6,          // [N]
+        line: 'Är den inte lite skrikig?',                                                    // [F*]
+        radio: ['ole', 'Du skal ha sterke farger, du som er mørk.'] } } ],                    // [F*]
   witnessToast: { who: 'herrStorch', r: 20, text: 'Ingen fara: linsskyddet sitter på.', cooldown: 60, // [N] P1; offence adds 0
     say: 'Lite film.' },                             // [F*] (WP-H); toast + filming never during a scene/cutaway (Phase 2)
   bustRadio: ['lasse', 'Friskotek i morgon bitti, Olsson!'],   // [N] (WP-H) after a free-roam bust only (Phase 2)
@@ -1524,7 +1543,10 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
   stopped, `car.speed` < `speed` = 4 m/s, with a living Land Rover within `r` = 10 m (centre to
   centre) for `secs` = 4 s in a row (`shame.stopT`; it resets when either stops being true, and
   holds during a scene, the bust freeze and `caughtT`); or (b) rammed twice: a pursuer contact
-  (`main.onCarImpact` → `shame.onRam`, impact > 1.5) starts an invisible `ramWindow` = 14 s clock
+  with his car (`main.onCarImpact` → `shame.onRam`, impact > 1.5; feature 36: `involved` needs his
+  car, so on foot a Land Rover meeting a wall is no ram: until then a wall hit, reported with no
+  other car, matched his missing car, and two inside 14 s busted him on foot from afar; the same
+  wall hits of traffic added SKANDAL and shook the camera) starts an invisible `ramWindow` = 14 s clock
   (`shame.ramT`), and a second ram before it runs out busts; when it runs out it resets. Contacts
   less than `ramGap` = 1 s after the last one are the same ram (a shove reports an impact on
   several steps). Both reset when a pursuit starts or ends (`resetCarBust`). Then:
@@ -1544,6 +1566,58 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
   the meter, ends the pursuit; the porter says his `line` first (bubble, 1 s + 0.045 s a character,
   halved in test mode; a radio toast if he is not there) and the hideout banner, flash and jingle
   follow when it ends (Phase 3: the banner, drawn over bubbles, hid the [F*] line). 60 s cooldown.
+- **Wardrobe** (free roam; feature 36 "Skjortbytet", 2026-10-17; `game/closet.js`, owned by Shame as
+  `shame.closet`, the `hideouts` entry with `outfit`, which `setupHideouts` hands to
+  `closet.configure(h)`). Room 107's wardrobe inside the door (landmark `rum107Garderob`, the E spot
+  in front of it). Only on the island with `missions.state === 'idle'` (as `bustRadio`), so no mission,
+  stage, timer or pool sees it; on foot, `normal`, not in a dialogue, not carrying, not frozen, no
+  PANIK.
+  - **The hideout**: during a pursuit, while the hawaii shirt shows (`player.outfit === need` and
+    SunTrip-butiken's dotted shirt, `cover`, not worn over it: §10.23) and its own `cooldown` (60 s,
+    `closet.t`; the porter's and the paint shop's `hideoutT` is untouched) is out, within `r` 1.2 m:
+    `<b>E</b> Byt till kostymen` [N] (priority 100). Free: `cost` 0. Stig faces the wardrobe, it opens
+    with the suit on the hanger (`worldHooks.wardrobe('kostym')`, a door sound and a rustle), he says
+    "De letar ju efter skjortan… inte efter mig." [N] and is frozen `secs` = 2.5 s (`frozenT`) while
+    the pursuit goes on: the officer still walks at him, and one who comes within 1.4 m busts him as
+    anywhere (`busted` → `closet.onBusted`: the doors shut, the shirt stays on, the fine). So whoever
+    comes in with the officer at his heels is taken in the room; at 7 m/s the officer needs about
+    19 m of head start when E is pressed (scenario `skjortbyte`: from 20.6 m on the pool deck he made
+    it 6 of 6 in a probe, from the walk 6 m off he never does). Done: a white flash, the suit
+    (`setPlayerOutfit('kostym', { persist: false })`: `islandOutfit` and the save keep the shirt), the
+    shirt on the hanger, the doors shut `shutSecs` 0.8 s later; `v = 0`, `closet.t = cooldown`,
+    `endPursuit(true)` (no fine, no escape banner); he and the camera face out of the room
+    (`flamencoPatio`'s yaw); `bannerAt` 0.5 s later the banner `INGEN KÄNDE IGEN DIG` /
+    `Guardia Civil letar efter skjortan` [N] (`good`, 2.6 s) and the `complete` jingle. Escaped while he
+    changed (the meter ran out): the suit and nothing more.
+  - **The officer walks past** (`passBy`, offsets [x, z] from `flamencoPatio`): from where he was if
+    he can see the patio's `look` spot (−17.5, −11.4) or the walk in front of it, `front` (−17.5,
+    −9.4), within `reach` 25 m; else from the end of that walk (`ends`, (−31, −9.4) and (−7.5, −9))
+    out of the camera's view. He runs at `run` 4.5 m/s, walks the last `slowR` 8 m at `walk` 2.2,
+    stands on the patio facing the room, waits for the banner (drawn over bubbles), looks round
+    (`anim.look`) and says "¿Dónde está el de la camisa?" [N]. With Stig within `replyR` 9 m on foot,
+    a short scene: `cinematic(officer, Stig)` and `cutTo(cam)` (`rum107Cam` at 7.5 m, julafton's
+    knock cut: the officer's back on the patio, Stig in his suit in the room), Stig turns to him
+    and says "Buenas tardes." [N] at `replyAt` 1.5 s. After `lookSecs` 3.4 s the scene ends and the
+    officer walks on to the other end and out of sight (hidden there, after `leaveSecs` 10 s, or if
+    he sticks); `radioAt` 1.2 s into that Ole on the radio: "Du kan ikke gå sånn her nede! Den buksa
+    og det slipset!" [F*] (his line in room 107 in buss17's outro, without "… Shorts."). Stuck or
+    over `comeSecs` 16 s on the way he gives up (hidden; within 2.5 m of the spot he looks from
+    there), and Ole still has his say. A new pursuit makes him the chaser again; a mission start or the
+    other level hides him. No escape banner, no map marker for him.
+  - **Back to the shirt**: no pursuit, the officer gone, in the suit he changed into here
+    (`player.outfit === to`, `islandOutfit === need`): `<b>E</b> Byt till hawaiiskjortan` [N]
+    (priority 0). The wardrobe opens with the shirt on the hanger, "Är den inte lite skrikig?" [F*]
+    (his line in room 107, relocated), frozen `back.secs` 1.5 s, then the white flash, the shirt
+    (`setPlayerOutfit(islandOutfit, { persist: false })`), the doors shut, and `back.radioAt` 0.6 s
+    later Ole on the radio: "Du skal ha sterke farger, du som er mørk." [F*] (his answer there). Or a
+    mission start (`runner.begin`, §10.4). Before buss17 he wears the suit already: neither prompt.
+  - **The shout**: `taunt` "¡Usted! ¡El de la camisa!" is one of the officers' `taunts` only while the
+    shirt shows (`closet.taunts(list)`, in missions too: before buss17 nobody shouts it at the suit).
+  - **Map**: a `friend` marker at the wardrobe (edge-clamped) while the hideout can be used, on foot
+    (`closet.markers()`; the paint shop's shows in a car).
+  - Balance: free, but a dead end, 2.5 s standing still with the officer coming, once per shirt (the
+    suit hides nothing, and back to the shirt only with no one after him), its own 60 s cooldown and
+    free roam only.
 - **Paint shop** (free roam; feature 1 "Coche folcloristico nativo", 2026-10-14; `game/paintshop.js`,
   owned by Shame as `shame.paint`, config `paintshop`). Open only on the island with no mission
   running (`missions.state === 'idle'`, as `bustRadio`): a mission's chase or wreck (the bodega
@@ -3207,6 +3281,12 @@ or `hawaii` alike. Only on the island with `missions.state === 'idle'`, never ov
 start takes it off (buss17's change to `hawaii` and every cutscene see his own outfit), the runner
 going idle puts it back on; in a car it waits until he is on foot. `player.outfit` stays the
 outfit's name.
+**The wardrobe's suit** (feature 36, §7.2): in free roam, during a pursuit, Stig changes from the
+hawaii shirt into `kostym` in room 107's wardrobe and back again there, with `persist: false`:
+`player.outfit` is `kostym`, `islandOutfit` and the save keep `hawaii`, so a reload has the shirt on.
+A mission start puts the island outfit back before the talk (`runner.begin`: on the island, when
+`player.outfit !== islandOutfit`; the forced placement below runs only when a mission ends), so
+missions 7–13, their scenes and their checks see the shirt as before.
 **Re-application (review fix 1):** `placeNpcs(true)` re-applies the home set's outfits
 (`applyOutfits`) whenever the runner is not in `outro`, so the gate → flight set follows
 `missions.index` without a level change, a cue outfit lasts through its mission's outro and reverts
@@ -4952,6 +5032,9 @@ put on it and the lines at it are invented (§1.6).
     menu's choice, and back to the sol tune is the pause menu's.
 - **Off.** A mission start or the other level (`reset`): the giraffe back on the bed, Ole's queued
   count dropped.
+- **The wardrobe** inside the door (feature 36, §7.2) is not one of these spots: its E spot
+  `rum107Garderob` (−19.6, −15.6, −π/2) is the SKANDAL hideout "Byt till kostymen" during a pursuit
+  and "Byt till hawaiiskjortan" after it; its doors open only for those (`WARDROBE`, hotels.js).
 - **Saved**: nothing new; the room follows `collected` and `unlocked` (§10.5). `room107.last`
   ({ what, … }) and `room107.world` (= `ROOM107`) are for tests. Scenarios `rum107` and `troferum`
   (§16.4).
@@ -5428,6 +5511,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/missions/island.js` | new | **G** | `ISLAND_MISSIONS` (indices 5–12) |
 | `src/game/missions.js` | **deleted** | — | |
 | `src/game/shame.js` | edit | **H** | configure/panic/pursuit/walker/hideouts |
+| `src/game/closet.js` | new (feature 36, 2026-10-17) | — | `Closet` (`shame.closet`): Skjortbytet in free roam: room 107's wardrobe as a hideout, the change, the officer walking past, the way back, the shirt taunt and the map marker (§7.2) |
 | `src/game/paintshop.js` | new (feature 1, 2026-10-14) | — | `PaintShop` (`shame.paint`): the free-roam paint shop at Gasolina, its scene, wet paint, drive-by and tip (§7.2); `DRIVE_BY` route |
 | `src/game/berraJob.js` | new (feature 2, 2026-10-14) | — | `BerraJob` (`game.berraJob`): Bärra hem Berra in free roam: the naps, Robban's ask, the carry, the drops, the desk and the pay (§10.6) |
 | `src/game/glide.js` | new (feature 3, 2026-10-14) | — | `Glide` (`game.glide`): Jag kan flyga in free roam after julafton: the tap-or-hold J in the air, the glide, walls, the landing roll, the lines (§10.7) |
@@ -5490,6 +5574,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `tools/scenarios/cast.mjs` | new | **E** | castsheet, cars |
 | `tools/scenarios/meter.mjs` | new | **H** | skandal, ui |
 | `tools/scenarios/paintshop.mjs` | new (feature 1) | — | pintura, dalasheet |
+| `tools/scenarios/skjortbyte.mjs` | new (feature 36) | — | skjortbyte, garderob |
 | `tools/scenarios/berra.mjs` | new (feature 2) | — | berra |
 | `tools/scenarios/glide.mjs` | new (feature 3) | — | glide |
 | `tools/scenarios/grisar.mjs` | new (feature 15) | — | grisar |
@@ -6199,6 +6284,11 @@ shame.carBustTick(dt) (from update() in a pursuit);  shame.resetCarBust();  sham
 shame.paint (PaintShop, §7.2): configure(cfg) from configure(); onPursuit() from startPursuit();
   update(dt) from update(); clear() from clear(); objective() (the wet-paint card or null, read by
   main.updateHud when no mission runs); markers() (read by main.mapMarkers); busy; wet; blocker(car)
+shame.closet (Closet, §7.2; feature 36): configure(h) from setupHideouts (h = the hideouts entry with
+  `outfit`, or null; returns the removers of its two interactables); onPursuit() from startPursuit();
+  onBusted() from busted(); update(dt) after paint.update; clear() from clear(); taunts(list) (the
+  shout about the shirt only while it shows); markers() (read by main.mapMarkers); canHide();
+  canBack(); shirt; t (its cooldown); swap; walk { phase come | look | leave, scene, from }; last
 
 // berraJob.js (feature 2, §10.6): game.berraJob = new BerraJob(game) after the runner; update(dt)
 //   from Game.update after shame.update; posed(key) / waving(key) read by syncAll (no wave, turn or
@@ -6948,6 +7038,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `brodrost`, `rostar` [feature 33] | Kontrollerad av G17 (§10.24). `brodrost`, at index 9 (free roam): the seven toasters in `IDS` order; none on the minimap from the golf, the pool bar's one there (one marker) with pale bread up and no label; its prompt from the front; E starts a try (the first at `secs`): the card (title, bar, zone, marker), "Upp med brödet!", bread and lever down; E early: pale, "Blekt. Underkänd.", the toast, nothing collected; left alone: burnt at the end, Stig flailing with his line, the toast, and Majsan's or Siv's "Bara de inte är ingenjörer." from the pool deck; E (a real key) in the field: `ok`, +250, `G17-brödrostar 1/7`, Stig's cheer and line, the label on and golden bread, no prompt or marker there; the porter's: the sweep × 0.92, a try off 4 m away; a mission start: the try off, none usable, no markers; at index 8 the pool bar's prompt at its front over Berra's talk (3.6 m); all seven: 7 × 250 + 1000 and Majsan on the radio, the legend 7/7; the save (v 1, the set's seven ids) and a reload with all seven labelled; a v 1 save without the set loads with none; the flight level inert. `rostar`, at index 13: each toaster on its landmark (top and yaw), its prompt from 0.9 m in front, shots coming up (3 m) and close beside it, asnan's cut to the FERRETERÍA front, the pool bar's in its three looks |
 | `rum107`, `troferum` [feature 38] | Rum 107 fylls med resans minnen (§10.25). `rum107`, at index 9 (free roam): the room bare on a fresh save (7 gadget, 7 fin and 3 julafton meshes built, none shown); E at the shelf with nothing found: "Inget att kontrollera.", he faces it, the card `Oles prylar 0/7 · Hajfenor 0/7`, Ole's "Hylla er tom…"; four gadgets and three fins collected (`collect`) show at once, each gadget in its own place 0.5 m apart standing on the shelf's 2.75; no prompt for `gap` s, then "Kontrollerad av G17.", 4/7 · 3/7 and "Fire av sju! Snart er hylla full."; before the unlocks the nap answers at the giraffe's spot and no boombox; all seven: the samba unlock, "Spela samba" sets and saves the samba with Ole's "Ja, det er fint! Samba!", no prompt while it plays, back with the sol tune; after `unlock('bodega')` the suitcase, the giraffe and the pack; E at the giraffe: held, the bed's hidden, "Precis en sån…", the prompt "Ställ tillbaka giraffen", back after `holdSecs`, at once 3 m off and with E; the nap beside his bed; a full shelf's "Alle sju! Nå er hylla full."; a reload dresses the room; at index 12 a mission start leaves none usable and the giraffe back; the flight level inert. `troferum`, at index 13: the room from the patio (`rum107Cam` at 5.5 and 7.5 m, buss17's and julafton's cuts) bare, mid-trip and after julafton, close shots of the shelf, the pile and the beds, Stig at the shelf, Stig with the giraffe, and the nap with the giraffe by his head |
 | `solkram` [feature 35] | Smörj in Majsans rygg (§10.26). At index 10 (fataga waiting, Majsan its giver at the pool) the talk and no SOLKRÄM; at index 11 beside Majsan "Smörj in ryggen", none at 22:00 or with Siv 5 m off her spot; E: the film's pair in a dialogue (and the marker `solkramFilm`), then her back turned (yaw π/2), Stig 0.97 m behind her facing her with `rub` 1 and his hands 0–0.2 m over her shoulder pivots and 0.03–0.2 m behind her middle, both sisters `busy`, the bottle, no prompt, the card (SOLKRÄM, `Håll E · släpp i det gröna`, `Majsans rygg`, the field `w0` wide with its middle in `at`, the marker) with no letterbox; E held (a real key) 0.6 s: the fill at 1/`secs` a second (0.6–1.3 ×), `rub` 2, `Håll… håll…`; let go in the stripe: 7, a record, Siv's `7` card, `SOLKRÄM 7 P` / `NYTT REKORD!`, `records.solkram` 7 in the save, then her three lines in order and at the end the camera, the sisters and the pose back, no bottle, `sjuPoang` (Siv's chatter, the toast, both markers saved); again: one of `again`, the field × `shrink`, 6 with "Sex, tycker jag." and the record kept (`REKORD 7 P`); the field's edge: 5 and "Giraffen, då? Fem."; short of it: early, no card, `FÖR LITE!`, "Var det allt?"; held to the end: over at 1, Siv's `–1` and laugh, Stig flailing 1.42 m behind her, the cream running, the shot from behind, three drops at 1.1 s, back to the front shot for Siv, the lines, the flail and the cream gone; no hold: "Jaha. Då får jag väl göra det själv."; six tries; a mission start with Siv's card up: the card down and the intro's cinematic kept; a reload: the record 7, `sjuPoang`, Siv's chatter and no film pair again; at index 13 after `unlock('bodega')` at 15:00 the pool fest's ring has Majsan (none), at 08:00 she is home and it is there; the flight level inert. Shots `solkram_0_prompt`, `_1_ready`, `_1b_hold`, `_2_sju`, `_3_after`, `_4_over`, `_5_minus` |
+| `skjortbyte`, `garderob` [feature 36] | Skjortbytet (§7.2). `skjortbyte`, at index 6 (free roam, the shirt): on foot with both Land Rovers chasing for 9 s, no `onRam` (their wall hits are no rams on him, `main.onCarImpact`); no prompt at the wardrobe without a pursuit; in one (the officer 40 m off on the pool deck): `Byt till kostymen`, the `friend` marker, the shirt taunt among the `taunts`; E: frozen 2.5 s, the wardrobe open with the suit, "De letar ju efter skjortan…", he faces it, no second prompt; then the suit, `islandOutfit` hawaii, no pursuit, no fine, the cooldown, the shirt on the hanger, the banner, the doors shut; the officer walks onto the patio (within 1 m of the spot), "¿Dónde está el de la camisa?", the scene (cinematic and cut), "Buenas tardes.", the scene over as he walks on, no back prompt meanwhile, out of sight, Ole's "Du kan ikke gå sånn her nede! …", one line only; the save keeps hawaii; a pursuit in the suit: no hideout, no back, no shirt taunt, no marker; back: `Byt till hawaiiskjortan`, the shirt on the hanger, "Är den inte lite skrikig?", the shirt, Ole's "sterke farger"; the cooldown (the porter's untouched); the officer on the walk 6 m off: busted in the wardrobe, fined, still in the shirt, the doors shut; under the dotted shirt (bought, `shop.refresh`): no hideout, no shirt taunt, and without it again; the officer 20.6 m off on the pool deck (placed and E in one frame): he makes it, and the officer comes on from where he was; a mission start while he walks off: the shirt back on, the officer gone, neither prompt; index 5 (the suit): no prompt, no shirt taunt; the flight level: no wardrobe. `garderob`: shots of the wardrobe shut from the patio and with Stig at it, open with the suit (from the room and the patio), the change done, the officer looking, "Buenas tardes." in the scene, the officer walking off with Ole's radio, back to the shirt |
 | `badgaster`, `stekt` [feature 32] | Badgäster på solstolarna (§10.22). `badgaster`, at index 6 (free roam): bodies only on taken sun loungers, their hips on the seat, at most `max` (10), none on Berra's or Robban's; on the main beach no taken lounger within `r` left empty nearer than the bodies (shot `badgaster_strand`); one rebuilt body's ms logged. The burn: three loungers in the z 250 row; a bather lain past `burn[0]` stays pale while in view within `seenR` and is pink once out of view; past `burn[1]` lobster red (skins from `skins`; shot `badgaster_stadier`). A kick at a free lounger and at a taken one give the same SKANDAL; the bather off it in a backward somersault (`flip` < 0) along the lounger's facing (vz > 2), an OUCH bark, a GETUP bark on his feet (shots `badgaster_kullerbytta`, `badgaster_upp`), gone once Stig is 30 m off; no `onCharHit`, no "hit" sorry. His car at 10 m/s through a taken lounger: SKANDAL 1 × 1.2 × gain only, the bather off along the car (vz > 5; shot `badgaster_bil`). The lounger back after its smash (respawn 0, him 100 m off): `n` + 1, a new seed, stage 0, a pale newcomer on it. At 22:00 nobody (after a cut); at 10:00 `dayN` + 1 and a new crowd. A mission start (friskotek) takes every body away at once, none in the mission; the flight level (index 2) makes none. `stekt`, at index 6: Berra and Robban `lying` on their loungers, outfit `stekt` (skin `STEKT_SKIN`), `slump`, busy, spot `stekt`; both snore within 9.5 s (shots `stekt_bar`, `stekt`); the E point `stekt:wake` at Berra's feet: Stig's line, then Berra's with `lift` > 0.6 (shot `stekt_fem_minuter`), then Robban's, in that order, and `lift` back under 0.1; a kick at Berra's lounger: `flung`, then `down` with his timer held (> 100), still `stekt`, only snores from him (shot `stekt_sparkad`); the lounger back with him 100 m off: on it again. A mission start (friskotek): both `normal`, outfit `sol`, no slump, within 2.5 m of their homes at the bar. Index 7: on their loungers; 5 and 8: not |
 | `talk` [Phase 0] | `autoDialog = false`, walk to Ole at `gateQueue`, E, Space twice |
 | `fullstory` [Phase 0b] | swaps the literal §8 missions (`tools/fixtures/full-missions.js`) into `MISSIONS` and plays all 13 per §16.3 (`FROM`/`TO` as `story`); must end `#13 idle`, `RESULT: PASS` |
@@ -7033,6 +7124,7 @@ fatagaDukar golf bungalow bygge dromplan airport hittegods busBay bagageband dyn
 + the G17 toasters `brodrost_ferreteria brodrost_poolbar brodrost_marknad brodrost_portier
 brodrost_supermercado brodrost_grillpaco brodrost_hittegods` (feature 33, §10.24)
 + room 107's E spots `rum107Hylla rum107Giraff rum107Radio` (feature 38, §10.25)
++ room 107's wardrobe `rum107Garderob` (feature 36, §7.2)
 + collectibles `pryl_klocka pryl_poolpen pryl_kalkylator pryl_kniv pryl_kamera pryl_glasogon
 pryl_pung fena_flamenco fena_suntrip fena_plaza fena_golf fena_bungalow fena_hamn fena_hav` + Rio
 `rioBoat rioCam`.
@@ -8781,3 +8873,29 @@ the fixer's group.
   Deviations: the result lines are bubbles; no chlorine goggles; by day only, so after the end it is
   the morning before the pool fest's hours. No mission, stage kind, timer, fixture or calibration pool
   changed (no solid). Scenario `solkram` (§16.4).
+- Feature 36, "Skjortbytet – Guardia letar efter ”el de la camisa”" (`features/implemented/skjortbytet.md`,
+  2026-10-17): room 107's wardrobe as the island's second SKANDAL hideout (§7.2 "Wardrobe"; new
+  `src/game/closet.js` (`shame.closet`), the `hideouts` entry with `outfit` in §7.1; §1.6, §6.3,
+  §10.4, §10.25, §16.4). Free roam only (`missions.state === 'idle'`): during a pursuit, on foot in the
+  hawaii shirt (not under SunTrip-butiken's dotted shirt), E at `rum107Garderob` ("Byt till kostymen")
+  opens the wardrobe on the suit and freezes Stig for 2.5 s with "De letar ju efter skjortan… inte
+  efter mig." [N] while the officer keeps coming (caught there: busted as anywhere). Done: a white
+  flash, the suit with `persist: false` (the save keeps the shirt), the pursuit over without a fine,
+  the banner INGEN KÄNDE IGEN DIG [N], its own 60 s cooldown; the officer walks onto the patio,
+  "¿Dónde está el de la camisa?" [N], a short scene from the patio with Stig's "Buenas tardes." [N],
+  on past him and out of sight, Ole on the radio "Du kan ikke gå sånn her nede! Den buksa og det
+  slipset!" [F*]. Back at the wardrobe with no one after him ("Byt till hawaiiskjortan"): "Är den inte
+  lite skrikig?" [F*] and Ole's "Du skal ha sterke farger, du som er mørk." [F*]; or at the next
+  mission start (`runner.begin` puts `islandOutfit` back). "¡Usted! ¡El de la camisa!" is shouted only
+  while the shirt shows; a `friend` map marker while the hideout can be used. The wardrobe got a seam
+  and knobs and an open state with its leaves, a mirror and the suit or the shirt on a hanger
+  (`WARDROBE`, `worldHooks.wardrobe`, hotels.js); landmark `rum107Garderob`. **Fix** found on the way
+  (main.js `onCarImpact`): `involved` now needs his car. On foot (`playerCar` null) a car meeting a
+  wall (`b` null) matched the missing car, so a Land Rover's wall hits counted as rams on him and two
+  inside 14 s busted him on foot from afar (a probe saw 9 such hits in 20 s of a pursuit on foot), and
+  traffic's wall hits added SKANDAL and shook the camera. In a car nothing changes (pursuit balance,
+  `carbust`). Deviations: the officer's arrival and line play as a short scene when Stig is within
+  9 m (the idea had it in play); Stig's thought is a bubble during the change, the ban on the suit
+  comes on the radio after the officer has gone, and the change back has the film's "Är den inte lite
+  skrikig?" / "sterke farger" pair. No mission, stage kind, timer, fixture or calibration pool changed
+  (no solid). Scenarios `skjortbyte`, `garderob` (§16.4).

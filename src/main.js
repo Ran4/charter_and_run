@@ -954,7 +954,9 @@ class Game {
 
   onCarImpact(a, b, impact, cx, cz) {
     const pc = this.playerCar;
-    const involved = a === pc || b === pc;
+    // His car hit something. On foot (pc null) a car meeting a wall (b null) is not his: until feature
+    // 36 it counted, so a Land Rover's wall hits rammed him from afar (two = busted, §7.2 `carBust`).
+    const involved = !!pc && (a === pc || b === pc);
     const f = this.focus();
     const near = dist(cx, cz, f.x, f.z) < 60;
     if (near) audio.crash(Math.min(1, impact / 18) * (involved ? 1 : 0.5));
@@ -1921,6 +1923,7 @@ class Game {
     out.push(...ms.markers());
     for (const h of this.shame.pursuers) if (!h.dead) out.push({ type: 'enemy', x: h.x, z: h.z, edge: true });
     out.push(...this.shame.paint.markers());
+    out.push(...this.shame.closet.markers());
     out.push(...this.berraJob.markers());
     out.push(...this.eslov.markers());
     out.push(...this.pigs.markers());

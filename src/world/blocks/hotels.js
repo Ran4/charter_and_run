@@ -500,6 +500,7 @@ function stigOleRoom(f, bx) {
   f.box(ORANGE, bx, C + 1.65, ROOM_BACK + 0.05, 0.6, 0.6, 0.03);
   f.box(WOOD, bx - 2.55, C, -15.6, 0.8, 2.0, 1.4);                        // wardrobe
   f.solid(bx - 2.55, -15.6, 0.8, 1.4, 99, 'furniture');
+  wardrobe(f, bx - 2.15, -15.6);
   // The keepsake shelf over the print, on two brackets; out of reach, so no collider.
   f.box(WOOD, bx, KEEP.shelfTop - 0.05, ROOM_BACK + KEEP.shelfZ, 3.8, 0.05, 0.24);
   for (const s of [-1, 1]) f.box(WOOD_D, bx + s * 1.65, KEEP.shelfTop - 0.27, ROOM_BACK + 0.09, 0.05, 0.22, 0.1);
@@ -570,6 +571,54 @@ function roomKeepsakes(f, bx) {
     ROOM107.fins.forEach((m, k) => { m.visible = k < n; });
     const home = !!unlocked?.has('bodega');
     for (const [kind, m] of Object.entries(ROOM107.after)) m.visible = home && ROOM107.held !== kind;
+  };
+}
+
+// Skjortbytet (free roam; feature 36, DESIGN §7.2): the wardrobe inside room 107's door, its front at
+// local x `fx`, facing into the room (+x). Shut it is the room's box with a seam and two knobs on its
+// front; open (game/closet.js: `worldHooks.wardrobe(hang)`) the two leaves stand out into the room
+// over a dark inside, a mirror on the right-hand one, and `hang` ('kostym' | 'hawaii') hangs on the
+// hanger: the suit or the hawaii shirt and shorts. null shuts it. Meshes of their own (the block's
+// geometry is merged), no colliders: Stig stands between the leaves.
+export const WARDROBE = { open: null, hang: {} };
+function wardrobe(f, fx, z) {
+  const scene = f.scene;
+  f.box(WOOD_D, fx + 0.006, C + 0.08, z, 0.012, 1.84, 0.025);                              // the seam
+  for (const s of [-1, 1]) f.box(GOLD, fx + 0.012, C + 1.02, z + s * 0.07, 0.025, 0.07, 0.035);   // knobs
+  if (!scene) return;
+  const O = new GeoBuilder(), K = new GeoBuilder(), H = new GeoBuilder(), a = 0.26, L = 0.68;
+  f.box(0x3a2a20, fx + 0.035, C + 0.07, z, 0.02, 1.86, 1.3, 0, O);                      // the inside
+  f.box(WOOD_D, fx + 0.05, C + 1.82, z, 0.02, 0.03, 1.3, 0, O);                          // the hat shelf
+  for (const s of [-1, 1]) {
+    // A leaf on its hinge at the front's edge, swung 15° past square out into the room.
+    const hz = z + s * 0.69, dx = Math.cos(a), dz = s * Math.sin(a);
+    f.box(WOOD, fx + dx * L / 2, C + 0.06, hz + dz * L / 2, L, 1.88, 0.035, -s * a, O);
+    if (s > 0) f.box(0xbcd8e8, fx + dx * 0.36 + Math.sin(a) * 0.02, C + 0.75, hz + dz * 0.36 - Math.cos(a) * 0.02, 0.4, 0.95, 0.01, -a, O);   // the mirror
+  }
+  for (const G of [K, H]) {
+    f.box(CHROME, fx + 0.11, C + 1.66, z, 0.025, 0.025, 0.46, 0, G);                     // the hanger
+    f.box(CHROME, fx + 0.11, C + 1.68, z, 0.02, 0.1, 0.02, 0, G);
+  }
+  // The suit (models.js kostym): the light jacket, the brown shirt and the tie, the trousers under it.
+  f.box(0xe8e0d0, fx + 0.11, C + 0.98, z, 0.1, 0.68, 0.5, 0, K);
+  for (const s of [-1, 1]) f.box(0xe8e0d0, fx + 0.1, C + 1.0, z + s * 0.3, 0.08, 0.6, 0.1, 0, K);
+  f.box(0x4a3426, fx + 0.165, C + 1.36, z, 0.01, 0.28, 0.16, 0, K);
+  f.box(0x7a2a2a, fx + 0.172, C + 1.1, z, 0.012, 0.5, 0.06, 0, K);
+  for (const s of [-1, 1]) f.box(0x3a2a1e, fx + 0.1, C + 0.32, z + s * 0.11, 0.07, 0.66, 0.17, 0, K);
+  // The hawaii shirt (models.js hawaii): red with yellow, green and blue flowers, and the shorts.
+  f.box(0xd8321e, fx + 0.11, C + 1.0, z, 0.08, 0.62, 0.52, 0, H);
+  for (const s of [-1, 1]) f.box(0xd8321e, fx + 0.11, C + 1.38, z + s * 0.32, 0.07, 0.22, 0.14, 0, H);
+  f.box(0xb02818, fx + 0.155, C + 1.56, z, 0.02, 0.06, 0.24, 0, H);
+  [[1.5, -0.16], [1.38, 0.12], [1.24, -0.04], [1.12, 0.18], [1.08, -0.2], [0.98, 0.04], [1.3, 0.22]].forEach(([y, u], k) => {
+    f.box([0xffd23f, 0x3f7a3a, 0x2f6ad8][k % 3], fx + 0.152, C + y, z + u, 0.008, 0.07, 0.07, 0, H);
+  });
+  f.box(0xe8dcb8, fx + 0.1, C + 0.52, z, 0.07, 0.44, 0.44, 0, H);
+  const put = (G) => { const m = toonMesh(G.build(), { outline: 0.02 }); m.visible = false; scene.add(m); return m; };
+  WARDROBE.open = put(O);
+  WARDROBE.hang = { kostym: put(K), hawaii: put(H) };
+  worldHooks.wardrobe = (hang) => {
+    WARDROBE.open.visible = !!hang;
+    for (const [k, m] of Object.entries(WARDROBE.hang)) m.visible = k === hang;
   };
 }
 

@@ -45,6 +45,9 @@ export class MissionRunner {
     if (!def || this.state !== 'idle') return;
     this.state = 'intro';
     this.syncIdleAnim();     // the idle pose ends when the talk starts
+    // The suit he changed into in room 107's wardrobe (free roam, §7.2) is never a mission's: his
+    // island outfit back before the talk (a forced placement does it only when a mission ends).
+    if (g.level === 'island' && g.player.outfit !== g.islandOutfit) g.setPlayerOutfit(g.islandOutfit, { persist: false });
     // In the evening or at night (the free-roam clock, §10.10) the mission starts the next morning:
     // black, NÄSTA MORGON, the clock to nine and the day palette, then the talk as by day.
     if (g.level === 'island' && g.day.dark) await g.day.toMorning();

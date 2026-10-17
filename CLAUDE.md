@@ -78,7 +78,11 @@ opens with a summary of the rounds and the timer changes.
     keepsake shelf and Ole's count, the giraffe, the boombox's samba and the save; the room from the
     patio and the nap, DESIGN §10.25), `solkram` (Smörj in Majsans rygg, the SOLKRÄM meter at
     Flamenco's pool after fataga: the film's pair once, the held E, 7/6/5, early, the cream running from
-    behind, Siv's cards, the record and `sjuPoang`, a mission start, after the end, DESIGN §10.26)
+    behind, Siv's cards, the record and `sjuPoang`, a mission start, after the end, DESIGN §10.26),
+    `skjortbyte garderob` (Skjortbytet, room 107's wardrobe as a SKANDAL hideout in free roam: the
+    change into the suit with the officer coming, busted in there, the officer walking past and his
+    scene, the way back to the shirt, the shirt taunt, a mission start; and the Land Rovers' wall hits
+    that are no rams on foot, DESIGN §7.2)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)
