@@ -130,7 +130,13 @@ opens with a summary of the rounds and the timer changes.
     still coming, the slam and the plaza shot, the Land Rovers waiting at the street with their lamps, the
     meter held till the officer has read ES UNA IGLESIA, spelt it out and scratched his head, the give-up
     and "De där svenskarna är heltokiga!", the peek out and "Hoppas vi inte får användning för det.", the
-    banner, busted at the door, 8.5 m behind, the cooldown, a mission start, DESIGN §7.2)
+    banner, busted at the door, 8.5 m behind, the cooldown, a mission start, DESIGN §7.2), `gatlopp
+    gatloppkal` (Gatlopp mot pizza-racern, José's three street races after Gamla kläder: his "!" and
+    E close by him (his talk a step off), the bet at the chalkboard by Berra and Robban, the fade to the
+    SALIDA · START grid in the hire car with José and his mother in his blue hatch, the race kind run
+    outside the runner, the prize and `records.gatlopp`, a loss, a wreck, José's drive back and walk
+    home, a mission start, the sisters' six; `gatloppkal` measures the courses' balance with calibrate's
+    autopilot: a clean run wins by a few seconds, one crash loses, DESIGN §10.38)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

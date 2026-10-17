@@ -386,7 +386,7 @@ from `KÖR!` to the line). Sample ids: `f7` feature 7 (`-1` its first probe, `-8
 the default runs on the final tree). The stage code was uncommitted on 1b3b561 (feature 7's commit is
 the first with it).
 
-Current pool: `walker-r1r2/1b3b561`: n 30, median 28.18 → T_ref 30.68 → timer ceil(1.25 × 30.68) = **39** (90 % range 39–39).
+Current pool: `walker-r1r2/1b3b561`: n 33, median 28.18 → T_ref 30.68 → timer ceil(1.25 × 30.68) = **39** (90 % range 39–39).
 
 | sample | date | code | pool | env | n | raw times (s, run order) | excluded (reason) |
 |---|---|---|---|---|---|---|---|
@@ -399,3 +399,36 @@ Current pool: `walker-r1r2/1b3b561`: n 30, median 28.18 → T_ref 30.68 → time
 | f7-F5 | 2026-10-15 | 1b3b561 + uncommitted: feature 7, the final tree (its commit) | `walker-r1r2/1b3b561` | default (ESLOV_RUNS=3) | 3 | 28.18 28.18 28.18 | none (falls 0) |
 | f7-F6 | 2026-10-15 | 1b3b561 + uncommitted: feature 7, the final tree (its commit) | `walker-r1r2/1b3b561` | default (ESLOV_RUNS=3) | 3 | 28.18 28.18 28.18 | none (falls 0) |
 | f31-1 | 2026-10-17 | bf18146 + uncommitted: feature 31's code (`src/game/dogs.js`, `DOGS`, town.js `dogLots`, nature.js `FARM_YARD`, the `placate` pose, `audio.woof`/`whistle`, main.js), its final code; the race, the walker and the course unchanged; Chispa in the yard by the course | `walker-r1r2/1b3b561` | default (ESLOV_RUNS=3) | 3 | 28.18 28.18 28.18 | none (falls 0) |
+| f69-1 | 2026-10-17 | f494e34 + uncommitted: feature 69's code (`src/game/streetRace.js`, `GATLOPP`, main.js); the race, the walker and the course unchanged (feature 69's banners show only in its own races) | `walker-r1r2/1b3b561` | default (ESLOV_RUNS=3) | 3 | lost (the scenario passed; its log was filtered to the RESULT lines) | – |
+| f69-2 | 2026-10-17 | f494e34 + uncommitted: feature 69, the final tree (its commit, but for the docs' last lines) | `walker-r1r2/1b3b561` | default (ESLOV_RUNS=3) | 3 | 28.18 28.20 28.18 | none (falls 0; CAL CHECK OK, 90 % range 39–39) |
+
+## Gatlopp · §10.38 · José's street races (free roam, feature 69) · race margins, not a timer
+
+Not a timer and not a pool (`tools/pool.mjs` has no rule for it; this section's header has no stage
+key, so it is not read): the rule is §8 "Races and chases", a clean race won by a few seconds and one
+crash lost. Measured by scenario `gatloppkal` (and the autopilot wins inside `gatlopp`) in free roam at
+index 10 with `&ts=1`: calibrate's autopilot (`installAutopilot` from the unchanged `calibrate.mjs`)
+drives the hire car (a sedan, ×1.2) from the grid (`gatlopp.startRace(k)`, the countdown), out of the
+left lane (`startOff` −5.5), on the course's road route (`ROUTES` in tools/scenarios/gatlopp.mjs) at
+full speed (`vEnd` 40); a crash run stops dead in the left lane at 45 % of the route and needs 1 s
+(calibrate's race crash). The margin: won, José's lane path left at the race's end over his average
+speed since KÖR!; lost, Stig's distance to the finish at 30 m/s. `imp` = the autopilot's impacts (a
+speed change over 3 m/s in a frame); `contact` = car-car impacts over 3 between the two racers (the
+`onCarImpact` log). José's spec is `cruise:maxSpeed:accel:steer`. Sample ids: `f69` feature 69 (`-t`
+the first trials, `-s` the tuning sweeps, `-F` the default runs on the final tree, `-G` the autopilot
+wins inside `gatlopp`). Every run of the feature's work is here, the tuning sweeps' too; the code was
+uncommitted on f494e34 throughout (feature 69's commit is the first with it).
+
+| sample | date | code | course | José | env | runs: clean (margin s, race s) · one crash (margin s) | notes |
+|---|---|---|---|---|---|---|---|
+| f69-t1 | 2026-10-17 | f494e34 + uncommitted: feature 69's first draft (the grid eastbound at x 70, lineX 73; course 1 then round SunTrip and Centro Nórdico, 491 m, its first corner 50 m off) | 1 (old) | 31:35:13:0.75 | GATLOPP_RACE=1 GATLOPP_RUNS=1 | clean +0.7 (22.32; imp 1, contact at all four corners) · crash −2.5 | superseded course and grid |
+| f69-t2 | 2026-10-17 | f494e34 + uncommitted: the westbound grid (t 28, lineX 89), course 1 round Hotel Flamenco and the gas station | 1 | 31:35:13:0.75 | GATLOPP_RACE=1 GATLOPP_RUNS=2 | clean +1.3 (21.98; imp 1), +1.4 (21.82; imp 1), both a contact at the first corner · crash −1.7, −1.6 | the hatch's own accel: side by side into the corner |
+| f69-s1 | 2026-10-17 | as f69-t2 | 1 | 31:35:10 · 31:35:11 · 33:36:10 | GATLOPP_RACE=1 GATLOPP_RUNS=1, sweep | 31:35:10 clean +2.6 (21.10) · crash −1.1; 31:35:11 +1.7 (21.95; a contact 4.0 at the first corner, imp 0) · −1.5; 33:36:10 +1.9 (21.10) · −1.4 | tuning |
+| f69-s2 | 2026-10-17 | as f69-t2, courses 2 and 3 on the westbound grid | 2, 3 | 31:35:10 · 33:36:10 · 33:37:10 | GATLOPP_RACE=2,3 GATLOPP_RUNS=1, sweep | course 2: +1.9 (22.60; imp 1, contacts at both rights) · −2.9; +1.8 (22.68; imp 2) · −3.2; +1.2 (22.87; imp 2) · −3.6. Course 3: +2.6 (26.28; imp 1) · −2.1; +2.0 (26.32; imp 1) · −2.9; +1.7 (26.35; imp 1) · −2.9 | José ran into Stig braking for the first right |
+| f69-s3 | 2026-10-17 | as f69-s2 | 2 | 33:37:8 · 34:37:8 · 34:38:7 | GATLOPP_RACE=2 GATLOPP_RUNS=1, sweep | +2.1 (22.58; a contact 4.5 at the second right, imp 0) · −3.6; +2.1 (22.58; the same) · −3.7; +2.9 (22.60) · −3.0 | tuning; 33:37:8 shipped |
+| f69-s4 | 2026-10-17 | as f69-s2 | 3 | 33:37:8 · 33:36:8 | GATLOPP_RACE=3 GATLOPP_RUNS=1, sweep | +2.7 (26.28) · −1.5; +2.9 (26.35) · −1.3 | tuning |
+| f69-s5 | 2026-10-17 | as f69-s2 | 3 | 34:38:8 · 35:38:8 · 34:38:9 | GATLOPP_RACE=3 GATLOPP_RUNS=1, sweep | +2.3 (26.27) · −1.9; +2.1 (26.28) · −2.0; +1.7 (26.40; imp 1, contacts at the first right) · −2.9 | tuning; 35:38:8 shipped |
+| f69-s6 | 2026-10-17 | as f69-s2 | 1 | 34:37:10 · 35:37:10 · 35:38:9 | GATLOPP_RACE=1 GATLOPP_RUNS=1, sweep | +1.6 (21.30) · −1.6; +1.5 (21.13) · −1.5; +1.8 (21.10) · −1.5 | tuning; 34:37:10 shipped |
+| f69-G1 | 2026-10-17 | f494e34 + uncommitted: the shipped specs, the module while its scenario was written (six `gatlopp` invocations that reached the races) | 1, 2, 3 | shipped | `gatlopp` (clean only) | course 1 +1.7 (21.13) ×6; course 2 +2.1 (22.58) ×4; course 3 +1.7 (26.67), +1.7 (26.60), +1.7 (26.60), +2.1 (26.27) | a seventh invocation's three wins (it passed) were filtered out of its log: lost |
+| f69-F1 | 2026-10-17 | f494e34 + uncommitted: feature 69's final code (the docs still being written) | 1, 2, 3 | shipped: 34:37:10 · 33:37:8 · 35:38:8 (steer 0.75) | default (GATLOPP_RUNS=2) | course 1: clean +1.6 (21.30), +1.7 (21.13) · crash −1.5, −1.5. Course 2: +2.1 (22.58), +2.1 (22.58; each a contact 4.5 at the second right, imp 0) · −3.6, −3.6. Course 3: +2.1 (26.27), +2.1 (26.28) · −2.2, −2.0 | none (imp 0 in all 12) |
+| f69-G2 | 2026-10-17 | f494e34 + uncommitted: feature 69, the final tree | 1, 2, 3 | shipped | `gatlopp` (clean only) | course 1 +1.7 (21.13); course 2 +2.1 (22.58; a contact 4.5 at the second right, imp 0); course 3 +2.1 (26.27) | none |

@@ -53,6 +53,7 @@ import { BeachDream } from './game/beachDream.js';
 import { GuardiaJeep } from './game/guardiaJeep.js';
 import { Lighthouse } from './game/lighthouse.js';
 import { ReceptionBell } from './game/receptionBell.js';
+import { StreetRace } from './game/streetRace.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
 import { LEVELS, ISLAND_PALETTES } from './level.js';
@@ -219,6 +220,7 @@ class Game {
     this.sirenYield = null;               // the jeep's siren the traffic gives way to: { x, z, fx, fz, r, … } (drivers.js)
     this.fyren = new Lighthouse(this);    // free roam: up Faro de Maspalomas, the mantra on the gallery 51 m up (§10.35)
     this.bell = new ReceptionBell(this);  // free roam: the queue at Flamenco's reception, the bell's tenth pling (§10.37)
+    this.gatlopp = new StreetRace(this);  // free roam after Gamla kläder: José's street races, Berra's and Robban's bet (§10.38)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -1559,6 +1561,7 @@ class Game {
     this.jeep.update(dt);
     this.fyren.update(dt);
     this.bell.update(dt);
+    this.gatlopp.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);
@@ -1858,11 +1861,13 @@ class Game {
   // with the ticket pad or Angerud in the tow scene (§10.17), the grisfest's evening (§10.18), the
   // souvenir seller swearing at a smashed fruit stall (§10.19), the crowd at the SunTrip stage
   // (§10.30), Herr Storch filming the stork (§10.31), someone in a gag's scene (§10.32), Siv or
-  // Majsan on the sand by Stig's towel (§10.33) or the porter ringing for the site manager (§10.37).
+  // Majsan on the sand by Stig's towel (§10.33), the porter ringing for the site manager (§10.37) or
+  // José and his mother walking back to his place after a street race (§10.38).
   // syncAll gives such an NPC no wave, turn or chatter, and the gang's talk leaves them be (§10.28).
   npcPosed(k) {
     return !!this.missions.idlePose(k) || this.berraJob.posed(k) || this.judges.posed(k) || this.film.posed(k) || this.eslov.posed(k) || this.fest.posed(k) || this.lapp.posed(k) || this.party.posed(k)
-      || this.stands.posed(k) || !!this.mic?.posed(k) || this.birds.posed(k) || !!this.gags?.posed(k) || !!this.dream?.posed(k) || !!this.bell?.posed(k);
+      || this.stands.posed(k) || !!this.mic?.posed(k) || this.birds.posed(k) || !!this.gags?.posed(k) || !!this.dream?.posed(k) || !!this.bell?.posed(k)
+      || !!this.gatlopp?.posed(k);
   }
 
   syncAll(dt, title) {
@@ -1981,7 +1986,7 @@ class Game {
       const g = this.npcs[ms.current.giver];
       if (g) out.push({ type: 'mission', x: g.x, z: g.z, edge: true });
     }
-    const t = ms.target() || this.berraJob.target() || this.eslov.target() || this.pigs.target();
+    const t = ms.target() || this.berraJob.target() || this.eslov.target() || this.pigs.target() || this.gatlopp.target();
     if (t && !t.follow) out.push({ type: 'objective', x: t.x, z: t.z, edge: true });
     if (t && t.follow) out.push({ type: ms.stage?.car?.isTarget ? 'enemy' : 'friend', x: t.x, z: t.z, edge: true });
     out.push(...ms.markers());
@@ -1992,6 +1997,7 @@ class Game {
     out.push(...this.berraJob.markers());
     out.push(...this.eslov.markers());
     out.push(...this.pigs.markers());
+    out.push(...this.gatlopp.markers());
     const o = this.shame.officer;
     if (o && o.state !== 'hidden' && this.shame.pursuit) out.push({ type: 'enemy', x: o.x, z: o.z, edge: true });
     if (!all) {
@@ -2048,8 +2054,9 @@ class Game {
       this.bang.fadeBeam(nearFade(g.x, g.z));
       if (dist(g.x, g.z, f.x, f.z) > 25) target = { x: g.x, z: g.z };
     } else this.bang.show(false);
-    // Or the free-roam Berra job's (§10.6), Eslövloppet's (§10.12), the grisbil's pigs' (§10.15).
-    const t = ms.target() || this.berraJob.target() || this.eslov.target() || this.pigs.target();
+    // Or the free-roam Berra job's (§10.6), Eslövloppet's (§10.12), the grisbil's pigs' (§10.15), José's
+    // street race's (§10.38).
+    const t = ms.target() || this.berraJob.target() || this.eslov.target() || this.pigs.target() || this.gatlopp.target();
     if (t) {
       target = t;
       const y = t.follow ? groundAt(t.x, t.z, 0.2, 0.6) + 2.5 : groundAt(t.x, t.z, 0.2, 0.6);
@@ -2078,10 +2085,10 @@ class Game {
   updateHud() {
     // No mission running: the SOLKRÄM meter (§10.26; first, as its scene holds him), the paint
     // shop's wet-paint card (§7.2), the church's while Guardia Civil waits outside (§7.2), the Berra
-    // job's (§10.6), Eslövloppet's (§10.12), the grisbil's pigs' (§10.15) or a G17 toaster's scale
-    // (§10.24), if any.
+    // job's (§10.6), Eslövloppet's (§10.12), the grisbil's pigs' (§10.15), a G17 toaster's scale
+    // (§10.24) or José's street race's (§10.38), if any.
     hud.setObjective(this.missions.objective() || this.solkram.objective() || this.shame.paint.objective() || this.shame.church.objective() || this.berraJob.objective() || this.eslov.objective()
-      || this.pigs.objective() || this.toasters.objective());
+      || this.pigs.objective() || this.toasters.objective() || this.gatlopp.objective());
     hud.setSpeedo(this.playerCar);
     if (this.missions.state !== 'failed') {
       let prompt = '';

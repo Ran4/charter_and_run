@@ -291,7 +291,10 @@ Guardia Civil, the officer outside reading the sisters' sign ES UNA IGLESIA alou
 Swedish and scratching his head, the Land Rovers waiting at the street until they give up, and Stig
 peeking out with the sisters' "Hoppas vi inte får användning för det." (free roam, §7.2; in the film
 both lines are the sisters' language record at home, the church is never entered, and the Guardia
-Civil is not in it).
+Civil is not in it); José's three street races against Stig from a start line south of Centro Nórdico
+with his mother in the car, the bet with Berra and Robban at the pool bar, and the sisters' six for the
+Giraffe once all three are won (free roam, §10.38; in the film José never races, the sisters call him
+"pizza-racern" and give the men their points on the plane).
 The film's flight has **no turbulence** and **no in-flight toilet scene**: both toilet scenes are
 at Arlanda (we keep them there). The plane's toilets are only an invented hideout.
 
@@ -458,6 +461,10 @@ Physical keys are unchanged from Bigmouth. The level config turns verbs on and o
   sambaen", §10.36); at the wardrobe inside the door ("E Byt kläder", §10.36).
 - **The reception's bell** (free roam, §10.37): E at the bell on Hotel Flamenco's desk ("E Plinga på
   klockan") plings it; the tenth pling in a row gets an answer.
+- **José's street races** (free roam after Gamla kläder, §10.38): E close by José at Centro Nórdico
+  ("E Gatlopp 1/3 – Ett varv runt centrum"; a step further off his talk) starts the next race, in the
+  hire car from the start line; E at the chalkboard by Berra and Robban ("E Slå vad med Berra") bets
+  100 pta on Stig.
 - **Majsan's sun cream** (free roam after fataga, by day, §10.26): E by Majsan at Flamenco's pool ("E
   Smörj in ryggen"); in the scene E held fills the SOLKRÄM meter and is let go in the green.
 - **The horn** (free roam, §10.9): H in a car makes pedestrians ahead hop aside and the nearest of
@@ -1968,6 +1975,13 @@ METERS.skandal = { mode: 'pursuit', label: 'SKANDAL', cls: 'skandal', hot: 70,
     not win. On that code a sedan won clean by 2.0 / 1.6 s and lost with one crash by 2.3 / 2.5 s;
     the race kind's spare hatch (a wrecked hire car) won clean by 2.8 s ×2 and lost with one crash
     by 1.1 s ×2.
+  - José's street races (free roam, feature 69, §10.38; not mission stages, no table row or
+    fixture): the same race kind and rule, measured the same way in the hire car by scenario
+    `gatloppkal` (the crash at 45 % of each course's route). Shipped: course 1 (cruise 34, maxSpeed
+    37, accel 10) clean won by 1.6 / 1.7 s, one crash lost by 1.5 s ×2; course 2 (33, 37, 8) won by
+    2.1 s ×2, lost by 3.6 s ×2; course 3 (35, 38, 8) won by 2.1 s ×2, lost by 2.2 / 2.0 s; no impact. With the hatch's own
+    accel 13 José went into the first corner side by side with the player and into him, so he pulls
+    away slower and runs faster (the raw runs, the tuning sweeps' too, in the ledger's "Gatlopp").
   - Guardia jeep (§8.9 s9): cruise 20, damageScale 4, the truck takes half damage. **Phase 3 r1
     (island-flow)**: the chase autopilot kept its unstick state in the route controller it
     re-builds every 1.2 s, so the stuck timer reset and every reverse was cut short: a truck nosed
@@ -3483,7 +3497,8 @@ Key **`charter-and-run-v1`** (localStorage):
 ```js
 { v: 1, mission: index, coins, collected: { prylar: [ids], fenor: [ids], brodrostar: [ids] },
   unlocked: ['grisbil', ...], outfit: 'kostym' | 'arlanda' | 'hawaii' | 'rio', tune: 'sol' | 'samba',
-  records: { simhopp: n, eslov: s, solkram: n, stunts: { planka: m, gula: m, garage: m }, stork: true },
+  records: { simhopp: n, eslov: s, solkram: n, stunts: { planka: m, gula: m, garage: m }, stork: true,
+             gatlopp: { won: 0..3, sex: true } },
   shop: { owned: ['hatt', 'glas', 'skjorta', 'nasa'], off: [ids], trapp: 0..2, trappT: s, bag: bool },
   gags: ['kamera', 'viking'] }
 ```
@@ -3504,7 +3519,8 @@ best points (5–7), saved at once when beaten (feature 35, §10.26), whose once
 `solkramFilm` is in `unlocked`; `stunts`, the named car jumps' best distances in metres (one
 decimal), saved at once with a new record (feature 40, §10.27; a jump with none is not yet passed);
 `stork`, true once Fru Storch has corrected Stig by the stork on the beach, saved at once (feature
-43, §10.31). `shop` (feature 34, §10.23):
+43, §10.31); `gatlopp` { won: 0–3 (José's street races won, in order), sex: true once the sisters
+have given the six }, saved at once with a win and with the six (feature 69, §10.38). `shop` (feature 34, §10.23):
 SunTrip-butiken's purchases (`owned`), the ones taken off at the counter (`off`), the Trapp Trull
 account's instalments still to pay (`trapp`) and its free-roam seconds towards the next (`trappT`,
 whole), and the beach bag taken (`bag`); saved at once with every purchase, change and instalment; a
@@ -6344,6 +6360,129 @@ card are ours [N]. Invented (§1.6): the queue in free roam, the bell's ten plin
   over the bell; the porter's own chatter keeps back while the queue is out; the card stays for the
   session, not saved, and is hidden in missions; the queue is there at every hour.
 
+### 10.38 Gatlopp mot pizza-racern – mamma åker med (free roam; feature 69, 2026-10-17)
+
+`game/streetRace.js` (`StreetRace`, owned by Game as `gatlopp`), config `GATLOPP` in
+content/island.js, hooks in main.js (the objective card, the target and the markers after the
+toasters' and the pigs', `npcPosed`, `update` after the bell's). Hit & Run's street races, with a bet
+at the bar, against the man the sisters call "pizza-racern" on the plane (research-plot.md:70, :197):
+their points become literal, the Giraffe against the pizza-racer, and the joke is that his mother
+rides along ("Hans mamma bevakar hans dygd", research-plot.md:70; she joins the dinner too, :331).
+The races, the bet and José as a street racer are ours [N] (§1.6); the sisters' points are the
+plane's, relocated [F*](t), and two of the mother's radio lines are her chatter [F*].
+
+- **When.** On the island with `missions.state === 'idle'`, from the index after `after` =
+  ropavieja (Gamla kläder) on (10 to the end). With a race left (`records.gatlopp.won` < 3) and José
+  free at his place (`cita`, within 2 m, not busy, not posed, in no car): a "!" over him (a `Bang` in
+  the friend teal `bang` 0x3ad8a0, hidden within 3 m of the camera or of Stig, as the giver's) and
+  the minimap's `friend` dot (not at the edge).
+- **The challenge.** On foot within `r` = 1.7 m of him (further off, up to the gang's 3 m, his talk,
+  §10.28: the sun cream's rule at Majsan, §10.26), no pursuit, no dialogue: `<b>E</b> Gatlopp {i}/3 –
+  {name}` [N]. E: the two turned to each other, Stig held (`frozenT`), José's `offer`, Stig's "Jag kör
+  bara hyrbil… men okej." [N] at `yesAt` 1.5 s, the black fade at `fadeAt` 2.9 s (`fadeSecs` 0.6) and
+  behind it the grid: Stig at the wheel of the hire car (`playerCar` hyrbil, wherever it stood,
+  repaired; a wreck or none: a new one, `ensureNamedCar`; the car the races are measured with) and
+  the race kind's init. In a car, knocked down or out of free roam then: no race.
+- **The race** is the mission stage kind `race` (kinds/core.js, unchanged) on a holder of our own
+  (`{ def, cars, items, data }`), never through the runner, so no mission index, saved mission number,
+  "Uppdrag i/n" banner or reward is touched. Its options: `who` jose, `type` hatch, `color` 0x2a4fa8,
+  `carName` joseBil (Gamla kläder's blue hatch, locked), `oppPassenger` mamma (the front seat),
+  `start`, `checkpoints`, `finish`, `radio`, and José's own `cruise` and `oppSpec` per course. So: the
+  grid (José on the start lane, Stig to his left, noses level), the countdown 3, 2, 1, KÖR! under
+  `freezeCar`, the checkpoints (r 11; José's 13), the closed course (`game.closure`), the rubber band
+  at the extremes, the place and checkpoint bar in the objective card (title `Gatlopp {i}/3` [N],
+  text `{name} – kom före José! {prize} pta` [N], with a bet `bet.card` `{name} – {prize} pta · vad
+  {n} pta` [N]; on foot the kind's "Tillbaka in i bilen!"), the guide to the next checkpoint and José
+  on the minimap. José's car is `noExplode` (a wreck steams: his mother is in it). The banner
+  `SALIDA · START` [N] across the z −40 road at x `lineX` = 89 on two poles at the kerbs (8.4 m up, the
+  GOD JUL banners' height) with a chequered line on the asphalt under it, and on a course with a
+  finish of its own `LLEGADA · MÅL` [N] at its `line`: module meshes, shown from the grid to the
+  result, no colliders.
+- **The courses.** Every one starts from the same grid, westbound on the z −40 road south of Centro
+  Nórdico (start lane 5,3 > 4,3 at t 28: José at (92, −42.75), Stig at (92.3, −37.25)), 130 m before
+  the first corner:
+
+  | # | `name` [N] | route (nodes [i, j], §6.1) | checkpoints → finish | length | José (`cruise`; `spec`) | prize |
+  |---|---|---|---|---|---|---|
+  | 1 | Ett varv runt centrum | round Hotel Flamenco and the gas station, the town's centre: four lefts, back to the line | 3,3 > 3,4 > 5,4 > 5,3 → (81, −40) | 491 m | 34; maxSpeed 37, accel 10, steer 0.75 | 300 |
+  | 2 | Till flygplatsen | right up x −40, right along the z −200 road to the terminal's front | 3,3 > 3,1 > 6,1 → (238, −197.25); MÅL at (232, −200) | 570 m | 33; maxSpeed 37, accel 8, steer 0.75 | 400 |
+  | 3 | Till Eslöv-skylten | right up x −40 to the north ring road (the real road past the grisfest farm and the fields), left along it, left down x −200 towards the ESLÖV 3 900 KM sign | 3,3 > 3,0 > 1,0 > 1,1 → (−202.75, −162); MÅL at (−200, −168) | 650 m | 35; maxSpeed 38, accel 8, steer 0.75 | 500 |
+
+  A finish lies straight on from the course's last node (`nearestNode(finish)` is that node), so the
+  kind's lane path for José ends with a straight to it: past a corner he cut it over the kerb. The
+  offers [N]: "Ett varv runt centrum, Stig? Mamma åker med." · "Till flygplatsen, amigo. Mamma åker
+  med." · "Ut på vischan, till den svenska skylten. ¡Vamos! Mamma åker med." The radio (RadioSeq):
+  1 mamma "¡Josito! ¡Josito!" [F*] at 3 s; 2 José "Mamma, håll i dig!" at 3 s and mamma "¡Despacio,
+  Josito!" 5 s later [N]; 3 mamma "¡Josito! ¡Josito!" [F*] at 4 s, José "Jag ser vägen, mamma!" [N]
+  and mamma "Inga svenskor!" [F*], 6 s apart.
+- **Balance** (§8 "Races and chases": a clean race is won by a few seconds and one crash loses it).
+  AI cars never get PLAYER_BOOST, so each course hands José a spec, as the night bus has. Measured with
+  scenario `gatloppkal`: calibrate's autopilot (`installAutopilot`) in the hire car (a sedan, ×1.2)
+  from the grid, out of the left lane, at full speed on the course's road route (`ROUTES` in
+  tools/scenarios/gatlopp.mjs), clean runs and runs with one crash at 45 % of the route (calibrate's
+  race crash: a stop in the left lane, 1 s to recover); the margin is José's road left at his average
+  speed (won) or Stig's distance to the finish at 30 m/s (lost). With the hatch's own accel 13 against
+  the sedan's 14.4 the two went side by side into the first corner and into each other: at a left,
+  every corner of course 1 when it started eastbound 50 m from its first; at a right, José (`avoid:
+  false` in the kind) ran into Stig braking for it. So José pulls away slower (accel 10 on course 1, 8
+  on the two that start with a right) and runs faster (cruise 33–35, maxSpeed 37–38). On the shipped
+  specs (the default run on the final code, 2 + 2 runs a course): course 1 clean won by 1.6 and 1.7 s (21.3 / 21.1 s), one crash lost by 1.5 s ×2; course 2 clean won by 2.1 s ×2 (22.6 s;
+  a light touch at the second right, no impact), one crash lost by 3.6 s ×2; course 3 clean won by
+  2.1 s ×2 (26.3 s), one crash lost by 2.2 and 2.0 s; no impact in any run. Course 1's crash point (45 %
+  of its route) is its second corner, at 19 m/s, so the crash costs about 3.1 s there against 5.7 s
+  at speed on course 2: on course 1 a clean win and a crash's loss are both about 1.5 s.
+  The raw runs are in `notes/calibration-samples.md` ("Gatlopp", not a timer pool).
+- **The result**, at once. Won: the banner `DU VANN!` / `Gatlopp {i}/3 på 0:21,1` [N] ('good',
+  3.2 s), the jingle 'complete', the prize and the toast `José gav dig {n} pta.` [N], a bet paid, the
+  course won (`records.gatlopp.won` = i, saved at once) and the toast `Nästa gatlopp: {name}. José
+  väntar vid Centro Nórdico.` [N], after the third `Alla tre gatloppen vunna! Siv och Majsan vid poolen
+  har hört om det.` [N]. Lost: `JOSÉ VANN` / `Gatlopp {i}/3 – försök igen` [N], 'fail'; the same
+  course is offered again. José's car wrecked (the kind's 'done' too): no race, nothing won, `Josés
+  bil är kvaddad – loppet räknas inte.` [N], the bet handed back. Then, with Stig within `linesR` 40 m
+  of José's car, his piece from it: won "Mamma säger att du kör som en spanjor." and Stig's "Tack…
+  tror jag." [N]; lost "Mamma säger att du kör som en turist." [N].
+- **Home.** The kind's cleanup (the freeze off, the course open), then José drives back by road
+  (`AIDriver` route, cruise 12, avoiding) to `via` 5,3 (a U-turn there if he comes the other way) and
+  west along the z −40 road to the kerb at `stop` (82, −42.75), slowing over `slowFrom` 28 m. Parked,
+  he and his mother step out on the sidewalk side and walk at 1.5 m/s (`posed`: no turn to Stig, no
+  chatter) to his place and 1.3 m beside it; there both are free again, and placeNpcs takes his
+  mother home to Fataga once Stig is 50 m off. 150 m from Stig, or held up 90 s with Stig 60 m off:
+  both home at once. A wreck: they stand where they landed until Stig is away; the wreck is cleared
+  80 m off.
+- **The bet.** While a race is left, the chalkboard `APUESTAS · VAD / JOSÉ 1 : 2 / STIG-HELMER 1 : 5`
+  [N] stands on an easel beside Berra and Robban: at the pool bar (`flamencoBar` −1.7, 1.0), and once
+  the bodega's unlock has their home there, at Pepes Bodega (`bodega` −3.2, 0, facing the street); no
+  collider. Its E within `bet.r` 1.4 m (at Berra himself his talk), with Berra free within 5 m of it,
+  Robban free within 5 m of him, no bet placed and no race on the way: `<b>E</b> Slå vad med Berra`
+  [N]. With 100 pta or more: −100, Berra's "Hundra pesetas på spanjoren!" and Robban's "Jag tar
+  Stig-Helmer. Fem gånger pengarna!" 1.6 s on [N], the toast `Vadet är slaget: 100 pta på dig själv.
+  Vinner du betalar Robban 500 pta.` [N]; with less, Berra's "Inga pesetas, inget vad." [N]. One bet,
+  for the next race (this session, not saved): won `Robban betalar ut vadet: 500 pta!` [N], lost
+  `Berra vann vadet – dina 100 pta.` [N], a wreck `Berra ger tillbaka vadet: 100 pta.` [N]; a mission
+  start keeps it.
+- **The sisters' six.** All three won, the first time Stig on foot comes within `sisters.r` 7 m of
+  Siv and Majsan standing free together (within 6 m): Siv's "Giraffen, då?", Majsan's "Sex, tycker
+  jag." 1.7 s on [F*](t) (the plane's points, research-plot.md:197, relocated, the split ours as in
+  landning) and Stig's "…Sex?" at 3.4 s [N] (his "…Fyra?" there); saved at once
+  (`records.gatlopp.sex`). "Pizza-racern" is never said: it is only the sisters' word, here the title's.
+- **A mission start or the other level** (`reset`): a fade undone, the race's cleanup, José's car
+  removed (the hire car stays where it is), José and his mother home at once, the banners down; the
+  bet stays. So no mission, stage kind, mission timer, fixture or calibration pool changes, no world
+  random draw and no solid is added, and the save gains only `records.gatlopp`.
+- **Tests**: `gatlopp.mode` (null | offer | race | home | walk), `k`, `result` ({ k, result: win |
+  lose | wreck, t (s from KÖR!), at, bet }), `last`, `bet`, `won`, `next`, `offered()`, `startRace(k)`
+  (the grid at once), `homeSpot(key)`, `boardSpot()`, `car`, `st` (the race stage). Scenarios
+  `gatlopp`, `gatloppkal` (§16.4).
+- **Not done / changed** (deviations from the idea): the start line is 13 m east of the idea's x 76
+  and every course starts westbound, 130 m before its first corner; course 1 goes round Hotel Flamenco
+  and the gas station (the town's centre) rather than round Centro Nórdico, whose lap began 50 m from
+  its first corner; course 3 finishes on x −200, 18 m before the Eslöv sign (a finish must lie
+  straight on from a node); Stig always races in the hire car; the bet is a fixed 100 pta on Stig at
+  1:5 (no stake to choose, no bet on José), its E at the board beside Berra (his talk keeps him); a
+  wreck of José's car is no win; once all three are won there is no rematch (José's E is his talk
+  again); the sisters' six is a one-time exchange in bubbles, not a CHATTER line (Siv's chatter is
+  the sun cream's after `sjuPoang`).
+
 ## 11. HUD / UI strings (Swedish; `src/strings.js` owned by WP-H, created by Phase 0)
 
 `strings.js` exports `S` (flat object) and `fmt(key, vars)`. Engine code uses `S.key` only.
@@ -6773,6 +6912,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/guardiaJeep.js` | new (feature 51, 2026-10-17) | — | `GuardiaJeep` (`game.jeep`): Låna Guardia-jeepen in free roam: `guardia1` open between missions after the bodega, the loan and its SKANDAL, his after the pursuit, the bust scene and the tow, the respawn, the siren on H (the lamp, the corners, `game.sirenYield`), Stig's surprise, Angerud's outburst, the reset (§10.34); `lampMesh(car)` exported (the church's waiting Land Rovers, feature 60, §7.2) |
 | `src/game/lighthouse.js` | new (feature 52, 2026-10-17) | — | `Lighthouse` (`game.fyren`): Uppför fyren in free roam: the keeper's door and the gallery door with their fades and banners, the clock on to the evening by day, the gallery's three cameras and the vertigo, the exercise against the lantern with his eyes shut, the long blink to the night, `leave`, a mission start with him up there (§10.35) |
 | `src/game/receptionBell.js` | new (feature 59, 2026-10-17) | — | `ReceptionBell` (`game.bell`): Ringklockan i receptionen in free roam: the queue of three departing guests at Hotel Flamenco's porter's desk with their suitcases (solid only while out), their question and the porter's answer, the desk bell's mesh, its interactable and plings, the tenth pling's call (the porter's phone, Lasse on the radio, the guest's question, Stig's sorry, the bell under the desk), the bell's return with the hotel's card, the reset at a mission start (§10.37) |
+| `src/game/streetRace.js` | new (feature 69, 2026-10-17) | — | `StreetRace` (`game.gatlopp`): Gatlopp mot pizza-racern in free roam after Gamla kläder: José's "!" and challenge, the grid in the hire car behind a fade, the three courses run on the mission kind `race` outside the runner, the start and finish banners, the result, the prize and `records.gatlopp`, José's drive back and the walk to his place with his mother, the bet at the chalkboard by Berra and Robban, the sisters' six, the reset at a mission start (§10.38) |
 | `src/game/church.js` | new (feature 60, 2026-10-17) | — | `Church` (`shame.church`): Kyrkfrid i Templo Ecuménico in free roam: the church door's interactable and its open doorway mesh, the walk in and the slam, the plaza shot and the card, the waiting Land Rovers with their lamps, the meter in the wait, the officer's walk to the sign and his lines and scratch, the give-up, the peek and the step out, Stig's line and the banner, the officer into his Land Rover, the interruptions and the map marker (§7.2) |
 | `src/game/beachDream.js` | new (feature 57, 2026-10-17) | — | `BeachDream` (`game.dream`): Strandkyssen i bränningen in free roam: the towel and its interactable, the scene's clock (lying down, the white wash, the dream with Majsan's double, the foam and the camera's glide, the flash, the wave and its splashes, the lines), the visitor on the sand and her way home, the drips, the reset (§10.33) |
 | `src/game/birds.js` | new (feature 43, 2026-10-17) | — | `Birds` (`game.birds`), `KINDS`: Fåglarna som lyfter in free roam: the four kinds' looks and instanced meshes, the flocks on their spots (pecking, steps, turns), the scare (Stig on foot, his car, the horn), the take-off, the circle and the landing, the sounds, Stig's sorry and hands up, the stork's trip to the Storches and the scene, the put-back at a mission start (§10.31) |
@@ -6858,7 +6998,7 @@ Init: `initGfx` → `input.init` → `hud.init` → `fx.init` → fonts (Luckies
 → peds (34) → NPC `Character`s (one per `CHARS` key except `stig`, the radio-only keys `levander
 kapten pa guardia pax telefonist` and the cabin-owned `vardinna2`; `key` field; hidden until placed, §2.3) →
 player `Character(CHARS.stig)` (`key = 'stig'`) → collectibles (`COLLECTIBLES`) → markers → `Shame`
-→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `DiveTower` (feature 24, §10.20; registers the ladder's two interactables, sets `DIVE_TOWER.live`) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `Eslov` (feature 7, §10.12; registers the rollerskier's interactable) → `PoolFest` (feature 8, §10.13) → `StigSorry` (feature 11, §10.14) → `PigTruck` (feature 15, §10.15) → `BaggageBelt` (feature 25, §10.16) → `Lapplisa` (feature 20, §10.17) → `GrisfestFree` (feature 21, §10.18; registers the gate's and the tourists' interactables) → `FruitStands` (feature 28, §10.19) → `Dogs` (feature 31, §10.21) → `Bathers` (feature 32, §10.22; registers the wake's interactable) → `SuntripShop` (feature 34, §10.23; registers the four wares' and the bag's interactables, sets `SUNTRIP_SHOP.live`) → `Toasters` (feature 33, §10.24; registers the seven toasters' interactables) → `Room107` (feature 38, §10.25; registers room 107's three interactables) → `Solkram` (feature 35, §10.26; registers Majsan's interactable) → `Stunts` (feature 40, §10.27) → `GangTalk` (feature 39, §10.28) → `RoofJump` (feature 41, §10.29; registers the three stair doors, sets `ROOF_JUMP.live`, places the roof coins) → `Mic` (feature 44, §10.30; registers the mic's interactable) → `Birds` (feature 43, §10.31; builds the four kinds' instanced meshes and puts every bird on its spot) → `Gags` (feature 47, §10.32; registers the two gags' interactables) → `BeachDream` (feature 57, §10.33; builds the towel and the foam, registers the towel's interactable) → `GuardiaJeep` (feature 51, §10.34) → `Lighthouse` (feature 52, §10.35; registers the two doors' interactables) → `ReceptionBell` (feature 59, §10.37; builds the bell, the card and the three suitcases with their solids, registers the bell's interactable) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
+→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `DiveTower` (feature 24, §10.20; registers the ladder's two interactables, sets `DIVE_TOWER.live`) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `Eslov` (feature 7, §10.12; registers the rollerskier's interactable) → `PoolFest` (feature 8, §10.13) → `StigSorry` (feature 11, §10.14) → `PigTruck` (feature 15, §10.15) → `BaggageBelt` (feature 25, §10.16) → `Lapplisa` (feature 20, §10.17) → `GrisfestFree` (feature 21, §10.18; registers the gate's and the tourists' interactables) → `FruitStands` (feature 28, §10.19) → `Dogs` (feature 31, §10.21) → `Bathers` (feature 32, §10.22; registers the wake's interactable) → `SuntripShop` (feature 34, §10.23; registers the four wares' and the bag's interactables, sets `SUNTRIP_SHOP.live`) → `Toasters` (feature 33, §10.24; registers the seven toasters' interactables) → `Room107` (feature 38, §10.25; registers room 107's three interactables) → `Solkram` (feature 35, §10.26; registers Majsan's interactable) → `Stunts` (feature 40, §10.27) → `GangTalk` (feature 39, §10.28) → `RoofJump` (feature 41, §10.29; registers the three stair doors, sets `ROOF_JUMP.live`, places the roof coins) → `Mic` (feature 44, §10.30; registers the mic's interactable) → `Birds` (feature 43, §10.31; builds the four kinds' instanced meshes and puts every bird on its spot) → `Gags` (feature 47, §10.32; registers the two gags' interactables) → `BeachDream` (feature 57, §10.33; builds the towel and the foam, registers the towel's interactable) → `GuardiaJeep` (feature 51, §10.34) → `Lighthouse` (feature 52, §10.35; registers the two doors' interactables) → `ReceptionBell` (feature 59, §10.37; builds the bell, the card and the three suitcases with their solids, registers the bell's interactable) → `StreetRace` (feature 69, §10.38; registers José's and the chalkboard's interactables) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
 `placeNpcs(true)` → spawn the player → portraits for every key in `CAST` (`renderPortrait`
 restores each model's parent and transform, so seated cast members stay in their seats) →
 `applySaveToWorld()` →
@@ -6870,7 +7010,7 @@ mantra/hold, AI, cars (a landing calls `onCarAirEnd`, feature 40), people (`glid
 traffic/peds skipped when `!levelDef.sim.*`) → `syncAll` (also
 writes `ch.x/y/z` from `car.seatWorld(ch.seatSide)` for every car-seated character, player
 included, so framing, bubbles and distance checks see where they really are) → `missions.update` →
-`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `tower.update` (feature 24) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `stands.update` (feature 28) → `dogs.update` (feature 31) → `bathers.update` (feature 32) → `shop.update` (feature 34) → `toasters.update` (feature 33) → `room107.update` (feature 38) → `solkram.update` (feature 35) → `stunts.update` (feature 40) → `chat.update` (feature 39) → `roofs.update` (feature 41) → `mic.update` (feature 44) → `birds.update` (feature 43) → `dream.update` (feature 57) → `jeep.update` (feature 51) → `fyren.update` (feature 52) → `bell.update` (feature 59) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
+`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `tower.update` (feature 24) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `stands.update` (feature 28) → `dogs.update` (feature 31) → `bathers.update` (feature 32) → `shop.update` (feature 34) → `toasters.update` (feature 33) → `room107.update` (feature 38) → `solkram.update` (feature 35) → `stunts.update` (feature 40) → `chat.update` (feature 39) → `roofs.update` (feature 41) → `mic.update` (feature 44) → `birds.update` (feature 43) → `dream.update` (feature 57) → `jeep.update` (feature 51) → `fyren.update` (feature 52) → `bell.update` (feature 59) → `gatlopp.update` (feature 69) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
 pickups/collectibles → props → `fx.tick` → `tickTown` → markers → camera → sun/sky → HUD → audio →
 traffic recycling (island) → autosave. `loop` then renders, and when `film.grabNow` is set calls
 `film.grab()` in the same task (Herr Storch's still from the frame's buffer, feature 6, §10.11).
@@ -6977,8 +7117,14 @@ game.bell;         // ReceptionBell (feature 59, §10.37): the queue at Flamenco
                    // (allChars, areaHit), spots, cases, canUse(), holds(), stigFree(), porterFree(), pling(),
                    // posed(key) (npcPosed: the porter in the call), step(h), update(dt), reset(), callT,
                    // callDone, last, said, cfg (RINGKLOCKA)
+game.gatlopp;      // StreetRace (feature 69, §10.38): José's street races, the bet, the sisters' six;
+                   // gatlopp.mode (null | 'offer' | 'race' | 'home' | 'walk'), k, st (the race stage), car,
+                   // result, bet, won, next, racing, offered(), canChallenge(), challenge(), startRace(k),
+                   // canBet(), placeBet(), boardSpot(), homeSpot(key), posed(key) (npcPosed: José and his
+                   // mother walking back), objective(), target(), markers(), update(dt), reset(), last,
+                   // cfg (GATLOPP)
 game.npcPosed(key) -> bool   // an NPC held in a pose of its own: §9.4 idleAnim or a free-roam module's
-                   // (berraJob, judges, film, eslov, fest, lapp, party, stands, mic, birds, gags, dream, bell); syncAll gives it no
+                   // (berraJob, judges, film, eslov, fest, lapp, party, stands, mic, birds, gags, dream, bell, gatlopp); syncAll gives it no
                    // wave, turn or chatter, and the gang's talk leaves it be (§10.28)
 game.bathers;      // Bathers (feature 32, §10.22): tourists on the sun loungers, Berra and Robban fried;
                    // bathers.loose (the bathers off their loungers: allChars, areaHit), step(h)
@@ -7825,6 +7971,13 @@ shame.chase(car) (feature 60): a Land Rover's chase AI with the catch-up band (s
 //   the bell back on the desk, the card off; live: the cut window and the view frustum, the queue out
 //   unseen, tickQueue, tickBell (the hand, the plunger, the call's clock, the bell's way under the desk
 //   and its return)); step(h) after mic.step; extras in allChars and areaHit; posed(key) in npcPosed
+// streetRace.js (feature 69, §10.38): game.gatlopp = new StreetRace(game) after the reception's bell
+//   (registers `gatlopp` at José and `gatloppVad` at the chalkboard; the "!", the banners and the board
+//   are made the first time they show); update(dt) after bell.update (not active: reset() once: the
+//   race's cleanup, José's car removed, José and his mother home; active: the bubbles, the mode's tick
+//   (the offer's fade and the grid, the race kind's update, the drive back, the walk), the wreck's
+//   clearing, the sisters' six, the "!" and the board); main.js asks objective() after the toasters',
+//   target() after the pigs', markers() after the pigs' and posed(key) in npcPosed
 // town.js: ROOF_JUMP { lots, roofs: { atl, sol: { name, minX, maxX, minZ, maxZ, floor, blocks } }, gap
 //   { x0, x1, z0, z1 }, jz, coins [[x, y, z]], live() } (feature 41; the roofs' blocks `dead` =
 //   !live(), the slabs' body and stair tower and the gap's two palms `dead` = live(), each palm with a
@@ -8478,6 +8631,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `klader`, `kladshots` [feature 67] | Garderoben och bergsprängaren i rum 107 (§10.36). `klader`: at index 5 (free roam, the suit) the wardrobe holds `kostym,arlanda`; at `rum107Garderob` "Byt kläder" (`rum107:garderob`); E: `swap`, frozen over `secs`, `cam.cine` (the shot), the wardrobe open with `arlanda` on the hanger, still the suit, facing it (yaw −π/2), no prompt; done: `arlanda` on, `islandOutfit` and the save's `outfit` `arlanda`, the suit on the hanger, "Det måste vara värmen.", turned to the shot's eye (within 0.01 rad); after `show`: no `cine`, the doors shut, the prompt again, `cam.yaw` the shot's way. E again: the suit, saved, Ole's "Du kan ikke gå sånn her nede! … Shorts." on the radio. In the coat `missions.begin()`: `kostym` on, `islandOutfit` still `arlanda`, the wardrobe not usable; `abort()`: the coat back on. E then `begin()` mid-change: no `swap`, the doors shut, no freeze, the suit, the shot not the camera's. The boombox at index 5: "Bergsprängaren", E: Ole's "Kvarts og digital.", the tune `sol`, no prompt until `radioT` is out; after `unlock('samba')`: "Spela samba", E: the samba, "Ja, det er fint! Samba!", the prompt "Stäng av sambaen"; E: `sol` (saved), "Spela samba"; E: the samba with `last.line` "Hører du? Samba.". At index 6 `kostym,arlanda,hawaii`: from the shirt round to the suit; to the shirt: "Är den inte lite skrikig?" and Ole's "Du skal ha sterke farger, du som er mørk.". A pursuit in the shirt: Skjortbytet's `hideout:rum107Garderob`; E and the officer's walk past; in its suit (`islandOutfit` `hawaii`): `garderob:rum107Garderob`, its way back, then "Byt kläder" again; in the coat in a pursuit: neither of the three, no shirt taunt. The save and a reload (no `fresh`): the coat at index 6, idle. At index 13 all four; with SunTrip's hat on, E from the shirt: `rio`, saved, Ole's "Og så Rio! Stranda, jentene og samba.", `shop.worn` empty and no bucket hat; E: the suit with the hat again. The flight level (index 2): `room107.live` false, no `rum107:` spot usable, the suit. `kladshots` at index 13: Stig at the wardrobe (`klader_1_stig`), then four changes, each changing (`klader_N_byte`: the next on the hanger beside him) and done (`klader_N_<outfit>`: his front in it, what he took off on the hanger): rio, kostym, arlanda, hawaii; the chase camera after (`klader_6_jaktkamera`); the coat on the patio (`klader_7_rocken_uteplatsen`) and the Rio jacket at the pool (`klader_8_rio_poolen`) |
 | `ringklocka`, `ringshots` [feature 59] | Ringklockan i receptionen (§10.37). `ringklocka`, at index 7 (free roam, Ole the giver at `flamenco`): the queue not out while Stig looks at its spots (hidden by hand, 40 frames), out once he is 30 m off facing away: three guests on their spots (none `local`, nothing held), each facing the one ahead and the first the porter (within 0.01 rad), a suitcase `caseOut` 0.8 m to each one's right, shown and solid, the guests in `allChars`; walking into the middle suitcase for 1.2 s stops him at `caseR` + his radius. At the bell (3.0, −10.3) "E Plinga på klockan" (`ringklocka`) and the bell's mesh on its spot; none 2 m off; in front of the G17 toaster (3.75, −10.3) its own prompt, pressed to the desk in front of the bell the bell's; none with the porter hidden; in a pursuit the porter's bribe (`hideout:flamencoRecepcion`), the bell again after it. Plings 1–9 by real E presses: each counted, `tap` on, `audio.pling`, "*pling*" over the bell and the porter's "Momento."; a second E within `rest` keeps `ringklocka` and is no pling (nor a toaster's try). The 10th: `phase` `call`, the count 0, the porter posed and turned to the key board (yaw over 2.6), one `audio.phone`, the radio `['lasse', "Klockan 12. Ställ väskorna utanför receptionen."]`, the said lines exactly *pling*, Lasse, the guest's "Och när ska vi lämna rummen?" (with the radio toast still up), Stig's "Förlåt…" (no "Momento."); in the call E is the bell's with an empty prompt; then `away`, the bell hidden, the porter free, no bell prompt. 30 m off facing away: the bell back on its spot with the card (`signed`, `signOn`), the prompt again, the count 0. By the desk (3.0, −4.5) a guest asks and the porter's "Momento." follows `replyAt` 1.3 s later (±0.25). A kick (J) at the last guest bowls him over (SKANDAL up), and he is back on his spot within 15 s. `missions.begin()`: the queue hidden, the suitcases' solids dead, the card off, the bell on its spot, `bell` phase, no prompt at the bell. The flight level: not live, no queue. `ringshots`: the queue from the porch, the prompt, the hand on the bell from his right, a pling and "Momento." from the side, the porter on the phone, the guest's question under Lasse's radio box, "Förlåt…", the bell on its way, the empty desk, the bell back, the card close up, the queue along the desk |
 | `kyrkfrid`, `kyrkshots` [feature 60] | Kyrkfrid i Templo Ecuménico (§7.2). `kyrkfrid`, at index 6 (free roam): no prompt at `kyrkaPuerta` without a pursuit, the door shut; in one (the officer 12 m off on the plaza) `Sök skydd i kyrkan` (`kyrka:kyrkaPuerta`) and the `friend` marker at the door; none 2.5 m out. E: `enter`, frozen, the doorway open, the pursuit on, facing the door (yaw π), no second prompt; `in`: hidden, the cut, the door shut, the card KYRKFRID / `Guardia Civil väntar utanför`, both Land Rovers held with their lamps, those placed on the street in front of the church (within 0.6 m of a stop's z, 15 m of its x), the others in the shot; 1.5 s later the meter lower but at or over `floor`, no bust, no fine, the Land Rovers within 3 m of where they stopped. The officer within 1 m of `read`, "Es una iglesia…", "Det… är… en… kyr-ka.", `scratch` on with the pursuit still on and the meter at or over `floor`; `giveUp`: no pursuit, the meter 0, no fine, `t` near `cooldown`, no escape banner, the card gone, `scratch` off, the officer walking to `board`, "De där svenskarna är heltokiga!", Stig still hidden in the cut; `peek`: Stig `normal` in the doorway (within 0.1 m), the door open, the cut, frozen, facing out (yaw 0); `out`: no scene, no cut, the door shut, at `out` (within 0.1 m), the camera's yaw 0, no freeze; "Hoppas vi inte får användning för det.", the banner KYRKFRID / `Guardia Civil gav upp`; the officer gone and the Land Rovers leaving as traffic; the four lines in order, once each. In a new pursuit inside the cooldown no prompt, the porter's `hideoutT` untouched; at `t` 0 the prompt. The officer 3.5 m out: busted at the door (`busted`), fined, Stig `normal` outside, the door shut, no cut. 8.5 m out (placed and E in one frame): `in`, no fine; `stop()`: Stig out, no cut, nothing held. The officer 78 m off (E and the slam in one go): he starts within 2.5 m of `entry`, out of the shot, and reaches `read`. `missions.begin()` while they wait: no scene, Stig `normal`, the door shut, nothing held, no card, no lamp lit, and the pursuit (if still on) with both Land Rovers chasing; the cut over once the mission runs; in it, with a pursuit, no prompt and `canUse()` false. The flight level (index 2): no `church.cfg`, no `kyrka:` interactable. `kyrkshots`: the prompt with the officer coming, Stig into the dark doorway, the plaza shot with the officer walking in, the sign read out, spelt out, the head scratched (and close up), the shout, the peek, his line with both Land Rovers at the street, the banner, the Land Rovers driving off |
+| `gatlopp`, `gatloppkal` [feature 69] | Gatlopp mot pizza-racern (§10.38). `gatlopp`: every line in `GATLOPP` tagged in the file and no "pizza" in one; at index 9 no "!", no board, no friend dot, at José his talk; at index 10 the "!" over José and one friend dot, at 1.2 m "E Gatlopp 1/3 – Ett varv runt centrum", at 2.4 m "E Prata med José"; at Berra (1.5 m) his talk and the board up, at the board "E Slå vad med Berra"; with 50 pta Berra's "Inga pesetas, inget vad." and no bet; with 3000 pta −100, Berra's and Robban's lines, the toast, and no second bet. E at José: the offer, Stig held, José's line and Stig's yes, then the grid: Stig in the hire car, José at the wheel of `joseBil` with his mother beside him, frozen, the course closed, the SALIDA banner, one `joseBil`, the countdown's 3 and the card GATLOPP 1/3. Stig standing still: JOSÉ VANN, no prize, the bet lost (Berra's toast), the course open, the banner down; José drives back and walks to his place, his car gone, the offer again, his "…som en turist.". E again and calibrate's autopilot wins: DU VANN! with the time, 300 + 500 pta, `won` 1 saved, the three toasts, then "Gatlopp 2/3" and his "…som en spanjor.". `missions.begin()` 2.5 s into race 2: no car, freeze, closure or banner left, José home, his mother home in Fataga, `abort`, the index and the wins unchanged. José's car wrecked: `wreck`, nothing won, the stake back, both free afterwards. Races 2 and 3 won by the autopilot, the MÅL banner up in each; after the third the toast, no "!" and no board, José's E his talk. The sisters' three lines by Stig at the pool, saved, not again. At index 13 with the bodega unlocked the board at the bodega by Berra and its prompt. Shots: José's "!", the board, the bet, the grid (the countdown, the SALIDA banner from ahead, José and his mother through the windscreen), José driving off, back home, the win, the MÅL banners at the terminal and on x −200, the finishes, the sisters, the bodega. `gatloppkal`: the races' balance (calibrate's autopilot in the hire car from the grid; `GATLOPP_RUNS` (2) clean and as many one-crash runs per course, `GATLOPP_RACE`, `GATLOPP_SWEEP` for tuning): a clean run wins, a clean win is by less than 6 s, one crash loses; every car-car impact logged |
 | `badgaster`, `stekt` [feature 32] | Badgäster på solstolarna (§10.22). `badgaster`, at index 6 (free roam): bodies only on taken sun loungers, their hips on the seat, at most `max` (10), none on Berra's or Robban's; on the main beach no taken lounger within `r` left empty nearer than the bodies (shot `badgaster_strand`); one rebuilt body's ms logged. The burn: three loungers in the z 250 row; a bather lain past `burn[0]` stays pale while in view within `seenR` and is pink once out of view; past `burn[1]` lobster red (skins from `skins`; shot `badgaster_stadier`). A kick at a free lounger and at a taken one give the same SKANDAL; the bather off it in a backward somersault (`flip` < 0) along the lounger's facing (vz > 2), an OUCH bark, a GETUP bark on his feet (shots `badgaster_kullerbytta`, `badgaster_upp`), gone once Stig is 30 m off; no `onCharHit`, no "hit" sorry. His car at 10 m/s through a taken lounger: SKANDAL 1 × 1.2 × gain only, the bather off along the car (vz > 5; shot `badgaster_bil`). The lounger back after its smash (respawn 0, him 100 m off): `n` + 1, a new seed, stage 0, a pale newcomer on it. At 22:00 nobody (after a cut); at 10:00 `dayN` + 1 and a new crowd. A mission start (friskotek) takes every body away at once, none in the mission; the flight level (index 2) makes none. `stekt`, at index 6: Berra and Robban `lying` on their loungers, outfit `stekt` (skin `STEKT_SKIN`), `slump`, busy, spot `stekt`; both snore within 9.5 s (shots `stekt_bar`, `stekt`); the E point `stekt:wake` at Berra's feet: Stig's line, then Berra's with `lift` > 0.6 (shot `stekt_fem_minuter`), then Robban's, in that order, and `lift` back under 0.1; a kick at Berra's lounger: `flung`, then `down` with his timer held (> 100), still `stekt`, only snores from him (shot `stekt_sparkad`); the lounger back with him 100 m off: on it again. A mission start (friskotek): both `normal`, outfit `sol`, no slump, within 2.5 m of their homes at the bar. Index 7: on their loungers; 5 and 8: not |
 | `talk` [Phase 0] | `autoDialog = false`, walk to Ole at `gateQueue`, E, Space twice |
 | `fullstory` [Phase 0b] | swaps the literal §8 missions (`tools/fixtures/full-missions.js`) into `MISSIONS` and plays all 13 per §16.3 (`FROM`/`TO` as `story`); must end `#13 idle`, `RESULT: PASS` |
@@ -8576,7 +8730,8 @@ pryl_pung fena_flamenco fena_suntrip fena_plaza fena_golf fena_bungalow fena_ham
 fataga golf bungalow bygge dromplan flygplats dyner fyren playa hamn bungalowR lagenhet`.
 
 **Named cars**: `hyrbil buss17 guardia1 guardia2 taxiAirport grisbil` (unlock; `guardia1` open between missions after the bodega, feature 51, §10.34) + mission cars
-`grisbilFollow joseBil utflyktsbuss nattbuss guardiaJeep`.
+`grisbilFollow joseBil utflyktsbuss nattbuss guardiaJeep` (`joseBil` is also José's car in his street
+races between missions, feature 69, §10.38).
 
 **Car types**: `sedan hatch wagon van pickup bus guagua icecream taxi guardia grisbil trolley`.
 
@@ -10626,3 +10781,33 @@ the fixer's group.
   are put on the street out of the shot rather than driven there; Stig peeks out in the plaza shot and
   says his line with the chase camera looking out; the meter holds near zero until the sign is read
   (the scene, not a clock, ends it). Scenarios `kyrkfrid`, `kyrkshots` (§16.4).
+- Feature 69, "Gatlopp mot pizza-racern – mamma åker med" (`features/implemented/pizza_racern.md`,
+  2026-10-17): José's three street races in free roam after Gamla kläder (§10.38; new
+  `src/game/streetRace.js` (`game.gatlopp`), `GATLOPP` in content/island.js; §1.6, §3, §8 "Races and
+  chases", §10.5, §14.1–14.3, §14.8, §16.4, Appendix A). Only when `missions.state === 'idle'` on the
+  island: a teal "!" over José at Centro Nórdico and the friend dot; E within 1.7 m (his talk further
+  off) "Gatlopp {i}/3 – {name}" [N]: his offer, Stig's "Jag kör bara hyrbil… men okej." [N], a black
+  fade to the SALIDA · START grid on the z −40 road (Stig in the hire car, José in Gamla kläder's blue
+  `joseBil` hatch with his mother in the front seat). The race is the mission kind `race`, unchanged,
+  run on a holder of the module's own, never through the runner (no mission index, saved mission
+  number, "Uppdrag i/n" or reward); José's car is `noExplode`. Three courses from one westbound grid
+  130 m before the first corner: round Hotel Flamenco and the gas station (491 m, 300 pta), to the
+  terminal's front (570 m, 400 pta), out on the north ring road towards the Eslöv sign (650 m, 500 pta),
+  each with José's own `cruise` and `oppSpec` measured by the new scenario `gatloppkal` (calibrate's
+  autopilot in the hire car): clean runs win by 1.6–2.1 s and one crash loses
+  by 1.5–3.6 s. Won: DU VANN! with the time, the prize, `records.gatlopp.won`
+  saved, the next offered; lost: JOSÉ VANN, the same again; José's car wrecked counts for nothing. José
+  drives back to the kerb in front of the centre and walks to his place with his mother. The bet: the
+  APUESTAS · VAD chalkboard by Berra and Robban at the pool bar (the bodega after its unlock), E at it
+  (Berra's own E stays his talk) bets 100 pta on Stig, Berra's "Hundra pesetas på spanjoren!" and
+  Robban's "Jag tar Stig-Helmer. Fem gånger pengarna!" [N]; Robban pays 500 on a win. All three won:
+  Siv's "Giraffen, då?", Majsan's "Sex, tycker jag." [F*](t) and Stig's "…Sex?" [N] once at the pool
+  (`records.gatlopp.sex`). A mission start or the other level ends it all at once (José's car removed,
+  José and his mother home). main.js: `gatlopp` after `bell`, `update` after `bell.update`, the
+  objective, target and markers chains, `npcPosed`. No mission, stage kind, mission timer, fixture or
+  calibration pool changed; no solid or world random draw added; the save gains `records.gatlopp`. The
+  margins' raw runs are in `notes/calibration-samples.md` ("Gatlopp"). Deviations from the idea: the
+  grid at x 89, every course westbound (the racers met side by side in the first corner otherwise),
+  course 1 round the hotel rather than the centre, course 3's line 18 m before the sign, always the
+  hire car, a fixed bet at the board, no rematches, the sisters' six as bubbles. Scenarios `gatlopp`,
+  `gatloppkal` (§16.4).

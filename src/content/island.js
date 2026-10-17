@@ -18,7 +18,8 @@
 // two gags on E, Ole's flash at his camera bag and Stig's cup under Viking Bar's lamp (§10.32), and
 // the towel at the water's edge, Stig's daydream in the surf, the wave and the visitors on the sand
 // (§10.33), and the borrowed Guardia jeep, its siren on H and the traffic giving way to it (§10.34),
-// and the queue at Flamenco's reception and the bell that answers on its tenth pling (§10.37).
+// and the queue at Flamenco's reception and the bell that answers on its tenth pling (§10.37), and
+// José's street races with his mother in the car, the bet at the pool bar and the sisters' six (§10.38).
 
 export const HOMES_ISLAND = {
   ole: ['flamenco', 2.0, 1.0, 0],     // yaw 0: under the pergola, facing the pool (flamenco faces π)
@@ -1499,6 +1500,92 @@ export const ESLOV = {
       line: 'Det är träningen som gör det!' },                                     // [N]
     abort: 'Eslövloppet avbrutet – det springs till fots.',                        // [N]
   },
+};
+
+// Gatlopp mot pizza-racern – mamma åker med (free roam, DESIGN §10.38; game/streetRace.js). On the
+// island with `missions.state === 'idle'`, once `after` (Gamla kläder) is done, José free at his place
+// (`who`) has a "!" (`bang`, and the minimap's friend dot) while a race is left, and E within `r` m
+// of him (`prompt`; further off, up to the gang's 3 m, his talk, §10.28) is his challenge to the
+// first race not yet won: his `offer` and Stig's `yes` as bubbles,
+// Stig held, a black fade (`fadeAt`, `fadeSecs`) and the grid: Stig in the hire car (`playerCar`,
+// wherever it stood), José in his blue hatch (`car`) with his mother beside him (`rider`), the
+// `banner.start` across the z −40 road at x `lineX`. The race is the mission kind `race`
+// (kinds/core.js) with the course's `start`, `checkpoints`, `finish`, `radio` and José's own `cruise`
+// and `spec` (its oppSpec; measured with calibrate's autopilot in the hire car, scenario `gatloppkal`:
+// a clean run wins by a few seconds and one crash loses, §10.38). A course's `line` is its finish
+// banner (`banner.finish`), where it is not the start's. Win: `prize` pta, the `win` banner, toast and
+// lines; the course is won (saved, `records.gatlopp.won`) and the next is offered (`next`), after the
+// last `all`. Lose: `lose`. José's car wrecked (the kind's 'done' too) counts for nothing (`wreck`;
+// the bet handed back, `bet.back`). Then José drives `home` to the kerb at `stop` on the z −40 road (west-
+// bound, `via` then `to`) and walks back to his place with his mother beside him (`mamma`); she goes
+// home to Fataga once Stig is away. `bet`: the `board` beside Berra and Robban at the pool bar (after
+// the bodega's unlock, their home there, at the bodega) while a race is left; E within `r` m of it
+// (`prompt`; at Berra himself his talk) with Berra free within `withR` m of it and Robban within
+// `withR` m of him, and no bet placed: `stake` pta on Stig, Berra's and Robban's lines and the toast;
+// Robban pays `odds` × the stake if Stig wins, Berra keeps it if he loses. `sisters`: all three
+// won, the first time Stig on foot comes within `r` m of Siv and Majsan standing together (`pairR`),
+// their exchange (saved, `records.gatlopp.sex`). Invented (§1.6): the races, the bet and José as a
+// street racer; "pizza-racern" is only the sisters' word (the title), and their points are the
+// plane's (research-plot.md:197), relocated, the split ours (as in landning).
+export const GATLOPP = {
+  who: 'jose', rider: 'mamma', after: 'ropavieja', playerCar: 'hyrbil',
+  car: { type: 'hatch', color: 0x2a4fa8, name: 'joseBil' },
+  r: 1.7, bang: 0x3ad8a0, linesR: 40,
+  prompt: '<b>E</b> Gatlopp {i}/{n} – {name}',                                     // [N]
+  offer: { yesAt: 1.5, fadeAt: 2.9, fadeSecs: 0.6,
+    yes: 'Jag kör bara hyrbil… men okej.' },                                       // [N]
+  banner: { start: 'SALIDA · START', finish: 'LLEGADA · MÅL', h: 8.4 },           // [N] · [N]
+  lineX: 89,
+  title: 'Gatlopp {i}/{n}',                                                        // [N]
+  text: '{name} – kom före José! {prize} pta',                                     // [N]
+  races: [
+    // Every course starts westbound on the z −40 road, the grid 130 m short of the first corner.
+    // Round the town's centre, Hotel Flamenco and the gas station (four left turns, 491 m), start
+    // and finish at the line.
+    { id: 'centrum', name: 'Ett varv runt centrum', prize: 300,                    // [N]
+      offer: 'Ett varv runt centrum, Stig? Mamma åker med.',                       // [N]
+      start: { lane: [[5, 3], [4, 3]], t: 28 }, checkpoints: [[3, 3], [3, 4], [5, 4], [5, 3]], finish: { x: 81, z: -40 },
+      cruise: 34, spec: { maxSpeed: 37, accel: 10, steer: 0.75 },
+      radio: [['mamma', '¡Josito! ¡Josito!', { gap: 3 }]] },                       // [F*] her chatter, relocated
+    // Right up x −40, right along the z −200 road to the terminal's front (570 m).
+    { id: 'flygplats', name: 'Till flygplatsen', prize: 400,                        // [N]
+      offer: 'Till flygplatsen, amigo. Mamma åker med.',                            // [N]
+      start: { lane: [[5, 3], [4, 3]], t: 28 }, checkpoints: [[3, 3], [3, 1], [6, 1]], finish: { x: 238, z: -197.25 },
+      line: { at: [232, -200], along: 'x' },
+      cruise: 33, spec: { maxSpeed: 37, accel: 8, steer: 0.75 },
+      radio: [['jose', 'Mamma, håll i dig!', { gap: 3 }], ['mamma', '¡Despacio, Josito!', { gap: 5 }]] },   // [N] · [N]
+    // Right up x −40 to the north ring road (the real road past the farm and the fields), left along
+    // it, left down x −200 towards the ESLÖV 3 900 KM sign (650 m).
+    { id: 'eslov', name: 'Till Eslöv-skylten', prize: 500,                          // [N]
+      offer: 'Ut på vischan, till den svenska skylten. ¡Vamos! Mamma åker med.',    // [N]
+      start: { lane: [[5, 3], [4, 3]], t: 28 }, checkpoints: [[3, 3], [3, 0], [1, 0], [1, 1]], finish: { x: -202.75, z: -162 },
+      line: { at: [-200, -168], along: 'z' },
+      cruise: 35, spec: { maxSpeed: 38, accel: 8, steer: 0.75 },
+      radio: [['mamma', '¡Josito! ¡Josito!', { gap: 4 }], ['jose', 'Jag ser vägen, mamma!', { gap: 6 }], ['mamma', 'Inga svenskor!', { gap: 6 }]] },   // [F*] · [N] · [F*] her chatter, relocated
+  ],
+  win: { banner: 'DU VANN!', sub: 'Gatlopp {i}/{n} på {t}',                       // [N] · [N]
+    toast: 'José gav dig {n} pta.',                                                // [N]
+    lines: [[1.2, 'jose', 'Mamma säger att du kör som en spanjor.'], [3.0, 'stig', 'Tack… tror jag.']] },   // [N] · [N]
+  lose: { banner: 'JOSÉ VANN', sub: 'Gatlopp {i}/{n} – försök igen',              // [N] · [N]
+    lines: [[1.0, 'jose', 'Mamma säger att du kör som en turist.']] },             // [N]
+  wreck: 'Josés bil är kvaddad – loppet räknas inte.',                             // [N]
+  next: 'Nästa gatlopp: {name}. José väntar vid Centro Nórdico.',                  // [N]
+  all: 'Alla tre gatloppen vunna! Siv och Majsan vid poolen har hört om det.',     // [N]
+  home: { via: [5, 3], to: [4, 3], stop: [82, -42.75], slowFrom: 28, cruise: 12, giveUp: 90, farR: 150, walk: 1.5, walkSecs: 20, mamma: [1.3, 0.4] },
+  bet: { stake: 100, odds: 5, r: 1.4, withR: 5, robbanAt: 1.6,
+    prompt: '<b>E</b> Slå vad med Berra',                                          // [N]
+    berra: 'Hundra pesetas på spanjoren!',                                        // [N]
+    robban: 'Jag tar Stig-Helmer. Fem gånger pengarna!',                          // [N]
+    toast: 'Vadet är slaget: {n} pta på dig själv. Vinner du betalar Robban {m} pta.',   // [N]
+    poor: 'Inga pesetas, inget vad.',                                             // [N]
+    card: '{name} – {prize} pta · vad {n} pta',                                   // [N]
+    paid: 'Robban betalar ut vadet: {n} pta!',                                    // [N]
+    lost: 'Berra vann vadet – dina {n} pta.',                                     // [N]
+    back: 'Berra ger tillbaka vadet: {n} pta.' },                                 // [N]
+  board: { text: 'APUESTAS · VAD\nJOSÉ  1 : 2\nSTIG-HELMER  1 : 5',              // [N]
+    flamencoBar: ['flamencoBar', -1.7, 1.0], bodega: ['bodega', -3.2, 0, Math.PI] },   // [lm, dx, dz, world yaw?]: the bodega's faces the street
+  sisters: { r: 7, pairR: 6,
+    lines: [[0, 'siv', 'Giraffen, då?'], [1.7, 'majsan', 'Sex, tycker jag.'], [3.4, 'stig', '…Sex?']] },   // [F*](t) · [F*](t) the plane's points, relocated · [N] his "…Fyra?" there
 };
 
 // Små grodorna i poolen – the pool fest after the end (free roam, DESIGN §10.13; game/poolFest.js).

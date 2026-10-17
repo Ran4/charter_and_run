@@ -406,6 +406,16 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   Stig mumlar "Förlåt…" och portiern lägger klockan under disken. När Stig har varit borta en stund
   står den där igen, med en handskriven lapp bredvid: PLINGA EN GÅNG · TOQUE UNA VEZ. Under
   uppdragen är kön borta och klockan bara en klocka.
+- **Gatlopp mot pizza-racern**: efter Gamla kläder har José ett turkost utropstecken vid Centro
+  Nórdico mellan uppdragen. Gå fram till honom och tryck **E** (Gatlopp 1/3), så utmanar han: "Ett
+  varv runt centrum, Stig? Mamma åker med." Det blir svart, och sedan står Stig i hyrbilen vid
+  banderollen SALIDA · START bredvid José i hans blå halvkombi, med mamma i framsätet. Tre, två, ett,
+  KÖR! Det finns tre lopp, och nästa öppnas när man vunnit det förra: ett varv runt centrum (runt
+  Hotel Flamenco och bensinstationen), till flygplatsen och ut på vischan längs vägen norr om stan mot
+  Eslöv-skylten. José är snabb, så ett rent lopp vinns med ett par sekunder och en krock förlorar det.
+  Vinst ger 300, 400 och 500 pta. Före loppet kan du slå vad vid griffeltavlan bredvid Berra och
+  Robban vid poolbaren (efter julafton vid Pepes Bodega): Berra satsar på spanjoren, och Robban betalar
+  fem gånger pengarna om Stig vinner. Vinner du alla tre har Siv och Majsan något att säga vid poolen.
 
 ## Vad är påhittat?
 
@@ -525,6 +535,9 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
 - kön av avresande gäster vid Flamencos reception, ringklockan som först svarar på tionde plinget,
   portierns samtal till Lasse och lappen PLINGA EN GÅNG (i filmen frågar gästerna Lasse på hotellet
   medan planet flyger söderut, och portierns "Momento." hör till scenen med havsutsikten)
+- Josés tre gatlopp mot Stig med mamma i bilen, vadslagningen hos Berra och Robban och systrarnas
+  sexa till Giraffen när alla tre är vunna (i filmen kör José aldrig ikapp med någon: systrarna kallar
+  honom "pizza-racern" och sätter poäng på männen på planet)
 - fårrusningen i Fataga, kappkörningen mot nattbussen och porslinskrosset på tid
 - att samla ihop julfestgästerna
 - Oles prylar och hajfenorna som samlarföremål, utspridda över ön
@@ -640,6 +653,7 @@ src/game/beachDream.js          Strandkyssen i bränningen in free roam: the tow
 src/game/guardiaJeep.js         Låna Guardia-jeepen in free roam: the loan and its SKANDAL, the bust's question and tow, the siren on H, the traffic giving way
 src/game/lighthouse.js          Uppför fyren in free roam: the stairs up the lighthouse, the gallery's cameras and vertigo, the exercise, the night
 src/game/receptionBell.js       Ringklockan i receptionen in free roam: the queue at Flamenco's desk, the bell's plings, the tenth's call, the card
+src/game/streetRace.js          Gatlopp mot pizza-racern in free roam: José's three street races (the race kind outside the runner), the bet, the sisters' six
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
@@ -648,8 +662,8 @@ tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, 
                                 artig, grisar, bagage, lapplisa, torsdag, frukt, hopptorn, hund,
                                 badgaster, butik, brodrost, rum107, solkram, skjortbyte,
                                 stunthopp, prata, takhopp, mikrofon, faglar, gags, strandkyssen,
-                                guardiajeep, fyren, klader, ringklocka, kyrkfrid, calibrate,
-                                calibflight)
+                                guardiajeep, fyren, klader, ringklocka, kyrkfrid, gatlopp,
+                                calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
 tools/pool.mjs                  re-derives every random stage's timer from the ledger
@@ -712,6 +726,7 @@ node tools/shot.mjs fyren                # up the lighthouse: the gallery's soli
 node tools/shot.mjs klader kladshots     # room 107's wardrobe and boombox: the outfits in turn, the shot, the save, a mission start, Skjortbytet, the samba on and off; shots
 node tools/shot.mjs ringklocka ringshots # the reception's queue and bell: the queue unseen, its suitcases, the prompt, the toaster beside it, plings, the tenth's call, the card, a mission start; shots
 node tools/shot.mjs kyrkfrid kyrkshots   # the church door in a pursuit: in, the wait, the sign read out, the give-up, the peek and the line, busted at the door, the cooldown, a mission start; shots
+node tools/shot.mjs gatlopp gatloppkal   # José's street races: the "!", the bet, the grid, a loss, wins, a wreck, the walk home, a mission start, the sisters; the courses' balance (autopilot, crash)
 node tools/shot.mjs fullstory kinds      # the literal §8 missions and the stage-kind checks
 node tools/shot.mjs calibrate calibflight  # timer and FLYGRÄDSLA calibration (slow; see DESIGN §8, §16.4)
 node tools/pool.mjs                      # random-stage timers from the raw runs in notes/calibration-samples.md
