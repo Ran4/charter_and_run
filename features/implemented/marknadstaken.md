@@ -1,18 +1,53 @@
 # 92. Pesetas på marknadstaken
 
+**Implementerat.** (2026-10-17, DESIGN §10.46.) En ny låg studsmarkis med skylten ¡SALTA! (3 × 2,8 m,
+topp 1,45) står i grusgången mellan rad A och A2 vid västra radänden, och ett spår av 26 mynt leder
+därifrån: tre över markisen, längs rad A:s markiser var tredje meter, i en båge över mittgången, över
+gången till A2:s fruktstånd, längs A2:s östra del, över glappet till det ensamma fruktståndet och i en
+båge upp till åsneståndets tak (2,9). Efter asnan (index 8) läggs fyra mynt till på åsneståndets tak,
+framför SOUVENIRS · RECUERDOS-skylten, en gång per session och bara när Stig är minst 25 m bort. Står
+Stig på taket ropar försäljaren ”¡No, no, no!” (en gång per besök, högst var 8:e s). När Stig tar det
+sista takmyntet efter asnan svär försäljaren ”Jävla smålänningar!” och Stig svarar ”Förlåt, förlåt…”.
+Allt reagerande sker bara med `missions.state === 'idle'`.
+- **Var:** `src/game/marketRoofs.js` (`MarketRoofs`, `game.awnings`), konfigurationen `MARKNADSTAK` i
+  `src/content/island.js`, markisen, spåret och taket i `src/world/blocks/centre.js` (`MARKET`; `stall`
+  returnerar sitt block), myntens `tag` och `minY` i `src/actors/pickups.js` (`placeCoin`), och
+  krokarna i `src/main.js` (konstruktorn, `update` och `collectCoin`). Scenarier i
+  `tools/scenarios/marknadstak.mjs`.
+- **Avvikelser från idén:** mynten ligger 0,75 m över markiserna (3,3) som alla andra mynt över ett
+  golv, inte 2 m. I stället får varje mynt i spåret en `minY` på 2,5: magneten drar och tar dem bara när
+  Stig (eller bilen) är minst 2,5 m upp. Höjden ensam räckte inte, för ett hopp från marken kom inom
+  magnetens 3,5 m. Spåret går längs rad A och A2:s östra del (skissen hade bara A2). Takets mynt kommer
+  först efter asnan, så före asnan finns bara ”¡No, no, no!” där uppe och svordomen har alltid sina
+  mynt. Ankomsten till taket avgörs av golvet under fötterna, inte `onLand` (ett dubbelhopp från marken
+  landar för mjukt för `onLand`). ”Hallå där!” är kvar som hans vanliga prat. Ingen låda eller andra
+  studsmarkis behövdes: ett dubbelhopp från det ensamma fruktståndet når taket. Glappen på 1 m mellan
+  stånden i en rad måste man springa eller hoppa över, för i gångfart faller man ner (det gällde redan
+  markiserna förut).
+- **Verifierat** headless på port 8861: `marknadstak` (efter asnan) kontrollerar markisen, taket och
+  mynten, att hopp från marken och en bil under spåret inte tar något mynt, och springer sedan hela
+  rutten som en spelare (W, Shift och Space genom spelets input): studs, rad A, dubbelhopp över
+  mittgången, gången, fruktståndet och dubbelhopp upp på taket. Alla 30 mynt tas (+750 pta), svordomen
+  kommer och sedan Stigs ursäkt. Testet kontrollerar också ”¡No, no, no!” vid återbesök med 8 s-spärren
+  och att inget sägs under ett uppdrag. `marknadstakFore` (före asnan) visar att taket saknar mynt, att
+  försäljaren säger ”¡No, no, no!” utan svordom, och att takmynten väntar tills Stig är 25 m bort.
+  `story`, `fullstory`, `frukt`, `fruktFore`, `brodrost`, `api`, `missions`, `takhopp`, `artig` och
+  `perf` (marknaden 60 fps) ger alla PASS. Ingen timer och ingen kalibreringspool påverkas
+  (notes/calibration-samples.md, ”Feature 92”).
+
 **Betyg:** 4,7/10 · wow 3 · film 2,3 · Stig-Helmer 2,3 — *Ett nästan gratis myntspår över markiserna med en bra svordom, men ingen filmreferens, och studsmarkisen är ny kollision som kräver story-körning.*
 
 *Stig-Helmer studsar upp på marknadens markiser, springer längs ett spår av pesetas från stånd till stånd och plockar till sist de sista mynten från souvenirförsäljarens eget tak. Då svär försäljaren.*
 
 **Kategori:** Lek och fysik · **Var:** Marknaden (kvarter 2,1): raderna A och A2 (z −185 och −177, x −105…−55) och åsneståndet vid (−74, −162) · **Insats:** S – kollisionen finns redan; det nya är mynt, en kopia av ¡SALTA!-markisen och två utlösta repliker
 
-![Stig står på FRUTAS-ståndets markis](free_roam_bilder/marknadstaken-1.jpg)
+![Stig står på FRUTAS-ståndets markis](../free_roam_bilder/marknadstaken-1.jpg)
 *Bild 1 (nuläge): Stig står på FRUTAS-ståndets markis i rad A. Ståndens tak är redan golv i kollisionen (2,55 m), så det här går att göra i dag. Men det finns inga mynt där uppe, ingen synlig väg upp och ingen som reagerar.*
 
-![Stig studsar upp från en ny studsmarkis mellan raderna](free_roam_bilder/marknadstaken-2.jpg)
+![Stig studsar upp från en ny studsmarkis mellan raderna](../free_roam_bilder/marknadstaken-2.jpg)
 *Bild 2 (SKISS – tillfälligt uppställd i en headless-körning, finns inte i spelet): en ny låg studsmarkis (röd och vit) i grusgången mellan rad A och A2, vid västra radänden. Stig studsar rakt upp med armarna i luften. Till höger går myntspåret längs rad A2:s markiser och bågar över mittgången längre bort. ¡SALTA!-skylten sitter på markisens södra sida och syns inte från den här vinkeln.*
 
-![Stig på åsneståndets tak, försäljaren svär nedanför](free_roam_bilder/marknadstaken-3.jpg)
+![Stig på åsneståndets tak, försäljaren svär nedanför](../free_roam_bilder/marknadstaken-3.jpg)
 *Bild 3 (SKISS – tillfälligt uppställd i en headless-körning, finns inte i spelet): Stig står på åsneståndets tak (2,9 m), och det sista myntet glänser framför SOUVENIRS · RECUERDOS-skylten. Försäljaren står på sin vanliga plats framför ståndet (spelets riktiga modell, med solhatt och mustasch). Han säger ”Jävla smålänningar!”, och Stig svarar ”Förlåt, förlåt…”.*
 
 **Idén.** Markiserna går att stå på, men i dag leder bara kalkylatorrutten upp dit. Vi lägger ett myntspår längs raderna A och A2, med en båge över den 8 m breda mittgången. En ny låg studsmarkis med skylten ¡SALTA! i grusgången mellan raderna visar var man kommer upp. Spåret slutar på åsneståndets tak, som ligger lite högre (2,9 m), och där ligger de sista mynten. Landar Stig på försäljarens tak innan uppdrag 8 är klarat ropar mannen ”¡No, no, no!”. Efter uppdrag 8 svär han ”Jävla smålänningar!” när Stig tar den sista peseten där uppe, och Stig ber förläget om ursäkt. Spelaren får pengarna, en ny väg tvärs över marknaden och svordomen som slutpoäng.

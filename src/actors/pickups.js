@@ -31,7 +31,7 @@ export function initCoins(scene) {
   coinOutline.frustumCulled = false;
   for (let i = 0; i < MAXC; i++) {
     coinMesh.setMatrixAt(i, _zero);
-    coins.push({ active: false, x: 0, y: 0, z: 0, vx: 0, vy: 0, vz: 0, life: 0, fixed: false, settle: 0, value: 1 });
+    coins.push({ active: false, x: 0, y: 0, z: 0, vx: 0, vy: 0, vz: 0, life: 0, fixed: false, settle: 0, value: 1, tag: null, minY: -Infinity });
   }
   scene.add(coinMesh, coinOutline);
 }
@@ -44,10 +44,14 @@ function freeCoin() {
   return best;
 }
 
-export function placeCoin(x, y, z) {
+// `tag`: a placed coin's owner, handed back to game.collectCoin (the donkey stand's roof, §10.46);
+// `minY`: the magnet pulls and takes it only from a collector standing that high or higher (the market's
+// awnings, §10.46: never from the ground or a car under them).
+export function placeCoin(x, y, z, tag = null, minY = -Infinity) {
   const c = freeCoin();
-  if (!c) return;
-  Object.assign(c, { active: true, fixed: true, x, y, z, vx: 0, vy: 0, vz: 0, life: Infinity, settle: 1, value: COIN_VALUE });
+  if (!c) return null;
+  Object.assign(c, { active: true, fixed: true, x, y, z, vx: 0, vy: 0, vz: 0, life: Infinity, settle: 1, value: COIN_VALUE, tag, minY });
+  return c;
 }
 
 export function burstCoins(x, y, z, n, vx = 0, vz = 0) {
@@ -55,7 +59,7 @@ export function burstCoins(x, y, z, n, vx = 0, vz = 0) {
     const c = freeCoin();
     if (!c) return;
     const a = Math.random() * Math.PI * 2, s = 1.5 + Math.random() * 3;
-    Object.assign(c, { active: true, fixed: false, x, y: y + 0.5, z, vx: vx * 0.3 + Math.cos(a) * s, vz: vz * 0.3 + Math.sin(a) * s, vy: 5 + Math.random() * 4, life: 25, settle: 0, value: COIN_VALUE });
+    Object.assign(c, { active: true, fixed: false, x, y: y + 0.5, z, vx: vx * 0.3 + Math.cos(a) * s, vz: vz * 0.3 + Math.sin(a) * s, vy: 5 + Math.random() * 4, life: 25, settle: 0, value: COIN_VALUE, tag: null, minY: -Infinity });
   }
 }
 
@@ -86,7 +90,7 @@ export function tickCoins(dt, t, collector, game) {
     // Magnet and collect.
     const dx = cx - c.x, dz = cz - c.z, dy = cy + 0.8 - c.y;
     const d2 = dx * dx + dz * dz;
-    if (d2 < (cr + 3) * (cr + 3) && Math.abs(dy) < 3.5 && (c.fixed || c.settle || c.life < 24.4)) {
+    if (d2 < (cr + 3) * (cr + 3) && Math.abs(dy) < 3.5 && (c.fixed || c.settle || c.life < 24.4) && cy >= c.minY) {
       const d = Math.sqrt(d2) || 0.01;
       if (d < cr + 0.6 && Math.abs(dy) < 2.2) {
         c.active = false;

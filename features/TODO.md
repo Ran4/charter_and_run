@@ -1,7 +1,6 @@
 # Gör dessa grejer (flytta filen till features/implemented/ och uppdatera den när du är klar, och
 # flytta den överst till "färdiga features"-sektionen nedan)
 # markörer: ⟨par N⟩ = de två raderna med samma N körs samtidigt (var sin worktree/gren, sedan rebase på main och push), ⟨solo⟩ = körs ensam; ta grupperna uppifrån och ned
-- features/marknadstaken.md – 92. Pesetas på marknadstaken [S] ⟨par 12⟩
 - features/vi_liftar.md – 106. Vi liftar – tummen upp på vischan [L] ⟨solo⟩
 - features/livraddarens_kikare.md – 108. Livräddarens kikare [M] ⟨solo⟩
 - features/lopande_bandet.md – 109. Stig på löpande band – sortera tomater i packhuset [M] ⟨par 13⟩
@@ -28,6 +27,7 @@
 - features/butaneron.md – 143. Butaneron och gasolbilen [M] ⟨solo⟩
 
 # Färdiga features (lägg till [färdig: yyyy-mm-dd hh:mm] i slutet)
+- features/implemented/marknadstaken.md – 92. Pesetas på marknadstaken [S] [färdig: 2026-10-17 21:31]
 - features/implemented/meta_fran_piren.md – 107. Meta från piren [M] [färdig: 2026-10-17 21:16]
 - features/implemented/poolbaren_svenskt_kaffe.md – 84. Poolbaren öppnar – svenskt kaffe ger fart [S] [färdig: 2026-10-17 20:36]
 - features/implemented/hytt_tva_ring_efter_bil.md – 80. Hytt två! – ring efter en bil [M] [färdig: 2026-10-17 20:18]

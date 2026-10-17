@@ -195,6 +195,16 @@ sprint (× 1.2) exists only with `missions.state === 'idle'`, is never on in a m
 Eslövloppet, and ends at a mission start. Its one measurement, the cup carried to Fru Storch, is
 below ("Kaffet till fru Storch"); it is not a pool and changes no timer.
 
+**Feature 92 (Pesetas på marknadstaken, 2026-10-17) touches no pool.** It put a second bounce shade
+(3 × 2.8 m, top 1.45) in the market's gravel lane between rad A and rad A2 (block (2,1), local (−24.5,
+−21), a 1.1 m way past it on either side) and 30 fixed coins over the awnings, taken only from 2.5 m up
+(`minY`, DESIGN §10.46). No pooled stage plays in the market's interior (asnan's walk to the souvenir
+stand is on the middle aisle and its timed stage is the paint drive from the supermercado; julafton's
+guests stop Majsan at the south entrance; the Guardia jeep flees by the streets), no route, spawn or
+autopilot passes the lane, and the shade's geometry draws no random number, so the rest of the world
+builds as before. The coins change no stage. `story` and `fullstory` passed on the feature's tree. Every
+pool below stands and no timer changed.
+
 ## `friskotekBalls` · §8.7 s1 · six fleeing beach balls · on foot: timer = ceil(1.25 × (p75 + 6 × 0.5))
 
 Phase 3 r2 island-staging placed everyone for the intro's group shot (Stig, Lasse, the sisters, the

@@ -61,6 +61,7 @@ import { Lighthouse } from './game/lighthouse.js';
 import { ReceptionBell } from './game/receptionBell.js';
 import { StreetRace } from './game/streetRace.js';
 import { PhoneBooth } from './game/phoneBooth.js';
+import { MarketRoofs } from './game/marketRoofs.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
 import { LEVELS, ISLAND_PALETTES } from './level.js';
@@ -237,6 +238,7 @@ class Game {
     this.hytt = new PhoneBooth(this);     // free roam: booth 2 at Centro Nórdico, ring for a car to the car park (§10.43)
     this.bar = new PoolBar(this);         // free roam after friskoteket: the pool bar's Swedish coffee, its sprint, the cup for Fru Storch (§10.44)
     this.fiske = new Fishing(this);       // free roam: the rod at the pier's end, the float, the catches and the FÅNGST card (§10.45)
+    this.awnings = new MarketRoofs(this); // the coin trail over the market's awnings; free roam: the souvenir seller's no and swear at Stig on his roof (§10.46)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -1127,6 +1129,7 @@ class Game {
     hud.setCoins(this.coins);
     hud.bumpCoins();
     audio.coin();
+    if (c.tag) this.awnings.onCoin(c);   // the donkey stand's roof (§10.46)
   }
   addCoins(n) { this.coins = Math.max(0, this.coins + n); hud.setCoins(this.coins); hud.bumpCoins(); }
   // No soft locks: if the purse is short, Ole pays (nothing is deducted).
@@ -1592,6 +1595,7 @@ class Game {
     this.hytt.update(dt);
     this.bar.update(dt);
     this.fiske.update(dt);
+    this.awnings.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);

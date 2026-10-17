@@ -284,6 +284,13 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   ett plask och en tom krok, och **Q** lägger ner spöt medan du väntar. En FÅNGST-lapp uppe till vänster
   håller räkningen när du är på piren, och det man jagar är att få alla fyra. Fångsten sparas. Metandet
   finns bara mellan uppdragen.
+- **Pesetas på marknadstaken**: i gången mellan marknadens två norra ståndrader står en ny låg
+  studsmarkis med skylten ¡SALTA!. Hoppa upp på den så kastas Stig upp på markiserna, och ett spår av
+  pesetas leder längs raden, över mittgången (dubbelhopp i sprint), över gången till nästa rad, till det
+  ensamma fruktståndet och vidare upp på souvenirförsäljarens eget tak. Mynten går bara att ta där uppe,
+  inte nerifrån marken. Försäljaren gillar inte folk på sitt tak: "¡No, no, no!". Efter uppdraget med
+  åsnan ligger de sista mynten på hans tak, och när Stig skrapar ihop den sista peseten svär han
+  "Jävla smålänningar!" – "Förlåt, förlåt…"
 - **Små grodorna i poolen** (efter slutet): julfesten är inte riktigt över. Varje gång du kommer in
   på Flamencos pooldäck (mellan nio på morgonen och elva på kvällen) vadar SunTrip-gänget ut i den
   grunda änden och ställer sig i ring runt Lasse i tomteluva. Affe spelar Små grodorna på dragspelet,
@@ -538,6 +545,9 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
 - metandet från piren, metspöet vid lyktan, fångsterna och FÅNGST-lappen (filmen har inget metande:
   "En julklapp. Den är inte till mig." säger Stig-Helmer i tullen på Arlanda, och "Det är ungefär så här
   stort." sägs när de letar knäckebröd i affärerna, utan att det framgår vem som säger det)
+- studsmarkisen och myntspåret över marknadens markiser, och souvenirförsäljarens "¡No, no, no!" och
+  svordom åt Stig på hans tak (i filmen svär han "Jävla smålänningar!" när Ole prutar ner åsnan, och
+  ingen klättrar upp på något stånd)
 - poolfesten efter slutet: ringen runt Lasse, portierns promenad, att Stig hoppar med och
   takträknaren (i filmen dansar de andra Små grodorna i poolen på julfesten medan Stig-Helmer och Ole
   öppnar knäckebrödet, och Stig-Helmer dansar aldrig)
@@ -742,6 +752,7 @@ src/game/residents.js           Balkongerna lever in free roam: the residents on
 src/game/phoneBooth.js          Hytt två! in free roam: booth 2 at Centro Nórdico, the menu of named cars, the call, the car moved whole to the car park
 src/game/poolBar.js             Poolbaren öppnar in free roam after friskoteket: the bartender, the coffee and its 30 s sprint, Berra's "Ska du ha?", the cup for Fru Storch
 src/game/fishing.js             Meta från piren in free roam: the rod at the pier's end, the cast, the float's dive, the catches, the FÅNGST card
+src/game/marketRoofs.js         Pesetas på marknadstaken: the coin trail over the market's awnings (minY), the roof's coins after asnan, the seller's "¡No, no, no!" and swear
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
@@ -751,7 +762,8 @@ tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, 
                                 badgaster, butik, brodrost, rum107, solkram, skjortbyte,
                                 stunthopp, prata, takhopp, mikrofon, faglar, gags, strandkyssen,
                                 guardiajeep, fyren, klader, ringklocka, kyrkfrid, gatlopp, skidor,
-                                golfbil, battur, balkong, hytt, kaffe, meta, calibrate, calibflight)
+                                golfbil, battur, balkong, hytt, kaffe, meta, marknadstak, calibrate,
+                                calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
 tools/pool.mjs                  re-derives every random stage's timer from the ledger
@@ -795,6 +807,7 @@ node tools/shot.mjs balkong balkongshots # the balconies' residents: the calls, 
 node tools/shot.mjs hytt                 # the phone at Centro Nórdico: the menu, Q, a call, the car out of view, the fare, a wreck, a full car park, the locks
 node tools/shot.mjs kaffe kaffestorch    # the pool bar after friskoteket: the coffee, its sprint, Berra's glass, the cup for Fru Storch, measured
 node tools/shot.mjs meta                 # fishing at the pier's end: the cast, the dive, E in time, the four catches, the FÅNGST card, early, late, Q
+node tools/shot.mjs marknadstak marknadstakFore   # the market's awnings: the shade, the coin trail run as a player, the seller's no and swear
 node tools/shot.mjs grodorna grodtakt    # the pool fest after the end: the ring, the porter, Stig in the ring, eight on the beat
 node tools/shot.mjs artig                # Stig says sorry: kicks, run over, a pump, bins, carjackings and the driver's "Nej."
 node tools/shot.mjs grisar               # the grisbil's pigs: the falls, the catch on foot and by creeping, Lasse, the pen

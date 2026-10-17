@@ -29,6 +29,12 @@ const WHITE = 0xf4efe6, WHITE2 = 0xfbf7ef, CREAM = 0xf2e6d0, TERRA = 0xc0623a, T
 const BULBS = [0xff5a4a, 0xffd23f, 0x6ad86a, 0x5ab4ff, 0xff8ad8];
 const TOWELS = [0xd8321e, 0x2f8ad8, 0xf7c31b, 0x2fa07a, 0xf07a1e, 0xffffff, 0xc2307a];
 
+// Pesetas på marknadstaken (game/marketRoofs.js, §10.46), filled by the marknad builder: the souvenir
+// stand's solid (`roof`: its awning, the floor at 2.9), the second bounce shade in the lane between rows
+// A and A2 (`pad`), the coin trail over the awnings (`coins`, [[x, y, z]] world, placed for good) and
+// the four coins on the donkey stand's own roof (`roofCoins`, placed only after asnan).
+export const MARKET = { roof: null, pad: null, coins: [], roofCoins: [] };
+
 // ---------------------------------------------------------------------------------------------
 // Per-block state: the unlit "glow" builder and the block's seeded RNG (deterministic layout).
 
@@ -414,7 +420,7 @@ function stall(f, x, z, w, d, face1, o) {
     fr.sign(o.sign, 0, top + 0.42, hd - 0.2, Math.min(w - 0.4, 3.6), 0.62, 0, { ...sopt, double: true });
     for (const s of [-1, 1]) fr.box(WOOD, s * 1.2, top, hd - 0.2, 0.08, 0.15, 0.08);
   }
-  f.solid(x, z, w, d, top, 'stall');
+  return f.solid(x, z, w, d, top, 'stall');
 }
 
 // What lies on a stall's counter (y = CURB + 0.93, z ≈ hd - 0.45) and hangs from its front. `gap`:
@@ -1061,7 +1067,9 @@ function xmasTree(f, x, z, h = 6) {
 // ---------------------------------------------------------------------------------------------
 // (2,1) The market (marknad): rows of striped stalls, the souvenir stand with painted donkeys
 //   (asnestand), plastic giraffes, bunting. pryl_kalkylator sits on the electronics stall K at
-//   (-12, -8) (awning top 2.55): crate steps on its east side, or the bounce awning to its west.
+//   (-12, -8) (awning top 2.55): crate steps on its east side, or the bounce awning to its west. A
+//   second bounce awning in the lane between rows A and A2 starts a coin trail over the awnings to the
+//   donkey stand's roof (Pesetas på marknadstaken, MARKET, §10.46).
 
 function marknad(f) {
   rflat(f, 0xdcc394, -31, -31, 31, 31, CURB + 0.01);
@@ -1107,9 +1115,42 @@ function marknad(f) {
     f.sign('¡SALTA!', x, top + 0.35, z + 2.0, 1.4, 0.45, 0, { bg: '#f7c31b', fg: '#d8321e', border: '#1d1426', scale: 0.7, double: true }); // [N]
     for (const s of [-1, 1]) f.box(WOOD, x + s * 0.6, top, z + 2.0, 0.06, 0.12, 0.06);
   }
+  // Pesetas på marknadstaken (§10.46): a smaller copy of that shade in the gravel lane between rows A
+  // and A2, at its west end (a 1.1 m way past it on either side), its ¡SALTA! board on the east edge,
+  // turned down the lane to the middle aisle. No random draw: the rest of the world builds as before.
+  {
+    const x = -24.5, z = -21, w = 3, d = 2.8, top = 1.45;
+    for (const s of [-1, 1]) for (const t of [-1, 1]) f.box(WOOD, x + s * (w / 2 - 0.1), CURB, z + t * (d / 2 - 0.1), 0.12, top - CURB, 0.12);
+    for (let k = 0; k < 6; k++) f.box(k % 2 ? WHITE2 : RED, x - w / 2 + (k + 0.5) * (w / 6), top - 0.1, z, w / 6, 0.1, d);
+    rbox(f, 0x2f5a9a, x - w / 2 - 0.05, z - d / 2 - 0.05, x + w / 2 + 0.05, z + d / 2 + 0.05, top - 0.22, 0.12);
+    for (let k = 0; k < 4; k++) {
+      const px = x + (k % 2 ? 0.7 : -0.7), pz = z + (k < 2 ? -0.6 : 0.6), c = [TERRA, 0xd07a4a, 0xe8d8b0, TERRA][k];
+      if (k === 1 || k === 2) sph(f, c, px, CURB + 0.32, pz, 0.62, 0.6, 0.62); else f.cyl(c, px, CURB + 0.35, pz, 0.25, 0.7, 10);
+    }
+    MARKET.pad = f.solid(x, z, w, d, top, 'bounce');
+    f.sign('¡SALTA!', x + w / 2, top + 0.35, z, 1.4, 0.45, HP, { bg: '#f7c31b', fg: '#d8321e', border: '#1d1426', scale: 0.7, double: true }); // [N]
+    for (const s of [-1, 1]) f.box(WOOD, x + w / 2, top, z + s * 0.6, 0.06, 0.12, 0.06);
+  }
+  // Its coin trail, 0.75 m over the awnings like every coin over a floor (3.3; over the pad, a gap or an
+  // aisle higher, in an arc), taken only from up there (game/marketRoofs.js places them with a `minY`).
+  // Three over the pad, row A's awnings west to east every 3 m with an arc over the middle aisle, over
+  // the lane to A2 at its fruit stall, east to the spice stall, over the gap to the lone fruit stall and
+  // an arc to the donkey stand's roof; its own four (3.65), before the SOUVENIRS board, after asnan.
+  const coin = (to, lx, y, lz) => to.push([f.wx(lx, lz), y, f.wz(lx, lz)]);
+  for (const y of [3.0, 4.0, 5.0]) coin(MARKET.coins, -24.5, y, -21);
+  for (let x = -24.5; x <= -6.5; x += 3) coin(MARKET.coins, x, 3.3, -25.25);
+  for (const x of [-2.5, 0, 2.5]) coin(MARKET.coins, x, 3.3 + 1.2 * (1 - (x / 4) ** 2), -25.25);
+  for (const x of [6.5, 9.5, 12.5]) coin(MARKET.coins, x, 3.3, -25.25);
+  for (const z of [-22.2, -19.8]) coin(MARKET.coins, 12.5, 3.9, z);
+  for (const x of [12.5, 15.5, 18.5]) coin(MARKET.coins, x, 3.3, -16.75);
+  for (const z of [-13.4, -11.1]) coin(MARKET.coins, 18.5, 3.9, z);
+  coin(MARKET.coins, 18.5, 3.3, -7.75);
+  for (const [x, z] of [[14.2, -5.2], [12.1, -3.8]]) coin(MARKET.coins, x, 4.0, z);
+  for (const x of [3.6, 5.2, 6.8, 8.4]) coin(MARKET.roofCoins, x, 3.65, -0.7);
 
-  // The souvenir stand (asnestand at (6, 2): the seller stands at (6, 0.8) in front of it).
-  stall(f, 6, -1.75, 9, 3.5, 1, { colors: [SUN, RED], goods: 'souvenir', top: 2.9 });
+  // The souvenir stand (asnestand at (6, 2): the seller stands at (6, 0.8) in front of it). Its awning
+  // (top 2.9) is the end of the coin trail (MARKET.roof).
+  MARKET.roof = stall(f, 6, -1.75, 9, 3.5, 1, { colors: [SUN, RED], goods: 'souvenir', top: 2.9 });
   f.sign('BURROS · 500 PTA', 6, 2.08, 0.44, 3.0, 0.48, 0, { bg: '#fff8e6', fg: '#d8321e', border: '#1d1426', scale: 0.7 }); // [N] §6.3
   standSign(f, 'BURROS\n500 PTA', 12.3, 0.5, 1.45, 1.3, 0.9, -0.3, { bg: '#f7c31b', fg: '#d8321e', scale: 0.7 }); // [N]
   f.sign('SOUVENIRS · RECUERDOS', 6, 3.35, -1.4, 5.6, 0.7, 0, { bg: '#d8321e', fg: '#fff8e6', border: '#f7c31b', scale: 0.62, double: true }); // [N]

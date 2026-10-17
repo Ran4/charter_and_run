@@ -7,8 +7,9 @@
 // pool fest after the end (Små grodorna in Flamenco's pool, Stig hopping with them in his suit),
 // Majsan ticketing cars on the island, the tow and her praise for a car parked straight (§10.17), and
 // the grisfest's evening bought again at the farm's gate with a tourist's refusal (§10.18), the
-// market's fruit stalls his car goes through, with their seller's cry (§10.19), the watchdogs in
-// the bungalow gardens and the farmyard on vischan, with their owners' calls (§10.21), and the
+// market's fruit stalls his car goes through, with their seller's cry (§10.19), the coin trail over
+// the market's awnings and the souvenir seller's "¡No, no, no!" and swear at Stig on his roof
+// (§10.46), the watchdogs in the bungalow gardens and the farmyard on vischan, with their owners' calls (§10.21), and the
 // bathers on the sun loungers, their burn and the fly-off, Berra waking for five minutes more
 // (§10.22), the SOLKRÄM meter for Majsan's sun cream, Siv's cards for it and the cream running
 // (§10.26), the gang's short exchanges on E between missions, Stig answering (§10.28), Stig
@@ -1781,6 +1782,26 @@ export const FRUKTSTAND = {
     hat: 'scarf', hatC: 0xd8321e, shirt: 0xf4f0e6, dress: 0x2f5a9a, apron: 0xf7c31b, pants: 0x2f5a9a, legsC: 0x6a4a3a, shoes: 0x2a2a2a, voice: 380 },
   swearFrom: 8, swearR: 25, swearGap: 60, swearAt: 1.4, swearSecs: 2.4,
   swearLine: 'Jävla smålänningar!',   // [F*] the souvenir seller's when Ole haggles the donkey down (research-plot.md:302–304; asnan's win), relocated
+};
+
+// Pesetas på marknadstaken (free roam; feature 92, DESIGN §10.46; game/marketRoofs.js, the bounce shade
+// and the trail in world/blocks/centre.js `MARKET`). A second ¡SALTA! bounce shade in the lane between
+// the market's rows A and A2 and a trail of coins over the awnings to the donkey stand's roof, always
+// there and taken only by a Stig `minY` m up or higher (the awnings' height). From missions index `from`
+// (after asnan), on the island with no mission running (`missions.state === 'idle'`) and Stig `placeR` m
+// off or more, the donkey stand's own four coins go on its roof, once a session. On the island with no
+// mission running and outside a dialogue: Stig on his feet on the donkey stand's roof, first in a visit (a
+// visit ends when he stands on anything else), the souvenir seller at his stand and free within `noR` m,
+// and his roof's coins not up: the seller's `no` (`noSecs`), at most every `noGap` s. Taking the last of
+// the roof's coins with Stig over `highY` m and the seller free within `swearR` m: `swearAt` s later his
+// `swearLine` (the yell for `swearSecs` s), and `sorryAt` s after it Stig's `sorry`. Invented (§1.6): the
+// shade, the trail, the seller's "¡No, no, no!" at Stig on his roof and his swear there.
+export const MARKNADSTAK = {
+  minY: 2.5, from: 8, placeR: 25, noR: 12, noGap: 8, noSecs: 1.8, highY: 2, swearR: 12,
+  swearAt: 0.5, swearSecs: 2.4, sorryAt: 1.3, sorrySecs: 2.2,
+  no: '¡No, no, no!',                 // [N] the seller's in asnan's haggle (missions/island.js), at Stig on his roof
+  swearLine: 'Jävla smålänningar!',   // [F*] the souvenir seller's when Ole haggles the donkey down (research-plot.md:302–304; asnan's win), relocated: Stig scrapes up the pesetas on his roof
+  sorry: 'Förlåt, förlåt…',           // [N]
 };
 
 // Badgäster på solstolarna (free roam; feature 32, DESIGN §10.22; game/bathers.js). On the island with
