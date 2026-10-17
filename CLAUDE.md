@@ -151,7 +151,13 @@ opens with a summary of the rounds and the timer changes.
     day: 300 pta, PALOMA out of the basin past the shark fin with Ole's statistics, along the beach, the
     lighthouse in the sunset with the Rio exchange, the quay; Ole a double, E's skip, a mission start;
     after the end the end card again with the Rio suits, Majsan and Siv, the cups and the banner,
-    DESIGN §10.41)
+    DESIGN §10.41),
+    `balkong balkongshots` (Balkongerna lever, the residents on the slabs' balconies between missions:
+    the 52 slabs' spots, at most ten bodies placed by hand and never stepped, the waves, "Hallå där
+    nere!", the mirror tourist's "Kallar ni det här för havsutsikt?", "Här nere parkerar de
+    hursomhelst." at a car left on the sidewalk; at siesta (13–17, the held test clock's 15:00) the
+    horn or a smash brings "¡Silencio! ¡Siesta!", the slipper on his head or the car's roof and
+    "Förlåt!"; nobody at night, in a mission or in the flight level, DESIGN §10.42)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

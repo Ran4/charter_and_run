@@ -247,6 +247,14 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   desember. Det er som i Rio." – "Har du varit i Rio?" – "Nei, men jeg skal reise dit." Efter slutet
   blir turen slutbilden igen: Rio-kostymerna, Majsan och Siv med, glasen i händerna och samban. **E**
   hoppar över turen.
+- **Balkongerna lever**: på lägenhetshotellens balkonger står det folk mellan uppdragen (från sju
+  på morgonen till elva på kvällen). Svenska turister vänder sig mot Stig, vinkar och ropar "Hallå där
+  nere! Är du också från Sverige?", och en gäst håller ut en handspegel som portiern i rum 107:
+  "Kallar ni det här för havsutsikt?". Lämnar du bilen med hjulen uppe på trottoaren under en balkong
+  får du höra "Här nere parkerar de hursomhelst.", och tutar du vinkar svenskarna. Men på siestan,
+  mellan ett och fem spansk tid, ska man inte tuta eller slå sönder något framför en señoras balkong:
+  "¡Silencio! ¡Siesta!", och en rosa toffel kommer farande ner i huvudet på Stig (eller på biltaket).
+  "Förlåt!", säger Stig till balkongen, och grannarna skrattar.
 - **Små grodorna i poolen** (efter slutet): julfesten är inte riktigt över. Varje gång du kommer in
   på Flamencos pooldäck (mellan nio på morgonen och elva på kvällen) vadar SunTrip-gänget ut i den
   grunda änden och ställer sig i ring runt Lasse i tomteluva. Affe spelar Små grodorna på dragspelet,
@@ -489,6 +497,9 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
 - båtturen med PALOMA från hamnkiosken till fyren och tillbaka, hajfenan i hamnbassängen och reprisen
   av slutbilden efter slutet (i filmen är slutbilden en båt utanför Copacabana, och Rio-repliken sägs
   vid välkomstmötet)
+- grannarna på balkongerna, señoran och hennes toffel på siestan och Stigs "Förlåt!" (i filmen är
+  spegeln portierns i rum 107, havsutsiktsrepliken sägs där och parkeringsrepliken är Majsans på
+  systrarnas balkong)
 - poolfesten efter slutet: ringen runt Lasse, portierns promenad, att Stig hoppar med och
   takträknaren (i filmen dansar de andra Små grodorna i poolen på julfesten medan Stig-Helmer och Ole
   öppnar knäckebrödet, och Stig-Helmer dansar aldrig)
@@ -689,6 +700,7 @@ src/game/receptionBell.js       Ringklockan i receptionen in free roam: the queu
 src/game/streetRace.js          Gatlopp mot pizza-racern in free roam: José's three street races (the race kind outside the runner), the bet, the sisters' six
 src/game/golfCart.js            Golfbilen in free roam: the golf carts (never a mission's), the pip-pip, the bunkers' sand and the pond's splash
 src/game/boatTrip.js            Båtturen med PALOMA in free roam: the kiosk, the trip's fixed shots, the doubles, the fin, the end card again after the end
+src/game/residents.js           Balkongerna lever in free roam: the residents on the slabs' balconies, their calls, the parking line, the señora's slipper at siesta
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
@@ -698,7 +710,7 @@ tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, 
                                 badgaster, butik, brodrost, rum107, solkram, skjortbyte,
                                 stunthopp, prata, takhopp, mikrofon, faglar, gags, strandkyssen,
                                 guardiajeep, fyren, klader, ringklocka, kyrkfrid, gatlopp, skidor,
-                                golfbil, battur, calibrate, calibflight)
+                                golfbil, battur, balkong, calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
 tools/pool.mjs                  re-derives every random stage's timer from the ledger
@@ -738,6 +750,7 @@ node tools/shot.mjs skidor eslovrundan   # the borrowed rollerskis: the loan, sp
 node tools/shot.mjs eslovrundankal       # measure the skier's two times with the ski pilot (clean, one fall, two; DESIGN §10.39)
 node tools/shot.mjs golfbil              # the golf carts: E, top speed, the pip-pip, a bunker, the pond, a wreck, the mission lock
 node tools/shot.mjs battur batturrio     # the boat trip: the kiosk, the four shots, Ole paying, E's skip, a mission start; the end card again after the end
+node tools/shot.mjs balkong balkongshots # the balconies' residents: the calls, the mirror, the parking line, the siesta's slipper
 node tools/shot.mjs grodorna grodtakt    # the pool fest after the end: the ring, the porter, Stig in the ring, eight on the beat
 node tools/shot.mjs artig                # Stig says sorry: kicks, run over, a pump, bins, carjackings and the driver's "Nej."
 node tools/shot.mjs grisar               # the grisbil's pigs: the falls, the catch on foot and by creeping, Lasse, the pen

@@ -66,6 +66,9 @@ export const SCENARIOS = {
     await T.fresh('&mission=9');
     await resetSaid(T);
     check(await T.ev(() => __game.missions.state === 'idle' && __game.level === 'island'), 'free roam');
+    // The morning: the street steps below play in front of block (4,4)'s slabs, and at siesta (the held
+    // test clock's 15:00) a señora there would throw her slipper and Stig say sorry to her (§10.42).
+    await T.ev(() => __game.day.set(10));
     const cfg = await T.ev(() => { const s = __game.sorry.cfg; return { kick: s.kick, hit: s.hit, prop: s.prop, boom: s.boom, carjack: s.carjack, no: s.no, gap: s.gap, at: s.at }; });
     // Gasolina's forecourt (block (4,3)): its four pumps, the open lane between the two islands.
     const pumps = await T.ev(() => {

@@ -65,6 +65,14 @@ export const frameRamps = [];   // half-built frames: { x, z, yaw, top, top2, de
 // to place. The slab's own solids (top 99) give way to the roof's while `live()` (set by the game
 // module: the island with no mission running); in a mission every stage meets the world as before.
 export const ROOF_JUMP = { lots: { '4,4,0,1': 'atl', '4,4,0,2': 'sol' }, roofs: {}, gap: null, coins: [], live: () => false };
+// Balkongerna lever (feature 77, DESIGN §10.42): every apartment-hotel slab's balcony rows, for the
+// residents game/residents.js puts on them. One entry a slab: { id (the residential lot, as
+// ROOF_JUMP's), x, z (the middle of its balcony line), yaw (facing the street), w, floors, spots:
+// [{ x, y, z, fl, u }] } in world coordinates, a spot per balcony unit and floor: on the floor's top,
+// 0.95 m in from the balcony's front edge (0.35 m behind the railing, so a body turned to the street
+// keeps its apron and its broom behind it) and a little off the unit's middle (clear of the fins and
+// the potted plant). Filled by slabLot with no random draws of its own: the world builds as before.
+export const balconyLots = [];
 // Lit after dark (§13.3): the street lamps' lantern panes and star centres go into one unlit mesh
 // that draws only while the sky is dark, as the hotels' lit windows do. The block builders run
 // inside buildTown and may add their own night lights here (world coordinates); buildTown makes
@@ -429,8 +437,14 @@ function slabLot(f, LW, LD, r, id) {
   f.flat(0xe6dac4, 0, front / 2, w + 2, front - 0.3, CURB + 0.03);
   // Balcony floors.
   const units = Math.max(3, Math.round(w / 3.8)), uw = w / units;
+  const lot = { id, x: f.wx(0, front - 0.95), z: f.wz(0, front - 0.95), yaw: f.yaw + Math.PI, w, floors, spots: [] };
+  balconyLots.push(lot);
   for (let fl = 1; fl < floors; fl++) {
     const y = CURB + fl * fh;
+    for (let u = 0; u < units; u++) {
+      const sx = -w / 2 + (u + 0.64) * uw;
+      lot.spots.push({ x: f.wx(sx, front - 0.95), y: y + 0.02, z: f.wz(sx, front - 0.95), fl, u });
+    }
     f.box(C.white2, 0, y - 0.18, front - 0.7, w + 0.3, 0.2, 1.4);
     f.box(C.glass, 0, y + 0.2, front - 0.03, w - 0.8, 2.0, 0.08);
     f.box(rail, 0, y + 0.02, front - 1.36, w + 0.3, 0.92, 0.12);

@@ -57,8 +57,8 @@ export const SCENARIOS = {
     out.push(await measure(T, 'gate spawn'));
 
     // Island: the spawn, the plaza and the market on foot, the main beach (its bathers, §10.22), a
-    // drive through the centre with traffic, the high view over the whole town and the lighthouse's
-    // gallery.
+    // street of slabs with their balconies' residents (§10.42), a drive through the centre with
+    // traffic, the high view over the whole town and the lighthouse's gallery.
     await T.fresh('&mission=6');
     await T.sleep(800);
     out.push(await measure(T, 'island spawn'));
@@ -67,6 +67,15 @@ export const SCENARIOS = {
       await T.sleep(1000);
       out.push(await measure(T, 'island ' + name));
     }
+    // A street of apartment slabs with their residents on the balconies (§10.42): the north row of
+    // block (4,4), 13 m out from its middle slab, the camera to the façades.
+    await T.ev(async () => {
+      const g = __game, { balconyLots } = await import('/src/world/town.js'), l = balconyLots.find((b) => b.id === '4,4,1,0');
+      const nx = Math.sin(l.yaw), nz = Math.cos(l.yaw);
+      g.player.teleport(l.x + nx * 13, l.z + nz * 13, l.yaw + Math.PI); g.cam.yaw = l.yaw + Math.PI + 0.5; g.cam.snapNext = true;
+    });
+    await T.sleep(1500);
+    out.push(await measure(T, 'island balkonger (' + (await T.ev(() => __game.residents.bodies.length)) + ' residents)'));
     await T.ev(() => { const g = __game, car = g.named.hyrbil; g.enterCar(car); car.place(-40, 60, Math.PI); g.cam.yaw = Math.PI; g.cam.snapNext = true; });
     await T.frames(3);
     await T.page.keyboard.down('w');

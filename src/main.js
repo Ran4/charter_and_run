@@ -54,6 +54,7 @@ import { BeachDream } from './game/beachDream.js';
 import { GuardiaJeep } from './game/guardiaJeep.js';
 import { GolfCarts } from './game/golfCart.js';
 import { BoatTrip } from './game/boatTrip.js';
+import { Residents } from './game/residents.js';
 import { Lighthouse } from './game/lighthouse.js';
 import { ReceptionBell } from './game/receptionBell.js';
 import { StreetRace } from './game/streetRace.js';
@@ -229,6 +230,7 @@ class Game {
     this.gatlopp = new StreetRace(this);  // free roam after Gamla kläder: José's street races, Berra's and Robban's bet (§10.38)
     this.golf = new GolfCarts(this);      // free roam: the golf carts at the clubhouse, pip-pip, the bunkers and the pond (§10.40)
     this.battur = new BoatTrip(this);     // free roam: the boat trip with PALOMA from the marina's kiosk, the end card again after the end (§10.41)
+    this.residents = new Residents(this); // free roam: the neighbours on the balconies, the siesta and its slipper (§10.42)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -989,6 +991,7 @@ class Game {
     if (p.def.coins) burstCoins(p.x, 0.4, p.z, p.def.coins, vx, vz);
     this.shame.add(p.def.shame * (this.playerCar ? 1.2 : 0.7));
     this.bathers.onPropBroken(p, vx, vz);
+    this.residents.onPropBroken(p);   // a señora at siesta (§10.42)
     if (p.def.splash) for (let k = 0; k < 6; k++) fx.splash(p.x, p.z);
     if (p.def.explode === 'big') fx.explosion(p.x, 0.5, p.z);
     else if (p.def.explode === 'small') { fx.sparks(p.x, 0.6, p.z, 10); fx.smoke(p.x, 0.6, p.z, true); }
@@ -1577,6 +1580,7 @@ class Game {
     this.gatlopp.update(dt);
     this.golf.update(dt);
     this.battur.update(dt);
+    this.residents.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);

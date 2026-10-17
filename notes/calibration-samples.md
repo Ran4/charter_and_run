@@ -172,6 +172,14 @@ mission start puts her back at once). No mission stage, route or pooled stage pl
 (its landmarks are a map label, `fena_hamn` and `pryl_glasogon`). `story` and `fullstory` passed on the
 feature's tree. Every pool below stands and no timer changed.
 
+**Feature 77 (Balkongerna lever, 2026-10-17) touches no pool.** It exports every apartment-hotel slab's
+balcony spots from `slabLot` (`balconyLots`, DESIGN §10.42) with no random draw of its own, so the
+world builds as before, and puts up to ten residents on the balconies only with `missions.state ===
+'idle'`: they are placed by hand, never stepped, have no collider and are not in `allChars`, draw
+from their own seed, and a mission start hides every one of them (and the señora's slipper) at once. A
+held broom's bristles now stop at the holder's soles (models.js), a look only. `story` and `fullstory`
+passed on the feature's tree. Every pool below stands and no timer changed.
+
 ## `friskotekBalls` · §8.7 s1 · six fleeing beach balls · on foot: timer = ceil(1.25 × (p75 + 6 × 0.5))
 
 Phase 3 r2 island-staging placed everyone for the intro's group shot (Stig, Lasse, the sisters, the

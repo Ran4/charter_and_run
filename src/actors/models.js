@@ -1107,7 +1107,14 @@ function heldPose(m, st, t, place = false) {
     case 'broom': {
       const sweep = moving ? 0 : Math.sin(t * 2.4);
       if (pose) R.rotation.set(-0.42, 0, 0.12 + sweep * 0.12);
-      if (place) inHand(m, prop(m, 'broom'), 0, 0, 0, 0, 0.28, 0, sweep * 0.25);
+      if (place) {
+        const p = prop(m, 'broom');
+        inHand(m, p, 0, 0, 0, 0, 0.28, 0, sweep * 0.25);
+        // The bristles stop at his soles: hanging from the hand they went 0.2 m into the floor, through
+        // a balcony's slab (the señora sweeping, game/residents.js). The hand slides down the handle.
+        const low = m.hips.position.y + m.body.position.y + p.position.y + _w.set(0, -1.2 * m.s, 0).applyEuler(p.rotation).y;
+        if (low < 0) p.position.y -= low;
+      }
       break;
     }
     case 'giraffe':

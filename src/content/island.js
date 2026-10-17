@@ -1823,6 +1823,49 @@ export const BATHERS = {
   },
 };
 
+// Balkongerna lever – the neighbours on the balconies (free roam, DESIGN §10.42;
+// game/residents.js). Each slab's balcony rows (world/town.js `balconyLots`) keep `perLot`
+// residents a session, drawn from `seed` (never the town's draws): a señora sweeping (at `senora`),
+// a tourist holding a hand mirror out for the sea view (at `mirror`), the rest Swedish tourists. At
+// most `max` bodies, on the occupied balconies nearest Stig within `r` m (looked for every
+// `pickEvery` s; a body goes past `out` m, and a nearer balcony by `swap` m takes the furthest body
+// when none is spare); a body appears or goes only unseen, beyond `seenR` m, or within `cutSecs` s
+// of a cut. Out from `hours[0]` to `hours[1]` (the island's clock, §10.10). "In front of" a
+// balcony: on the street side of its line, or under it up to `back` m behind it. Stig within
+// `turnR` m in front: the Swedes and the señora turn to him (at most `turnMax` rad off the façade),
+// the Swedes wave once an approach (`waveR`, `waveSecs`; again once he has been `awayR` m off), and
+// within `callR` m a Swede calls `call` and the mirror tourist asks `sea` (the session's first of
+// each always, later ones at `callChance`, `callEvery` s or more after any resident's line). His
+// horn (game.hornAt, §10.9) waves the Swedes within `hornR` m. A car he leaves still (`park.still`
+// m/s) with `park.wheels` or more wheels on the sidewalk gets `park.line` from the nearest Swede
+// (else the mirror tourist) within `park.r` m, at most every `park.every` s. At `siesta` hours his
+// horn, or a prop smashed within `mineR` m of him, within `siestaR` m in front of a señora's
+// balcony makes her yell `yell` (`yellSecs`, her broom up) and, `throwAt` s in, throw a slipper
+// (`shoe`, `scale` × a real one) that comes down on his head (on foot) or his car's roof: `secs` s
+// for the arc plus `perM` s a metre, peaking `up` m over its line; it bounces off (`bounce`: up,
+// out m/s; gravity `g`) and lies `rest` s. Stig says `sorry` `sorryAt` s after the hit, and the
+// Swedes within `laughR` m laugh (`laughSecs`). A señora at most every `every` s; harmless: no
+// fling, no SKANDAL. Invented (§1.6): the residents and the slipper; the mirror and the parking
+// line are the film's, relocated.
+export const BALKONG = {
+  seed: 7707, max: 10, r: 55, out: 62, swap: 6, seenR: 32, cutSecs: 1.2, pickEvery: 0.25,
+  hours: [7, 23], siesta: [13, 17], back: 3,
+  perLot: [2, 4], senora: 0.7, mirror: 0.4,
+  turnR: 30, turnMax: 0.8, waveR: 20, waveSecs: 2.2, awayR: 34,
+  callR: 16, callEvery: 10, callChance: 0.5, hornR: 25,
+  call: 'Hallå där nere! Är du också från Sverige?',   // [N]
+  sea: 'Kallar ni det här för havsutsikt?',             // [F*] the sea-view line at the hotel (research-plot.md:253; Stig's in buss17's outro), relocated to a guest copying the porter's mirror
+  park: {
+    r: 18, wheels: 2, still: 0.6, every: 20,
+    line: 'Här nere parkerar de hursomhelst.',          // [F*] Majsan's on the sisters' balcony (research-plot.md:256), relocated to a neighbour
+  },
+  siestaR: 24, mineR: 6, every: 6, yellSecs: 1.8, throwAt: 0.55,
+  yell: '¡Silencio! ¡Siesta!',                          // [N]
+  shoe: { secs: 0.75, perM: 0.025, up: 1.6, bounce: [3.4, 1.6], g: 22, rest: 12, scale: 1.5, color: 0xf08ab0, sole: 0xf6e2d6, pom: 0xfafafa },
+  sorry: 'Förlåt!',                                     // [N] Stig, to the balcony
+  sorryAt: 0.3, laughR: 25, laughSecs: 1.6,
+};
+
 // Speedo names for named and mission cars (§11.4); unnamed cars show their type's Swedish name.
 // Fin hund… – the watchdogs (free roam, DESIGN §10.21; game/dogs.js). `lots` of the 48 bungalowR
 // lots (the ones with a trampoline first, then those with a car, at most `perBlock` a block) and the
