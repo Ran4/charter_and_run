@@ -44,7 +44,7 @@ Samma tangenter i båda nivåerna; nivån bestämmer vad de gör.
 | Shift | spring | | skynda – men det ökar rädslan |
 | Space | hoppa, i luften igen för dubbelhopp | handbroms (sladd!) | **håll i dig**: ta tag i närmaste stolsrygg vid turbulens |
 | J / klick | sparka, i luften: stampa (efter julafton: **håll in i luften** för att glidflyga) | | **håll in**: "Jag kan flyga, jag är inte rädd" – sänker FLYGRÄDSLA |
-| E | prata, kliv in, sno en bil, kvarta en stund i Stigs säng i rum 107, titta i herr Storchs kamera, heja på rullskidåkaren, dansa med i poolen, smörja in Majsans rygg (**håll in** och släpp i det gröna), byta om i garderoben i rum 107 | kliv ur (i fart: rulla ur) | prata, **sätt dig / res dig**, lås in dig på toaletten, anropsknappen, serveringsvagnen |
+| E | prata (med uppdragsgivaren, och mellan uppdragen med gänget), kliv in, sno en bil, kvarta en stund i Stigs säng i rum 107, titta i herr Storchs kamera, heja på rullskidåkaren, dansa med i poolen, smörja in Majsans rygg (**håll in** och släpp i det gröna), byta om i garderoben i rum 107 | kliv ur (i fart: rulla ur) | prata, **sätt dig / res dig**, lås in dig på toaletten, anropsknappen, serveringsvagnen |
 | H | | tuta (utanför uppdragen hör folk den) | |
 | B | | titta bakåt | |
 | M / Tab | stor karta | stor karta | plan över gaten/kabinen |
@@ -297,6 +297,15 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   gröna blir smalare för varje försök, och ditt bästa resultat sparas. Första sjuan slår
   pizza-racern, och då har Siv något nytt att prata om vid poolen. Efter slutet har Små grodorna
   systrarna i poolen från nio på morgonen, så då får det bli tidigt.
+- **Prata med gänget**: mellan uppdragen kan du gå fram till Ole, Majsan, Siv, Berra, Robban,
+  Angerud, Lasse, Affe, Gabbe, paret Storch eller José och trycka E ("Prata med Ole"). Då blir det en
+  kort växling i pratbubblor där Stig själv svarar, och vad de pratar om beror på hur långt resan har
+  kommit. Ole säger "Tenk å sitte her i desember. Det er som i Rio." från ankomsten fram till julafton
+  (Stig frågar om han har varit där, och det har han inte, men han ska resa dit), och mellan
+  grisfesten och julafton undrar Stig om man måste gå på julfesten ("Var inte så typiskt svensk.").
+  Efter slutet har alla nya repliker, och vid bodegan frågar Berra "Ska du ha?". Tryck E igen så
+  kommer nästa växling, och när de är slut börjar de om. Den som delar ut nästa uppdrag har sitt
+  vanliga E, och de som dansar Små grodorna i poolen får du prata med på kvällen eller morgonen.
 
 ## Vad är påhittat?
 
@@ -379,6 +388,8 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
   men där finns ingen hylla)
 - SOLKRÄM-mätaren när Stig smörjer in Majsans rygg, Sivs poänglappar för det och krämen som rinner
   när han tar för mycket (i filmen är solkrämen bara poolprat, och ingen sätter poäng på den)
+- samtalen med gänget på E mellan uppdragen, där Stig svarar (replikerna kommer från andra scener i
+  filmen eller är våra: Oles Rio-replik sägs på välkomstmötet, julfestrepliken på julaftons morgon)
 - fårrusningen i Fataga, kappkörningen mot nattbussen och porslinskrosset på tid
 - att samla ihop julfestgästerna
 - Oles prylar och hajfenorna som samlarföremål, utspridda över ön
@@ -484,6 +495,7 @@ src/game/toasters.js            Kontrollerad av G17 in free roam: the seven toas
 src/game/room107.js             Rum 107 fylls med resans minnen in free roam: the keepsake shelf, the giraffe, the boombox
 src/game/solkram.js             Smörj in Majsans rygg in free roam: the SOLKRÄM meter, Siv's cards, the cream running
 src/game/stunts.js              Stunthopp med G17-stämpel in free roam: his car's jumps measured, LUFTTID, the stamp, the records
+src/game/gangTalk.js            Prata med gänget in free roam: E talks to the gang, the exchanges by part of the trip
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
@@ -491,7 +503,7 @@ tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, 
                                 paintshop, berra, glide, simhopp, tuta, dygn, super8, eslov, grodorna,
                                 artig, grisar, bagage, lapplisa, torsdag, frukt, hopptorn, hund,
                                 badgaster, butik, brodrost, rum107, solkram, skjortbyte,
-                                stunthopp, calibrate, calibflight)
+                                stunthopp, prata, calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
 tools/pool.mjs                  re-derives every random stage's timer from the ledger
@@ -543,6 +555,7 @@ node tools/shot.mjs rum107 troferum      # room 107: the shelf and Ole's count, 
 node tools/shot.mjs solkram              # Majsan's sun cream: the ask, the meter held, 7/6/5, early, over from behind, the record and Siv's chatter, the save
 node tools/shot.mjs stunthopp stuntzoner # the stunt jumps: the plank to the dream plane, the stamp, the pay and the record, UNDERKÄND; the yellow ramp, a garage deck, GODKÄND
 node tools/shot.mjs skjortbyte garderob  # room 107's wardrobe in a pursuit: the change, busted in there, the officer walking past, back to the shirt; shots
+node tools/shot.mjs prata                # the gang's talk: the table, who at every index, Rio, the round, the stops, the julfest, after the end; shots
 node tools/shot.mjs fullstory kinds      # the literal §8 missions and the stage-kind checks
 node tools/shot.mjs calibrate calibflight  # timer and FLYGRÄDSLA calibration (slow; see DESIGN §8, §16.4)
 node tools/pool.mjs                      # random-stage timers from the raw runs in notes/calibration-samples.md

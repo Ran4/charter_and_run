@@ -44,6 +44,7 @@ import { Toasters } from './game/toasters.js';
 import { Stunts } from './game/stunts.js';
 import { Room107 } from './game/room107.js';
 import { Solkram } from './game/solkram.js';
+import { GangTalk } from './game/gangTalk.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
 import { LEVELS, ISLAND_PALETTES } from './level.js';
@@ -200,6 +201,7 @@ class Game {
     this.room107 = new Room107(this);     // free roam: room 107's keepsake shelf, the giraffe and the boombox (§10.25)
     this.solkram = new Solkram(this);     // free roam: the SOLKRÄM meter at Majsan's back by the pool (§10.26)
     this.stunts = new Stunts(this);       // free roam: his car's jumps judged, the G17 stamp (§10.27)
+    this.chat = new GangTalk(this);       // free roam: E talks to the gang, and Stig answers (§10.28)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -1377,6 +1379,9 @@ class Game {
     }
     const it = this.bestInteractable((i) => !i.whileSeated);
     if (it) return { type: 'it', it };
+    // Someone in the gang to talk to (free roam, §10.28): after every interactable, before the cars.
+    const who = this.chat.nearest();
+    if (who) return { type: 'chat', who };
     if (!this.levelDef.verbs.enterCars || this.carrying?.who) return null;
     let best = null, bd = 2.2;
     for (const c of this.cars) {
@@ -1395,6 +1400,7 @@ class Game {
     const it = this.nearestInteractable();
     if (!it) return;
     if (it.type === 'talk') this.missions.begin();
+    else if (it.type === 'chat') this.chat.start(it.who);
     else if (it.type === 'car') this.enterCar(it.car);
     else if (it.type === 'it') it.it.use?.(this);
     else if (it.type === 'stand') this.standPlayer();
@@ -1517,6 +1523,7 @@ class Game {
     this.room107.update(dt);
     this.solkram.update(dt);
     this.stunts.update(dt);
+    this.chat.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);
@@ -1805,6 +1812,17 @@ class Game {
     }
   }
 
+  // An NPC held in a pose of its own: §9.4 idleAnim (e.g. Berra asleep), or held by the free-roam
+  // Berra job (§10.6), the diving judges at the pool's edge (§10.8), Herr Storch's filming (§10.11),
+  // the rollerskier's laps (§10.12), the pool fest's dancers and porter (§10.13), Majsan on her round
+  // with the ticket pad or Angerud in the tow scene (§10.17), the grisfest's evening (§10.18) or the
+  // souvenir seller swearing at a smashed fruit stall (§10.19). syncAll gives such an NPC no wave,
+  // turn or chatter, and the gang's talk leaves them be (§10.28).
+  npcPosed(k) {
+    return !!this.missions.idlePose(k) || this.berraJob.posed(k) || this.judges.posed(k) || this.film.posed(k) || this.eslov.posed(k) || this.fest.posed(k) || this.lapp.posed(k) || this.party.posed(k)
+      || this.stands.posed(k);
+  }
+
   syncAll(dt, title) {
     const cx = camera.position.x, cz = camera.position.z;
     const def = this.levelDef;
@@ -1836,19 +1854,16 @@ class Game {
       const near = dist(n.x, n.z, this.player.x, this.player.z);
       n.anim.talk = talker === k;
       const giver = ms.state === 'idle' && ms.current?.giver === k && ms.current.level === this.level;
-      // §9.4 idleAnim (e.g. Berra asleep), or held by the free-roam Berra job (§10.6) or the diving
-      // judges at the pool's edge (§10.8): no wave, turn or chatter; Robban waves Stig over to the
-      // sleeping Berra as a giver does. An answer to the horn waves from further off (§10.9); the
-      // rollerskier waves his pole while he skis (§10.12); the pool fest's dancers and porter (§10.13);
-      // Majsan on her round with the ticket pad, Angerud in the tow scene (§10.17); the grisfest's
-      // evening (§10.18); the souvenir seller swearing at a smashed fruit stall (§10.19).
-      const posed = !!ms.idlePose(k) || this.berraJob.posed(k) || this.judges.posed(k) || this.film.posed(k) || this.eslov.posed(k) || this.fest.posed(k) || this.lapp.posed(k) || this.party.posed(k)
-        || this.stands.posed(k);
+      // Posed (npcPosed): no wave, turn or chatter; Robban waves Stig over to the sleeping Berra as a
+      // giver does. An answer to the horn waves from further off (§10.9); the rollerskier waves his
+      // pole while he skis (§10.12).
+      const posed = this.npcPosed(k);
       n.anim.wave = (((giver || this.berraJob.waving(k)) && near < 9 || this.honk.waving(k)) && !posed || this.eslov.waving(k)) && !this.inDialog && n.state === 'normal';
       if (n.state === 'normal' && !posed && near < 10 && !this.inDialog) n.yaw += Math.atan2(Math.sin(yawTo(this.player.x - n.x, this.player.z - n.z) - n.yaw), Math.cos(yawTo(this.player.x - n.x, this.player.z - n.z) - n.yaw)) * Math.min(1, dt * 3);
       // Free play only: not in the gap before an outro (bubbles stacked over its first line).
       const lines = (this.level === 'island' && this.chatterOverrides[k]) || chatter[k];
-      if (near < 9 && n.state === 'normal' && !posed && !this.inDialog && ms.state === 'idle' && lines) {
+      // Not while Stig talks with the gang (§10.28).
+      if (near < 9 && n.state === 'normal' && !posed && !this.inDialog && ms.state === 'idle' && lines && !this.chat.busy) {
         n.chatT = (n.chatT ?? 2 + Math.random() * 3) - dt;
         if (n.chatT <= 0) {
           n.chatT = 7 + Math.random() * 6;
@@ -2031,7 +2046,7 @@ class Game {
         // prompts (Phase 3 r3: the "E Sätt dig" of every free seat he passed in the aisle replaced it
         // through the sprit sweep's shaking); E still uses the nearest interactable.
         const hold = this.level === 'flight' && this.cabin.turbulent && p.state === 'normal' && !this.holding;
-        if (it?.type === 'talk') prompt = fmt('promptTalk', { name: it.who.def.name });
+        if (it?.type === 'talk' || it?.type === 'chat') prompt = fmt('promptTalk', { name: it.who.def.name });
         else if (hold) prompt = S.promptHold;
         else if (it?.type === 'car') prompt = it.car.locked ? '' : it.car.driverBust ? S.promptSteal : S.promptGetIn;
         else if (it?.type === 'it') prompt = it.it.prompt || '';

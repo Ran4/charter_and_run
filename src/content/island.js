@@ -10,8 +10,8 @@
 // market's fruit stalls his car goes through, with their seller's cry (§10.19), the watchdogs in
 // the bungalow gardens and the farmyard on vischan, with their owners' calls (§10.21), and the
 // bathers on the sun loungers, their burn and the fly-off, Berra waking for five minutes more
-// (§10.22), and the SOLKRÄM meter for Majsan's sun cream, Siv's cards for it and the cream running
-// (§10.26).
+// (§10.22), the SOLKRÄM meter for Majsan's sun cream, Siv's cards for it and the cream running
+// (§10.26), and the gang's short exchanges on E between missions, Stig answering (§10.28).
 
 export const HOMES_ISLAND = {
   ole: ['flamenco', 2.0, 1.0, 0],     // yaw 0: under the pergola, facing the pool (flamenco faces π)
@@ -87,6 +87,222 @@ export const CHATTER = {
   grisbonde: ['Akta grisarna, señor!' /* [N] */],
   // Said while he stands at the lane's south end between laps (game/eslov.js, §10.12).
   eslov: ['Man får passa på när det är barmark.' /* [N] */, 'Hemma i Eslöv är det slask nu.' /* [N] */],
+};
+
+// Prata med gänget – E talks to the gang (free roam; feature 39, DESIGN §10.28; game/gangTalk.js).
+// On the island with no mission running (`missions.state === 'idle'`), Stig on foot within `r` m of
+// one of `people` who stands free (normal, shown, not walked anywhere, not held by a mission's idle
+// pose or a free-roam module (main.npcPosed), not the idle mission's giver, not Robban waving Stig
+// over to the napping Berra) gets S.promptTalk; main asks after every interactable (so the sun
+// cream's E at Majsan's back, 1.8 m, wins) and before the cars. E plays that person's next exchange as bubbles, a line at a
+// time (each up as long as game.say holds it, `secs` at least, then `gap` s), Stig turned to them.
+// An exchange holds while the idle mission lies from `from` to `to` (mission ids; `to: 'julafton'` =
+// until julafton is done, 'end' = after the end); `hours` ([from, to) on the free-roam clock, §10.10)
+// and `pryl` (Ole's gadget found) narrow it, and `with` names third speakers, who must stand free
+// within `withR` m of the person. E again plays the next one in table order, round and round (per
+// session). A line's `anim` holds a pose flag on its speaker while it is up; `{es}` / `{no}` are the
+// clock's Spanish and Norwegian (= Swedish) time. The chain stops when Stig is more than `leaveR` m
+// off, in a car or knocked down, when a speaker is no longer free, or when free roam ends (a mission,
+// a dialogue: then its bubbles come down). While it runs no chatter bubble starts, and after it the
+// NPCs within `hushR` m keep quiet `after` s. No line here repeats a chatter line (CHATTER,
+// CHATTER_FLIGHT, an unlock's). Angerud has nothing after the end (hospital, and nothing about it).
+// Invented (§1.6): the exchanges; most lines are the film's, relocated ([F*]), the rest ours.
+export const TALK_ISLAND = {
+  r: 3.0, leaveR: 8, withR: 6, secs: 2.2, gap: 0.35, hushR: 9, after: 4,
+  people: {
+    ole: [
+      { id: 'rio', from: 'buss17', to: 'julafton', lines: [
+        ['ole', 'Tenk å sitte her i desember. Det er som i Rio.'],       // [F*](t) the welcome meeting (research-plot.md:268), in Norwegian
+        ['stig', 'Har du varit i Rio?'],                                   // [F*](t)
+        ['ole', 'Nei, men jeg skal reise dit.'],                           // [F*](t) the end card is his trip there
+      ] },
+      { id: 'asna', from: 'bodega', to: 'julafton', lines: [
+        ['stig', 'Undrar vad åsna heter på spanska.'],                     // [F*] his dalahäst question, about the donkey
+        ['ole', 'Cabalho folkloristico… nativo!'],                         // [F*] his answer to it
+        ['stig', 'Det var ju dalahästen.'],                                // [N]
+        ['ole', 'Samme sak. Vi fikset det!'],                              // [N]
+      ] },
+      { id: 'klokka', from: 'asnan', to: 'end', pryl: 'klocka', lines: [
+        ['ole', 'Hva er klokka, Stig-Helmer?'],                            // [N] Stig has his watch (§10.10)
+        ['stig', 'Spansk, norsk eller svensk tid?'],                       // [F*] the watch's "spansk, norsk, svensk tid", asked
+        ['ole', 'Alle tre!'],                                              // [N]
+        ['stig', '{es} spansk tid. {no} norsk och svensk.'],               // [N]
+      ] },
+      { id: 'morn', from: 'friskotek', to: 'end', hours: [6, 11], lines: [
+        ['ole', 'Morn, gutten min!'],                                      // [F*](t) julafton morning's greeting, relocated
+        ['stig', 'Morrn morrn.'],                                          // [F*](t)
+        ['ole', 'Ta to B-vitaminer til frokost. Bra for leveren!'],        // [F*] his B-vitamins before the grisfest, relocated
+      ] },
+      { id: 'concorde', from: 'end', to: 'end', lines: [
+        ['ole', 'Concorde til Rio! 2 300 km i timen!'],                    // [F*] his dream on the plane (research-characters.md:177)
+        ['stig', 'Jag kan flyga, jag är inte rädd.', { anim: 'wings' }],   // [F*] the mantra
+        ['ole', 'Sånn, ja! Nå er du klar for Rio.'],                       // [N]
+      ] },
+    ],
+    majsan: [
+      { id: 'karlar', from: 'buss17', to: 'friskotek', lines: [
+        ['stig', 'Hej igen… Stig-Helmer. Från planet.'],                   // [N]
+        ['majsan', 'Lägg av, jag är trött på karlar!'],                    // [F*] (research-characters.md:222), relocated
+        ['stig', 'Förlåt. Jag ville bara säga hej.'],                      // [N]
+      ] },
+      { id: 'fr', from: 'asnan', to: 'grisfest', lines: [
+        ['stig', 'Var det inte du som satt hos Levander?'],                // [N]
+        ['majsan', 'Jag vaccinerade mig och tänkte att jag kunde ta lite FR-terapi samtidigt.'],   // [F*] at the clinic in the film
+        ['stig', 'Hjälpte det?'],                                          // [N]
+        ['majsan', 'Fråga mig på hemresan.'],                              // [N]
+      ] },
+      { id: 'julfest', from: 'julafton', to: 'julafton', lines: [
+        ['stig', 'Måste man gå på den?'],                                  // [F*](t) julafton morning (research-plot.md:365), relocated to the pool
+        ['majsan', 'Var inte så typiskt svensk.'],                         // [F*](t)
+        ['stig', 'Det är väl typiskt svenskt att ha julfest bland palmerna.'],   // [F*](t)
+        ['majsan', 'Du kan väl komma för min skull?'],                     // [F*] (research-characters.md:225)
+      ] },
+      { id: 'hem', from: 'end', to: 'end', lines: [
+        ['majsan', 'Jag vill inte åka hem.'],                              // [F*] her warm night by the pool, shortened
+        ['stig', 'Vi kan ju åka hit igen. Nästa jul.'],                    // [N]
+        ['majsan', 'Med SunTrip?'],                                        // [N]
+        ['stig', 'Fast utan bränsletillägg.'],                             // [N]
+      ] },
+    ],
+    siv: [
+      { id: 'whisky', from: 'buss17', to: 'julafton', lines: [
+        ['siv', 'En stor whisky och Sivan Åman är i form.'],               // [F*] (research-characters.md:245), relocated
+        ['stig', 'Och om det inte räcker?'],                               // [N]
+        ['siv', 'I värsta fall får jag ta Valium.'],                       // [F*]
+      ] },
+      { id: 'sture', from: 'buss17', to: 'grisfest', lines: [
+        ['stig', 'Har Majsan någon där hemma?'],                           // [N]
+        ['siv', 'Bara namnet – Sture! Kunde han prata om annat än fotboll och bruna bönor?'],   // [F*] (research-characters.md:246)
+        ['stig', 'Jag gillar Hammarby. Men inte bruna bönor.'],            // [N]
+      ] },
+      { id: 'ole', from: 'fataga', to: 'julafton', lines: [
+        ['siv', 'Du som delar rum med Ole… snarkar han?'],                 // [N]
+        ['stig', 'Han har en kalkylator med väckarklocka.'],               // [F*] his gadget (research-plot.md:255)
+        ['siv', 'Gud, vad praktiskt!'],                                    // [N]
+      ] },
+      { id: 'rio', from: 'end', to: 'end', lines: [
+        ['siv', 'Ole ska ta med mig till Rio!'],                           // [N]
+        ['stig', 'Har han varit i Rio?'],                                  // [F*](t) the welcome meeting's question
+        ['siv', 'Nej, men han ska resa dit.'],                             // [F*](t) Ole's answer there; Siv gives it
+      ] },
+    ],
+    berra: [
+      { id: 'bagage', from: 'buss17', to: 'julafton', lines: [
+        ['stig', 'Har du inget bagage?'],                                  // [N]
+        ['berra', 'Jag reser lätt.'],                                      // [F*] his plastic bag at Arlanda (research-characters.md:346)
+        ['stig', 'Min väska har inte kommit än.'],                         // [F*] his line at Las Palmas, adapted
+      ] },
+      { id: 'skaduha', from: 'end', to: 'end', lines: [
+        ['berra', 'Ska du ha?'],                                           // [F*] the Arlanda men's room (research-plot.md:177), an echo of the gate
+        ['stig', 'Nej tack, jag tål inte starksprit.'],                    // [F*]
+        ['berra', 'Nej, vem fan gör det?'],                                // [F*]
+      ] },
+    ],
+    robban: [
+      { id: 'tullen', from: 'buss17', to: 'julafton', with: ['berra'], lines: [
+        ['stig', 'Hur kom ni egentligen igenom tullen?'],                  // [N]
+        ['robban', 'Invalido.'],                                           // [F*] at customs, an echo of buss17's intro
+        ['berra', 'Va? Var jag med där?'],                                 // [F*] his Benidorm answer, adapted
+      ] },
+      { id: 'rom', from: 'end', to: 'end', lines: [
+        ['robban', 'Åttioprocentig rom. På vinflaskor!'],                  // [F*] Sulan's tip at Arlanda, relocated
+        ['stig', 'Jag håller mig till juice.'],                            // [N]
+        ['robban', 'Du har ingen karaktär, du.'],                          // [F*] Berra's to him, relocated
+      ] },
+    ],
+    angerud: [
+      { id: 'tullare', from: 'buss17', to: 'asnan', lines: [
+        ['angerud', 'Alla tullare har varit barn.'],                       // [F*] Operation Julklapp (research-characters.md:287), relocated
+        ['stig', 'Förlåt?'],                                               // [N]
+        ['angerud', 'Psykologi.'],                                         // [F*] "Psykologi, Levander.", shortened
+      ] },
+      { id: 'mustasch', from: 'bodega', to: 'bodega', lines: [
+        ['angerud', 'Har du sett en lång, mörkhårig karl med glasögon och mustasch?'],   // [F*] Carmencita's description, he asks
+        ['stig', 'Nej… inte vad jag vet.'],                                // [N]
+      ] },
+      { id: 'hittelon', from: 'ropavieja', to: 'julafton', lines: [
+        ['angerud', 'Har du tänkt på det där med hittelön?'],              // [N]
+        ['stig', 'Jag har inte hittat något.'],                            // [N]
+        ['angerud', 'Tänk på det.'],                                       // [F*] the end of his hittelön speech
+      ] },
+    ],
+    lasse: [
+      { id: 'program', from: 'asnan', to: 'grisfest', lines: [
+        ['stig', 'Är det något program i veckan?'],                        // [N]
+        ['lasse', 'Grisfest på torsdag och julfest på julafton – med svensk julmat och svenska jullekar!'],   // [F*] the welcome meeting's reminder, adapted
+        ['stig', 'Jullekar… bland palmerna.'],                             // [N]
+      ] },
+      { id: 'eden', from: 'end', to: 'end', lines: [
+        ['lasse', 'Kommer du ihåg vad du lovade, Olsson?'],                // [N]
+        ['stig', 'Jag lovar att bli en sundare och friskare människa under semestern.', { anim: 'oath' }],   // [F*] the friskotek oath, an echo
+        ['lasse', 'Det gäller ända fram till hemresan!'],                  // [N]
+      ] },
+    ],
+    affe: [
+      { id: 'trott', from: 'friskotek', to: 'julafton', lines: [
+        ['stig', 'Du ser trött ut.'],                                      // [N]
+        ['affe', 'Transfern, natturen och frukostmötet. Och så dragspelet.'],   // [N]
+        ['stig', 'Du kanske ska kvarta en stund?'],                        // [F*] his own "kvarta", turned back on him
+      ] },
+      { id: 'grodor', from: 'end', to: 'end', lines: [
+        ['affe', 'Små grodorna en gång till, sen går jag och lägger mig.'],   // [N]
+        ['stig', 'Det har du sagt tre gånger nu.'],                        // [N]
+      ] },
+    ],
+    gabbe: [
+      { id: 'natt', from: 'buss17', to: 'grisfest', lines: [
+        ['gabbe', 'Följer du med på natturen, Olsson? Tonga Tonga öppnar klockan tio.'],   // [N]
+        ['stig', 'Jag brukar gå och lägga mig vid tio.'],                  // [N]
+        ['gabbe', 'Vi med. Fast på morgonen.'],                            // [N]
+      ] },
+      { id: 'bodega', from: 'end', to: 'end', lines: [
+        ['gabbe', 'Pepes Bodega låg på baksidan av hotellet hela tiden!'], // [F*] Berra's find, relocated
+        ['stig', 'Och de har letat i en hel vecka.'],                      // [N]
+        ['gabbe', 'Det kallar jag semester.'],                             // [N]
+      ] },
+    ],
+    herrStorch: [
+      { id: 'film', from: 'buss17', to: 'julafton', lines: [
+        ['stig', 'Har du filmat länge sådär?'],                            // [F*](t) Ole's question at the julfest ([WQ]), Stig asks
+        ['herrStorch', 'Hela resan.'],                                     // [F*] [WQ]'s answer
+        ['stig', 'Det blir säkert en fin film.'],                          // [N]
+      ] },
+      { id: 'omtag', from: 'end', to: 'end', lines: [
+        ['stig', 'Blev det någon film till slut?'],                        // [N]
+        ['herrStorch', 'Jag har börjat om från början.'],                  // [N]
+      ] },
+    ],
+    fruStorch: [
+      { id: 'mjolby', from: 'buss17', to: 'julafton', lines: [
+        ['stig', 'Var bor ni någonstans?'],                                // [N]
+        ['fruStorch', 'Vi bor i Mjölby.'],                                 // [F*] at the travel agency (research-characters.md:422), relocated
+        ['stig', 'Jag menade här nere.'],                                  // [N]
+      ] },
+      { id: 'stork', from: 'buss17', to: 'julafton', lines: [
+        ['fruStorch', 'Vi är på bröllopsresa, ska du veta.'],              // [N]
+        ['stig', 'Grattis, fru Stork!'],                                   // [N]
+        ['fruStorch', 'Storch.'],                                          // [F*] her "Vi heter faktiskt Storch, inte Stork.", shortened
+      ] },
+      { id: 'locket', from: 'end', to: 'end', lines: [
+        ['fruStorch', 'Nu har min man äntligen tagit av locket.'],         // [N]
+        ['stig', 'Då blir det film.'],                                     // [N]
+        ['fruStorch', 'Av julgranen. I tjugo minuter.'],                   // [N]
+      ] },
+    ],
+    jose: [
+      { id: 'jobb', from: 'buss17', to: 'ropavieja', lines: [
+        ['stig', 'Jobbar du på pizzeria?'],                                // [N]
+        ['jose', 'Nej. Datatekniker.'],                                    // [F*](t) the sisters' word for him, relocated: he says it
+        ['stig', 'Jag kontrollerar brödrostar.'],                          // [F*] his G17 job, shortened
+      ] },
+      { id: 'mamma', from: 'fataga', to: 'end', lines: [
+        ['stig', 'Hur gick middagen med Siv?'],                            // [N]
+        ['jose', 'Bra. Mamma följde med.'],                                // [N]
+        ['stig', 'Ville hon inte sitta med er?'],                          // [F*](t) Siv's question at the restaurant, adapted
+        ['jose', 'Nej, hon ville inte vara i vägen.'],                     // [F*] his answer there, in the past tense
+      ] },
+    ],
+  },
 };
 
 // Barks by speaker (§14.10; Game.bark picks the table). These four are the Swedish tourists' (charter
@@ -453,7 +669,10 @@ export const UNLOCKS = {
       lasse: ['flamencoPool', -3.4, 2.8], fruStorch: ['flamencoPool', 0.6, 2.6], affe: ['flamencoPool', 4.6, 2.4], gabbe: ['flamencoPool', 6.0, 1.2] },
     outfit: { lasse: 'jul' },
     chatter: { berra: ['Robban! Jag hittade Pepes Bodega!' /* [F*] */], robban: ['Pepes Bodega. Glöm aldrig det, du.' /* [F*] */],
-      herrStorch: ['Lite film.' /* [F*](t) */, 'Locket är av nu, ska du veta.' /* [N] */] },
+      herrStorch: ['Lite film.' /* [F*](t) */, 'Locket är av nu, ska du veta.' /* [N] */],
+      // Prata med gänget (§10.28): two lines the end made stale, the grisfest's bus and the lost bag.
+      gabbe: ['Natturen går klockan nio!' /* [N] */, 'God fortsättning! Natturen går som vanligt.' /* [N] */],
+      hittegods: ['Inga fler väskor, señor? ¡Feliz Navidad!' /* [N] */] },
     witness: { text: 'Linsskyddet är av – nu finns det bevis!', evidence: true },   // [N] the offence counts
     toast: 'Pepes Bodega har öppnat – på baksidan av hotellet.' },                   // [N]
   // Jag kan flyga (§10.7): the glide comes with `bodega` (julafton); this unlock only carries its

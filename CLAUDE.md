@@ -86,7 +86,9 @@ opens with a summary of the rounds and the timer changes.
     jumps judged: the plank off the bygge's first floor to the dream plane, LUFTTID, the stamp
     KONTROLLERAD AV G17 or UNDERKÄND, the pay, the record and the save, his arms out by the plane; the
     yellow ramp, a hop too small, a garage deck, GODKÄND before fataga, nothing in a mission, DESIGN
-    §10.27)
+    §10.27), `prata` (Prata med gänget, E on the gang between missions: the exchanges by part of the
+    trip with Stig answering, who can be talked to at every index, the round, the stops, the julfest,
+    after the end, DESIGN §10.28)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)
