@@ -19,7 +19,8 @@
 // the towel at the water's edge, Stig's daydream in the surf, the wave and the visitors on the sand
 // (§10.33), and the borrowed Guardia jeep, its siren on H and the traffic giving way to it (§10.34),
 // and the queue at Flamenco's reception and the bell that answers on its tenth pling (§10.37), and
-// José's street races with his mother in the car, the bet at the pool bar and the sisters' six (§10.38).
+// José's street races with his mother in the car, the bet at the pool bar and the sisters' six (§10.38),
+// and the boat trip with PALOMA from the marina's kiosk to the lighthouse and back (§10.41).
 
 export const HOMES_ISLAND = {
   ole: ['flamenco', 2.0, 1.0, 0],     // yaw 0: under the pergola, facing the pool (flamenco faces π)
@@ -2029,4 +2030,62 @@ export const GAGS = {
       ],
       end: null, hold: 1.2 },
   ],
+};
+
+// Båtturen med PALOMA – slutbilden, fast på riktigt (free roam, DESIGN §10.41; game/boatTrip.js). On
+// the island with no mission running (`missions.state === 'idle'`), by day (the clock's `dayHours`),
+// Stig on foot within `r` m of the PASEOS EN BARCO kiosk's window (`lm`) gets `prompt` (after the end
+// `promptRio`); E pays `price` (Ole pays when the purse is short, game.pay) and the trip is fixed shots
+// with a white flash between them, as the Rio end card: `clips` in order, each from its `at` s of the
+// scene. PALOMA (world/blocks/coast.js PALOMA) glides from `from` to `to` ([dx, dz] in world metres from
+// `start`, 'moor' her mooring or a world [x, z]; and her yaw) over the clip; the camera's `eye` and
+// `look` are [u (to her port side), v (to her bow), y (over the water)] in her frame at the clip's start,
+// or every frame with `track`, or world [x, z, y] with `world`. Her passengers sit on her benches (`seats`, [u, v] in her frame, the
+// cushion `bench` m over her waterline) facing the bow, or stand on her deck (`deck`); Ole, Majsan and
+// Siv are doubles (Characters of their looks, only in the trip): the real ones stay where they are.
+// Before the end (`plain`): Stig and Ole; out of the harbour basin past an inflatable shark fin (`fin`,
+// the collectible fins' model, decor only in the trip; [u, v] in her frame at the mooring) Ole stands
+// and points and gives his statistics, Stig holds on; along the beach; the turn at the lighthouse in
+// the sunset with the Rio exchange; back on the pier by day. After the end (`rio`): the end card again,
+// on our coast: Stig and Ole in their Rio suits with a cup each, Majsan and Siv behind them, the samba
+// from the first shot, Ole's Rio line and the cups raised (`cheers`) under the end card's banner at the
+// lighthouse. On the quay at the pier root (`pier`: [u, v] in her frame at the mooring and a world yaw)
+// everyone stands where the trip ends, facing the kiosk (out of the pier coins' pull); Stig's free roam goes on from there, and the doubles stay `stay` s, then go once out of
+// the camera's view or `popR` m from it. E from `skipFrom` s goes straight to the pier. Nothing is
+// saved. Invented (§1.6): the trip, the kiosk's sale and the fin; the lines are the film's, relocated.
+export const BATTUR = {
+  lm: 'battur', r: 1.6, price: 300,
+  prompt: '<b>E</b> Båttur till fyren ({n} pta)',                                 // [N]
+  promptRio: '<b>E</b> Slutbilden igen – båttur ({n} pta)',                       // [N]
+  skipFrom: 0.8, stay: 6, popR: 40,
+  deck: 0.65, bench: 1.05,
+  seats: { stig: [-0.62, 1.8], ole: [0.62, 1.8], majsan: [-0.62, -0.6], siv: [0.62, -0.6] },
+  oleStands: [0.9, 3.4],                                                           // in the basin, at the bow, turned to the fin
+  fin: { at: [3.3, 8.6], bob: 0.05 },
+  clips: [
+    { id: 'hamn', at: 0, start: 'moor', from: [0, 0, 0], to: [0.5, 3.6, 0.05],
+      eye: [0.9, 14.6, 2.6], look: [1.2, 3.0, 1.5] },                             // over the water by the pier's end
+    { id: 'playa', at: 7.6, start: [58, 352], from: [0, 0, -Math.PI / 2], to: [-15, 0, -Math.PI / 2], track: true,
+      eye: [5.5, 11.0, 3.4], look: [-2.0, 0.0, 2.0] },                            // ahead of her bow on the sea side, the beach behind her
+    { id: 'fyren', at: 13.6, start: [-237, 334], from: [0, 0, -1.25], to: [-2.0, 6.0, -0.2], sky: 'sunset', world: true,
+      eye: [-240.2, 349.5, 2.6], look: [-239.3, 334, 5.2] },                      // she turns towards it, the tower behind her sun roof
+    { id: 'pier', at: 23.4, start: 'moor', from: [0, 0, 0], to: [0, 0, 0], ashore: true,
+      eye: [-3.0, -19.5, 2.25], look: [-2.6, -10.5, 1.15] },                      // from the quay, the kiosk on the left
+  ],
+  end: 26.0,
+  pier: { stig: [-3.0, -13.2, Math.PI], ole: [-4.1, -13.2, Math.PI - 0.25], majsan: [-1.9, -13.0, Math.PI + 0.25], siv: [-5.2, -12.9, Math.PI - 0.15] },   // in a row on the quay
+  plain: {
+    lines: [
+      [0.7, 'ole', 'Farlige saker. Der dør det mellom to og tre mennesker hver dag. Understrømmer, solstikk og haier.'],   // [F*] his answer to the beach (research-plot.md:281), as in CHATTER.ole, said to the fin
+      [14.4, 'ole', 'Tenk å sitte her i desember. Det er som i Rio.'],             // [F*](t) the welcome meeting (research-plot.md:268, the speaker interpreted), on the boat
+      [17.6, 'stig', 'Har du varit i Rio?'],                                       // [F*](t)
+      [19.4, 'ole', 'Nei, men jeg skal reise dit.'],                               // [F*](t)
+    ],
+  },
+  rio: {
+    tune: 'samba', cheers: 16.4, banner: 17.2, bannerSecs: 5.4,
+    lines: [
+      [14.4, 'ole', 'Tenk å sitte her i desember. Det er som i Rio.'],             // [F*](t) the welcome meeting (research-plot.md:268), after the end card's Rio
+    ],
+  },
 };

@@ -53,6 +53,7 @@ import { Gags } from './game/gags.js';
 import { BeachDream } from './game/beachDream.js';
 import { GuardiaJeep } from './game/guardiaJeep.js';
 import { GolfCarts } from './game/golfCart.js';
+import { BoatTrip } from './game/boatTrip.js';
 import { Lighthouse } from './game/lighthouse.js';
 import { ReceptionBell } from './game/receptionBell.js';
 import { StreetRace } from './game/streetRace.js';
@@ -227,6 +228,7 @@ class Game {
     this.bell = new ReceptionBell(this);  // free roam: the queue at Flamenco's reception, the bell's tenth pling (§10.37)
     this.gatlopp = new StreetRace(this);  // free roam after Gamla kläder: José's street races, Berra's and Robban's bet (§10.38)
     this.golf = new GolfCarts(this);      // free roam: the golf carts at the clubhouse, pip-pip, the bunkers and the pond (§10.40)
+    this.battur = new BoatTrip(this);     // free roam: the boat trip with PALOMA from the marina's kiosk, the end card again after the end (§10.41)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -1574,6 +1576,7 @@ class Game {
     this.bell.update(dt);
     this.gatlopp.update(dt);
     this.golf.update(dt);
+    this.battur.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);

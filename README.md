@@ -240,6 +240,13 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   ett ynkligt "pip-pip". Kör ner i en bunker så tar det stopp i sanden och Stig konstaterar "Jag
   pliktar ett slag."; i dammen plaskar det: "Oj… ett vattenhinder." Under ett uppdrag är golfbilen
   för långsam: "Golfbilen är för långsam – ta en riktig bil."
+- **Båtturen med PALOMA**: biljettkiosken PASEOS EN BARCO vid hamnens pir säljer båtturer mellan
+  uppdragen, på dagen, för 300 pta (räcker inte kassan betalar Ole). Utflyktsbåten PALOMA tar Stig och
+  Ole ut ur hamnbassängen förbi en uppblåsbar hajfena, där Ole pekar och drar sin olycksstatistik medan
+  Stig håller hårt i bänken, längs playan och bort till fyren i solnedgången: "Tenk å sitte her i
+  desember. Det er som i Rio." – "Har du varit i Rio?" – "Nei, men jeg skal reise dit." Efter slutet
+  blir turen slutbilden igen: Rio-kostymerna, Majsan och Siv med, glasen i händerna och samban. **E**
+  hoppar över turen.
 - **Små grodorna i poolen** (efter slutet): julfesten är inte riktigt över. Varje gång du kommer in
   på Flamencos pooldäck (mellan nio på morgonen och elva på kvällen) vadar SunTrip-gänget ut i den
   grunda änden och ställer sig i ring runt Lasse i tomteluva. Affe spelar Små grodorna på dragspelet,
@@ -479,6 +486,9 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
   trea efter första åket.")
 - golfbilarna vid klubbhuset, pip-pip-tutan, bunkrarna och dammen (i filmen finns ingen golfbil, och
   "Jag pliktar ett slag." hörs på golfrundan)
+- båtturen med PALOMA från hamnkiosken till fyren och tillbaka, hajfenan i hamnbassängen och reprisen
+  av slutbilden efter slutet (i filmen är slutbilden en båt utanför Copacabana, och Rio-repliken sägs
+  vid välkomstmötet)
 - poolfesten efter slutet: ringen runt Lasse, portierns promenad, att Stig hoppar med och
   takträknaren (i filmen dansar de andra Små grodorna i poolen på julfesten medan Stig-Helmer och Ole
   öppnar knäckebrödet, och Stig-Helmer dansar aldrig)
@@ -678,6 +688,7 @@ src/game/lighthouse.js          Uppför fyren in free roam: the stairs up the li
 src/game/receptionBell.js       Ringklockan i receptionen in free roam: the queue at Flamenco's desk, the bell's plings, the tenth's call, the card
 src/game/streetRace.js          Gatlopp mot pizza-racern in free roam: José's three street races (the race kind outside the runner), the bet, the sisters' six
 src/game/golfCart.js            Golfbilen in free roam: the golf carts (never a mission's), the pip-pip, the bunkers' sand and the pond's splash
+src/game/boatTrip.js            Båtturen med PALOMA in free roam: the kiosk, the trip's fixed shots, the doubles, the fin, the end card again after the end
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
@@ -687,7 +698,7 @@ tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, 
                                 badgaster, butik, brodrost, rum107, solkram, skjortbyte,
                                 stunthopp, prata, takhopp, mikrofon, faglar, gags, strandkyssen,
                                 guardiajeep, fyren, klader, ringklocka, kyrkfrid, gatlopp, skidor,
-                                golfbil, calibrate, calibflight)
+                                golfbil, battur, calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
 tools/pool.mjs                  re-derives every random stage's timer from the ledger
@@ -726,6 +737,7 @@ ESLOV_RUNS=8 node tools/shot.mjs eslovlopp  # measure Eslövloppet's timer with 
 node tools/shot.mjs skidor eslovrundan   # the borrowed rollerskis: the loan, speeds, surfaces, falls, the cheers, the return; Eslövrundan's three places
 node tools/shot.mjs eslovrundankal       # measure the skier's two times with the ski pilot (clean, one fall, two; DESIGN §10.39)
 node tools/shot.mjs golfbil              # the golf carts: E, top speed, the pip-pip, a bunker, the pond, a wreck, the mission lock
+node tools/shot.mjs battur batturrio     # the boat trip: the kiosk, the four shots, Ole paying, E's skip, a mission start; the end card again after the end
 node tools/shot.mjs grodorna grodtakt    # the pool fest after the end: the ring, the porter, Stig in the ring, eight on the beat
 node tools/shot.mjs artig                # Stig says sorry: kicks, run over, a pump, bins, carjackings and the driver's "Nej."
 node tools/shot.mjs grisar               # the grisbil's pigs: the falls, the catch on foot and by creeping, Lasse, the pen

@@ -1051,7 +1051,7 @@ function heldPose(m, st, t, place = false) {
   const h = m.def.held;
   if (!h || !PROP_GEO[h]) return;
   const [R, L] = m.arms;
-  const busy = st.wings || st.cupUp || st.cupHeld || st.push || st.rub || st.hold || st.flail || st.oath || st.dance || st.laugh || st.mirror || st.film || st.camShow || st.giraffe || st.butterKnife || st.ticket || st.carryOver || st.shoeOff || st.calc || st.groda || st.placate || st.tap || st.scratch || st.cheer || st.wave || st.kick > 0;
+  const busy = st.wings || st.cupUp || st.cupHeld || st.push || st.rub || st.hold || st.flail || st.oath || st.dance || st.laugh || st.mirror || st.film || st.camShow || st.giraffe || st.butterKnife || st.ticket || st.carryOver || st.shoeOff || st.calc || st.groda || st.placate || st.tap || st.scratch || st.point || st.cheer || st.wave || st.kick > 0;
   const pose = !place && !busy;
   const moving = st.speed > 0.3;
   switch (h) {
@@ -1173,12 +1173,14 @@ function poseFlags(m, st, t) {
     R.rotation.set(-0.3, 0, -2.75 + Math.sin(t * 15) * 0.08);
     m.neck.rotation.z = 0.14; m.neck.rotation.x = 0.08;
   }
+  if (st.point) R.rotation.set(-1.72, 0, -0.14);   // the right arm out at something ahead (Ole at the fin, game/boatTrip.js)
   if (st.cupHeld) {
     // A paper cup in the right hand: raised from a seat (Stig's "Ja." to the call button, §8.3),
     // held out to the row standing (the trolley stewardess serving); with `cupUp` raised standing
-    // too (Stig under Viking Bar's lamp, §10.32).
-    const up = st.seated || st.cupUp;
-    R.rotation.set(up ? -2.75 : -1.65, 0, up ? -0.08 : 0.12);
+    // too (Stig under Viking Bar's lamp, §10.32). 'low': held before the chest, seated or standing
+    // (the drinks on PALOMA, game/boatTrip.js).
+    const low = st.cupHeld === 'low', up = !low && (st.seated || st.cupUp);
+    R.rotation.set(up ? -2.75 : low ? -1.05 : -1.65, 0, up ? -0.08 : 0.12);
     if (st.cupUp && !st.seated) m.neck.rotation.x = -0.3;   // and he looks up to it
     inHand(m, prop(m, 'cup'), 0, 0, 0.01, 0);
   }

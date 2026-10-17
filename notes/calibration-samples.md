@@ -162,6 +162,16 @@ traffic spawn and walker. A golf cart can be driven only with `missions.state ==
 and a mission start puts both back on their spots. `story` and `fullstory` passed on the feature's
 tree. Every pool below stands and no timer changed.
 
+**Feature 76 (Båtturen med PALOMA, 2026-10-17) touches no pool.** It broke PALOMA, the excursion boat
+in the marina's basin (block (5,6), world (176.6, 254)), out of the marina's shared boat mesh into a mesh
+of her own with the same geometry and outline, her name board a child (DESIGN §10.41). Her collider is
+the same block in the same place in the collision list ([174.98, 248.6]–[178.22, 259.4], top 0.7), the
+count of blocks is unchanged, and her geometry draws no random numbers, so the world builds as before.
+She leaves her mooring only during the boat trip, which runs only with `missions.state === 'idle'` (a
+mission start puts her back at once). No mission stage, route or pooled stage plays in the marina block
+(its landmarks are a map label, `fena_hamn` and `pryl_glasogon`). `story` and `fullstory` passed on the
+feature's tree. Every pool below stands and no timer changed.
+
 ## `friskotekBalls` · §8.7 s1 · six fleeing beach balls · on foot: timer = ceil(1.25 × (p75 + 6 × 0.5))
 
 Phase 3 r2 island-staging placed everyone for the intro's group shot (Stig, Lasse, the sisters, the

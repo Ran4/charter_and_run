@@ -146,7 +146,12 @@ opens with a summary of the rounds and the timer changes.
     measures the skier's two times with the ski pilot, `ESLOVRUNDAN_RUNS`, DESIGN §10.39), `golfbil`
     (Golfbilen – pip-pip!, the two golf carts by the golf clubhouse between missions: E, about 23 km/h,
     the pip-pip, a bunker with "Jag pliktar ett slag.", the pond's splash, a wreck back on its spot;
-    never a mission's car: no prompt and the toast in a mission, home at a mission start, DESIGN §10.40)
+    never a mission's car: no prompt and the toast in a mission, home at a mission start, DESIGN §10.40),
+    `battur batturrio` (Båtturen med PALOMA, the PASEOS EN BARCO kiosk at the marina between missions by
+    day: 300 pta, PALOMA out of the basin past the shark fin with Ole's statistics, along the beach, the
+    lighthouse in the sunset with the Rio exchange, the quay; Ole a double, E's skip, a mission start;
+    after the end the end card again with the Rio suits, Majsan and Siv, the cups and the banner,
+    DESIGN §10.41)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

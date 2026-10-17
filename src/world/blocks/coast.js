@@ -67,6 +67,13 @@ export const BELT = { x: 0, z: 0, spin: 0.32, top: 0, r0: 0, r1: 0, block: null,
 // depth too), and the gallery door's angle round the axis (`door`, as a yaw: north-east, to the town).
 export const LIGHTHOUSE = { x: 0, z: 0, deck: 0, lantern: 0, rail: 0, rIn: 0, rOut: 0, door: 0, blocks: [] };
 
+// PALOMA, the marina's excursion boat, as the boat trip sees it (game/boatTrip.js, §10.41), filled by
+// the hamn builder: her own mesh (`mesh`, built round her middle at the waterline CURB, bow to +z
+// local, the PALOMA board a child), her mooring (world `x`, `z`, `yaw`), her length and beam, and
+// `away` (set by the trip while she is out: the harbour's bob leaves her alone). Her collider stays at
+// the mooring.
+export const PALOMA = { mesh: null, x: 0, z: 0, yaw: 0, len: 12, beam: 3.6, away: false };
+
 // Coins wanted at build time, placed once the pool exists (pickups.initCoins runs after buildTown).
 const pendingCoins = [];
 function coinAt(f, lx, lz, y) {
@@ -1156,25 +1163,41 @@ function hamn(f, W) {
   for (let z = 6; z <= 24; z += 3) coinAt(f, PX, z, DECK + 0.75);
   // Bollards along the quay edge.
   for (let x = -27; x <= 27; x += 6) { if (Math.abs(x - PX) < 3) continue; f.cyl(INK, x, CURB + 0.3, 2.3, 0.18, 0.5, 8); f.circ(x, 2.3, 0.2, CURB + 0.6, 'bollard'); }
-  // Boats (one bobbing mesh built around the block centre) + their colliders.
+  // Boats (one bobbing mesh built around the block centre) + their colliders. PALOMA, the excursion
+  // boat, is a mesh of its own built round its middle, with its name board as a child, bobbing with
+  // the others while moored: the boat trip (game/boatTrip.js, §10.41) takes it out. Same geometry,
+  // outline and collider (which stays at the mooring) as when it was part of the shared mesh.
   {
     const G = new GeoBuilder(), bf = new Frame(G, G, 0, 0, 0, scene);
     const BOATS = [
       ['sail', -24, 9, PI, {}], ['motor', -18.5, 8.5, PI, {}], ['fishing', -14, 7.5, PI, { hull: 0x2f6aa8, band: 0xf4f4f0 }],
       ['motor', -4.2, 9.5, PI, { band: GREEN }], ['sail', 7.6, 13.5, 0, { cover: RED }], ['motor', 7.6, 23, 0, {}],
-      ['excursion', 16.6, 14, 0, {}], ['motor', 25, 17, 0, { len: 9, beam: 3 }],
+      ['excursion', 16.6, 14, 0, { paloma: true }], ['motor', 25, 17, 0, { len: 9, beam: 3 }],
       ['fishing', -24, 24, 0, { hull: GREEN, band: SUNY, roof: BLUE }], ['sail', -17.5, 23.5, 0, {}],
     ];
+    const PG = new GeoBuilder();
     for (const [kind, x, z, yaw, o] of BOATS) {
-      boat(bf, kind, x, z, yaw, { ...o, solid: false });
+      if (o.paloma) boat(new Frame(PG, PG, 0, 0, 0, scene), kind, 0, 0, 0, { solid: false });
+      else boat(bf, kind, x, z, yaw, { ...o, solid: false });
       const L = o.len ?? (kind === 'excursion' ? 12 : kind === 'fishing' ? 6 : 7.5), B = o.beam ?? (kind === 'excursion' ? 3.6 : kind === 'fishing' ? 2.2 : 2.5);
       f.solid(x, z, B * 0.9, L * 0.9, CURB + 0.55, 'boat');
+      if (o.paloma) Object.assign(PALOMA, { x: f.wx(x, z), z: f.wz(x, z), yaw: f.yaw + yaw, len: L, beam: B });
     }
     const boats = meshOf(G, scene, 0.035);
     boats.position.set(f.ox, 0, f.oz);
-    onTick((t) => { boats.position.y = Math.sin(t * 1.15) * 0.05; }, scene);
+    const paloma = PALOMA.mesh = meshOf(PG, scene, 0.035);
+    paloma.position.set(PALOMA.x, 0, PALOMA.z);
+    paloma.rotation.y = PALOMA.yaw;
+    onTick((t) => {
+      boats.position.y = Math.sin(t * 1.15) * 0.05;
+      if (!PALOMA.away) paloma.position.y = Math.sin(t * 1.15) * 0.05;
+    }, scene);
     for (const [x, z] of [[-24, 5.2], [-18.5, 4.7], [-14, 4.5], [-4.2, 5.7]]) f.boxC(ROPE, x, CURB + 0.45, z - 1.3, 0.05, 0.05, 2.0, 0, 0.2);
-    f.sign('PALOMA', 18.45, CURB + 1.25, 17.5, 2.2, 0.5, PI / 2, { bg: null, border: null, fg: '#1b2f6b', scale: 0.8 });
+    const name = f.sign('PALOMA', 18.45, CURB + 1.25, 17.5, 2.2, 0.5, PI / 2, { bg: null, border: null, fg: '#1b2f6b', scale: 0.8 });
+    // The board on her port side, 1.85 m out from her middle, 3.5 m towards the bow (block yaw 0).
+    paloma.add(name);
+    name.position.set(18.45 - 16.6, CURB + 1.25, 17.5 - 14);
+    name.rotation.y = PI / 2;
   }
   // North: entrance arch, harbour office (CAPITANÍA), fish restaurant with a terrace.
   for (const sx of [-1, 1]) { f.box(WASH, sx * 5.5, CURB, -29.5, 1.1, 4.2, 1.1); f.solid(sx * 5.5, -29.5, 1.1, 1.1); f.box(TERRA, sx * 5.5, CURB + 4.2, -29.5, 1.3, 0.3, 1.3); }

@@ -1,7 +1,6 @@
 # Gör dessa grejer (flytta filen till features/implemented/ och uppdatera den när du är klar, och
 # flytta den överst till "färdiga features"-sektionen nedan)
 # markörer: ⟨par N⟩ = de två raderna med samma N körs samtidigt (var sin worktree/gren, sedan rebase på main och push), ⟨solo⟩ = körs ensam; ta grupperna uppifrån och ned
-- features/battur_rio.md – 76. Båtturen med PALOMA – slutbilden, fast på riktigt [M] ⟨par 10⟩
 - features/balkonglivet.md – 77. Balkongerna lever – grannar, siesta och ”havsutsikt” [M] ⟨par 10⟩
 - features/hytt_tva_ring_efter_bil.md – 80. Hytt två! – ring efter en bil [M] ⟨par 11⟩
 - features/poolbaren_svenskt_kaffe.md – 84. Poolbaren öppnar – svenskt kaffe ger fart [S] ⟨par 11⟩
@@ -33,6 +32,7 @@
 - features/butaneron.md – 143. Butaneron och gasolbilen [M] ⟨solo⟩
 
 # Färdiga features (lägg till [färdig: yyyy-mm-dd hh:mm] i slutet)
+- features/implemented/battur_rio.md – 76. Båtturen med PALOMA – slutbilden, fast på riktigt [M] [färdig: 2026-10-17 19:27]
 - features/implemented/snackrutor.md – Snackrutorna buggar ur, gör dem högre (bugg) [färdig: 2026-10-17 18:38]
 - features/implemented/golfbilen.md – 74. Golfbilen – pip-pip! [M] [färdig: 2026-10-17 18:21]
 - features/implemented/lana_rullskidorna.md – 71. Låna rullskidorna – åk fort på asfalt [L] [färdig: 2026-10-17 17:42]

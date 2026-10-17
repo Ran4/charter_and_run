@@ -203,6 +203,9 @@ export const ISLAND_LANDMARKS = {
   hamn: { b: [5, 6], at: [0, 0], yaw: PI },
   fena_hamn: { b: [5, 6], at: [-8, 10], yaw: 0, y: 0.35 },
   pryl_glasogon: { b: [5, 6], at: [12, 28], yaw: 0, y: 1.2 },
+  // Båtturen med PALOMA (free roam, §10.41): before the PASEOS EN BARCO kiosk's window at the pier
+  // root, facing it (E: the trip).
+  battur: { b: [5, 6], at: [18.5, -0.4], yaw: PI },
   // The G17 toasters (feature 33, §10.24), on things that were there, with no collider of their own:
   // `y` is the top a toaster stands on, `yaw` the side Stig checks it from (its front).
   brodrost_ferreteria: { b: [4, 2], at: [25.6, 13.0], yaw: 0, y: 0.65 },          // FERRETERÍA's paint-can crate
