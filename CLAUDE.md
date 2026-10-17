@@ -163,7 +163,14 @@ opens with a summary of the rounds and the timer changes.
     the named car itself moved whole to a free spot in the car park out of the camera's view, "Señor,
     betala!" and 25 pta (Ole when short), Stig turned to it; a dent, a wreck, a delivered grisbil's bed,
     a full car park; no prompt in a car, a pursuit or a mission; bus 17 home at its mission's start,
-    DESIGN §10.43)
+    DESIGN §10.43),
+    `kaffe kaffestorch` (Poolbaren öppnar, BAR PISCINA after friskoteket: shut and nobody behind it
+    before, the bartender by the percolator after; E at the counter's north end: 40 pta, the head shaken
+    when short, the cup in Stig's hand and 30 s of sprint × 1.2 with the box under the meter, "Påtår",
+    cold; no prompt in a pursuit, ended by Eslövloppet's or a mission's start; Berra's "Ska du ha?" at
+    index 8; the toaster's E kept; `kaffestorch`: the cup for Fru Storch, her question and his "Ja.", 50
+    pta, and calibrate's walker from the counter to her within the coffee's 30 s, `KAFFE_RUNS`, DESIGN
+    §10.44)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

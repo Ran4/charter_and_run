@@ -103,6 +103,10 @@ export const CHARS = {
     scarf: 0xf4f4f0, hairFlower: 0xffffff, pants: 0xf4f0e6, shoes: 0xf4f0e6, voice: 410, ring: '#fff8e6' }),
   portier: A({ name: 'Portiern', skin: ES, hair: 'slick', hairC: 0x1d1426, brows: 0x1d1426, shirt: 0xf4f4f0, longSleeves: true, vest: 0x1d1426, bowtie: 0x1d1426,
     mustache: 0x1d1426, stache: 'thick', pants: 0x1d1426, voice: 255, ring: '#d8321e' }),
+  // The pool bar's bartender (feature 84, §10.44): balding with sideburns, white shirt, red waistcoat,
+  // black bow tie and a white bar apron (the porter has his hair slicked back and a black waistcoat).
+  camarero: A({ name: 'Bartendern', skin: ES, wide: 1.1, hair: 'balding', hairC: 0x1d1426, sideburns: true, brows: 0x1d1426, shirt: 0xf4f4f0, longSleeves: true,
+    vest: 0xc8202a, bowtie: 0x1d1426, apron: 0xf4f4f0, mustache: 0x1d1426, stache: 'big', pants: 0x1d1426, voice: 265, ring: '#d8321e' }),
   sulan: A({ name: 'Sulan', skin: 0xd9a07a, hair: 'short', hairC: 0x6a4a2a, shirt: 0x6a4a2a, collar: true, longSleeves: true, pants: 0x4a4a52, voice: 245, ring: '#fff8e6' }),
   vardinna: A({ name: 'Flygvärdinnan', hair: 'bun', hairC: 0xf0d890, brows: 0xc0a060, lashes: true, dress: 0x1e9aa0, pinafore: true, shirt: 0xf4f4f0, longSleeves: true,
     scarf: 0xf7c31b, pants: 0x1e9aa0, shoes: 0x1d1426, voice: 370, ring: '#1e9aa0' }),

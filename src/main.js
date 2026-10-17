@@ -55,6 +55,7 @@ import { GuardiaJeep } from './game/guardiaJeep.js';
 import { GolfCarts } from './game/golfCart.js';
 import { BoatTrip } from './game/boatTrip.js';
 import { Residents } from './game/residents.js';
+import { PoolBar } from './game/poolBar.js';
 import { Lighthouse } from './game/lighthouse.js';
 import { ReceptionBell } from './game/receptionBell.js';
 import { StreetRace } from './game/streetRace.js';
@@ -233,6 +234,7 @@ class Game {
     this.battur = new BoatTrip(this);     // free roam: the boat trip with PALOMA from the marina's kiosk, the end card again after the end (§10.41)
     this.residents = new Residents(this); // free roam: the neighbours on the balconies, the siesta and its slipper (§10.42)
     this.hytt = new PhoneBooth(this);     // free roam: booth 2 at Centro Nórdico, ring for a car to the car park (§10.43)
+    this.bar = new PoolBar(this);         // free roam after friskoteket: the pool bar's Swedish coffee, its sprint, the cup for Fru Storch (§10.44)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -887,6 +889,8 @@ class Game {
       const n = this.npcs[key];
       if (!force && (n.busy || n.car)) continue;
       let home = set[key] ?? null;
+      // The pool bar's bartender is not there before the bar opens (§10.44).
+      if (this.level === 'island' && this.bar?.hides(key)) home = null;
       // An unlock's home override; `null` hides the NPC (Angerud after the end, UNLOCKS.bodega).
       if (this.level === 'island' && key in this.homeOverrides) home = this.homeOverrides[key];
       let needed = false;
@@ -1584,6 +1588,7 @@ class Game {
     this.battur.update(dt);
     this.residents.update(dt);
     this.hytt.update(dt);
+    this.bar.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);
@@ -1749,7 +1754,8 @@ class Game {
         const l = Math.hypot(wx, wz);
         if (l > 1) { wx /= l; wz /= l; }
         const sprint = input.down('sprint') && !this.speedCap;
-        const sp = Math.min(sprint ? def.speeds.sprint : def.speeds.walk, this.speedCap ?? Infinity);
+        // A cup of Swedish coffee from the pool bar: a faster sprint between missions (§10.44).
+        const sp = Math.min(sprint ? def.speeds.sprint * this.bar.sprintK() : def.speeds.walk, this.speedCap ?? Infinity);
         p.wishX = wx * sp; p.wishZ = wz * sp;
         p.anim.sprint = sprint && l > 0.1;
       }
@@ -1887,13 +1893,14 @@ class Game {
   // with the ticket pad or Angerud in the tow scene (§10.17), the grisfest's evening (§10.18), the
   // souvenir seller swearing at a smashed fruit stall (§10.19), the crowd at the SunTrip stage
   // (§10.30), Herr Storch filming the stork (§10.31), someone in a gag's scene (§10.32), Siv or
-  // Majsan on the sand by Stig's towel (§10.33), the porter ringing for the site manager (§10.37) or
-  // José and his mother walking back to his place after a street race (§10.38).
+  // Majsan on the sand by Stig's towel (§10.33), the porter ringing for the site manager (§10.37),
+  // José and his mother walking back to his place after a street race (§10.38), or the bartender,
+  // Berra or Fru Storch in a scene at the pool bar or with its cup (§10.44).
   // syncAll gives such an NPC no wave, turn or chatter, and the gang's talk leaves them be (§10.28).
   npcPosed(k) {
     return !!this.missions.idlePose(k) || this.berraJob.posed(k) || this.judges.posed(k) || this.film.posed(k) || this.eslov.posed(k) || this.fest.posed(k) || this.lapp.posed(k) || this.party.posed(k)
       || this.stands.posed(k) || !!this.mic?.posed(k) || this.birds.posed(k) || !!this.gags?.posed(k) || !!this.dream?.posed(k) || !!this.bell?.posed(k)
-      || !!this.gatlopp?.posed(k);
+      || !!this.gatlopp?.posed(k) || !!this.bar?.posed(k);
   }
 
   syncAll(dt, title) {

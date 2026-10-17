@@ -54,6 +54,7 @@ export const hud = {
       <div id="results"><div class="res-title"></div><div class="res-rows"></div><div class="res-caption"></div></div>
       <div id="fade"></div>
       <div id="takt"></div>
+      <div id="kaffe"><span class="kaffe-icon"></span><span class="kf-text"></span></div>
       <div id="toasts"></div>
       <div id="banner"><div class="banner-main"></div><div class="banner-sub"></div></div>
       <div id="bubbles"></div>
@@ -93,6 +94,7 @@ export const hud = {
     this.scoreEl = $('score');
     this.resultsEl = $('results');
     this.taktEl = $('takt');
+    this.kaffeEl = $('kaffe');
     this.vfEl = $('viewfinder');
     this.fnEl = $('filmnight');
     this.flash = $('flash');
@@ -412,6 +414,16 @@ export const hud = {
       clearTimeout(this._taktT);
       this._taktT = setTimeout(() => e.classList.remove('miss', 'goal'), 900);
     } else if (!on) { clearTimeout(this._taktT); e.classList.remove('miss', 'goal'); }
+  },
+
+  // The pool bar's coffee (game/poolBar.js, §10.44), top right under the meter (under the hop counter
+  // when that shows): `text` ("SVENSKT KAFFE · SPRINT +20 % · 0:27"), null hides it; `low` pulses it
+  // (the last seconds). Touches the DOM only on a change.
+  setKaffe(text, low = false) {
+    const e = this.kaffeEl, on = text != null;
+    if (on && text !== this._kaffeText) { this._kaffeText = text; e.querySelector('.kf-text').textContent = upper(text); }
+    if (on !== this._kaffeOn) { this._kaffeOn = on; e.classList.toggle('show', on); }
+    if ((on && low) !== this._kaffeLow) { this._kaffeLow = on && low; e.classList.toggle('low', on && low); }
   },
 
   letterbox(on) { $('letterbox').classList.toggle('on', on); },

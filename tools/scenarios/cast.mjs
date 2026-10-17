@@ -145,7 +145,8 @@ export const SCENARIOS = {
     await T.ev(installStudio);
     const keys = await T.ev(() => window.__cs.M.CAST);
     const all = await T.ev(() => Object.keys(window.__cs.M.CHARS));
-    check(all.length === 34 && keys.length === 34, `34 CHARS keys with portraits (got ${all.length}/${keys.length})`);
+    // 35 since feature 84 (§10.44): the pool bar's bartender.
+    check(all.length === 35 && keys.length === 35, `35 CHARS keys with portraits (got ${all.length}/${keys.length})`);
     // Every def builds and animates with every flag on, without throwing or NaN.
     const bad = await T.ev((flags) => {
       const { M } = window.__cs, out = [];

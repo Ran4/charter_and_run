@@ -264,6 +264,15 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   (en kvaddad bil kommer tillbaka som ny), telefonisten säger "Señor, betala!" (räcker inte kassan
   betalar Ole) och Stig tackar artigt. När han vänder sig om står bilen och väntar. Grisbilen? "Den
   luktar lite."
+- **Poolbaren öppnar** (efter friskoteket): Berra hade rätt, "De har inte öppnat än", men när
+  friskoteket är avklarat står det en bartender bakom BAR PISCINA vid Flamencos pool. Ställ dig vid
+  diskens norra ände, vid perkolatorn, och tryck **E**: en kopp svenskt kaffe för 40 pesetas.
+  "Äntligen riktigt bryggkaffe." I 30 sekunder springer Stig 20 % fortare (Shift) med koppen i
+  handen, och en ruta under mätaren räknar ner. En påtår startar om de 30 sekunderna men ger inte mer
+  fart. Har du inte råd skakar bartendern på huvudet. Står Berra vid baren höjer han glaset: "Ska du
+  ha?" – "Nej tack, jag tål inte starksprit." Och hinner du ner till fru Storch på stranden innan
+  kaffet är slut kan du ge henne koppen (**E**): "Finns det svenskt kaffe på hotellet?" – "Ja." Hon
+  betalar 50 pesetas. Kaffet finns bara mellan uppdragen: när ett uppdrag börjar är det slut.
 - **Små grodorna i poolen** (efter slutet): julfesten är inte riktigt över. Varje gång du kommer in
   på Flamencos pooldäck (mellan nio på morgonen och elva på kvällen) vadar SunTrip-gänget ut i den
   grunda änden och ställer sig i ring runt Lasse i tomteluva. Affe spelar Små grodorna på dragspelet,
@@ -512,6 +521,9 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
 - att ringa efter en bil från hytt 2 på Centro Nórdico, bilmenyn och telefonisten som ställer bilen på
   parkeringen (i filmen ringer Angerud Levander från en telefonstation; "Hytt två" sägs på engelska och
   någon kräver "Señor, betala!", men anteckningarna säger inte vem)
+- poolbaren som öppnar efter friskoteket, bartendern, kaffets fart, påtåren och koppen till fru
+  Storch (i filmen är Berras "Ska du ha?" på Arlandas herrtoalett, frågan om svenskt kaffe och dess
+  "Ja." sägs på välkomstmötet, och ingen bar i filmen serverar Stig-Helmer)
 - poolfesten efter slutet: ringen runt Lasse, portierns promenad, att Stig hoppar med och
   takträknaren (i filmen dansar de andra Små grodorna i poolen på julfesten medan Stig-Helmer och Ole
   öppnar knäckebrödet, och Stig-Helmer dansar aldrig)
@@ -714,6 +726,7 @@ src/game/golfCart.js            Golfbilen in free roam: the golf carts (never a 
 src/game/boatTrip.js            Båtturen med PALOMA in free roam: the kiosk, the trip's fixed shots, the doubles, the fin, the end card again after the end
 src/game/residents.js           Balkongerna lever in free roam: the residents on the slabs' balconies, their calls, the parking line, the señora's slipper at siesta
 src/game/phoneBooth.js          Hytt två! in free roam: booth 2 at Centro Nórdico, the menu of named cars, the call, the car moved whole to the car park
+src/game/poolBar.js             Poolbaren öppnar in free roam after friskoteket: the bartender, the coffee and its 30 s sprint, Berra's "Ska du ha?", the cup for Fru Storch
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
@@ -723,7 +736,7 @@ tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, 
                                 badgaster, butik, brodrost, rum107, solkram, skjortbyte,
                                 stunthopp, prata, takhopp, mikrofon, faglar, gags, strandkyssen,
                                 guardiajeep, fyren, klader, ringklocka, kyrkfrid, gatlopp, skidor,
-                                golfbil, battur, balkong, hytt, calibrate, calibflight)
+                                golfbil, battur, balkong, hytt, kaffe, calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
 tools/pool.mjs                  re-derives every random stage's timer from the ledger
@@ -765,6 +778,7 @@ node tools/shot.mjs golfbil              # the golf carts: E, top speed, the pip
 node tools/shot.mjs battur batturrio     # the boat trip: the kiosk, the four shots, Ole paying, E's skip, a mission start; the end card again after the end
 node tools/shot.mjs balkong balkongshots # the balconies' residents: the calls, the mirror, the parking line, the siesta's slipper
 node tools/shot.mjs hytt                 # the phone at Centro Nórdico: the menu, Q, a call, the car out of view, the fare, a wreck, a full car park, the locks
+node tools/shot.mjs kaffe kaffestorch    # the pool bar after friskoteket: the coffee, its sprint, Berra's glass, the cup for Fru Storch, measured
 node tools/shot.mjs grodorna grodtakt    # the pool fest after the end: the ring, the porter, Stig in the ring, eight on the beat
 node tools/shot.mjs artig                # Stig says sorry: kicks, run over, a pump, bins, carjackings and the driver's "Nej."
 node tools/shot.mjs grisar               # the grisbil's pigs: the falls, the catch on foot and by creeping, Lasse, the pen

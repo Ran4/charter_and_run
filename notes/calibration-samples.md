@@ -187,6 +187,13 @@ unchanged, so a mission's `getInCar` `atHome` (buss17's bus, grisfest's hire car
 in its bay as it does a driven one, and the tow does too; no stage, route, actor or autopilot changed.
 The world builds as before (three landmarks, no geometry). `story` and `fullstory` passed on the
 feature's tree. Every pool below stands and no timer changed.
+**Feature 84 (Poolbaren öppnar, 2026-10-17) touches no pool.** From index 7 (after friskoteket) a new
+NPC, the bartender `camarero`, stands behind BAR PISCINA's counter in the aisle at Hotel Flamenco's
+pool (block-local (19.1, 9.4)), in missions too, on no stage's route or spawn area (the friskotek balls
+are in (3,2), and he is hidden at index 6); building his model draws no random number. The coffee's
+sprint (× 1.2) exists only with `missions.state === 'idle'`, is never on in a mission or in
+Eslövloppet, and ends at a mission start. Its one measurement, the cup carried to Fru Storch, is
+below ("Kaffet till fru Storch"); it is not a pool and changes no timer.
 
 ## `friskotekBalls` · §8.7 s1 · six fleeing beach balls · on foot: timer = ceil(1.25 × (p75 + 6 × 0.5))
 
@@ -510,3 +517,22 @@ uncommitted on f494e34 throughout (feature 69's commit is the first with it).
 | f69-G1 | 2026-10-17 | f494e34 + uncommitted: the shipped specs, the module while its scenario was written (six `gatlopp` invocations that reached the races) | 1, 2, 3 | shipped | `gatlopp` (clean only) | course 1 +1.7 (21.13) ×6; course 2 +2.1 (22.58) ×4; course 3 +1.7 (26.67), +1.7 (26.60), +1.7 (26.60), +2.1 (26.27) | a seventh invocation's three wins (it passed) were filtered out of its log: lost |
 | f69-F1 | 2026-10-17 | f494e34 + uncommitted: feature 69's final code (the docs still being written) | 1, 2, 3 | shipped: 34:37:10 · 33:37:8 · 35:38:8 (steer 0.75) | default (GATLOPP_RUNS=2) | course 1: clean +1.6 (21.30), +1.7 (21.13) · crash −1.5, −1.5. Course 2: +2.1 (22.58), +2.1 (22.58; each a contact 4.5 at the second right, imp 0) · −3.6, −3.6. Course 3: +2.1 (26.27), +2.1 (26.28) · −2.2, −2.0 | none (imp 0 in all 12) |
 | f69-G2 | 2026-10-17 | f494e34 + uncommitted: feature 69, the final tree | 1, 2, 3 | shipped | `gatlopp` (clean only) | course 1 +1.7 (21.13); course 2 +2.1 (22.58; a contact 4.5 at the second right, imp 0); course 3 +2.1 (26.27) | none |
+
+## Kaffet till fru Storch · §10.44 · the cup from BAR PISCINA to the beach (free roam, feature 84) · not a pool
+
+Not a stage and not a pool (this section's header has no stage key, so `tools/pool.mjs` does not read
+it): the coffee's 30 s is the idea's, and the delivery is measured against it the way an on-foot stage
+would be (DESIGN §8: T_ref = the run's median + 0.5 s per target, timer = ceil(1.25 × T_ref)). Scenario
+`kaffestorch` at index 9: calibrate's walker (`installAutopilot` from the unchanged `calibrate.mjs`,
+`ap.walk` to a point 1.4 m short of Fru Storch on the line from Stig) from the moment the cup is in his
+hand at the counter's spot (`poolbarKaffe`, after E) until her E (`kaffe:storch`, 2.2 m) is the nearest
+interactable, sprinting with the coffee (10.56 m/s). `left` = the coffee's seconds left on arrival.
+The probe rows ran before the feature existed, at the plain sprint (8.8), from (17.9, 7.4) (the first
+idea for the spot, the counter's north end) to the same arrival. Sample ids: `f84`.
+
+| sample | date | code | env | runs (s, run order; walked m; left s) | notes |
+|---|---|---|---|---|---|
+| f84-p | 2026-10-17 | 1ff64cb, no feature code (a scratch probe) | sprint 8.8, 2 runs | 27.88, 27.80 (243 m each) | baseline; × 8.8 / 10.56 ≈ 23.2 |
+| f84-1 | 2026-10-17 | 1ff64cb + uncommitted: feature 84 (first full `kaffestorch`) | KAFFE_RUNS=3 (default) | 23.08 (242; 6.83), 23.00 (241; 6.98), 23.00 (241; 6.98) | median 23.00 → T_ref 23.50 → ceil(1.25 × 23.50) = 30 |
+| f84-2 | 2026-10-17 | 1ff64cb + uncommitted: feature 84, Stig's spot by Fru Storch moved and the hush added | KAFFE_RUNS=3 (default) | 23.00 (241; 7.00), 23.07 (242; 6.93), 23.00 (241; 6.98) | median 23.00 → T_ref 23.50 → 30 = the coffee's 30 s |
+| f84-3 | 2026-10-17 | 3d9349f (feature 84 rebased on 792c688, feature 80) | KAFFE_RUNS=3 (default) | 23.08, 23.00, 23.00 | median 23.00 → T_ref 23.50 → 30 |

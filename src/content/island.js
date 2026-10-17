@@ -20,7 +20,8 @@
 // (§10.33), and the borrowed Guardia jeep, its siren on H and the traffic giving way to it (§10.34),
 // and the queue at Flamenco's reception and the bell that answers on its tenth pling (§10.37), and
 // José's street races with his mother in the car, the bet at the pool bar and the sisters' six (§10.38),
-// and the boat trip with PALOMA from the marina's kiosk to the lighthouse and back (§10.41).
+// and the boat trip with PALOMA from the marina's kiosk to the lighthouse and back (§10.41), and the pool
+// bar open after friskoteket, its bartender, the Swedish coffee's sprint and the cup for Fru Storch (§10.44).
 
 export const HOMES_ISLAND = {
   ole: ['flamenco', 2.0, 1.0, 0],     // yaw 0: under the pergola, facing the pool (flamenco faces π)
@@ -42,6 +43,7 @@ export const HOMES_ISLAND = {
   pappa: ['fatagaFold', 0, 0],
   carmencita: ['vikingbar', -2.0, 0],
   portier: ['flamencoRecepcion', 0, 0],
+  camarero: ['camarero', 0, 0],        // behind BAR PISCINA's counter, only once the bar is open (game/poolBar.js `hides`, §10.44)
   hittegods: ['hittegods', 0, 0],
   saljare: ['bungalow', 0, 0],
   souvenir: ['asnestand', 0, 1.2],
@@ -85,6 +87,7 @@ export const CHATTER = {
   jose: ['Jag ska inte bort, jag ska hem.' /* [F*] */],
   mamma: ['Inga svenskor!' /* [F*] */, '¡Josito! ¡Josito!' /* [F*] */],
   portier: ['Momento.' /* [F*] */],
+  camarero: ['¡Café!' /* [N] */, '¡Café sueco!' /* [N] */],
   affe: ['Va fan, jag hade ju natturen i natt!' /* [F*] */, 'Jag måste få kvarta nån gång.' /* [F*] */],
   gabbe: ['Natturen går klockan nio!' /* [N] */, 'Grisfestbussen går från SunTrip!' /* [N] */],
   souvenir: ['Hallå där!' /* [F*] */, 'Titta, den är jättelustig.' /* [F*] */],
@@ -335,7 +338,7 @@ export const NPC_KICKED_OLE = ['Au!' /* [N] */, 'Au! Hva er det med deg?' /* [N]
 // The Spanish cast and the local pedestrians (randomPed `local`): Spanish exclamations a Swedish
 // player understands (§1.3, like the locals' ¡Cuidado! in §6.7). José is here too: Swedish in his
 // scenes, but a Spaniard (and a mamma's boy) when he lands on the pavement.
-export const LOCAL_CAST = ['jose', 'mamma', 'pappa', 'carmencita', 'portier', 'hittegods', 'souvenir', 'stadare', 'grisbonde', 'varden', 'telefonist'];
+export const LOCAL_CAST = ['jose', 'mamma', 'pappa', 'carmencita', 'portier', 'camarero', 'hittegods', 'souvenir', 'stadare', 'grisbonde', 'varden', 'telefonist'];
 export const OUCH_LOCAL = ['¡Ay, mi madre!' /* [N] */, '¡Ay, ay, ay!' /* [N] */, '¡Turistas!' /* [N] */, '¡Cuidado!' /* [N] */];
 export const GETUP_LOCAL = ['¡Madre mía…!' /* [N] */, 'Suecos…' /* [N] */, 'Nada, nada.' /* [N] */];
 export const CARJACK_LOCAL = ['¡Ladrón!' /* [N] */, '¡Mi coche!' /* [N] */, '¡Policía!' /* [N] */];
@@ -2166,5 +2169,63 @@ export const BATTUR = {
     lines: [
       [14.4, 'ole', 'Tenk å sitte her i desember. Det er som i Rio.'],             // [F*](t) the welcome meeting (research-plot.md:268), after the end card's Rio
     ],
+  },
+};
+
+// Poolbaren öppnar – svenskt kaffe ger fart (free roam; feature 84, DESIGN §10.44; game/poolBar.js).
+// BAR PISCINA (hotels.js flamencoBar) is shut and empty until `after` is done (Berra's "De har inte
+// öppnat än" in its outro); from the next mission index on the bartender `barman` stands behind the
+// counter by the percolator (HOMES_ISLAND, landmark `camarero`). On the island with no mission running,
+// on foot before the counter's north end (landmark `lm`, within `r` m) with the bartender free and within
+// `barmanR` m of his place, and no dialogue, carry, pursuit, bust, PANIK, pool-fest ring, belt, gang
+// talk, nap, sun cream, toaster game, rollerskis or Eslövloppet under way: E buys a cup for `price` pta
+// (`addCoins`: the purse must hold it, Ole does not pay). The bartender holds it out with `buy.thanks`,
+// hands it over at `buy.handAt` s and Stig, cup in hand (`cupHeld` 'low'), says `buy.stig` (a refill:
+// `buy.more`, the prompt `promptMore`); for `secs` s his sprint is `sprint` × (main.fixedStep) and the
+// box under the meter counts down (`hud`, pulsing from `lowSecs` s). A new cup starts the `secs` again,
+// never more speed. Short of the price the bartender shakes his head (`short`). Berra standing free
+// within `berra.r` m of the counter's spot raises his glass when Stig buys and the Arlanda men's room
+// plays (`berra.lines`, [at, who, text, secs]), at most every `berra.every` s. With the cup still in his
+// hand, E at Fru Storch (within `storch.r` m, free) plays `storch.lines`; Stig holds the cup out at
+// `offerAt`, she has it at `handAt` and keeps it `holdSecs` s, pays `pay` pta (`toast`) and the coffee
+// ends (the countdown stands still from E to the hand-over). While a scene plays the people within
+// `hushR` m keep their chatter until `hushAfter` s after it; it breaks off when Stig is `leaveR` m away.
+// A mission start, the other level or Eslövloppet's start ends the coffee at once. Nothing is saved.
+// Invented (§1.6): the bar open, the bartender, the coffee's sprint, the refill and the cup for Fru
+// Storch; the men's-room exchange and the subtitle's question and answer are the film's, relocated.
+export const KAFFE = {
+  after: 'friskotek', barman: 'camarero', barmanR: 6, lm: 'poolbarKaffe', r: 1.3, price: 40,
+  secs: 30, sprint: 1.2, lowSecs: 5, leaveR: 10, hushR: 9, hushAfter: 3,
+  prompt: '<b>E</b> Köp svenskt kaffe ({n} pta)',                                 // [N]
+  promptMore: '<b>E</b> Påtår ({n} pta)',                                          // [N]
+  hud: 'Svenskt kaffe · sprint +20 % · {t}',                                       // [N]
+  buy: {
+    thanks: '¡Gracias, señor!', thanksSecs: 1.4,                                   // [N]
+    handAt: 0.6, stigAt: 0.9, stigSecs: 2.4, end: 3.3,
+    stig: 'Äntligen riktigt bryggkaffe.',                                          // [N] the Swedes' missed bryggkaffe (research-setting.md:211)
+    more: 'Påtår. Precis som hemma.',                                              // [N]
+  },
+  short: {
+    barman: '¡No, señor!', barmanSecs: 1.4, shakeSecs: 1.4,                        // [N]
+    stig: 'Jag har bara kronor…', stigAt: 1.3, stigSecs: 2.0, end: 3.3,            // [N]
+  },
+  berra: {
+    r: 4.5, every: 120, lowerAt: 10.8,
+    lines: [
+      [3.5, 'berra', 'Ska du ha?', 1.8],                                           // [F*] the Arlanda men's room (research-characters.md:118–121), at the pool bar
+      [5.4, 'stig', 'Nej tack, jag tål inte starksprit.', 2.6],                    // [F*]
+      [8.3, 'berra', 'Nej, vem fan gör det?', 2.4],                                // [F*]
+    ],
+  },
+  storch: {
+    who: 'fruStorch', r: 2.2, priority: 1, pay: 50, holdSecs: 14,
+    prompt: '<b>E</b> Ge fru Storch kaffet',                                       // [N]
+    offerAt: 2.5, handAt: 3.1, end: 6.4,
+    lines: [
+      [0, 'fruStorch', 'Finns det svenskt kaffe på hotellet?', 2.4],               // [F*] her question at the welcome meeting (research-plot.md:247), the film's subtitle
+      [2.5, 'stig', 'Ja.', 1.2],                                                   // [F*] the answer there, given by Stig with the cup
+      [3.6, 'fruStorch', 'Tack, snälla du! Och det är fortfarande varmt.', 2.6],   // [N]
+    ],
+    toast: 'Fru Storch betalar kaffet: {n} pta.',                                  // [N]
   },
 };
