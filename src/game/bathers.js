@@ -156,6 +156,8 @@ export class Bathers {
     const r = ch.bather.rec;
     if (r && r.ch === ch) r.ch = null;
     ch.bather.rec = null;
+    ch.bather.flee = null;
+    ch.anim.flail = false;
     this.g.unsay(ch);
     ch.state = 'hidden';
     ch.liePose = null;
@@ -196,8 +198,40 @@ export class Bathers {
     return true;
   }
   // main.js fixedStep: the loose bathers walk nowhere, but fall, land and stand up.
+  // The shark warning from the SunTrip stage (§10.30, game/mic.js): every bather lying on a lounger
+  // within r m of (x, z) jumps up beside it and runs from (x, z), flailing, for flee.secs s at
+  // flee.speed m/s; the lounger stays empty until the next morning. Returns the bathers.
+  scare(x, z, r, flee) {
+    const out = [];
+    if (!this.live) return out;
+    for (const ch of this.lying.slice()) {
+      const rec = ch.bather.rec;
+      if (dist(rec.p.x, rec.p.z, x, z) > r) continue;
+      const d = dist(ch.x, ch.z, x, z) || 1, ux = (ch.x - x) / d, uz = (ch.z - z) / d;
+      rec.occ = false;
+      rec.ch = null;
+      ch.bather.rec = null;
+      ch.bather.standT = 0;
+      ch.bather.flee = { x: ux * flee.speed, z: uz * flee.speed, t: flee.secs };
+      this.lying.splice(this.lying.indexOf(ch), 1);
+      this.loose.push(ch);
+      ch.liePose = null;
+      ch.standAt(rec.p.x + ux * 0.9, rec.p.z + uz * 0.9, yawTo(ux, uz));
+      ch.anim.flail = true;
+      out.push(ch);
+    }
+    return out;
+  }
   step(h) {
-    for (const ch of this.loose) { ch.wishX = ch.wishZ = 0; ch.step(h, this.g); }
+    for (const ch of this.loose) {
+      const f = ch.bather.flee;
+      if (f && ch.state === 'normal' && (f.t -= h) > 0) { ch.wishX = f.x; ch.wishZ = f.z; }
+      else {
+        ch.wishX = ch.wishZ = 0;
+        if (f && f.t <= 0) { ch.bather.flee = null; ch.anim.flail = false; }
+      }
+      ch.step(h, this.g);
+    }
   }
 
   // ---------------------------------------------------------------------------------------------
@@ -263,7 +297,7 @@ export class Bathers {
       const dd = dist(ch.x, ch.z, f.x, f.z);
       if (ch.state === 'normal') {
         ch.bather.standT += dt;
-        if (dd < 12) ch.yaw = dampAngle(ch.yaw, yawTo(f.x - ch.x, f.z - ch.z), 3, dt);
+        if (dd < 12 && !ch.bather.flee) ch.yaw = dampAngle(ch.yaw, yawTo(f.x - ch.x, f.z - ch.z), 3, dt);
       }
       if (dd > this.cfg.out || (ch.state === 'normal' && ch.bather.standT > 4 && this.mayPop(ch.x, ch.y + 1, ch.z, dd))) { this.put(ch); continue; }
       ch.sync(dt);

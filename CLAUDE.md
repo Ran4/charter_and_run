@@ -92,7 +92,11 @@ opens with a summary of the rounds and the timer changes.
     APARTAMENTOS SOL DE INVIERNO walkable between missions: the stairs up and the arrival out of breath,
     the coins, the jump over the gap with the mantra, the view by the brochure's sign, the stairs down,
     the belly flop and the cannonball in the pool next door, the stairs shut in a pursuit, a mission
-    start and the world as before in the mission, DESIGN §10.29)
+    start and the world as before in the mission, DESIGN §10.29), `mikrofon utrop` (Mikrofonen på
+    scenen, E at the SunTrip stage's mic between missions: Lasse's announcements in turn, the terrace's
+    guests spitting, the crowd on the lawn and the question time with Stig's "Ja.", Ole and the time,
+    the slump at friskoteket, the bathers fleeing the shark warning, a mission start; the crowd's ways
+    in, the terrace's hours, index 6, after the end, DESIGN §10.30)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

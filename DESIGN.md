@@ -251,7 +251,12 @@ the julfest's on julafton morning, Berra's "Ska du ha?" in Arlanda's men's room)
 ATLÁNTICO and APARTAMENTOS SOL DE INVIERNO walkable between missions, the stairs up with the lift out of
 order, the jump over the gap between them with the mantra and his arms out, the brochure's sign and
 Stig's sea view up there, and the dive off the roof into the pool next door (free roam, §10.29; in the
-film the sea view is the porter's mirror held out of the hotel room, and nobody goes on a roof).
+film the sea view is the porter's mirror held out of the hotel room, and nobody goes on a roof); Stig
+at the SunTrip stage's microphone reading Lasse's announcements, the guests at the terrace spitting out
+their drinks, the crowd on the lawn with the question time, Ole's answer to the time, the crowd sinking
+at friskoteket and the bathers fleeing a shark warning that is true (free roam, §10.30; in the film
+Lasse reads them in the transfer bus and at the welcome meeting, and "Hajar i poolen?" is his phone
+call).
 The film's flight has **no turbulence** and **no in-flight toilet scene**: both toilet scenes are
 at Arlanda (we keep them there). The plane's toilets are only an invented hideout.
 
@@ -1211,7 +1216,7 @@ standing there faces. `y` (optional) = absolute height for collectible spots on 
 | block (i,j) | type → builder (owner, file) | content | landmarks: `id` (lx, lz, yaw[, y]) | named / parked cars |
 |---|---|---|---|---|
 | (3,3) | `flamenco` → `hotelFlamenco` (C1, hotels.js) | 7-storey white slab x [−26, 26], z [−27, −14] with balcony rows, terracotta accents, `HOTEL FLAMENCO` roof sign; open reception porch (canopy, desk, plastic Christmas tree `julgran` prop, `RECEPCIÓN`; Phase 3 r2: `HOTEL FLAMENCO · RECEPCIÓN` stands on a terracotta panel above the pergola's fascia, where it no longer fills the top of the chase frame, and the garland runs across the fascia's face) at the slab's south face; ground-floor room patios along the south face (Stig & Ole's room west, room 113 east) with a visible 1st-floor balcony above 113; terracotta piers at the bay lines, solid (Phase 3 r2); pool deck south with a **walkable shallow pool** (flat blue slab at CURB+0.02 + `box(..., CURB, 'water')`, sign "TRE METER DJUPT I ENA ÄNDEN, / EN METER I DEN ANDRA. / BARNVÄNLIG!" (three lines) [F*] (the bungalow seller's line, relocated)); the **10 m diving tower** `TRAMPOLÍN 10 M` [N] at the deep end, on the strip between the hedge and the pool north of the low board (feature 24, §10.20: a white room over the whole footprint x [−17.4, −14.8], z [2.4, 4.8], four posts and two terracotta landings, the railed platform at C + 9.8 = 9.95 (the hotel's fourth floor), the board 1.4 m out over the deep end, the ladder up the north face; its solids `DIVE_TOWER.blocks`, live only between missions); poolbar with straw parasols (`BAR PISCINA · SVENSKT KAFFE`); the julafton party `julgran` on the pool deck at (2.2, 16), in the party and sunset-duet shots (Phase 3); room numbers: a closed room's centred above its own glass door, an open room's (107, 113) on its right-hand pier (Phase 3); parking lot on the west (its eight painted 2.8 × 5 m bays exported as `flamencoBays`, feature 20, §10.17); the parking signs here and at SunTrip's lot are a blue `P` plate over a name strip (`HOTEL FLAMENCO`, `SUNTRIP`) on a post that stops under them (Phase 3 r2: one two-line plate had shrunk the P to the name's size, and the post ran through both faces); **PEPES BODEGA**: small whitewashed annex x [4, 12], z [−31, −27] on the north side with a green door, barrels, sign `PEPES BODEGA · VINOS · RON` facing north (`worldHooks.bodegaLit(on)` lights it after julafton); room 107's keepsake shelf over the print (3.8 m, its top at 2.75, no collider) and the keepsakes on it, on the floor and on the beds, meshes of their own shown by `worldHooks.rum107(collected, unlocked)` (`ROOM107`; feature 38, §10.25); room 107's wardrobe inside the door with a seam and two knobs on its front, and open (its leaves out into the room over a dark inside, a mirror on one, the suit or the hawaii shirt on a hanger) meshes of their own shown by `worldHooks.wardrobe(hang)` (`WARDROBE`, no collider; feature 36, §7.2) | `flamenco` (−4, −8, π) (faces the hotel, so the views/cutaway camera stands on the pool deck; Phase 2) · `flamencoRecepcion` (2, −10, 0) · `flamencoPatio` (−18, −11, 0) · `rum113` (18, −11, 0) · `flamencoBalcony` (18, −8, π) · `flamencoPool` (−3, 18, π) · cut anchors (Phase 3; a cut stands `dist` m behind one, looking the way it faces): `rum107Cam` (−18, −11, π) = `flamencoPatio` turned round (looks into room 107), `recepcionCam` (2, −10, π) = `flamencoRecepcion` turned round (the desk from the porch front) · `flamencoDeck` (−4, −2.5, 0) (the island spawn: approachSpot puts the player on the pool deck at (−4, −1) facing the hotel, the chase camera over the pool rather than under the pergola slats; Phase 2) · `flamencoBar` (16, 12, −π/2) · `stektBerra` (8.2, 21.6, 0) · `stektRobban` (6.6, 21.6, 0) (the pool deck's two sun loungers in the north row where Berra and Robban lie fried, §10.22; their props, not standing spots) · `brodrost_poolbar` (18.0, 15.45, −π/2, 1.33) (a G17 toaster on BAR PISCINA's counter top, its south end, 3.6 m from `flamencoBar`; facing the deck) · `brodrost_portier` (3.75, −11.2, 0, 1.28) (a G17 toaster on the porter's desk east of the bell; §10.24; not standing spots) · `flamencoDrive` (−26, 22, π) · `flamencoBack` (−6, −33.5, 0) · `bodega` (8, −33.5, 0) · `fena_flamenco` (−3, 7, 0, 0.35) · `flamencoBoard` (−14.1, 7, π/2) (the middle of the diving board's bounce pad, facing out over the deep end: the judged board and the anchor of the sisters' spots at the pool's edge; not a standing spot; §10.8) · `stigSang` (−19.75, −20.35, 0) (the middle of Stig's turquoise bed in room 107, the way a sleeper on his back faces: the nap's E spot and the anchor of Ole's and Stig's places; not a standing spot, `teleport` puts him on the 0.70 mattress; §10.10) · `rum107Hylla` (−18, −18.9, π) · `rum107Giraff` (−18.85, −21.05, −π/2) · `rum107Radio` (−18, −20.45, π) (room 107's E spots, where Stig stands facing the keepsake shelf, the giraffe on his bed and Ole's boombox; §10.25) · `rum107Garderob` (−19.6, −15.6, −π/2) (in front of the wardrobe inside room 107's door, facing it: the second hideout's E spot; §7.2) · `flamencoRing` (2, 8, 0) (the middle of the pool fest's ring in the shallow end, 2.5 m east of the circling fin's path; Lasse's place; the ring's places and Stig's gap are round it; §10.13) · `hopptorn` (−15.5, 1.55, 0) (the foot of the diving tower's ladder, facing it: KLÄTTRA UPP's E spot, and where KLÄTTRA NER puts him, turned round; §10.20) · `hopptornTopp` (−15.6, 3.15, π/2, 9.95) (on the platform beside the ladder's top, facing along the board: KLÄTTRA NER's E spot and where KLÄTTRA UPP puts him; not a standing spot for `teleport`; §10.20) | `hyrbil` (sedan `0xf4f4f0`) at `flamencoDrive` — default `getInCar` car and test car |
-| (3,2) | `suntrip` → `hotelSunTrip` (C1, hotels.js) | lower U-shaped hotel on red rock; welcome **stage** with SunTrip sun backdrop (red text on yellow sun), accordion/conga props; pool; **friskotek lawn**; SunTrip office porch on the south side facing Flamenco's back; posters `GRISFEST TORSDAG · 800 PTA`, `FRISKOTEKET 9.30`; the free-standing `FRISKOTEKET / VARJE MORGON 9.30` board on the lawn's west edge is solid (Phase 3 r3: only its posts were, so he walked through it and the chase eye stood behind it); SunTrip-butiken (feature 34, §10.23: hotels.js `suntripShop`, `SUNTRIP_SHOP`): a yellow counter on the porch by the east window, x [−11.9, −8.5] from the window to z 22.2, top C + 1.0, with `SUNTRIP-BUTIKEN` over it, `BRÄNSLETILLÄGG TILLKOMMER` on its front, the price board west of it and the four wares, in its own group shown only between missions on the island, its two solids (the counter, the board) live only then | `suntrip` (−14, 24, π) (faces the office porch; Phase 2) · `butik` (−10.2, 22.95, π) (Stig's spot in front of the counter's middle, facing it; feature 34, §10.23) · `scen` (0, −14, 0) · `friskotek` (−10, 8, 0) · `suntripPool` (14, 4, π) · `suntripLot` (24, 22, π) · `fena_suntrip` (14, 8, 0, 0.35) · `berraSolstol` (17.4, 2.2, 0) (the pool lounger Berra naps on, on its prop, facing its backrest end; §10.6) | — |
+| (3,2) | `suntrip` → `hotelSunTrip` (C1, hotels.js) | lower U-shaped hotel on red rock; welcome **stage** with SunTrip sun backdrop (red text on yellow sun), accordion/conga props, a microphone stand between the speakers (E there between missions reads Lasse's announcements; feature 44, §10.30); pool; **friskotek lawn**; SunTrip office porch on the south side facing Flamenco's back; posters `GRISFEST TORSDAG · 800 PTA`, `FRISKOTEKET 9.30`; the free-standing `FRISKOTEKET / VARJE MORGON 9.30` board on the lawn's west edge is solid (Phase 3 r3: only its posts were, so he walked through it and the chase eye stood behind it); SunTrip-butiken (feature 34, §10.23: hotels.js `suntripShop`, `SUNTRIP_SHOP`): a yellow counter on the porch by the east window, x [−11.9, −8.5] from the window to z 22.2, top C + 1.0, with `SUNTRIP-BUTIKEN` over it, `BRÄNSLETILLÄGG TILLKOMMER` on its front, the price board west of it and the four wares, in its own group shown only between missions on the island, its two solids (the counter, the board) live only then | `suntrip` (−14, 24, π) (faces the office porch; Phase 2) · `butik` (−10.2, 22.95, π) (Stig's spot in front of the counter's middle, facing it; feature 34, §10.23) · `scen` (0, −14, 0) · `friskotek` (−10, 8, 0) · `suntripPool` (14, 4, π) · `suntripLot` (24, 22, π) · `fena_suntrip` (14, 8, 0, 0.35) · `berraSolstol` (17.4, 2.2, 0) (the pool lounger Berra naps on, on its prop, facing its backrest end; §10.6) · `mikrofon` (0, −11.2, 0) (on the stage behind the microphone's stand at (0, −10.6), facing the lawn: the mic's E spot; feature 44, §10.30) | — |
 | (1,2) | `kasbah` → `kasbah` (C2, centre.js) | **Centro La Medina** (fictional; internal id `kasbah`): two-level nightlife courtyard centre: arcade, stairs (ramp) to a roof terrace (top ≈ 6.0) with a balustrade above the bottom three steps and a sloped wall collider along it (Phase 3: the way on is over those three steps), neon signs `CENTRO LA MEDINA`, `VIKING BAR` (horned helmet), `TONGA TONGA` (mirror ball), `BAR SVENSKA · SMÖRGÅSAR` | `kasbah` (0, 22, π) · `vikingbar` (−16, 18, π) · `tongatonga` (14, 18, π) · `tongaLot` (20, 27, π) · `tongaSlump` (16.3, 17.4, 0.5) (where Berra slumps after Tonga Tonga and is picked up, at the right of the group in the street shot; Phase 3 r3) · `pryl_poolpen` (8, −6, 0, 7.2) · `angerudBil` (−7, 32.75, −π/2) (Angerud's hire car on the south sidewalk between missions, feature 20, §10.17) | — |
 | (4,2) | `cita` → `cita` (C2, centre.js) | **Centro Nórdico** (fictional; internal id `cita`) strip mall, sign `CENTRO NÓRDICO`: `SUPERMERCADO`, `FERRETERÍA`, `FARMACIA`, `ESTANCO`, `TELÉFONOS · HYTT 1·2·3`, `SOUVENIRS`, `SVENSKT KAFFE`, `CAMBIO · 1 KR = 17 PTA` (Phase 3: the north shop row and its canopy fit the courtyard between the wings, x ±11; `SOUVENIRS · REGALOS` and `FARMACIA` with its green cross sit on the wings' courtyard faces) | `cita` (0, 22, π) · `supermercado` (−18, 18, π) · `ferreteria` (18, 18, π) · `telefon` (0, 8, π) · `brodrost_ferreteria` (25.6, 13.0, 0, 0.65) (a G17 toaster on the east end of FERRETERÍA's paint-can crate, whose two east cans of each row are gone) · `brodrost_supermercado` (−24.15, 13.0, 0, 0.6) (one on SUPERMERCADO's east fruit crate, its fruit gone; §10.24; not standing spots) | — |
 | (2,3) | `plaza` → `plaza` (C2, centre.js) | palms, fountain (shallow walkable pool), restaurant terraces; the north row's arcade (12 arches), shops `CAFETERÍA EL SOL` · `HELADERÍA LA PALMERA` · `CORREOS · TELÉGRAFOS` · `BANCO · CAMBIO` · `PELUQUERÍA` (Phase 3 r3: each name on a 3.5 × 0.8 m board on the arcade's front above its arch's crown (4.09), y 4.1–4.9, two lines where needed; on the shop wall at 3.62 the 5.6–6.6 m signs hung behind the 3.93 m arches, which showed only their middle third) and the arcade café tables keep to x [−19, 29], clear of the west row (x [−29, −19]) that stands on the north row's west end (Phase 3 r2: two arches, the café sign and two tables were inside it); **CASA LOLA** (`CASA LOLA · COMIDA CANARIA`, fictional; internal id `grillpaco`) terrace on the SE corner (Phase 3 r2: the bougainvillea along its eave sits above the pergola's camera cap, west of the name board; Phase 3 r3: the string lights hang from the cross beams' underside (3.08) with a 0.15 sag, the lowest bulb at 2.72, and the pergola's camera ceiling is under 2.72: capped at 2.6 under lights sagging to 2.44, a bulb sat over his head) | `plaza` (0, 6.8, π) (south of the fountain rim, facing it: the fountain column stands at (0, 0); Phase 2) · `grillpaco` (20, 22, π) · `grillpacoMamma` (25, 24, π) · `grillpacoCurb` world (−60, 36, −π/2) (westbound kerb of the z = 40 road, the `follow` endpoint) · `fena_plaza` (0, 0, 0, 0.35) · `berraBank` (0, 8.6, 0) (the bench south of the fountain Berra naps on, on its prop, facing away from the fountain; §10.6) · `brodrost_grillpaco` (15.0, 19.0, π/2, 0.945) (a G17 toaster on Casa Lola's north-west terrace table; §10.24; not a standing spot) | — |
@@ -3652,7 +3657,8 @@ react to the horn read `game.hornAt`.
   (`honk.last.eslov`).
 - A dancer or the porter held by the pool fest (feature 8, §10.13: `fest.posed`) does not answer, nor
   Majsan on her ticket round or Angerud in the tow scene (feature 20, §10.17: `lapp.owns`), nor the
-  grisfest evening's cast (feature 21, §10.18: `party.posed`).
+  grisfest evening's cast (feature 21, §10.18: `party.posed`), nor the gang in the crowd at the SunTrip
+  stage (feature 44, §10.30: `mic.posed`).
 - `honk.last` ({ t, pigs, peds, replies: [[key, text]], stig: [text], eslov? }) is for tests. The
   rest is session state; nothing is saved. Scenario `tuta` (§16.4).
 
@@ -4821,6 +4827,11 @@ burn and the fly-off are [N] (§1.6).
   standing, awake, in their own skin, `busy` false, `spot` null. So friskotek's and asnan's intros and
   stages, and the bodega's intro with Berra's "Det är ju fan vad solen tar här nere, Robban." as its
   first line, are as before (red in that intro would be the user's decision: the idea leaves it open).
+- **The shark warning** (feature 44, §10.30): `scare(x, z, r, flee)` stands every bather lying on a
+  lounger within r m of (x, z) up beside it (0.9 m out, away from (x, z)) and makes him loose with
+  `bather.flee`: `step` walks him away from (x, z) at `flee.speed` for `flee.secs` with `anim.flail`
+  (not turned to Stig meanwhile), then he stands and goes as any loose bather. His lounger's `occ` is
+  false, so it stays empty until the next morning's draw; `put` clears the flee and the flail.
 - `bathers.last` ({ kind: 'claim' | 'flyoff' | 'stekt' | 'wake' | 'letGo', who?, t, x?, z?, car?, up?,
   step? }) and `held` are for tests; nothing is saved. Scenarios `badgaster` and `stekt`; `perf`'s
   `playa` view measures the beach with its bathers (§16.4).
@@ -5427,6 +5438,119 @@ the jump and the dive into the pool are [N] (§1.6); the high-rises are the 1980
   coins respawn every session (world coins are not saved); the way down by the stairs leaves him 2.8 m
   out of the lobby.
 
+### 10.30 Mikrofonen på scenen – Stig reads Lasse's announcements (free roam; feature 44, 2026-10-17)
+
+`game/mic.js` (`Mic`, owned by Game as `mic`), config `MIKROFON` in content/island.js, the landmark
+`mikrofon` and `bathers.scare` (§10.22). The welcome stage at Hotel SunTrip (block (3,2), §6.3) has
+had a microphone between its two speakers since Phase 1, and nothing used it. Between missions E there
+plays the PA chime, Stig reads the next of Lasse's announcements with a civil servant's gravity, and
+the hotel round him does what he says. The lines are Lasse's from the transfer bus and the welcome
+meeting (research-plot.md:246–247, :266, :440–441), relocated to Stig ([F*]), the shark warning ours;
+the question time is the film's subtitle ("Finns det svenskt kaffe på hotellet?" / "Ja." / "Norsk,
+da?" / "Ja.", research-plot.md:247, research-characters.md:180), with Stig answering in Lasse's place.
+The microphone's use, the crowd and every reaction are [N] (§1.6).
+
+- **When.** `live`: on the island, `missions.state === 'idle'`. The interactable `mic` at `mikrofon`
+  (0, −91.2; block-local (0, −11.2), on the stage, top `stageY` = 0.55, just behind the stand at (0,
+  −90.6), facing the lawn), `r` = 1.4 m, so not from the lawn or the step in front of the stage, shows
+  `<b>E</b> Läs ett utrop` [N] while `canUse()`: live, not `busy`, no dialogue, on foot and on the
+  ground, on the stage (y over `stageY` − 0.1), not carrying, **no SKANDAL pursuit** (no announcements
+  with the Guardia at his heels), no bust freeze or PANIK, not in the pool fest's ring, on the baggage
+  belt or in a talk with the gang. No `inDialog` (a dialogue counts as a scene for the pursuit, §10.28).
+- **E.** The next announcement of `order` (`vatten`, `grisfest`, `klocka`, `friskotek`, `hajar`, round
+  and round; per session, not saved; `hajar` skipped once the SunTrip pool's fin `fena_suntrip` is
+  squashed): `audio.dingdong()` (the PA chime of `cue({ pa })`); the bubbles of the NPCs within `hushR`
+  = 14 m taken down (Affe and Gabbe beside him on the stage); Stig turned to the line's audience
+  (`face`, block-local: the terrace, the lawn or the pool); the camera eased in behind him, `camOff` =
+  0.4 rad to his right so that he does not stand in front of what happens, for `camSecs` = 1.4 s
+  (`dampAngle`, k 4; the mouse turning it, a car or a cutaway ends the ease); and
+  `dingSecs` = 0.9 s later his line as a bubble. The lines of an announcement follow one another as in
+  the gang's talk (each up as long as `game.say` holds it, then `gap` = 0.35 s; a line may wait for a
+  condition, `until` with `max` s, or be skipped, `if`), the reactions beside them on a clock
+  (`queue`); meanwhile the NPCs within `hushR` keep their chatter back (`chatT`). E again only after
+  `cool` = 6 s and once the lines are said (`busy`); a new announcement drops what is left of the last.
+  A line of Stig's further on (the question time's "Ja.", his answer to Lasse) is dropped, with the
+  rest of the lines, once he is more than `leaveR` = 12 m from the mic, in a car or not `normal`.
+- **"Ni bör inte dricka vattnet."** Three guests sit at the terrace's straw-parasol tables
+  (`terrace.seats`, block-local: (12.15, −11.5) and (13.85, −11.5) at one table, (17.65, −18) at
+  another; on the chair's seat, `y` = 0.61) by day and evening (`hours` = 8–23) while Stig is within
+  `r` = 45 m: seeded tourists (`seed`, made once, no Spanish locals), seated with `seatAt` (the plane
+  seat's pose), each put on or taken off its chair only out of the camera's view or more than `popR`
+  = 40 m from it, or within `cutSecs` = 1.2 s of a cut (free roam again, a warp: the focus 15 m or
+  more in a frame), as the bathers (§10.22). At the chime they lift their glasses (`cupHeld`, from
+  `sipAt` = 0.3 s, 0.15 s apart), and `spitAt` = 1.3 s after his line goes up (0.3 s apart) they spit:
+  the glass down, `yell` for `yellSecs` = 1.2 s, a spray of the drink from the mouth (18 orange and
+  white drops, `fx.spawn`), and a line each from `spit`: "Isbitarna!", "Usch!", "Är isen också
+  vatten?" [N].
+- **"Grisfesten är på torsdag och kostar 800 pesetas. Några frågor?"** The crowd: `crowd.tourists` =
+  6 seeded tourists (made at the first grisfest, hidden between) and every free one of `crowd.gang`
+  (Fru Storch, Ole, Robban, Berra, Herr Storch, Majsan, Siv; free = standing, shown, in no car or seat,
+  not `busy` (at home: nobody's), walked by no module (`steer`), `honk.free`, not `npcPosed`, not the
+  waiting mission's giver or extra). Each takes a place of `spots` (14 in three rows on the lawn in
+  front of the stage, z −5.6 to −1.2, the gang first) and comes in by one of `entries`: west (the gap
+  south of the west wing, past the notice board), east (along the forecourt past the pool deck) or
+  south (from the street over the forecourt). He is teleported to the nearest start of that entry that
+  is out of view (or more than `popR` from the camera), on the shortest such way; one of the gang
+  already in view walks from where he stands. They walk the entry's `via` points at `walk` = 3.4 m/s,
+  a little spread (tourists up to `lag` = 1.5 s apart and ±1.2 m across the way, the gang 0.35 s; a
+  point that holds one up 1.5 s is skipped), and each cheers on arrival (`anim.cheer` for `cheerSecs`
+  = 2.4 s; the applause at the first, `cheer` "Hurra!" and "Grisfest!" [N] from the first two
+  tourists). Once nobody is on the way (at most `arriveSecs` = 14 s): Robban's "Ja, herre jävlar, minns
+  du Benidorm? Snacka om grisfest!" [F*] if he is there, and if Fru Storch is, the question time: her
+  "Finns det svenskt kaffe på hotellet?", Stig's "Ja.", Ole's "Norsk, da?" (if he is there) and Stig's
+  "Ja." (all [F*]). The gang in the crowd are ours (`busy`, `spot` `mic`, a `steer` of ours that
+  main.js walks), `npcPosed` (no wave, turn, chatter or talk) and out of `honk.free` (so every other
+  module leaves them be). Standing, they face the mic; Herr Storch films (`anim.film`). They stay
+  `stay` = 30 s after the last has come, then stroll out the way they came at `outWalk` = 2.0 m/s
+  (one who walked in from view by the nearest entry), and at its outermost start, out of view or after
+  `outSecs` = 12 s, a tourist is hidden and one of the gang put home (`placeNpc` to his place in the
+  home set, `busy` off, `spot` null). The grisfest again calls everyone not yet gone back to his place
+  and cheers again. The tourists are the module's own `Character`s (`mic.extras`: main.js adds them to
+  `allChars` and `areaHit`'s people, so a kick or a car bowls them over as pedestrians, and steps
+  them after the bathers). Measured (`utrop`): from each entry's outermost start to a place, west 9.6
+  s, east 14.4 s, south 10.8 s; at index 9 the crowd is in place 7–10 s after E.
+- **"Klockan är {tid} spansk tid – alltså en timme tidigare än svensk tid."** The hour on the island's
+  clock (§10.10) in words, as an official reads it (`hours`, 12-hour; from a quarter past to a quarter
+  to `half`, "halv fyra"): at 15:00, where the clock starts and where test mode holds it, the film's
+  "tre". Stig does not tell people the wrong time (§1.2). Ole, standing in the crowd or within
+  `klocka.r` = 25 m of the mic, answers: with his watch found (pryl `klocka`, which Stig wears, §10.10)
+  its line, "Digital, analog, spansk, norsk, svensk tid, kronometer, og så klokke." [F*], else
+  `oleLost`, "Og norsk tid? Klokka mi ligger et sted på øya." [N]; without Ole a tourist of the crowd
+  or a guest at the terrace says `other`, "Ska man ställa om klockan igen?" [N].
+- **"Friskoteket börjar halv tio varje morgon."** 0.6 s after his line the crowd sinks (`anim.slump`),
+  stands `slumpSecs` = 1.6 s (and up to 1.2 s more each) and shuffles out slumped at `slumpWalk` = 1.3
+  m/s (the film's gym that grows emptier, research-plot.md:282); the terrace's guests slump in their
+  chairs for `terrace.slumpSecs` = 4 s. A tourist: "Halv tio? På semestern?" [N]; Berra, if he was
+  there: "Halv tio? Då har vi inte ens gått och lagt oss." [N].
+- **"Hajar i poolen!"** [N] (Lasse's "Hajar i poolen? Delirium – ring kliniken.", research-plot.md:292,
+  turned round). Only while the fin circles, so the warning is true and Stig means it (§1.2). 0.3 s
+  after his line `bathers.scare` (§10.22): every bather lying on a lounger within `hajar.r` = 11 m of
+  the pool's middle (`at`, block-local (14.5, 9)) jumps up beside it and runs from the pool flailing
+  (`anim.flail`) for `flee.secs` = 3.5 s at `flee.speed` = 5.5 m/s, the first two crying "Hjälp!" and
+  "En haj!" [N]; their loungers stay empty until the next morning. Lasse, if he can speak (shown,
+  standing, not posed) within `lasseR` = 50 m of the pool (his place on the office porch is 32 m off),
+  waves it off: "Hajar i poolen igen? Ring kliniken!" [F*] (Lasse's line as the fins' first, §10.1),
+  and Stig: "Men den är ju där…" [N]. By night, or with nobody on those loungers, only the lines.
+- **A mission start** (any state but idle) or the other level: `reset()` takes it all away at once:
+  the queue and the lines, the camera's ease, the crowd (the tourists hidden; the gang home, unless the
+  mission's own placement had them first: then where it put them), the guests. So no mission, stage
+  kind, timer, fixture or calibration pool sees any of it, the friskotek balls' pool round this lawn
+  included: in a mission the lawn and the terrace hold what they held before. No solid and no random
+  draw is added to the world build. Nothing is saved. `mic.last` ({ id, t, text, drinkers, crowd,
+  gang, scared }), `said` ([who, text, t] since the last E), `crowd`, `drinkers`, `next`, `nextId()`,
+  `clockWords(h)`, `free(key)`, `busy` and `live` are for tests. Scenarios `mikrofon` and `utrop`
+  (§16.4).
+- **Not done / changed** (deviations from the idea): the turn order puts the time before friskoteket
+  (vatten, grisfest, klocka, friskotek, hajar), so that Ole still stands in the crowd for the time and
+  friskoteket is what sends the crowd home; the time is the island's clock's (the film's "tre" at
+  three); Ole's answer follows his watch (found: its line; lost: a line about it); six tourists; the
+  terrace's guests sit there all day and evening, not only for the announcement (they must be drinking
+  when it comes); Lasse answers from where he stands, with no wave-off pose (`syncAll` owns `wave`);
+  the camera eases round once at E (the idea had none: the terrace and the pool are off to the side);
+  no reward (the idea's optional box and coin: the shark warning cannot be had once the fin is
+  squashed, so five of five could be lost for good). The welcome meeting (the idea Välkomstmötet) is
+  not built; if it is, the mic should be shut while it plays, and the oath stays there.
+
 ## 11. HUD / UI strings (Swedish; `src/strings.js` owned by WP-H, created by Phase 0)
 
 `strings.js` exports `S` (flat object) and `fmt(key, vars)`. Engine code uses `S.key` only.
@@ -5479,7 +5603,7 @@ mutes without touching the button, which then said `Ljud: på` while muted).
 | dialogue next | `E ▸` |
 | minimap rim badge | `N` (island) / `FRAM` (flight) |
 | big-map legend | from `game.mapLegend()` (§10.1) |
-| prompts | `<b>E</b> Prata med {name}` (a giver, and since feature 39 anyone in the gang between missions, §10.28) · `<b>E</b> Kliv in` · `<b>E</b> Ta bilen` · `<b>E</b> Sätt dig` · `<b>E</b> Res dig` · `<b>E</b> Lås in dig` · `<b>E</b> Ta en juice` · `<b>E</b> Kvarta en stund` (Stig's bed, §10.10) · `<b>E</b> Titta i kameran` / `<b>E</b> Se filmen` (Herr Storch, §10.11) · `<b>E</b> Heja Eslöv!` / `<b>E</b> Eslövloppet – ett varv runt fälten` (the rollerskier, §10.12) · `<b>E</b> Dansa med` / `<b>E</b> Kliv ur ringen` (the pool fest's gap, §10.13) · `<b>E</b> Kontrollera brödrosten` / `<b>E</b> Upp med brödet!` (a G17 toaster, §10.24) · `<b>E</b> Kontrollera hyllan` · `<b>E</b> Ta upp giraffen` / `<b>E</b> Ställ tillbaka giraffen` · `<b>E</b> Spela samba` (room 107, §10.25) · `<b>E</b> Smörj in ryggen` (Majsan's sun cream, §10.26) · `<b>E</b> Ta trappan upp` / `<b>E</b> Ta trappan ner` (the hotel roofs' stairs, §10.29) · `<b>SPACE</b> Håll i dig!` · `<b>J</b> håll: Jag kan flyga!` (the `<b>` keycap is Luckiest Guy: uppercase). Order (`updateHud`): talk (a giver's or the gang's), then `Håll i dig!` while the cabin is turbulent and he stands without holding on (Phase 3 r3, §5.7), then the car, interactable (seats, toilets…) and stand prompts |
+| prompts | `<b>E</b> Prata med {name}` (a giver, and since feature 39 anyone in the gang between missions, §10.28) · `<b>E</b> Kliv in` · `<b>E</b> Ta bilen` · `<b>E</b> Sätt dig` · `<b>E</b> Res dig` · `<b>E</b> Lås in dig` · `<b>E</b> Ta en juice` · `<b>E</b> Kvarta en stund` (Stig's bed, §10.10) · `<b>E</b> Titta i kameran` / `<b>E</b> Se filmen` (Herr Storch, §10.11) · `<b>E</b> Heja Eslöv!` / `<b>E</b> Eslövloppet – ett varv runt fälten` (the rollerskier, §10.12) · `<b>E</b> Dansa med` / `<b>E</b> Kliv ur ringen` (the pool fest's gap, §10.13) · `<b>E</b> Kontrollera brödrosten` / `<b>E</b> Upp med brödet!` (a G17 toaster, §10.24) · `<b>E</b> Kontrollera hyllan` · `<b>E</b> Ta upp giraffen` / `<b>E</b> Ställ tillbaka giraffen` · `<b>E</b> Spela samba` (room 107, §10.25) · `<b>E</b> Smörj in ryggen` (Majsan's sun cream, §10.26) · `<b>E</b> Ta trappan upp` / `<b>E</b> Ta trappan ner` (the hotel roofs' stairs, §10.29) · `<b>E</b> Läs ett utrop` (the SunTrip stage's microphone, §10.30) · `<b>SPACE</b> Håll i dig!` · `<b>J</b> håll: Jag kan flyga!` (the `<b>` keycap is Luckiest Guy: uppercase). Order (`updateHud`): talk (a giver's or the gang's), then `Håll i dig!` while the cabin is turbulent and he stands without holding on (Phase 3 r3, §5.7), then the car, interactable (seats, toilets…) and stand prompts |
 
 **The result line** (feature 4, §10.8): `#score`, low in the middle (bottom 92 px, under the
 prompt at 178 px), a cream card with the dive and its sum in Luckiest Guy over the record line
@@ -5815,7 +5939,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/strings.js` | new | **H** | `S`, `fmt()` (§11) |
 | `src/content/index.js` | new | none | merges `HOMES`, `MAP_LABELS`, `LEVEL_OUTFITS`, re-exports all content |
 | `src/content/flight.js` | new | **F** | `HOMES_GATE`, `HOMES_FLIGHT`, `MAP_LABELS_FLIGHT`, `CHATTER_FLIGHT`, `OLE_STATS`, `LEVEL_OUTFITS_GATE`, `LEVEL_OUTFITS_FLIGHT` |
-| `src/content/island.js` | new | **G** | `HOMES_ISLAND`, `MAP_LABELS_ISLAND`, `CHATTER`, `OUCH`, `GETUP`, `CARJACK`, `NPC_KICKED` (+ the `_OLE` / `_LOCAL` tables, `LOCAL_CAST`, `BARKS`: Phase 3 r2, §14.10; `STIG_SORRY`: feature 11, §10.14; `PIG_TRUCK`: feature 15, §10.15; `BAGGAGE_BELT`: feature 25, §10.16; `LAPPLISA`: feature 20, §10.17; `GRISFEST_FREE`: feature 21, §10.18; `FRUKTSTAND`: feature 28, §10.19; `TOWER`: feature 24, §10.20; `DOGS`: feature 31, §10.21; `BATHERS`: feature 32, §10.22; `RUM107`: feature 38, §10.25; `SOLKRAM`: feature 35, §10.26; `STUNTHOPP`: feature 40, §10.27; `TALK_ISLAND`: feature 39, §10.28; `TAKHOPP`: feature 41, §10.29), `COLLECTIBLES`, `UNLOCKS`, `NAMED_CARS`, `LEVEL_OUTFITS_ISLAND` |
+| `src/content/island.js` | new | **G** | `HOMES_ISLAND`, `MAP_LABELS_ISLAND`, `CHATTER`, `OUCH`, `GETUP`, `CARJACK`, `NPC_KICKED` (+ the `_OLE` / `_LOCAL` tables, `LOCAL_CAST`, `BARKS`: Phase 3 r2, §14.10; `STIG_SORRY`: feature 11, §10.14; `PIG_TRUCK`: feature 15, §10.15; `BAGGAGE_BELT`: feature 25, §10.16; `LAPPLISA`: feature 20, §10.17; `GRISFEST_FREE`: feature 21, §10.18; `FRUKTSTAND`: feature 28, §10.19; `TOWER`: feature 24, §10.20; `DOGS`: feature 31, §10.21; `BATHERS`: feature 32, §10.22; `RUM107`: feature 38, §10.25; `SOLKRAM`: feature 35, §10.26; `STUNTHOPP`: feature 40, §10.27; `TALK_ISLAND`: feature 39, §10.28; `TAKHOPP`: feature 41, §10.29; `MIKROFON`: feature 44, §10.30), `COLLECTIBLES`, `UNLOCKS`, `NAMED_CARS`, `LEVEL_OUTFITS_ISLAND` |
 | `src/game/missions/index.js` | new | none | `MISSIONS = [...FLIGHT_MISSIONS, ...ISLAND_MISSIONS]`, `MissionRunner` re-export |
 | `src/game/missions/runner.js` | new (from missions.js) | none | `MissionRunner` (§9.4) |
 | `src/game/missions/kinds/core.js` | new | **none** (frozen after Phase 0) | getInCar goto pickup dropoff follow rabbits race destroy grab scene |
@@ -5850,7 +5974,8 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/solkram.js` | new (feature 35, 2026-10-17) | — | `Solkram` (`game.solkram`): Smörj in Majsans rygg in free roam: Majsan's interactable, the scene (the ask, her back turned, the meter's card and the held E, the result's shots, cards and bubbles), the bottle and the cream, the record and `sjuPoang`, the reset (§10.26) |
 | `src/game/stunts.js` | new (feature 40, 2026-10-17) | — | `Stunts` (`game.stunts`): Stunthopp med G17-stämpel in free roam: his car's jumps measured (from car.js `airT`/`airFrom`), LUFTTID in the air, the settle and the verdict, the stamp and the card, the named jumps' take-offs, pay and records, the mantra off the plank, Stig's lines, his arms out by the dream plane, the reset (§10.27) |
 | `src/game/roofJump.js` | new (feature 41, 2026-10-17) | — | `RoofJump` (`game.roofs`): Hoppet mellan hotelltaken in free roam: `ROOF_JUMP.live`, the roof coins, the three stair doors and their fades, the out-of-breath arrival, the fall off a roof (the mantra over the gap or off an edge, the poses), the splash in the pool, the view line, the put-down at a mission start (§10.29) |
-| `src/game/bathers.js` | new (feature 32, 2026-10-17) | — | `Bathers` (`game.bathers`): Badgäster på solstolarna in free roam: tourists on the sun loungers nearest him by day, their burn (pale, pink, lobster red), the fly-off from a kicked or smashed lounger, a newcomer on a lounger back; Berra and Robban fried and asleep on two Flamenco loungers between buss17 and the bodega, their snores and the wake (§10.22) |
+| `src/game/mic.js` | new (feature 44, 2026-10-17) | — | `Mic` (`game.mic`): Mikrofonen på scenen in free roam: the mic's interactable and the turn of Lasse's announcements, the chime, Stig's facing and the camera's ease, the lines one after another, the terrace's guests and their spit, the crowd (tourists and the free gang: the ways in and out, the places, the cheer, the question time), Ole's answer to the time, the slump, the shark warning through `bathers.scare`, the reset (§10.30) |
+| `src/game/bathers.js` | new (feature 32, 2026-10-17) | — | `Bathers` (`game.bathers`): Badgäster på solstolarna in free roam: tourists on the sun loungers nearest him by day, their burn (pale, pink, lobster red), the fly-off from a kicked or smashed lounger, a newcomer on a lounger back; Berra and Robban fried and asleep on two Flamenco loungers between buss17 and the bodega, their snores and the wake (§10.22); `scare` for the shark warning (feature 44, §10.30) |
 | `src/game/suntripShop.js` | new (feature 34, 2026-10-17) | — | `SuntripShop` (`game.shop`): Bränsletillägg tillkommer in free roam: SunTrip-butiken's counter shown and its solids live between missions, the travel agent, the wares' and the bag's interactables, the receipts, the Trapp Trull account's instalments, "Paketet!", Ole's line; his bought look as a layer over his outfit (`dress`), saved (§10.23) |
 | `src/game/hud.js` | edit | **H** | map sources, meter, strings, legend, ring, blips, zone bar, markers; `renderPortrait` restores the model transform (§14.8) |
 | `src/game/camera.js` | edit | **A1** | profile, frameOne, cutTo, `clampZ` |
@@ -5902,6 +6027,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `tools/scenarios/butik.mjs` | new (feature 34) | — | butik, butikbil |
 | `tools/scenarios/stunthopp.mjs` | new (feature 40) | — | stunthopp, stuntzoner |
 | `tools/scenarios/takhopp.mjs` | new (feature 41) | — | takhopp |
+| `tools/scenarios/mikrofon.mjs` | new (feature 44) | — | mikrofon, utrop |
 | `tools/story/flight.mjs` | new | **F** | `M_FLIGHT` (M[0..4]) |
 | `tools/story/island.mjs` | new | **G** | `M_ISLAND` (M[5..12]) |
 
@@ -5920,7 +6046,7 @@ Init: `initGfx` → `input.init` → `hud.init` → `fx.init` → fonts (Luckies
 → peds (34) → NPC `Character`s (one per `CHARS` key except `stig`, the radio-only keys `levander
 kapten pa guardia pax telefonist` and the cabin-owned `vardinna2`; `key` field; hidden until placed, §2.3) →
 player `Character(CHARS.stig)` (`key = 'stig'`) → collectibles (`COLLECTIBLES`) → markers → `Shame`
-→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `DiveTower` (feature 24, §10.20; registers the ladder's two interactables, sets `DIVE_TOWER.live`) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `Eslov` (feature 7, §10.12; registers the rollerskier's interactable) → `PoolFest` (feature 8, §10.13) → `StigSorry` (feature 11, §10.14) → `PigTruck` (feature 15, §10.15) → `BaggageBelt` (feature 25, §10.16) → `Lapplisa` (feature 20, §10.17) → `GrisfestFree` (feature 21, §10.18; registers the gate's and the tourists' interactables) → `FruitStands` (feature 28, §10.19) → `Dogs` (feature 31, §10.21) → `Bathers` (feature 32, §10.22; registers the wake's interactable) → `SuntripShop` (feature 34, §10.23; registers the four wares' and the bag's interactables, sets `SUNTRIP_SHOP.live`) → `Toasters` (feature 33, §10.24; registers the seven toasters' interactables) → `Room107` (feature 38, §10.25; registers room 107's three interactables) → `Solkram` (feature 35, §10.26; registers Majsan's interactable) → `Stunts` (feature 40, §10.27) → `GangTalk` (feature 39, §10.28) → `RoofJump` (feature 41, §10.29; registers the three stair doors, sets `ROOF_JUMP.live`, places the roof coins) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
+→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `DiveTower` (feature 24, §10.20; registers the ladder's two interactables, sets `DIVE_TOWER.live`) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `Eslov` (feature 7, §10.12; registers the rollerskier's interactable) → `PoolFest` (feature 8, §10.13) → `StigSorry` (feature 11, §10.14) → `PigTruck` (feature 15, §10.15) → `BaggageBelt` (feature 25, §10.16) → `Lapplisa` (feature 20, §10.17) → `GrisfestFree` (feature 21, §10.18; registers the gate's and the tourists' interactables) → `FruitStands` (feature 28, §10.19) → `Dogs` (feature 31, §10.21) → `Bathers` (feature 32, §10.22; registers the wake's interactable) → `SuntripShop` (feature 34, §10.23; registers the four wares' and the bag's interactables, sets `SUNTRIP_SHOP.live`) → `Toasters` (feature 33, §10.24; registers the seven toasters' interactables) → `Room107` (feature 38, §10.25; registers room 107's three interactables) → `Solkram` (feature 35, §10.26; registers Majsan's interactable) → `Stunts` (feature 40, §10.27) → `GangTalk` (feature 39, §10.28) → `RoofJump` (feature 41, §10.29; registers the three stair doors, sets `ROOF_JUMP.live`, places the roof coins) → `Mic` (feature 44, §10.30; registers the mic's interactable) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
 `placeNpcs(true)` → spawn the player → portraits for every key in `CAST` (`renderPortrait`
 restores each model's parent and transform, so seated cast members stay in their seats) →
 `applySaveToWorld()` →
@@ -5928,11 +6054,11 @@ loop → `window.__ready = true` → `start()` in test mode.
 
 Frame (`update`): hooks → one-shots (incl. E/J/R while seated) → fixed steps (player intent incl.
 mantra/hold, AI, cars (a landing calls `onCarAirEnd`, feature 40), people (`glide.step` → the player's step → `glide.after`, feature 3 →
-`belt.carry`, feature 25 → the NPCs → `party.step`, feature 21 → `bathers.step`, feature 32) —
+`belt.carry`, feature 25 → the NPCs → `party.step`, feature 21 → `bathers.step`, feature 32 → `mic.step`, feature 44) —
 traffic/peds skipped when `!levelDef.sim.*`) → `syncAll` (also
 writes `ch.x/y/z` from `car.seatWorld(ch.seatSide)` for every car-seated character, player
 included, so framing, bubbles and distance checks see where they really are) → `missions.update` →
-`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `tower.update` (feature 24) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `stands.update` (feature 28) → `dogs.update` (feature 31) → `bathers.update` (feature 32) → `shop.update` (feature 34) → `toasters.update` (feature 33) → `room107.update` (feature 38) → `solkram.update` (feature 35) → `stunts.update` (feature 40) → `chat.update` (feature 39) → `roofs.update` (feature 41) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
+`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `tower.update` (feature 24) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `stands.update` (feature 28) → `dogs.update` (feature 31) → `bathers.update` (feature 32) → `shop.update` (feature 34) → `toasters.update` (feature 33) → `room107.update` (feature 38) → `solkram.update` (feature 35) → `stunts.update` (feature 40) → `chat.update` (feature 39) → `roofs.update` (feature 41) → `mic.update` (feature 44) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
 pickups/collectibles → props → `fx.tick` → `tickTown` → markers → camera → sun/sky → HUD → audio →
 traffic recycling (island) → autosave. `loop` then renders, and when `film.grabNow` is set calls
 `film.grab()` in the same task (Herr Storch's still from the frame's buffer, feature 6, §10.11).
@@ -6009,13 +6135,18 @@ game.roofs;        // RoofJump (feature 41, §10.29): the walkable roofs of HOTE
                    // DE INVIERNO; roofs.live, canUse(), stairs(door), put(name, up), on ('sol' | 'atl' | null),
                    // dive ({ t, x, z, y0, gap } | null), roofUnder(m), overGap(), onLand(v, y) (game.onLand),
                    // last, climbs, mantras, cfg (TAKHOPP)
+game.mic;          // Mic (feature 44, §10.30): Stig reads Lasse's announcements at the SunTrip stage; mic.live,
+                   // busy, canUse(), speak() (the interactable), nextId(), clockWords(h), free(key),
+                   // posed(key) (npcPosed, honk.free), extras (the crowd's tourists: allChars, areaHit),
+                   // step(h) (fixedStep), update(dt), reset(), crowd, drinkers, last, said, cfg (MIKROFON)
 game.npcPosed(key) -> bool   // an NPC held in a pose of its own: §9.4 idleAnim or a free-roam module's
-                   // (berraJob, judges, film, eslov, fest, lapp, party, stands); syncAll gives it no
+                   // (berraJob, judges, film, eslov, fest, lapp, party, stands, mic); syncAll gives it no
                    // wave, turn or chatter, and the gang's talk leaves it be (§10.28)
 game.bathers;      // Bathers (feature 32, §10.22): tourists on the sun loungers, Berra and Robban fried;
                    // bathers.loose (the bathers off their loungers: allChars, areaHit), step(h)
                    // (fixedStep), onPropBroken(p, vx, vz) (from onPropBroken, after the lounger's own
-                   // SKANDAL), onGetUp(ch) (onGetUp: true for a bather, his line said), held, last
+                   // SKANDAL), onGetUp(ch) (onGetUp: true for a bather, his line said), scare(x, z, r,
+                   // flee) (the shark warning, feature 44, §10.30), held, last
 game.shop;         // SuntripShop (feature 34, §10.23): SunTrip-butiken in free roam; shop.live,
                    // dress(def, name) (setPlayerOutfit: his bought look over the outfit), worn,
                    // owned, off, trapp, trappT, bag, clerk, saveData()/loadData(s) (save's `shop`), last
@@ -6779,6 +6910,21 @@ shame.closet (Closet, §7.2; feature 36): configure(h) from setupHideouts (h = t
 //   { x0, x1, z0, z1 }, jz, coins [[x, y, z]], live() } (feature 41; the roofs' blocks `dead` =
 //   !live(), the slabs' body and stair tower and the gap's two palms `dead` = live(), each palm with a
 //   twin to 8 m)
+// mic.js (feature 44, §10.30): game.mic = new Mic(game) after the roofs (registers `mic`); update(dt)
+//   after roofs.update (not live: reset() once: the queue and the lines dropped, the crowd's tourists
+//   hidden and the gang home, the terrace's guests off; live: the cut window and the view frustum,
+//   tickDrinkers (the guests on or off their chairs, unseen), the queue, tickScript (the lines one after
+//   another, `until` and `if`; a line of Stig's off the mic drops the rest), tickCrowd (a placement by
+//   others drops one of the gang, waits, unstick, arrival and its cheer, the way out, out of view gone,
+//   the anims and facing, the stay), the chatter held round the stage, the camera's ease); step(h) from
+//   fixedStep after bathers.step (the tourists' walk and Character.step; the gang walk by their
+//   `steer`); speak() (the interactable's use); spit(); gather() (join, comeBack, entryFor, pathIn);
+//   clock(); sink() (leaveAll); shark() (bathers.scare); posed(key) read by npcPosed and honk.free;
+//   extras read by allChars and areaHit; live; busy; canUse(); free(key); homeOf(key); inCrowd(key, st);
+//   speaker(who); seen(); mayPop(); nextId(); clockWords(h); at(p) (block-local); crowd; tourists;
+//   drinkers; next; last { id, t, text, drinkers?, crowd?, gang?, scared? }; said
+// syncAll: posed also when mic.posed(k) (npcPosed); allChars() adds mic.extras; areaHit bowls them over
+//   as pedestrians; honk.free: not mic.posed(key)
 // areaHit: props with def.carOnly are skipped (a kick never breaks a fruit stall)
 // bathers.js (feature 32, §10.22): game.bathers = new Bathers(game) after the stands (registers
 //   stekt:wake); update(dt) after stands.update and before tickProps (reset() while not live: every
@@ -6787,7 +6933,9 @@ shame.closet (Closet, §7.2; feature 36): configure(h) from setupHideouts (h = t
 //   after party.step; onPropBroken(p, vx, vz) from Game.onPropBroken; onGetUp(ch) first in
 //   Game.onGetUp (true: a bather's, no other bark); live; window; count; recs; byProp; lying; loose;
 //   spare; made; dayN; cutT; beds; held; waking; lift; last { kind, who?, t, x?, z?, car?, up?, step? };
-//   roll(r, fresh); stage(r); reserved(r); def(r, k); seen(); mayPop(); body(r); dress(); lay(); put()
+//   roll(r, fresh); stage(r); reserved(r); def(r, k); seen(); mayPop(); body(r); dress(); lay(); put();
+//   scare(x, z, r, flee) (feature 44, §10.30: the bathers lying within r m of (x, z) up and loose with
+//   `bather.flee` { x, z (m/s), t (s) }, walked by step(h) and flailing until it runs out; put clears it)
 // allChars and areaHit's people: bathers.loose too (a car or a kick on a standing bather is a person
 //   hit, as a pedestrian); carsVsPeople passes a `lying` body by (Berra and Robban on their loungers:
 //   the lounger is what a car meets); onPropBroken: bathers.onPropBroken after the lounger's own SKANDAL
@@ -7400,6 +7548,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `stunthopp`, `stuntzoner` [feature 40] | Stunthopp med G17-stämpel (§10.27), driven by a route follower in his car's `ai` (pure pursuit, as calibrate's), the peds and traffic near the bygge sent away. `stunthopp`, at index 11 (free roam): `stunt_planka` at (182, −161.4); the plank's ground 4.42 at its end, 3.6 near its foot, the ground past it; the route up the big ramp, round the S at 3.5 m/s, flat out along the strip: off the plank's end (`airFrom` y over 4.3, zone `planka`), `LUFTTID 0,n S` on the result line with no sub, the mantra said in the air; the verdict: passed, one flight, 0.85–1.05 s and 14.5–20 m (0.93 s, 16.4 m), the banner KONTROLLERAD AV G17 (cls `stamp`, not `fail`), the card `LUFTTID 0,9 S · 16 M · +100 PTA` / `NYTT REKORD: BYGGET – DRÖMPLANET` (record), +100 pta, `records.stunts.planka` its distance, no SKANDAL, "Godkänd av G17. Det är ju jag."; stopped on the dream plane's lot (x 205–222) with over 80 hp; out of the car: arms out facing `pryl_kamera`, down after 3 s; the plank again: passed, no pay, the card's `REKORD 16 M`; the best set to 10: a record, +25; the save (v 1, `records.stunts`) and a reload keep it; a parked car at (205, −161.4): UNDERKÄND (`krock`, cls `stamp fail`), the card with the name, no pay, the fail line. `stuntzoner`: the yellow ramp at 20 m/s from the yard: `gula`, two flights, over 0.7 s and 14 m, +100; at 16 m/s into the big ramp's side: UNDERKÄND; at 6 m/s a hop under 6 m: no verdict, no line; off deck 1's front edge of `frameRamps[0]` at 14 m/s: `garage`, +100; a mission started (`T.startMission`): not `live`, no jump, no line, no verdict; at index 9 (before fataga) the yellow ramp's stamp GODKÄND; the flight level inert. Shots `stunt_planka_luft`, `_stampel`, `stunt_dromplanet`, `stunt_underkand`, `stunt_gula_luft`, `_stampel`, `stunt_garage`, `stunt_godkand` |
 | `prata` [feature 39] | Prata med gänget (§10.28). The table: 12 people, 33 exchanges of 2–4 lines, speakers the person, Stig or a `with`, windows on known missions (none of Angerud's after the end), no ä or ö in Ole's lines, no line a chatter line (CHATTER, CHATTER_FLIGHT, unlocks'), a source tag on every line row in content/island.js; who can be talked to and with what at every island index 5–13 (at 15:00, at 08:00, at 15:00 with Ole's watch found; the pool fest out of its hours let go first): every exchange somewhere, Ole's Rio at 9 and none at 12 (the giver), no Lasse at 5–6 (the giver), the gang at the airport at 5, Majsan's julfest at 12 and not 11, no Angerud and Berra's "Ska du ha?" after the end. At index 9 by Ole under the pergola: `chat` / Ole, `E Prata med Ole`; E (a real key): Stig turned to him, no `inDialog`, no talk prompt and an empty prompt while it runs, the Rio lines in order, nothing else said meanwhile (no chatter), a line at a time (2.2–6 s apart), the NPCs within 9 m quiet ≥ 3 s after; E again the donkey, again Rio; with the klocka the watch, "15:00 spansk tid. 16:00 norsk och svensk."; the morning one at 08:00, not at 15:00; warped 9 m off mid-talk: `left`, no more lines; Robban's customs with Berra's "Va? Var jag med där?"; Siv (the giver) a `talk`; a mission begun mid-talk: `free roam`, the bubble down. Index 12: within 1.4 m of Majsan the `solkram` interactable, at 2.5 m the talk, the julfest's four lines; Ole (the giver) none. Index 13 after `unlock('bodega')`: at 15:00 on the deck the fest's dancers not to be talked to; Berra at the bodega (the Berra job held off) "Ska du ha?" …; Angerud hidden, none; at 08:00 Lasse's oath with `oath` on Stig during his line and off after; Ole's Concorde with `wings` and the arms down after. The flight level: nothing. Shots `prata_1_prompt`, `_2_rio`, `_3_julfest`, `_4_bodega`, `_5_eden`, `_6_concorde` |
 | `takhopp` [feature 41] | Hoppet mellan hotelltaken (§10.29), at index 13 (free roam): `ROOF_JUMP` live, the roofs HOTEL ATLÁNTICO and APARTAMENTOS SOL DE INVIERNO, both floors at 21.09 (`groundAt` from 25 on each roof and at `takSolTopp`, `takAtlTopp`, `takUtsikt`), the gap 3.68 m with no floor in it, the lift room a wall (23.05), 17 coins, the gap's two palms at 8 m, no 99 m slab solid under the roofs; at `takSolLobby` the prompt "Ta trappan upp", E fades to black and puts him on the roof at `takSolTopp` facing the gap (yaw −π/2, `on` `sol`, `climbs` 1), `slump` and "Sju våningar…", no coin collected there, the prompt "Ta trappan ner"; W + Shift along the coins (a frame hook aims the camera) and a jump 1.2 m before the edge (as Space does): over the gap `dive.gap`, `leap`, the mantra once, down on ATLÁNTICO (`last.kind` `roof`, `gap`, the arms in), at least 11 coins on the way; run to `takUtsikt`: "Nu har jag havsutsikt." once (not again after a step away on the roof), at least 4 coins of the stash; `takAtlTopp`: "Ta trappan ner", E: out of ATLÁNTICO's lobby 2.8 m from `takAtlLobby`, facing out, no stairs there; on the roof again the view line again; sprinting off ATLÁNTICO's west edge at z 62: `leap` (not `bomb`, not `gap`), the mantra, a belly flop in the pool next door (x 53.9–64.8, v > 28, `down`) and its splash; with J 3 m under the roof a cannonball (`bomb`, `waterSplash` with bomb, no flop); a SKANDAL pursuit: no "Ta trappan" prompt at the lobby. At index 9, up by the stairs: the runner's state set to `intro` alone (a real start's intro stands him by the giver at once): `put` once to `takSolLobby`, out of the lobby with no landing over 6 m/s; from the roof `missions.begin()`: no landing over 6 m/s, on the ground; in the mission no `roof` block, every slab solid and stair tower to 99, the palms to 99, no roof floor at (100, 60), no `takhopp` prompt. Shots `takhopp_paret`, `_ascensor`, `_uppe`, `_glipan`, `_atlantico`, `_utsikt`, `_kvallssol`, `_nere`, `_fall`, `_plask` |
+| `mikrofon`, `utrop` [feature 44] | Mikrofonen på scenen (§10.30). `mikrofon`: every line in MIKROFON has its source tag in content/island.js and Ole's have no ä or ö; `clockWords` (tre, halv fyra from a quarter past, fyra from a quarter to, tolv, halv två); at index 9 (free roam, 15:00): no mic prompt from the lawn 2.8 m in front of the stand, at `mikrofon` the prompt "Läs ett utrop" and three guests seated at the terrace; E (a real key): `vatten`, Stig turned to the terrace (within 0.05 rad), the glasses up at once, his line first, three spit lines with the glasses down and `yell`, the camera behind him (`camOff`, within 0.1), no prompt while it plays, no announcement from E in the cooldown; E: `grisfest`, the free gang (Fru Storch, Ole, Robban, Berra, Herr Storch; not Siv, the giver, or Majsan, her extra) and six tourists, the gang `npcPosed`, out of `honk.free`, `spot` `mic`, busy; everyone within 0.8 m of his place, a cheer, then in order Robban's Benidorm, Fru Storch's coffee, "Ja.", "Norsk, da?", "Ja.", and no chatter from Affe or Gabbe meanwhile; E: "Klockan är tre spansk tid…" and Ole's lost watch; with the klocka found at 15:30 "halv fyra" and the watch's line; E: `friskotek`, everyone leaving slumped, the guests slumped (and up again), the tourist's and Berra's lines; the crowd gone: the tourists hidden, the gang free and within 3 m of home; eight bathers forced onto the pool's loungers: E: `hajar`, all eight up, running from the pool flailing (over 3 m further in 1.5 s), "Hjälp!", "En haj!", Lasse's line and Stig's answer, then no flailing and nobody back on those loungers; the fin squashed: the turn skips the shark; the grisfest again, Stig warped 21 m off after Fru Storch's question: no "Ja." or "Norsk, da?"; `missions.begin()` with the crowd on the lawn: no crowd, extras or guests, the gang let go, no prompt. `utrop`: one tourist from each entry's outermost start to a place (under 20 s, within 0.6 m: west 9.6 s, east 14.4 s, south 10.8 s); the guests at 09:00 and 22:30, none at 23:30 or 05:00 (after a cut), at 15:00 again; no prompt in a SKANDAL pursuit; index 6 (friskotek): six tourists only, no question time, the giver and his extras not taken; index 13 after `unlock('bodega')`: none of the pool fest's dancers in the crowd; the flight level (index 2) inert. Shots `mikrofon_1_prompt`, `_2_vatten`, `_3_publiken`, `_4_hurra`, `_5_norsk`, `_6_friskotek`, `_7_hajar`, `utrop_1_friskotek`, `utrop_2_efter_slutet` |
 | `badgaster`, `stekt` [feature 32] | Badgäster på solstolarna (§10.22). `badgaster`, at index 6 (free roam): bodies only on taken sun loungers, their hips on the seat, at most `max` (10), none on Berra's or Robban's; on the main beach no taken lounger within `r` left empty nearer than the bodies (shot `badgaster_strand`); one rebuilt body's ms logged. The burn: three loungers in the z 250 row; a bather lain past `burn[0]` stays pale while in view within `seenR` and is pink once out of view; past `burn[1]` lobster red (skins from `skins`; shot `badgaster_stadier`). A kick at a free lounger and at a taken one give the same SKANDAL; the bather off it in a backward somersault (`flip` < 0) along the lounger's facing (vz > 2), an OUCH bark, a GETUP bark on his feet (shots `badgaster_kullerbytta`, `badgaster_upp`), gone once Stig is 30 m off; no `onCharHit`, no "hit" sorry. His car at 10 m/s through a taken lounger: SKANDAL 1 × 1.2 × gain only, the bather off along the car (vz > 5; shot `badgaster_bil`). The lounger back after its smash (respawn 0, him 100 m off): `n` + 1, a new seed, stage 0, a pale newcomer on it. At 22:00 nobody (after a cut); at 10:00 `dayN` + 1 and a new crowd. A mission start (friskotek) takes every body away at once, none in the mission; the flight level (index 2) makes none. `stekt`, at index 6: Berra and Robban `lying` on their loungers, outfit `stekt` (skin `STEKT_SKIN`), `slump`, busy, spot `stekt`; both snore within 9.5 s (shots `stekt_bar`, `stekt`); the E point `stekt:wake` at Berra's feet: Stig's line, then Berra's with `lift` > 0.6 (shot `stekt_fem_minuter`), then Robban's, in that order, and `lift` back under 0.1; a kick at Berra's lounger: `flung`, then `down` with his timer held (> 100), still `stekt`, only snores from him (shot `stekt_sparkad`); the lounger back with him 100 m off: on it again. A mission start (friskotek): both `normal`, outfit `sol`, no slump, within 2.5 m of their homes at the bar. Index 7: on their loungers; 5 and 8: not |
 | `talk` [Phase 0] | `autoDialog = false`, walk to Ole at `gateQueue`, E, Space twice |
 | `fullstory` [Phase 0b] | swaps the literal §8 missions (`tools/fixtures/full-missions.js`) into `MISSIONS` and plays all 13 per §16.3 (`FROM`/`TO` as `story`); must end `#13 idle`, `RESULT: PASS` |
@@ -7488,6 +7637,7 @@ brodrost_supermercado brodrost_grillpaco brodrost_hittegods` (feature 33, §10.2
 + room 107's wardrobe `rum107Garderob` (feature 36, §7.2)
 + the hotel roofs' stairs and view `takSolLobby takSolTopp takAtlTopp takAtlLobby takUtsikt` (feature 41,
 §10.29)
++ the SunTrip stage's microphone `mikrofon` (feature 44, §10.30)
 + collectibles `pryl_klocka pryl_poolpen pryl_kalkylator pryl_kniv pryl_kamera pryl_glasogon
 pryl_pung fena_flamenco fena_suntrip fena_plaza fena_golf fena_bungalow fena_hamn fena_hav` + Rio
 `rioBoat rioCam`.
@@ -9331,3 +9481,24 @@ the fixer's group.
   room and none in its lobby; the roof floors are the slabs' footprints (0.15 m inside the parapets);
   the gap's palms stop at 8 m between missions; the coins respawn every session; down by the stairs he
   stands 2.8 m out of the lobby. Scenario `takhopp` (§16.4).
+- Feature 44, "Mikrofonen på scenen" (`features/implemented/mikrofonen_pa_scenen.md`, 2026-10-17): E at
+  the SunTrip stage's microphone between missions reads the next of Lasse's announcements (§10.30; new
+  `src/game/mic.js`, `MIKROFON` in content/island.js, the landmark `mikrofon`; §1.6, §6.3, §10.9,
+  §10.22, §11, §14.1–§14.3, §14.8, §16.4, Appendix A). The PA chime, Stig turned to the audience with
+  the camera easing in behind him, his line, then in turn: "Ni bör inte dricka vattnet." (three
+  seeded guests at the terrace's tables, there by day and evening, lift their glasses and spit);
+  "Grisfesten är på torsdag och kostar 800 pesetas. Några frågor?" (six seeded tourists and the free
+  gang come onto the lawn from out of view, cheer, and Robban's Benidorm, Fru Storch's coffee, Stig's
+  "Ja.", Ole's "Norsk, da?", "Ja."; they stay 30 s); "Klockan är {tid} spansk tid – alltså en timme
+  tidigare än svensk tid." (the island's clock in words; Ole answers by his watch); "Friskoteket
+  börjar halv tio varje morgon." (the crowd slumps and shuffles off, the terrace slumps); "Hajar i
+  poolen!" (only while `fena_suntrip` circles: the bathers on the pool's loungers flee, Lasse waves it
+  off). No prompt in a SKANDAL pursuit. bathers.js: `scare(x, z, r, flee)` and the flee in `step`;
+  honk.js: `free` leaves the mic's crowd out; main.js: `mic` after `roofs`, `mic.update` after
+  `roofs.update`, `mic.step` after `bathers.step`, `mic.extras` in `allChars` and `areaHit`'s people,
+  `mic.posed` in `npcPosed`. Everything only between missions on the island and gone at a mission start
+  (the gang home): no mission, stage kind, timer, fixture or calibration pool changed, no solid and no
+  world random draw added. Deviations from the idea: the time before friskoteket in the turn order;
+  the time read off the island's clock; Ole's answer by his watch; six tourists; the terrace's guests
+  sit there all day and evening; no wave-off pose for Lasse; a camera ease at E; no reward. Scenarios
+  `mikrofon`, `utrop` (§16.4).

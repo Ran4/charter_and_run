@@ -80,6 +80,9 @@ export const ISLAND_LANDMARKS = {
   // Bärra hem Berra (free roam, §10.6): the sun lounger by the SunTrip pool where Berra naps (its
   // `solstol` prop; yaw = the prop's facing, the backrest end).
   berraSolstol: { b: [3, 2], at: [17.4, 2.2], yaw: 0 },
+  // Mikrofonen på scenen (free roam, §10.30): where Stig stands on the welcome stage (top 0.55)
+  // behind the microphone's stand (hotels.js suntripStage, at (0, -10.6)), facing the lawn: the E spot.
+  mikrofon: { b: [3, 2], at: [0, -11.2], yaw: 0 },
   // (1,2) Centro La Medina
   kasbah: { b: [1, 2], at: [0, 22], yaw: PI },
   vikingbar: { b: [1, 2], at: [-16, 18], yaw: PI },

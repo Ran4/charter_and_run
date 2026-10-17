@@ -318,6 +318,19 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   ut över västra kanten och ner i hotellpoolen intill: ett magplask, eller en bomb om du trycker J i
   luften. Under en jakt med Guardia Civil är trappan stängd, och under uppdragen går taken inte att
   stå på.
+- **Mikrofonen på scenen**: på SunTrips välkomstscen står ett mikrofonstativ mellan högtalarna. Mellan
+  uppdragen kan du kliva upp på scenen och trycka E, "Läs ett utrop". Det plingar i högtalarna och
+  Stig läser upp ett av Lasses utrop med tjänstemannaallvar, och hotellet gör som han säger. "Ni bör
+  inte dricka vattnet." får gästerna vid terrassborden att spotta ut drinkarna. Vid "Grisfesten är på
+  torsdag och kostar 800 pesetas. Några frågor?" strömmar turister och de i gänget som är lediga in på
+  gräsmattan och hurrar, och sedan kommer filmens frågestund: fru Storch undrar om det finns svenskt
+  kaffe, Ole om det finns norskt, och Stig svarar "Ja." båda gångerna. Klockslaget läser han från öns
+  klocka, och Ole i publiken svarar (har du hittat hans klocka får du höra vad den kan). Vid
+  "Friskoteket börjar halv tio varje morgon." sjunker publiken ihop och glider därifrån. Så länge
+  hajfenan cirklar i SunTrip-poolen ropar han också "Hajar i poolen!", och då flyr solbadarna från
+  solstolarna medan Lasse viftar bort det. Varje tryck tar nästa utrop i tur och ordning, och efter
+  ett par sekunder kan du ta nästa. Under en jakt med Guardia Civil är mikrofonen avstängd, och när
+  ett uppdrag börjar går alla hem.
 
 ## Vad är påhittat?
 
@@ -406,6 +419,10 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
   hoppet över glipan med mantrat, broschyrskylten och Stigs havsutsikt där uppe, och språnget ner i
   poolen (i filmen är havsutsikten en spegel som portiern håller ut från hotellrummet, och ingen går
   upp på något tak)
+- Stig vid mikrofonen på SunTrip-scenen: gästerna som spottar ut drinkarna, publiken på gräsmattan
+  med frågestunden, Oles svar om klockan, publiken som sjunker ihop vid friskoteket och solbadarna som
+  flyr en hajvarning som stämmer (i filmen läser Lasse utropen i transferbussen och på välkomstmötet,
+  och "Hajar i poolen?" säger han i telefon)
 - fårrusningen i Fataga, kappkörningen mot nattbussen och porslinskrosset på tid
 - att samla ihop julfestgästerna
 - Oles prylar och hajfenorna som samlarföremål, utspridda över ön
@@ -513,6 +530,7 @@ src/game/solkram.js             Smörj in Majsans rygg in free roam: the SOLKRÄ
 src/game/stunts.js              Stunthopp med G17-stämpel in free roam: his car's jumps measured, LUFTTID, the stamp, the records
 src/game/gangTalk.js            Prata med gänget in free roam: E talks to the gang, the exchanges by part of the trip
 src/game/roofJump.js            Hoppet mellan hotelltaken in free roam: the walkable hotel roofs, the stairs, the jump, the pool
+src/game/mic.js                 Mikrofonen på scenen in free roam: Lasse's announcements at the SunTrip stage, the crowd, the reactions
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
@@ -520,7 +538,7 @@ tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, 
                                 paintshop, berra, glide, simhopp, tuta, dygn, super8, eslov, grodorna,
                                 artig, grisar, bagage, lapplisa, torsdag, frukt, hopptorn, hund,
                                 badgaster, butik, brodrost, rum107, solkram, skjortbyte,
-                                stunthopp, prata, takhopp, calibrate, calibflight)
+                                stunthopp, prata, takhopp, mikrofon, calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
 tools/pool.mjs                  re-derives every random stage's timer from the ledger
@@ -574,6 +592,7 @@ node tools/shot.mjs stunthopp stuntzoner # the stunt jumps: the plank to the dre
 node tools/shot.mjs skjortbyte garderob  # room 107's wardrobe in a pursuit: the change, busted in there, the officer walking past, back to the shirt; shots
 node tools/shot.mjs prata                # the gang's talk: the table, who at every index, Rio, the round, the stops, the julfest, after the end; shots
 node tools/shot.mjs takhopp              # the hotel roofs: the stairs up, the jump over the gap, the view, the stairs down, into the pool, a mission start
+node tools/shot.mjs mikrofon utrop       # the SunTrip stage's mic: the five announcements and their reactions, the crowd's ways in, the terrace's hours, a mission start
 node tools/shot.mjs fullstory kinds      # the literal §8 missions and the stage-kind checks
 node tools/shot.mjs calibrate calibflight  # timer and FLYGRÄDSLA calibration (slow; see DESIGN §8, §16.4)
 node tools/pool.mjs                      # random-stage timers from the raw runs in notes/calibration-samples.md

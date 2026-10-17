@@ -11,7 +11,9 @@
 // the bungalow gardens and the farmyard on vischan, with their owners' calls (§10.21), and the
 // bathers on the sun loungers, their burn and the fly-off, Berra waking for five minutes more
 // (§10.22), the SOLKRÄM meter for Majsan's sun cream, Siv's cards for it and the cream running
-// (§10.26), and the gang's short exchanges on E between missions, Stig answering (§10.28).
+// (§10.26), the gang's short exchanges on E between missions, Stig answering (§10.28), and Stig
+// reading Lasse's announcements at the SunTrip stage's microphone, the island doing what he says
+// (§10.30).
 
 export const HOMES_ISLAND = {
   ole: ['flamenco', 2.0, 1.0, 0],     // yaw 0: under the pergola, facing the pool (flamenco faces π)
@@ -901,6 +903,101 @@ export const TAKHOPP = {
   ],
   top: 'Sju våningar…',   // [N]
   view: { lm: 'takUtsikt', r: 2.2, line: 'Nu har jag havsutsikt.' },   // [N] (his "Kallar ni det här för havsutsikt?" answered at last, research-plot.md:252)
+};
+
+// Mikrofonen på scenen – Stig reads Lasse's announcements (free roam, DESIGN §10.30; game/mic.js).
+// Places are block-local to `block` (Hotel SunTrip, as in world/blocks/hotels.js). On the island
+// with no mission running, Stig on foot on the welcome stage (over `stageY`) within `r` m of the mic
+// (`lm`, where he stands behind its stand) and no SKANDAL pursuit: E plays the next announcement of
+// `order`, round and round (per session; `hajar` only while the SunTrip pool's fin `hajar.fin` still
+// circles): the PA chime (audio.dingdong), Stig turned to the line's audience (`face`) with the camera
+// easing in behind him, `camOff` rad to his right, for `camSecs` s (the mouse turning it ends it), and
+// `dingSecs` s later his line as a bubble. His and the others' lines follow one another (each up as
+// long as game.say holds it, then `gap` s); E again only after `cool` s and once those lines are said.
+// The NPCs within `hushR` m have their bubbles taken down at the chime and keep their chatter back
+// meanwhile. A line of Stig's further on is dropped, and the rest with it, once he is more than
+// `leaveR` m from the mic, in a car or knocked down. A body (a guest, one of the crowd) comes or goes
+// only out of the camera's view, more than `popR` m from it, or within `cutSecs` s of a cut.
+//   vatten: the guests at the terrace tables (`terrace.seats` [x, z, yaw], seated at `y`, there by
+//     day and evening, `hours`, while he is within `terrace.r` m; seeded) lift their glasses `sipAt`
+//     s after the chime and spit the drink out `spitAt` s after his line, yelling `yellSecs` s, with
+//     the `spit` lines.
+//   grisfest: `crowd.tourists` tourists (seeded, made once) and every free one of `crowd.gang`
+//     (standing, shown, at home, nobody's, not the waiting mission's giver or extra) come to the
+//     lawn's `spots` (the gang first), each from the nearest `entries` start out of view (one of the
+//     gang in view walks from where he is) by its `via` points at `walk` m/s (tourists up to `lag` s
+//     apart), and cheers on arrival (`cheerSecs`, `cheer` from the first two, the applause). Once they
+//     are there (at most `arriveSecs` s): Robban's Benidorm line, and Fru Storch's question with
+//     Stig's "Ja." in Lasse's place, Ole's "Norsk, da?" and the second "Ja." They stay `stay` s, then
+//     walk out the way they came at `outWalk` m/s; at its outermost start, out of view or after
+//     `outSecs` s, a tourist is hidden and one of the gang put home.
+//   klocka: the hour from the island's clock (§10.10) in words (`hours`, `half` from a quarter past
+//     to a quarter to); Ole in the crowd or within `klocka.r` m of the mic answers with his watch's
+//     line once Stig has found it (pryl `klocka`), else `oleLost`; without Ole someone in the crowd
+//     or at the terrace says `other`.
+//   friskotek: the crowd sinks (`anim.slump`), stands `slumpSecs` s and shuffles off slumped at
+//     `slumpWalk` m/s; the guests at the terrace slump for `terrace.slumpSecs` s; `slump` from a
+//     tourist, `berraSlump` from Berra.
+//   hajar: every bather on a lounger within `hajar.r` m of `hajar.at` (§10.22, bathers.scare) jumps
+//     up and runs from the pool flailing for `flee.secs` s at `flee.speed` m/s (the first two cry
+//     out), the lounger empty until the next morning; Lasse within `lasseR` m of the pool waves it
+//     off, and Stig answers him.
+// A mission start or the other level takes everything away at once (the gang home). Invented
+// (§1.6): the microphone's use, the crowd, the reactions; Stig's lines are Lasse's from the bus and
+// the welcome meeting, relocated, the shark warning ours.
+export const MIKROFON = {
+  block: [3, 2], lm: 'mikrofon', r: 1.4, stageY: 0.55, cool: 6, dingSecs: 0.9, camSecs: 1.4, camOff: 0.4, gap: 0.35,
+  hushR: 14, leaveR: 12, popR: 40, cutSecs: 1.2,
+  prompt: '<b>E</b> Läs ett utrop',                                                             // [N]
+  order: ['vatten', 'grisfest', 'klocka', 'friskotek', 'hajar'],
+  lines: {
+    vatten: { face: [14.5, -14], text: 'Ni bör inte dricka vattnet.' },                         // [F*] Lasse in the bus (research-plot.md:246, :441), relocated to Stig on the stage
+    grisfest: { face: [-0.5, -3.5], text: 'Grisfesten är på torsdag och kostar 800 pesetas. Några frågor?' },   // [F*] the same
+    klocka: { face: [-0.5, -3.5], text: 'Klockan är {tid} spansk tid – alltså en timme tidigare än svensk tid.' },   // [F*] the same, the hour read off the island's clock
+    friskotek: { face: [-0.5, -3.5], text: 'Friskoteket börjar halv tio varje morgon.' },       // [F*] Lasse at the welcome meeting (research-plot.md:266)
+    hajar: { face: [14.5, 9], text: 'Hajar i poolen!' },                                        // [N] Lasse's "Hajar i poolen? Delirium – ring kliniken." (research-plot.md:292) turned round: the fin is there
+  },
+  hours: ['tolv', 'ett', 'två', 'tre', 'fyra', 'fem', 'sex', 'sju', 'åtta', 'nio', 'tio', 'elva'],
+  half: 'halv {h}',
+  terrace: {
+    seats: [[12.15, -11.5, Math.PI / 2], [13.85, -11.5, -Math.PI / 2], [17.65, -18, Math.PI / 2]],
+    y: 0.61, r: 45, hours: [8, 23], seed: 4411, sipAt: 0.3, spitAt: 1.3, yellSecs: 1.2, slumpSecs: 4,
+    spit: ['Isbitarna!' /* [N] */, 'Usch!' /* [N] */, 'Är isen också vatten?' /* [N] */],
+  },
+  crowd: {
+    tourists: 6, seed: 4401, walk: 3.4, outWalk: 2.0, slumpWalk: 1.3, lag: 1.5, stay: 30, arriveSecs: 14, cheerSecs: 2.4,
+    slumpSecs: 1.6, outSecs: 12,
+    gang: ['fruStorch', 'ole', 'robban', 'berra', 'herrStorch', 'majsan', 'siv'],
+    spots: [[-2.7, -5.6], [0, -5.6], [2.7, -5.6], [-5.4, -5.6], [4.6, -6.6], [-1.35, -3.4], [1.35, -3.4],
+      [-4, -3.4], [4, -3.4], [-6.6, -3.4], [0, -1.2], [-2.65, -1.2], [2.65, -1.2], [-5.3, -1.2]],
+    entries: {
+      w: { from: [[-25.5, 7.2], [-30, 7.2], [-34.5, 7.2]], via: [[-21.6, 7.2], [-15, 3.5]] },
+      e: { from: [[24, 15.3], [29, 15.3], [34.5, 15.3]], via: [[6.2, 15.3], [5.4, 5]] },
+      s: { from: [[0.5, 24], [0.5, 33]], via: [[0.5, 13]] },
+    },
+    cheer: ['Hurra!' /* [N] */, 'Grisfest!' /* [N] */],
+    robban: 'Ja, herre jävlar, minns du Benidorm? Snacka om grisfest!',                       // [F*] Robban at the bodega (research-characters.md:393), relocated
+    qa: [
+      ['fruStorch', 'Finns det svenskt kaffe på hotellet?'],                                  // [F*] Fru Storch in the bus (research-plot.md:247), relocated
+      ['stig', 'Ja.'],                                                                        // [F*] Lasse's answer, now Stig's
+      ['ole', 'Norsk, da?'],                                                                  // [F*] Ole's (research-characters.md:180), relocated
+      ['stig', 'Ja.'],                                                                        // [F*] Lasse's second answer, now Stig's
+    ],
+    slump: 'Halv tio? På semestern?',                                                         // [N]
+    berraSlump: 'Halv tio? Då har vi inte ens gått och lagt oss.',                            // [N]
+  },
+  klocka: {
+    r: 25,
+    ole: 'Digital, analog, spansk, norsk, svensk tid, kronometer, og så klokke.',             // [F*] his watch (COLLECTIBLES), Stig wears it
+    oleLost: 'Og norsk tid? Klokka mi ligger et sted på øya.',                                // [N]
+    other: 'Ska man ställa om klockan igen?',                                                 // [N]
+  },
+  hajar: {
+    fin: 'fena_suntrip', at: [14.5, 9], r: 11, lasseR: 50, flee: { secs: 3.5, speed: 5.5 },
+    cries: ['Hjälp!' /* [N] */, 'En haj!' /* [N] */],
+    lasse: 'Hajar i poolen igen? Ring kliniken!',                                             // [F*] Lasse's phone call in the film, adapted (as COLLECTIBLES.fenor.first)
+    stig: 'Men den är ju där…',                                                               // [N]
+  },
 };
 
 // Stunthopp med G17-stämpel – his car's jumps judged (free roam, DESIGN §10.27; game/stunts.js, the

@@ -46,6 +46,7 @@ import { Room107 } from './game/room107.js';
 import { Solkram } from './game/solkram.js';
 import { GangTalk } from './game/gangTalk.js';
 import { RoofJump } from './game/roofJump.js';
+import { Mic } from './game/mic.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
 import { LEVELS, ISLAND_PALETTES } from './level.js';
@@ -204,6 +205,7 @@ class Game {
     this.stunts = new Stunts(this);       // free roam: his car's jumps judged, the G17 stamp (§10.27)
     this.chat = new GangTalk(this);       // free roam: E talks to the gang, and Stig answers (§10.28)
     this.roofs = new RoofJump(this);      // free roam: the stairs up SOL DE INVIERNO, the jump to HOTEL ATLÁNTICO's roof (§10.29)
+    this.mic = new Mic(this);             // free roam: Stig reads Lasse's announcements at the SunTrip stage's mic (§10.30)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -781,6 +783,7 @@ class Game {
     for (const k in this.npcs) out.push(this.npcs[k]);
     out.push(...this.party.extras);   // the grisfest's band and tourists (§10.18)
     out.push(...this.bathers.loose);  // bathers off their loungers (§10.22)
+    out.push(...this.mic.extras);     // the tourists come to hear Stig at the SunTrip stage (§10.30)
     return out;
   }
 
@@ -1528,6 +1531,7 @@ class Game {
     this.stunts.update(dt);
     this.chat.update(dt);
     this.roofs.update(dt);
+    this.mic.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);
@@ -1727,6 +1731,7 @@ class Game {
     }
     this.party.step(h);   // the grisfest's band and tourists (§10.18)
     this.bathers.step(h); // bathers off their loungers (§10.22)
+    this.mic.step(h);     // the tourists at the SunTrip stage (§10.30)
     this.carsVsPeople();
   }
 
@@ -1736,8 +1741,9 @@ class Game {
     let broke = null, bowled = false;
     // A fruit stall is the car's only (`carOnly`, §10.19).
     for (const prop of propsNear(x, z, r)) { if (prop.def.carOnly) continue; const b = breakProp(prop, dx * 8, dz * 8, this); if (b && !broke?.def.explode) broke = b; }
-    // Pedestrians, the grisfest's band and tourists (§10.18) and bathers off their loungers (§10.22).
-    const people = (this.levelDef.sim.peds ? this.peds.map((ped) => ped.char) : []).concat(this.party.extras, this.bathers.loose);
+    // Pedestrians, the grisfest's band and tourists (§10.18), bathers off their loungers (§10.22) and
+    // the tourists at the SunTrip stage (§10.30).
+    const people = (this.levelDef.sim.peds ? this.peds.map((ped) => ped.char) : []).concat(this.party.extras, this.bathers.loose, this.mic.extras);
     for (const c of people) {
       if (c.state !== 'normal' || Math.abs(c.y - y) > 1.6 || dist(c.x, c.z, x, z) > r + 0.4) continue;
       c.fling(dx * 7 + (c.x - x) * 2, 5, dz * 7 + (c.z - z) * 2);
@@ -1819,12 +1825,13 @@ class Game {
   // An NPC held in a pose of its own: §9.4 idleAnim (e.g. Berra asleep), or held by the free-roam
   // Berra job (§10.6), the diving judges at the pool's edge (§10.8), Herr Storch's filming (§10.11),
   // the rollerskier's laps (§10.12), the pool fest's dancers and porter (§10.13), Majsan on her round
-  // with the ticket pad or Angerud in the tow scene (§10.17), the grisfest's evening (§10.18) or the
-  // souvenir seller swearing at a smashed fruit stall (§10.19). syncAll gives such an NPC no wave,
-  // turn or chatter, and the gang's talk leaves them be (§10.28).
+  // with the ticket pad or Angerud in the tow scene (§10.17), the grisfest's evening (§10.18), the
+  // souvenir seller swearing at a smashed fruit stall (§10.19) or the crowd at the SunTrip stage
+  // (§10.30). syncAll gives such an NPC no wave, turn or chatter, and the gang's talk leaves them be
+  // (§10.28).
   npcPosed(k) {
     return !!this.missions.idlePose(k) || this.berraJob.posed(k) || this.judges.posed(k) || this.film.posed(k) || this.eslov.posed(k) || this.fest.posed(k) || this.lapp.posed(k) || this.party.posed(k)
-      || this.stands.posed(k);
+      || this.stands.posed(k) || !!this.mic?.posed(k);
   }
 
   syncAll(dt, title) {

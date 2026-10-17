@@ -2,7 +2,6 @@
 # flytta den till "färdiga features"-sektionen nedan)
 # markörer: ⟨par N⟩ = de två raderna med samma N körs samtidigt (var sin worktree/gren, sedan rebase på main och push), ⟨solo⟩ = körs ensam; ta grupperna uppifrån och ned
 - features/faglar_som_lyfter.md – 43. Fåglarna som lyfter – och storken i La Charca [M] ⟨par 7⟩
-- features/mikrofonen_pa_scenen.md – 44. Mikrofonen på scenen – Stig läser Lasses utrop [M] ⟨par 7⟩
 - features/gags_sma_filmscener.md – 47. Gags på E – Oles blixt och Angeruds Viking special [S] ⟨par 8⟩
 - features/strandkyssen.md – 57. Strandkyssen i bränningen [M] ⟨par 8⟩
 - features/guardia_jeepen.md – 51. Låna Guardia-jeepen – ”Ursäkta, är det din bil?” [M] ⟨solo⟩
@@ -71,3 +70,4 @@
 - features/implemented/stunthopp.md – 40. Stunthopp med G17-stämpel [M]
 - features/implemented/prata_med_ganget.md – 39. Prata med gänget [M]
 - features/implemented/hoppet_mellan_hotelltaken.md – 41. Hoppet mellan hotelltaken [M]
+- features/implemented/mikrofonen_pa_scenen.md – 44. Mikrofonen på scenen – Stig läser Lasses utrop [M]
