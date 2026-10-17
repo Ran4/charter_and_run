@@ -1,5 +1,5 @@
 # Gör dessa grejer (flytta filen till features/implemented/ och uppdatera den när du är klar, och
-# flytta den till "färdiga features"-sektionen nedan)
+# flytta den överst till "färdiga features"-sektionen nedan)
 # markörer: ⟨par N⟩ = de två raderna med samma N körs samtidigt (var sin worktree/gren, sedan rebase på main och push), ⟨solo⟩ = körs ensam; ta grupperna uppifrån och ned
 - features/battur_rio.md – 76. Båtturen med PALOMA – slutbilden, fast på riktigt [M] ⟨par 10⟩
 - features/balkonglivet.md – 77. Balkongerna lever – grannar, siesta och ”havsutsikt” [M] ⟨par 10⟩
@@ -12,15 +12,16 @@
 - features/lopande_bandet.md – 109. Stig på löpande band – sortera tomater i packhuset [M] ⟨par 13⟩
 - features/strandvolley.md – 111. Strandvolley mot Berra och Robban [M] ⟨par 13⟩
 - features/ta_ett_kort_pa_oss.md – 110. ”Kan du ta ett kort på oss?” – turistparet vid fyren [M] ⟨solo⟩
-
-# Vänta med dessa tills spelaren säger till
-# markörer som ovan: ⟨par N⟩ = de två raderna med samma N körs samtidigt, ⟨solo⟩ = körs ensam; här från par 6 och uppåt så att taggarna är unika när rader köas en och en
 - features/guaguan_fotbollssnack.md – 112. Guaguan – åk buss och snacka fotboll [M] ⟨par 14⟩
 - features/hittelon_pa_hittegods.md – 116. Hittelön – de borttappade väskorna [M] ⟨par 14⟩
 - features/systrarnas_balkong_whisky.md – 117. Systrarnas balkong – ”Vi är väl inte på nåt jäkla vernissage?” [M] ⟨par 15⟩
 - features/traktorn.md – 121. Traktorn med släpkärran [M] ⟨par 15⟩
 - features/kranen_pa_bygget.md – 118. Åk med byggkranen [L] ⟨solo⟩
 - features/trampbat.md – 120. Hyr en trampbåt (200 PTA/H) [L] ⟨solo⟩
+- features/roster.md – Röster – ett fullt röstsatt spel (ElevenLabs, som Saab- och Seinfeld-spelen; svara på de öppna frågorna i §13 först) [L] ⟨solo⟩
+
+# Vänta med dessa tills spelaren säger till
+# markörer som ovan: ⟨par N⟩ = de två raderna med samma N körs samtidigt, ⟨solo⟩ = körs ensam; här från par 6 och uppåt så att taggarna är unika när rader köas en och en
 - features/takterrassen_pa_la_medina.md – 122. Takterrassen på La Medina vaknar [M] ⟨par 16⟩
 - features/utflykt_med_lasse.md – 124. Utflykt med Lasse – åk med SunTrip-bussen till Fataga [L] ⟨par 16⟩
 - features/glass_till_majsan.md – 126. Glass till Majsan innan den smälter [M] ⟨par 17⟩
@@ -31,37 +32,47 @@
 - features/kvarteren_tands.md – 140. Kvarteren tänds – adventsstjärnor och tända fönster [S] ⟨par 19⟩
 - features/butaneron.md – 143. Butaneron och gasolbilen [M] ⟨solo⟩
 
-# Färdiga features
+# Färdiga features (lägg till [färdig: yyyy-mm-dd hh:mm] i slutet)
+- features/implemented/snackrutor.md – Snackrutorna buggar ur, gör dem högre (bugg) [färdig: 2026-10-17 18:38]
 - features/implemented/golfbilen.md – 74. Golfbilen – pip-pip! [M] [färdig: 2026-10-17 18:21]
-- features/implemented/dalahastbilen.md – 1. Coche folcloristico nativo – bilen målas som en dalahäst [M]
-- features/implemented/barra_hem_berra_igen.md – 2. Bärra hem Berra – igen [M]
-- features/implemented/skandalforandringar.md – SKANDAL-förändringar: mätaren ×3 och 10 s innan den sjunker, i bil tagen efter 4 s nära en jeep eller två prejningar inom 14 s
-- features/implemented/jag_kan_flyga_glidflykt.md – 3. Jag kan flyga – glidflykt efter julafton [M]
-- features/implemented/systrarna_satter_poang.md – 4. Siv och Majsan sätter poäng på simhoppen [M]
-- features/implemented/tutan_som_folk_reagerar_pa.md – 5. Tutan som folk reagerar på [S]
-- features/implemented/dygnet_runt.md – 30. Dygnet runt – kväll på ön och en tupplur i rum 107 [M]
-- features/implemented/storch_super8.md – 6. Lite film. – herr Storchs semesterfilm [M]
-- features/implemented/heja_eslov.md – 7. Heja Eslöv! – rullskidåkaren tränar på riktigt [M]
-- features/implemented/sma_grodorna_runt_poolen.md – 8. Små grodorna i poolen [M]
-- features/implemented/artiga_stig.md – 11. Förlåt, förlåt! – Stig-Helmer ber om ursäkt [S]
-- features/implemented/grisarna_ramlar_av_grisbilen.md – 15. Grisarna ramlar av grisbilen – och tutan grymtar [M]
-- features/implemented/aka_bagageband.md – 25. Åk bagageband [S]
-- features/implemented/lapplisan_majsan.md – 20. Lapplisan Majsan – ”Ursäkta, är det din bil?” [M]
-- features/implemented/grisfest_pa_torsdag.md – 21. Grisfest varje torsdag – 800 pesetas [M]
-- features/implemented/fruktstandet.md – 28. Rakt genom fruktståndet [M]
-- features/implemented/fran_fjarde_vaningen.md – 24. Från fjärde våningen – hopptornet vid Flamencopoolen [M]
-- features/implemented/fin_hund.md – 31. Fin hund… – vakthundarna som jagar Stig [M]
-- features/implemented/badgaster_pa_solstolarna.md – 32. Badgäster på solstolarna – och stekta Berra och Robban [M]
+- features/implemented/lana_rullskidorna.md – 71. Låna rullskidorna – åk fort på asfalt [L] [färdig: 2026-10-17 17:42]
+- features/implemented/dalahastbilen.md – 1. Coche folcloristico nativo – bilen målas som en dalahäst [M] [färdig: ???]
+- features/implemented/barra_hem_berra_igen.md – 2. Bärra hem Berra – igen [M] [färdig: ???]
+- features/implemented/skandalforandringar.md – SKANDAL-förändringar: mätaren ×3 och 10 s innan den sjunker, i bil tagen efter 4 s nära en jeep eller två prejningar inom 14 s [färdig: ???]
+- features/implemented/jag_kan_flyga_glidflykt.md – 3. Jag kan flyga – glidflykt efter julafton [M] [färdig:
+  ???] [färdig: ???]
+- features/implemented/systrarna_satter_poang.md – 4. Siv och Majsan sätter poäng på simhoppen [M] [färdig:
+  ???] [färdig: ???]
+- features/implemented/tutan_som_folk_reagerar_pa.md – 5. Tutan som folk reagerar på [S] [färdig: ???]
+- features/implemented/dygnet_runt.md – 30. Dygnet runt – kväll på ön och en tupplur i rum 107 [M] [färdig:
+  ???] [färdig: ???]
+- features/implemented/storch_super8.md – 6. Lite film. – herr Storchs semesterfilm [M] [färdig: ???]
+- features/implemented/heja_eslov.md – 7. Heja Eslöv! – rullskidåkaren tränar på riktigt [M] [färdig: ???]
+- features/implemented/sma_grodorna_runt_poolen.md – 8. Små grodorna i poolen [M] [färdig: ???]
+- features/implemented/artiga_stig.md – 11. Förlåt, förlåt! – Stig-Helmer ber om ursäkt [S] [färdig: ???]
+- features/implemented/grisarna_ramlar_av_grisbilen.md – 15. Grisarna ramlar av grisbilen – och tutan grymtar [M] [färdig: ???]
+- features/implemented/aka_bagageband.md – 25. Åk bagageband [S] [färdig: ???]
+- features/implemented/lapplisan_majsan.md – 20. Lapplisan Majsan – ”Ursäkta, är det din bil?” [M] [färdig:
+  ???] [färdig: ???]
+- features/implemented/grisfest_pa_torsdag.md – 21. Grisfest varje torsdag – 800 pesetas [M] [färdig: ???]
+- features/implemented/fruktstandet.md – 28. Rakt genom fruktståndet [M] [färdig: ???]
+- features/implemented/fran_fjarde_vaningen.md – 24. Från fjärde våningen – hopptornet vid Flamencopoolen [M] [färdig: ???]
+- features/implemented/fin_hund.md – 31. Fin hund… – vakthundarna som jagar Stig [M] [färdig: ???]
+- features/implemented/badgaster_pa_solstolarna.md – 32. Badgäster på solstolarna – och stekta Berra och Robban [M] [färdig: ???]
 - features/implemented/bransletillagg_butiken.md – 34. Bränsletillägg tillkommer – SunTrip-butiken [M]
-- features/implemented/g17_brodrostar.md – 33. Kontrollerad av G17 – öns brödrostar [M]
-- features/implemented/rum_107_troferum.md – 38. Rum 107 fylls med resans minnen [S]
-- features/implemented/smorj_in_majsan.md – 35. Smörj in Majsans rygg – SOLKRÄM-mätaren [S]
-- features/implemented/skjortbytet.md – 36. Skjortbytet – Guardia letar efter ”el de la camisa” [M]
-- features/implemented/stunthopp.md – 40. Stunthopp med G17-stämpel [M]
-- features/implemented/prata_med_ganget.md – 39. Prata med gänget [M]
-- features/implemented/hoppet_mellan_hotelltaken.md – 41. Hoppet mellan hotelltaken [M]
+  [färdig: ???] [färdig: ???]
+- features/implemented/g17_brodrostar.md – 33. Kontrollerad av G17 – öns brödrostar [M] [färdig: ???]
+- features/implemented/rum_107_troferum.md – 38. Rum 107 fylls med resans minnen [S] [färdig: ???]
+- features/implemented/smorj_in_majsan.md – 35. Smörj in Majsans rygg – SOLKRÄM-mätaren [S] [färdig: ???]
+- features/implemented/skjortbytet.md – 36. Skjortbytet – Guardia letar efter ”el de la camisa” [M] [färdig:
+  ???] [färdig: ???]
+- features/implemented/stunthopp.md – 40. Stunthopp med G17-stämpel [M] [färdig: ???]
+- features/implemented/prata_med_ganget.md – 39. Prata med gänget [M] [färdig: ???]
+- features/implemented/hoppet_mellan_hotelltaken.md – 41. Hoppet mellan hotelltaken [M] [färdig: ???]
 - features/implemented/mikrofonen_pa_scenen.md – 44. Mikrofonen på scenen – Stig läser Lasses utrop [M]
-- features/implemented/faglar_som_lyfter.md – 43. Fåglarna som lyfter – och storken i La Charca [M]
+  [färdig: ???] [färdig: ???]
+- features/implemented/faglar_som_lyfter.md – 43. Fåglarna som lyfter – och storken i La Charca [M] [färdig:
+  ???] [färdig: ???]
 - features/implemented/gags_sma_filmscener.md – 47. Gags på E – Oles blixt och Angeruds Viking special [S]
 - features/implemented/strandkyssen.md – 57. Strandkyssen i bränningen [M]
 - features/implemented/guardia_jeepen.md – 51. Låna Guardia-jeepen – ”Ursäkta, är det din bil?” [M]
@@ -70,4 +81,3 @@
 - features/implemented/ringklockan_och_kon.md – 59. Ringklockan i receptionen – ”Och när ska vi lämna rummen?” [M]
 - features/implemented/kyrkfrid.md – 60. Kyrkfrid i Templo Ecuménico [M]
 - features/implemented/pizza_racern.md – 69. Gatlopp mot pizza-racern – mamma åker med [L]
-- features/implemented/lana_rullskidorna.md – 71. Låna rullskidorna – åk fort på asfalt [L] [färdig: 2026-10-17 17:42]

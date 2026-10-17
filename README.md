@@ -713,7 +713,7 @@ node tools/shot.mjs start walk aerial drive traffic title talk missions views tr
 node tools/shot.mjs gate cabin trolley turbulence panic flightshots          # the flight level
 node tools/shot.mjs phases sceneryPeek flightseq dc8                         # flight scenery
 node tools/shot.mjs smash foot propsheet riocard endcard islandstats islandtour
-node tools/shot.mjs castsheet cars heads ui skandal carbust perf
+node tools/shot.mjs castsheet cars heads ui skandal carbust snackrutor perf
 node tools/shot.mjs pintura dalasheet    # the free-roam paint shop and the dalahäst dress on every body
 node tools/shot.mjs berra                # Bärra hem Berra in free roam: naps, the carry home, drops, the pay
 node tools/shot.mjs glide                # the glide after julafton: the wing, the palm, a wall, the diving board, the lines

@@ -464,7 +464,10 @@ export const hud = {
       this.dialog.style.setProperty('--ring', def?.ring || '#f7c31b');
       this.dialog.querySelector('.dlg-name').textContent = upper(def?.name || line.who);
       const textEl = this.dialog.querySelector('.dlg-text');
+      // The untyped rest holds its place, hidden (style.css `.dlg-text::after`): the box has the whole
+      // line's height from the first letter. textContent stays the typed part.
       textEl.textContent = '';
+      textEl.dataset.rest = line.text;
       game.setTalker(line.who);
       let shown = 0;
       const text = line.text;
@@ -478,13 +481,14 @@ export const hud = {
             if (n > shown) {
               shown = n;
               textEl.textContent = text.slice(0, shown);
+              textEl.dataset.rest = text.slice(shown);
               blip -= 1;
               if (blip <= 0 && /\p{L}/u.test(text[shown - 1])) { audio.talk(def?.voice || 300); blip = 2; }
             }
             if (shown >= text.length) { done = true; game.setTalker(null); }
           }
           if (game.input.pressed('skip')) {
-            if (!done) { shown = text.length; textEl.textContent = text; done = true; game.setTalker(null); }
+            if (!done) { shown = text.length; textEl.textContent = text; textEl.dataset.rest = ''; done = true; game.setTalker(null); }
             else { skipped = true; }
           }
           if (skipped || (game.autoDialog && done && (acc += dt * speed) > text.length + pad)) { game.offFrame(step); resolve(); }

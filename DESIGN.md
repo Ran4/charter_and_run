@@ -8007,6 +8007,12 @@ hud.setObjective({ title, text, timer?, bar?, barColor?, barLabel?, zone?: [a, b
                                 // marker has a cream edge (seen over a dark fill, the toasters' burnt end)
 hud.runDialog(lines, game)      // lines [{ who, text, cue }]; ring from def.ring; blips /\p{L}/u;
                                 // speed game.dialogSpeed; auto-advance pad 30 (TEST: 8)
+                                // the box (fix "snackrutor", 2026-10-17): the 112 px portrait inside
+                                // it, under the top stripe; `.dlg-text` three lines tall at least
+                                // (152 px box); the untyped rest in `data-rest`, laid out hidden by
+                                // `.dlg-text::after`, gives the box the whole line's height at its
+                                // first letter (never grows mid-line, no word jumps a line);
+                                // `.dlg-text` textContent is the typed part only
 hud.setSpeedo(car)              // KM/H; hidden when !car or car.spec.noSpeedo
 hud.renderPortrait(renderer, model)   // Phase 0 fix: saves root.parent/position/rotation/scale and
                                 // restores them after rendering (Bigmouth left the root at the
@@ -8869,6 +8875,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `foot` [B] | trampoline bounce, kick a fin (`fena`), stand on a car roof, double jump |
 | `castsheet`, `cars` [E] | lineups (`cars`: every type, the golf cart since feature 74 with a close-up beside a hatch); no errors |
 | `ui` [H] | long Swedish strings in toasts/banners/objective; glyph check shot; dialogue with Norwegian line |
+| `snackrutor` [fix] | the speech boxes with the longest scripted `['who', 'text']` line in src/content and src/game, at the run's `W`×`H`: the dialogue box as tall at its first letter as at its last (every frame of a slow typing), three lines tall at least (a one-line line gives the same box when the longest fits in three), the portrait and the text inside it, on screen; the radio toast and a bubble over Stig with the same line, their text inside them (a Range over the contents: the bubble's tail is outside), on screen |
 | `skandal` [H] | `addCoins(2000)`, `shame.add(100)`: 2 `guardia` cars spawn; exit car → officer walks at the player (closes 3 m within 10 s without a stuck teleport, round a block corner if a building stands between them; Phase 3 r2, was 1.5 s) and never stands inside a solid; block him behind a building → teleported within 6 s; get busted → coins −400 (20 %), ¡MULTA!, player frozen ~3 s; an offence within 20 m of Herr Storch adds 0; the porter bribe: his line shows before the `PORTIERN TITTADE BORT` banner (Phase 3) |
 | `carbust` [feature SKANDAL] | the user's SKANDAL balance (§7.2, 2026-10-14): a kicked-pedestrian offence (9) adds 27; the meter holds 10 s before it sinks; in a hatch on the z = 40 road with both Land Rovers parked away (`forced`), real rams by a Land Rover launched at 14 m/s from 8 m behind: one is no bust and starts the 14 s clock, which runs out after 14 s, a ram after that only restarts it, a second ram 2.5 s later busts (−20 %, out of the car); three impacts in one shove are one ram; standing with a Land Rover 15 m off for 5.5 s is no bust, 6 m off a bust after 4.0 s (page time) with ¡MULTA!; stopped in the paint shop's box with one 20 m off: the `seen` toast, no bust, no paint for 5.5 s; 6 m off: a bust after 4.0 s, no paint |
 | `pintura` [feature 1] | the paint shop (§7.2): the drive-by route clear of props and solids, the moved parked hatch free; no paint without a pursuit; Ole's tip once; no paint with a Land Rover 20 m off; `stop` while rolling in; the paint job (−1000 pta, pursuit over, cooldown ≥ 50 s, a cutaway scene with both lines and the car in the bay, then red with the dress, repaired, rolled out with Stig at the wheel, Ole back, the banner and the wet card); the drive-by bubble; dry; known next time; busy in the cooldown; poor at 500 pta; a second job; ruined wet paint → a new pursuit; a bus refused; nothing while a mission runs |
@@ -11139,3 +11146,11 @@ the fixer's group.
   m/s and gets "Oj… ett vattenhinder." [N]. A wreck steams and comes back on its spot when Stig is
   60 m off. No mission, stage, mission timer, fixture or calibration pool changed (the world change is
   inside the golf block, off every route; the ledger notes it). Scenario `golfbil`, and `cars` (§16.4).
+
+- Fix "Snackrutorna buggar ur – gör dem högre" (`features/implemented/snackrutor.md`, 2026-10-17): the
+  dialogue box grew upwards mid-line when the typing wrapped to a new line (its height followed the
+  typed text, so a 3-line line jumped from 118 to 145 px, the portrait with it) and its portrait stuck
+  42 px out over the top edge with the stripe drawn across it. The portrait now sits inside the box,
+  `.dlg-text` is three lines tall at least (the box 152 px, was 118), and `hud.runDialog` keeps the
+  untyped rest in `data-rest`, laid out hidden by `.dlg-text::after`, so the box has the whole line's
+  height at its first letter (§14.8). style.css, hud.js; new scenario `snackrutor` (§16.4).

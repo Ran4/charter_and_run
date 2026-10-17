@@ -261,14 +261,19 @@ body:has(#letterbox.on) #objective.show { transform: translate(-50%, -220%); }
 body.in-dialog #minimap-wrap, body.in-dialog #speedo, body.in-dialog #prompt { opacity: 0; }
 
 /* ---------------------------------------------------------------- dialogue */
-#dialog { --ring: var(--sun); position: absolute; left: 50%; bottom: 3.5vh; width: min(880px, 92vw); transform: translate(-50%, 220%); display: flex; gap: 16px; align-items: stretch; background: var(--cream); border: 4px solid var(--ink); border-radius: 22px; padding: 14px 18px; box-shadow: 6px 7px 0 var(--ink); transition: transform 0.35s cubic-bezier(.3, 1.4, .5, 1); }
+/* The portrait sits inside the box, under the stripe (it stuck 42 px out over the top edge, the
+   stripe drawn across it). The box is three text lines tall at least and has a line's full height
+   before its first letter: the untyped rest holds its place, hidden (`.dlg-text::after` from
+   `data-rest`, hud.runDialog), so the box never grows mid-line and no word jumps to the next line. */
+#dialog { --ring: var(--sun); position: absolute; left: 50%; bottom: 3.5vh; width: min(880px, 92vw); transform: translate(-50%, 220%); display: flex; gap: 16px; align-items: stretch; background: var(--cream); border: 4px solid var(--ink); border-radius: 22px; padding: 16px 18px; box-shadow: 6px 7px 0 var(--ink); transition: transform 0.35s cubic-bezier(.3, 1.4, .5, 1); }
 #dialog::before { content: ""; position: absolute; left: 22px; right: 22px; top: -4px; height: 7px; border-radius: 0 0 5px 5px; background: linear-gradient(90deg, var(--orange) 0 33%, var(--sun) 33% 66%, var(--terracotta) 66%); }
 #dialog.show { transform: translate(-50%, 0); }
-.dlg-portrait { flex: none; width: 112px; height: 112px; border-radius: 50%; border: 4px solid var(--ink); background: var(--ring); padding: 6px; margin-top: -42px; box-shadow: 3px 4px 0 var(--ink); }
+.dlg-portrait { flex: none; width: 112px; height: 112px; border-radius: 50%; border: 4px solid var(--ink); background: var(--ring); padding: 6px; box-shadow: 3px 4px 0 var(--ink); }
 .dlg-portrait img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 50%; background: radial-gradient(circle at 50% 35%, #fffdf4, #f1e2c0); box-shadow: inset 0 0 0 2px rgba(29, 20, 38, 0.6); }
 .dlg-body { flex: 1; min-width: 0; }
 .dlg-name { font: 24px var(--display); color: var(--terracotta); letter-spacing: 1px; }
-.dlg-text { font: 800 21px/1.35 var(--body); min-height: 58px; }
+.dlg-text { font: 800 21px/1.35 var(--body); min-height: calc(3 * 1.35em); overflow-wrap: anywhere; }
+.dlg-text::after { content: attr(data-rest); visibility: hidden; }
 .dlg-next { align-self: flex-end; font: 16px var(--display); background: var(--sun); border: 3px solid var(--ink); border-radius: 10px; padding: 2px 8px; animation: nudge 0.8s infinite; }
 @keyframes nudge { 50% { transform: translateX(4px); } }
 

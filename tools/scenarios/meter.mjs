@@ -1,4 +1,4 @@
-// Meter and UI scenarios (WP-H; DESIGN §16.4): ui, skandal.
+// Meter and UI scenarios (WP-H; DESIGN §16.4): ui, skandal, carbust, snackrutor.
 //   ui:      long Swedish strings in toasts/banners/objective/prompt; a glyph check (åäöæø on a
 //            banner and on a world sign); dialogue portrait rings with a Norwegian line; both big
 //            maps with collision-free labels; the pause card; FLYGRÄDSLA hot (vignette) and PANIK;
@@ -12,7 +12,14 @@
 //            14 s, a ram after that only restarts it, a second ram inside it busts; standing with a
 //            Land Rover 15 m off is no bust, 6 m off busts after 4 s; in the paint shop's box with
 //            one 20 m off no bust (and no paint), 6 m off a bust after 4 s.
-import { check } from '../lib.mjs';
+//   snackrutor: the speech boxes with the longest scripted line (a [who, text] line in src/content or
+//            src/game) at the run's size (W, H): the dialogue box as tall at its first letter as at
+//            its last, three lines tall at least (a one-line line gives the same box), the portrait
+//            and the text inside it, on screen; the radio toast and a speech bubble with the same
+//            line, their text inside them, on screen.
+import fs from 'fs';
+import path from 'path';
+import { check, ROOT } from '../lib.mjs';
 
 const ISLAND = '&mission=6';
 
@@ -38,6 +45,42 @@ const labelProblems = () => {
     }
   }
   return { n: L.length, problems: out };
+};
+
+// The longest scripted line: every dialogue, radio, overhear and cue line is a ['who', 'text'] tuple.
+function longestLine() {
+  const files = [];
+  const walk = (d) => { for (const f of fs.readdirSync(d)) { const p = path.join(d, f); if (fs.statSync(p).isDirectory()) walk(p); else if (p.endsWith('.js')) files.push(p); } };
+  walk(path.join(ROOT, 'src', 'content')); walk(path.join(ROOT, 'src', 'game'));
+  let best = null;
+  for (const f of files) {
+    for (const m of fs.readFileSync(f, 'utf8').matchAll(/\[\s*'(\w+)',\s*'((?:\\.|[^'\\\n])*)'/g)) {
+      const text = m[2].replace(/\\(.)/g, '$1');
+      if (!best || text.length > best[1].length) best = [m[1], text, path.relative(ROOT, f)];
+    }
+  }
+  return best;
+}
+
+// The dialogue box's layout in the page: its rect, the portrait's and the text's (the text's counts
+// the untyped rest, which holds its place).
+const dialogBox = () => {
+  const d = document.getElementById('dialog'), r = d.getBoundingClientRect(), t = d.querySelector('.dlg-text');
+  const p = d.querySelector('.dlg-portrait').getBoundingClientRect(), tr = t.getBoundingClientRect();
+  return { h: r.height, top: r.top, bottom: r.bottom, left: r.left, right: r.right, pTop: p.top, pBottom: p.bottom, pLeft: p.left, tTop: tr.top, tBottom: tr.bottom, tRight: tr.right,
+    lines: Math.round(tr.height / parseFloat(getComputedStyle(t).lineHeight)), wide: t.scrollWidth > t.clientWidth + 1, W: innerWidth, H: innerHeight };
+};
+// A box's text inside it (a Range over its contents: a bubble's tail is its ::after, outside it) and
+// the box on screen.
+const boxProblems = (sel) => {
+  const all = document.querySelectorAll(sel), e = all[all.length - 1];
+  if (!e) return ['none shown'];
+  const r = e.getBoundingClientRect(), out = [], rg = document.createRange();
+  rg.selectNodeContents(e);
+  const t = rg.getBoundingClientRect(), bw = parseFloat(getComputedStyle(e).borderTopWidth);
+  if (t.left < r.left + bw - 0.5 || t.right > r.right - bw + 0.5 || t.top < r.top + bw - 0.5 || t.bottom > r.bottom - bw + 0.5) out.push(`text outside the box (${t.left.toFixed(0)},${t.top.toFixed(0)}–${t.right.toFixed(0)},${t.bottom.toFixed(0)} in ${r.left.toFixed(0)},${r.top.toFixed(0)}–${r.right.toFixed(0)},${r.bottom.toFixed(0)})`);
+  if (r.left < 0 || r.top < 0 || r.right > innerWidth || r.bottom > innerHeight) out.push(`off screen (${r.left.toFixed(0)},${r.top.toFixed(0)}–${r.right.toFixed(0)},${r.bottom.toFixed(0)})`);
+  return out;
 };
 
 export const SCENARIOS = {
@@ -457,5 +500,64 @@ export const SCENARIOS = {
     check(paintT > 3.9 && paintT < 4.6 && !r.inCar && !r.busy && !r.painted && r.coins === 2400, 'stopped in the paint box with a Land Rover 6 m off: busted after 4 s, no paint');
     await T.frames(6);
     await T.shot('carbust_paint_multa');
+  },
+
+  async snackrutor(T) {
+    const [who, text, file] = longestLine();
+    T.log(`longest line (${text.length} chars, ${who}, ${file}): ${text}`);
+    check(text.length >= 100, 'found the longest scripted line');
+    await T.fresh(ISLAND);
+    // --- the dialogue box: a one-line line, then the longest typed slowly, its height every frame ---
+    const short = 'Ja.';
+    await T.ev((ls) => { const g = __game; g.autoDialog = false; window.__dlgDone = false; g.dialog(ls).then(() => { window.__dlgDone = true; }); }, [['stig', short], [who, text]]);
+    await T.until((t) => document.querySelector('.dlg-text').textContent === t, 15000, short);
+    await T.sleep(600);   // the box's slide in (0.35 s, real time)
+    const a = await T.ev(dialogBox);
+    T.log('dialog, one line', JSON.stringify(a));
+    await T.shot('snack_dialog_kort');
+    await T.ev((line) => {
+      const g = __game;
+      window.__dlgSpeed = g.dialogSpeed;
+      g.dialogSpeed = 12;
+      window.__dlgLog = [];   // [typed, box height] every frame of the longest line ('Ja.' is no prefix of it)
+      window.__dlgRec = () => { const d = document.getElementById('dialog'), t = d.querySelector('.dlg-text'); if (line.startsWith(t.textContent)) window.__dlgLog.push([t.textContent.length, d.offsetHeight]); };
+      g.onFrame(window.__dlgRec);
+    }, text);
+    await T.tap('Space');
+    await T.until((n) => document.querySelector('.dlg-text').textContent.length >= n, 60000, Math.floor(text.length * 0.45));
+    await T.shot('snack_dialog_halv');
+    const half = await T.ev(dialogBox);
+    await T.until((t) => document.querySelector('.dlg-text').textContent === t, 90000, text);
+    await T.frames(3);
+    const b = await T.ev(dialogBox);
+    const log = await T.ev(() => { __game.offFrame(window.__dlgRec); __game.dialogSpeed = window.__dlgSpeed; return window.__dlgLog; });
+    T.log('dialog, longest', JSON.stringify(b));
+    await T.shot('snack_dialog_lang');
+    const hs = log.map((e) => e[1]), h0 = Math.min(...hs), h1 = Math.max(...hs);
+    T.log(`typing: ${log.length} frames, typed ${log[0]?.[0]}..${log[log.length - 1]?.[0]}, box ${h0}..${h1} px`);
+    check(log.length > 20 && log[0][0] <= 2 && h1 - h0 < 1 && Math.abs(half.h - b.h) < 1, 'the box is as tall at the first letter as at the last (no growth mid-line)');
+    check(a.lines >= 3 && (b.lines > 3 || Math.abs(a.h - b.h) < 1), `three text lines at least: a one-line line gives the longest's box when it fits in three (${a.lines}, ${b.lines} lines)`);
+    for (const [k, r] of [['one line', a], ['longest', b]]) {
+      check(r.pTop >= r.top + 4 && r.pBottom <= r.bottom - 4, `${k}: the portrait inside the box`);
+      check(r.tTop >= r.top + 4 && r.tBottom <= r.bottom - 4 && r.tRight <= r.right - 4 && !r.wide, `${k}: the text inside the box`);
+      check(r.top >= 0 && r.bottom <= r.H && r.left >= 0 && r.right <= r.W, `${k}: the box on screen`);
+    }
+    await T.tap('Space');
+    await T.until(() => window.__dlgDone === true, 5000);
+    await T.ev(() => { __game.autoDialog = true; });
+    // --- the radio toast ---
+    await T.ev((l) => __game.radio(l[0], l[1]), [who, text]);
+    await T.sleep(500);
+    let p = await T.ev(boxProblems, '.toast.radio');
+    T.log('radio', JSON.stringify(p));
+    check(!p.length, 'radio: the text inside the toast, on screen');
+    await T.shot('snack_radio');
+    // --- a speech bubble (over Stig) ---
+    await T.ev((t) => __game.say(__game.player, t, 8), text);
+    await T.frames(10);
+    p = await T.ev(boxProblems, '.bubble');
+    T.log('bubble', JSON.stringify(p));
+    check(!p.length, 'bubble: the text inside the bubble, on screen');
+    await T.shot('snack_bubble');
   },
 };
