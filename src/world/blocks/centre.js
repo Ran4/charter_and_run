@@ -545,7 +545,9 @@ function kasbah(f) {
     vb.boxC([0xf4efe6, RED, SUN, BLUE][k], u, CURB + 2.95, 0.19, 0.8, 0.1, 0.02, 0, 0, k * 0.8);
     sph(vb, 0xc8ccd2, u, CURB + 2.95, 0.2, 0.2);
   });
-  vb.box(0xffe6a0, 1.25, 2.3, 0.2, 0.2, 0.32, 0.2, 0, GL);
+  // The lamp beside the door, over the frame: the cup Stig holds up reaches under it, as under the
+  // plane's call button (the gag, feature 47, §10.32; it hung at 2.3 m, level with his raised cup).
+  vb.box(0xffe6a0, 1.25, 2.95, 0.2, 0.2, 0.32, 0.2, 0, GL);
   board(vb, 'VIKING BAR', 0, 4.85, 7.4, 1.45, { bg: '#3a2416', fg: '#f7c31b', stroke: '#1d1426', scale: 0.74, neon: 0xffd23f, backC: WOOD_D, border: '#f7c31b' });
   {
     const hx = -16, hz = 10.75, hy = TOP + 0.9;

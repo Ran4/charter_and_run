@@ -342,6 +342,17 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   fru Storch. Följ efter, så säger Stig "Oj, en stork!", fru Storch rättar honom första gången ("Vi
   heter faktiskt Storch, inte Stork.") och herr Storch filmar storken en stund innan den flyger hem.
   Under uppdragen står fåglarna stilla.
+- **Gags på E**: två korta filmscener som du hittar genom att E-prompten dyker upp. Under pergolan vid
+  Hotell Flamenco ligger Oles kameraväska på den låga muren vid rum 109 ("Titta på Oles
+  kameraväska"). Ole visar sin andra kamera ("Kamera to – japansk, liten, motor… Blits… Telelinse…
+  Normal."), frågar om Stig har någon, fnyser "Gammelt…", och när Stig försvarar sig med "Fast det är
+  blixt." lyfter Ole kameran: "Si omelett!", och blixten går. Vid Viking Bars dörr i La Medina
+  ("Beställ en juice") beställer Angerud "En Viking special till, tack." och Stig en juice av
+  Carmencita. Medan hon hämtar dem håller Stig upp muggen under lampan bredvid dörren, som under
+  anropsknappen på planet: "Om man vill ha lite mer juice…?". Angerud tittar inte ens upp. Första
+  gången ger varje gag 100 pesetas och ett streck på raden "Gags" (på den stora kartan, M), sedan kan
+  den spelas om hur många gånger som helst. Bara mellan uppdragen och inte under en jakt. Efter slutet
+  ligger Angerud på sjukhus, så då finns bara kameraväskan kvar.
 
 ## Vad är påhittat?
 
@@ -438,6 +449,10 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
   dem, och storken i La Charca som flyger till paret Storch på stranden (i filmen syns inga fåglar, och
   storken är bara ett skämt om parets namn: på Arlanda, på välkomstmötet, i telegrammet och på
   friskoteket)
+- gagsen på E, med Oles blixt under pergolan och Stigs mugg under lampan vid Viking Bar, och raden
+  "Gags" (i filmen pratar Ole och Stig kameror i rum 107, "Säg omelett." sägs under köpäventyret,
+  Viking special dricker Angerud i baren efter grisfesten, och muggen lyfts mot anropsknappen på
+  planet)
 - fårrusningen i Fataga, kappkörningen mot nattbussen och porslinskrosset på tid
 - att samla ihop julfestgästerna
 - Oles prylar och hajfenorna som samlarföremål, utspridda över ön
@@ -547,6 +562,7 @@ src/game/gangTalk.js            Prata med gänget in free roam: E talks to the g
 src/game/roofJump.js            Hoppet mellan hotelltaken in free roam: the walkable hotel roofs, the stairs, the jump, the pool
 src/game/mic.js                 Mikrofonen på scenen in free roam: Lasse's announcements at the SunTrip stage, the crowd, the reactions
 src/game/birds.js               Fåglarna som lyfter in free roam: the flocks that lift and land, Stig's sorry, the stork's trip and scene
+src/game/gags.js                Gags på E in free roam: Ole's flash at his camera bag, the juice under Viking Bar's lamp, the Gags count
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
@@ -554,7 +570,8 @@ tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, 
                                 paintshop, berra, glide, simhopp, tuta, dygn, super8, eslov, grodorna,
                                 artig, grisar, bagage, lapplisa, torsdag, frukt, hopptorn, hund,
                                 badgaster, butik, brodrost, rum107, solkram, skjortbyte,
-                                stunthopp, prata, takhopp, mikrofon, faglar, calibrate, calibflight)
+                                stunthopp, prata, takhopp, mikrofon, faglar, gags, calibrate,
+                                calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
 tools/pool.mjs                  re-derives every random stage's timer from the ledger
@@ -610,6 +627,7 @@ node tools/shot.mjs prata                # the gang's talk: the table, who at ev
 node tools/shot.mjs takhopp              # the hotel roofs: the stairs up, the jump over the gap, the view, the stairs down, into the pool, a mission start
 node tools/shot.mjs mikrofon utrop       # the SunTrip stage's mic: the five announcements and their reactions, the crowd's ways in, the terrace's hours, a mission start
 node tools/shot.mjs faglar storken       # the birds: the four flocks, the lift on foot, by car and by the horn, the landing, a mission start; the stork's trip and the Storch scene
+node tools/shot.mjs gags gagshots        # the two gags on E: the prompts, the lines, shots and poses, the flash, everyone back, the pay, Gags n/2 and the save; every line as seen
 node tools/shot.mjs fullstory kinds      # the literal §8 missions and the stage-kind checks
 node tools/shot.mjs calibrate calibflight  # timer and FLYGRÄDSLA calibration (slow; see DESIGN §8, §16.4)
 node tools/pool.mjs                      # random-stage timers from the raw runs in notes/calibration-samples.md

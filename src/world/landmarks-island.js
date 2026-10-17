@@ -67,6 +67,7 @@ export const ISLAND_LANDMARKS = {
   // Skjortbytet (free roam, §7.2): where Stig stands in front of the wardrobe inside room 107's door
   // (hotels.js stigOleRoom, its front at x −20.15), facing it: the second hideout's E spot.
   rum107Garderob: { b: [3, 3], at: [-19.6, -15.6], yaw: -PI / 2 },
+  gagKamera: { b: [3, 3], at: [-8.3, -11.2], yaw: -PI / 2 },   // facing Ole's camera bag on the patio wall's cap (the gag, §10.32)
   // (3,2) Hotel SunTrip
   suntrip: { b: [3, 2], at: [-14, 24], yaw: PI },     // faces the office porch (C1)
   // Bränsletillägg tillkommer (free roam, §10.23): Stig's spot in front of the middle of SunTrip-
@@ -95,6 +96,7 @@ export const ISLAND_LANDMARKS = {
   // Lapplisan Majsan (free roam, §10.17): Angerud's hire car on the sidewalk outside the centre,
   // facing west with the traffic on that side (the palm 5 m ahead of its nose, the post box behind).
   angerudBil: { b: [1, 2], at: [-7, 32.75], yaw: -PI / 2 },
+  gagViking: { b: [1, 2], at: [-14.75, 12.1], yaw: PI },        // under the lamp beside Viking Bar's door, facing it (the gag, §10.32)
   // (4,2) Centro Nórdico
   cita: { b: [4, 2], at: [0, 22], yaw: PI },
   supermercado: { b: [4, 2], at: [-18, 18], yaw: PI },

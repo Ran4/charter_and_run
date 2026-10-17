@@ -13,8 +13,9 @@
 // (§10.22), the SOLKRÄM meter for Majsan's sun cream, Siv's cards for it and the cream running
 // (§10.26), the gang's short exchanges on E between missions, Stig answering (§10.28), Stig
 // reading Lasse's announcements at the SunTrip stage's microphone, the island doing what he says
-// (§10.30), and the island's birds that lift and land again, Stig's sorry to them, and the stork
-// that flies from La Charca to the Storches on the beach with Fru Storch's correction there (§10.31).
+// (§10.30), the island's birds that lift and land again, Stig's sorry to them, and the stork
+// that flies from La Charca to the Storches on the beach with Fru Storch's correction there (§10.31),
+// and two gags on E, Ole's flash at his camera bag and Stig's cup under Viking Bar's lamp (§10.32).
 
 export const HOMES_ISLAND = {
   ole: ['flamenco', 2.0, 1.0, 0],     // yaw 0: under the pergola, facing the pool (flamenco faces π)
@@ -1570,4 +1571,56 @@ export const BUTIK = {
   paketet: 'Paketet!',                                                   // [F*] the film's running gag at the clinic and the agency (research-plot.md:133)
   bagTaken: 'Paketet. Ja. Tack.',                                        // [N] Stig
   ole: 'Nå ser du ut som en ekte sydenturist, Stig-Helmer!',             // [N] Ole
+};
+
+// Gags på E – Ole's flash and Angerud's Viking special (free roam, DESIGN §10.32; game/gags.js). Two
+// short film scenes in the dialogue box behind E, Hit & Run's gags: `kamera` at Ole's camera bag on
+// the patio wall at the pergola's west edge (landmark `gagKamera`, the bag built in hotels.js), with
+// Ole; `viking` under the lamp beside Viking Bar's door (landmark `gagViking`), with Angerud and
+// Carmencita. A gag is offered (its `prompt` within `r` m of its landmark) on the island with no
+// mission running, Stig on foot and free, no SKANDAL pursuit, and everyone in `needs` standing free
+// within `needR` m (shown, at home or the waiting mission's place, not walked or posed by anyone, not
+// in a car or a seat; Angerud is in hospital after the end, so `viking` is gone then). E: the people
+// to their `marks` (landmark-relative [dx = left, dz = forward, absolute world yaw]), the letterbox
+// and a cut to `shots[shot]` (landmark-relative [dx, dz, height over the ground] for the eye and the
+// look), then the `lines` one by one; a line's `do` changes the shot, moves people (`marks`), holds a
+// pose (`pose`: who -> an anim flag, or null for none) or sends someone in (`hide`) as it starts.
+// After the last line the `end` (a flash and a sound, or nothing) and `hold` s on the last shot, then
+// the camera back behind Stig at his `after` mark and everyone else back where they stood. The first
+// time each gag pays `pay` pta and counts on the Gags row (the big map's legend, the collect card;
+// `gags` in the save); after that it plays again for nothing, `rest` s after the last. Invented
+// (§1.6): the gags themselves; the lines are the film's, relocated, and Stig's order.
+export const GAGS = {
+  pay: 100, r: 1.5, needR: 16, rest: 1.5,
+  label: 'Gags',                                                                   // [N]
+  list: [
+    { id: 'kamera', lm: 'gagKamera', needs: ['ole'],
+      prompt: '<b>E</b> Titta på Oles kameraväska',                                // [N]
+      marks: { stig: [2.8, -1.3, Math.PI], ole: [0.6, -1.3, 0] },
+      after: [0, 0, -Math.PI / 2],
+      shots: { two: [[1.7, -5.7, 1.6], [1.6, -1.1, 1.3]], ole: [[-0.3, -2.5, 1.95], [2.8, -1.3, 1.55]] },   // the two-shot from the reception; over his shoulder, the lighthouse beyond
+      shot: 'two',
+      lines: [
+        ['ole', 'Kamera to – japansk, liten, motor… Blits… Telelinse… Normal.', { pose: { ole: 'camShow' } }],   // [F*](t) his gadget show in room 107 (research-plot.md:255), in Norwegian
+        ['ole', 'Har du noe kamera?'],                                             // [F*](t) the notes leave the speakers open: Ole asks
+        ['stig', 'Ja.'],                                                           // [F](t)
+        ['ole', 'Gammelt…'],                                                       // [F*](t) (bokmål: et kamera)
+        ['stig', 'Fast det är blixt.'],                                            // [F](t)
+        ['ole', 'Si omelett!', { shot: 'ole', pose: { ole: 'film' } }],            // [F*] the shopping trip's "Säg omelett." (research-plot.md:300), in Norwegian
+      ],
+      end: { flash: 'white', sfx: 'shutter', sparkle: 'ole' }, hold: 0.9 },
+    { id: 'viking', lm: 'gagViking', needs: ['angerud', 'carmencita'],
+      prompt: '<b>E</b> Beställ en juice',                                         // [N]
+      marks: { stig: [-0.3, 0.55, -1.6], carmencita: [1.3, 0.6, 0.5], angerud: [2.15, -0.15, 2.29] },
+      after: [0, 0, Math.PI],
+      shots: { bar: [[0.95, -6.1, 1.6], [0.85, 0.3, 1.45]], lamp: [[-3.15, -0.6, 1.7], [0.45, 0.7, 2.1]] },   // from the street, an arch each; along the arcade
+      shot: 'bar',
+      lines: [
+        ['angerud', 'En Viking special till, tack.'],                              // [F*] his order at Viking Bar after the grisfest (research-plot.md:354)
+        ['stig', 'En juice, tack.', { pose: { stig: 'cupHeld' } }],                // [N] he cannot take strong drink (research-plot.md:177)
+        ['stig', 'Om man vill ha lite mer juice…?', { shot: 'lamp', hide: ['carmencita'], marks: { stig: [0.3, 0.55, Math.PI], angerud: [1.85, 0.1, Math.PI - 0.5] }, pose: { stig: ['cupHeld', 'cupUp'] } }],   // [F*] the juice scene (research-plot.md:209), the cup up under the lamp
+        ['angerud', 'Undrar hur länge man ska stå här.'],                          // [F*] his line at the airport (research-plot.md:236)
+      ],
+      end: null, hold: 1.2 },
+  ],
 };

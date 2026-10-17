@@ -1030,12 +1030,12 @@ function heldPose(m, st, t, place = false) {
   const h = m.def.held;
   if (!h || !PROP_GEO[h]) return;
   const [R, L] = m.arms;
-  const busy = st.wings || st.cupUp || st.cupHeld || st.push || st.rub || st.hold || st.flail || st.oath || st.dance || st.laugh || st.mirror || st.film || st.giraffe || st.butterKnife || st.ticket || st.carryOver || st.shoeOff || st.calc || st.groda || st.placate || st.cheer || st.wave || st.kick > 0;
+  const busy = st.wings || st.cupUp || st.cupHeld || st.push || st.rub || st.hold || st.flail || st.oath || st.dance || st.laugh || st.mirror || st.film || st.camShow || st.giraffe || st.butterKnife || st.ticket || st.carryOver || st.shoeOff || st.calc || st.groda || st.placate || st.cheer || st.wave || st.kick > 0;
   const pose = !place && !busy;
   const moving = st.speed > 0.3;
   switch (h) {
     case 'camera':
-      if (st.film) return;   // the film flag lifts it to the eye
+      if (st.film || st.camShow) return;   // the film flag lifts it to the eye; camShow holds it out
       if (pose) R.rotation.set(st.seated ? -1.0 : -0.8, 0, 0.32);
       if (place) inHand(m, prop(m, 'camera'), 0, 0, -0.02, 0.02);
       break;
@@ -1147,8 +1147,11 @@ function poseFlags(m, st, t) {
   if (st.cupUp) R.rotation.set(-2.75, 0, -0.08);   // an empty hand up (the stowers at the rack, the carried juice)
   if (st.cupHeld) {
     // A paper cup in the right hand: raised from a seat (Stig's "Ja." to the call button, §8.3),
-    // held out to the row standing (the trolley stewardess serving).
-    R.rotation.set(st.seated ? -2.75 : -1.65, 0, st.seated ? -0.08 : 0.12);
+    // held out to the row standing (the trolley stewardess serving); with `cupUp` raised standing
+    // too (Stig under Viking Bar's lamp, §10.32).
+    const up = st.seated || st.cupUp;
+    R.rotation.set(up ? -2.75 : -1.65, 0, up ? -0.08 : 0.12);
+    if (st.cupUp && !st.seated) m.neck.rotation.x = -0.3;   // and he looks up to it
     inHand(m, prop(m, 'cup'), 0, 0, 0.01, 0);
   }
   if (st.oath) {
@@ -1320,6 +1323,15 @@ function poseFlags(m, st, t) {
     m.body.rotation.y = Math.sin(t * 0.8) * 0.3;
     const p = prop(m, 'camera');
     between(m, p, 0.0, 0.0, -0.06);
+    p.rotation.y = 0;
+  }
+  if (st.camShow) {
+    // Ole showing his camera (the gag at his bag, §10.32): held out in both hands at the chest,
+    // the lens to the one he shows it to, his head bent to it.
+    R.rotation.set(-1.25, 0, 0.5); L.rotation.set(-1.2, 0, -0.5);
+    m.neck.rotation.x = 0.22;
+    const p = prop(m, 'camera');
+    between(m, p, 0.0, 0.04, 0.02);
     p.rotation.y = 0;
   }
   if (st.giraffe) {

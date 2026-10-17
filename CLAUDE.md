@@ -100,7 +100,11 @@ opens with a summary of the rounds and the timer changes.
     lyfter, the flocks between missions: the pigeons at the plaza's fountain, the gulls at the beach
     kiosk and on the pier, La Charca's herons; the lift on foot, by car and by the horn, never traffic,
     the landing on their spots, Stig's sorry, a mission start; the stork's trip to the Storches on the
-    beach, "Oj, en stork!", the correction once, Herr Storch filming it, DESIGN §10.31)
+    beach, "Oj, en stork!", the correction once, Herr Storch filming it, DESIGN §10.31), `gags
+    gagshots` (Gags på E, two film scenes between missions: Ole's camera bag under Flamenco's pergola
+    and his flash, "Si omelett!"; Stig's cup under the lamp at Viking Bar's door with Angerud and
+    Carmencita; the cast put back, the pay, Gags n/2 and the save, no prompt in a pursuit or a mission,
+    the Viking gag gone after the end; every line as seen, DESIGN §10.32)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

@@ -692,6 +692,14 @@ function flamencoPorch(f, glow, rnd) {
   f.prop('palmkruka', 8.3, -7.7);
   f.prop('bagagevagn', 6.6, -13.1, 0.4);
   f.prop('bank', -5.5, -14.55, 0);
+  // Ole's camera bag on the cap of the patio wall at the pergola's west edge (the gag, feature 47,
+  // §10.32; landmark gagKamera): brown leather, the lid's flap and a brass clasp on the pergola side,
+  // the strap lying along the cap.
+  f.box(0x7a4a2a, -9, C + 1.08, -11.2, 0.17, 0.2, 0.3);
+  f.box(0x5a341c, -9, C + 1.28, -11.2, 0.19, 0.035, 0.32);
+  f.box(0x5a341c, -8.9, C + 1.15, -11.2, 0.025, 0.14, 0.3);
+  f.box(GOLD, -8.885, C + 1.17, -11.2, 0.02, 0.04, 0.06);
+  f.box(0x3a2416, -9, C + 1.08, -11.62, 0.05, 0.012, 0.55);
 }
 
 // Pool deck (§6.3): the walkable shallow pool, the depth sign, diving board, sunbeds, toys.

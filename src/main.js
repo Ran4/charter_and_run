@@ -48,6 +48,7 @@ import { GangTalk } from './game/gangTalk.js';
 import { RoofJump } from './game/roofJump.js';
 import { Mic } from './game/mic.js';
 import { Birds } from './game/birds.js';
+import { Gags } from './game/gags.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
 import { LEVELS, ISLAND_PALETTES } from './level.js';
@@ -208,6 +209,7 @@ class Game {
     this.roofs = new RoofJump(this);      // free roam: the stairs up SOL DE INVIERNO, the jump to HOTEL ATLÁNTICO's roof (§10.29)
     this.mic = new Mic(this);             // free roam: Stig reads Lasse's announcements at the SunTrip stage's mic (§10.30)
     this.birds = new Birds(this);         // free roam: the flocks that lift, the stork in La Charca (§10.31)
+    this.gags = new Gags(this);           // free roam: E at Ole's camera bag and Viking Bar's lamp, two film gags (§10.32)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -1423,7 +1425,7 @@ class Game {
         v: 1, mission: this.missions.index, coins: this.coins,
         collected: Object.fromEntries(Object.entries(this.collected).map(([k, ids]) => [k, [...ids]])),
         unlocked: [...this.unlocked], outfit: this.islandOutfit, tune: this.islandTune, records: this.records,
-        shop: this.shop.saveData(),
+        shop: this.shop.saveData(), gags: this.gags.saveData(),
       }));
     } catch (e) { /* private mode: progress just won't persist */ }
   }
@@ -1441,6 +1443,7 @@ class Game {
           this.islandOutfit = s.outfit || 'kostym';
           this.islandTune = s.tune === 'samba' && this.unlocked.has('samba') ? 'samba' : 'sol';
           this.shop.loadData(s.shop);   // SunTrip-butiken's purchases and the Trapp Trull account (§10.23)
+          this.gags.loadData(s.gags);   // the gags played (§10.32)
         }
       } catch (e) { /* corrupt save: start fresh */ }
     }
@@ -1830,11 +1833,11 @@ class Game {
   // the rollerskier's laps (§10.12), the pool fest's dancers and porter (§10.13), Majsan on her round
   // with the ticket pad or Angerud in the tow scene (§10.17), the grisfest's evening (§10.18), the
   // souvenir seller swearing at a smashed fruit stall (§10.19), the crowd at the SunTrip stage
-  // (§10.30) or Herr Storch filming the stork (§10.31). syncAll gives such an NPC no wave, turn or
-  // chatter, and the gang's talk leaves them be (§10.28).
+  // (§10.30), Herr Storch filming the stork (§10.31) or someone in a gag's scene (§10.32). syncAll
+  // gives such an NPC no wave, turn or chatter, and the gang's talk leaves them be (§10.28).
   npcPosed(k) {
     return !!this.missions.idlePose(k) || this.berraJob.posed(k) || this.judges.posed(k) || this.film.posed(k) || this.eslov.posed(k) || this.fest.posed(k) || this.lapp.posed(k) || this.party.posed(k)
-      || this.stands.posed(k) || !!this.mic?.posed(k) || this.birds.posed(k);
+      || this.stands.posed(k) || !!this.mic?.posed(k) || this.birds.posed(k) || !!this.gags?.posed(k);
   }
 
   syncAll(dt, title) {
@@ -1990,6 +1993,8 @@ class Game {
     const base = `${S.legendClose} · <span class="lg-y">!</span> ${S.legendMission.replace(/^!\s*/, '')}`;
     if (this.level === 'flight') return base;
     const parts = Object.entries(COLLECTIBLES).map(([k, set]) => `<span class="lg-${set.marker}">●</span> ${set.label} <b>${this.collected[k].size}/${set.items.length}</b>`);
+    // The gags played (§10.32): no marker on the map, so no dot.
+    parts.push(`${this.gags.cfg.label} <b>${this.gags.count}/${this.gags.total}</b>`);
     return [base, ...parts].join(' · ');
   }
 

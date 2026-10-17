@@ -316,6 +316,13 @@ export const audio = {
     for (let k = 0; k < n; k++) this.noise(0.016, 0.035, 2600, 'bandpass', k / 18, 5);
     this.tone(118, secs, 'sawtooth', 0.01, 112);
   },
+  // Ole's camera (the gag at his bag, §10.32): the flash's pop and the shutter's double click, then
+  // the flash charging again, a faint whine rising 1.8 → 5 kHz.
+  shutter() {
+    this.noise(0.05, 0.3, 2600, 'bandpass', 0, 1.5);
+    this.noise(0.03, 0.22, 3800, 'bandpass', 0.06, 3);
+    this.tone(1800, 0.9, 'sine', 0.018, 5000, 0.15);
+  },
   // Turbulence: cabin rattle with a few loose clinks.
   rattle() {
     this.noise(0.3, 0.15, 300);
