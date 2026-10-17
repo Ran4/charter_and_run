@@ -44,7 +44,7 @@ Samma tangenter i båda nivåerna; nivån bestämmer vad de gör.
 | Shift | spring | | skynda – men det ökar rädslan |
 | Space | hoppa, i luften igen för dubbelhopp | handbroms (sladd!) | **håll i dig**: ta tag i närmaste stolsrygg vid turbulens |
 | J / klick | sparka, i luften: stampa (efter julafton: **håll in i luften** för att glidflyga) | | **håll in**: "Jag kan flyga, jag är inte rädd" – sänker FLYGRÄDSLA |
-| E | prata, kliv in, sno en bil, kvarta en stund i Stigs säng i rum 107, titta i herr Storchs kamera, heja på rullskidåkaren, dansa med i poolen | kliv ur (i fart: rulla ur) | prata, **sätt dig / res dig**, lås in dig på toaletten, anropsknappen, serveringsvagnen |
+| E | prata, kliv in, sno en bil, kvarta en stund i Stigs säng i rum 107, titta i herr Storchs kamera, heja på rullskidåkaren, dansa med i poolen, smörja in Majsans rygg (**håll in** och släpp i det gröna) | kliv ur (i fart: rulla ur) | prata, **sätt dig / res dig**, lås in dig på toaletten, anropsknappen, serveringsvagnen |
 | H | | tuta (utanför uppdragen hör folk den) | |
 | B | | titta bakåt | |
 | M / Tab | stor karta | stor karta | plan över gaten/kabinen |
@@ -271,6 +271,17 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   strandväskan ropar försäljaren "Paketet!" efter honom, och nässkyddet är gratis, plus
   bränsletillägg. Det han köper har han på sig direkt mellan uppdragen, även efter omstart, och vid
   disken kan han ta av och på sig sakerna igen. Under uppdragen är disken borta.
+- **Smörj in Majsans rygg**: efter Fataga står Majsan vid Flamencos pool och vill bli insmord. På
+  dagen och mellan uppdragen: tryck E vid henne ("Smörj in ryggen"). Första gången säger hon filmens
+  två repliker, "Du, vill du smörja in mig på ryggen?" och "Ta inte för mycket, då kan det börja
+  koka.". Sedan vänder hon ryggen till, Stig lägger händerna på hennes axlar och SOLKRÄM-mätaren
+  visas. Håll in E så fylls den, och släpp i det gröna. Mitt i det ljusa strecket blir det sju poäng,
+  nära mitten sex och annars fem, och Siv håller upp poänglappen från sin plats ("Giraffen, då?
+  Sju."). Håller du för länge rinner krämen nerför Majsans klänning ("Oj! Nu kokar det!"), Stig
+  skyller på flaskan och Siv ger minuspoäng; släpper du för tidigt undrar Majsan om det var allt. Det
+  gröna blir smalare för varje försök, och ditt bästa resultat sparas. Första sjuan slår
+  pizza-racern, och då har Siv något nytt att prata om vid poolen. Efter slutet har Små grodorna
+  systrarna i poolen från nio på morgonen, så då får det bli tidigt.
 
 ## Vad är påhittat?
 
@@ -345,6 +356,8 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
 - hyllan i rum 107 som Oles prylar hamnar på när de hittas, hajfenorna i en hög vid Stigs säng, Stigs
   "Kontrollerad av G17." vid hyllan och Oles räkning i radion (i filmen visar Ole sina prylar i rummet,
   men där finns ingen hylla)
+- SOLKRÄM-mätaren när Stig smörjer in Majsans rygg, Sivs poänglappar för det och krämen som rinner
+  när han tar för mycket (i filmen är solkrämen bara poolprat, och ingen sätter poäng på den)
 - fårrusningen i Fataga, kappkörningen mot nattbussen och porslinskrosset på tid
 - att samla ihop julfestgästerna
 - Oles prylar och hajfenorna som samlarföremål, utspridda över ön
@@ -447,13 +460,14 @@ src/game/bathers.js             Badgäster på solstolarna in free roam: bathers
 src/game/suntripShop.js         Bränsletillägg tillkommer in free roam: SunTrip-butiken, the receipts, the Trapp Trull account, his bought look
 src/game/toasters.js            Kontrollerad av G17 in free roam: the seven toasters, the timing game, the label, the sisters' line
 src/game/room107.js             Rum 107 fylls med resans minnen in free roam: the keepsake shelf, the giraffe, the boombox
+src/game/solkram.js             Smörj in Majsans rygg in free roam: the SOLKRÄM meter, Siv's cards, the cream running
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
 tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, meter, kinds, perf,
                                 paintshop, berra, glide, simhopp, tuta, dygn, super8, eslov, grodorna,
                                 artig, grisar, bagage, lapplisa, torsdag, frukt, hopptorn, hund,
-                                badgaster, butik, brodrost,
+                                badgaster, butik, brodrost, rum107, solkram,
                                 calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
@@ -503,6 +517,7 @@ node tools/shot.mjs badgaster stekt      # bathers on the loungers: the burn, th
 node tools/shot.mjs butik butikbil       # SunTrip-butiken: the receipts, the Trapp Trull account, "Paketet!", the look, a mission start; the look in every car
 node tools/shot.mjs brodrost rostar      # the G17 toasters: pale, burnt, golden, the label, 7/7 and Majsan, the save; the seven spots
 node tools/shot.mjs rum107 troferum      # room 107: the shelf and Ole's count, the giraffe, the boombox's samba, the save; the room from the patio, the nap
+node tools/shot.mjs solkram              # Majsan's sun cream: the ask, the meter held, 7/6/5, early, over from behind, the record and Siv's chatter, the save
 node tools/shot.mjs fullstory kinds      # the literal §8 missions and the stage-kind checks
 node tools/shot.mjs calibrate calibflight  # timer and FLYGRÄDSLA calibration (slow; see DESIGN §8, §16.4)
 node tools/pool.mjs                      # random-stage timers from the raw runs in notes/calibration-samples.md

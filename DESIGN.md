@@ -234,7 +234,10 @@ when all seven pass (free roam, §10.24; in the film G17 is only his boast to Ma
 nobody toasts anything); the shelf in room 107 that Ole's gadgets come home to as they are found, the
 fins Stig trod down in a pile by his bed, Stig checking it all with "Kontrollerad av G17." and Ole
 counting on the radio (free roam, §10.25; in the film Ole shows his gadgets in the room, but there is
-no shelf, and the suitcase, the giraffe and the crispbread pack are only the film's own scenes).
+no shelf, and the suitcase, the giraffe and the crispbread pack are only the film's own scenes);
+Majsan's sun cream as a SOLKRÄM meter Stig fills with E and lets go in the green, Siv's cards for it
+(5, 6, 7 or –1) and the cream running down Majsan's dress when he holds too long (free roam, §10.26;
+in the film the two lines are pool talk, with no score and nothing spilt).
 The film's flight has **no turbulence** and **no in-flight toilet scene**: both toilet scenes are
 at Arlanda (we keep them there). The plane's toilets are only an invented hideout.
 
@@ -394,6 +397,8 @@ Physical keys are unchanged from Bigmouth. The level config turns verbs on and o
 - **Room 107** (free roam, §10.25): E at the keepsake shelf ("E Kontrollera hyllan"); after julafton
   at the plastic giraffe on Stig's bed ("E Ta upp giraffen", then "E Ställ tillbaka giraffen"); after
   the samba unlock at Ole's boombox ("E Spela samba").
+- **Majsan's sun cream** (free roam after fataga, by day, §10.26): E by Majsan at Flamenco's pool ("E
+  Smörj in ryggen"); in the scene E held fills the SOLKRÄM meter and is let go in the green.
 - **The horn** (free roam, §10.9): H in a car makes pedestrians ahead hop aside and the nearest of
   the gang answer; in a mission it is only the sound. The grisbil's horn is a grunt everywhere.
 - **The nap** (free roam, §10.10): E at Stig's bed in room 107 ("E Kvarta en stund") sleeps on to
@@ -3168,8 +3173,12 @@ Herr Storch counts (§7.2). The same unlock is his "after the end" in `game.film
 unlocks `glid` the first time he is in the air in free roam after it, so the toast shows then, once.
 `bodega` also puts the suitcase, the plastic giraffe and the SPORT-KNÄCKE pack in room 107 (feature
 38, §10.25): `unlock` and `applySaveToWorld` call `dressRoom107`, so it needs no `hook` of its own.
+`sjuPoang` (feature 35, §10.26) carries only Siv's `chatter` ("Sju poäng till Giraffen. Mer än
+pizza-racern!") and its toast: `game.solkram` unlocks it as the scene of the first 7 for the sun
+cream ends.
 A name not in `UNLOCKS` is only added to `game.unlocked` (saved with it): the glide keeps its
-once-ever marker `glidPlask` (Lasse's pool line has been said) there.
+once-ever marker `glidPlask` (Lasse's pool line has been said) there, the sun cream `solkramFilm`
+(the film's pair has been said, §10.26).
 `home` overrides the island HOMES entry (main.js `homeOverrides`); a `null` home hides the NPC
 (`key in homeOverrides`, Phase 3 r2: a falsy override used to be ignored). `chatter` (Phase 3 r2,
 main.js `chatterOverrides`) replaces that NPC's free-roam CHATTER on the island. Both are applied
@@ -3212,7 +3221,7 @@ Key **`charter-and-run-v1`** (localStorage):
 ```js
 { v: 1, mission: index, coins, collected: { prylar: [ids], fenor: [ids], brodrostar: [ids] },
   unlocked: ['grisbil', ...], outfit: 'kostym' | 'hawaii', tune: 'sol' | 'samba',
-  records: { simhopp: n, eslov: s },
+  records: { simhopp: n, eslov: s, solkram: n },
   shop: { owned: ['hatt', 'glas', 'skjorta', 'nasa'], off: [ids], trapp: 0..2, trappT: s, bag: bool } }
 ```
 
@@ -3225,7 +3234,9 @@ Berra job (§10.6) is not saved. `unlocked` also holds the glide's `glid` (its t
 marker `glidPlask` (Lasse's pool line said; saved at once), §10.7. `records` holds the free-roam
 bests (`game.records`; a missing key is no record yet): `simhopp`, the diving judges' best total,
 saved at once when beaten (feature 4, §10.8); `eslov`, Eslövloppet's best time in seconds (two
-decimals), saved at once with a win that beats it (feature 7, §10.12). `shop` (feature 34, §10.23):
+decimals), saved at once with a win that beats it (feature 7, §10.12); `solkram`, the sun cream's
+best points (5–7), saved at once when beaten (feature 35, §10.26), whose once-ever marker
+`solkramFilm` is in `unlocked`. `shop` (feature 34, §10.23):
 SunTrip-butiken's purchases (`owned`), the ones taken off at the counter (`off`), the Trapp Trull
 account's instalments still to pay (`trapp`) and its free-roam seconds towards the next (`trappT`,
 whole), and the beach bag taken (`bag`); saved at once with every purchase, change and instalment; a
@@ -4836,7 +4847,7 @@ whose pickup is a timing game. The game, the toasters and the label on them are 
   The prompt `<b>E</b> Kontrollera brödrosten` [N]; a passed one has none. The minimap shows the ones
   not passed within 45 m while `live` (`idle`).
 - **A try.** E pushes the lever down (`audio.toasterDown`), the bread goes down, Stig turns to it, and
-  the objective card (`objective()`, after the other free-roam cards in `updateHud`) shows the title
+  the objective card (`objective()`, last of the free-roam cards in `updateHud`) shows the title
   `KONTROLLERAD AV G17` [F*], `Tryck E när brödet är gyllenbrunt` [N] and the haggle's bar as a scale:
   the fill a gradient from pale (left) through golden to burnt black (right), the golden field a
   `zone` 0.22 wide whose left edge is drawn in `zoneAt` [0.48, 0.60] (fill and cream edges from
@@ -4951,6 +4962,83 @@ put on it and the lines at it are invented (§1.6).
   G17 toasters (feature 33) stay where they stand with their labels and are not in the room; the
   boombox only switches to the samba.
 
+### 10.26 Smörj in Majsans rygg – the SOLKRÄM meter (free roam; feature 35, 2026-10-17)
+
+`game/solkram.js` (`Solkram`, owned by Game as `solkram`), config `SOLKRAM` and the unlock
+`UNLOCKS.sjuPoang` in content/island.js, the anim flag `rub` (§14.6), `audio.squirt` and `splat`
+(§12.3). By the pool in the film: "Du, vill du smörja in mig på ryggen?" / "Ta inte för mycket, då kan
+det börja koka." (research-plot.md:286; the source does not say who, the game gives both to Majsan
+(t)), first heard in the game in fataga's intro (§8.11). After fataga she asks again in free roam and
+Stig does it with a G17 inspector's care; the points scene on the plane ("Giraffen, då? Fyra." /
+"Mindre än pizza-racern?" / "Det blir minuspoäng.", research-plot.md:197) becomes Siv's score for it.
+The meter, scores for sun cream, Siv's cards and the cream running are invented (§1.6). The game has
+no sunburn and no swimsuit: Majsan keeps her dress, and the shots stay on Stig's hands and face (§1.2).
+
+- **When.** `live`: on the island, `missions.state === 'idle'`, `missions.index` ≥ `fromIndex` 11
+  (after fataga, index 10). By day (`day.isDay()`, DAY.dayHours 7–19). Stig free: on foot, `normal`, on
+  the ground, not in a dialogue, not carrying, not frozen, no PANIK, no SKANDAL pursuit, not in the pool
+  fest's ring or on the baggage belt, not in Eslövloppet (its clock would run on through the scene).
+  Both sisters at home: on their HOMES spot (its spot id, within `homeR` 0.8 m), `normal`, shown, not
+  `busy`, nobody's (`honk.free`: not the diving judges', the pool fest's, Majsan's round with the
+  ticket pad, the grisfest evening's…), not the waiting mission's giver or extra (fataga's Majsan).
+  After the end the pool fest's ring has the sisters whenever Stig is on the deck in its hours (9–23,
+  §10.13), so then it is the morning, 07–09 (the nap wakes him at 08, §10.10).
+- **The prompt.** An interactable on Majsan (`r` 1.8, priority 0; a giver's talk goes first): `<b>E</b>
+  Smörj in ryggen` [N].
+- **The ask.** E holds both sisters (`busy`), snaps Majsan to her spot (−1, 18) facing west and Stig
+  `talk` 1.3 m in front of her, facing her, puts the bottle on the deck (unbranded: an orange body, a
+  white cap and nozzle, 0.24 m, §1.5) and cuts to a side shot from the north (`camAsk`/`lookAsk`); Siv
+  turns to them. A dialogue: the first time ever the film's pair [F](t) and Stig's "En kontrollerad
+  mängd. Det är mitt yrke." [N] (the once-ever marker `solkramFilm` in the saved unlocks, saved at
+  once); after it one of four asks of ours (`again`, [N]).
+- **The meter.** Majsan turns her back (world yaw π/2, `stage.yaw`), Stig stands `back` 0.97 m behind
+  her with his hands on her shoulders (`rub` 1), and the shot from her front right (`cam`/`look`) holds
+  his face and hands, Siv in the background at her place and the pool to the right. The letterbox goes
+  off and the objective card (first in `updateHud`'s free-roam chain, §11.4) shows `SOLKRÄM` [N],
+  `Håll E · släpp i det gröna` [N] and the haggle's bar as the cream (fill `#fffbea`, label `Majsans
+  rygg` [N]), the green field and the marker on the fill. The field is `zone.w0` 0.26 wide on the
+  session's first try and × `zone.shrink` 0.88 each try after it, down to `zone.min` 0.12; its middle
+  is drawn in `zone.at` [0.55, 0.74] each try, and a light stripe ± `bull` 0.022 round it marks the 7.
+  E must be seen up first (the dialogue's last skip press does not count); held, the fill rises at
+  1/`secs` = 1/2.4 a second (real time), Stig rubs (`rub` 2), the bottle squeezes (`audio.squirt`
+  every 0.28 s), a dab of cream grows on her back, and the card reads `Håll… håll…`, in the field
+  `Släpp i det gröna!` and past it `Släpp! Släpp!` with a red fill labelled `För mycket!` [N]. No hold
+  within `readySecs` 12 s: Majsan's "Jaha. Då får jag väl göra det själv." [N] and the scene ends.
+- **The result** (E let go, or the bar full), by the fill against the field:
+  - in the stripe (± 0.022 of the middle) **7**, within ± `six` 0.055 **6**, elsewhere in the field
+    **5**: the hands rest, `audio.pling`, Siv holds up her card (`anim.card`, `cardSecs` 4.6 s) and
+    the bubbles: 7 "Mm… precis lagom." [N], Siv's "Giraffen, då? Sju." [F*](t), Majsan's "Mer än
+    pizza-racern!" [F*](t); 6 "Mm. Det där var skönt." [N], "Sex, tycker jag." [F*](t); 5 "Tack,
+    Stig-Helmer." [N], "Giraffen, då? Fem." [F*](t). The result line (`#score`, §11.4) `SOLKRÄM n P`
+    [N] over `NYTT REKORD!` or `REKORD n P` [N].
+  - past the field (or held to 1) **over**, −1: a cut to behind them from her right
+    (`camOver`/`lookOver`), Stig a step back (`overStep` 0.45 m) flailing for `flailSecs` 1.4 s,
+    `audio.splat`; the dab stays and three drops run down her back over `drip` 1.6 s; "Oj! Nu kokar
+    det!" [N], Stig's "Den här flaskan hade aldrig gått igenom G17." [N]; at `front` 3.2 s back to the
+    front shot for Siv's –1 card, her laugh and "Det blir minuspoäng." [F*](t); `FÖR MYCKET! –1 P` [N].
+  - short of it **early**, no points and no card: "Var det allt?" [N], Stig's "Man ska inte slösa."
+    [N]; `FÖR LITE!` [N].
+  The lines are bubbles at their delays (each up at least `lineSecs` 2.6 s) under the letterbox, and
+  the scene ends `tail` 2.2 s after the last (4–6 s in all): the chase camera from her right side (the
+  two of them side by side; from behind Stig it stood at Siv's place), the sisters free, no pose, the
+  bottle and the cream gone. E again after `restSecs` 0.6 s; no timer, no SKANDAL, nothing lost.
+- **Saved.** `records.solkram`, the best points (5–7), saved at once when beaten (§10.5). The first 7
+  unlocks `sjuPoang` as its scene ends: the toast "Sju poäng! Nu pratar Siv om det vid poolen." [N]
+  and Siv's island chatter is "Sju poäng till Giraffen. Mer än pizza-racern!" [N] from then on
+  (`chatter`, §10.3). `solkram.last` ({ kind: 7 | 6 | 5 | 'over' | 'early' | 'giveUp', points, fill,
+  zone, mid, record, best, t }), `phase`, `fill`, `zone`, `mid` and `tries` are for tests. Scenario
+  `solkram` (§16.4).
+- **Off.** The scene is a dialogue throughout (`inDialog`: no other E, kick, move or R), and the held
+  sisters are `busy`, so the other free-roam modules leave them be. Not `live` (a mission start, the
+  other level): any scene off at once (`reset`; the cinematic ends only if one of ours is under way, so
+  a mission's intro keeps its own), Siv's card down, the result line hidden.
+- **Not done / changed** (deviations from the idea): the result lines are bubbles (as the sketches
+  show), so the card and the score are seen; Stig adds a line [N] after the film's pair; his pose is
+  `push`'s lean with the arms nearer level (`rub`), since `push` itself put his hands at her neck from
+  behind; the field narrows with each try of the session (not saved); the cream running is seen from
+  behind her right side with Stig a step back; no Ole's chlorine goggles (no goggles model); by day
+  only, so after the end it is the morning before the pool fest's hours.
+
 ## 11. HUD / UI strings (Swedish; `src/strings.js` owned by WP-H, created by Phase 0)
 
 `strings.js` exports `S` (flat object) and `fmt(key, vars)`. Engine code uses `S.key` only.
@@ -5003,12 +5091,13 @@ mutes without touching the button, which then said `Ljud: på` while muted).
 | dialogue next | `E ▸` |
 | minimap rim badge | `N` (island) / `FRAM` (flight) |
 | big-map legend | from `game.mapLegend()` (§10.1) |
-| prompts | `<b>E</b> Prata med {name}` · `<b>E</b> Kliv in` · `<b>E</b> Ta bilen` · `<b>E</b> Sätt dig` · `<b>E</b> Res dig` · `<b>E</b> Lås in dig` · `<b>E</b> Ta en juice` · `<b>E</b> Kvarta en stund` (Stig's bed, §10.10) · `<b>E</b> Titta i kameran` / `<b>E</b> Se filmen` (Herr Storch, §10.11) · `<b>E</b> Heja Eslöv!` / `<b>E</b> Eslövloppet – ett varv runt fälten` (the rollerskier, §10.12) · `<b>E</b> Dansa med` / `<b>E</b> Kliv ur ringen` (the pool fest's gap, §10.13) · `<b>E</b> Kontrollera brödrosten` / `<b>E</b> Upp med brödet!` (a G17 toaster, §10.24) · `<b>E</b> Kontrollera hyllan` · `<b>E</b> Ta upp giraffen` / `<b>E</b> Ställ tillbaka giraffen` · `<b>E</b> Spela samba` (room 107, §10.25) · `<b>SPACE</b> Håll i dig!` · `<b>J</b> håll: Jag kan flyga!` (the `<b>` keycap is Luckiest Guy: uppercase). Order (`updateHud`): talk, then `Håll i dig!` while the cabin is turbulent and he stands without holding on (Phase 3 r3, §5.7), then the car, interactable (seats, toilets…) and stand prompts |
+| prompts | `<b>E</b> Prata med {name}` · `<b>E</b> Kliv in` · `<b>E</b> Ta bilen` · `<b>E</b> Sätt dig` · `<b>E</b> Res dig` · `<b>E</b> Lås in dig` · `<b>E</b> Ta en juice` · `<b>E</b> Kvarta en stund` (Stig's bed, §10.10) · `<b>E</b> Titta i kameran` / `<b>E</b> Se filmen` (Herr Storch, §10.11) · `<b>E</b> Heja Eslöv!` / `<b>E</b> Eslövloppet – ett varv runt fälten` (the rollerskier, §10.12) · `<b>E</b> Dansa med` / `<b>E</b> Kliv ur ringen` (the pool fest's gap, §10.13) · `<b>E</b> Kontrollera brödrosten` / `<b>E</b> Upp med brödet!` (a G17 toaster, §10.24) · `<b>E</b> Kontrollera hyllan` · `<b>E</b> Ta upp giraffen` / `<b>E</b> Ställ tillbaka giraffen` · `<b>E</b> Spela samba` (room 107, §10.25) · `<b>E</b> Smörj in ryggen` (Majsan's sun cream, §10.26) · `<b>SPACE</b> Håll i dig!` · `<b>J</b> håll: Jag kan flyga!` (the `<b>` keycap is Luckiest Guy: uppercase). Order (`updateHud`): talk, then `Håll i dig!` while the cabin is turbulent and he stands without holding on (Phase 3 r3, §5.7), then the car, interactable (seats, toilets…) and stand prompts |
 
 **The result line** (feature 4, §10.8): `#score`, low in the middle (bottom 92 px, under the
 prompt at 178 px), a cream card with the dive and its sum in Luckiest Guy over the record line
 (terracotta, teal for `NYTT REKORD!`). `hud.showScore(main, sub, record, secs = 4.5)` pops it in
-(uppercased, §1.3); `hud.hideScore()` takes it down (the judges' `reset`).
+(uppercased, §1.3); `hud.hideScore()` takes it down (the judges' `reset`). The sun cream's result
+uses it too (feature 35, §10.26: `SOLKRÄM 7 P` over the record, `FÖR MYCKET! –1 P`, `FÖR LITE!`).
 
 **The hop counter** (feature 8, §10.13): `#takt`, top right under the meter (top 88 px, right 24 px),
 a cream card in Luckiest Guy 26 px, while Stig is in the pool fest's ring: `I TAKT {n} / 8`, `OTAKT!`
@@ -5231,6 +5320,7 @@ Scheduler fixes (Phase 0): catch-up guard `if (next < ctx.currentTime) next = ct
 | `whistle()` | a dog's owner whistling it home (feature 31, §10.21): a sine 1700 → 2400 Hz (0.14 s), then 2350 → 1500 Hz (0.36 s) |
 | `thud()`, `crash()`, `coin()`, `pickup()` | existing |
 | `toasterDown()`, `pop()` | a G17 toaster (feature 33, §10.24): the lever going down (a band-passed noise clack and a 170 → 110 Hz square), the bread popping up (a short 2.6 kHz noise burst and a 380 → 900 Hz sine) |
+| `squirt()`, `splat()` | the sun cream (feature 35, §10.26): a squeeze of the bottle every 0.28 s while E is held (a 0.07 s band-passed noise at 0.9–1.2 kHz and a 240 → 170 Hz sine), too much landing on her back (a 0.22 s low-passed noise and a 1.4 kHz → 400 Hz sweep) |
 | `splash(k = 0)` | water (existing at k 0: a band-passed noise burst and a sweep down); feature 24 (§10.20): `k` 0..2 lengthens, lowers and lifts it (`game.waterSplash`: 1 a fall from the 10 m tower, 1–2 a stomp's cannonball), and over 1 a 75 → 38 Hz sine boom under it |
 | `pip()` | Ole's calculator alarm (feature 30, §10.10): PIP-PIP-PIP twice, 2794 Hz square pips of 0.06 s 0.12 s apart, the second three 0.55 s on; the nap plays it twice |
 | `whirr(secs = 1.2)` | Herr Storch's film camera (feature 6, §10.11): the clockwork motor, 18 soft clicks a second (0.016 s band-passed noise bursts at 2.6 kHz) over a faint 118 → 112 Hz sawtooth hum; when he films (2.1 s), on a viewfinder (1.2 s) and for the film night (2.4 s) |
@@ -5327,7 +5417,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/strings.js` | new | **H** | `S`, `fmt()` (§11) |
 | `src/content/index.js` | new | none | merges `HOMES`, `MAP_LABELS`, `LEVEL_OUTFITS`, re-exports all content |
 | `src/content/flight.js` | new | **F** | `HOMES_GATE`, `HOMES_FLIGHT`, `MAP_LABELS_FLIGHT`, `CHATTER_FLIGHT`, `OLE_STATS`, `LEVEL_OUTFITS_GATE`, `LEVEL_OUTFITS_FLIGHT` |
-| `src/content/island.js` | new | **G** | `HOMES_ISLAND`, `MAP_LABELS_ISLAND`, `CHATTER`, `OUCH`, `GETUP`, `CARJACK`, `NPC_KICKED` (+ the `_OLE` / `_LOCAL` tables, `LOCAL_CAST`, `BARKS`: Phase 3 r2, §14.10; `STIG_SORRY`: feature 11, §10.14; `PIG_TRUCK`: feature 15, §10.15; `BAGGAGE_BELT`: feature 25, §10.16; `LAPPLISA`: feature 20, §10.17; `GRISFEST_FREE`: feature 21, §10.18; `FRUKTSTAND`: feature 28, §10.19; `TOWER`: feature 24, §10.20; `DOGS`: feature 31, §10.21; `BATHERS`: feature 32, §10.22; `RUM107`: feature 38, §10.25), `COLLECTIBLES`, `UNLOCKS`, `NAMED_CARS`, `LEVEL_OUTFITS_ISLAND` |
+| `src/content/island.js` | new | **G** | `HOMES_ISLAND`, `MAP_LABELS_ISLAND`, `CHATTER`, `OUCH`, `GETUP`, `CARJACK`, `NPC_KICKED` (+ the `_OLE` / `_LOCAL` tables, `LOCAL_CAST`, `BARKS`: Phase 3 r2, §14.10; `STIG_SORRY`: feature 11, §10.14; `PIG_TRUCK`: feature 15, §10.15; `BAGGAGE_BELT`: feature 25, §10.16; `LAPPLISA`: feature 20, §10.17; `GRISFEST_FREE`: feature 21, §10.18; `FRUKTSTAND`: feature 28, §10.19; `TOWER`: feature 24, §10.20; `DOGS`: feature 31, §10.21; `BATHERS`: feature 32, §10.22; `RUM107`: feature 38, §10.25; `SOLKRAM`: feature 35, §10.26), `COLLECTIBLES`, `UNLOCKS`, `NAMED_CARS`, `LEVEL_OUTFITS_ISLAND` |
 | `src/game/missions/index.js` | new | none | `MISSIONS = [...FLIGHT_MISSIONS, ...ISLAND_MISSIONS]`, `MissionRunner` re-export |
 | `src/game/missions/runner.js` | new (from missions.js) | none | `MissionRunner` (§9.4) |
 | `src/game/missions/kinds/core.js` | new | **none** (frozen after Phase 0) | getInCar goto pickup dropoff follow rabbits race destroy grab scene |
@@ -5357,6 +5447,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/dogs.js` | new (feature 31, 2026-10-17) | — | `Dogs` (`game.dogs`): Fin hund… in free roam: the watchdogs' lots (`Lot`), looks and dogs (`Dog`), their rush, bay, call and calm, Stig's hands, lines and thanks (§10.21) |
 | `src/game/toasters.js` | new (feature 33, 2026-10-17) | — | `Toasters` (`game.toasters`): Kontrollerad av G17 in free roam: the seven toasters' interactables, the timing game and its card, the pop and its three results, the sister's line, the reset at a mission start (§10.24) |
 | `src/game/room107.js` | new (feature 38, 2026-10-17) | — | `Room107` (`game.room107`): Rum 107 fylls med resans minnen in free roam: the shelf's, the giraffe's and the boombox's interactables, Stig's lines and Ole's count on the radio, the giraffe held and put back, the reset (§10.25) |
+| `src/game/solkram.js` | new (feature 35, 2026-10-17) | — | `Solkram` (`game.solkram`): Smörj in Majsans rygg in free roam: Majsan's interactable, the scene (the ask, her back turned, the meter's card and the held E, the result's shots, cards and bubbles), the bottle and the cream, the record and `sjuPoang`, the reset (§10.26) |
 | `src/game/bathers.js` | new (feature 32, 2026-10-17) | — | `Bathers` (`game.bathers`): Badgäster på solstolarna in free roam: tourists on the sun loungers nearest him by day, their burn (pale, pink, lobster red), the fly-off from a kicked or smashed lounger, a newcomer on a lounger back; Berra and Robban fried and asleep on two Flamenco loungers between buss17 and the bodega, their snores and the wake (§10.22) |
 | `src/game/suntripShop.js` | new (feature 34, 2026-10-17) | — | `SuntripShop` (`game.shop`): Bränsletillägg tillkommer in free roam: SunTrip-butiken's counter shown and its solids live between missions, the travel agent, the wares' and the bag's interactables, the receipts, the Trapp Trull account's instalments, "Paketet!", Ole's line; his bought look as a layer over his outfit (`dress`), saved (§10.23) |
 | `src/game/hud.js` | edit | **H** | map sources, meter, strings, legend, ring, blips, zone bar, markers; `renderPortrait` restores the model transform (§14.8) |
@@ -5364,7 +5455,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/fx.js` | edit | **A1** | `snow`, `steam`, `meterPuff` (rename of `shame`); `splash`'s `up` (feature 24, §10.20) |
 | `src/game/markers.js` | unchanged | none | |
 | `src/gfx.js` | edit | none | `setSkyPalette`, `setCloudsVisible`, `setShadows`, `MAT.sky`, `MAT.water` sea colour |
-| `src/audio.js` | edit | **H** | §12 API; `splash(k)`'s size (feature 24, §10.20); `woof`, `whistle` (feature 31, §10.21); `toasterDown`, `pop` (feature 33, §10.24) |
+| `src/audio.js` | edit | **H** | §12 API; `splash(k)`'s size (feature 24, §10.20); `woof`, `whistle` (feature 31, §10.21); `toasterDown`, `pop` (feature 33, §10.24); `squirt`, `splat` (feature 35, §10.26) |
 | `src/input.js` | edit | none | pad Start → `pause` |
 | `src/util.js` | unchanged | none | |
 | `src/world/frame.js` | new (from town.js) | none | `Frame` (`prop(…, opts)` passes `opts` to `placeProp`: feature 28) |
@@ -5382,8 +5473,8 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/world/cabin.js` | new | **A1** | §5 interior, collision, seats, trolley, turbulence, fear, interactables, blockers, `CAM_CABIN`, `FLIGHT_PALETTES`, `FEAR`; calls `buildFlightScenery` |
 | `src/world/flightScenery.js` | new | **A2** | §5.6 visuals: gate-set visuals, airframe, animated scenery per phase, `buildFlightScenery`, `buildPlaneExterior` |
 | `src/world/rio.js` | new | **B** | `buildRioCard` (P1) |
-| `src/actors/models.js` | edit | **E** | `CHARS`, `CAST`, new def fields, anim flags, `buildBustGeo`, `outfitDef`, `randomPed` palette; the `ticket` flag and its `lappblock`/`penna` props (feature 20, §10.17); the `leap` and `bomb` poses (feature 24, §10.20); the `placate` pose (feature 31, §10.21); the `lie` pose, the `stekt` outfits and `STEKT_SKIN` (feature 32, §10.22) |
-| `src/actors/character.js` | edit | **E** | `setDef`, `hidden`, `seatAt`, `standAt`, new anim flag defaults (`placate`: feature 31); the state `lying`, `lieAt`, `fling`'s `flip` (feature 32, §10.22) |
+| `src/actors/models.js` | edit | **E** | `CHARS`, `CAST`, new def fields, anim flags, `buildBustGeo`, `outfitDef`, `randomPed` palette; the `ticket` flag and its `lappblock`/`penna` props (feature 20, §10.17); the `leap` and `bomb` poses (feature 24, §10.20); the `placate` pose (feature 31, §10.21); the `lie` pose, the `stekt` outfits and `STEKT_SKIN` (feature 32, §10.22); the `rub` pose (feature 35, §10.26) |
+| `src/actors/character.js` | edit | **E** | `setDef`, `hidden`, `seatAt`, `standAt`, new anim flag defaults (`placate`: feature 31; `rub`: feature 35); the state `lying`, `lieAt`, `fling`'s `flip` (feature 32, §10.22) |
 | `src/actors/car.js` | edit | **E** | §6.6 types/flags, `registerCarType`, `build`/`noWheels`/`noSpeedo`/`noExplode`/`livery`; the grisbil's pig meshes `PIG_SLOTS`, `pigMesh`, `car.pigs`, `setPig`, `pigWorld` (feature 15, §10.15); `car.lift`, the nose raised on the tow truck's hook (feature 20, §10.17); a prop is known by its block's `ref`, `game.breakProp` may refuse, `def.slow` (feature 28, §10.19) |
 | `src/actors/pickups.js` | edit | **E** | `COLLECT_KINDS`, `registerCollectKind`, `Collectible` table, `Rabbit` meshes, coin value 25; the `brodrost` kind, `TOASTER`, `setToaster`, `Collectible.mark` and the `yaw` option (feature 33, §10.24); `PRYL_IDS` exported (feature 38, §10.25) |
 | `src/actors/peds.js` | edit | **E** | Swedish/Spanish shouts; `dodge`, `startle` (feature 5, §6.7) |
@@ -5424,7 +5515,7 @@ Init: `initGfx` → `input.init` → `hud.init` → `fx.init` → fonts (Luckies
 → peds (34) → NPC `Character`s (one per `CHARS` key except `stig`, the radio-only keys `levander
 kapten pa guardia pax telefonist` and the cabin-owned `vardinna2`; `key` field; hidden until placed, §2.3) →
 player `Character(CHARS.stig)` (`key = 'stig'`) → collectibles (`COLLECTIBLES`) → markers → `Shame`
-→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `DiveTower` (feature 24, §10.20; registers the ladder's two interactables, sets `DIVE_TOWER.live`) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `Eslov` (feature 7, §10.12; registers the rollerskier's interactable) → `PoolFest` (feature 8, §10.13) → `StigSorry` (feature 11, §10.14) → `PigTruck` (feature 15, §10.15) → `BaggageBelt` (feature 25, §10.16) → `Lapplisa` (feature 20, §10.17) → `GrisfestFree` (feature 21, §10.18; registers the gate's and the tourists' interactables) → `FruitStands` (feature 28, §10.19) → `Dogs` (feature 31, §10.21) → `Bathers` (feature 32, §10.22; registers the wake's interactable) → `SuntripShop` (feature 34, §10.23; registers the four wares' and the bag's interactables, sets `SUNTRIP_SHOP.live`) → `Toasters` (feature 33, §10.24; registers the seven toasters' interactables) → `Room107` (feature 38, §10.25; registers room 107's three interactables) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
+→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `DiveTower` (feature 24, §10.20; registers the ladder's two interactables, sets `DIVE_TOWER.live`) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `Eslov` (feature 7, §10.12; registers the rollerskier's interactable) → `PoolFest` (feature 8, §10.13) → `StigSorry` (feature 11, §10.14) → `PigTruck` (feature 15, §10.15) → `BaggageBelt` (feature 25, §10.16) → `Lapplisa` (feature 20, §10.17) → `GrisfestFree` (feature 21, §10.18; registers the gate's and the tourists' interactables) → `FruitStands` (feature 28, §10.19) → `Dogs` (feature 31, §10.21) → `Bathers` (feature 32, §10.22; registers the wake's interactable) → `SuntripShop` (feature 34, §10.23; registers the four wares' and the bag's interactables, sets `SUNTRIP_SHOP.live`) → `Toasters` (feature 33, §10.24; registers the seven toasters' interactables) → `Room107` (feature 38, §10.25; registers room 107's three interactables) → `Solkram` (feature 35, §10.26; registers Majsan's interactable) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
 `placeNpcs(true)` → spawn the player → portraits for every key in `CAST` (`renderPortrait`
 restores each model's parent and transform, so seated cast members stay in their seats) →
 `applySaveToWorld()` →
@@ -5436,7 +5527,7 @@ mantra/hold, AI, cars, people (`glide.step` → the player's step → `glide.aft
 traffic/peds skipped when `!levelDef.sim.*`) → `syncAll` (also
 writes `ch.x/y/z` from `car.seatWorld(ch.seatSide)` for every car-seated character, player
 included, so framing, bubbles and distance checks see where they really are) → `missions.update` →
-`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `tower.update` (feature 24) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `stands.update` (feature 28) → `dogs.update` (feature 31) → `bathers.update` (feature 32) → `shop.update` (feature 34) → `toasters.update` (feature 33) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
+`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `tower.update` (feature 24) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `stands.update` (feature 28) → `dogs.update` (feature 31) → `bathers.update` (feature 32) → `shop.update` (feature 34) → `toasters.update` (feature 33) → `room107.update` (feature 38) → `solkram.update` (feature 35) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
 pickups/collectibles → props → `fx.tick` → `tickTown` → markers → camera → sun/sky → HUD → audio →
 traffic recycling (island) → autosave. `loop` then renders, and when `film.grabNow` is set calls
 `film.grab()` in the same task (Herr Storch's still from the frame's buffer, feature 6, §10.11).
@@ -5460,7 +5551,7 @@ game.glide;        // Glide (feature 3, §10.7): the free-roam glide after julaf
 game.judges;       // PoolJudges (feature 4, §10.8): the sisters judge his dives at Flamenco's pool
 game.tower;        // DiveTower (feature 24, §10.20): the 10 m diving tower at Flamenco's pool; tower.live,
                    // canClimb(), climb(up), put(up), dive, fromTop, radioSaid, last, climbs
-game.records;      // { simhopp?: n, eslov?: s } free-roam bests, saved (§10.5)
+game.records;      // { simhopp?: n, eslov?: s, solkram?: n } free-roam bests, saved (§10.5)
 game.honk;         // Honk (feature 5, §10.9): the island hears the horn in free roam
 game.hornAt;       // null | { x, z, yaw, t, pigs }: the last free-roam horn press (§10.9)
 game.day;          // DayClock (feature 30, §10.10): day.h (Spanish time, 0–24), day.run (moves by
@@ -5497,6 +5588,10 @@ game.toasters;     // Toasters (feature 33, §10.24): the G17 toasters' timing g
 game.room107;      // Room107 (feature 38, §10.25): room 107's shelf, giraffe and boombox; room107.live,
                    // canUse(), shelf(), giraffe(), hold(on), radio(), reset(), holdT, restT, last,
                    // world (= hotels.js ROOM107), cfg (RUM107)
+game.solkram;      // Solkram (feature 35, §10.26): Majsan's sun cream and the SOLKRÄM meter; solkram.live,
+                   // meter, phase (null | intro | ready | hold | result), canUse(), start(), judge(),
+                   // reset(), objective() (updateHud, first of the free-roam cards), fill, zone, mid,
+                   // tries, restT, last, bottle, dab, drops, cfg (SOLKRAM)
 game.bathers;      // Bathers (feature 32, §10.22): tourists on the sun loungers, Berra and Robban fried;
                    // bathers.loose (the bathers off their loungers: allChars, areaHit), step(h)
                    // (fixedStep), onPropBroken(p, vx, vz) (from onPropBroken, after the lounger's own
@@ -5826,6 +5921,11 @@ palms out (R (−2.4, 0, −0.5), L (−2.4, 0, 0.5), a 17/s and 19/s tremble of
 his eyes on it (neck 0.22); 2 up out of its reach with the mantra, the arms straight out as `wings`
 (R (0, 0, −1.55), a 9/s shake of 0.05) without `wings`' stop. Before `flail`, which wins. Only a look
 (it steers nothing); only `game.dogs` sets it; `heldPose` counts it as busy.
+`rub` (feature 35, §10.26), a number: 1 his hands on the shoulders of someone shorter in front
+(Majsan, 0.97 m ahead of him): `push`'s lean (hips 0.18) with the arms nearer level (R (−1.47, 0,
+0.1), L (−1.47, 0, −0.1)), the hands 0.1 m over her shoulder pivots; 2 rubbing the sun cream in, both
+hands side to side together (z ± 0.1 at 8/s). Only a look; only `game.solkram` sets it; `heldPose`
+counts it as busy.
 `lie` (feature 32, §10.22; not a flag: `anim.lie` is the lying pose, `{ lean, arms, tilt, lift }`,
 set by `sync` in state `lying`, else null): on a sun lounger the root leans back `lean` (the
 backrest's −0.75) about the hips, so the legs are laid straight along the bed (x = −π/2 − lean,
@@ -6847,6 +6947,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `butik`, `butikbil` [feature 34] | Bränsletillägg tillkommer – SunTrip-butiken (§10.23). `butik`, at index 6 (free roam, hawaii): the counter's group shown, its two solids live (the counter a wall), the clerk behind it, the greeting; E at the hat with 30 pta "Det räcker inte ens till bränsletillägget.", with 60 the total 225 and nothing paid; with the purse the hat on the Trapp Trull account (75 paid, 2 instalments, the receipt's 7 lines one by one, its text, the sell line, Stig's sigh after the total, the hat with `hatSun` on him, headTop up, the bag shown); "Paketet!" walking 8 m off, once a departure, again after coming back; E at the bag; no call once taken; the glasses 275, the shirt 350, the nose guard 50 (its receipt, "Nässkydd – det får du också gratis.", "Gratis… plus bränsletillägg."); the full look (`worn` `hatt glas skjorta nasa`, shades, no glasses, dots, the nose guard, no suit); E takes the glasses off (his own back, free) and on; the instalments held back while short, then 2 of 3 and 3 of 3 (75 each, the account paid); Ole's line within 7 m; the save's `shop` and a reload (not fresh): all of it on him, Ole silent; a mission start (friskotek): group, bag and clerk gone, solids dead, his own hawaii look; an abort: back; `rio` takes no layer, the island outfit takes it again. `butikbil`, at index 9 with the full look: seated in hatch, sedan, taxi, wagon, pickup, grisbil, van, icecream, guardia and bus, the head with the hat under `roofY` and its x extent within the body's half width, a shot of each from the driver's side; on foot again with the look |
 | `brodrost`, `rostar` [feature 33] | Kontrollerad av G17 (§10.24). `brodrost`, at index 9 (free roam): the seven toasters in `IDS` order; none on the minimap from the golf, the pool bar's one there (one marker) with pale bread up and no label; its prompt from the front; E starts a try (the first at `secs`): the card (title, bar, zone, marker), "Upp med brödet!", bread and lever down; E early: pale, "Blekt. Underkänd.", the toast, nothing collected; left alone: burnt at the end, Stig flailing with his line, the toast, and Majsan's or Siv's "Bara de inte är ingenjörer." from the pool deck; E (a real key) in the field: `ok`, +250, `G17-brödrostar 1/7`, Stig's cheer and line, the label on and golden bread, no prompt or marker there; the porter's: the sweep × 0.92, a try off 4 m away; a mission start: the try off, none usable, no markers; at index 8 the pool bar's prompt at its front over Berra's talk (3.6 m); all seven: 7 × 250 + 1000 and Majsan on the radio, the legend 7/7; the save (v 1, the set's seven ids) and a reload with all seven labelled; a v 1 save without the set loads with none; the flight level inert. `rostar`, at index 13: each toaster on its landmark (top and yaw), its prompt from 0.9 m in front, shots coming up (3 m) and close beside it, asnan's cut to the FERRETERÍA front, the pool bar's in its three looks |
 | `rum107`, `troferum` [feature 38] | Rum 107 fylls med resans minnen (§10.25). `rum107`, at index 9 (free roam): the room bare on a fresh save (7 gadget, 7 fin and 3 julafton meshes built, none shown); E at the shelf with nothing found: "Inget att kontrollera.", he faces it, the card `Oles prylar 0/7 · Hajfenor 0/7`, Ole's "Hylla er tom…"; four gadgets and three fins collected (`collect`) show at once, each gadget in its own place 0.5 m apart standing on the shelf's 2.75; no prompt for `gap` s, then "Kontrollerad av G17.", 4/7 · 3/7 and "Fire av sju! Snart er hylla full."; before the unlocks the nap answers at the giraffe's spot and no boombox; all seven: the samba unlock, "Spela samba" sets and saves the samba with Ole's "Ja, det er fint! Samba!", no prompt while it plays, back with the sol tune; after `unlock('bodega')` the suitcase, the giraffe and the pack; E at the giraffe: held, the bed's hidden, "Precis en sån…", the prompt "Ställ tillbaka giraffen", back after `holdSecs`, at once 3 m off and with E; the nap beside his bed; a full shelf's "Alle sju! Nå er hylla full."; a reload dresses the room; at index 12 a mission start leaves none usable and the giraffe back; the flight level inert. `troferum`, at index 13: the room from the patio (`rum107Cam` at 5.5 and 7.5 m, buss17's and julafton's cuts) bare, mid-trip and after julafton, close shots of the shelf, the pile and the beds, Stig at the shelf, Stig with the giraffe, and the nap with the giraffe by his head |
+| `solkram` [feature 35] | Smörj in Majsans rygg (§10.26). At index 10 (fataga waiting, Majsan its giver at the pool) the talk and no SOLKRÄM; at index 11 beside Majsan "Smörj in ryggen", none at 22:00 or with Siv 5 m off her spot; E: the film's pair in a dialogue (and the marker `solkramFilm`), then her back turned (yaw π/2), Stig 0.97 m behind her facing her with `rub` 1 and his hands 0–0.2 m over her shoulder pivots and 0.03–0.2 m behind her middle, both sisters `busy`, the bottle, no prompt, the card (SOLKRÄM, `Håll E · släpp i det gröna`, `Majsans rygg`, the field `w0` wide with its middle in `at`, the marker) with no letterbox; E held (a real key) 0.6 s: the fill at 1/`secs` a second (0.6–1.3 ×), `rub` 2, `Håll… håll…`; let go in the stripe: 7, a record, Siv's `7` card, `SOLKRÄM 7 P` / `NYTT REKORD!`, `records.solkram` 7 in the save, then her three lines in order and at the end the camera, the sisters and the pose back, no bottle, `sjuPoang` (Siv's chatter, the toast, both markers saved); again: one of `again`, the field × `shrink`, 6 with "Sex, tycker jag." and the record kept (`REKORD 7 P`); the field's edge: 5 and "Giraffen, då? Fem."; short of it: early, no card, `FÖR LITE!`, "Var det allt?"; held to the end: over at 1, Siv's `–1` and laugh, Stig flailing 1.42 m behind her, the cream running, the shot from behind, three drops at 1.1 s, back to the front shot for Siv, the lines, the flail and the cream gone; no hold: "Jaha. Då får jag väl göra det själv."; six tries; a mission start with Siv's card up: the card down and the intro's cinematic kept; a reload: the record 7, `sjuPoang`, Siv's chatter and no film pair again; at index 13 after `unlock('bodega')` at 15:00 the pool fest's ring has Majsan (none), at 08:00 she is home and it is there; the flight level inert. Shots `solkram_0_prompt`, `_1_ready`, `_1b_hold`, `_2_sju`, `_3_after`, `_4_over`, `_5_minus` |
 | `badgaster`, `stekt` [feature 32] | Badgäster på solstolarna (§10.22). `badgaster`, at index 6 (free roam): bodies only on taken sun loungers, their hips on the seat, at most `max` (10), none on Berra's or Robban's; on the main beach no taken lounger within `r` left empty nearer than the bodies (shot `badgaster_strand`); one rebuilt body's ms logged. The burn: three loungers in the z 250 row; a bather lain past `burn[0]` stays pale while in view within `seenR` and is pink once out of view; past `burn[1]` lobster red (skins from `skins`; shot `badgaster_stadier`). A kick at a free lounger and at a taken one give the same SKANDAL; the bather off it in a backward somersault (`flip` < 0) along the lounger's facing (vz > 2), an OUCH bark, a GETUP bark on his feet (shots `badgaster_kullerbytta`, `badgaster_upp`), gone once Stig is 30 m off; no `onCharHit`, no "hit" sorry. His car at 10 m/s through a taken lounger: SKANDAL 1 × 1.2 × gain only, the bather off along the car (vz > 5; shot `badgaster_bil`). The lounger back after its smash (respawn 0, him 100 m off): `n` + 1, a new seed, stage 0, a pale newcomer on it. At 22:00 nobody (after a cut); at 10:00 `dayN` + 1 and a new crowd. A mission start (friskotek) takes every body away at once, none in the mission; the flight level (index 2) makes none. `stekt`, at index 6: Berra and Robban `lying` on their loungers, outfit `stekt` (skin `STEKT_SKIN`), `slump`, busy, spot `stekt`; both snore within 9.5 s (shots `stekt_bar`, `stekt`); the E point `stekt:wake` at Berra's feet: Stig's line, then Berra's with `lift` > 0.6 (shot `stekt_fem_minuter`), then Robban's, in that order, and `lift` back under 0.1; a kick at Berra's lounger: `flung`, then `down` with his timer held (> 100), still `stekt`, only snores from him (shot `stekt_sparkad`); the lounger back with him 100 m off: on it again. A mission start (friskotek): both `normal`, outfit `sol`, no slump, within 2.5 m of their homes at the bar. Index 7: on their loungers; 5 and 8: not |
 | `talk` [Phase 0] | `autoDialog = false`, walk to Ole at `gateQueue`, E, Space twice |
 | `fullstory` [Phase 0b] | swaps the literal §8 missions (`tools/fixtures/full-missions.js`) into `MISSIONS` and plays all 13 per §16.3 (`FROM`/`TO` as `story`); must end `#13 idle`, `RESULT: PASS` |
@@ -6950,8 +7051,9 @@ feature 28).
 
 **Collect kinds**: `pryl fena brodrost flaska juice knacke asna vaska giraff` (`brodrost`: feature 33).
 **Rabbit meshes**: `badboll faar blomma gris`. **Collectible sets**: `prylar fenor brodrostar`
-(`brodrostar`: feature 33). **Unlocks**: `grisbil samba bodega glid`
-(+ the saved markers `glidPlask`, feature 3, §10.3, and `lappFilm` `lappRuta`, feature 20, §10.17).
+(`brodrostar`: feature 33). **Unlocks**: `grisbil samba bodega glid sjuPoang` (`sjuPoang`: feature 35,
+§10.26) (+ the saved markers `glidPlask`, feature 3, §10.3, `lappFilm` `lappRuta`, feature 20,
+§10.17, and `solkramFilm`, feature 35, §10.26).
 
 **Stage kinds**: `getInCar goto pickup dropoff follow rabbits race destroy grab collect sit interact
 carry mantra timeline scene haggle smash`.
@@ -8660,3 +8762,22 @@ the fixer's group.
   [F*]. Deviations: Ole on the radio, not in the room; the giraffe by the pillow, not at the bed's foot
   (the nap); the toasters are not in the room. No mission, stage kind, timer, fixture or calibration
   pool changed (no solid). Scenarios `rum107`, `troferum` (§16.4).
+- Feature 35, "Smörj in Majsans rygg" (`features/implemented/smorj_in_majsan.md`, 2026-10-17): the
+  SOLKRÄM meter at Flamenco's pool (§10.26; new `src/game/solkram.js`, `SOLKRAM` and
+  `UNLOCKS.sjuPoang` in content/island.js; §1.6, §3, §10.3, §10.5, §11.4, §12.3, §14.1–14.3, §14.6,
+  §16.4, Appendix A). After fataga (index ≥ 11), by day, with `missions.state === 'idle'`, on foot and
+  both sisters at home and free: E by Majsan ("E Smörj in ryggen") plays the film's pool pair once
+  ever (marker `solkramFilm`; later one of four [N] asks), she turns her back and Stig stands behind
+  her with his hands on her shoulders (the new anim flag `rub`: `push`'s lean, the arms nearer level; 2
+  rubs). The objective card (now first of the free-roam cards in `updateHud`) shows the haggle's bar as
+  the cream: E held fills it in 2.4 s (real time), and E let go in the green field (0.26 wide, × 0.88
+  each try of the session, at least 0.12) scores 7 in its light middle stripe (± 0.022), 6 within ±
+  0.055, else 5: Majsan's line, Siv's card and "Giraffen, då? Sju./Sex, tycker jag./Fem." [F*](t)
+  from her place, the result line `SOLKRÄM n P`. Too long: the cream runs down her back in a shot from
+  behind, "Oj! Nu kokar det!", "Den här flaskan hade aldrig gått igenom G17." and Siv's –1 with "Det
+  blir minuspoäng." [F*](t); too short: "Var det allt?". The best points are `records.solkram`
+  (saved); the first 7 unlocks `sjuPoang` (Siv's chatter "Sju poäng till Giraffen. Mer än
+  pizza-racern!"). `audio.squirt` and `splat`; the cream is unlit (`MAT.mouth`), no new material.
+  Deviations: the result lines are bubbles; no chlorine goggles; by day only, so after the end it is
+  the morning before the pool fest's hours. No mission, stage kind, timer, fixture or calibration pool
+  changed (no solid). Scenario `solkram` (§16.4).

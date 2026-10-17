@@ -245,6 +245,9 @@ export const audio = {
   // The G17 toasters (§10.24): the lever going down with a clack, the bread popping up.
   toasterDown() { this.noise(0.05, 0.18, 1800, 'bandpass', 0, 2); this.tone(170, 0.07, 'square', 0.07, 110); },
   pop() { this.noise(0.04, 0.26, 2600, 'bandpass', 0, 3); this.tone(380, 0.1, 'sine', 0.16, 900); },
+  // The sun cream (§10.26): a squeeze of the bottle while E is held, and too much landing on her back.
+  squirt() { this.noise(0.07, 0.12, 900 + Math.random() * 300, 'bandpass', 0, 4); this.tone(240, 0.06, 'sine', 0.04, 170); },
+  splat() { this.noise(0.22, 0.3, 600, 'lowpass', 0, 1.2); this.sweep(0.3, 0.1, 1400, 400, 'bandpass', 2, 0.03); },
   horn(on) {
     if (!ctx) return;
     if (on && !hornNodes) {

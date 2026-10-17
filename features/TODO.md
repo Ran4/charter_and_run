@@ -1,7 +1,6 @@
 # Gör dessa grejer (flytta filen till features/implemented/ och uppdatera den när du är klar, och
 # flytta den till "färdiga features"-sektionen nedan)
 # markörer: ⟨par N⟩ = de två raderna med samma N körs samtidigt (var sin worktree/gren, sedan rebase på main och push), ⟨solo⟩ = körs ensam; ta grupperna uppifrån och ned
-- features/smorj_in_majsan.md – 35. Smörj in Majsans rygg – SOLKRÄM-mätaren [S] ⟨par 5⟩
 - features/skjortbytet.md – 36. Skjortbytet – Guardia letar efter ”el de la camisa” [M] ⟨solo⟩
 - features/prata_med_ganget.md – 39. Prata med gänget [M] ⟨par 6⟩
 - features/stunthopp.md – 40. Stunthopp med G17-stämpel [M] ⟨par 6⟩
@@ -71,3 +70,4 @@
 - features/implemented/bransletillagg_butiken.md – 34. Bränsletillägg tillkommer – SunTrip-butiken [M]
 - features/implemented/g17_brodrostar.md – 33. Kontrollerad av G17 – öns brödrostar [M]
 - features/implemented/rum_107_troferum.md – 38. Rum 107 fylls med resans minnen [S]
+- features/implemented/smorj_in_majsan.md – 35. Smörj in Majsans rygg – SOLKRÄM-mätaren [S]

@@ -10,7 +10,8 @@
 // market's fruit stalls his car goes through, with their seller's cry (§10.19), the watchdogs in
 // the bungalow gardens and the farmyard on vischan, with their owners' calls (§10.21), and the
 // bathers on the sun loungers, their burn and the fly-off, Berra waking for five minutes more
-// (§10.22).
+// (§10.22), and the SOLKRÄM meter for Majsan's sun cream, Siv's cards for it and the cream running
+// (§10.26).
 
 export const HOMES_ISLAND = {
   ole: ['flamenco', 2.0, 1.0, 0],     // yaw 0: under the pergola, facing the pool (flamenco faces π)
@@ -357,6 +358,83 @@ export const RUM107 = {
     line: 'Ja, det er fint! Samba!' },                                             // [F*] Ole furnishing for the boombox (research-plot.md:254)
 };
 
+// Smörj in Majsans rygg – the SOLKRÄM meter (free roam; feature 35, DESIGN §10.26; game/solkram.js).
+// From `fromIndex` (after fataga, whose intro first has the film's two pool lines), by day (the
+// clock's `dayHours`), with both sisters at home and free: E within `r` m of Majsan plays `ask` (the
+// film's pair, once ever: the `onceKey` marker in the saved unlocks; after it one of `again`), she
+// turns her back (her world yaw `stage.yaw`) and Stig stands `stage.back` m behind her with his
+// hands on her shoulders (anim `rub`). Holding E fills the meter, the whole bar in `secs` s (real
+// time); he lets go in the green field, `zone.w0` wide on the session's first try and × `zone.shrink`
+// each try after it, down to `zone.min`, centred in `zone.at`. In it: 7 within `bull` of the middle
+// (the light stripe), 6 within `six`, else 5; Majsan's line, Siv's card and line from her place
+// (`kinds`). Past it (or held to the end): the cream runs down her back (`drip` s) in the shot from
+// behind, and Siv's minus. Short of it: Majsan asks if that was all. No hold within `readySecs`:
+// `giveUp`. The best points are `records.solkram` (saved); the first 7 unlocks `sjuPoang` (Siv's
+// chatter). The shots (`camAsk`/`lookAsk` the ask, `cam`/`look` the meter, `camOver`/`lookOver` the
+// cream running, Stig `overStep` m further back): [forward, right, height] in Majsan's frame
+// (forward = her facing with her back to Stig); `bottle` [forward, right]. Invented (§1.6): the
+// meter, the scores for the cream, Siv's cards; the lines are the film's (the pool,
+// research-plot.md:286; the points on the plane, :197) and ours.
+export const SOLKRAM = {
+  fromIndex: 11, onceKey: 'solkramFilm', r: 1.8, priority: 0, homeR: 0.8, restSecs: 0.6,
+  secs: 2.4, zone: { w0: 0.26, shrink: 0.88, min: 0.12, at: [0.55, 0.74] }, bull: 0.022, six: 0.055,
+  readySecs: 12, squirtEvery: 0.28, cardSecs: 4.6, drip: 1.6, flailSecs: 1.4,
+  stage: { yaw: Math.PI / 2, talk: 1.3, back: 0.97, overStep: 0.45, bottle: [-0.45, 0.8],
+    camAsk: [-0.5, 3.6, 2.1], lookAsk: [-0.5, 0, 1.8], cam: [3.3, 1.7, 2.1], look: [-0.3, 0, 1.6],
+    camOver: [-2.2, 3.0, 2.1], lookOver: [-0.2, 0, 1.3] },
+  prompt: '<b>E</b> Smörj in ryggen',                                              // [N]
+  title: 'Solkräm',                                                               // [N]
+  text: 'Håll E · släpp i det gröna',                                             // [N]
+  textHold: 'Håll… håll…',                                                        // [N]
+  textZone: 'Släpp i det gröna!',                                                 // [N]
+  textOver: 'Släpp! Släpp!',                                                      // [N]
+  barLabel: 'Majsans rygg', barLabelOver: 'För mycket!',                          // [N] · [N]
+  barColor: '#fffbea', barColorOver: '#e0503a',                                   // the cream; past the field, red
+  zoneEdge: '#e9fff0',
+  // The film's pair, said once ever (it is first heard in fataga's intro).
+  ask: [
+    ['majsan', 'Du, vill du smörja in mig på ryggen?'],                           // [F](t) the pool (research-plot.md:286), speaker interpreted
+    ['majsan', 'Ta inte för mycket, då kan det börja koka.'],                     // [F](t)
+    ['stig', 'En kontrollerad mängd. Det är mitt yrke.'],                         // [N]
+  ],
+  again: [
+    [['majsan', 'Ryggen igen, Stig-Helmer? Lagom mycket, nu.']],                  // [N]
+    [['majsan', 'Du missade en bit mellan skulderbladen.']],                      // [N]
+    [['majsan', 'Solen tar här nere. Smörjer du mig igen?']],                     // [N]
+    [['majsan', 'Siv säger att du har varma händer.'], ['stig', 'Det är cirkulationen.']],   // [N] · [N]
+  ],
+  // The result: bubbles [delay s, who, text]; the scene ends `tail` s after the last (each up at
+  // least `lineSecs`). The over's shot from behind cuts back to the meter's at `front` s, for Siv.
+  lineSecs: 2.6, tail: 2.2,
+  kinds: {
+    7: { card: '7', lines: [
+      [0.3, 'majsan', 'Mm… precis lagom.'],                                       // [N]
+      [1.8, 'siv', 'Giraffen, då? Sju.'],                                         // [F*](t) the points scene on the plane (research-plot.md:197), the score ours
+      [3.4, 'majsan', 'Mer än pizza-racern!'],                                    // [F*](t) "Mindre än pizza-racern?" turned round
+    ] },
+    6: { card: '6', lines: [
+      [0.3, 'majsan', 'Mm. Det där var skönt.'],                                  // [N]
+      [1.8, 'siv', 'Sex, tycker jag.'],                                           // [F*](t) the pizza-racer's score on the plane
+    ] },
+    5: { card: '5', lines: [
+      [0.3, 'majsan', 'Tack, Stig-Helmer.'],                                      // [N]
+      [1.8, 'siv', 'Giraffen, då? Fem.'],                                         // [F*](t) the film's four, one more
+    ] },
+    over: { card: '–1', laugh: true, front: 3.2, lines: [
+      [0.2, 'majsan', 'Oj! Nu kokar det!'],                                       // [N]
+      [1.5, 'stig', 'Den här flaskan hade aldrig gått igenom G17.'],              // [N]
+      [3.4, 'siv', 'Det blir minuspoäng.'],                                       // [F*](t) the points scene on the plane
+    ] },
+    early: { lines: [
+      [0.3, 'majsan', 'Var det allt?'],                                           // [N]
+      [1.7, 'stig', 'Man ska inte slösa.'],                                       // [N]
+    ] },
+  },
+  giveUp: [[0.3, 'majsan', 'Jaha. Då får jag väl göra det själv.']],              // [N]
+  score: 'SOLKRÄM {n} P', scoreOver: 'FÖR MYCKET! –1 P', scoreEarly: 'FÖR LITE!',  // [N] · [N] · [N]
+  record: 'REKORD {n} P', newRecord: 'NYTT REKORD!',                              // [N] · [N] (as the diving judges')
+};
+
 export const UNLOCKS = {
   grisbil: { car: { type: 'grisbil', name: 'grisbil', at: 'flamencoDrive', dx: 4, dz: 0 },
     toast: 'Upplåst: <b>Grisbilen</b> – parkerad vid Hotell Flamenco. Den luktar.' },   // [N]
@@ -381,6 +459,9 @@ export const UNLOCKS = {
   // Jag kan flyga (§10.7): the glide comes with `bodega` (julafton); this unlock only carries its
   // toast, shown the first time he is in the air in free roam after the end card (game/glide.js).
   glid: { toast: 'Upplåst: <b>Jag kan flyga</b> – håll J i luften' },             // [N]
+  // Smörj in Majsans rygg (§10.26): the first 7 for the sun cream, and Siv's chatter is about it.
+  sjuPoang: { chatter: { siv: ['Sju poäng till Giraffen. Mer än pizza-racern!' /* [N] */] },
+    toast: 'Sju poäng! Nu pratar Siv om det vid poolen.' },                        // [N]
 };
 
 // Jag kan flyga – the glide (free roam after julafton, DESIGN §10.7; game/glide.js). J pressed in

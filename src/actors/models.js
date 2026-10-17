@@ -1030,7 +1030,7 @@ function heldPose(m, st, t, place = false) {
   const h = m.def.held;
   if (!h || !PROP_GEO[h]) return;
   const [R, L] = m.arms;
-  const busy = st.wings || st.cupUp || st.cupHeld || st.push || st.hold || st.flail || st.oath || st.dance || st.laugh || st.mirror || st.film || st.giraffe || st.butterKnife || st.ticket || st.carryOver || st.shoeOff || st.calc || st.groda || st.placate || st.cheer || st.wave || st.kick > 0;
+  const busy = st.wings || st.cupUp || st.cupHeld || st.push || st.rub || st.hold || st.flail || st.oath || st.dance || st.laugh || st.mirror || st.film || st.giraffe || st.butterKnife || st.ticket || st.carryOver || st.shoeOff || st.calc || st.groda || st.placate || st.cheer || st.wave || st.kick > 0;
   const pose = !place && !busy;
   const moving = st.speed > 0.3;
   switch (h) {
@@ -1125,6 +1125,13 @@ function poseFlags(m, st, t) {
   }
   if (st.push) {
     R.rotation.set(-1.3, 0, 0.14); L.rotation.set(-1.3, 0, -0.14);
+    m.hips.rotation.x += 0.18;
+  }
+  if (st.rub) {
+    // The sun cream (game/solkram.js): push's lean with the arms nearer level, so the hands rest on
+    // the shoulders of someone shorter in front; 2 rubs them side to side together.
+    const w = st.rub === 2 ? Math.sin(t * 8) * 0.1 : 0;
+    R.rotation.set(-1.47, 0, 0.1 + w); L.rotation.set(-1.47, 0, -0.1 + w);
     m.hips.rotation.x += 0.18;
   }
   if (st.hold) {

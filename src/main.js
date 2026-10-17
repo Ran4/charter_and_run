@@ -42,6 +42,7 @@ import { Bathers } from './game/bathers.js';
 import { SuntripShop } from './game/suntripShop.js';
 import { Toasters } from './game/toasters.js';
 import { Room107 } from './game/room107.js';
+import { Solkram } from './game/solkram.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
 import { LEVELS, ISLAND_PALETTES } from './level.js';
@@ -196,6 +197,7 @@ class Game {
     this.shop = new SuntripShop(this);    // free roam: SunTrip-butiken on the office porch, its add-ons and his look (§10.23)
     this.toasters = new Toasters(this);   // free roam: the G17 toasters' timing game (§10.24)
     this.room107 = new Room107(this);     // free roam: room 107's keepsake shelf, the giraffe and the boombox (§10.25)
+    this.solkram = new Solkram(this);     // free roam: the SOLKRÄM meter at Majsan's back by the pool (§10.26)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -1505,6 +1507,7 @@ class Game {
     this.shop.update(dt);
     this.toasters.update(dt);
     this.room107.update(dt);
+    this.solkram.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);
@@ -2003,10 +2006,11 @@ class Game {
   }
 
   updateHud() {
-    // No mission running: the paint shop's wet-paint card (§7.2), the Berra job's (§10.6),
-    // Eslövloppet's (§10.12), the grisbil's pigs' (§10.15) or a G17 toaster's scale (§10.24), if any.
-    hud.setObjective(this.missions.objective() || this.shame.paint.objective() || this.berraJob.objective() || this.eslov.objective() || this.pigs.objective()
-      || this.toasters.objective());
+    // No mission running: the SOLKRÄM meter (§10.26; first, as its scene holds him), the paint
+    // shop's wet-paint card (§7.2), the Berra job's (§10.6), Eslövloppet's (§10.12), the grisbil's
+    // pigs' (§10.15) or a G17 toaster's scale (§10.24), if any.
+    hud.setObjective(this.missions.objective() || this.solkram.objective() || this.shame.paint.objective() || this.berraJob.objective() || this.eslov.objective()
+      || this.pigs.objective() || this.toasters.objective());
     hud.setSpeedo(this.playerCar);
     if (this.missions.state !== 'failed') {
       let prompt = '';
