@@ -1089,7 +1089,7 @@ function heldPose(m, st, t, place = false) {
   const h = m.def.held;
   if (!h || !PROP_GEO[h]) return;
   const [R, L] = m.arms;
-  const busy = st.wings || st.cupUp || st.cupHeld || st.push || st.rub || st.hold || st.flail || st.oath || st.dance || st.laugh || st.mirror || st.film || st.camShow || st.giraffe || st.butterKnife || st.ticket || st.carryOver || st.shoeOff || st.calc || st.groda || st.placate || st.tap || st.scratch || st.point || st.cheer || st.wave || st.fish || st.thumb || st.ride || st.kikare || st.kick > 0;
+  const busy = st.wings || st.cupUp || st.cupHeld || st.push || st.rub || st.hold || st.flail || st.oath || st.dance || st.laugh || st.mirror || st.film || st.camShow || st.giraffe || st.butterKnife || st.ticket || st.carryOver || st.shoeOff || st.calc || st.groda || st.placate || st.tap || st.scratch || st.point || st.cheer || st.wave || st.fish || st.thumb || st.ride || st.kikare || st.sort || st.kick > 0;
   const pose = !place && !busy;
   const moving = st.speed > 0.3;
   switch (h) {
@@ -1219,6 +1219,22 @@ function poseFlags(m, st, t) {
     m.neck.rotation.z = 0.14; m.neck.rotation.x = 0.08;
   }
   if (st.point) R.rotation.set(-1.72, 0, -0.14);   // the right arm out at something ahead (Ole at the fin, game/boatTrip.js)
+  if (st.sort) {
+    // Sorting at the packing shed's belt (game/packhus.js): both hands down to the belt before him
+    // (the first 40 % of `sortK`, the move's 0..1), then the arm on the bin's side throws the tomato
+    // out ('R' his right, 'L' his left) or both lower it into the bucket at his feet ('C').
+    const k = Math.max(0, Math.min(1, st.sortK || 0)), a = k < 0.4 ? Math.sin((k / 0.4) * Math.PI / 2) : 1 - (k - 0.4) / 0.6;
+    const b = k < 0.4 ? 0 : Math.sin(((k - 0.4) / 0.6) * Math.PI);
+    if (st.sort === 'C') {
+      R.rotation.set(-1.2 * a - 0.25 * b, 0, 0.12 * a); L.rotation.set(-1.2 * a - 0.25 * b, 0, -0.12 * a);
+    } else {
+      const [T, O, sg] = st.sort === 'R' ? [R, L, -1] : [L, R, 1];
+      T.rotation.set(-1.2 * a + 0.5 * b, 0, sg * (1.25 * b - 0.12 * a));
+      O.rotation.set(-1.2 * a, 0, sg * 0.12 * a);
+    }
+    m.neck.rotation.x = 0.22 * a;
+    if (!st.seated) m.body.rotation.x = 0.1 * a;
+  }
   if (st.cupHeld) {
     // A paper cup in the right hand: raised from a seat (Stig's "Ja." to the call button, §8.3),
     // held out to the row standing (the trolley stewardess serving); with `cupUp` raised standing

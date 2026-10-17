@@ -44,7 +44,7 @@ Samma tangenter i båda nivåerna; nivån bestämmer vad de gör.
 | Shift | spring | | skynda – men det ökar rädslan |
 | Space | hoppa, i luften igen för dubbelhopp | handbroms (sladd!) | **håll i dig**: ta tag i närmaste stolsrygg vid turbulens |
 | J / klick | sparka, i luften: stampa (efter julafton: **håll in i luften** för att glidflyga) | | **håll in**: "Jag kan flyga, jag är inte rädd" – sänker FLYGRÄDSLA |
-| E | prata (med uppdragsgivaren, och mellan uppdragen med gänget), kliv in, sno en bil, kvarta en stund i Stigs säng i rum 107, titta i herr Storchs kamera, heja på rullskidåkaren, dansa med i poolen, smörja in Majsans rygg (**håll in** och släpp i det gröna), byta om i garderoben i rum 107, söka skydd i kyrkan, ringa efter en bil från hytt 2, meta från piren (och **dra upp** när flötet dyker), lifta på landsvägen (på flaket: hoppa av), ta livräddarens kikare (och sänka den igen) | kliv ur (i fart: rulla ur) | prata, **sätt dig / res dig**, lås in dig på toaletten, anropsknappen, serveringsvagnen |
+| E | prata (med uppdragsgivaren, och mellan uppdragen med gänget), kliv in, sno en bil, kvarta en stund i Stigs säng i rum 107, titta i herr Storchs kamera, heja på rullskidåkaren, dansa med i poolen, smörja in Majsans rygg (**håll in** och släpp i det gröna), byta om i garderoben i rum 107, söka skydd i kyrkan, ringa efter en bil från hytt 2, meta från piren (och **dra upp** när flötet dyker), lifta på landsvägen (på flaket: hoppa av), ta livräddarens kikare (och sänka den igen), ta ett skift vid packhusets sorteringsband | kliv ur (i fart: rulla ur) | prata, **sätt dig / res dig**, lås in dig på toaletten, anropsknappen, serveringsvagnen |
 | H | | tuta (utanför uppdragen hör folk den; i den lånade Guardia-jeepen: sirenen) | |
 | B | | titta bakåt | |
 | M / Tab | stor karta | stor karta | plan över gaten/kabinen |
@@ -60,7 +60,8 @@ också: A hopp/handbroms, B spring, X sparka/mantra, Y prata, Start paus, triggr
 bilmeny väljer W/S (pilarna, styrkorsets upp och ner), E ringer och Q (Backspace, B) lägger på. När
 Stig metar lägger Q ner spöt medan han väntar. Står han på grisflaket när han liftar lutar A/D honom
 emot i kurvorna. Med livräddarens kikare vrider musen eller W/A/S/D (pilarna) kikaren, och E eller Q
-sänker den.
+sänker den. Vid packhusets sorteringsband slänger A (←) tomaten i ROJOS, S (↓) i hinken och D (→) i
+VERDES (styrkorset på handkontrollen), och Q avslutar skiftet.
 
 Vägen visas av den gula pilen över Stig-Helmers huvud, ljuskäglan och ringen vid målet och
 stjärnan på kartan. På Arlanda och i planet går pilen runt bänkar, väggar och stolsrader i
@@ -313,6 +314,16 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   och leta. När alla åtta är hittade sänker Stig kikaren: "Inga hajar. Bara svenskar." **E** eller **Q**
   sänker kikaren när du vill. Listan sparas. Kikaren finns bara mellan uppdragen. Tornets tak sitter nu
   högre, så att Stig får plats under det.
+- **Stig på löpande band**: på gården framför packhuset ute bland tomatfälten står en förman i keps och
+  vinkar in Stig: "¡Señor! Vi behöver folk till skiftet!" Tryck **E** hos honom: ett sorteringsband, två
+  arbetare och tre lådor dyker upp, och Stig står bakom bandet. Röda tomater ska i ROJOS (**A**), ruttna i
+  hinken (**S**) och gröna i VERDES (**D**), och tangenten tar tomaten i den gula zonen framför Stig.
+  Bandet går fortare och fortare. Tomater som hamnar i fel låda studsar ut på marken, och de som Stig
+  missar trillar av i änden. Ligger åtta på marken rasar högen: TOMATRAS!, och Stig står där med famnen
+  full: "Ursäkta… ett ögonblick bara…". Varje full låda får stämpeln KONTROLLERAD AV G17, ett helt skift
+  ger 100 pesetas, och flest fyllda lådor på ett skift är rekordet (det sparas). **Q** avslutar skiftet.
+  Går Stig sedan förbi Siv vid poolen säger hon: "Spänn av, Stig-Helmer. Du är ledig." Förmannen är där
+  på dagen, och skiftet finns bara mellan uppdragen.
 - **Små grodorna i poolen** (efter slutet): julfesten är inte riktigt över. Varje gång du kommer in
   på Flamencos pooldäck (mellan nio på morgonen och elva på kvällen) vadar SunTrip-gänget ut i den
   grunda änden och ställer sig i ring runt Lasse i tomteluva. Affe spelar Små grodorna på dragspelet,
@@ -573,6 +584,10 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
 - livräddarens kikare, spaningen och listan med åtta saker att hitta (i filmen varnar Ole för stranden
   med sin statistik om underströmmar, solsting och hajar, och linsskyddet upptäcks på julfesten:
   "Du måste ta av objektivlocket.")
+- skiftet vid packhusets sorteringsband, förmannen, arbetarna, tomatlådorna med stämpeln och raset (i
+  filmen kontrollerar Stig-Helmer brödrostar hemma: "Om du köper en brödrost, och det står 'Kontrollerad
+  av G17', så är det jag", tomaterna körs till packhusen med lastbil, och "Spänn av, Majsan. Du är ledig."
+  sägs till Majsan)
 - poolfesten efter slutet: ringen runt Lasse, portierns promenad, att Stig hoppar med och
   takträknaren (i filmen dansar de andra Små grodorna i poolen på julfesten medan Stig-Helmer och Ole
   öppnar knäckebrödet, och Stig-Helmer dansar aldrig)
@@ -780,6 +795,7 @@ src/game/fishing.js             Meta från piren in free roam: the rod at the pi
 src/game/marketRoofs.js         Pesetas på marknadstaken: the coin trail over the market's awnings (minY), the roof's coins after asnan, the seller's "¡No, no, no!" and swear
 src/game/hitch.js               Vi liftar in free roam: the hitch-hiking spots, the grisbil that stops, Stig standing in its bed, the lean and ÅKSJUKA, the fall, the drop behind Flamenco
 src/game/binoculars.js          Livräddarens kikare in free roam: the lifeguard tower's binoculars, the 12° view (the camera's scope), the eight targets, the list, "Inga hajar. Bara svenskar."
+src/game/packhus.js             Stig på löpande band in free roam: the packing shed's foreman, the shift at the sorting belt, A/S/D, the G17 stamp, TOMATRAS, the record, Siv's line
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
@@ -790,7 +806,7 @@ tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, 
                                 stunthopp, prata, takhopp, mikrofon, faglar, gags, strandkyssen,
                                 guardiajeep, fyren, klader, ringklocka, kyrkfrid, gatlopp, skidor,
                                 golfbil, battur, balkong, hytt, kaffe, meta, marknadstak, lifta,
-                                kikare, calibrate, calibflight)
+                                kikare, packhus, calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
 tools/pool.mjs                  re-derives every random stage's timer from the ledger
@@ -837,6 +853,7 @@ node tools/shot.mjs meta                 # fishing at the pier's end: the cast, 
 node tools/shot.mjs marknadstak marknadstakFore   # the market's awnings: the shade, the coin trail run as a player, the seller's no and swear
 node tools/shot.mjs lifta liftaFall      # hitch-hiking: the thumb, the stop, the hop up, the ride leaning, the drop; the fall, E off, a warp, a knock, a mission start
 node tools/shot.mjs kikare kikareshots   # the lifeguard's binoculars: the prompt up on the tower, the view, a find, all eight and the end shot, the locks; every target through them
+node tools/shot.mjs packhus packhusbalans   # the packing shed's belt: the foreman, the keys, a box stamped, a whole shift, TOMATRAS, Q, Siv, the locks; the balance with the autopilot
 node tools/shot.mjs grodorna grodtakt    # the pool fest after the end: the ring, the porter, Stig in the ring, eight on the beat
 node tools/shot.mjs artig                # Stig says sorry: kicks, run over, a pump, bins, carjackings and the driver's "Nej."
 node tools/shot.mjs grisar               # the grisbil's pigs: the falls, the catch on foot and by creeping, Lasse, the pen

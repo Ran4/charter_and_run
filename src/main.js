@@ -64,6 +64,7 @@ import { PhoneBooth } from './game/phoneBooth.js';
 import { MarketRoofs } from './game/marketRoofs.js';
 import { Hitch } from './game/hitch.js';
 import { Binoculars } from './game/binoculars.js';
+import { Packhus } from './game/packhus.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
 import { LEVELS, ISLAND_PALETTES } from './level.js';
@@ -243,6 +244,7 @@ class Game {
     this.awnings = new MarketRoofs(this); // the coin trail over the market's awnings; free roam: the souvenir seller's no and swear at Stig on his roof (§10.46)
     this.hitch = new Hitch(this);         // free roam: hitch-hiking on the country roads, standing in a grisbil's bed into town (§10.47)
     this.kikare = new Binoculars(this);   // free roam: the lifeguard's binoculars on the beach's tower, eight things to spot (§10.48)
+    this.packhus = new Packhus(this);     // free roam: the foreman at the packing shed, a shift at the tomato sorting belt (§10.49)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -679,6 +681,7 @@ class Game {
     if (this.player.seatId) this.standPlayer();
     this.hitch.reset('warp');   // off a hitch truck's bed, the truck gone (§10.47)
     if (this.kikare.busy) this.kikare.end('down');   // the binoculars down (§10.48)
+    this.packhus.end('gone');                        // off the packing shed's belt (§10.49)
     if (this.playerCar) this.playerCar.place(x, z, yaw);
     else this.player.teleport(x, z, yaw);
     this.cam.snapNext = true;
@@ -827,6 +830,7 @@ class Game {
     out.push(...this.bathers.loose);  // bathers off their loungers (§10.22)
     out.push(...this.mic.extras);     // the tourists come to hear Stig at the SunTrip stage (§10.30)
     out.push(...this.bell.extras);    // the departing guests queueing at Flamenco's reception (§10.37)
+    out.push(...this.packhus.extras); // the foreman on the packing shed's yard (§10.49)
     return out;
   }
 
@@ -1606,6 +1610,7 @@ class Game {
     this.awnings.update(dt);
     this.hitch.update(dt);
     this.kikare.update(dt);
+    this.packhus.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);
@@ -1815,6 +1820,7 @@ class Game {
     this.bathers.step(h); // bathers off their loungers (§10.22)
     this.mic.step(h);     // the tourists at the SunTrip stage (§10.30)
     this.bell.step(h);    // the queue at Flamenco's reception (§10.37)
+    this.packhus.step(h); // the foreman on the packing shed's yard (§10.49)
     this.carsVsPeople();
   }
 
@@ -1825,8 +1831,9 @@ class Game {
     // A fruit stall is the car's only (`carOnly`, §10.19).
     for (const prop of propsNear(x, z, r)) { if (prop.def.carOnly) continue; const b = breakProp(prop, dx * 8, dz * 8, this); if (b && !broke?.def.explode) broke = b; }
     // Pedestrians, the grisfest's band and tourists (§10.18), bathers off their loungers (§10.22), the
-    // tourists at the SunTrip stage (§10.30) and the queue at Flamenco's reception (§10.37).
-    const people = (this.levelDef.sim.peds ? this.peds.map((ped) => ped.char) : []).concat(this.party.extras, this.bathers.loose, this.mic.extras, this.bell.extras);
+    // tourists at the SunTrip stage (§10.30), the queue at Flamenco's reception (§10.37) and the foreman
+    // on the packing shed's yard (§10.49).
+    const people = (this.levelDef.sim.peds ? this.peds.map((ped) => ped.char) : []).concat(this.party.extras, this.bathers.loose, this.mic.extras, this.bell.extras, this.packhus.extras);
     for (const c of people) {
       if (c.state !== 'normal' || Math.abs(c.y - y) > 1.6 || dist(c.x, c.z, x, z) > r + 0.4) continue;
       c.fling(dx * 7 + (c.x - x) * 2, 5, dz * 7 + (c.z - z) * 2);
@@ -2138,9 +2145,10 @@ class Game {
     // No mission running: the SOLKRÄM meter (§10.26; first, as its scene holds him), the paint
     // shop's wet-paint card (§7.2), the church's while Guardia Civil waits outside (§7.2), the Berra
     // job's (§10.6), Eslövloppet's (§10.12), Eslövrundan's (§10.39), the grisbil's pigs' (§10.15), a G17 toaster's scale
-    // (§10.24), José's street race's (§10.38) or a hitch's (§10.47), if any.
+    // (§10.24), José's street race's (§10.38), a hitch's (§10.47) or a shift at the packing shed's belt
+    // (§10.49), if any.
     hud.setObjective(this.missions.objective() || this.solkram.objective() || this.shame.paint.objective() || this.shame.church.objective() || this.berraJob.objective() || this.eslov.objective() || this.skis.objective()
-      || this.pigs.objective() || this.toasters.objective() || this.gatlopp.objective() || this.hitch.objective());
+      || this.pigs.objective() || this.toasters.objective() || this.gatlopp.objective() || this.hitch.objective() || this.packhus.objective());
     hud.setSpeedo(this.playerCar);
     if (this.missions.state !== 'failed') {
       let prompt = '';
@@ -2160,7 +2168,8 @@ class Game {
       }
       if (this.belt.seated && !this.inDialog) prompt = this.belt.cfg.prompt;
       // Fishing at the pier's end (§10.45): the wait's hint and the dive's "E Dra upp!".
-      const fh = this.fiske.hint() ?? this.hitch.hint();   // or the keys in a hitch truck's bed (§10.47)
+      // Or the keys in a hitch truck's bed (§10.47), or at the packing shed's belt (§10.49).
+      const fh = this.fiske.hint() ?? this.hitch.hint() ?? this.packhus.hint();
       if (fh != null) prompt = fh;
       hud.setPrompt(prompt);
     }

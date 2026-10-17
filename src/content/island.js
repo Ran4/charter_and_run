@@ -25,7 +25,8 @@
 // bar open after friskoteket, its bartender, the Swedish coffee's sprint and the cup for Fru Storch (§10.44),
 // and the fishing at the marina's pier end, its catches and the FÅNGST card (§10.45), and Stig
 // hitch-hiking on the country roads, standing in the farmer's grisbil bed into town (§10.47), and the
-// lifeguard's binoculars on the beach's tower, the eight things to spot and their list (§10.48).
+// lifeguard's binoculars on the beach's tower, the eight things to spot and their list (§10.48), and the
+// shift at the packing shed's tomato sorting belt, its foreman and workers and Siv's line after it (§10.49).
 
 export const HOMES_ISLAND = {
   ole: ['flamenco', 2.0, 1.0, 0],     // yaw 0: under the pergola, facing the pool (flamenco faces π)
@@ -2439,4 +2440,82 @@ export const KIKARE = {
     { id: 'handdukar', name: 'Reserverat!', label: 'RESERVADO-raden', pts: [[22, 1.45, 246.7], [19.75, 0.6, 250.3], [23.85, 0.6, 250.3]], size: 1.4,   // [N]
       line: 'RESERVADO-raden. En handduk på varje solstol, sen i morse.' },                               // [N] the towel gag (research-setting §3)
   ],
+};
+
+// Stig på löpande band – sortera tomater i packhuset (free roam; feature 109, DESIGN §10.49;
+// game/packhus.js). On the packing shed's yard in block `b` (3,0) a foreman (`boss`: block-local `at`
+// [x, z] and `yaw`; a local in a cap, drawn from `seed`; there by day, `day.isDay()`) waves Stig in within
+// `waveR` m and calls `call` (`callAgain` after a shift) when he comes within `callR` m, at most every
+// `callGap` s. On the island with no mission running (`missions.state === 'idle'`), Stig on foot within
+// `r` m of the foreman's spot with no dialogue, carry, pursuit, bust, PANIK or other free-roam hold:
+// `prompt`. E: a `fadeSecs` s black fade, and behind it the belt (`belt`: from `x0` to `x1` at `z`, its top
+// `top` over the yard's dirt, `w` wide; the sorting zone `zone` [x0, x1] yellow on its rails), the bins
+// (`bins`: ROJOS, the bucket, VERDES; [x, z]), two workers (`workers`) and the foreman at his `shiftAt`
+// appear, Stig stands at `stig` behind the belt facing the camera (`inDialog`) and the camera cuts to
+// `shot` (`eye`, `look`: [x, z, y], block-local, y absolute). After `introSecs` (the foreman's `intro`,
+// Stig's `stigIntro`) the belt runs: `count` tomatoes come on at its head (their kinds drawn by
+// `weights`), each `gap` m behind the last (from `gap[0]` to `gap[1]` over the shift), and the belt's
+// speed rises from `speed[0]` to `speed[1]` m/s with the tomatoes come on (the foreman's `faster` lines
+// at `fasterAt` of them). A (←, the pad's ←) throws the frontmost tomato in the zone into ROJOS, D (→)
+// into VERDES, S (↓) into the bucket (at most one every `cool` s; Stig's move `sortSecs` s, the flight
+// `flySecs`). One thrown into the wrong bin bounces out onto the ground before it (the foreman's `wrong`
+// for its kind, at most every `wrongGap` s), one that rides past the zone drops off the belt's end onto
+// the pile at `pile`: each is one dropped (the bar TAPPADE). At `pileMax` the pile gives way: the belt
+// stops, every tomato on it and on the pile rolls off, and Stig with his arms full says `rasStig`, the
+// foreman `rasBoss`, then `rasAfter`. A crate holds `perBox`: full, Stig stamps it (`stampSecs`; the label
+// `label`, the shift's first with his `firstBox`) and it goes on its stack (`stacks`), a new one on the
+// bin. Every tomato handled with fewer than `pileMax` dropped: the stamp `stamp`, `pay` pesetas, the
+// foreman's `done` and Stig's `doneStig`. Q (Backspace, the pad's B) ends a shift (`quit`). The card
+// (`card`, `sub`, `lador`) shows the crates filled; the most in one shift is `records.packhus` (saved).
+// `doneSecs` (`rasSecs`; 1.6 s after Q) after the end a black fade, the belt, bins and workers gone, Stig
+// at `after`. After a shift with `sivAfter` or more tomatoes sorted, Siv says `siv` once when Stig on foot
+// comes within `sivR` m of her. Invented (§1.6): the shift, the belt, the foreman and the workers; the
+// label is the film's (research-characters.md:94-95), and Siv's line Majsan's ("Spänn av, Majsan. Du är
+// ledig.", research-characters.md:212-213) turned to Stig.
+export const LOPANDE_BAND = {
+  b: [3, 0], seed: 109,
+  boss: { at: [0, 12.6], yaw: 0, shiftAt: [2.75, 8.0] },
+  stig: { at: [0, 7.95], yaw: 0 }, after: { at: [-1.5, 13.6], yaw: Math.PI },
+  workers: [{ at: [-5.0, 8.0], yaw: 0.35, seed: 3 }, { at: [-2.7, 8.0], yaw: 0, seed: 11 }],
+  belt: { x0: -5.8, x1: 3.2, z: 9.15, top: 0.92, w: 0.72 },
+  zone: [-0.6, 0.6],
+  bins: { rojo: [-1.55, 10.25], podrido: [0, 10.2], verde: [1.55, 10.25] },
+  stacks: { rojo: [-2.9, 10.4], verde: [2.9, 10.4] },
+  pile: [3.95, 8.95],
+  shot: { eye: [0, 15.2, 2.85], look: [0, 9.4, 0.75] },
+  r: 2.2, waveR: 14, callR: 10, callGap: 30, sivR: 4.5, sivAfter: 5,
+  count: 40, perBox: 5, pileMax: 8, pay: 100,
+  speed: [0.75, 1.9], gap: [1.9, 1.15], fasterAt: [0.35, 0.7],
+  weights: { rojo: 0.45, verde: 0.35, podrido: 0.2 },
+  cool: 0.14, sortSecs: 0.3, flySecs: 0.32, stampSecs: 0.3, wrongGap: 1.6,
+  fadeSecs: 0.5, introSecs: 2.6, rasSecs: 3.6, doneSecs: 3.6,
+  prompt: '<b>E</b> Ta ett skift',                                                 // [N]
+  keys: '<b>A</b> Röda · <b>S</b> Ruttna · <b>D</b> Gröna · <b>Q</b> Sluta',       // [N]
+  title: 'Sortera tomater',                                                        // [N]
+  text: 'Tomat {n} / {total} · Lådor {boxes}',                                     // [N]
+  barLabel: 'TAPPADE {n} / {max}',                                                 // [N]
+  signs: { rojo: 'ROJOS', verde: 'VERDES' },                                       // [N] the bins' signs (Spanish, §1.3)
+  label: 'KONTROLLERAD\nAV G17',                                                   // [F*] the film's label (research-characters.md:94-95), on a box
+  call: '¡Señor! Vi behöver folk till skiftet!',                                   // [N] the foreman
+  callAgain: '¡Señor! Ett skift till?',                                            // [N] the foreman
+  intro: 'Röda i ROJOS, gröna i VERDES, ruttna i hinken. ¡Vamos!',                 // [N] the foreman
+  stigIntro: 'Jag är van vid kvalitetskontroll.',                                  // [N] Stig
+  faster: ['¡Más rápido, señor!', 'Fortare, señor! ¡Rápido!'],                     // [N] the foreman
+  wrong: {
+    rojo: 'Den är röd, señor!',                                                    // [N] the foreman
+    verde: 'Den är grön, señor!',                                                  // [N] the foreman
+    podrido: 'Den är rutten, señor!',                                              // [N] the foreman
+  },
+  firstBox: 'Kontrollerad av G17.',                                                // [F*] the film's label (research-characters.md:94-95), said by Stig as he stamps
+  rasStig: 'Ursäkta… ett ögonblick bara…',                                         // [N] Stig
+  rasBoss: '¡Ay, ay, ay! Tomaterna, señor!',                                       // [N] the foreman
+  rasAfter: 'Ingen fara, señor. Mañana igen?',                                     // [N] the foreman
+  done: '¡Muy bien, señor! Hundra pesetas.',                                       // [N] the foreman
+  doneStig: "Om det står 'Kontrollerad av G17' på lådan, så är det jag.",          // [F*] Stig's line at the pool (research-characters.md:94-95; fataga's intro), turned to the boxes
+  quit: 'Redan trött, señor?',                                                     // [N] the foreman
+  stamp: 'KONTROLLERAD AV G17',                                                    // [F*] the film's label, as the stunt jumps' stamp (§10.27)
+  lador: ['{n} låda', '{n} lådor'],                                                // [N] one, more (the card's {lador})
+  card: { done: 'Skiftet klart · {lador} · {pay} pta', ras: 'Tomatras · {lador}', quit: 'Skiftet slut · {lador}' },   // [N]
+  sub: { record: 'Nytt rekord!', best: 'Rekord: {lador}' },                        // [N]
+  siv: 'Spänn av, Stig-Helmer. Du är ledig.',                                      // [F*](t) "Spänn av, Majsan. Du är ledig." (research-characters.md:212-213), turned to Stig
 };

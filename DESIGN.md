@@ -338,7 +338,12 @@ on the beach's SOCORRISTA tower, Stig scanning the sea for Ole's dangers and the
 ferry, the fishing boat, the lighthouse and the RESERVADO row), with Stig's "Underströmmar, solsting och
 hajar…" and "Du måste ta av objektivlocket!" and his "Inga hajar. Bara svenskar." at the end (free
 roam, §10.48; in the film Ole warns Stig off the beach with his statistics, and the lens cap is found at
-the julfest).
+the julfest); a shift at a tomato sorting belt on the packing shed's yard, its foreman ("¡Señor! Vi
+behöver folk till skiftet!") and two workers, the belt that runs faster and faster, the boxes stamped
+KONTROLLERAD AV G17, the pile of missed tomatoes that gives way with Stig's "Ursäkta… ett ögonblick
+bara…", and Siv's "Spänn av, Stig-Helmer. Du är ledig." afterwards (free roam, §10.49; in the film Stig
+checks toasters at home, the tomatoes go by truck to the packing sheds, and the line to relax is
+Majsan's).
 The film's flight has **no turbulence** and **no in-flight toilet scene**: both toilet scenes are
 at Arlanda (we keep them there). The plane's toilets are only an invented hideout.
 
@@ -539,6 +544,10 @@ Physical keys are unchanged from Bigmouth. The level config turns verbs on and o
   beach ("E Ta kikaren") puts them to his eyes; the mouse (the pad's right stick) or W/A/S/D (the arrows,
   the left stick) turn them round the horizon, and E or Q (Backspace, the pad's B) lowers them. Stig
   stands still while he looks. Esc pauses, as everywhere.
+- **A shift at the packing shed's belt** (free roam, §10.49): E at the foreman on the packing shed's
+  yard ("E Ta ett skift") starts it. A (←, the pad's d-pad ←) throws the tomato in the yellow zone into
+  ROJOS, S (↓) into the bucket, D (→) into VERDES; Q (Backspace, the pad's B) ends the shift. Stig
+  stands still at the belt (A, S and D are the sorting keys there, not steps).
 - **The nap** (free roam, §10.10): E at Stig's bed in room 107 ("E Kvarta en stund") sleeps on to
   the next part of the day; E at a mission giver in the evening or at night starts it the next
   morning.
@@ -1351,7 +1360,7 @@ standing there faces. `y` (optional) = absolute height for collectible spots on 
 | (3,1) | `kyrka` → `kyrka` (C2, centre.js) | **Templo Ecuménico**: white rationalist church (flat planes, bell slab), palm plaza, crèche, small fountain; sign `ES UNA IGLESIA` / `DET ÄR EN KYRKA.` [F*] (the sisters' language record, relocated; uppercase since Phase 3 r2, §1.3), read aloud by the officer in kyrkfrid (feature 60, §7.2); the door's open right leaf (the dark church behind it) is game/church.js's mesh, shown only while Stig goes in or peeks out | `kyrka` (0, 18, π) · `kyrkaPuerta` (0.8, 2.2, 0) (before the door's right leaf under the portico, facing out: kyrkfrid's E spot and the anchor of its scene's spots; feature 60, §7.2) · cut anchor `kyrkaCam` (−2, 9, π) (the door and the sisters' sign from the plaza: the wait's shot, 12 m behind it, 3 m up) | — |
 | (4,3) | `bensin` → `bensin` (C2, centre.js) | gas station: canopy, `GASOLINA` (no brand), prices in pesetas, kiosk; `gaspump` props explode; the workshop's two open bays (`TALLER · NEUMÁTICOS · LAVADO`) are the free-roam paint shop (§7.2): `PINTURA` on the pillar between them, paint tins and a brush by the left bay, a yellow 4 × 7 m box in front of it, the cone moved to the pillar and the parked yellow hatch to the east gable (29.5, −20), out of the painted car's way to the road | `bensin` (0, 16, π) · `pintura` (11.25, −8, 0) (the paint zone in front of the left bay, facing out of it) · cut anchor `pinturaCam` (11.25, −9.6, π) (the bay seen from the forecourt) | — |
 | (5,3) | `guardia` → `cuartel` (C2, centre.js) | ochre barracks, red-yellow-red flag mast beside the path at x 4.6 (Phase 3: off the axis to the `CASA CUARTEL` plaque), `CASA CUARTEL`; two parked green Land Rovers | `guardia` (0, 20, π) | `guardia1`, `guardia2` (type `guardia`, locked; feature 51: `guardia1` open between missions after the bodega, §10.34) |
-| (1,0), (3,0), (0,1) | `tomat` → `tomatfalt` (D1, nature.js) | rows of low tomato bushes (one merged mesh, walls a car drives through: no solids, or tops ≤ 0.6), packing shed `TOMATES · EXPORTACIÓN` / `EMPAQUETADO`, `tomatlada` props, dirt tracks; on (0,1) the finca's yard is `FARM_YARD` (feature 31, §10.21: the yard dog's rectangle x [−30.1, −2.6], z [−30.1, −14.8], its door and spot, the finca and the tank with its ramp as its walls; data only); the Eslöv lane's asphalt runs on over the sidewalk to the roads at both ends (a kerb cut, paint only; feature 71, §10.39) | on (0,1): `vischan` (6, 24, π) · cut anchor `vischanCam` (5.7, 22.7, −0.14) (on the gravel track north of the vischan scene, looking back south at the road and the `CAMINO SIN ASFALTAR` sign; Phase 3 r2) · `eslovVag` (27.5, 24, 0) (the rollerskier on the Eslöv lane, 6 m up from the z −120 road and facing it; Phase 3 r2, was (28, 4, −π/2) mid-lane, 33 m off the vischan drive) · `liftaVischan` (7, 33.2, 0) (on the north sidewalk at the vischan track's mouth, facing the z −120 road, the hitch-hiking spot; feature 106, §10.47) — on (3,0): `packhus` (0, 10, π) · `liftaPackhus` (6, 33.2, 0) (on the north sidewalk before the packing shed's yard, facing the z −200 road, the hitch-hiking spot; feature 106, §10.47) | — |
+| (1,0), (3,0), (0,1) | `tomat` → `tomatfalt` (D1, nature.js) | rows of low tomato bushes (one merged mesh, walls a car drives through: no solids, or tops ≤ 0.6), packing shed `TOMATES · EXPORTACIÓN` / `EMPAQUETADO`, `tomatlada` props, dirt tracks (on (3,0) the yard's foreman in free roam by day, and only during a shift the sorting belt, its bins and two workers before the loading dock: game/packhus.js's, no solids; feature 109, §10.49); on (0,1) the finca's yard is `FARM_YARD` (feature 31, §10.21: the yard dog's rectangle x [−30.1, −2.6], z [−30.1, −14.8], its door and spot, the finca and the tank with its ramp as its walls; data only); the Eslöv lane's asphalt runs on over the sidewalk to the roads at both ends (a kerb cut, paint only; feature 71, §10.39) | on (0,1): `vischan` (6, 24, π) · cut anchor `vischanCam` (5.7, 22.7, −0.14) (on the gravel track north of the vischan scene, looking back south at the road and the `CAMINO SIN ASFALTAR` sign; Phase 3 r2) · `eslovVag` (27.5, 24, 0) (the rollerskier on the Eslöv lane, 6 m up from the z −120 road and facing it; Phase 3 r2, was (28, 4, −π/2) mid-lane, 33 m off the vischan drive) · `liftaVischan` (7, 33.2, 0) (on the north sidewalk at the vischan track's mouth, facing the z −120 road, the hitch-hiking spot; feature 106, §10.47) — on (3,0): `packhus` (0, 10, π) · `liftaPackhus` (6, 33.2, 0) (on the north sidewalk before the packing shed's yard, facing the z −200 road, the hitch-hiking spot; feature 106, §10.47) | — |
 | (2,0) | `grisfest` → `grisgard` (D1, nature.js) | farm: white barn (roof top ≈ 5), pergola deck with long tables under string lights, spit-roast pig, bandstand, dance-floor platform (deck top 0.4), piglet pen, gate on the **south** road; **12 `tallrikar` prop stacks** on the tables (smash stage; `placeProp(..., baseY = table top)`, §14.7) | `grisfest` (0, 26, π) · `grisfestGate` world (−80, −204, π/2) (on the south road at the farm gate, the `follow` endpoint) · `dansgolv` (0, 0, 0) · `pryl_pung` (−18, −14, 0, 5.4) · `grisfalla` (−11, 20.5, −π/2) and `grisfallaIn` (−18.5, 20.6, −π/2) (the pig delivery's stop by the piglet pen and the pen's middle, feature 15, §10.15) | — |
 | (0,0) | `fataga` → `fataga` (D1, nature.js) | white village houses, tile roofs, narrow lanes, date palms, small church, embroidered tablecloths on lines (`MANTELES · DUKAR`), sheepfold (fence solids, gap gate); six ochre crags along the north edge, solid along their length (Phase 3 r3: rock()'s 1 m circle plus a box 0.85·sx × 0.53·sz on the long axis, the mesh's widest section; the circle alone let the player and the chase eye 2–3 m into the rock, also in the fold's back under the shelter) | `fataga` (0, 18, π) · `fatagaBus` world (−240, −204, −π/2) (westbound kerb of the z = −200 road, the `follow` endpoint) · `fatagaFold` (−18, −12, 0) · `fatagaDukar` (8, 4, π) · cut anchor `dukarCam` (8, 4, 0) = `fatagaDukar` turned round (the stall from the square; Phase 3) · `pryl_kniv` (0, 0, 0, 1.2) | — |
 | (4,0) | `golf` → `golf` (D1, nature.js) | fairway, bunkers (sand slabs), **pond** (`water` circle + flat blue), flag 18, small clubhouse `CAMPO DE GOLF`; the bunkers' and the pond's discs exported as `GOLF_COURSE` (world `{ bunkers: [{ x, z, r }], pond: { x, z, r } }`, data only; feature 74, §10.40) | `golf` (0, 22, π) · `fena_golf` (−10, −6, 0, 0.35) | `golfbil1` (0xf4f4f0) at (−14, 14.4), `golfbil2` (0xf2e6c0) at (−14, 11.6), both facing east (π/2) to the fairway: parked golf carts (`golfbil`, a toy: never a mission's car), on the spots of the two boxes and their wall (`'cart'`, 2.2 × 1.2, top C + 2.2) they replace (feature 74, §10.40) |
@@ -1515,6 +1524,14 @@ outfit (`npc(key).def`).
   order as before. In free roam the player's horn (§10.9) calls `Ped.startle(dx, dz, delay, shout)`
   for a pedestrian standing ahead of his car: the same dodge `delay` s later, from walking or from an
   idle stop (which it ends); a flung or downed pedestrian drops it. Its draws use `Math.random`.
+- **The packing shed's people** (feature 109, §10.49; game/packhus.js's Characters, not in `CHARS`: no
+  portrait, no home, no chatter table): **Förmannen**, the foreman on the yard, a local `randomPed` drawn
+  from `LOPANDE_BAND.seed` (the first local man) in a blue cap `0x2f4f7a` with a dark peak, a cream shirt
+  `0xf4f0e6` with short sleeves and a collar, brown trousers `0x5a4632`, a thick mustache in his hair
+  colour, `wide` ≥ 1.05, scale 1.02, voice 215; shown in free roam by day and during a shift, counted as a
+  person (kicks, cars; a local's barks). The two workers at the belt, only during a shift: a local woman
+  with a red headscarf (`hat: 'scarf'`), a dark dress and a cream apron, and a local man in a brown cap
+  with a pale shirt and an apron (seeds 3 and 11).
 
 ### 6.8 Props (`props.js` `TYPES`; WP-B)
 
@@ -3594,7 +3611,7 @@ Key **`charter-and-run-v1`** (localStorage):
   unlocked: ['grisbil', ...], outfit: 'kostym' | 'arlanda' | 'hawaii' | 'rio', tune: 'sol' | 'samba',
   records: { simhopp: n, eslov: s, solkram: n, stunts: { planka: m, gula: m, garage: m }, stork: true,
              gatlopp: { won: 0..3, sex: true }, eslovSkidor: s, fiske: { fisk: n, sko: n, fena: n, knacke: n },
-             kikare: ['flotte', 'fena', …] },
+             kikare: ['flotte', 'fena', …], packhus: n },
   shop: { owned: ['hatt', 'glas', 'skjorta', 'nasa'], off: [ids], trapp: 0..2, trappT: s, bag: bool },
   gags: ['kamera', 'viking'] }
 ```
@@ -3621,7 +3638,9 @@ decimal), saved at once with a new record (feature 40, §10.27; a jump with none
 have given the six }, saved at once with a win and with the six (feature 69, §10.38); `fiske` { fisk,
 sko, fena, knacke }, the catches at the pier's end by kind (the FÅNGST card), saved at once with every
 catch (feature 107, §10.45); `kikare`, the ids of the binoculars' targets found, in the order found (a fin
-already taken goes in at the next look), saved at once with every find (feature 108, §10.48). `shop`
+already taken goes in at the next look), saved at once with every find (feature 108, §10.48); `packhus`,
+the most boxes filled in one shift at the packing shed's belt, saved at once when beaten (feature 109,
+§10.49). `shop`
 (feature 34, §10.23):
 SunTrip-butiken's purchases (`owned`), the ones taken off at the counter (`off`), the Trapp Trull
 account's instalments still to pay (`trapp`) and its free-roam seconds towards the next (`trappT`,
@@ -7489,6 +7508,128 @@ ours [N] (§1.6).
   and bathers lie on some); every target's line is Stig's own under the picture, not a bubble (his head is
   the camera); Herr Storch films the tower while he is watched, so his lens cap faces the binoculars.
 
+### 10.49 Stig på löpande band – sortera tomater i packhuset (free roam; feature 109, 2026-10-18)
+
+`game/packhus.js` (`Packhus`, owned by Game as `packhus`), config `LOPANDE_BAND` in content/island.js, the
+input actions `sortRed`, `sortRotten`, `sortGreen` in input.js (§3), the `sort` pose in models.js and the
+anim flag `sort` in character.js (§14.6), and hooks in main.js (built after the binoculars, `packhus.step`
+after `bell.step`, `packhus.update` after `kikare.update`, `packhus.extras` in `allChars` and `areaHit`,
+the objective last and `packhus.hint()` after `hitch.hint()` in `updateHud`, `debugWarp` ends a shift).
+Stig-Helmer checks toasters for a living ("Om du köper en brödrost, och det står: 'Kontrollerad av G17',
+så är det jag", research-characters.md:94-95; fataga's intro has it, §8.11), and the island's tomatoes go
+by truck to the packing sheds (*empaquetados*, research-setting.md:123). Here the quality inspector takes
+an extra shift at a sorting belt on the yard of the packing shed in block (3,0) and cannot keep up with
+the Canarian pace. The shift, the belt, the foreman and the workers are ours [N] (§1.6).
+
+- **The foreman** (Förmannen, §6.7; a module-owned Character, not in `CHARS`): on his spot `boss.at` (0,
+  12.6) block-local (world (0, −227.4)), facing the road (yaw 0), between missions on the island **by day**
+  (`day.isDay()`); hidden at night, in a mission and in the other level. He comes and goes where nobody
+  sees it (his spot and he out of the camera's view or over 70 m off; a mission or the other level takes
+  him at once). Within `waveR` 14 m of Stig on foot (over 2.6 m) he turns to him and waves; coming within
+  `callR` 10 m he calls "¡Señor! Vi behöver folk till skiftet!" [N] (after a shift this session "¡Señor!
+  Ett skift till?" [N]), at most every `callGap` 30 s. He is a person (`extras`): a kick or a car bowls him
+  over (SKANDAL as for a pedestrian, a local's barks, Stig's sorry), and he walks back to his spot (a
+  teleport back from over 25 m when unseen).
+- **The prompt**: within `r` 2.2 m of his spot, with him standing there (normal, within 1 m), "E Ta ett
+  skift" [N]. Only on the island with `missions.state === 'idle'`, by day, Stig on foot and on the ground,
+  with no dialogue, cutaway, car, carry, pursuit, bust or PANIK, not in the pool fest's ring, on the belt,
+  in the gang's talk, the nap, the SOLKRÄM scene, a toaster's game, on the rollerskis, in a street race, a
+  cast at the pier, the binoculars or a hitch truck's bed.
+- **The shift** (E): `inDialog` (no walking; the clock stands still, as in every scene) and a `fadeSecs`
+  0.5 s black fade; behind it the belt and its things are made visible (built at the first shift, no solid
+  or collider, a group at the block's centre; hidden again after the shift), Stig stands at `stig` (0,
+  7.95), 1.45 m before the loading dock, behind the belt facing south (yaw 0), the foreman at `shiftAt`
+  (2.75, 8.0) behind the belt by its end, turned to Stig, the two workers at (−5.0, 8.0) and (−2.7, 8.0),
+  and the camera cuts to `shot` (eye (0, 15.2) at 2.85 m, looking at (0, 9.4) at 0.75 m: the belt across
+  the middle of the screen, the bins under it, Stig's head under the objective card, the bins above the
+  prompt line). The belt: a dark rubber band from `x0` −5.8 to `x1` 3.2 at z 9.15, its top 0.92 over the
+  yard's dirt, 0.72 wide, with steel rails and legs, rollers at the ends, grey cleats riding round with it,
+  a blue motor box at its end and a crate of tomatoes at its head (off the left edge of the shot); the
+  `zone` x [−0.6, 0.6] before Stig yellow on both rails, with a short yellow post at each end on the front
+  rail. Before the belt the bins (`bins`): an open crate on ROJOS (−1.55, 10.25) on Stig's right (the
+  screen's left), the tin bucket (0, 10.2) before him, a crate on VERDES (1.55, 10.25) on his left, their
+  signs ROJOS (red) and VERDES (green) on two posts behind each crate (Spanish, §1.3). After `introSecs`
+  2.6 s, the foreman's "Röda i ROJOS, gröna i VERDES, ruttna i hinken. ¡Vamos!" [N] (pointing) and Stig's
+  "Jag är van vid kvalitetskontroll." [N], the belt starts.
+- **The tomatoes**: `count` 40 a shift, oversized (r 0.13) so they read from the camera: red (`rojo`, 45 %),
+  green (`verde`, 35 %, a little smaller and paler) and rotten (`podrido`, 20 %, squat, brown, spotted, a
+  grey bloom of mould), drawn from a seeded draw a shift (`seed` 109 on, one up a shift); three instanced
+  meshes with outlines. They come on at the belt's head, each `gap` m behind the last (1.9 m at the start,
+  1.15 m at the end, by the share come on), and the belt's speed rises the same way from `speed` 0.75 to
+  1.9 m/s: a tomato every 2.5 s at the start, every 0.6 s at the end; 1.6 s in the zone at the start, 0.63
+  s at the end. The foreman hurries him on at `fasterAt` 35 % and 70 % of them come on: "¡Más rápido,
+  señor!" [N] and "Fortare, señor! ¡Rápido!" [N] (pointing), with a rising hum.
+- **Sorting**: A (←, the pad's d-pad ←) throws the frontmost tomato inside the zone (the one furthest
+  along) into ROJOS, S (↓) into the bucket, D (→) into VERDES; at most one every `cool` 0.14 s. Stig's `sort`
+  pose plays 0.3 s ('R', 'C', 'L'), also when the zone is empty (then nothing happens, a soft tick). The
+  right bin: the tomato flies there in `flySecs` 0.32 s and lies in the crate (five places, three and two
+  on top) or goes into the bucket. The wrong bin: it flies to that bin's rim and bounces out onto the ground
+  before it, one **dropped**; the foreman says "Den är röd, señor!", "Den är grön, señor!" or "Den är
+  rutten, señor!" [N] for the tomato's kind, at most every `wrongGap` 1.6 s. A tomato that rides past the
+  zone and off the belt's end drops onto the **pile** at (3.95, 8.95) (a heap, the first ones in the middle
+  and on top), one dropped too. The card's bar TAPPADE counts them (§11.4).
+- **The crates**: `perBox` 5 tomatoes fill one. When the fifth has landed, Stig stamps it (the `tap` pose
+  `stampSecs` 0.3 s, the stamp's thump) and the label KONTROLLERAD AV G17 [F*] (yellow, as the toasters',
+  §10.24) shows on its front; the shift's first is said too, "Kontrollerad av G17." [F*]. The crate swings
+  onto its stack beside its bin (`stacks`: ROJOS's at −2.9, VERDES's at 2.9; four high, then a second stack
+  outside), and a new empty crate pops onto the bin once the full one is away (a tomato thrown at it before
+  lands where it will stand).
+- **The end**:
+  - **A whole shift**: every tomato handled with fewer than `pileMax` 8 dropped. The belt stops, the stamp
+    KONTROLLERAD AV G17 (`stamp`, the stunt jumps' banner, §10.27), `pay` 100 pta, the foreman's "¡Muy
+    bien, señor! Hundra pesetas." [N], Stig cheering and, 1.3 s on, "Om det står 'Kontrollerad av G17' på
+    lådan, så är det jag." [F*] (his line at the pool, turned to the boxes).
+  - **TOMATRAS**: the eighth dropped. The belt stops, every tomato on it and on the pile rolls off across
+    the yard (bouncing, slowing, never into the dock's face), the camera shakes with a rumble and splats,
+    and Stig stands with his arms out (`placate` 2) and a red and a green tomato in his hands: "Ursäkta…
+    ett ögonblick bara…" [N]; 0.7 s on the foreman scratches his head, "¡Ay, ay, ay! Tomaterna, señor!"
+    [N], and at 2.3 s, warm, "Ingen fara, señor. Mañana igen?" [N]. No pay. (The idea's TOMATRAS banner
+    is only the card's: a banner over the middle of the screen covered Stig's arms, the moment's gag.)
+  - **Q** (Backspace, the pad's B), in the intro or on the belt: the foreman's "Redan trött, señor?" [N]; no
+    pay.
+  - The card (`hud.showScore`, §11.4): `SKIFTET KLART · n LÅDOR · 100 PTA`, `TOMATRAS · n LÅDOR` or (with a
+    crate filled) `SKIFTET SLUT · n LÅDOR`, under it `NYTT REKORD!` or `REKORD: n LÅDOR`. The crates filled
+    count in any end; the most in one shift is `records.packhus`, saved at once when beaten (§10.5).
+  - `doneSecs` 3.6 s (`rasSecs` 3.6, 1.6 after Q) later a black fade: behind it the belt, the crates, the
+    tomatoes and the workers go, the foreman back on his spot facing the road, Stig at `after` (−1.5, 13.6)
+    facing the shed (π) with the foreman on his right within reach (the prompt again), the camera behind
+    him, free.
+- **Siv**: after a shift with `sivAfter` 5 or more tomatoes sorted, the next time Stig on foot comes within
+  `sivR` 4.5 m of Siv (free, not saying anything, no gang talk, not in a car), she says "Spänn av,
+  Stig-Helmer. Du är ledig." [F*](t) (the film's "Spänn av, Majsan. Du är ledig.", research-characters.md:
+  212-213, turned to Stig), once; another shift brings it again.
+- **Only between missions**: `live` is the island with `missions.state === 'idle'`. A mission start or the
+  other level ends a shift at once (`last.kind` 'gone'): the belt and everything on it, the workers and the
+  poses gone, the fade off, the foreman hidden; the camera and `inDialog` are left to the mission. A debug
+  warp ends it too. In a mission nobody stands on the yard, there is no prompt and `start()` refuses. Nothing
+  of it is a solid or a collider and nothing is there in a mission, so no mission, stage, timer, fixture or
+  calibration pool changes (no random stage is near block (3,0); the hitch-hiking spot `liftaPackhus` is
+  on the road's sidewalk, 21 m south of the foreman).
+- **Balance** (modelled, `packhusbalans`: the autopilot sorts the frontmost tomato in the zone `react` s
+  after it became the front one, with a share `wrong` of wrong keys; 3 shifts a model): a quick clean
+  player (0.3 s, no wrong key) finished 3 of 3 with nothing dropped (5 crates each); a slow clean one (0.55
+  s) 3 of 3, dropping 2–3 at the end where two tomatoes share the zone (4–6 crates); 0.45 s with 15 % wrong
+  keys 2 of 3 (3, 8 and 7 dropped: the second came down on the last tomatoes); 30 % wrong keys came down 3
+  of 3 after 17–26 tomatoes; a reaction of 0.75 s came down 3 of 3 at the 31st, where the belt passes 1.6
+  m/s. A human sees the colour coming about 4 m before the zone (the shot's left edge) and can press as it
+  enters, but tires and fumbles at the end; the whole shift is meant to be within reach and the collapse common at a first try. Not a mission
+  timer (§8's rule does not apply); only hand play can judge the feel (HANDOFF §4.7).
+- **Tests**: `packhus.sc` ({ phase 'in' | 'intro' | 'run' | 'end' | 'out', t, T, toms [{ kind, st
+  'belt' | 'fly' | 'box' | 'ground' | 'pile' | 'roll' | 'held' | 'gone', x, y, z, crate, slot, id }], v,
+  spawned, sorted, dropped, wrong, filled, bins, done, hold (the belt stopped), next (the next kinds),
+  result, … }), `auto` ({ react, wrong }), `seed`, `shifts`, `sivDue`, `shown`, `boss`, `workers`,
+  `crates`, `built`, `last` ({ kind: 'done' | 'ras' | 'quit' | 'gone', t, boxes, dropped, sorted, wrong,
+  spawned, pay, record, best, ended }), `speedAt(k)`, `gapAt(k)`, `inZone()`, `sort(kind)`, `bossSpot()`,
+  `at([x, z], y)`, `canUse()`, `start()`, `end(kind)`, `cfg` (LOPANDE_BAND). Scenarios `packhus`,
+  `packhusbalans` (§16.4).
+- **Not done / changed** (deviations from the idea): the yard variant (M): the shed's middle gate stays
+  shut and the shed a solid box; the belt, the bins and the workers exist only during a shift (as the idea
+  asks). The foreman stands behind the belt by its end during a shift (in front he stood off the frame's
+  edge or before the pile). There is no TOMATRAS banner (see above). A wrong key throws the tomato into the
+  wrong bin and out onto the ground (the idea did not say), so the pile's limit counts tomatoes on the ground
+  of both kinds (TAPPADE). The foreman is there by day only. The pay is for a whole shift only; a collapsed
+  shift's crates still count for the record. The "Moderna tider" thought stays out of the game's text.
+
 ## 11. HUD / UI strings (Swedish; `src/strings.js` owned by WP-H, created by Phase 0)
 
 `strings.js` exports `S` (flat object) and `fmt(key, vars)`. Engine code uses `S.key` only.
@@ -7541,7 +7682,7 @@ mutes without touching the button, which then said `Ljud: på` while muted).
 | dialogue next | `E ▸` |
 | minimap rim badge | `N` (island) / `FRAM` (flight) |
 | big-map legend | from `game.mapLegend()` (§10.1) |
-| prompts | `<b>E</b> Prata med {name}` (a giver, and since feature 39 anyone in the gang between missions, §10.28) · `<b>E</b> Kliv in` · `<b>E</b> Ta bilen` · `<b>E</b> Sätt dig` · `<b>E</b> Res dig` · `<b>E</b> Lås in dig` · `<b>E</b> Ta en juice` · `<b>E</b> Kvarta en stund` (Stig's bed, §10.10) · `<b>E</b> Titta i kameran` / `<b>E</b> Se filmen` (Herr Storch, §10.11) · `<b>E</b> Heja Eslöv!` / `<b>E</b> Eslövloppet – ett varv runt fälten` (the rollerskier, §10.12) · `<b>E</b> Får jag låna skidorna?` / `<b>E</b> Lämna tillbaka skidorna` / `<b>E</b> Eslövrundan – ett varv på skidor` (his skis, §10.39) · `<b>E</b> Dansa med` / `<b>E</b> Kliv ur ringen` (the pool fest's gap, §10.13) · `<b>E</b> Kontrollera brödrosten` / `<b>E</b> Upp med brödet!` (a G17 toaster, §10.24) · `<b>E</b> Kontrollera hyllan` · `<b>E</b> Ta upp giraffen` / `<b>E</b> Ställ tillbaka giraffen` · `<b>E</b> Spela samba` (room 107, §10.25) · `<b>E</b> Bergsprängaren` · `<b>E</b> Stäng av sambaen` · `<b>E</b> Byt kläder` (room 107, §10.36) · `<b>E</b> Smörj in ryggen` (Majsan's sun cream, §10.26) · `<b>E</b> Ta trappan upp` / `<b>E</b> Ta trappan ner` (the hotel roofs' stairs, §10.29) · `<b>E</b> Läs ett utrop` (the SunTrip stage's microphone, §10.30) · `<b>E</b> Gå upp i fyren` / `<b>E</b> Gå ner` (the lighthouse, §10.35) · `<b>E</b> Plinga på klockan` (the reception's bell, §10.37) · `<b>E</b> Köp svenskt kaffe (40 pta)` / `<b>E</b> Påtår (40 pta)` (the pool bar) · `<b>E</b> Ge fru Storch kaffet` (with its cup, §10.44) · `<b>E</b> Meta` (the rod at the pier's end, §10.45; while he fishes the prompt line is `Vänta tills flötet dyker… <b>Q</b> Lägg ner spöt`, then `<b>E</b> Dra upp!` at the dive, `fiske.hint()`) · `<b>E</b> Lifta` (a hitch-hiking spot, §10.47; standing in the truck's bed the prompt line is `<b>A</b>/<b>D</b> Luta dig · <b>E</b> Hoppa av`, `hitch.hint()`) · `<b>E</b> Ta kikaren` (the lifeguard tower's platform, §10.48; while they are up the keys are in the binoculars' overlay, §11.4) · `<b>SPACE</b> Håll i dig!` · `<b>J</b> håll: Jag kan flyga!` (the `<b>` keycap is Luckiest Guy: uppercase; since feature 52 shown on the lighthouse's gallery, after E's prompt when there is one). Order (`updateHud`): talk (a giver's or the gang's), then `Håll i dig!` while the cabin is turbulent and he stands without holding on (Phase 3 r3, §5.7), then the car, interactable (seats, toilets…) and stand prompts; then `fyren.prompt` adds the J hint up there |
+| prompts | `<b>E</b> Prata med {name}` (a giver, and since feature 39 anyone in the gang between missions, §10.28) · `<b>E</b> Kliv in` · `<b>E</b> Ta bilen` · `<b>E</b> Sätt dig` · `<b>E</b> Res dig` · `<b>E</b> Lås in dig` · `<b>E</b> Ta en juice` · `<b>E</b> Kvarta en stund` (Stig's bed, §10.10) · `<b>E</b> Titta i kameran` / `<b>E</b> Se filmen` (Herr Storch, §10.11) · `<b>E</b> Heja Eslöv!` / `<b>E</b> Eslövloppet – ett varv runt fälten` (the rollerskier, §10.12) · `<b>E</b> Får jag låna skidorna?` / `<b>E</b> Lämna tillbaka skidorna` / `<b>E</b> Eslövrundan – ett varv på skidor` (his skis, §10.39) · `<b>E</b> Dansa med` / `<b>E</b> Kliv ur ringen` (the pool fest's gap, §10.13) · `<b>E</b> Kontrollera brödrosten` / `<b>E</b> Upp med brödet!` (a G17 toaster, §10.24) · `<b>E</b> Kontrollera hyllan` · `<b>E</b> Ta upp giraffen` / `<b>E</b> Ställ tillbaka giraffen` · `<b>E</b> Spela samba` (room 107, §10.25) · `<b>E</b> Bergsprängaren` · `<b>E</b> Stäng av sambaen` · `<b>E</b> Byt kläder` (room 107, §10.36) · `<b>E</b> Smörj in ryggen` (Majsan's sun cream, §10.26) · `<b>E</b> Ta trappan upp` / `<b>E</b> Ta trappan ner` (the hotel roofs' stairs, §10.29) · `<b>E</b> Läs ett utrop` (the SunTrip stage's microphone, §10.30) · `<b>E</b> Gå upp i fyren` / `<b>E</b> Gå ner` (the lighthouse, §10.35) · `<b>E</b> Plinga på klockan` (the reception's bell, §10.37) · `<b>E</b> Köp svenskt kaffe (40 pta)` / `<b>E</b> Påtår (40 pta)` (the pool bar) · `<b>E</b> Ge fru Storch kaffet` (with its cup, §10.44) · `<b>E</b> Meta` (the rod at the pier's end, §10.45; while he fishes the prompt line is `Vänta tills flötet dyker… <b>Q</b> Lägg ner spöt`, then `<b>E</b> Dra upp!` at the dive, `fiske.hint()`) · `<b>E</b> Lifta` (a hitch-hiking spot, §10.47; standing in the truck's bed the prompt line is `<b>A</b>/<b>D</b> Luta dig · <b>E</b> Hoppa av`, `hitch.hint()`) · `<b>E</b> Ta kikaren` (the lifeguard tower's platform, §10.48; while they are up the keys are in the binoculars' overlay, §11.4) · `<b>E</b> Ta ett skift` (the foreman on the packing shed's yard, §10.49; at the belt the prompt line is `<b>A</b> Röda · <b>S</b> Ruttna · <b>D</b> Gröna · <b>Q</b> Sluta`, `packhus.hint()`) · `<b>SPACE</b> Håll i dig!` · `<b>J</b> håll: Jag kan flyga!` (the `<b>` keycap is Luckiest Guy: uppercase; since feature 52 shown on the lighthouse's gallery, after E's prompt when there is one). Order (`updateHud`): talk (a giver's or the gang's), then `Håll i dig!` while the cabin is turbulent and he stands without holding on (Phase 3 r3, §5.7), then the car, interactable (seats, toilets…) and stand prompts; then `fyren.prompt` adds the J hint up there |
 
 **The result line** (feature 4, §10.8): `#score`, low in the middle (bottom 92 px, under the
 prompt at 178 px), a cream card with the dive and its sum in Luckiest Guy over the record line
@@ -7612,6 +7753,13 @@ the keys (`.kk-keys`: `MUS`/`WASD` Spana · `E` Sänk kikaren, keycaps as the pr
 lower edge, Stig's line (`.kk-line`: "Stig-Helmer: – …", white Nunito 800 17–24 px with a dark shadow, as
 the viewfinder's). `hud.setKikare({ title, rows: [{ label, found }], bar, news, line, who, keys })` shows
 it (the DOM touched only on a change); `hud.setKikare(null)` hides it and the ring.
+
+**A shift at the packing shed's belt** (feature 109, §10.49) has no element of its own: the objective card
+(`SORTERA TOMATER`, `Tomat n / 40 · Lådor n` with n the tomatoes handled, sorted or dropped, and the bar
+`TAPPADE n / 8`, its fill the dropped share, orange `#f07a1e`, red `#ff4a3a` from 6), the prompt line (the
+keys), the stamp banner (`stamp`, as the stunt jumps', §10.27) for a whole shift, and the score card
+(`#score`): `SKIFTET KLART · n LÅDOR · 100 PTA`, `TOMATRAS · n LÅDOR` or `SKIFTET SLUT · n LÅDOR` (one
+`LÅDA`), its sub `NYTT REKORD!` (teal) or `REKORD: n LÅDOR`, up until the fade.
 
 **Toasts, bubbles and the objective card** (Phase 3):
 - **Toasts** (`hud.toast(text, cls = '', secs)`; radio lines are toasts) stay up `secs`, by default
@@ -7931,7 +8079,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/strings.js` | new | **H** | `S`, `fmt()` (§11) |
 | `src/content/index.js` | new | none | merges `HOMES`, `MAP_LABELS`, `LEVEL_OUTFITS`, re-exports all content |
 | `src/content/flight.js` | new | **F** | `HOMES_GATE`, `HOMES_FLIGHT`, `MAP_LABELS_FLIGHT`, `CHATTER_FLIGHT`, `OLE_STATS`, `LEVEL_OUTFITS_GATE`, `LEVEL_OUTFITS_FLIGHT` |
-| `src/content/island.js` | new | **G** | `HOMES_ISLAND`, `MAP_LABELS_ISLAND`, `CHATTER`, `OUCH`, `GETUP`, `CARJACK`, `NPC_KICKED` (+ the `_OLE` / `_LOCAL` tables, `LOCAL_CAST`, `BARKS`: Phase 3 r2, §14.10; `STIG_SORRY`: feature 11, §10.14; `PIG_TRUCK`: feature 15, §10.15; `BAGGAGE_BELT`: feature 25, §10.16; `LAPPLISA`: feature 20, §10.17; `GRISFEST_FREE`: feature 21, §10.18; `FRUKTSTAND`: feature 28, §10.19; `TOWER`: feature 24, §10.20; `DOGS`: feature 31, §10.21; `BATHERS`: feature 32, §10.22; `RUM107`: feature 38, §10.25; `SOLKRAM`: feature 35, §10.26; `STUNTHOPP`: feature 40, §10.27; `TALK_ISLAND`: feature 39, §10.28; `TAKHOPP`: feature 41, §10.29; `MIKROFON`: feature 44, §10.30; `BIRDS`: feature 43, §10.31; `GAGS`: feature 47, §10.32; `STRANDKYSSEN`: feature 57, §10.33; `FYREN`: feature 52, §10.35; `RINGKLOCKA`: feature 59, §10.37; `BALKONG`: feature 77, §10.42; `HYTT_TVA`: feature 80, §10.43; `KAFFE`: feature 84, §10.44; `FISKE`: feature 107, §10.45; `MARKNADSTAK`: feature 92, §10.46; `LIFTA`: feature 106, §10.47; `KIKARE`: feature 108, §10.48), `COLLECTIBLES`, `UNLOCKS`, `NAMED_CARS`, `LEVEL_OUTFITS_ISLAND` |
+| `src/content/island.js` | new | **G** | `HOMES_ISLAND`, `MAP_LABELS_ISLAND`, `CHATTER`, `OUCH`, `GETUP`, `CARJACK`, `NPC_KICKED` (+ the `_OLE` / `_LOCAL` tables, `LOCAL_CAST`, `BARKS`: Phase 3 r2, §14.10; `STIG_SORRY`: feature 11, §10.14; `PIG_TRUCK`: feature 15, §10.15; `BAGGAGE_BELT`: feature 25, §10.16; `LAPPLISA`: feature 20, §10.17; `GRISFEST_FREE`: feature 21, §10.18; `FRUKTSTAND`: feature 28, §10.19; `TOWER`: feature 24, §10.20; `DOGS`: feature 31, §10.21; `BATHERS`: feature 32, §10.22; `RUM107`: feature 38, §10.25; `SOLKRAM`: feature 35, §10.26; `STUNTHOPP`: feature 40, §10.27; `TALK_ISLAND`: feature 39, §10.28; `TAKHOPP`: feature 41, §10.29; `MIKROFON`: feature 44, §10.30; `BIRDS`: feature 43, §10.31; `GAGS`: feature 47, §10.32; `STRANDKYSSEN`: feature 57, §10.33; `FYREN`: feature 52, §10.35; `RINGKLOCKA`: feature 59, §10.37; `BALKONG`: feature 77, §10.42; `HYTT_TVA`: feature 80, §10.43; `KAFFE`: feature 84, §10.44; `FISKE`: feature 107, §10.45; `MARKNADSTAK`: feature 92, §10.46; `LIFTA`: feature 106, §10.47; `KIKARE`: feature 108, §10.48; `LOPANDE_BAND`: feature 109, §10.49), `COLLECTIBLES`, `UNLOCKS`, `NAMED_CARS`, `LEVEL_OUTFITS_ISLAND` |
 | `src/game/missions/index.js` | new | none | `MISSIONS = [...FLIGHT_MISSIONS, ...ISLAND_MISSIONS]`, `MissionRunner` re-export |
 | `src/game/missions/runner.js` | new (from missions.js) | none | `MissionRunner` (§9.4) |
 | `src/game/missions/kinds/core.js` | new | **none** (frozen after Phase 0) | getInCar goto pickup dropoff follow rabbits race destroy grab scene |
@@ -7975,6 +8123,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/fishing.js` | new (feature 107, 2026-10-17) | — | `Fishing` (`game.fiske`): Meta från piren in free roam: the rod in its holder on the harbour light, its holder and the tin bucket (meshes of their own), the spot's interactable, the cut, the cast, the float, the line, the nibbles and the dive, the hook and the window, the four catches (`FISH_KINDS`; the fin and the pack the collectibles' looks, never collected) and their draw (`pick`: the weights and the pity rule), the show with Stig's lines and the face shot, the toss, the empty hook, Q, the FÅNGST card and `records.fiske`, the reset at a mission start (§10.45) |
 | `src/game/marketRoofs.js` | new (feature 92, 2026-10-17) | — | `MarketRoofs` (`game.awnings`): Pesetas på marknadstaken: the trail's coins placed (`minY`), the roof's four after asnan, Stig on the souvenir stand's roof and the seller's "¡No, no, no!", the last roof coin's swear and Stig's sorry (§10.46) |
 | `src/game/binoculars.js` | new (feature 108, 2026-10-18) | — | `Binoculars` (`game.kikare`): Livräddarens kikare in free roam: the pair on the lifeguard tower's south railing, the platform's interactable, the look (the camera's `scope`, Stig in the middle with them at his eyes, hidden), the turn by mouse and keys, the eight targets (`points`: fixed points, Herr Storch, the fin's live mesh, the lighthouse) and the aim (`aimed`, the ring, the hold), a find (the list, the pay, Stig's line, `records.kikare`), a taken fin counted, the end shot with "Inga hajar. Bara svenskar.", Herr Storch filming the tower while watched, the reset at a mission start (§10.48) |
+| `src/game/packhus.js` | new (feature 109, 2026-10-18) | — | `Packhus` (`game.packhus`): Stig på löpande band in free roam: the foreman on the packing shed's yard (shown by day between missions, his wave, turn and call, his interactable, back to his spot after a knock), the shift (the fade, the belt, its zone, cleats, bins, signs and the tomato crate, built at the first shift; the two workers; the camera cut), the tomatoes (three instanced kinds with outlines: on the belt, flown to a crate, the bucket or the ground, dropped onto the pile, rolling), the crates (filled, stamped KONTROLLERAD AV G17 and stacked, a new one on the bin), the speed and the foreman's hurries, the collapse (TOMATRAS), the whole shift's pay, the record, Siv's line after, the tests' autopilot, the reset at a mission start (§10.49) |
 | `src/game/hitch.js` | new (feature 106, 2026-10-17) | — | `Hitch` (`game.hitch`): Vi liftar in free roam: the two hitch-hiking spots' interactables, the thumb, the grisbil from up the road with the grisbonde's bust and its stop beside him, the cut, the question and the answer, the hop up, Stig standing on the truck's tilt, the balance (the pull, the lean, ÅKSJUKA), the fall, E's step or jump off, the drop behind Hotel Flamenco, the truck driving off and taken away out of sight, the reset at a mission start or a debug warp (§10.47) |
 | `src/game/poolBar.js` | new (feature 84, 2026-10-17) | — | `PoolBar` (`game.bar`): Poolbaren öppnar in free roam after friskoteket: the bartender hidden before (`hides`, for main.placeNpcs), the coffee's interactable at the counter and the sale or the head shaken, the cup handed over, the sprint's factor (`sprintK`, for main.fixedStep) and its 30 s, Stig's cup, the coffee box, Berra's "Ska du ha?", the cup for Fru Storch and her pay, the scenes' holds (`posed`), the reset at a mission start or Eslövloppet's (§10.44) |
 | `src/game/golfCart.js` | new (feature 74, 2026-10-17) | — | `GolfCarts` (`game.golf`): Golfbilen in free roam: `open()`/`refuse()` for main.enterCar and updateHud (a golf cart only between missions on the island), the pip-pip, the bunkers' and the pond's brake (`step`) with the sand, the splash and Stig's lines, a wreck back on its spot, both home at a mission start (§10.40) |
@@ -7993,7 +8142,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/markers.js` | unchanged | none | |
 | `src/gfx.js` | edit | none | `setSkyPalette`, `setCloudsVisible`, `setShadows`, `MAT.sky`, `MAT.water` sea colour |
 | `src/audio.js` | edit | **H** | §12 API; `splash(k)`'s size (feature 24, §10.20); `woof`, `whistle` (feature 31, §10.21); `toasterDown`, `pop` (feature 33, §10.24); `squirt`, `splat` (feature 35, §10.26); `stamp`, `stampFail` (feature 40, §10.27); `flap`, `gull` (feature 43, §10.31); `shutter` (feature 47, §10.32); `phone` (feature 59, §10.37) |
-| `src/input.js` | edit | none | pad Start → `pause`; the menu's `menuUp`, `menuDown`, `hangUp` (feature 80, §10.43) |
+| `src/input.js` | edit | none | pad Start → `pause`; the menu's `menuUp`, `menuDown`, `hangUp` (feature 80, §10.43); the belt's `sortRed`, `sortRotten`, `sortGreen` (A/S/D, ←/↓/→, the pad's d-pad; feature 109, §10.49) |
 | `src/util.js` | unchanged | none | |
 | `src/world/frame.js` | new (from town.js) | none | `Frame` (`prop(…, opts)` passes `opts` to `placeProp`: feature 28) |
 | `src/world/registry.js` | new | none | `worldHooks` |
@@ -8010,8 +8159,8 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/world/cabin.js` | new | **A1** | §5 interior, collision, seats, trolley, turbulence, fear, interactables, blockers, `CAM_CABIN`, `FLIGHT_PALETTES`, `FEAR`; calls `buildFlightScenery` |
 | `src/world/flightScenery.js` | new | **A2** | §5.6 visuals: gate-set visuals, airframe, animated scenery per phase, `buildFlightScenery`, `buildPlaneExterior` |
 | `src/world/rio.js` | new | **B** | `buildRioCard` (P1) |
-| `src/actors/models.js` | edit | **E** | `CHARS`, `CAST`, new def fields, anim flags, `buildBustGeo`, `outfitDef`, `randomPed` palette; the `ticket` flag and its `lappblock`/`penna` props (feature 20, §10.17); the `leap` and `bomb` poses (feature 24, §10.20); the `placate` pose (feature 31, §10.21); the `lie` pose, the `stekt` outfits and `STEKT_SKIN` (feature 32, §10.22); the `rub` pose (feature 35, §10.26); the `camShow` pose and `cupHeld` raised standing with `cupUp` (feature 47, §10.32); the `lie` pose's `roll`, `turn` and given arms (feature 57, §10.33); the `eyesShut` lids (feature 52, §10.35); the `tap` pose (feature 59, §10.37); the `scratch` pose (feature 60, §7.2); the `point` pose and `cupHeld: 'low'` (feature 76, §10.41); a held broom's bristles stop at his soles (feature 77, §10.42); the bartender `camarero` (feature 84, §10.44); the `fish` pose with `fishK`, the prop `metspo` and the exported `fishingRod`, `ROD_LEN` (feature 107, §10.45); the `thumb` and `ride` poses with `rideLean`, and a seated `ride` standing (feature 106, §10.47); the `kikare` pose, the prop `kikare` and the exported `binoculars` (feature 108, §10.48) |
-| `src/actors/character.js` | edit | **E** | `setDef`, `hidden`, `seatAt`, `standAt`, new anim flag defaults (`placate`: feature 31; `rub`: feature 35; `camShow`: feature 47; `eyesShut`: feature 52; `tap`: feature 59; `scratch`: feature 60; `point`: feature 76; `fish`: feature 107; `thumb`, `ride`: feature 106; `kikare`: feature 108); the state `lying`, `lieAt`, `fling`'s `flip` (feature 32, §10.22) |
+| `src/actors/models.js` | edit | **E** | `CHARS`, `CAST`, new def fields, anim flags, `buildBustGeo`, `outfitDef`, `randomPed` palette; the `ticket` flag and its `lappblock`/`penna` props (feature 20, §10.17); the `leap` and `bomb` poses (feature 24, §10.20); the `placate` pose (feature 31, §10.21); the `lie` pose, the `stekt` outfits and `STEKT_SKIN` (feature 32, §10.22); the `rub` pose (feature 35, §10.26); the `camShow` pose and `cupHeld` raised standing with `cupUp` (feature 47, §10.32); the `lie` pose's `roll`, `turn` and given arms (feature 57, §10.33); the `eyesShut` lids (feature 52, §10.35); the `tap` pose (feature 59, §10.37); the `scratch` pose (feature 60, §7.2); the `point` pose and `cupHeld: 'low'` (feature 76, §10.41); a held broom's bristles stop at his soles (feature 77, §10.42); the bartender `camarero` (feature 84, §10.44); the `fish` pose with `fishK`, the prop `metspo` and the exported `fishingRod`, `ROD_LEN` (feature 107, §10.45); the `thumb` and `ride` poses with `rideLean`, and a seated `ride` standing (feature 106, §10.47); the `kikare` pose, the prop `kikare` and the exported `binoculars` (feature 108, §10.48); the `sort` pose with `sortK` (feature 109, §10.49) |
+| `src/actors/character.js` | edit | **E** | `setDef`, `hidden`, `seatAt`, `standAt`, new anim flag defaults (`placate`: feature 31; `rub`: feature 35; `camShow`: feature 47; `eyesShut`: feature 52; `tap`: feature 59; `scratch`: feature 60; `point`: feature 76; `fish`: feature 107; `thumb`, `ride`: feature 106; `kikare`: feature 108; `sort`: feature 109); the state `lying`, `lieAt`, `fling`'s `flip` (feature 32, §10.22) |
 | `src/actors/car.js` | edit | **E** | §6.6 types/flags, `registerCarType`, `build`/`noWheels`/`noSpeedo`/`noExplode`/`livery`; the grisbil's pig meshes `PIG_SLOTS`, `pigMesh`, `car.pigs`, `setPig`, `pigWorld` (feature 15, §10.15); `car.lift`, the nose raised on the tow truck's hook (feature 20, §10.17); a prop is known by its block's `ref`, `game.breakProp` may refuse, `def.slow` (feature 28, §10.19); the flight's `airT`, `airFrom` and `game.onCarAirEnd` (feature 40, §10.27) |
 | `src/actors/pickups.js` | edit | **E** | `COLLECT_KINDS`, `registerCollectKind`, `Collectible` table, `Rabbit` meshes, coin value 25; the `brodrost` kind, `TOASTER`, `setToaster`, `Collectible.mark` and the `yaw` option (feature 33, §10.24); `PRYL_IDS` exported (feature 38, §10.25); `placeCoin`'s `tag` and `minY` (feature 92, §10.46) |
 | `src/actors/peds.js` | edit | **E** | Swedish/Spanish shouts; `dodge`, `startle` (feature 5, §6.7) |
@@ -8067,7 +8216,7 @@ carts, last: feature 74) → traffic (20)
 → peds (34) → NPC `Character`s (one per `CHARS` key except `stig`, the radio-only keys `levander
 kapten pa guardia pax telefonist` and the cabin-owned `vardinna2`; `key` field; hidden until placed, §2.3) →
 player `Character(CHARS.stig)` (`key = 'stig'`) → collectibles (`COLLECTIBLES`) → markers → `Shame`
-→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `DiveTower` (feature 24, §10.20; registers the ladder's two interactables, sets `DIVE_TOWER.live`) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `Eslov` (feature 7, §10.12; registers the rollerskier's interactable) → `PoolFest` (feature 8, §10.13) → `StigSorry` (feature 11, §10.14) → `PigTruck` (feature 15, §10.15) → `BaggageBelt` (feature 25, §10.16) → `Lapplisa` (feature 20, §10.17) → `GrisfestFree` (feature 21, §10.18; registers the gate's and the tourists' interactables) → `FruitStands` (feature 28, §10.19) → `Dogs` (feature 31, §10.21) → `Bathers` (feature 32, §10.22; registers the wake's interactable) → `SuntripShop` (feature 34, §10.23; registers the four wares' and the bag's interactables, sets `SUNTRIP_SHOP.live`) → `Toasters` (feature 33, §10.24; registers the seven toasters' interactables) → `Room107` (feature 38, §10.25; registers room 107's three interactables) → `Solkram` (feature 35, §10.26; registers Majsan's interactable) → `Stunts` (feature 40, §10.27) → `GangTalk` (feature 39, §10.28) → `RoofJump` (feature 41, §10.29; registers the three stair doors, sets `ROOF_JUMP.live`, places the roof coins) → `Mic` (feature 44, §10.30; registers the mic's interactable) → `Birds` (feature 43, §10.31; builds the four kinds' instanced meshes and puts every bird on its spot) → `Gags` (feature 47, §10.32; registers the two gags' interactables) → `BeachDream` (feature 57, §10.33; builds the towel and the foam, registers the towel's interactable) → `GuardiaJeep` (feature 51, §10.34) → `Lighthouse` (feature 52, §10.35; registers the two doors' interactables) → `ReceptionBell` (feature 59, §10.37; builds the bell, the card and the three suitcases with their solids, registers the bell's interactable) → `StreetRace` (feature 69, §10.38; registers José's and the chalkboard's interactables) → `GolfCarts` (feature 74, §10.40) → `BoatTrip` (feature 76, §10.41; builds the fin, registers the kiosk's interactable) → `Residents` (feature 77, §10.42) → `PhoneBooth` (feature 80, §10.43; registers booth 2's interactable) → `PoolBar` (feature 84, §10.44; registers the counter's and Fru Storch's interactables) → `Fishing` (feature 107, §10.45; builds the rod, its holder, the bucket, the float, the line and the four catches, registers the spot's interactable) → `MarketRoofs` (feature 92, §10.46; places the market's coin trail) → `Hitch` (feature 106, §10.47; registers the two spots' interactables) → `Binoculars` (feature 108, §10.48; builds the pair on the railing, registers the platform's interactable) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
+→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `DiveTower` (feature 24, §10.20; registers the ladder's two interactables, sets `DIVE_TOWER.live`) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `Eslov` (feature 7, §10.12; registers the rollerskier's interactable) → `PoolFest` (feature 8, §10.13) → `StigSorry` (feature 11, §10.14) → `PigTruck` (feature 15, §10.15) → `BaggageBelt` (feature 25, §10.16) → `Lapplisa` (feature 20, §10.17) → `GrisfestFree` (feature 21, §10.18; registers the gate's and the tourists' interactables) → `FruitStands` (feature 28, §10.19) → `Dogs` (feature 31, §10.21) → `Bathers` (feature 32, §10.22; registers the wake's interactable) → `SuntripShop` (feature 34, §10.23; registers the four wares' and the bag's interactables, sets `SUNTRIP_SHOP.live`) → `Toasters` (feature 33, §10.24; registers the seven toasters' interactables) → `Room107` (feature 38, §10.25; registers room 107's three interactables) → `Solkram` (feature 35, §10.26; registers Majsan's interactable) → `Stunts` (feature 40, §10.27) → `GangTalk` (feature 39, §10.28) → `RoofJump` (feature 41, §10.29; registers the three stair doors, sets `ROOF_JUMP.live`, places the roof coins) → `Mic` (feature 44, §10.30; registers the mic's interactable) → `Birds` (feature 43, §10.31; builds the four kinds' instanced meshes and puts every bird on its spot) → `Gags` (feature 47, §10.32; registers the two gags' interactables) → `BeachDream` (feature 57, §10.33; builds the towel and the foam, registers the towel's interactable) → `GuardiaJeep` (feature 51, §10.34) → `Lighthouse` (feature 52, §10.35; registers the two doors' interactables) → `ReceptionBell` (feature 59, §10.37; builds the bell, the card and the three suitcases with their solids, registers the bell's interactable) → `StreetRace` (feature 69, §10.38; registers José's and the chalkboard's interactables) → `GolfCarts` (feature 74, §10.40) → `BoatTrip` (feature 76, §10.41; builds the fin, registers the kiosk's interactable) → `Residents` (feature 77, §10.42) → `PhoneBooth` (feature 80, §10.43; registers booth 2's interactable) → `PoolBar` (feature 84, §10.44; registers the counter's and Fru Storch's interactables) → `Fishing` (feature 107, §10.45; builds the rod, its holder, the bucket, the float, the line and the four catches, registers the spot's interactable) → `MarketRoofs` (feature 92, §10.46; places the market's coin trail) → `Hitch` (feature 106, §10.47; registers the two spots' interactables) → `Binoculars` (feature 108, §10.48; builds the pair on the railing, registers the platform's interactable) → `Packhus` (feature 109, §10.49; builds the foreman, hidden, registers his interactable; the belt, its bins and the workers wait for the first shift) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
 `placeNpcs(true)` → spawn the player → portraits for every key in `CAST` (`renderPortrait`
 restores each model's parent and transform, so seated cast members stay in their seats) →
 `applySaveToWorld()` →
@@ -8075,11 +8224,11 @@ loop → `window.__ready = true` → `start()` in test mode.
 
 Frame (`update`): hooks → one-shots (incl. E/J/R while seated) → fixed steps (player intent incl.
 mantra/hold and the sprint × `bar.sprintK()` (feature 84), AI, cars (a landing calls `onCarAirEnd`, feature 40), `golf.step` (feature 74), people (`glide.step` → `skis.step`, feature 71 → the player's step → `glide.after` → `skis.after`, feature 3, 71 →
-`belt.carry`, feature 25 → the NPCs → `party.step`, feature 21 → `bathers.step`, feature 32 → `mic.step`, feature 44 → `bell.step`, feature 59) —
+`belt.carry`, feature 25 → the NPCs → `party.step`, feature 21 → `bathers.step`, feature 32 → `mic.step`, feature 44 → `bell.step`, feature 59 → `packhus.step`, feature 109) —
 traffic/peds skipped when `!levelDef.sim.*`) → `syncAll` (also
 writes `ch.x/y/z` from `car.seatWorld(ch.seatSide)` for every car-seated character, player
 included, so framing, bubbles and distance checks see where they really are) → `missions.update` →
-`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `tower.update` (feature 24) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `skis.update` (feature 71) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `stands.update` (feature 28) → `dogs.update` (feature 31) → `bathers.update` (feature 32) → `shop.update` (feature 34) → `toasters.update` (feature 33) → `room107.update` (feature 38) → `solkram.update` (feature 35) → `stunts.update` (feature 40) → `chat.update` (feature 39) → `roofs.update` (feature 41) → `mic.update` (feature 44) → `birds.update` (feature 43) → `dream.update` (feature 57) → `jeep.update` (feature 51) → `fyren.update` (feature 52) → `bell.update` (feature 59) → `gatlopp.update` (feature 69) → `golf.update` (feature 74) → `battur.update` (feature 76) → `residents.update` (feature 77) → `hytt.update` (feature 80) → `bar.update` (feature 84) → `fiske.update` (feature 107) → `awnings.update` (feature 92) → `hitch.update` (feature 106) → `kikare.update` (feature 108) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
+`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `tower.update` (feature 24) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `skis.update` (feature 71) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `stands.update` (feature 28) → `dogs.update` (feature 31) → `bathers.update` (feature 32) → `shop.update` (feature 34) → `toasters.update` (feature 33) → `room107.update` (feature 38) → `solkram.update` (feature 35) → `stunts.update` (feature 40) → `chat.update` (feature 39) → `roofs.update` (feature 41) → `mic.update` (feature 44) → `birds.update` (feature 43) → `dream.update` (feature 57) → `jeep.update` (feature 51) → `fyren.update` (feature 52) → `bell.update` (feature 59) → `gatlopp.update` (feature 69) → `golf.update` (feature 74) → `battur.update` (feature 76) → `residents.update` (feature 77) → `hytt.update` (feature 80) → `bar.update` (feature 84) → `fiske.update` (feature 107) → `awnings.update` (feature 92) → `hitch.update` (feature 106) → `kikare.update` (feature 108) → `packhus.update` (feature 109) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
 pickups/collectibles → props → `fx.tick` → `tickTown` → markers → camera → sun/sky → HUD → audio →
 traffic recycling (island) → autosave. `loop` then renders, and when `film.grabNow` is set calls
 `film.grab()` in the same task (Herr Storch's still from the frame's buffer, feature 6, §10.11).
@@ -8233,6 +8382,15 @@ game.kikare;       // Binoculars (feature 108, §10.48): the lifeguard's binocul
                    // busy, up, found (records.kikare), has(id), all, spot(), canUse(), start(), update(dt),
                    // end(kind) ('down' | 'done' | 'gone'), points(t), aimed(), place(), sc, looks, lastAim,
                    // last, rest, cfg (KIKARE)
+game.packhus;      // Packhus (feature 109, §10.49): the foreman on the packing shed's yard and a shift at the
+                   // tomato sorting belt; live, busy, running, best (records.packhus), shown, extras (the
+                   // foreman while shown: allChars, areaHit), boss, workers, built, bossSpot(), at([x, z], y),
+                   // canUse(), start(), step(h), update(dt), speedAt(k), gapAt(k), inZone(), sort(kind),
+                   // finish(kind), end(kind) (a mission start, a debug warp: 'gone'), objective(), hint()
+                   // (updateHud's prompt line at the belt), sc ({ phase 'in' | 'intro' | 'run' | 'end' |
+                   // 'out', toms, v, spawned, sorted, dropped, wrong, filled, bins, hold, next, … }), auto
+                   // (tests' autopilot: { react, wrong }), seed, shifts, sivDue, crates, last, cfg
+                   // (LOPANDE_BAND)
 game.npcPosed(key) -> bool   // an NPC held in a pose of its own: §9.4 idleAnim or a free-roam module's
                    // (berraJob, judges, film, eslov, fest, lapp, party, stands, mic, birds, gags, dream, bell, gatlopp, bar); syncAll gives it no
                    // wave, turn or chatter, and the gang's talk leaves it be (§10.28)
@@ -8367,7 +8525,7 @@ game.dressRoom107()   // worldHooks.rum107(collected, unlocked): room 107 shows 
 game.mapMarkers(all);  game.mapLabels();  game.mapLegend() -> html
 
 // ---- tests ----
-game.debugWarp(x, z, yaw)                 // stands up first if seated, off a hitch truck (§10.47), the binoculars down (§10.48); snapNext
+game.debugWarp(x, z, yaw)                 // stands up first if seated, off a hitch truck (§10.47), the binoculars down (§10.48), off the packing shed's belt (§10.49); snapNext
 game.approachSpot(lm) -> { x, z, yaw }    // §4.4 spawn rule (landmark + 1.5 m facing back, else the landmark)
 game.freeSpot(cx, cz, rMin, rMax, ok?) -> { x, z }   // random free ground spot; ok(x, z) filters (Phase 2)
 game.footReach(cx, cz, R) -> (x, z) => bool   // on-foot flood fill (0.5 m grid, 0.45 m step, no jumps; Phase 2)
@@ -8635,6 +8793,13 @@ eyes (R (−2.55, 0, 0.3), L (−2.55, 0, −0.3), the neck straight; the prop 2
 him); 'low': at his chest (R (−1.25, 0, 0.45), L (−1.25, 0, −0.45), the neck −0.08; 1.52 up, 0.71
 before him). Only `game.kikare` sets it; `heldPose` counts it as busy. While they are at his eyes the
 binoculars hide his root (the camera's eye is before his face).
+`sort` (feature 109, §10.49): sorting tomatoes at the packing shed's belt, `sortK` the move's 0..1. Over
+its first 40 % both hands go down to the belt before him (both arms x −1.2 at the full reach, z 0.12
+inwards; the neck 0.22 and the body 0.1 forward with it); then 'R' (his right) or 'L' (his left) swings
+that arm out to its side (z ∓1.25 at the peak, x easing back by 0.5) while the other arm comes back, and
+'C' lowers both hands 0.25 further (the bucket at his feet). Only a look; `game.packhus` sets it on Stig
+for 0.3 s a key (a whiff too) and cycles it on the two workers ('C' for the one at the belt's head, 'R'
+and 'L' in turn for the other); `heldPose` counts it as busy.
 `lie` (feature 32, §10.22; not a flag: `anim.lie` is the lying pose, `{ lean, arms, tilt, lift }`,
 set by `sync` in state `lying`, else null): on a sun lounger the root leans back `lean` (the
 backrest's −0.75) about the hips, so the legs are laid straight along the bed (x = −π/2 − lean,
@@ -9193,6 +9358,14 @@ shame.chase(car) (feature 60): a Land Rover's chase AI with the catch-up band (s
 //   moveY), the scope's eye and Stig's yaw (place), Herr Storch filming, the aim and the hold, the overlay;
 //   after all eight the end shot and its wait); cam.update returns at once with cam.scope set (it is the
 //   view); debugWarp calls end('down') while it is busy
+// packhus.js (feature 109, §10.49): game.packhus = new Packhus(game) after the binoculars (builds the
+//   foreman, hidden; registers `packhus` at his spot); step(h) after bell.step in fixedStep (the foreman
+//   back to his spot in free roam); update(dt) after kikare.update (the foreman shown by day between
+//   missions where nobody sees him pop, his wave, turn and call; Siv's line once after a shift; with a
+//   shift under way (inDialog): not live: end('gone'); its phases, the belt, the keys (input.pressed
+//   sortRed, sortRotten, sortGreen, hangUp), the flights, the crates, the poses and the instances);
+//   allChars and areaHit count packhus.extras; updateHud takes packhus.objective() last and
+//   packhus.hint() after hitch.hint(); debugWarp calls end('gone')
 // golfCart.js (feature 74, §10.40): game.golf = new GolfCarts(game) after the street races; step(h)
 //   after the cars' steps in fixedStep (the bunker's and the pond's brake on his golf cart); update(dt)
 //   after gatlopp.update (out of a golf cart in a mission, both home at a mission start, a wreck back
@@ -9847,6 +10020,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `marknadstak`, `marknadstakFore` [feature 92] | Pesetas på marknadstaken (§10.46). `marknadstak` at index 8: the shade (bounce, top 1.45) at (−24.5, −21) local, the roof's floor at 2.9, 26 trail coins with `minY` 2.5 and, with Stig far off at the start, the roof's four (`minY` 2.5); jumps from the ground in the lane under rad A, in front of the souvenir stand and beside the shade, and a car in the lane and under the arc to the roof take none; then the route as a player runs it (W, Shift and Space through `input`, a frame hook turns the camera): the hop onto the shade and the bounce, rad A, the double jump over the middle aisle, the sprint jump over the lane, the hop over A2's gap, the jump to the lone fruit stall, the double jump onto the roof and along it: every coin of the trail and the roof (+750 pta), "Jävla smålänningar!" from the seller and then Stig's "Förlåt, förlåt…", no "¡No, no, no!" while the roof's coins were up, one swear and one sorry; on the roof again "¡No, no, no!", a jump on it the same visit, a new visit within 8 s nothing, 8 s on again; a mission started (the bodega) and on the roof nothing. `marknadstakFore` at index 6: the trail there, no coins on the roof; from the lone fruit stall the double jump onto the roof: "¡No, no, no!", no swear, no sorry; with `from` lowered the roof's coins wait while he is on it and come with him 30 m off. Shots `marknadstak_start`, `marknadstak_svordom`, `marknadstak_forlat`, `marknadstak_nonono`, `marknadstak_fore`, `marknadstak_studsmarkis`, `marknadstak_spar` |
 | `lifta`, `liftaFall` [feature 106] | Vi liftar (§10.47). `lifta` at index 9 (free roam): by the CAMINO SIN ASFALTAR sign the prompt "E Lifta"; E: Stig on `liftaVischan` facing the road, the thumb out, the card (LIFTA · Tummen upp – vänta på en bil.), a grisbil set off out of the camera's view and over 70 m up the road, locked, `noEnter`, the farmer's bust at the wheel, three pigs; it stops with its tail 0.6 m (± 1) past him on the lane beside him; the cut across the road and the hold; Stig's question and the farmer's answer; mid-hop off the kerb; in the bed: 'seated' on the truck's tilt at the bed's middle, the `ride` pose, no hold, the chase camera 6–14 m from the truck, the card (LIFTA TILL STAN · Håll dig kvar på flaket!) with the ÅKSJUKA bar, the keys, the pig's NÖFF!, R does nothing, "Det luktar lite… lantligt."; unbalanced in the first turn he tips (over 0.15 rad); leaning the probe's exact lean all the way: off at `flamencoBack` (within 0.3 m) on his feet, `rides` 1, the peak under 60 %, "Jättefint! Tack.", the farmer's "¡Adiós, señor!", no SKANDAL, no pay; the truck drives off and is gone once out of sight; the prompt again. `liftaFall` at index 9: at the packing shed with no lean, past half "Jag har lite anlag för åksjuka.", off in a turn (`fall`, `falls` 1), tumbling, down, up, the truck on its way with the adiós; walking off the spot: `cancel` 'walk', the truck by or away; E as the ride starts: `step` with his thanks; E at over 6 m/s: `jump`; A held all the way: a fall before the drop; a debug warp: off the truck, it gone; a traffic car at 14 m/s into its side: ÅKSJUKA + 10 or more, the truck whole; no SKANDAL added while hitching; a mission start mid-ride: off the truck on his feet, `last` 'gone', no truck, no card; in the mission no prompt and `start()` refuses; after it the prompt again. Shots `lifta_prompt`, `lifta_tumme`, `lifta_kommer`, `lifta_fraga`, `lifta_hopp`, `lifta_flaket`, `lifta_kurva`, `lifta_framme`, `lifta_adios`, `lifta_packhus_tumme`, `lifta_packhus`, `lifta_lutar`, `lifta_ramlar`, `lifta_liggande` |
 | `kikare`, `kikareshots` [feature 108] | Livräddarens kikare (§10.48). `kikare` at index 9 (free roam): the pair on the SOCORRISTA tower's south railing, nothing found; on the sand beside the tower no prompt, up on the platform "E Ta kikaren"; E: the binoculars up (the scope at 12°, Stig in the middle with them at his eyes, hidden, the eye 2.3 m up and 0.45 m before him, the railing empty), the overlay (SPANING, eight unchecked, KIKAREN · HITTAT 0 / 8, the keys) and Ole's warning in Stig's mouth; Herr Storch turns to the tower and films it; D turns the view right and W tilts it up while he stays put, the pitch stops at 0.32; the raft held in the middle fills the ring, away it empties, held 1 s it is found (checked, +25 pta, HITTAT 1 / 8 · FLOTTEN, Stig's line, `records.kikare` saved) and is not aimed at again; E lowers them (the pair back, Stig seen and free, the view at 62°, Herr Storch stops filming and turns back to the sea), and the chase eye sees his head with no roof between (the roof's camera ceiling); a fin already taken counts at the next look, with no second warning; Q lowers them; the other five and RESERVADO-raden: ALLA ÅTTA!, every row checked, the cut to him from the sand with the binoculars at his chest facing the sea and "Inga hajar. Bara svenskar.", the toast, then free; a later look opens with that line. No prompt at the wheel or in a pursuit; a mission start mid-look puts everything down ('gone'); in the mission no prompt and `start()` refuses; after it (aborted) the prompt again; seven found and the fin taken since: the next look makes eight and ends with the cut. Shots `kikare_prompt`, `_upp`, `_ring`, `_fynd`, `_ner`, `_slut`. `kikareshots`: every target through the binoculars, aimed at its first point (`kikare_fena` … `kikare_handdukar`), the far pedal boats, a look down at the sand, and Stig on the platform from outside with them at his eyes and at his chest (`kikare_stig`, `kikare_stig_low`) |
+| `packhus`, `packhusbalans` [feature 109] | Stig på löpande band (§10.49). `packhus` at index 8 (free roam, the held clock's 15:00): the foreman on his spot, nothing of the belt (not built); 6 m off he waves and calls "¡Señor! Vi behöver folk till skiftet!", no prompt; at him "E Ta ett skift". E: the shift behind a black fade (`hud.fade` on in 'in', off in 'intro'), the belt and two workers shown, the camera cut, Stig at his spot facing the camera, the foreman by the belt's end, the card SORTERA TOMATER · Tomat 0 / 40 · Lådor 0 · TAPPADE 0 / 8, the keys' line, the intro's two lines; W does not move him. The belt held (`sc.hold`) with forced kinds (`sc.next`): A on a red in the zone (Stig's 'R' throw) puts it in ROJOS's crate, S a rotten one in the bucket, D a green one in VERDES's crate; A on a green one bounces it onto the ground (one dropped, TAPPADE 1 / 8, "Den är grön, señor!"); a key with the zone empty changes nothing. Five reds (the autopilot): the crate stamped (its label), on ROJOS's stack at −2.9, a new crate on the bin, "Kontrollerad av G17.", Lådor 1; a tomato let past onto the pile. The autopilot (0.3 s) to the end: the belt's speed follows the tomatoes come on (> 1.5 m/s at 30), both hurries, a whole shift: 100 pta, the stamp banner, the card SKIFTET KLART · n LÅDOR · 100 PTA with NYTT REKORD!, the foreman's and Stig's lines, `records.packhus` saved; after the fade the belt and workers gone, Stig at `after`, free, the prompt again, the coins only the pay. Siv at the pool: her line once, not on a second visit. "¡Señor! Ett skift till?"; a shift let go: TOMATRAS at eight dropped (the belt's and the pile's tomatoes rolling, Stig's arms out with two in his hands, his and the foreman's lines, no pay, the card with REKORD); Q: "Redan trött, señor?", no pay, free. A kick: the foreman down, SKANDAL, no prompt; back on his spot, the prompt. By night nobody on the yard and no prompt; by day again. No prompt at the wheel or in a pursuit; a mission start mid-shift: everything gone at once ('gone'), the foreman hidden; in the mission nobody and no prompt, `start()` refuses; after it (aborted) the foreman and the prompt again. Shots `packhus_gard`, `_prompt`, `_intro`, `_sortera`, `_fel`, `_lada`, `_fort`, `_stampel`, `_klart`, `_efter`, `_siv`, `_ras`, `_natt`. `packhusbalans`: `PACKHUS_RUNS` (default 3) shifts each of five autopilot models (the reaction from a tomato's being the front one in the zone, a share of wrong keys): quick clean (0.3 s) and slow clean (0.55 s) must finish every shift, 15 % wrong at 0.45 s most of them; careless (30 % wrong) and too slow (0.75 s) are logged |
 | `golfbil` [feature 74] | Golfbilen (§10.40) at index 9: the two golf carts on the boxes' spots, named, unlocked, the toy type, no `'cart'` solid left, not the first free small car; E from the driver's side (the prompt, "Golfbilen" on the speedo), Stig full size under the roof (side, front and rear stills); held W tops out at 6.0–6.6 m/s, the speedo 21–24 km/h, the motor `electric`; H a pip-pip, again while held (every 0.45 s), never the two-tone horn, the island hears it; a bunker brakes it to 1.6 m/s with sand off the rear wheels and "Jag pliktar ett slag.", a second within 12 s no line; the pond splashes and brakes it to 0.9 m/s, "Oj… ett vattenhinder."; a wreck steams, no SKANDAL, back on its spot only once Stig is far; a mission start puts a moved one back; in the mission no prompt, E gives the toast and no seat, a debug seat is undone, `retryCar` gives a spare; after Q E gets in again |
 | `eslovlopp` [feature 7] | Eslövloppet's timer (§10.12, §8 "Timers and difficulty"): calibrate's walker runs the lap `ESLOV_RUNS` (3) times at `&ts=1` with the clock raised; prints `CAL eslovLopp` (the median + 2.5 s → the timer) and `CAL CHECK` against the shipped timer (the sample's 90 % bootstrap range); its raw times go into the ledger (`eslovLopp`) |
 | `grodorna` [feature 8] | Små grodorna i poolen (§10.13): no fest at index 11 (Lasse at SunTrip in `sol`) nor at index 13 without `bodega`; with it (unlock + forced placement) Lasse wears `jul` and he, Affe, Gabbe and Fru Storch stand at their pool-deck homes, Herr Storch on the beach; at 23.30 no visit; Stig on the deck: all seven ours (`poolFest`, busy, invulnerable, posed), wading 0.5 m in their places facing the middle; the exchange in order, once; round 1 on the audio clock; sampled in the page: in the air 0.17–0.22 s after an even beat with tails (beats 0–7), Affe hopping without `groda`, down at 0.55–0.75 s, ears on 8–11, the chorus higher; the porter at his spot with his line and the head shake, then home and free; on the coping dry with "Dansa med" and the gap marked; E: in the gap, stiff (`groda` 3), wading, `I TAKT 0 / 8`, "Kliv ur ringen"; J no kick; E out onto the coping, dry; in again and a step out; no SKANDAL; round 2 two beats after round 1 (±0.06 s), the pause 12 s (±0.8); a dancer does not answer the horn; off the deck all walk home and are free with their spot ids; julafton's unlock gone mid-visit: home at once. Shots `grodorna_vadar`, `_portier`, `_ring`, `_kanten` |
@@ -10002,8 +10176,8 @@ feature 28).
 carry mantra timeline scene haggle smash`.
 
 **Anim flags**: `wings cupUp cupHeld push planeSeat hold flail oath dance laugh slump shoeOff mirror film
-camShow giraffe butterKnife carryOver glide swan calc ski groda ticket leap bomb placate rub eyesShut tap scratch point fish thumb ride` (`eyesShut`:
-feature 52, `tap`: feature 59, `scratch`: feature 60, `point`: feature 76, `fish`: feature 107, `thumb` and `ride`: feature 106, §14.6; `cupHeld` may be `'low'`) (+ existing `kick talk wave cheer sprint spin look`, the glide's numeric `bank`, feature 3, the hitch's numeric `rideLean`, feature 106, the judges' `card`, feature 4, and the pool fest's
+camShow giraffe butterKnife carryOver glide swan calc ski groda ticket leap bomb placate rub eyesShut tap scratch point fish thumb ride sort` (`eyesShut`:
+feature 52, `tap`: feature 59, `scratch`: feature 60, `point`: feature 76, `fish`: feature 107, `thumb` and `ride`: feature 106, `sort`: feature 109, §14.6; `cupHeld` may be `'low'`) (+ existing `kick talk wave cheer sprint spin look`, the glide's numeric `bank`, feature 3, the hitch's numeric `rideLean`, feature 106, the packing shed's numeric `sortK`, feature 109, the judges' `card`, feature 4, and the pool fest's
 numeric `hop`, feature 8; `groda` is 1 | 2 | 3, §14.6; and `lie`, the lying pose, feature 32).
 **Character states**: `normal flung down seated lying hidden` (`lying`: feature 32, §14.6).
 
@@ -12248,3 +12422,23 @@ the fixer's group.
   his chest, "Inga hajar. Bara svenskar." [N]. E or Q lowers them; a mission start ends a look at once.
   No mission, stage, timer, fixture or calibration pool changed (the roof has no collider). Scenarios
   `kikare`, `kikareshots` (§16.4).
+- Feature 109, "Stig på löpande band – sortera tomater i packhuset" (`features/implemented/lopande_bandet.md`,
+  2026-10-18): a shift at a tomato sorting belt on the packing shed's yard in block (3,0) (§10.49; new
+  `src/game/packhus.js` (`game.packhus`), `LOPANDE_BAND` in content/island.js, the input actions
+  `sortRed`, `sortRotten`, `sortGreen` in input.js, the `sort` pose (with `sortK`) in models.js and its
+  anim flag in character.js; main.js (constructor, update, fixedStep, `allChars`, `areaHit`, updateHud's
+  card and prompt line, debugWarp); §1.6, §3, §6.3, §6.7, §10.5, §11.4, §14.1–14.3, §14.6, §16.4,
+  Appendix A). Between missions, by day, a foreman in a cap (a module-owned local, §6.7) waves Stig in
+  ("¡Señor! Vi behöver folk till skiftet!" [N]); E ("E Ta ett skift") behind a black fade puts Stig behind
+  a sorting belt with a fixed camera, two workers beside him and three bins before it (ROJOS, the bucket,
+  VERDES). 40 tomatoes come along it faster and faster (0.75 → 1.9 m/s); A, S and D throw the one in the
+  yellow zone into ROJOS, the bucket or VERDES. A wrong bin bounces it out onto the ground and a missed one
+  drops off the end onto the pile; at eight on the ground the pile gives way (TOMATRAS), the tomatoes roll
+  across the yard and Stig stands with his arms full: "Ursäkta… ett ögonblick bara…" [N]. A full crate of
+  five is stamped KONTROLLERAD AV G17 [F*] and stacked; a whole shift pays 100 pta with the stamp banner and
+  Stig's "Om det står 'Kontrollerad av G17' på lådan, så är det jag." [F*]; Q ends it; the most crates in a
+  shift is `records.packhus` (saved). Afterwards Siv at the pool says "Spänn av, Stig-Helmer. Du är ledig."
+  [F*](t) once. The belt, its bins and the workers exist only during a shift and nothing of it is solid; a
+  mission start ends a shift at once and nobody stands on the yard in a mission, so no mission, stage,
+  timer, fixture or calibration pool changed. The balance is modelled with the autopilot
+  (`packhusbalans`). Scenarios `packhus`, `packhusbalans` (§16.4).

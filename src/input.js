@@ -23,9 +23,13 @@ const KEYS = {
   menuUp: ['KeyW', 'ArrowUp'],
   menuDown: ['KeyS', 'ArrowDown'],
   hangUp: ['KeyQ', 'Backspace'],
+  // The packing shed's belt (Stig på löpande band, §10.49): a tomato into ROJOS, the bucket, VERDES.
+  sortRed: ['KeyA', 'ArrowLeft'],
+  sortRotten: ['KeyS', 'ArrowDown'],
+  sortGreen: ['KeyD', 'ArrowRight'],
 };
-// Standard gamepad layout (Start = button 9 = pause; the d-pad's up and down = 12 and 13).
-const PAD = { jump: [0], handbrake: [0], sprint: [1], attack: [2], interact: [3], horn: [10], pause: [9], map: [8], skip: [0, 3], lookBack: [11], menuUp: [12], menuDown: [13], hangUp: [1] };
+// Standard gamepad layout (Start = button 9 = pause; the d-pad's up, down, left and right = 12–15).
+const PAD = { jump: [0], handbrake: [0], sprint: [1], attack: [2], interact: [3], horn: [10], pause: [9], map: [8], skip: [0, 3], lookBack: [11], menuUp: [12], menuDown: [13], hangUp: [1], sortRed: [14], sortRotten: [13], sortGreen: [15] };
 
 export const input = {
   locked: false,

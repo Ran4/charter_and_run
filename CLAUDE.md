@@ -192,7 +192,14 @@ opens with a summary of the rounds and the timer changes.
     turn by keys, Herr Storch filming the tower; a target held in the middle 1 s (the ring) found, 25 pta,
     his line, `records.kikare`; E or Q down, a taken fin counted, all eight and the cut to him with "Inga
     hajar. Bara svenskar.", no prompt in a car, a pursuit or a mission, a mission start mid-look; the
-    tower's raised roof and its camera ceiling; every target through the binoculars, DESIGN §10.48)
+    tower's raised roof and its camera ceiling; every target through the binoculars, DESIGN §10.48),
+    `packhus packhusbalans` (Stig på löpande band, the foreman in his cap on the packing shed's yard by
+    day between missions: his wave and call, "E Ta ett skift", the fade, the belt, its bins and two
+    workers (built at the first shift, hidden after it), A/S/D into ROJOS, the bucket and VERDES, a wrong
+    bin and a miss on the ground, a box stamped KONTROLLERAD AV G17 and stacked, the foreman's hurries, a
+    whole shift's 100 pta and `records.packhus`, TOMATRAS at eight dropped with Stig's arms full, Q,
+    Siv's "Spänn av, Stig-Helmer. Du är ledig." once, a kick, by night, the locks and a mission start;
+    `packhusbalans` models the shift's balance with the autopilot, `PACKHUS_RUNS`, DESIGN §10.49)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)
