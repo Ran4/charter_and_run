@@ -777,6 +777,10 @@ function sheep(f, lx, lz, a) {
 // ---------------------------------------------------------------------------------------------
 // golf (4,0): fairway from the tee (south-east) past the pond to green 18 (north-west).
 
+// The course's hazards for the golf carts (feature 74, §10.40; game/golfCart.js): { bunkers: [{ x, z,
+// r }], pond: { x, z, r } } in world coordinates (the sand discs and the water disc). Filled by golf.
+export const GOLF_COURSE = {};
+
 function golf(f, W, ctx) {
   const { rnd } = ctx;
   f.flat(0x6aa84a, 0, 0, W - 2, W - 2, CURB + 0.01);
@@ -797,12 +801,15 @@ function golf(f, W, ctx) {
   f.sign('18', -15.4, CURB + 2.75, -20.96, 0.9, 0.6, 0, { bg: '#d8321e', fg: '#fff8e6', border: null, scale: 0.8, double: true });   // [N]
   f.circ(-16, -21, 0.08, 99, 'pole');
   // Bunkers.
+  GOLF_COURSE.bunkers = [];
   for (const [x, z, r] of [[-22, -14, 3], [-11, -26, 2.6], [-12.5, -24.5, 2.2], [6, -4, 2.8], [8.5, -2, 2.2], [-2, 10, 2.6]]) {
     f.F.cyl(0xb89a62, f.wx(x, z), CURB + 0.032, f.wz(x, z), r + 0.35, 0.02, 18);
     f.F.cyl(0xf0dca8, f.wx(x, z), CURB + 0.036, f.wz(x, z), r, 0.02, 18);
+    GOLF_COURSE.bunkers.push({ x: f.wx(x, z), z: f.wz(x, z), r });
   }
   // The pond (fena_golf circles in it): walkable shallow water, reeds and rocks on the north side.
   waterDisc(f, -10, -6, 6.2, 0x5a8a3a);
+  GOLF_COURSE.pond = { x: f.wx(-10, -6), z: f.wz(-10, -6), r: 6.2 };
   for (let k = 0; k < 7; k++) { const a = PI + 0.3 + k * 0.32; rock(f, -10 + Math.cos(a) * 7.2, -6 + Math.sin(a) * 7.2, 1.2, 0.8, 1.0, 0x9a948a, a, false); }
   for (const a of [-0.4, 0.5, 1.3, 2.4]) reeds(f, -10 + Math.cos(a) * 6.2, -6 + Math.sin(a) * 6.2, rnd);
   // Tee box (raised, top 0.4) with markers, a bench and a ball washer.
@@ -818,20 +825,14 @@ function golf(f, W, ctx) {
   f.ceiling(-8.1, 21, 1.8, 9.6, CURB + 3.0, CURB + 3.6);   // the chase camera stays under the veranda
   f.prop('julgran', -8.0, 23.6);   // Christmas week (§6.9): by the clubhouse door, under the veranda
   postSign(f, 'CAMPO DE GOLF', -18, 28.6, 6.4, 1.2, 1.6, 0, { bg: '#2f6a4a', fg: '#fff8e6', border: '#fff8e6' });   // [N]
-  for (const [z, c] of [[14.4, 0xf4f4f0], [11.6, 0xf2e6c0]]) golfCart(f, -14, z, c);
+  // The two golf carts by the clubhouse, facing the fairway (feature 74, §10.40; were boxes in a
+  // wall): parked cars of the toy type `golfbil`, named, so a mission's clean-up puts them back on
+  // their spots instead of removing them, and `ensureNamedCar` can bring a wreck back.
+  [[14.4, 0xf4f4f0], [11.6, 0xf2e6c0]].forEach(([z, c], k) => f.car('golfbil', -14, z, PI / 2, { color: c, name: `golfbil${k + 1}` }));
   // Palms along the edges, flowering bushes by the clubhouse.
   for (const [x, z] of [[28, -28], [28, -10], [28, 6], [-28, -28], [-28, -6], [-28, 8], [6, -28], [-11, 29.4], [12, 28.6]]) palm(f, x, z, 0.95);
   for (const [x, z] of [[-27.6, 15], [-9, 27], [-27.6, 27]]) boug(f, x, z, 0.9);
   for (const [x, z] of [[2, 24], [24, 26]]) f.prop('palmkruka', x, z);
-}
-
-function golfCart(f, lx, lz, c) {
-  f.box(c, lx, CURB + 0.3, lz, 2.2, 0.6, 1.2);
-  f.box(0x2a2a2a, lx - 0.2, CURB + 0.9, lz, 0.5, 0.5, 1.1);
-  for (const s of [-1, 1]) for (const t of [-1, 1]) f.box(STEEL, lx + s * 0.9, CURB + 0.9, lz + t * 0.5, 0.06, 1.2, 0.06);
-  f.box(c, lx, CURB + 2.1, lz, 2.3, 0.1, 1.3);
-  for (const s of [-1, 1]) for (const t of [-1, 1]) f.cyl(0x222222, lx + s * 0.75, CURB + 0.2, lz + t * 0.6, 0.2, 0.14, 8, PI / 2);
-  f.solid(lx, lz, 2.2, 1.2, CURB + 2.2, 'cart');
 }
 
 // ---------------------------------------------------------------------------------------------

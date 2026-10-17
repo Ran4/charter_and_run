@@ -170,14 +170,15 @@ export const audio = {
   pauseLoops() { if (!ctx) return; drone.g.gain.setTargetAtTime(0, ctx.currentTime, 0.05); if (siren) siren.g.gain.setTargetAtTime(0, ctx.currentTime, 0.05); },
   resumeLoops() { if (!ctx) return; if (this._drone) this.drone(...this._drone); if (siren) siren.g.gain.setTargetAtTime(siren.level, ctx.currentTime, 0.05); },
 
-  engine(on, revs, load) {
+  // `electric` (the golf cart, §10.40): a quiet hum rising to a thin whine instead of the motor.
+  engine(on, revs, load, electric = false) {
     if (!ctx) return;
     const t = ctx.currentTime;
-    const f = 38 + revs * 95;
+    const f = electric ? 150 + revs * 420 : 38 + revs * 95;
     eng.o1.frequency.setTargetAtTime(f, t, 0.05);
-    eng.o2.frequency.setTargetAtTime(f * 0.5 + 1.5, t, 0.05);
-    eng.f.frequency.setTargetAtTime(260 + revs * 900 + load * 600, t, 0.05);
-    eng.g.gain.setTargetAtTime(on ? 0.035 + load * 0.04 : 0, t, on ? 0.08 : 0.25);
+    eng.o2.frequency.setTargetAtTime(electric ? f * 1.004 : f * 0.5 + 1.5, t, 0.05);
+    eng.f.frequency.setTargetAtTime(electric ? 500 + revs * 1100 : 260 + revs * 900 + load * 600, t, 0.05);
+    eng.g.gain.setTargetAtTime(on ? (electric ? 0.008 + load * 0.01 : 0.035 + load * 0.04) : 0, t, on ? 0.08 : 0.25);
   },
   skid(amount) {
     if (!ctx) return;
@@ -251,6 +252,8 @@ export const audio = {
   stamp() { this.noise(0.05, 0.36, 1500, 'bandpass', 0, 1.1); this.tone(96, 0.16, 'sine', 0.38, 52); this.noise(0.14, 0.2, 420, 'lowpass', 0.02, 1.3); },
   stampFail() { this.stamp(); this.tone(196, 0.32, 'square', 0.05, 98, 0.1); this.tone(147, 0.36, 'square', 0.04, 74, 0.12); },
   splat() { this.noise(0.22, 0.3, 600, 'lowpass', 0, 1.2); this.sweep(0.3, 0.1, 1400, 400, 'bandpass', 2, 0.03); },
+  // The golf cart's horn (§10.40): a short, feeble pip-pip.
+  pipHorn() { for (const d of [0, 0.14]) { this.tone(1245, 0.08, 'square', 0.035, 1175, d); this.tone(2490, 0.06, 'sine', 0.01, null, d); } },
   horn(on) {
     if (!ctx) return;
     if (on && !hornNodes) {

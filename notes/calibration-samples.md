@@ -150,6 +150,18 @@ collider, and draw no random numbers; the suit's hanger only changed colour. No 
 autopilot or timer changed (scenario `klader` checks the mission start and the runner going idle).
 Every pool below stands.
 
+**Feature 74 (Golfbilen – pip-pip!, 2026-10-17) touches no pool.** It replaced the two golf-cart boxes
+and their wall by the clubhouse in block (4,0) (`'cart'`, 2.2 × 1.2, top C + 2.2, at world (66,
+−225.6) and (66, −228.4)) with two parked cars of the new toy type `golfbil` (2.4 × 1.3) on the same
+spots (DESIGN §10.40). They spawn after every other parked car, so every other car keeps its id and its
+place in `game.cars`, and their geometry draws no random numbers, so the world builds as before. No
+mission stage, route or pooled stage plays in the golf block (its landmarks are a map label and the fin
+`fena_golf`), and the carts stand about 25 m from the nearest road's centre line, out of every route,
+traffic spawn and walker. A golf cart can be driven only with `missions.state === 'idle'`: in a mission
+`enterCar` refuses it, `getInCar` and `retryCar` never take one, the harness's `anyCar` skips them,
+and a mission start puts both back on their spots. `story` and `fullstory` passed on the feature's
+tree. Every pool below stands and no timer changed.
+
 ## `friskotekBalls` · §8.7 s1 · six fleeing beach balls · on foot: timer = ceil(1.25 × (p75 + 6 × 0.5))
 
 Phase 3 r2 island-staging placed everyone for the intro's group shot (Stig, Lasse, the sisters, the

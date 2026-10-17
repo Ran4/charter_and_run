@@ -12,7 +12,7 @@ import { groundAt, queryBlocks, contains, circleVsObb, circleVsBlock, topAt, wat
 import { worldHooks } from './world/registry.js';
 import { buildCabin, CABIN_X } from './world/cabin.js';
 import { buildRioCard } from './world/rio.js';
-import { Car, collideCars } from './actors/car.js';
+import { Car, CAR_TYPES, collideCars } from './actors/car.js';
 import { Character, ANIM_FLAGS } from './actors/character.js';
 import { CHARS, CAST, buildBust, buildCharacter, randomPed, outfitDef } from './actors/models.js';
 import { AIDriver } from './actors/drivers.js';
@@ -52,6 +52,7 @@ import { Birds } from './game/birds.js';
 import { Gags } from './game/gags.js';
 import { BeachDream } from './game/beachDream.js';
 import { GuardiaJeep } from './game/guardiaJeep.js';
+import { GolfCarts } from './game/golfCart.js';
 import { Lighthouse } from './game/lighthouse.js';
 import { ReceptionBell } from './game/receptionBell.js';
 import { StreetRace } from './game/streetRace.js';
@@ -162,7 +163,9 @@ class Game {
     this.cabin.placeCoins();
     setLoading(S.loading[2]);
     await frame();
-    for (const pc of parkedCars) this.spawnParked(pc);
+    // The golf carts (toys, §10.40) last: a "first free car" (tests, scans) is never one.
+    for (const pc of parkedCars) if (!CAR_TYPES[pc.type]?.toy) this.spawnParked(pc);
+    for (const pc of parkedCars) if (CAR_TYPES[pc.type]?.toy) this.spawnParked(pc);
     this.spawnTraffic(20);
     setLoading(S.loading[3]);
     await frame();
@@ -223,6 +226,7 @@ class Game {
     this.fyren = new Lighthouse(this);    // free roam: up Faro de Maspalomas, the mantra on the gallery 51 m up (§10.35)
     this.bell = new ReceptionBell(this);  // free roam: the queue at Flamenco's reception, the bell's tenth pling (§10.37)
     this.gatlopp = new StreetRace(this);  // free roam after Gamla kläder: José's street races, Berra's and Robban's bet (§10.38)
+    this.golf = new GolfCarts(this);      // free roam: the golf carts at the clubhouse, pip-pip, the bunkers and the pond (§10.40)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -666,6 +670,7 @@ class Game {
     if (!car || car.dead) return;
     if (!this.levelDef.verbs.enterCars || car.noEnter) { if (this.level === 'flight') hud.toast(S.noCars); return; }
     if (car.locked) { hud.toast(S.carBusy); return; }
+    if (car.spec.toy && !this.golf.open()) { this.golf.refuse(); return; }   // a golf cart is never a mission's car (§10.40)
     if (this.player.seatId) this.standPlayer();
     this.skis.giveBack('car');   // the borrowed rollerskis go back to the skier (§10.39)
     this.jeep.onEnter(car);   // the Guardia jeep at the barracks: the loan, SKANDAL (§10.34)
@@ -1568,6 +1573,7 @@ class Game {
     this.fyren.update(dt);
     this.bell.update(dt);
     this.gatlopp.update(dt);
+    this.golf.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);
@@ -1751,6 +1757,7 @@ class Game {
     const simTraffic = def.sim.traffic;
     for (const c of this.cars) if (c.ai && (simTraffic || !c.traffic)) c.ai.update(h, this);
     for (const c of this.cars) if (simTraffic || !c.traffic) c.step(h, this);
+    this.golf.step(h);   // a golf cart in a bunker or the pond (§10.40)
     const cars = this.cars;
     for (let i = 0; i < cars.length; i++) for (let j = i + 1; j < cars.length; j++) collideCars(cars[i], cars[j], this);
     // People. The glide (§10.7) steers and eases his fall around his step, and so do the borrowed
@@ -2111,7 +2118,7 @@ class Game {
         const hold = this.level === 'flight' && this.cabin.turbulent && p.state === 'normal' && !this.holding;
         if (it?.type === 'talk' || it?.type === 'chat') prompt = fmt('promptTalk', { name: it.who.def.name });
         else if (hold) prompt = S.promptHold;
-        else if (it?.type === 'car') prompt = it.car.locked ? '' : this.jeep.prompt(it.car) || (it.car.driverBust ? S.promptSteal : S.promptGetIn);
+        else if (it?.type === 'car') prompt = it.car.locked || (it.car.spec.toy && !this.golf.open()) ? '' : this.jeep.prompt(it.car) || (it.car.driverBust ? S.promptSteal : S.promptGetIn);
         else if (it?.type === 'it') prompt = it.it.prompt || '';
         else if (it?.type === 'stand') prompt = S.promptStand;
         prompt = this.fyren.prompt(prompt);   // the J hint on the lighthouse's gallery (§10.35)
@@ -2130,10 +2137,11 @@ class Game {
   updateAudio(dt) {
     const c = this.playerCar;
     if (c && !c.dead) {
-      audio.engine(true, c.revs, c.ctrl.throttle);
+      audio.engine(true, c.revs, c.ctrl.throttle, !!c.spec.electric);
       audio.skid(c.air ? 0 : c.skidAmt);
-      // The grisbil grunts instead (honk.update, §10.9); the borrowed Guardia jeep's H is its siren (§10.34).
-      audio.horn(input.down('horn') && !c.spec.pigs && !this.jeep.hasSiren(c));
+      // The grisbil grunts instead (honk.update, §10.9), a golf cart pips (golf.update, §10.40); the
+      // borrowed Guardia jeep's H is its siren (§10.34).
+      audio.horn(input.down('horn') && !c.spec.pigs && !c.spec.horn && !this.jeep.hasSiren(c));
       if (c.skidAmt > 0.3 && !c.air) {
         this.skidT = (this.skidT || 0) - 1;
         if (this.skidT <= 0) {

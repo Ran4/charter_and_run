@@ -215,13 +215,14 @@ function clearSpot(g, car, r = 7) {
 // The common option `retryCar: { at, type?, name?, passenger?, rider?, park? }` (DESIGN §9.4 item 3),
 // called by the runner on a retry from that checkpoint, on the fresh `m` before the stage starts.
 // Without `type` the car is the one the player last drove (`prev`, if it is still in one piece:
-// repaired), else a spare hatch he keeps; with `type` it is a new mission car (named `name`), like
-// the one it stands in for (bodega's pig truck went with the failed mission's cars). It waits at
-// `at` with `passenger` seated and `rider` as a bust, and the player at the wheel; with `park` the
-// player stays on foot at `retryAt` and the car is parked for a later stage.
+// repaired; never a golf cart, a toy, §10.40), else a spare hatch he keeps; with `type` it is a new
+// mission car (named `name`), like the one it stands in for (bodega's pig truck went with the
+// failed mission's cars). It waits at `at` with `passenger` seated and `rider` as a bust, and the
+// player at the wheel; with `park` the player stays on foot at `retryAt` and the car is parked for
+// a later stage.
 export function retryCar(g, m, rc, prev) {
   const s = at(rc.at), yaw = s.yaw ?? 0;
-  let car = !rc.type && prev && !prev.dead && !prev.locked && g.cars.includes(prev) ? prev : null;
+  let car = !rc.type && prev && !prev.dead && !prev.locked && !prev.spec.toy && g.cars.includes(prev) ? prev : null;
   if (car) { if (car.hp < car.spec.hp) car.repair(); }
   else {
     car = g.spawnMissionCar(m, rc.type || 'hatch', s.x, s.z, yaw, { name: rc.name });
@@ -340,7 +341,7 @@ export const getInCar = (o = {}) => common(o, {
     // A wrecked mission car cannot come back: fail (a retry starts over), never a soft lock.
     if (o.missionCar && this.car?.dead && g.playerCar !== this.car) return { fail: this.owner ? fmt('wreckedRide', { name: this.owner }) : S.wrecked };
     const pc = g.playerCar;
-    if (!pc) return;
+    if (!pc || pc.spec.toy) return;   // never a golf cart (a toy: main.enterCar refuses it in a mission, §10.40)
     if (o.any === false && this.car && pc !== this.car) return;
     if (o.passenger) { const n = g.npc(o.passenger); if (n && n.car !== pc) seatIn(g, o.passenger, pc, -1); }
     return 'done';

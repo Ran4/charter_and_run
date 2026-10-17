@@ -1872,9 +1872,36 @@ export const DOGS = {
   thanks: 'Tack… tack så mycket!',   // [N] to the owner nobody sees
 };
 
+// Golfbilen – pip-pip! (free roam, DESIGN §10.40; game/golfCart.js). The two golf carts by the golf
+// clubhouse (`names`, world/blocks/nature.js) are parked cars of the toy type `golfbil` (car.js): E
+// gets in on the island with no mission running (`missions.state === 'idle'`); in a mission, or in
+// the other level, no prompt and E gives the toast `blocked`, so a golf cart is never a mission's
+// car (and a debug start puts him out of one). Its horn is a pip-pip, again every `pipEvery` s while
+// H is held. On the course (nature.js GOLF_COURSE; Stig at the wheel of one, on the ground): a
+// bunker (its sand disc + `sand.edge` m) brakes it at `decel` m/s² to `v` m/s and sand flies off the
+// rear wheels while the pedal is down (`sprayEvery` s); `lineAfter` s in, Stig says its `line`, at
+// most every `every` s. The pond (its radius − `pond.edge`) splashes on the way in, brakes it to `v`,
+// leaves a wake every `wakeEvery` s and gets its `line`. Between missions a wrecked golf cart comes
+// back on its spot once Stig is `respawnR` m from both; at a mission start both go back to their spots.
+export const GOLFBIL = {
+  names: ['golfbil1', 'golfbil2'],
+  blocked: 'Golfbilen är för långsam – ta en riktig bil.',   // [N]
+  pipEvery: 0.45,
+  sand: {
+    edge: 0.15, v: 1.6, decel: 12, sprayEvery: 0.05, lineAfter: 0.5, every: 12,
+    line: 'Jag pliktar ett slag.',   // [F*] the golf round's line (research-plot.md:294; design-A gives it to Angerud), Stig's in a bunker
+  },
+  pond: {
+    edge: 0.4, v: 0.9, decel: 16, wakeEvery: 0.18, lineAfter: 0.6, every: 12,
+    line: 'Oj… ett vattenhinder.',   // [N]
+  },
+  respawnR: 60,
+};
+
 export const NAMED_CARS = {
   buss17: 'SunTrips buss 17', hyrbil: 'Hyrbilen', grisbil: 'Grisbilen', nattbuss: 'Nattbussen', joseBil: 'Josés bil', guardiaJeep: 'Guardia-jeepen',
   grisbilFollow: 'Grisbilen', utflyktsbuss: 'Utflyktsbussen', guardia1: 'Guardia-jeepen',   // [N]
+  golfbil1: 'Golfbilen', golfbil2: 'Golfbilen',   // [N] feature 74 (§10.40)
 };
 
 export const LEVEL_OUTFITS_ISLAND = { ole: 'sol', berra: 'sol', robban: 'sol', angerud: 'sol', majsan: 'sol', siv: 'sol', lasse: 'sol' };

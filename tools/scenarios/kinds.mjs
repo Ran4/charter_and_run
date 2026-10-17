@@ -472,7 +472,7 @@ export const SCENARIOS = {
     await T.startMission();
     // Enter a car already doing 12 m/s (one evaluate: getInCar finishes on the next update).
     await T.ev(() => {
-      const g = __game, p = g.player, c = g.cars.filter((q) => !q.locked && !q.dead && !q.ai && !q.noEnter).sort((a, b) => Math.hypot(a.x - p.x, a.z - p.z) - Math.hypot(b.x - p.x, b.z - p.z))[0];
+      const g = __game, p = g.player, c = g.cars.filter((q) => !q.locked && !q.dead && !q.ai && !q.noEnter && !q.spec.toy).sort((a, b) => Math.hypot(a.x - p.x, a.z - p.z) - Math.hypot(b.x - p.x, b.z - p.z))[0];
       c.place(p.x + 3, p.z, c.yaw);
       g.enterCar(c);
       c.vx = Math.sin(c.yaw) * 12; c.vz = Math.cos(c.yaw) * 12;

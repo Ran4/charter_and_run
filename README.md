@@ -235,6 +235,11 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   på skidor, mot rullskidåkarens egna tider, med en resultatlista som på tv: "Stig-Helmer ligger trea
   efter första åket." Skidorna lämnas tillbaka med E, och de går tillbaka av sig själva när Stig
   sätter sig i en bil eller ett uppdrag börjar.
+- **Golfbilen – pip-pip!**: de två golfbilarna vid golfbanans klubbhus går att köra mellan
+  uppdragen. Kliv in med **E** och puttra fram i drygt 20 km/h över fairwayn, med en tuta som säger
+  ett ynkligt "pip-pip". Kör ner i en bunker så tar det stopp i sanden och Stig konstaterar "Jag
+  pliktar ett slag."; i dammen plaskar det: "Oj… ett vattenhinder." Under ett uppdrag är golfbilen
+  för långsam: "Golfbilen är för långsam – ta en riktig bil."
 - **Små grodorna i poolen** (efter slutet): julfesten är inte riktigt över. Varje gång du kommer in
   på Flamencos pooldäck (mellan nio på morgonen och elva på kvällen) vadar SunTrip-gänget ut i den
   grunda änden och ställer sig i ring runt Lasse i tomteluva. Affe spelar Små grodorna på dragspelet,
@@ -472,6 +477,8 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
 - att Stig lånar rullskidorna, hans fall på trottoarkanter och sand, att folk ropar "Heja Eslöv!"
   åt hans nummerlapp och Eslövrundan med resultatlistan (raden blinkar åt kaptenens "Stenmark ligger
   trea efter första åket.")
+- golfbilarna vid klubbhuset, pip-pip-tutan, bunkrarna och dammen (i filmen finns ingen golfbil, och
+  "Jag pliktar ett slag." hörs på golfrundan)
 - poolfesten efter slutet: ringen runt Lasse, portierns promenad, att Stig hoppar med och
   takträknaren (i filmen dansar de andra Små grodorna i poolen på julfesten medan Stig-Helmer och Ole
   öppnar knäckebrödet, och Stig-Helmer dansar aldrig)
@@ -670,6 +677,7 @@ src/game/guardiaJeep.js         Låna Guardia-jeepen in free roam: the loan and 
 src/game/lighthouse.js          Uppför fyren in free roam: the stairs up the lighthouse, the gallery's cameras and vertigo, the exercise, the night
 src/game/receptionBell.js       Ringklockan i receptionen in free roam: the queue at Flamenco's desk, the bell's plings, the tenth's call, the card
 src/game/streetRace.js          Gatlopp mot pizza-racern in free roam: José's three street races (the race kind outside the runner), the bet, the sisters' six
+src/game/golfCart.js            Golfbilen in free roam: the golf carts (never a mission's), the pip-pip, the bunkers' sand and the pond's splash
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
@@ -679,7 +687,7 @@ tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, 
                                 badgaster, butik, brodrost, rum107, solkram, skjortbyte,
                                 stunthopp, prata, takhopp, mikrofon, faglar, gags, strandkyssen,
                                 guardiajeep, fyren, klader, ringklocka, kyrkfrid, gatlopp, skidor,
-                                calibrate, calibflight)
+                                golfbil, calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
 tools/pool.mjs                  re-derives every random stage's timer from the ledger
@@ -717,6 +725,7 @@ node tools/shot.mjs eslov                # the rollerskier: his lane, the horn, 
 ESLOV_RUNS=8 node tools/shot.mjs eslovlopp  # measure Eslövloppet's timer with calibrate's walker (DESIGN §10.12)
 node tools/shot.mjs skidor eslovrundan   # the borrowed rollerskis: the loan, speeds, surfaces, falls, the cheers, the return; Eslövrundan's three places
 node tools/shot.mjs eslovrundankal       # measure the skier's two times with the ski pilot (clean, one fall, two; DESIGN §10.39)
+node tools/shot.mjs golfbil              # the golf carts: E, top speed, the pip-pip, a bunker, the pond, a wreck, the mission lock
 node tools/shot.mjs grodorna grodtakt    # the pool fest after the end: the ring, the porter, Stig in the ring, eight on the beat
 node tools/shot.mjs artig                # Stig says sorry: kicks, run over, a pump, bins, carjackings and the driver's "Nej."
 node tools/shot.mjs grisar               # the grisbil's pigs: the falls, the catch on foot and by creeping, Lasse, the pen

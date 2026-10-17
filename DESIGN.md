@@ -297,7 +297,10 @@ both lines are the sisters' language record at home, the church is never entered
 Civil is not in it); José's three street races against Stig from a start line south of Centro Nórdico
 with his mother in the car, the bet with Berra and Robban at the pool bar, and the sisters' six for the
 Giraffe once all three are won (free roam, §10.38; in the film José never races, the sisters call him
-"pizza-racern" and give the men their points on the plane).
+"pizza-racern" and give the men their points on the plane); the two golf carts by the golf clubhouse,
+Stig puttering about the course in one at about 23 km/h with a feeble pip-pip for a horn, stuck in a
+bunker with "Jag pliktar ett slag." and in the pond with "Oj… ett vattenhinder." (free roam, §10.40; the
+film has no golf cart, and the golf line is said on the golf round, by Angerud in design-A).
 The film's flight has **no turbulence** and **no in-flight toilet scene**: both toilet scenes are
 at Arlanda (we keep them there). The plane's toilets are only an invented hideout.
 
@@ -471,7 +474,11 @@ Physical keys are unchanged from Bigmouth. The level config turns verbs on and o
 - **Majsan's sun cream** (free roam after fataga, by day, §10.26): E by Majsan at Flamenco's pool ("E
   Smörj in ryggen"); in the scene E held fills the SOLKRÄM meter and is let go in the green.
 - **The horn** (free roam, §10.9): H in a car makes pedestrians ahead hop aside and the nearest of
-  the gang answer; in a mission it is only the sound. The grisbil's horn is a grunt everywhere.
+  the gang answer; in a mission it is only the sound. The grisbil's horn is a grunt everywhere, a golf
+  cart's a pip-pip (§10.40).
+- **The golf carts** (free roam, §10.40): E at one of the two by the golf clubhouse ("E Kliv in")
+  between missions; it putters at about 23 km/h. In a mission no prompt, and E gives "Golfbilen är för
+  långsam – ta en riktig bil."
 - **The nap** (free roam, §10.10): E at Stig's bed in room 107 ("E Kvarta en stund") sleeps on to
   the next part of the day; E at a mission giver in the evening or at night starts it the next
   morning.
@@ -1285,7 +1292,7 @@ standing there faces. `y` (optional) = absolute height for collectible spots on 
 | (1,0), (3,0), (0,1) | `tomat` → `tomatfalt` (D1, nature.js) | rows of low tomato bushes (one merged mesh, walls a car drives through: no solids, or tops ≤ 0.6), packing shed `TOMATES · EXPORTACIÓN` / `EMPAQUETADO`, `tomatlada` props, dirt tracks; on (0,1) the finca's yard is `FARM_YARD` (feature 31, §10.21: the yard dog's rectangle x [−30.1, −2.6], z [−30.1, −14.8], its door and spot, the finca and the tank with its ramp as its walls; data only); the Eslöv lane's asphalt runs on over the sidewalk to the roads at both ends (a kerb cut, paint only; feature 71, §10.39) | on (0,1): `vischan` (6, 24, π) · cut anchor `vischanCam` (5.7, 22.7, −0.14) (on the gravel track north of the vischan scene, looking back south at the road and the `CAMINO SIN ASFALTAR` sign; Phase 3 r2) · `eslovVag` (27.5, 24, 0) (the rollerskier on the Eslöv lane, 6 m up from the z −120 road and facing it; Phase 3 r2, was (28, 4, −π/2) mid-lane, 33 m off the vischan drive) — on (3,0): `packhus` (0, 10, π) | — |
 | (2,0) | `grisfest` → `grisgard` (D1, nature.js) | farm: white barn (roof top ≈ 5), pergola deck with long tables under string lights, spit-roast pig, bandstand, dance-floor platform (deck top 0.4), piglet pen, gate on the **south** road; **12 `tallrikar` prop stacks** on the tables (smash stage; `placeProp(..., baseY = table top)`, §14.7) | `grisfest` (0, 26, π) · `grisfestGate` world (−80, −204, π/2) (on the south road at the farm gate, the `follow` endpoint) · `dansgolv` (0, 0, 0) · `pryl_pung` (−18, −14, 0, 5.4) · `grisfalla` (−11, 20.5, −π/2) and `grisfallaIn` (−18.5, 20.6, −π/2) (the pig delivery's stop by the piglet pen and the pen's middle, feature 15, §10.15) | — |
 | (0,0) | `fataga` → `fataga` (D1, nature.js) | white village houses, tile roofs, narrow lanes, date palms, small church, embroidered tablecloths on lines (`MANTELES · DUKAR`), sheepfold (fence solids, gap gate); six ochre crags along the north edge, solid along their length (Phase 3 r3: rock()'s 1 m circle plus a box 0.85·sx × 0.53·sz on the long axis, the mesh's widest section; the circle alone let the player and the chase eye 2–3 m into the rock, also in the fold's back under the shelter) | `fataga` (0, 18, π) · `fatagaBus` world (−240, −204, −π/2) (westbound kerb of the z = −200 road, the `follow` endpoint) · `fatagaFold` (−18, −12, 0) · `fatagaDukar` (8, 4, π) · cut anchor `dukarCam` (8, 4, 0) = `fatagaDukar` turned round (the stall from the square; Phase 3) · `pryl_kniv` (0, 0, 0, 1.2) | — |
-| (4,0) | `golf` → `golf` (D1, nature.js) | fairway, bunkers (sand slabs), **pond** (`water` circle + flat blue), flag 18, small clubhouse `CAMPO DE GOLF` | `golf` (0, 22, π) · `fena_golf` (−10, −6, 0, 0.35) | — |
+| (4,0) | `golf` → `golf` (D1, nature.js) | fairway, bunkers (sand slabs), **pond** (`water` circle + flat blue), flag 18, small clubhouse `CAMPO DE GOLF`; the bunkers' and the pond's discs exported as `GOLF_COURSE` (world `{ bunkers: [{ x, z, r }], pond: { x, z, r } }`, data only; feature 74, §10.40) | `golf` (0, 22, π) · `fena_golf` (−10, −6, 0, 0.35) | `golfbil1` (0xf4f4f0) at (−14, 14.4), `golfbil2` (0xf2e6c0) at (−14, 11.6), both facing east (π/2) to the fairway: parked golf carts (`golfbil`, a toy: never a mission's car), on the spots of the two boxes and their wall (`'cart'`, 2.2 × 1.2, top C + 2.2) they replace (feature 74, §10.40) |
 | (5,0) | `bungalow` → `bungalowTomt` (D1, nature.js) | Angerud's show bungalow: one-storey white cube, pool, plot fence, `SE VENDE · BUNGALOW · 4 RUM OCH KÖK` | `bungalow` (0, 22, π) · `fena_bungalow` (6, −4, 0, 0.35) | — |
 | (5,1) | `bygge` → `bygge` (D1, nature.js) | half-built hotel frame, crane, girder deck with ramp (Bigmouth construction reworked), `PRÓXIMAMENTE · HOTEL NUEVA ESTOCOLMO II`, cones/barrels; the storeys under the 2nd- and 3rd-floor slabs are closed (dark core, brick infill on the faces the floor below walks along), since their colliders are solid from the ground (Phase 3); the plank at the 1st floor's east end, local x [19.2, 22], z [−2.7, −0.1], up to S1 + 0.9 (feature 40, §10.27) | `bygge` (0, 22, π) · `pryl_klocka` (6, −6, 0, 7.6) · `stunt_planka` (22, −1.4, π/2, 4.45), `stunt_gula` (−16, 4, π, 1.95) (the stunt jumps' take-offs, §10.27) | — |
 | (6,1) | `dromplan` → `dromplan` (D2, coast.js) | **the old propeller "drömplanet"**: faded red 4-engine prop plane (DC-7-like) on a dirt lot by the road, wing reachable via a crate ramp, windsock, sign `AERÓDROMO`; its scraggly palm at (−24, 6), out of the plank jump's run-out (it was at (−24, −2); feature 40, §10.27) | `dromplan` (0, 20, π) · `pryl_kamera` (−4, −2, 0, 3.6) (on the wing) · `stunt_landning` (−26, −1.4, π/2) (the plank jump's run-out, §10.27) | — |
@@ -1394,6 +1401,13 @@ in the air, and every landing calls `game.onCarAirEnd(car, impact)` before the o
 | `guardia` | Guardia Civil | new: `tall`, len 4.2, wid 1.9, bodyH 1.45, cabinH 0, wheelR 0.4, maxSpeed 30, accel 12, grip 9, steer .58, mass 2000, hp 160; flag `guardia` (white roof, blue lamp, white door band, spare wheel on the bonnet) | `0x2e5e3e` | pursuit, `guardia1/2` parked (`guardia1` borrowable between missions after the bodega, its lamp blinking on H: feature 51, §10.34) |
 | `grisbil` | Grisbilen | pickup + flag `pigs` (slatted rack + 3 pink pig blobs: one at −0.15 L, the back two across the bed snout to snout at −0.41/−0.425 L, scale 0.72, wholly inside the rack — Phase 3 r2, they faced aft and their snouts stuck ~0.2 m out over the tailgate; the bed-rider slots at −0.3 L stay free; since feature 15 each pig is its own outlined mesh, `PIG_SLOTS` / `car.pigs`, so one can tumble off in free roam, §10.15, same look), maxSpeed 34, accel 14 | rust `0xa8442a` | bodega mission, unlock |
 | `trolley` | Serveringsvagn | registered by cabin.js (§5.8) | `0xc8ccd2` | cabin only |
+| `golfbil` | Golfbil | new (feature 74, §10.40): len 2.4, wid 1.3, bodyH 0.45, cabinH 1.48, wheelR 0.25, `wheelInset` 0.12 (the wheels near the ends), maxSpeed 5.5, accel 6, grip 11, steer 0.75, mass 450, hp 80; own `build` (open sides, a bench, a roof on four posts with a red edge, a windscreen, two golf bags in the rear well); flags `toy` (`main.enterCar` refuses it outside free roam), `governed` (no pull past maxSpeed: × 1.2 for the player, 6.6 m/s, the speedo about 23 km/h), `horn: 'pip'`, `electric`, `noExplode` | `0xf4f4f0` | `golfbil1/2` by the golf clubhouse, never traffic |
+
+New spec fields (feature 74): `wheelInset` (wheel centre from the body's end less wheelR, default
+0.38), `governed` (`step` pulls with max(0, 1 − v/maxSpeed) instead of max(0.08, …), so the car
+never creeps past its top speed), `noExplode` (a spec default for the car field). A seated Stig is full
+size in the golf cart: hips at seatY + 0.12 = 0.56, his head top 2.07, roofY 2.09 (the idea's cabinH
+1.37 gave fitScale 0.94).
 
 Removed: `hearse`, `muscle` (their geometry branches may stay as dead code). Traffic mix (main.js):
 `['hatch','hatch','hatch','hatch','sedan','sedan','wagon','van','taxi','pickup','guagua','icecream']`
@@ -6633,6 +6647,73 @@ name (§1.5). No line is from Snowroller.
   measurement, and Eslövrundan has no clock that fails it, only the result list and a 120 s cap; the
   pedestrians do not jump aside for the skis.
 
+### 10.40 Golfbilen – pip-pip! (free roam; feature 74, 2026-10-17)
+
+`game/golfCart.js` (`GolfCarts`, owned by Game as `golf`), config `GOLFBIL` in content/island.js, the
+car type `golfbil` in car.js, the two carts in nature.js `golf` (with `GOLF_COURSE`), hooks in main.js
+(`enterCar`, `updateHud`'s car prompt, `updateAudio`, `golf.step` after the cars' steps in `fixedStep`,
+`golf.update` after `gatlopp.update`, the parked cars' spawn order) and kinds/core.js (`getInCar`,
+`retryCar`). The two golf carts by the golf clubhouse, until now boxes in a wall, are real parked cars:
+the island's smallest and slowest vehicle, with a horn like a toy's. The golf cart is ours [N] (§1.6:
+no golf cart in the notes on the film); the bunker line is the film's golf round's, relocated [F*].
+
+- **The carts** (nature.js `golf`, §6.3): `golfbil1` (white `0xf4f4f0`) at block-local (−14, 14.4) and
+  `golfbil2` (cream `0xf2e6c0`) at (−14, 11.6), world (66, −225.6) and (66, −228.4), both facing east
+  (yaw π/2) to the fairway; parked cars (`f.car`), named, so a mission's clean-up (`clearSpot`,
+  `clearRoute`) and the tow (§10.17) put one back on its spot instead of removing it. They replace the
+  two boxes and their wall (`'cart'`, 2.2 × 1.2, top C + 2.2) on the same spots. They spawn after every
+  other parked car (main.js), so every other car keeps its id and its place in `game.cars`, and a
+  "first free small car" (tests, scans) is never one; their geometry draws no random numbers.
+- **The type** (car.js `CAR_TYPES.golfbil`, §6.6): len 2.4, wid 1.3, bodyH 0.45, cabinH 1.48, wheelR
+  0.25 with the wheels near the ends (`wheelInset` 0.12), maxSpeed 5.5, accel 6, grip 11, steer 0.75
+  (tight turns: about 2.6 m at top speed), mass 450, hp 80, colour `0xf4f4f0`. `governed`: at the
+  wheel the pull is max(0, 1 − v/maxSpeed), so the player's golf cart (× 1.2, §6.6) tops out at
+  6.4–6.6 m/s and the speedo reads about 23 km/h (`Golfbilen`, NAMED_CARS). `noExplode`: a wreck
+  steams and stops. Its `build` (`buildGolfbil`): open sides over sills, a nose narrow below and full
+  width over the front wheels with a dash sloping up to the driver, round lamps, a steering column and
+  wheel on the left, a bench (base, cushion, a backrest leaning back) with chrome hip rails, a rear well
+  with two golf bags leaning back (red with white bands, navy with tan), their clubs' head covers, a
+  strap across, four posts, a windscreen between the front ones, and a roof with a red edge. Stig sits
+  on the ordinary seat (seatY 0.44) full size under the roof (his head top 2.07, roofY 2.09); his legs go
+  out under the dash. Not in `TRAFFIC_MIX`; the paint shop does not take it (a `build` car, §7.2).
+- **Never a mission's car.** `golf.open()` is the island with `missions.state === 'idle'`. E at a
+  golf cart (`enterCar`) gets in only then; otherwise there is no car prompt at it and E gives the
+  toast `Golfbilen är för långsam – ta en riktig bil.` [N] and no seat. So no stage (`getInCar` and
+  its four "Hoppa in i en bil", a timed drive, `pickup`, a `retryCar`) can be played in one. Behind
+  that: `getInCar` never counts a golf cart as the player's car, `retryCar` never hands one back
+  (a spare hatch instead), `golf.update` puts him out of one at once whenever a mission runs (only a
+  debug start can find him in one), and at a mission start (`missions.state` leaving 'idle') both go
+  back to their spots (a wreck comes back whole). The harness's `anyCar` skips them.
+- **The horn and the motor**: H in a golf cart is `audio.pipHorn()`, a short, feeble pip-pip, again
+  every `pipEvery` 0.45 s while H is held (`golf.update`; `updateAudio` keeps the two-tone horn off for
+  a spec `horn`). The press is a horn press like any other: in free roam the island hears it (§10.9).
+  The motor is `audio.engine(…, electric)`: a quiet hum rising to a thin whine (§12.3).
+- **The course** (nature.js `GOLF_COURSE`; Stig at the wheel of one, on the ground, on the island): a
+  **bunker** (within its sand disc's radius + `sand.edge` 0.15 m) brakes the golf cart at `sand.decel`
+  12 m/s² (less the pedal's pull) to `sand.v` 1.6 m/s (`golf.step`, after the cars' steps), and while the
+  pedal is down sand flies back and up off both rear wheels (every `sprayEvery` 0.05 s, two grains a
+  wheel); `lineAfter` 0.5 s in, Stig says "Jag pliktar ett slag." [F*] (the golf round's line,
+  research-plot.md:294; design-A gives it to Angerud), at most every `every` 12 s. The **pond** (within
+  its radius − `pond.edge` 0.4 m) splashes on the way in (`fx.splash`, `audio.splash(0)`), brakes it at
+  16 m/s² to `pond.v` 0.9 m/s, throws a small wake every `wakeEvery` 0.18 s while it moves, and 0.6 s in
+  Stig says "Oj… ett vattenhinder." [N] (at most every 12 s). Other cars cross the course as before.
+- **A wreck**: steam, no fire, no SKANDAL (a named car); between missions it comes back on its spot,
+  whole, once Stig is `respawnR` 60 m from both the wreck and the spot.
+- So no mission, stage, timer, fixture or calibration pool changes: no stage plays in the golf block
+  (its landmarks are a map label and the fin `fena_golf`), the carts stand about 25 m from the nearest
+  road's centre line, on the old boxes' footprints, and in a mission they are parked cars nobody can
+  take (notes/calibration-samples.md, "Feature 74").
+- **Tests**: `golf.surf`, `inT`, `pips`, `sand`, `pond`, `sprays`, `last` ({ kind: 'refuse' | 'out' |
+  'sand' | 'pond' (v) | 'line' (surf, text) | 'home' (names) | 'respawn' (name) }), `course`,
+  `surfaceAt(x, z)`, `open()`. Scenario `golfbil` (§16.4); `cars` shows the type beside a hatch.
+- **Not done / changed** (deviations from the idea): cabinH 1.48, not 1.37 (Stig, 1.51 m from hips
+  to cowlick, was scaled to 0.94 under the lower roof); the speedo reads about 23 km/h ("drygt 20");
+  the lock is in `enterCar` (no prompt, the toast), with `getInCar` and `retryCar` as a second guard,
+  and a mission start puts both carts home; the pond has a line of its own [N]; only a golf cart feels
+  the bunkers and the pond; the carts face the fairway. "Angeruds golfrunda" is not built, so Stig keeps
+  "Jag pliktar ett slag."; if it is, his bunker line should become his own, e.g. "Oj, förlåt gräset!"
+  [N], and the line stays Angerud's.
+
 ## 11. HUD / UI strings (Swedish; `src/strings.js` owned by WP-H, created by Phase 0)
 
 `strings.js` exports `S` (flat object) and `fmt(key, vars)`. Engine code uses `S.key` only.
@@ -6681,7 +6762,7 @@ mutes without touching the button, which then said `Ljud: på` while muted).
 | Herr Storch's viewfinder (feature 6, §10.11) | `#viewfinder` over the whole HUD (z-index 4, over bubbles and toasts): the black camera body round a 4:3 gate (min(66vw, 92vh) wide, 47 % down, rounded 22 px; the body is the gate's 200vmax spread shadow), cream sprocket holes either side, `I KAMERAN` (Luckiest Guy, `.vf-title`, over the shadow) at the top, the counter (`DAG {n}` / `JULAFTON`, Nunito 800 22 px, bottom right in the gate), dust and a scratch jumping every 0.12 s, his line `Herr Storch: – …` in Nunito at the bottom; the gate black (`#050403`) with the cap, clear with `live` (and `body.film-live` filters the canvas, a faint warm flicker); `hud.viewfinder(o \| null)` |
 | Herr Storch's film night (feature 6, §10.11) | `#filmnight` over the whole HUD (`#0d0a0c`): `FILMKVÄLL` (Luckiest Guy) over the sub (Nunito), a black strip with sprocket holes top and bottom and seven black 16:9 frames with dust and `DAG 1`…`DAG 7` (fading in 0.14 s apart), his first line, a second strip with up to four stills (`img`, the pale filter, a `JULAFTON` tag in Luckiest Guy) and his second line; `hud.filmNight(o \| null)`, `hud.filmNightStep('l1' \| 'jul' \| 'l2')` brings in the line, the stills and the last line |
 | meter label | `FLYGRÄDSLA` (flight) / `SKANDAL` (island); pursuit suffix (CSS `::after`) ` · ¡ALTO!` |
-| speedo unit | `KM/H` (× 3.6); car name = Swedish `spec.name` or `NAMED_CARS[name]` (`buss17`: "SunTrips buss 17", `hyrbil`: "Hyrbilen", `grisbil`: "Grisbilen", `nattbuss`: "Nattbussen", `joseBil`: "Josés bil", `guardiaJeep`: "Guardia-jeepen") |
+| speedo unit | `KM/H` (× 3.6); car name = Swedish `spec.name` or `NAMED_CARS[name]` (`buss17`: "SunTrips buss 17", `hyrbil`: "Hyrbilen", `grisbil`: "Grisbilen", `nattbuss`: "Nattbussen", `joseBil`: "Josés bil", `guardiaJeep`: "Guardia-jeepen", `golfbil1`/`golfbil2`: "Golfbilen", feature 74) |
 | dialogue next | `E ▸` |
 | minimap rim badge | `N` (island) / `FRAM` (flight) |
 | big-map legend | from `game.mapLegend()` (§10.1) |
@@ -6936,6 +7017,8 @@ Scheduler fixes (Phase 0): catch-up guard `if (next < ctx.currentTime) next = ct
 | `stamp()`, `stampFail()` | the stunt jumps' stamp (feature 40, §10.27): a rubber thump on paper (a 1.5 kHz noise slap, a 96 → 52 Hz sine, a low noise tail); UNDERKÄND adds a falling two-tone square buzz (196 → 98, 147 → 74 Hz) |
 | `squirt()`, `splat()` | the sun cream (feature 35, §10.26): a squeeze of the bottle every 0.28 s while E is held (a 0.07 s band-passed noise at 0.9–1.2 kHz and a 240 → 170 Hz sine), too much landing on her back (a 0.22 s low-passed noise and a 1.4 kHz → 400 Hz sweep) |
 | `splash(k = 0)` | water (existing at k 0: a band-passed noise burst and a sweep down); feature 24 (§10.20): `k` 0..2 lengthens, lowers and lifts it (`game.waterSplash`: 1 a fall from the 10 m tower, 1–2 a stomp's cannonball), and over 1 a 75 → 38 Hz sine boom under it |
+| `pipHorn()` | a golf cart's horn (feature 74, §10.40): a short, feeble pip-pip, two 0.08 s square tones gliding 1245 → 1175 Hz 0.14 s apart with a faint octave; `golf.update` plays it on H and every 0.45 s while H is held, and `updateAudio` keeps `horn` off in a car whose spec has a `horn` |
+| `engine(on, revs, load, electric = false)` | the motor loop (existing); `electric` (a golf cart, feature 74): a quiet hum, 150 + 420 × revs Hz through a low-pass at 500 + 1100 × revs, gain 0.008 + 0.01 × load |
 | `pip()` | Ole's calculator alarm (feature 30, §10.10): PIP-PIP-PIP twice, 2794 Hz square pips of 0.06 s 0.12 s apart, the second three 0.55 s on; the nap plays it twice |
 | `whirr(secs = 1.2)` | Herr Storch's film camera (feature 6, §10.11): the clockwork motor, 18 soft clicks a second (0.016 s band-passed noise bursts at 2.6 kHz) over a faint 118 → 112 Hz sawtooth hum; when he films (2.1 s), on a viewfinder (1.2 s) and for the film night (2.4 s) |
 | `shutter()` | Ole's camera (feature 47, §10.32): the flash's pop and the shutter's double click (band-passed noise bursts of 0.05 s at 2.6 kHz and, 0.06 s on, 0.03 s at 3.8 kHz), then the flash charging again, a faint sine rising 1800 → 5000 Hz over 0.9 s from 0.15 s; at "Si omelett!" with the white flash |
@@ -7070,6 +7153,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/lighthouse.js` | new (feature 52, 2026-10-17) | — | `Lighthouse` (`game.fyren`): Uppför fyren in free roam: the keeper's door and the gallery door with their fades and banners, the clock on to the evening by day, the gallery's three cameras and the vertigo, the exercise against the lantern with his eyes shut, the long blink to the night, `leave`, a mission start with him up there (§10.35) |
 | `src/game/receptionBell.js` | new (feature 59, 2026-10-17) | — | `ReceptionBell` (`game.bell`): Ringklockan i receptionen in free roam: the queue of three departing guests at Hotel Flamenco's porter's desk with their suitcases (solid only while out), their question and the porter's answer, the desk bell's mesh, its interactable and plings, the tenth pling's call (the porter's phone, Lasse on the radio, the guest's question, Stig's sorry, the bell under the desk), the bell's return with the hotel's card, the reset at a mission start (§10.37) |
 | `src/game/rollerskis.js` | new (feature 71, 2026-10-17) | — | `Rollerskis` (`game.skis`): Låna rullskidorna in free roam after Pepes Bodega: the loan at the rollerskier's rest and the return, the skis' rolling (`step`/`after` around the player's step: the heading, poling, ploughing, rolling, the surfaces `skiSurface`), the falls, "Heja Eslöv!" at the bib and Stig's answer, Eslövrundan (the countdown, the card, the result list, the record `records.eslovSkidor`), the skis back by themselves (§10.39) |
+| `src/game/golfCart.js` | new (feature 74, 2026-10-17) | — | `GolfCarts` (`game.golf`): Golfbilen in free roam: `open()`/`refuse()` for main.enterCar and updateHud (a golf cart only between missions on the island), the pip-pip, the bunkers' and the pond's brake (`step`) with the sand, the splash and Stig's lines, a wreck back on its spot, both home at a mission start (§10.40) |
 | `src/game/streetRace.js` | new (feature 69, 2026-10-17) | — | `StreetRace` (`game.gatlopp`): Gatlopp mot pizza-racern in free roam after Gamla kläder: José's "!" and challenge, the grid in the hire car behind a fade, the three courses run on the mission kind `race` outside the runner, the start and finish banners, the result, the prize and `records.gatlopp`, José's drive back and the walk to his place with his mother, the bet at the chalkboard by Berra and Robban, the sisters' six, the reset at a mission start (§10.38) |
 | `src/game/church.js` | new (feature 60, 2026-10-17) | — | `Church` (`shame.church`): Kyrkfrid i Templo Ecuménico in free roam: the church door's interactable and its open doorway mesh, the walk in and the slam, the plaza shot and the card, the waiting Land Rovers with their lamps, the meter in the wait, the officer's walk to the sign and his lines and scratch, the give-up, the peek and the step out, Stig's line and the banner, the officer into his Land Rover, the interruptions and the map marker (§7.2) |
 | `src/game/beachDream.js` | new (feature 57, 2026-10-17) | — | `BeachDream` (`game.dream`): Strandkyssen i bränningen in free roam: the towel and its interactable, the scene's clock (lying down, the white wash, the dream with Majsan's double, the foam and the camera's glide, the flash, the wave and its splashes, the lines), the visitor on the sand and her way home, the drips, the reset (§10.33) |
@@ -7097,7 +7181,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/world/blocks/index.js` | new | none | `BLOCK_BUILDERS` merge |
 | `src/world/blocks/hotels.js` | new | **C1** | `flamenco`, `suntrip`; `flamencoBays` (feature 20, §10.17); the diving tower `diveTower` and its solids `DIVE_TOWER` (feature 24, §10.20); SunTrip-butiken's counter `suntripShop` and `SUNTRIP_SHOP` (feature 34, §10.23); room 107's keepsake shelf, `roomKeepsakes`, `ROOM107` and `worldHooks.rum107` (feature 38, §10.25); the wardrobe's Arlanda coat and Rio jacket on the hanger, the suit's colours (feature 67, §10.36); Ole's camera bag on the patio wall under the pergola (feature 47, §10.32); the porter's desk bell left to game/receptionBell.js (feature 59, §10.37) |
 | `src/world/blocks/centre.js` | new | **C2** | `kasbah`, `cita`, `plaza`, `marknad`, `kyrka`, `bensin`, `guardia`; the market's five fruit stalls as `frutas` props (feature 28, §10.19); room for three G17 toasters (two paint cans a row, a fruit crate's fruit, stall K's radio 5 via `stall`'s `gap`; feature 33, §10.24); the lamp beside Viking Bar's door raised to 2.95 m (feature 47, §10.32) |
-| `src/world/blocks/nature.js` | new | **D1** | `tomat`, `grisfest`, `fataga`, `golf`, `bungalow`, `bygge`, `dyner`; `FARM_YARD` (feature 31, §10.21); the bygge's plank (feature 40, §10.27); La Charca's herons moved out to game/birds.js (feature 43, §10.31) |
+| `src/world/blocks/nature.js` | new | **D1** | `tomat`, `grisfest`, `fataga`, `golf`, `bungalow`, `bygge`, `dyner`; `FARM_YARD` (feature 31, §10.21); the bygge's plank (feature 40, §10.27); La Charca's herons moved out to game/birds.js (feature 43, §10.31); `GOLF_COURSE` and the golf carts `golfbil1/2` (feature 74, §10.40) |
 | `src/world/blocks/coast.js` | new | **D2** | `flygplats`, `dromplan`, `fyren`, `playa`, `hamn`; `BELT` (feature 25, §10.16); the dream plane lot's palm moved (feature 40, §10.27); `LIGHTHOUSE`, the tower's solid to its gallery floor, the lantern's and the railing's walls, the rail bars along the ring and the gallery door (feature 52, §10.35) |
 | `src/world/cabin.js` | new | **A1** | §5 interior, collision, seats, trolley, turbulence, fear, interactables, blockers, `CAM_CABIN`, `FLIGHT_PALETTES`, `FEAR`; calls `buildFlightScenery` |
 | `src/world/flightScenery.js` | new | **A2** | §5.6 visuals: gate-set visuals, airframe, animated scenery per phase, `buildFlightScenery`, `buildPlaneExterior` |
@@ -7152,23 +7236,24 @@ Init: `initGfx` → `input.init` → `hud.init` → `fx.init` → fonts (Luckies
 `buildTown(scene)` (calls `registerIslandLandmarks()` first, then `streets`, every block via
 `BLOCK_BUILDERS[MAP[j][i]]`, `outskirts`, ped loops) → `this.cabin = buildCabin(scene, this)` →
 `buildRioCard(scene)` (if present) → `finalizeProps(scene)` → `initCoins(scene)` →
-`hud.buildBaseMap()` → `placeWorldCoins()` → `this.cabin.placeCoins()` → parked cars → traffic (20)
+`hud.buildBaseMap()` → `placeWorldCoins()` → `this.cabin.placeCoins()` → parked cars (the toys, the golf
+carts, last: feature 74) → traffic (20)
 → peds (34) → NPC `Character`s (one per `CHARS` key except `stig`, the radio-only keys `levander
 kapten pa guardia pax telefonist` and the cabin-owned `vardinna2`; `key` field; hidden until placed, §2.3) →
 player `Character(CHARS.stig)` (`key = 'stig'`) → collectibles (`COLLECTIBLES`) → markers → `Shame`
-→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `DiveTower` (feature 24, §10.20; registers the ladder's two interactables, sets `DIVE_TOWER.live`) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `Eslov` (feature 7, §10.12; registers the rollerskier's interactable) → `PoolFest` (feature 8, §10.13) → `StigSorry` (feature 11, §10.14) → `PigTruck` (feature 15, §10.15) → `BaggageBelt` (feature 25, §10.16) → `Lapplisa` (feature 20, §10.17) → `GrisfestFree` (feature 21, §10.18; registers the gate's and the tourists' interactables) → `FruitStands` (feature 28, §10.19) → `Dogs` (feature 31, §10.21) → `Bathers` (feature 32, §10.22; registers the wake's interactable) → `SuntripShop` (feature 34, §10.23; registers the four wares' and the bag's interactables, sets `SUNTRIP_SHOP.live`) → `Toasters` (feature 33, §10.24; registers the seven toasters' interactables) → `Room107` (feature 38, §10.25; registers room 107's three interactables) → `Solkram` (feature 35, §10.26; registers Majsan's interactable) → `Stunts` (feature 40, §10.27) → `GangTalk` (feature 39, §10.28) → `RoofJump` (feature 41, §10.29; registers the three stair doors, sets `ROOF_JUMP.live`, places the roof coins) → `Mic` (feature 44, §10.30; registers the mic's interactable) → `Birds` (feature 43, §10.31; builds the four kinds' instanced meshes and puts every bird on its spot) → `Gags` (feature 47, §10.32; registers the two gags' interactables) → `BeachDream` (feature 57, §10.33; builds the towel and the foam, registers the towel's interactable) → `GuardiaJeep` (feature 51, §10.34) → `Lighthouse` (feature 52, §10.35; registers the two doors' interactables) → `ReceptionBell` (feature 59, §10.37; builds the bell, the card and the three suitcases with their solids, registers the bell's interactable) → `StreetRace` (feature 69, §10.38; registers José's and the chalkboard's interactables) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
+→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `DiveTower` (feature 24, §10.20; registers the ladder's two interactables, sets `DIVE_TOWER.live`) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `Eslov` (feature 7, §10.12; registers the rollerskier's interactable) → `PoolFest` (feature 8, §10.13) → `StigSorry` (feature 11, §10.14) → `PigTruck` (feature 15, §10.15) → `BaggageBelt` (feature 25, §10.16) → `Lapplisa` (feature 20, §10.17) → `GrisfestFree` (feature 21, §10.18; registers the gate's and the tourists' interactables) → `FruitStands` (feature 28, §10.19) → `Dogs` (feature 31, §10.21) → `Bathers` (feature 32, §10.22; registers the wake's interactable) → `SuntripShop` (feature 34, §10.23; registers the four wares' and the bag's interactables, sets `SUNTRIP_SHOP.live`) → `Toasters` (feature 33, §10.24; registers the seven toasters' interactables) → `Room107` (feature 38, §10.25; registers room 107's three interactables) → `Solkram` (feature 35, §10.26; registers Majsan's interactable) → `Stunts` (feature 40, §10.27) → `GangTalk` (feature 39, §10.28) → `RoofJump` (feature 41, §10.29; registers the three stair doors, sets `ROOF_JUMP.live`, places the roof coins) → `Mic` (feature 44, §10.30; registers the mic's interactable) → `Birds` (feature 43, §10.31; builds the four kinds' instanced meshes and puts every bird on its spot) → `Gags` (feature 47, §10.32; registers the two gags' interactables) → `BeachDream` (feature 57, §10.33; builds the towel and the foam, registers the towel's interactable) → `GuardiaJeep` (feature 51, §10.34) → `Lighthouse` (feature 52, §10.35; registers the two doors' interactables) → `ReceptionBell` (feature 59, §10.37; builds the bell, the card and the three suitcases with their solids, registers the bell's interactable) → `StreetRace` (feature 69, §10.38; registers José's and the chalkboard's interactables) → `GolfCarts` (feature 74, §10.40) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
 `placeNpcs(true)` → spawn the player → portraits for every key in `CAST` (`renderPortrait`
 restores each model's parent and transform, so seated cast members stay in their seats) →
 `applySaveToWorld()` →
 loop → `window.__ready = true` → `start()` in test mode.
 
 Frame (`update`): hooks → one-shots (incl. E/J/R while seated) → fixed steps (player intent incl.
-mantra/hold, AI, cars (a landing calls `onCarAirEnd`, feature 40), people (`glide.step` → `skis.step`, feature 71 → the player's step → `glide.after` → `skis.after`, feature 3, 71 →
+mantra/hold, AI, cars (a landing calls `onCarAirEnd`, feature 40), `golf.step` (feature 74), people (`glide.step` → `skis.step`, feature 71 → the player's step → `glide.after` → `skis.after`, feature 3, 71 →
 `belt.carry`, feature 25 → the NPCs → `party.step`, feature 21 → `bathers.step`, feature 32 → `mic.step`, feature 44 → `bell.step`, feature 59) —
 traffic/peds skipped when `!levelDef.sim.*`) → `syncAll` (also
 writes `ch.x/y/z` from `car.seatWorld(ch.seatSide)` for every car-seated character, player
 included, so framing, bubbles and distance checks see where they really are) → `missions.update` →
-`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `tower.update` (feature 24) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `skis.update` (feature 71) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `stands.update` (feature 28) → `dogs.update` (feature 31) → `bathers.update` (feature 32) → `shop.update` (feature 34) → `toasters.update` (feature 33) → `room107.update` (feature 38) → `solkram.update` (feature 35) → `stunts.update` (feature 40) → `chat.update` (feature 39) → `roofs.update` (feature 41) → `mic.update` (feature 44) → `birds.update` (feature 43) → `dream.update` (feature 57) → `jeep.update` (feature 51) → `fyren.update` (feature 52) → `bell.update` (feature 59) → `gatlopp.update` (feature 69) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
+`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `tower.update` (feature 24) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `skis.update` (feature 71) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `stands.update` (feature 28) → `dogs.update` (feature 31) → `bathers.update` (feature 32) → `shop.update` (feature 34) → `toasters.update` (feature 33) → `room107.update` (feature 38) → `solkram.update` (feature 35) → `stunts.update` (feature 40) → `chat.update` (feature 39) → `roofs.update` (feature 41) → `mic.update` (feature 44) → `birds.update` (feature 43) → `dream.update` (feature 57) → `jeep.update` (feature 51) → `fyren.update` (feature 52) → `bell.update` (feature 59) → `gatlopp.update` (feature 69) → `golf.update` (feature 74) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
 pickups/collectibles → props → `fx.tick` → `tickTown` → markers → camera → sun/sky → HUD → audio →
 traffic recycling (island) → autosave. `loop` then renders, and when `film.grabNow` is set calls
 `film.grab()` in the same task (Herr Storch's still from the frame's buffer, feature 6, §10.11).
@@ -7285,6 +7370,10 @@ game.gatlopp;      // StreetRace (feature 69, §10.38): José's street races, th
                    // canBet(), placeBet(), boardSpot(), homeSpot(key), posed(key) (npcPosed: José and his
                    // mother walking back), objective(), target(), markers(), update(dt), reset(), last,
                    // cfg (GATLOPP)
+game.golf;         // GolfCarts (feature 74, §10.40): the golf carts at the clubhouse; golf.open() (the
+                   // island, missions.state 'idle'), refuse(kind), mine(), surfaceAt(x, z) ('pond' |
+                   // 'sand' | null), step(h), update(dt), home(), respawn(), course (GOLF_COURSE), surf,
+                   // inT, pips, sand, pond, sprays, last, cfg (GOLFBIL)
 game.npcPosed(key) -> bool   // an NPC held in a pose of its own: §9.4 idleAnim or a free-roam module's
                    // (berraJob, judges, film, eslov, fest, lapp, party, stands, mic, birds, gags, dream, bell, gatlopp); syncAll gives it no
                    // wave, turn or chatter, and the gang's talk leaves it be (§10.28)
@@ -8155,6 +8244,13 @@ shame.chase(car) (feature 60): a Land Rover's chase AI with the catch-up band (s
 //   the bell back on the desk, the card off; live: the cut window and the view frustum, the queue out
 //   unseen, tickQueue, tickBell (the hand, the plunger, the call's clock, the bell's way under the desk
 //   and its return)); step(h) after mic.step; extras in allChars and areaHit; posed(key) in npcPosed
+// golfCart.js (feature 74, §10.40): game.golf = new GolfCarts(game) after the street races; step(h)
+//   after the cars' steps in fixedStep (the bunker's and the pond's brake on his golf cart); update(dt)
+//   after gatlopp.update (out of a golf cart in a mission, both home at a mission start, a wreck back
+//   between missions, the pip-pip, the surfaces' sand, splash and lines); main.enterCar asks open()
+//   (else refuse()), updateHud gives no car prompt at a golf cart when !open(), updateAudio keeps the
+//   two-tone horn off for a spec `horn` and passes `electric` to audio.engine; kinds/core.js getInCar
+//   and retryCar never take a toy; tools/lib.mjs `anyCar` skips them
 // streetRace.js (feature 69, §10.38): game.gatlopp = new StreetRace(game) after the reception's bell
 //   (registers `gatlopp` at José and `gatloppVad` at the chalkboard; the "!", the banners and the board
 //   are made the first time they show); update(dt) after bell.update (not active: reset() once: the
@@ -8771,7 +8867,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `title` [Phase 0] | title card shot (fresh save → cabin orbit; `&mission=6` → Flamenco orbit) |
 | `smash` [B] | ram the nearest `correos` with `hyrbil`, then a ped: SKANDAL rose, coins burst |
 | `foot` [B] | trampoline bounce, kick a fin (`fena`), stand on a car roof, double jump |
-| `castsheet`, `cars` [E] | lineups; no errors |
+| `castsheet`, `cars` [E] | lineups (`cars`: every type, the golf cart since feature 74 with a close-up beside a hatch); no errors |
 | `ui` [H] | long Swedish strings in toasts/banners/objective; glyph check shot; dialogue with Norwegian line |
 | `skandal` [H] | `addCoins(2000)`, `shame.add(100)`: 2 `guardia` cars spawn; exit car → officer walks at the player (closes 3 m within 10 s without a stuck teleport, round a block corner if a building stands between them; Phase 3 r2, was 1.5 s) and never stands inside a solid; block him behind a building → teleported within 6 s; get busted → coins −400 (20 %), ¡MULTA!, player frozen ~3 s; an offence within 20 m of Herr Storch adds 0; the porter bribe: his line shows before the `PORTIERN TITTADE BORT` banner (Phase 3) |
 | `carbust` [feature SKANDAL] | the user's SKANDAL balance (§7.2, 2026-10-14): a kicked-pedestrian offence (9) adds 27; the meter holds 10 s before it sinks; in a hatch on the z = 40 road with both Land Rovers parked away (`forced`), real rams by a Land Rover launched at 14 m/s from 8 m behind: one is no bust and starts the 14 s clock, which runs out after 14 s, a ram after that only restarts it, a second ram 2.5 s later busts (−20 %, out of the car); three impacts in one shove are one ram; standing with a Land Rover 15 m off for 5.5 s is no bust, 6 m off a bust after 4.0 s (page time) with ¡MULTA!; stopped in the paint shop's box with one 20 m off: the `seen` toast, no bust, no paint for 5.5 s; 6 m off: a bust after 4.0 s, no paint |
@@ -8789,6 +8885,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `skidor` [feature 71] | Låna rullskidorna (§10.39): at index 8 E at the skier's rest is "Heja Eslöv!" and no loan; at index 9 Stig at his place brings him back from the north leg (under 20 s) and he stays; the loan (the prompt, the ask and the yes, the hint toast, Stig with `ski`, the skier `lent` at the lane's edge without them), no glide; on the z −120 road poling to 13.2 m/s at 3.2 m/s², rolling at 0.45, ploughing at about 3 straight on, a wide turn at speed; the sidewalk's wobble at 2.2 m/s; a kerb at 10 m/s: down, up, the heat; at 6 m/s rolling onto it: no fall; sand at 3 m/s: down on his back, the sand line, then a 1 m/s shuffle; a parked car at speed: down; a held pedestrian: flung, SKANDAL up, down; a Swedish tourist and Berra by the road cheer, Stig answers; no gang talk on the skis; E at the skier gives them back (the sand line), the skier skis on; back by themselves into a car, at a pursuit, at a mission's start (the skier at his place with them) |
 | `eslovrundan` [feature 71] | Eslövrundan (§10.39) at index 9: the start line's prompt, the countdown, the card `ESLÖVRUNDAN` / `Tid 0:0x,x · att slå: …` / `KONTROLL 0/5`; the ski pilot clean: first, the result list (`ESLÖVRUNDAN · RESULTAT`, Stig's row first, "Stig-Helmer leder efter första åket."), 100 pta, the record, his best beaten by 1–4 s, the skier's line; one forced fall: second "efter andra åket"; two: third "efter tredje åket", each with his line; R and a car end it (the car takes the skis back), no card after |
 | `eslovrundankal` [feature 71] | Eslövrundan's times (§10.39, §8 "Races and chases"): the ski pilot `ESLOVRUNDAN_RUNS` (3) times clean, with one fall and with two at `&ts=1`; prints `CAL eslovRundan` (T_ref, T_1, T_2 → pers ceil((T_ref + T_1) / 2), i dag ceil(1.2 × T_ref)) and `CAL CHECK` against the shipped times and the order clean < pers < one fall < i dag < two falls; its raw times go into the ledger (`eslovRundan`) |
+| `golfbil` [feature 74] | Golfbilen (§10.40) at index 9: the two golf carts on the boxes' spots, named, unlocked, the toy type, no `'cart'` solid left, not the first free small car; E from the driver's side (the prompt, "Golfbilen" on the speedo), Stig full size under the roof (side, front and rear stills); held W tops out at 6.0–6.6 m/s, the speedo 21–24 km/h, the motor `electric`; H a pip-pip, again while held (every 0.45 s), never the two-tone horn, the island hears it; a bunker brakes it to 1.6 m/s with sand off the rear wheels and "Jag pliktar ett slag.", a second within 12 s no line; the pond splashes and brakes it to 0.9 m/s, "Oj… ett vattenhinder."; a wreck steams, no SKANDAL, back on its spot only once Stig is far; a mission start puts a moved one back; in the mission no prompt, E gives the toast and no seat, a debug seat is undone, `retryCar` gives a spare; after Q E gets in again |
 | `eslovlopp` [feature 7] | Eslövloppet's timer (§10.12, §8 "Timers and difficulty"): calibrate's walker runs the lap `ESLOV_RUNS` (3) times at `&ts=1` with the clock raised; prints `CAL eslovLopp` (the median + 2.5 s → the timer) and `CAL CHECK` against the shipped timer (the sample's 90 % bootstrap range); its raw times go into the ledger (`eslovLopp`) |
 | `grodorna` [feature 8] | Små grodorna i poolen (§10.13): no fest at index 11 (Lasse at SunTrip in `sol`) nor at index 13 without `bodega`; with it (unlock + forced placement) Lasse wears `jul` and he, Affe, Gabbe and Fru Storch stand at their pool-deck homes, Herr Storch on the beach; at 23.30 no visit; Stig on the deck: all seven ours (`poolFest`, busy, invulnerable, posed), wading 0.5 m in their places facing the middle; the exchange in order, once; round 1 on the audio clock; sampled in the page: in the air 0.17–0.22 s after an even beat with tails (beats 0–7), Affe hopping without `groda`, down at 0.55–0.75 s, ears on 8–11, the chorus higher; the porter at his spot with his line and the head shake, then home and free; on the coping dry with "Dansa med" and the gap marked; E: in the gap, stiff (`groda` 3), wading, `I TAKT 0 / 8`, "Kliv ur ringen"; J no kick; E out onto the coping, dry; in again and a step out; no SKANDAL; round 2 two beats after round 1 (±0.06 s), the pause 12 s (±0.8); a dancer does not answer the horn; off the deck all walk home and are free with their spot ids; julafton's unlock gone mid-visit: home at once. Shots `grodorna_vadar`, `_portier`, `_ring`, `_kanten` |
 | `grodtakt` [feature 8] | the hop counter (§10.13), Space as real key events timed in the page: seven on the beat (`I TAKT 7 / 8`, a shot in the air), the eighth: the goal, `I TAKT 8 / 8` teal, the ring cheers, +50 pta, the toast, "Heia Norge!" then Lasse's line, and Stig's "Hopp… och hopp…"; half a hop off the beat: a miss, `OTAKT!`, Majsan and Ole laugh; a skipped hop beat breaks the row; eight across the gap between two rounds (round 2's beat 0 counts): the goal again, no second coin; the music off: no new cue, judged on the audio clock; no audio clock (`audio.clock` stubbed null): the round on the game clock, judged; a dive off the board: the judges take Siv and Majsan out of the ring and judge it; home again, the fest takes them back. Shots `grodorna_takt`, `_hopp`, `_jubel`, `_otakt` |
@@ -11023,3 +11120,22 @@ the fixer's group.
   at his rest is the loan). No mission, stage kind, mission timer, fixture or existing calibration
   pool changed; Eslövloppet's race and pool are untouched. Scenarios `skidor`, `eslovrundan`,
   `eslovrundankal` (§16.4).
+
+- Feature 74, "Golfbilen – pip-pip!" (`features/implemented/golfbilen.md`, 2026-10-17): the two golf
+  carts by the golf clubhouse are real cars (§10.40; new `src/game/golfCart.js` (`game.golf`), `GOLFBIL`
+  in content/island.js, the type `golfbil` in car.js, `GOLF_COURSE` in nature.js; main.js, audio.js,
+  kinds/core.js, tools/lib.mjs; §1.6, §3, §6.3, §6.6, §11.4, §12.3, §14.1–14.3, §14.8, §16.4). A new
+  car type `golfbil` with its own model (open sides, a roof on four posts with a red edge, two golf bags)
+  and the spec fields `toy`, `governed` (no pull past maxSpeed), `horn: 'pip'`, `electric`,
+  `noExplode`, `wheelInset`: the player's tops out at 6.6 m/s, about 23 km/h. `golfbil1` and `golfbil2`
+  replace the two boxes and their `'cart'` wall at the same spots in block (4,0), named
+  ("Golfbilen", NAMED_CARS) and spawned after every other parked car. E gets in only on the island
+  with `missions.state === 'idle'`; otherwise no prompt and the toast "Golfbilen är för långsam – ta en
+  riktig bil." [N]; `getInCar` and `retryCar` never take a toy, `golf.update` puts him out of one in a
+  mission, and a mission start puts both back on their spots; `anyCar` (tools/lib.mjs) and the `kinds`
+  scenario's nearest-car pick skip them. H is a pip-pip (`audio.pipHorn`), the motor a hum
+  (`audio.engine`'s `electric`). A bunker brakes it to 1.6 m/s with sand off the rear wheels and Stig's
+  "Jag pliktar ett slag." [F*] (the golf round's line, relocated); the pond splashes, brakes it to 0.9
+  m/s and gets "Oj… ett vattenhinder." [N]. A wreck steams and comes back on its spot when Stig is
+  60 m off. No mission, stage, mission timer, fixture or calibration pool changed (the world change is
+  inside the golf block, off every route; the ledger notes it). Scenario `golfbil`, and `cars` (§16.4).

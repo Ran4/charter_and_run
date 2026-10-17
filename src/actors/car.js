@@ -8,9 +8,13 @@ import { fx as FX } from '../game/fx.js';
 
 // DESIGN §6.6. Spec flags: tall, bus, bed, icecream, livery ('suntrip' | 'guagua'), guardia, taxi,
 // pigs, build (custom geometry: (spec, color) -> { geo, glass, extras? }), noWheels, noSpeedo,
-// colors (palette for random colours). Car fields set by game code: noEnter (never offered to the
-// player), noExplode (damage -> dead + steam, no fire), isPursuer, riders[] (decorative busts),
-// locked. Physics numbers are Bigmouth's except the ones §6.6 lists.
+// colors (palette for random colours), wheelInset (wheel centre from the body's end less wheelR,
+// default 0.38), and for the golf cart (feature 74, §10.40): toy (a joke car, never a mission's:
+// main.enterCar refuses it outside free roam), governed (no pull past maxSpeed), horn ('pip': the
+// golf carts' pip-pip instead of the two-tone horn), electric (a hum for the engine), noExplode.
+// Car fields set by game code: noEnter (never offered to the player), noExplode (damage -> dead +
+// steam, no fire; also from the spec), isPursuer, riders[] (decorative busts), locked. Physics
+// numbers are Bigmouth's except the ones §6.6 lists.
 const SEDAN = { len: 4.5, wid: 1.9, bodyH: 0.62, cabinH: 0.68, wheelR: 0.36, maxSpeed: 31, accel: 12, grip: 9.5, steer: 0.6, mass: 1400, hp: 100, cabin: [-0.3, 0.12] };
 const PICKUP = { len: 5.1, wid: 2.0, bodyH: 0.75, cabinH: 0.75, wheelR: 0.42, maxSpeed: 29, accel: 11, grip: 8.6, steer: 0.58, mass: 1900, hp: 130, cabin: [-0.05, 0.2], bed: true };
 // aiSteer: an AI-driven bus steers like G's night bus (0.9): at 0.52 it cannot follow a lane path's
@@ -30,6 +34,9 @@ export const CAR_TYPES = {
   taxi: { name: 'Taxi', ...SEDAN, color: 0xe8dcb8, taxi: true },
   guardia: { name: 'Guardia Civil', len: 4.2, wid: 1.9, bodyH: 1.45, cabinH: 0, wheelR: 0.4, maxSpeed: 30, accel: 12, grip: 9, steer: 0.58, mass: 2000, hp: 160, color: 0x2e5e3e, tall: true, guardia: true },
   grisbil: { name: 'Grisbilen', ...PICKUP, maxSpeed: 34, accel: 14, color: 0xa8442a, pigs: true },
+  // The golf carts at the clubhouse (feature 74, §10.40): ×1.2 for the player, about 23 km/h.
+  golfbil: { name: 'Golfbil', len: 2.4, wid: 1.3, bodyH: 0.45, cabinH: 1.48, wheelR: 0.25, wheelInset: 0.12, maxSpeed: 5.5, accel: 6, grip: 11, steer: 0.75, mass: 450, hp: 80,
+    color: 0xf4f4f0, toy: true, governed: true, horn: 'pip', electric: true, noExplode: true, build: buildGolfbil },
 };
 export function registerCarType(key, spec) { CAR_TYPES[key] = spec; }
 
@@ -425,6 +432,65 @@ function dalaDress(s) {
   return g.build();
 }
 
+// The golf cart (feature 74, §10.40): open sides, a bench under a roof on four posts with a red
+// edge, a windscreen, a low nose and two golf bags in the rear well. Nose and rear well are narrow
+// below the fenders, so the wheels (wheelInset) turn clear of them. Stig sits full size under the
+// roof on the ordinary seat (seatY/roofY), his legs out under the dash.
+const GOLF = { seat: 0xe8dcc0, roofEdge: 0xd8321e, post: 0xc8ccd2, bags: [[0xc8322a, 0xf4f4f0], [0x2a3a6a, 0xd8c49a]], covers: [0xffd23f, 0xd8321e, 0x2f8a4a] };
+function buildGolfbil(s, color) {
+  const g = new GeoBuilder(), glass = new GeoBuilder();
+  const L = s.len, W = s.wid, F = L / 2, R = -L / 2, dark = shade(color, 0.72);
+  const rt = s.wheelR * 0.95 + s.bodyH + s.cabinH;   // the roof's underside + 0.08 (roofY + 0.08)
+  // Floor between the wheels, sills along the sides.
+  g.boxB(TRIM, 0, 0.16, 0, W - 0.52, 0.12, L - 0.1);
+  for (const sx of [-1, 1]) g.boxB(dark, sx * (W / 2 - 0.12), 0.17, 0, 0.24, 0.1, 1.1);
+  // The nose: narrow below, full width over the front wheels, a dash sloping up to the driver.
+  g.boxB(color, 0, 0.2, F - 0.33, W - 0.52, 0.32, 0.66);
+  g.boxB(color, 0, 0.52, F - 0.33, W, 0.22, 0.66);
+  g.box(shade(color, 1.06), 0, 0.8, F - 0.62, W - 0.04, 0.08, 0.36, 0, 0.45);
+  g.box(TRIM, 0, 0.3, F + 0.04, W - 0.1, 0.08, 0.08);
+  for (const sx of [-1, 1]) lamp(g, sx * (W / 2 - 0.24), 0.6, F + 0.01, 0.07, 0xfff6c0);
+  // Steering column and wheel before the driver (left, +x).
+  g.cyl(TRIM, W * 0.22, 0.86, F - 0.72, 0.025, 0.42, 6, -0.55);
+  g.add(PRIM.torus(), TYRE, mat(W * 0.22, 1.04, F - 0.82, -0.9, 0, 0, 0.32, 0.32, 0.32));
+  // The bench: base, cushion, a backrest leaning back, the hip rails.
+  g.boxB(color, 0, 0.28, -0.1, W - 0.08, 0.14, 0.66);
+  g.boxB(GOLF.seat, 0, 0.42, -0.08, W - 0.16, 0.08, 0.62);
+  g.box(GOLF.seat, 0, 0.8, -0.42, W - 0.16, 0.6, 0.09, 0, -0.14);
+  for (const sx of [-1, 1]) {
+    g.box(CHROME, sx * (W / 2 - 0.04), 0.66, -0.06, 0.04, 0.04, 0.52);
+    g.box(CHROME, sx * (W / 2 - 0.04), 0.55, 0.18, 0.04, 0.22, 0.04);
+  }
+  // The rear well: narrow below, full width over the rear wheels; bumper and tail lamps.
+  g.boxB(color, 0, 0.2, R + 0.38, W - 0.52, 0.32, 0.76);
+  g.boxB(color, 0, 0.52, R + 0.38, W, 0.14, 0.76);
+  g.box(TRIM, 0, 0.3, R - 0.04, W - 0.1, 0.08, 0.08);
+  for (const sx of [-1, 1]) g.box(0xe8322a, sx * (W / 2 - 0.16), 0.58, R - 0.01, 0.16, 0.08, 0.04);
+  // Four posts and the roof with its red edge, the windscreen between the front posts.
+  for (const sx of [-1, 1]) {
+    g.box(GOLF.post, sx * (W / 2 - 0.06), (0.8 + rt) / 2, F - 0.7, 0.05, rt - 0.8, 0.05, 0, -0.06);
+    g.box(GOLF.post, sx * (W / 2 - 0.06), (0.66 + rt) / 2, -0.62, 0.05, rt - 0.66, 0.05);
+  }
+  g.boxB(color, 0, rt - 0.02, -0.06, W + 0.12, 0.08, 1.56);
+  for (const sz of [-1, 1]) g.box(GOLF.roofEdge, 0, rt + 0.01, -0.06 + sz * 0.79, W + 0.16, 0.07, 0.04);
+  for (const sx of [-1, 1]) g.box(GOLF.roofEdge, sx * (W / 2 + 0.07), rt + 0.01, -0.06, 0.04, 0.07, 1.62);
+  glass.box(0xffffff, 0, (0.84 + rt) / 2, F - 0.69, W - 0.18, rt - 0.88, 0.03, 0, -0.06);
+  // Two golf bags leaning back in the well, a strap across, clubs with head covers out of the top.
+  g.box(TRIM, 0, 1.16, -0.76, W - 0.24, 0.05, 0.04);
+  GOLF.bags.forEach(([bag, band], k) => {
+    const x = (k ? -1 : 1) * 0.27, a = -0.24, h = 0.95, c = Math.cos(a), sn = Math.sin(a);
+    const at = (d) => [x, 0.66 + d * c, -0.9 + d * sn];
+    g.cyl(bag, ...at(h / 2), 0.14, h, 12, a);
+    g.cyl(band, ...at(h - 0.05), 0.145, 0.1, 12, a);
+    g.cyl(band, ...at(0.12), 0.145, 0.06, 12, a);
+    for (let j = 0; j < 3; j++) {
+      const [cx, cy, cz] = at(h + 0.1);
+      g.sphere(GOLF.covers[(j + k) % 3], cx + (j - 1) * 0.08, cy + (j % 2) * 0.05, cz + (j % 2 ? -0.03 : 0.03), 0.12, 0.16, 0.12);
+    }
+  });
+  return { geo: g.build(), glass: glass.build() };
+}
+
 function buildCarModel(s, color) {
   if (s.build) return s.build(s, color);
   const g = new GeoBuilder(), glass = new GeoBuilder(), extras = [];
@@ -487,7 +553,7 @@ export class Car {
     }
     this.wheels = [];
     const wg = getWheelGeo();
-    const wr = spec.wheelR, wx = spec.wid / 2 - 0.02, wz = spec.len / 2 - wr - (spec.bus ? 1.2 : 0.38);
+    const wr = spec.wheelR, wx = spec.wid / 2 - 0.02, wz = spec.len / 2 - wr - (spec.bus ? 1.2 : spec.wheelInset ?? 0.38);
     for (const [sx, sz] of spec.noWheels ? [] : [[1, 1], [-1, 1], [1, -1], [-1, -1]]) {
       const piv = new THREE.Group();
       piv.position.set(sx * wx, wr, sz * wz);
@@ -523,7 +589,7 @@ export class Car {
     this.revs = 0;
     this.riders = [];
     this.noEnter = false;
-    this.noExplode = false;
+    this.noExplode = !!spec.noExplode;
     this.isPursuer = false;
     this.lift = 0;           // the nose raised, rad (hooked to the tow truck in Lapplisan Majsan, §10.17)
     this.updateObb();
@@ -576,7 +642,7 @@ export class Car {
           if (vf < -0.5) vf = Math.min(0, vf + 24 * boost * thr * dt);
           else {
             const t = 1 - Math.max(0, vf) / maxSpeed;
-            vf += accel * thr * Math.max(0.08, t) * dt;
+            vf += accel * thr * Math.max(s.governed ? 0 : 0.08, t) * dt;
             if (vf < 3 && thr > 0.9 && c.handbrake) this.skidAmt = 1;
           }
         }

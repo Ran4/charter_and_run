@@ -142,7 +142,10 @@ opens with a summary of the rounds and the timer changes.
     sidewalk, falling off a kerb, into a car or a person, on his back on the sand, "Heja Eslöv!" at the
     bib and "Jag är från Stockholm, egentligen…", the return, back by themselves in a car, a pursuit or
     a mission; Eslövrundan on the skis with its result list, first, second and third; `eslovrundankal`
-    measures the skier's two times with the ski pilot, `ESLOVRUNDAN_RUNS`, DESIGN §10.39)
+    measures the skier's two times with the ski pilot, `ESLOVRUNDAN_RUNS`, DESIGN §10.39), `golfbil`
+    (Golfbilen – pip-pip!, the two golf carts by the golf clubhouse between missions: E, about 23 km/h,
+    the pip-pip, a bunker with "Jag pliktar ett slag.", the pond's splash, a wreck back on its spot;
+    never a mission's car: no prompt and the toast in a mission, home at a mission start, DESIGN §10.40)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

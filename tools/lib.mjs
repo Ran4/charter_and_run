@@ -99,7 +99,8 @@ export async function launch({ port, out, w = 1280, h = 720 }) {
       await ev(() => {
         const g = __game, p = g.player;
         let best = null, bd = 1e9;
-        for (const c of g.cars) { if (c.locked || c.dead || c.ai || c.noEnter) continue; const d = Math.hypot(c.x - p.x, c.z - p.z); if (d < bd) { bd = d; best = c; } }
+        // Never a golf cart (a toy, refused in a mission: DESIGN §10.40).
+        for (const c of g.cars) { if (c.locked || c.dead || c.ai || c.noEnter || c.spec.toy) continue; const d = Math.hypot(c.x - p.x, c.z - p.z); if (d < bd) { bd = d; best = c; } }
         if (best) { best.place(p.x + 3, p.z, best.yaw); g.enterCar(best); }
       });
       await frames(5);
