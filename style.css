@@ -290,6 +290,16 @@ body.in-dialog #minimap-wrap, body.in-dialog #speedo, body.in-dialog #prompt { o
 .vf-line { position: absolute; left: 0; right: 0; bottom: 3.2vh; text-align: center; font: 800 clamp(18px, 3.2vh, 26px) var(--body); color: #fff; }
 .vf-line span, .fn-line span { color: #c9b994; font-size: 0.78em; }
 body.film-live #app canvas { filter: sepia(0.42) saturate(0.8) contrast(1.06) brightness(1.04); }
+
+/* ---------------------------------------------------------------- Stig's daydream (§10.33) */
+/* The beach dream: a soft, warm picture with white edges, and DAGDRÖM in a pale script at the top;
+   the white wash over everything for the fades and the flash back. */
+body.dream #app canvas { filter: saturate(1.18) contrast(0.9) brightness(1.07) sepia(0.12) blur(0.5px); }
+#dream { position: absolute; inset: 0; pointer-events: none; opacity: 0; background: radial-gradient(ellipse 78% 72% at 50% 52%, transparent 46%, rgba(255, 248, 240, 0.5) 74%, rgba(255, 255, 255, 0.96) 100%); }
+#dream.show { opacity: 1; }
+#dream .dr-title { position: absolute; left: 0; right: 0; top: 11.5vh; text-align: center; font: italic 400 clamp(30px, 6.4vh, 58px) Georgia, 'DejaVu Serif', serif; letter-spacing: 0.32em; color: #c86a84; text-shadow: 0 0 18px #fff, 0 0 6px #fff; }
+#dreamwash { position: absolute; inset: 0; pointer-events: none; background: #fff; opacity: 0; z-index: 5; transition: opacity 0.8s ease-in-out; }
+#dreamwash.on { opacity: 1; }
 /* The film night: seven black days on one strip, his line, the julafton stills on the next. */
 #filmnight { background: #0d0a0c; color: #fff; text-align: center; padding-top: 3vh; }
 .fn-title { font: clamp(34px, 6vh, 56px) var(--display); letter-spacing: 2px; color: #f4e7c4; }

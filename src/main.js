@@ -49,6 +49,7 @@ import { RoofJump } from './game/roofJump.js';
 import { Mic } from './game/mic.js';
 import { Birds } from './game/birds.js';
 import { Gags } from './game/gags.js';
+import { BeachDream } from './game/beachDream.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
 import { LEVELS, ISLAND_PALETTES } from './level.js';
@@ -210,6 +211,7 @@ class Game {
     this.mic = new Mic(this);             // free roam: Stig reads Lasse's announcements at the SunTrip stage's mic (§10.30)
     this.birds = new Birds(this);         // free roam: the flocks that lift, the stork in La Charca (§10.31)
     this.gags = new Gags(this);           // free roam: E at Ole's camera bag and Viking Bar's lamp, two film gags (§10.32)
+    this.dream = new BeachDream(this);    // free roam: the towel at the water's edge, Stig's daydream in the surf (§10.33)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -1538,6 +1540,7 @@ class Game {
     this.roofs.update(dt);
     this.mic.update(dt);
     this.birds.update(dt);
+    this.dream.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);
@@ -1833,11 +1836,12 @@ class Game {
   // the rollerskier's laps (§10.12), the pool fest's dancers and porter (§10.13), Majsan on her round
   // with the ticket pad or Angerud in the tow scene (§10.17), the grisfest's evening (§10.18), the
   // souvenir seller swearing at a smashed fruit stall (§10.19), the crowd at the SunTrip stage
-  // (§10.30), Herr Storch filming the stork (§10.31) or someone in a gag's scene (§10.32). syncAll
-  // gives such an NPC no wave, turn or chatter, and the gang's talk leaves them be (§10.28).
+  // (§10.30), Herr Storch filming the stork (§10.31), someone in a gag's scene (§10.32) or Siv or
+  // Majsan on the sand by Stig's towel (§10.33). syncAll gives such an NPC no wave, turn or chatter, and
+  // the gang's talk leaves them be (§10.28).
   npcPosed(k) {
     return !!this.missions.idlePose(k) || this.berraJob.posed(k) || this.judges.posed(k) || this.film.posed(k) || this.eslov.posed(k) || this.fest.posed(k) || this.lapp.posed(k) || this.party.posed(k)
-      || this.stands.posed(k) || !!this.mic?.posed(k) || this.birds.posed(k) || !!this.gags?.posed(k);
+      || this.stands.posed(k) || !!this.mic?.posed(k) || this.birds.posed(k) || !!this.gags?.posed(k) || !!this.dream?.posed(k);
   }
 
   syncAll(dt, title) {

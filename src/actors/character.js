@@ -1,7 +1,7 @@
 // A walking body: capsule-ish physics on the town's blocks, standing on low things, bouncing on
 // trampolines, getting flung by cars and lying there for a bit. States: normal | flung | down |
 // seated (in a car via game.seat, or in a plane seat via seatAt) | lying (on a sun lounger via lieAt,
-// game/bathers.js) | hidden (no step, invisible).
+// game/bathers.js; on the sand, game/beachDream.js) | hidden (no step, invisible).
 // `tumble(secs, roll)`: a forward roll onto his back, then down (the glide's landing, game/glide.js).
 // `flop(secs)`: flat on his belly, then up (the belly flop into the pool, game/poolJudges.js).
 // `wade`: metres the standing model is sunk below his feet (waist-deep in the pool, game/poolFest.js).

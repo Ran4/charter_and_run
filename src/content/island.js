@@ -15,7 +15,9 @@
 // reading Lasse's announcements at the SunTrip stage's microphone, the island doing what he says
 // (§10.30), the island's birds that lift and land again, Stig's sorry to them, and the stork
 // that flies from La Charca to the Storches on the beach with Fru Storch's correction there (§10.31),
-// and two gags on E, Ole's flash at his camera bag and Stig's cup under Viking Bar's lamp (§10.32).
+// two gags on E, Ole's flash at his camera bag and Stig's cup under Viking Bar's lamp (§10.32), and
+// the towel at the water's edge, Stig's daydream in the surf, the wave and the visitors on the sand
+// (§10.33).
 
 export const HOMES_ISLAND = {
   ole: ['flamenco', 2.0, 1.0, 0],     // yaw 0: under the pergola, facing the pool (flamenco faces π)
@@ -1054,6 +1056,68 @@ export const BIRDS = {
     stig: 'Oj, en stork!',                                     // [N]
     correct: ['fruStorch', 'Vi heter faktiskt Storch, inte Stork.'],   // [F*] the welcome meeting's (research-plot.md:269), relocated
     correctAt: 1.9, filmAt: 2.6, filmSecs: 5,
+  },
+};
+
+// Strandkyssen i bränningen – the daydream in the surf (free roam, DESIGN §10.33;
+// game/beachDream.js). A lone towel (`towel`: world [x, z] of its middle, its length along `yaw`,
+// Majsan's dress's blue with white dots; no collider) lies at the water's edge below Flamenco. On the
+// island with no mission running, Stig on foot within `r` m of it and no SKANDAL pursuit: E and he lies
+// down on it (sitting, then `lie.back` s onto his back, his feet to the sea, his hips `lie.hips` m
+// seaward of its middle). The scene runs on a clock (`at`, s): the picture washes to white from
+// `at.wash` over `washSecs`, and from `at.dream` the island is a dream (the white fading out over
+// `washOutSecs`): the `sunset` palette, the soft picture (style.css body.dream), the white vignette
+// and `title`, the `tune`, and Majsan (a double: the real one stays where she is) lying beside him in
+// each other's arms (`pose`), the foam washing slowly over their legs (`swash`: its front's z out and
+// in every `secs` s), her `whisper` at `at.whisper`; the camera holds on them (`cam.dream`) and from
+// `at.glide` glides up and away to the sky over the sea (`cam.away`) before the kiss. At `at.wake` a
+// white flash (`flashSecs`): the clock's palette, the music and the picture back, Majsan gone, Stig
+// alone on his back (`cam.wake`); at `at.wave` a real wave (`wave`: its front's z in over `inSecs`, out
+// to `back` over `outSecs`, `w` m wide) over him with three splashes; `blott` at `at.blott`. Who stands
+// on the sand (`visitor`: [dx, dz] from the towel's middle), if free: after the end Majsan (`after`:
+// her invitation, his answer, and she dances for `after.stay` s after the scene), else by day on every
+// `siv.every`th dream from the `siv.first`th, Siv with her score (laughing `laughSecs` s; staying
+// `stay` s); each `script` (and `plain` with nobody) gives the times he gets up and the scene ends.
+// A visitor goes home once out of the camera's view or `popR` m from it, or at a mission start. He
+// gets up beside the towel (`stand`: [dx, dz]) and drips for `dripSecs` s. The cuts (`cam`) are
+// [dx, y, dz] from the towel's middle (dx to its left, dz to the sea). Invented (§1.6): the towel, the
+// dream, the wave, the visitors on the sand; the pose is the famous beach kiss, left unnamed (§1.5),
+// and the camera leaves before the kiss.
+export const STRANDKYSSEN = {
+  towel: { at: [-30, 300.9], yaw: 0, w: 0.95, len: 1.9, color: 0x4a7fd0, dots: 0xffffff, fringe: 0xf4f0e6 },
+  r: 1.5, popR: 40,
+  prompt: '<b>E</b> Lägg dig i vattenbrynet',                       // [N]
+  title: 'Dagdröm',                                                  // [N]
+  tune: 'vals',
+  lie: { back: 0.7, hips: 0.55 },                                    // hips: m along the towel from its middle, to the sea
+  at: { wash: 0.55, dream: 1.5, whisper: 3.4, glide: 6.4, wake: 9.6, wave: 9.9, blott: 12.4 },
+  washSecs: 0.8, washOutSecs: 1.0, flashSecs: 0.7,
+  // The pose of two (models.js lie: roll onto the side, head turn and tilt, [right, left] arm
+  // rotations): he turned to her, his right arm over her, his left under her neck; she on her back
+  // beside him (`at`: her hips from his, [to his left, to the sea]), her right arm up round his neck.
+  pose: {
+    stig: { roll: 0.6, turn: 0.5, tilt: -0.15, arms: [[-1.0, 0, 1.0], [-0.1, 0, 1.45]] },
+    majsan: { at: [0.62, -0.12], roll: -0.15, turn: -0.05, tilt: 0.1, arms: [[-0.5, 0, -1.3], [-0.25, 0, -0.3]] },
+  },
+  swash: { far: 305.6, near: 302.6, secs: 3.4, crest: 0.22 },        // z of the foam's front, out and in
+  wave: { from: 311.5, to: 299.2, inSecs: 2.1, back: 307, outSecs: 2.3, crest: 0.55, w: 10 },
+  whisper: ['majsan', 'Då kanske vi ses…'],                          // [F*](t) the parting line after the tow in Stockholm (research-plot.md:102; the speaker unknown), relocated to the dream
+  blott: 'Blött.',                                                   // [N]
+  visitor: [-1.6, -1.2],
+  siv: { every: 3, first: 2, laughSecs: 2.4,
+    line: ['siv', 'Giraffen, då? Fyra.'],                            // [F*](t) the points scene on the plane (research-plot.md:197)
+    script: { line: 13.5, up: 14.6, end: 16.4 } },
+  after: { stay: 6,
+    line: ['majsan', 'Vill du dansa med mig?'],                      // [F*] Majsan asks him at the grisfest (research-plot.md:346), relocated to the beach
+    answer: 'Ja.',                                                   // [N]
+    script: { up: 13.4, line: 14.0, answer: 15.9, end: 16.8 } },
+  plain: { up: 13.6, end: 14.4 },
+  stay: 6, stand: [0.6, -1.7], dripSecs: 4,
+  cam: {
+    lie: { eye: [2.7, 1.6, -2.4], look: [0, 0.45, 0.7] },
+    dream: { eye: [2.2, 0.9, -1.6], look: [0.2, 0.45, 0.2] },
+    away: { eye: [2.6, 3.2, -2.6], look: [-24, 7.5, 34] },
+    wake: { eye: [2.6, 1.9, -2.8], look: [-0.6, 0.5, 0.9] },
   },
 };
 

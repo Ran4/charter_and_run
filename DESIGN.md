@@ -266,7 +266,12 @@ showing Stig his second camera by its bag under Hotel Flamenco's pergola and tak
 the flash ("Si omelett!"), and Angerud ordering another Viking special at Viking Bar's door while
 Stig orders a juice and holds his cup up under the lamp beside the door (free roam, §10.32; in the
 film the camera talk is in room 107, "Säg omelett." is the shopping trip, the Viking special is
-Angerud's drink at the bar after the grisfest, and the cup goes up under the plane's call button).
+Angerud's drink at the bar after the grisfest, and the cup goes up under the plane's call button);
+a towel at the water's edge below Flamenco, Stig's daydream on it of Majsan and himself in
+the famous beach kiss in the surf (the sunset, the soft picture, DAGDRÖM and the waltz), the real wave
+over him with his "Blött.", and Siv with her score or, after the end, Majsan asking him to dance on the
+sand (free roam, §10.33; in the film he daydreams of the kiss in Stockholm, after the tow, and no wave
+wakes him).
 The film's flight has **no turbulence** and **no in-flight toilet scene**: both toilet scenes are
 at Arlanda (we keep them there). The plane's toilets are only an invented hideout.
 
@@ -5756,6 +5761,94 @@ letterbox and fixed shots (as the paint shop's scene, §7.2), on the island betw
   after); `rest` 1.5 s between plays; no other E scenes counted yet (the idea's golf round, church
   peace and wardrobe are other ideas; `GAGS.list` is where they would go).
 
+### 10.33 Strandkyssen i bränningen – Stig's daydream in the surf (free roam; feature 57, 2026-10-17)
+
+`game/beachDream.js` (`BeachDream`, owned by Game as `dream`), config `STRANDKYSSEN` in content/island.js,
+the dream's look in hud.js (`dream`, `dreamWash`, `dreamFlash`) and style.css (`body.dream`, `#dream`,
+`#dreamwash`), and the lie pose's `roll`, `turn` and given arms (models.js, §14.6). In the film's first
+act, in the Stockholm slush after the tow and the talk that ends "Då kanske vi ses.", Stig-Helmer
+daydreams of himself and Majsan in the famous beach kiss in the surf (research-plot.md:102, :104). Here
+he lies on the beach of the poster, and it is still a dream. The towel, the dream, the wave and the
+visitors on the sand are [N] (§1.6). The pose carries the reference: neither the film the kiss is from
+nor its actors are named (§1.5), the music is the game's own waltz, and the camera leaves before the
+kiss.
+
+- **The towel.** 0.95 × 1.9 m, Majsan's dress's blue (0x4a7fd0) with white dots and a cream fringe at
+  both ends (GeoBuilder, `toonMesh` outline 0.012, no shadow), lies at the water's edge below Flamenco,
+  its middle at (−30, 300.9) (`towel.at`, world; its length along z, across the foam line at z 300–301.2),
+  always, in missions too. No collider and no landmark: the only thing the feature leaves in the world.
+- **When.** `live`: on the island, `missions.state === 'idle'`. The interactable `strandkyssen` at the
+  towel's middle, `r` = 1.5 m, shows `<b>E</b> Lägg dig i vattenbrynet` [N] while `canUse()`: live, no
+  scene under way, no dialogue, on foot and on the ground, not carrying, **no SKANDAL pursuit**, no bust
+  freeze or PANIK, not in the pool fest's ring, on the baggage belt or in a talk with the gang. By night
+  too (the night comes back at the wake).
+- **E.** A scene on a clock (`at`, real seconds; 14.4–16.8 s in all): `inDialog`, the letterbox, the
+  toasts down; Stig on the towel at once (`lieAt`, his hips `lie.hips` = 0.55 m seaward of its middle,
+  his feet to the sea), sitting, then onto his back over `lie.back` = 0.7 s, the camera cut to him
+  (`cam.lie`; the cuts are `[dx, y, dz]` in the towel's frame). From `at.wash` = 0.55 s the picture
+  washes to white over `washSecs` = 0.8 s (`hud.dreamWash`: `#dreamwash`, over everything).
+- **The dream** (`at.dream` = 1.5 s to `at.wake` = 9.6 s): the `sunset` palette (`setSky`; the clock
+  writes nothing while the scene holds `inDialog`), the soft picture (`body.dream`: the canvas filtered
+  `saturate(1.18) contrast(0.9) brightness(1.07) sepia(0.12) blur(0.5px)`), the white vignette and the
+  `title` DAGDRÖM [N] in a pale pink italic serif at the top (`hud.dream`, under the bubbles and the
+  letterbox), the `tune` `vals` (§12.1, the grisfest's waltz); the white fades out over `washOutSecs` =
+  1 s. Majsan lies beside him: a double, a `Character` of her look as it is now (`npc('majsan').def`),
+  built at the first dream and never in the world's lists (no physics, collisions or placements): the
+  real Majsan stays where she is, so no giver, placement or other module sees her move. The pose of two
+  (`pose`; the lie pose's `roll`, `turn`, `tilt` and [right, left] arm rotations, §14.6): he flat on his
+  back and turned 0.6 rad towards her, his head turned 0.5 to her, his right arm over her, his left out
+  under her neck; she on her back 0.62 m to his left and 0.12 m landward, her right arm out round his
+  neck. The foam washes slowly over their legs (`swash`: the foam's front from z 305.6 in to 302.6 and
+  out again every 3.4 s, 0.22 m high). At `at.whisper` = 3.4 s the double whispers "Då kanske vi ses…"
+  [F*](t) (the parting line after the tow, research-plot.md:102, its speaker unknown; relocated). The
+  camera holds on them from beside her head (`cam.dream`: the sea and the sunset sky behind them) and
+  from `at.glide` = 6.4 s glides up and away to the sky over the sea (`cam.away`), so no kiss is seen.
+- **The wake** (`at.wake`): a white flash (`hud.dreamFlash`: white at once, out over `flashSecs` = 0.7
+  s), and under it the clock's palette (`day.write()`), the picture and the music back (`levelTune()`;
+  only if the waltz is still ours), the double hidden, Stig alone on his back with his arms at his sides,
+  the camera on the sand (`cam.wake`). At `at.wave` = 9.9 s a real wave (the foam mesh: three rows of
+  lumps over a thin sheet, `wave.w` = 10 m wide, `toonMesh` outline 0.02) comes in from z 311.5 to 299.2
+  in `inSecs` = 2.1 s (fast, then slowing, its crest from 0.55 m down), over him, and back to 307 in
+  `outSecs` = 2.3 s; as its front passes his feet, his chest and his head, `fx.splash` there (the
+  chest's the biggest, with `audio.splash(1)` and a camera shake of 0.3). Purely a look: no collider, it
+  pushes nobody. At `at.blott` = 12.4 s, still lying: "Blött." [N].
+- **Who stands on the sand** (decided at the wake; free: shown, standing, not `busy`, no module's
+  `steer`, `honk.free`, not posed, not the waiting mission's giver or extra). After the end (index 13):
+  **Majsan** herself (`after`, every dream): he gets up at 13.4 s, her "Vill du dansa med mig?" [F*]
+  (she asks him at the grisfest, research-plot.md:346; relocated) at 14.0 s, his "Ja." [N] at 15.9 s,
+  and she dances (`anim.dance`) through the scene's end at 16.8 s and `after.stay` = 6 s after it.
+  Before the end, by day (`day.isDay()`), on every `siv.every` = 3rd dream of the session from the
+  `siv.first` = 2nd (the 2nd, 5th, 8th…): **Siv** (`siv`) at 13.5 s with "Giraffen, då? Fyra." [F*](t)
+  (the points scene on the plane, research-plot.md:197; the line is the plane's, §8.1, and the diving
+  judges', §10.8, so she comes only now and then), laughing (`anim.laugh`) for `laughSecs` = 2.4 s; he
+  gets up at 14.6 s, the scene ends at 16.4 s, and she stays `stay` = 6 s. The visitor is teleported in
+  under the flash to `visitor` (1.6 m to the towel's right, 1.2 m landward, on the sand, in the wake's
+  shot), facing him; she is ours (`busy`, `spot` `strand`, `posed`: in `npcPosed` and `honk.free`, so
+  no wave, turn, chatter, horn answer or talk). Getting up, Stig turns to her and the camera frames the
+  two as in a talk (`cam.frame`). After her stay she goes home (`placeNpc` to her place in the home set,
+  `busy` back, `spot` null) once out of the camera's view or more than `popR` = 40 m from it, at once at
+  a mission start; placed by someone else meanwhile, she is left where she is. With nobody on the sand
+  he gets up at 13.6 s facing the land, and the scene ends at 14.4 s.
+- **Getting up.** Beside the towel's land end (`stand`: 0.6 m to its left, 1.7 m landward); his clothes
+  drip for `dripSecs` = 4 s (blue and white drops from his body, thinning; `fx.spawn`). The scene's end:
+  the camera behind him (turned 0.5 rad with a visitor, so she is beside him, not behind him), the
+  letterbox off, free roam.
+- **A mission start** (any state but idle) or the other level: `reset()` ends it all at once: the
+  dream's palette (the level's, the clock re-synced), the picture, the vignette, the wash, the music
+  (if still the waltz), the double, the foam, Stig on his feet beside the towel, the visitor home, the
+  drips. A mission's start keeps its own dialogue, letterbox and camera (only a level change has them
+  given back here). So no mission, stage kind, timer, fixture or calibration pool sees any of it. No
+  solid and no world random draw is added; nothing is saved (the dream count is per session).
+  `dream.last` ({ t, variant, visitor, dream, wake, splash, said, ended }), `sc`, `vis`, `dreams`,
+  `double`, `foam`, `towel`, `canUse()`, `free(key)`, `homeOf(key)`, `sivDue(n)` are for tests.
+  Scenarios `strandkyssen` and `strandefter` (§16.4).
+- **Not done / changed** (deviations from the idea): the dream's Majsan is a double, not the real one
+  placed with `placeNpc` (so the real one never moves, whatever holds her); the scene runs on a clock in
+  `update`, not as an async method; the pose of two is the bathers' lie pose (`lieAt`, §10.22) with a
+  roll, a head turn and given arm rotations, not a new anim flag; Siv comes on every third dream from
+  the second, by day; after the end Stig answers "Ja." and she dances; the towel is offered by night
+  too; it has no landmark.
+
 ## 11. HUD / UI strings (Swedish; `src/strings.js` owned by WP-H, created by Phase 0)
 
 `strings.js` exports `S` (flat object) and `fmt(key, vars)`. Engine code uses `S.key` only.
@@ -5993,7 +6086,7 @@ wins when both show).
 | `muzak` | flight level (gate + cabin), title on a fresh save | 92 bpm bossa-muzak, Dmaj7–Bm7–Em7–A7, soft sine pad chords, brushed hats, a sine "chime" melody every 8 bars. Routed through the **fear low-pass** |
 | `sol` | island default, title on an island save | 116 bpm straight-eighths charter schlager in A minor, Andalusian cadence Am–G–F–E; "accordion" lead (detuned square pair, 5 Hz tremolo, low-passed) playing an original 8-bar phrase; conga voice (sine 220→170 / 330→250); "timple" triangle arpeggios; root–fifth bass |
 | `skandal` | island pursuit | 132 bpm 2/4 paso-doble feel, Am–E7–Am–Dm–E7; brass stabs (filtered saw), snare rolls (noise). The two-tone siren plays on top |
-| `vals` | grisfest night (cue) | 3/4 at 150 bpm oom-pah, C–G7–G7–C / F–C–G7–C; bass on 1, chord stabs on 2–3, accordion lead |
+| `vals` | grisfest night (cue); Stig's beach dream (feature 57, §10.33) | 3/4 at 150 bpm oom-pah, C–G7–G7–C / F–C–G7–C; bass on 1, chord stabs on 2–3, accordion lead |
 | `jul` | julafton (cue) | `sol` re-voiced in A major + sleigh-bell noise ticks |
 | `samba` | Ole's boombox (cue), Tonga Tonga, Rio card, unlock | 100 bpm, Dm7–G7–Cmaj7–A7; surdo (sine 60→45 Hz) on 2, tamborim (short high noise ticks), agogô (two square tones) |
 
@@ -6147,7 +6240,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/strings.js` | new | **H** | `S`, `fmt()` (§11) |
 | `src/content/index.js` | new | none | merges `HOMES`, `MAP_LABELS`, `LEVEL_OUTFITS`, re-exports all content |
 | `src/content/flight.js` | new | **F** | `HOMES_GATE`, `HOMES_FLIGHT`, `MAP_LABELS_FLIGHT`, `CHATTER_FLIGHT`, `OLE_STATS`, `LEVEL_OUTFITS_GATE`, `LEVEL_OUTFITS_FLIGHT` |
-| `src/content/island.js` | new | **G** | `HOMES_ISLAND`, `MAP_LABELS_ISLAND`, `CHATTER`, `OUCH`, `GETUP`, `CARJACK`, `NPC_KICKED` (+ the `_OLE` / `_LOCAL` tables, `LOCAL_CAST`, `BARKS`: Phase 3 r2, §14.10; `STIG_SORRY`: feature 11, §10.14; `PIG_TRUCK`: feature 15, §10.15; `BAGGAGE_BELT`: feature 25, §10.16; `LAPPLISA`: feature 20, §10.17; `GRISFEST_FREE`: feature 21, §10.18; `FRUKTSTAND`: feature 28, §10.19; `TOWER`: feature 24, §10.20; `DOGS`: feature 31, §10.21; `BATHERS`: feature 32, §10.22; `RUM107`: feature 38, §10.25; `SOLKRAM`: feature 35, §10.26; `STUNTHOPP`: feature 40, §10.27; `TALK_ISLAND`: feature 39, §10.28; `TAKHOPP`: feature 41, §10.29; `MIKROFON`: feature 44, §10.30; `BIRDS`: feature 43, §10.31; `GAGS`: feature 47, §10.32), `COLLECTIBLES`, `UNLOCKS`, `NAMED_CARS`, `LEVEL_OUTFITS_ISLAND` |
+| `src/content/island.js` | new | **G** | `HOMES_ISLAND`, `MAP_LABELS_ISLAND`, `CHATTER`, `OUCH`, `GETUP`, `CARJACK`, `NPC_KICKED` (+ the `_OLE` / `_LOCAL` tables, `LOCAL_CAST`, `BARKS`: Phase 3 r2, §14.10; `STIG_SORRY`: feature 11, §10.14; `PIG_TRUCK`: feature 15, §10.15; `BAGGAGE_BELT`: feature 25, §10.16; `LAPPLISA`: feature 20, §10.17; `GRISFEST_FREE`: feature 21, §10.18; `FRUKTSTAND`: feature 28, §10.19; `TOWER`: feature 24, §10.20; `DOGS`: feature 31, §10.21; `BATHERS`: feature 32, §10.22; `RUM107`: feature 38, §10.25; `SOLKRAM`: feature 35, §10.26; `STUNTHOPP`: feature 40, §10.27; `TALK_ISLAND`: feature 39, §10.28; `TAKHOPP`: feature 41, §10.29; `MIKROFON`: feature 44, §10.30; `BIRDS`: feature 43, §10.31; `GAGS`: feature 47, §10.32; `STRANDKYSSEN`: feature 57, §10.33), `COLLECTIBLES`, `UNLOCKS`, `NAMED_CARS`, `LEVEL_OUTFITS_ISLAND` |
 | `src/game/missions/index.js` | new | none | `MISSIONS = [...FLIGHT_MISSIONS, ...ISLAND_MISSIONS]`, `MissionRunner` re-export |
 | `src/game/missions/runner.js` | new (from missions.js) | none | `MissionRunner` (§9.4) |
 | `src/game/missions/kinds/core.js` | new | **none** (frozen after Phase 0) | getInCar goto pickup dropoff follow rabbits race destroy grab scene |
@@ -6163,7 +6256,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/berraJob.js` | new (feature 2, 2026-10-14) | — | `BerraJob` (`game.berraJob`): Bärra hem Berra in free roam: the naps, Robban's ask, the carry, the drops, the desk and the pay (§10.6) |
 | `src/game/glide.js` | new (feature 3, 2026-10-14) | — | `Glide` (`game.glide`): Jag kan flyga in free roam after julafton: the tap-or-hold J in the air, the glide, walls, the landing roll, the lines (§10.7) |
 | `src/game/poolJudges.js` | new (feature 4, 2026-10-15) | — | `PoolJudges` (`game.judges`): Siv och Majsan sätter poäng in free roam: the board's hops, the call and the walk to the edge, the verdicts, cards, lines, result line and record (§10.8) |
-| `src/game/honk.js` | new (feature 5, 2026-10-15) | — | `Honk` (`game.honk`): Tutan som folk reagerar på in free roam: the pedestrians' hop, the cast's answers and poses, Stig's lines, the grisbil's grunt (§10.9); `free` leaves Herr Storch filming the stork be (feature 43, §10.31) |
+| `src/game/honk.js` | new (feature 5, 2026-10-15) | — | `Honk` (`game.honk`): Tutan som folk reagerar på in free roam: the pedestrians' hop, the cast's answers and poses, Stig's lines, the grisbil's grunt (§10.9); `free` leaves Herr Storch filming the stork be (feature 43, §10.31) and the visitor on the sand by Stig's towel (feature 57, §10.33) |
 | `src/game/dayClock.js` | new (feature 30, 2026-10-15) | — | `DayClock` (`game.day`): Dygnet runt in free roam: the island's clock, the palette blend and night lights, Ole's watch in the HUD, NÄSTA MORGON before a mission, the nap in room 107, chatter by the hour (§10.10) |
 | `src/game/storchFilm.js` | new (feature 6, 2026-10-15) | — | `StorchFilm` (`game.film`): Lite film. in free roam: Herr Storch trots over the sand to film Stig's tricks, his viewfinder (black before the end), the stills and the film night after it (§10.11) |
 | `src/game/eslov.js` | new (feature 7, 2026-10-15) | — | `Eslov` (`game.eslov`): Heja Eslöv! in free roam: the rollerskier skis up and down the Eslöv lane, answers the horn and E, "Spår!", Eslövloppet round the tomato fields (§10.12) |
@@ -6181,13 +6274,14 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/gangTalk.js` | new (feature 39, 2026-10-17) | — | `GangTalk` (`game.chat`): Prata med gänget in free roam: who can be talked to and which exchange is next, the chain of bubbles with Stig's answers and their poses, the stop, the hush after it (§10.28) |
 | `src/game/solkram.js` | new (feature 35, 2026-10-17) | — | `Solkram` (`game.solkram`): Smörj in Majsans rygg in free roam: Majsan's interactable, the scene (the ask, her back turned, the meter's card and the held E, the result's shots, cards and bubbles), the bottle and the cream, the record and `sjuPoang`, the reset (§10.26) |
 | `src/game/stunts.js` | new (feature 40, 2026-10-17) | — | `Stunts` (`game.stunts`): Stunthopp med G17-stämpel in free roam: his car's jumps measured (from car.js `airT`/`airFrom`), LUFTTID in the air, the settle and the verdict, the stamp and the card, the named jumps' take-offs, pay and records, the mantra off the plank, Stig's lines, his arms out by the dream plane, the reset (§10.27) |
+| `src/game/beachDream.js` | new (feature 57, 2026-10-17) | — | `BeachDream` (`game.dream`): Strandkyssen i bränningen in free roam: the towel and its interactable, the scene's clock (lying down, the white wash, the dream with Majsan's double, the foam and the camera's glide, the flash, the wave and its splashes, the lines), the visitor on the sand and her way home, the drips, the reset (§10.33) |
 | `src/game/birds.js` | new (feature 43, 2026-10-17) | — | `Birds` (`game.birds`), `KINDS`: Fåglarna som lyfter in free roam: the four kinds' looks and instanced meshes, the flocks on their spots (pecking, steps, turns), the scare (Stig on foot, his car, the horn), the take-off, the circle and the landing, the sounds, Stig's sorry and hands up, the stork's trip to the Storches and the scene, the put-back at a mission start (§10.31) |
 | `src/game/gags.js` | new (feature 47, 2026-10-17) | — | `Gags` (`game.gags`): Gags på E in free roam: the two gags' interactables, who must stand free, the scene line by line (marks, poses, shots, the one sent in), Ole's flash, everyone put back, the pay and the Gags count, saved (§10.32) |
 | `src/game/roofJump.js` | new (feature 41, 2026-10-17) | — | `RoofJump` (`game.roofs`): Hoppet mellan hotelltaken in free roam: `ROOF_JUMP.live`, the roof coins, the three stair doors and their fades, the out-of-breath arrival, the fall off a roof (the mantra over the gap or off an edge, the poses), the splash in the pool, the view line, the put-down at a mission start (§10.29) |
 | `src/game/mic.js` | new (feature 44, 2026-10-17) | — | `Mic` (`game.mic`): Mikrofonen på scenen in free roam: the mic's interactable and the turn of Lasse's announcements, the chime, Stig's facing and the camera's ease, the lines one after another, the terrace's guests and their spit, the crowd (tourists and the free gang: the ways in and out, the places, the cheer, the question time), Ole's answer to the time, the slump, the shark warning through `bathers.scare`, the reset (§10.30) |
 | `src/game/bathers.js` | new (feature 32, 2026-10-17) | — | `Bathers` (`game.bathers`): Badgäster på solstolarna in free roam: tourists on the sun loungers nearest him by day, their burn (pale, pink, lobster red), the fly-off from a kicked or smashed lounger, a newcomer on a lounger back; Berra and Robban fried and asleep on two Flamenco loungers between buss17 and the bodega, their snores and the wake (§10.22); `scare` for the shark warning (feature 44, §10.30) |
 | `src/game/suntripShop.js` | new (feature 34, 2026-10-17) | — | `SuntripShop` (`game.shop`): Bränsletillägg tillkommer in free roam: SunTrip-butiken's counter shown and its solids live between missions, the travel agent, the wares' and the bag's interactables, the receipts, the Trapp Trull account's instalments, "Paketet!", Ole's line; his bought look as a layer over his outfit (`dress`), saved (§10.23) |
-| `src/game/hud.js` | edit | **H** | map sources, meter, strings, legend, ring, blips, zone bar, markers; `renderPortrait` restores the model transform (§14.8) |
+| `src/game/hud.js` | edit | **H** | map sources, meter, strings, legend, ring, blips, zone bar, markers; `renderPortrait` restores the model transform (§14.8); `dream`, `dreamWash`, `dreamFlash` (feature 57, §10.33) |
 | `src/game/camera.js` | edit | **A1** | profile, frameOne, cutTo, `clampZ` |
 | `src/game/fx.js` | edit | **A1** | `snow`, `steam`, `meterPuff` (rename of `shame`); `splash`'s `up` (feature 24, §10.20) |
 | `src/game/markers.js` | unchanged | none | |
@@ -6210,13 +6304,13 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/world/cabin.js` | new | **A1** | §5 interior, collision, seats, trolley, turbulence, fear, interactables, blockers, `CAM_CABIN`, `FLIGHT_PALETTES`, `FEAR`; calls `buildFlightScenery` |
 | `src/world/flightScenery.js` | new | **A2** | §5.6 visuals: gate-set visuals, airframe, animated scenery per phase, `buildFlightScenery`, `buildPlaneExterior` |
 | `src/world/rio.js` | new | **B** | `buildRioCard` (P1) |
-| `src/actors/models.js` | edit | **E** | `CHARS`, `CAST`, new def fields, anim flags, `buildBustGeo`, `outfitDef`, `randomPed` palette; the `ticket` flag and its `lappblock`/`penna` props (feature 20, §10.17); the `leap` and `bomb` poses (feature 24, §10.20); the `placate` pose (feature 31, §10.21); the `lie` pose, the `stekt` outfits and `STEKT_SKIN` (feature 32, §10.22); the `rub` pose (feature 35, §10.26); the `camShow` pose and `cupHeld` raised standing with `cupUp` (feature 47, §10.32) |
+| `src/actors/models.js` | edit | **E** | `CHARS`, `CAST`, new def fields, anim flags, `buildBustGeo`, `outfitDef`, `randomPed` palette; the `ticket` flag and its `lappblock`/`penna` props (feature 20, §10.17); the `leap` and `bomb` poses (feature 24, §10.20); the `placate` pose (feature 31, §10.21); the `lie` pose, the `stekt` outfits and `STEKT_SKIN` (feature 32, §10.22); the `rub` pose (feature 35, §10.26); the `camShow` pose and `cupHeld` raised standing with `cupUp` (feature 47, §10.32); the `lie` pose's `roll`, `turn` and given arms (feature 57, §10.33) |
 | `src/actors/character.js` | edit | **E** | `setDef`, `hidden`, `seatAt`, `standAt`, new anim flag defaults (`placate`: feature 31; `rub`: feature 35; `camShow`: feature 47); the state `lying`, `lieAt`, `fling`'s `flip` (feature 32, §10.22) |
 | `src/actors/car.js` | edit | **E** | §6.6 types/flags, `registerCarType`, `build`/`noWheels`/`noSpeedo`/`noExplode`/`livery`; the grisbil's pig meshes `PIG_SLOTS`, `pigMesh`, `car.pigs`, `setPig`, `pigWorld` (feature 15, §10.15); `car.lift`, the nose raised on the tow truck's hook (feature 20, §10.17); a prop is known by its block's `ref`, `game.breakProp` may refuse, `def.slow` (feature 28, §10.19); the flight's `airT`, `airFrom` and `game.onCarAirEnd` (feature 40, §10.27) |
 | `src/actors/pickups.js` | edit | **E** | `COLLECT_KINDS`, `registerCollectKind`, `Collectible` table, `Rabbit` meshes, coin value 25; the `brodrost` kind, `TOASTER`, `setToaster`, `Collectible.mark` and the `yaw` option (feature 33, §10.24); `PRYL_IDS` exported (feature 38, §10.25) |
 | `src/actors/peds.js` | edit | **E** | Swedish/Spanish shouts; `dodge`, `startle` (feature 5, §6.7) |
 | `src/actors/drivers.js` | Phase 2 edit | none | (accepts duck-typed paths); an AI bus's lane path starts its turns 11 m from the junction centre instead of 8.5 (left-turn radius 13.75 m > the bus's ≈ 12 m minimum), so the excursion bus no longer swings into the grisfest farm wall; right turns stay too tight for buses (mission bus routes turn left only); traffic holds short of a closed race junction (`game.closure`, §9.2 race) |
-| `index.html`, `style.css` | edit | **H** | §11, §13.4 |
+| `index.html`, `style.css` | edit | **H** | §11, §13.4; the beach dream's `body.dream`, `#dream`, `#dreamwash` (feature 57, §10.33) |
 | `tools/shot.mjs`, `tools/lib.mjs`, `tools/scenarios/core.mjs`, `tools/story/common.mjs` | edit/new | none (Phase 2) | harness, `T` API, core scenarios `start walk aerial drive traffic title talk missions views transition` + `levels` (boots into both levels) + `api` (Game API smoke test) |
 | `tools/fixtures/full-missions.js`, `tools/scenarios/kinds.mjs` | new (Phase 0b) | none (Phase 2) | the literal §8 missions as a test fixture; scenarios `fullstory` (plays them per §16.3) and `kinds` (option checks) |
 | `notes/calibration-samples.md`, `tools/pool.mjs` | new (Phase 3 r1 repair 2) | none | the raw-sample ledger of the random stages' timers (every run's time, code, autopilot version, exclusions) and the tool that pools it by stage and pool and prints n, median, p75, T_ref, timer and the 90 % range (§8 "Timers and difficulty") |
@@ -6240,6 +6334,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `tools/scenarios/mikrofon.mjs` | new (feature 44) | — | mikrofon, utrop |
 | `tools/scenarios/faglar.mjs` | new (feature 43) | — | faglar, storken |
 | `tools/scenarios/gags.mjs` | new (feature 47) | — | gags, gagshots |
+| `tools/scenarios/strandkyssen.mjs` | new (feature 57) | — | strandkyssen, strandefter |
 | `tools/story/flight.mjs` | new | **F** | `M_FLIGHT` (M[0..4]) |
 | `tools/story/island.mjs` | new | **G** | `M_ISLAND` (M[5..12]) |
 
@@ -6258,7 +6353,7 @@ Init: `initGfx` → `input.init` → `hud.init` → `fx.init` → fonts (Luckies
 → peds (34) → NPC `Character`s (one per `CHARS` key except `stig`, the radio-only keys `levander
 kapten pa guardia pax telefonist` and the cabin-owned `vardinna2`; `key` field; hidden until placed, §2.3) →
 player `Character(CHARS.stig)` (`key = 'stig'`) → collectibles (`COLLECTIBLES`) → markers → `Shame`
-→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `DiveTower` (feature 24, §10.20; registers the ladder's two interactables, sets `DIVE_TOWER.live`) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `Eslov` (feature 7, §10.12; registers the rollerskier's interactable) → `PoolFest` (feature 8, §10.13) → `StigSorry` (feature 11, §10.14) → `PigTruck` (feature 15, §10.15) → `BaggageBelt` (feature 25, §10.16) → `Lapplisa` (feature 20, §10.17) → `GrisfestFree` (feature 21, §10.18; registers the gate's and the tourists' interactables) → `FruitStands` (feature 28, §10.19) → `Dogs` (feature 31, §10.21) → `Bathers` (feature 32, §10.22; registers the wake's interactable) → `SuntripShop` (feature 34, §10.23; registers the four wares' and the bag's interactables, sets `SUNTRIP_SHOP.live`) → `Toasters` (feature 33, §10.24; registers the seven toasters' interactables) → `Room107` (feature 38, §10.25; registers room 107's three interactables) → `Solkram` (feature 35, §10.26; registers Majsan's interactable) → `Stunts` (feature 40, §10.27) → `GangTalk` (feature 39, §10.28) → `RoofJump` (feature 41, §10.29; registers the three stair doors, sets `ROOF_JUMP.live`, places the roof coins) → `Mic` (feature 44, §10.30; registers the mic's interactable) → `Birds` (feature 43, §10.31; builds the four kinds' instanced meshes and puts every bird on its spot) → `Gags` (feature 47, §10.32; registers the two gags' interactables) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
+→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `DiveTower` (feature 24, §10.20; registers the ladder's two interactables, sets `DIVE_TOWER.live`) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `Eslov` (feature 7, §10.12; registers the rollerskier's interactable) → `PoolFest` (feature 8, §10.13) → `StigSorry` (feature 11, §10.14) → `PigTruck` (feature 15, §10.15) → `BaggageBelt` (feature 25, §10.16) → `Lapplisa` (feature 20, §10.17) → `GrisfestFree` (feature 21, §10.18; registers the gate's and the tourists' interactables) → `FruitStands` (feature 28, §10.19) → `Dogs` (feature 31, §10.21) → `Bathers` (feature 32, §10.22; registers the wake's interactable) → `SuntripShop` (feature 34, §10.23; registers the four wares' and the bag's interactables, sets `SUNTRIP_SHOP.live`) → `Toasters` (feature 33, §10.24; registers the seven toasters' interactables) → `Room107` (feature 38, §10.25; registers room 107's three interactables) → `Solkram` (feature 35, §10.26; registers Majsan's interactable) → `Stunts` (feature 40, §10.27) → `GangTalk` (feature 39, §10.28) → `RoofJump` (feature 41, §10.29; registers the three stair doors, sets `ROOF_JUMP.live`, places the roof coins) → `Mic` (feature 44, §10.30; registers the mic's interactable) → `Birds` (feature 43, §10.31; builds the four kinds' instanced meshes and puts every bird on its spot) → `Gags` (feature 47, §10.32; registers the two gags' interactables) → `BeachDream` (feature 57, §10.33; builds the towel and the foam, registers the towel's interactable) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
 `placeNpcs(true)` → spawn the player → portraits for every key in `CAST` (`renderPortrait`
 restores each model's parent and transform, so seated cast members stay in their seats) →
 `applySaveToWorld()` →
@@ -6270,7 +6365,7 @@ mantra/hold, AI, cars (a landing calls `onCarAirEnd`, feature 40), people (`glid
 traffic/peds skipped when `!levelDef.sim.*`) → `syncAll` (also
 writes `ch.x/y/z` from `car.seatWorld(ch.seatSide)` for every car-seated character, player
 included, so framing, bubbles and distance checks see where they really are) → `missions.update` →
-`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `tower.update` (feature 24) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `stands.update` (feature 28) → `dogs.update` (feature 31) → `bathers.update` (feature 32) → `shop.update` (feature 34) → `toasters.update` (feature 33) → `room107.update` (feature 38) → `solkram.update` (feature 35) → `stunts.update` (feature 40) → `chat.update` (feature 39) → `roofs.update` (feature 41) → `mic.update` (feature 44) → `birds.update` (feature 43) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
+`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `tower.update` (feature 24) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `stands.update` (feature 28) → `dogs.update` (feature 31) → `bathers.update` (feature 32) → `shop.update` (feature 34) → `toasters.update` (feature 33) → `room107.update` (feature 38) → `solkram.update` (feature 35) → `stunts.update` (feature 40) → `chat.update` (feature 39) → `roofs.update` (feature 41) → `mic.update` (feature 44) → `birds.update` (feature 43) → `dream.update` (feature 57) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
 pickups/collectibles → props → `fx.tick` → `tickTown` → markers → camera → sun/sky → HUD → audio →
 traffic recycling (island) → autosave. `loop` then renders, and when `film.grabNow` is set calls
 `film.grab()` in the same task (Herr Storch's still from the frame's buffer, feature 6, §10.11).
@@ -6359,8 +6454,13 @@ game.gags;         // Gags (feature 47, §10.32): the two film gags on E (Ole's 
                    // gags.live, done (Set of ids, saved), count, total, run ({ gag, held, poses } while a
                    // scene plays), restUntil, last ({ id, t, first, lines, shots, ended }), canPlay(gag),
                    // free(key, gag), posed(key), play(gag), saveData(), loadData(ids), cfg (GAGS)
+game.dream;        // BeachDream (feature 57, §10.33): the towel at the water's edge and Stig's daydream in the
+                   // surf; dream.live, busy, canUse(), start() (the interactable), free(key), homeOf(key),
+                   // sivDue(n), posed(key) (npcPosed, honk.free), update(dt), reset(), sc ({ t, ev, H, hy,
+                   // dream, wake, wave, variant }), vis (the visitor { key, n, busy, stayUntil, dance }),
+                   // dreams, double, towel, foam, T, last, cfg (STRANDKYSSEN)
 game.npcPosed(key) -> bool   // an NPC held in a pose of its own: §9.4 idleAnim or a free-roam module's
-                   // (berraJob, judges, film, eslov, fest, lapp, party, stands, mic, birds, gags); syncAll gives it no
+                   // (berraJob, judges, film, eslov, fest, lapp, party, stands, mic, birds, gags, dream); syncAll gives it no
                    // wave, turn or chatter, and the gang's talk leaves it be (§10.28)
 game.bathers;      // Bathers (feature 32, §10.22): tourists on the sun loungers, Berra and Robban fried;
                    // bathers.loose (the bathers off their loungers: allChars, areaHit), step(h)
@@ -6709,8 +6809,10 @@ backrest's −0.75) about the hips, so the legs are laid straight along the bed 
 z ∓0.06), toes up; `arms` `'side'` (R (0.12, 0, −0.3)) or `'belly'` (the hands folded on it, R
 (−0.72, 0, 0.32)); the neck −0.1 back with a 1.4/s breath, tipped `tilt` (+ 0.45 with `slump`:
 asleep, lolling, the mouth open), `lift` (0..1) raising the head 0.55 off the backrest and stopping
-the loll. `slump`'s own poses skip a lying body. `STEKT_SKIN` 0xf0705a is the `stekt` outfits' skin
-(Berra's and Robban's island looks, lobster red).
+the loll. `slump`'s own poses skip a lying body. Feature 57 (§10.33): flat on the sand `lean` is −π/2;
+`arms` may be [[R], [L]], the two arms' rotations as given; `roll` turns the whole body about its own
+long axis (`body.rotation.y`, + its front to its left) and `turn` the head (+ to its left).
+`STEKT_SKIN` 0xf0705a is the `stekt` outfits' skin (Berra's and Robban's island looks, lobster red).
 
 **character.js**: `ch.setDef(def)` (rebuild model under the same parent; keep x/y/z/yaw/state;
 `height` updated); state `'hidden'` (step no-op, `root.visible = false`, skipped by
@@ -7144,6 +7246,18 @@ shame.closet (Closet, §7.2; feature 36): configure(h) from setupHideouts (h = t
 //   canPlay(gag); free(key, gag); posed(key) read by npcPosed; done; count; total; run; restUntil;
 //   saveData() / loadData(ids) from save / load (`gags`); last { id, t, first, lines, shots, ended }
 // mapLegend: the Gags row after the collectibles (gags.count/total, no dot)
+// beachDream.js (feature 57, §10.33): game.dream = new BeachDream(game) after the gags (builds the towel
+//   and the foam, both added to the scene, the foam hidden; registers `strandkyssen`); update(dt) after
+//   birds.update (not live: reset() once: the dream's palette, picture, music, double and foam off, Stig
+//   on his feet, the visitor home, the drips stopped; a mission's start keeps its dialogue, letterbox
+//   and camera; live: the drips, the visitor's stay and way home, the scene's clock: its events, the
+//   lie-down, the dream's foam and glide, the wave, the double's sync); canUse(); start(); dreamOn();
+//   majsan() (the double, setDef when her look changed); wakeUp(); dreamOff(); takeVisitor(key);
+//   getUp(); finish(); placeFoam(z, crest); tickLie / tickDream / tickWave / tickDrip / tickVisitor;
+//   mayPop(n); endVisitor(); lose(); free(key); homeOf(key); sivDue(n); posed(key) (npcPosed,
+//   honk.free); spot([dx, y, dz]); at(dx, dz); sc; vis; dreams; double; towel; foam; last
+// hud.js (feature 57): dream(title | null) (the vignette, the title, body.dream; at once),
+//   dreamWash(on, secs), dreamFlash(secs); models.js: the lie pose's roll, turn and [R, L] arms
 // town.js: ROOF_JUMP { lots, roofs: { atl, sol: { name, minX, maxX, minZ, maxZ, floor, blocks } }, gap
 //   { x0, x1, z0, z1 }, jz, coins [[x, y, z]], live() } (feature 41; the roofs' blocks `dead` =
 //   !live(), the slabs' body and stair tower and the gap's two palms `dead` = live(), each palm with a
@@ -7789,6 +7903,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `mikrofon`, `utrop` [feature 44] | Mikrofonen på scenen (§10.30). `mikrofon`: every line in MIKROFON has its source tag in content/island.js and Ole's have no ä or ö; `clockWords` (tre, halv fyra from a quarter past, fyra from a quarter to, tolv, halv två); at index 9 (free roam, 15:00): no mic prompt from the lawn 2.8 m in front of the stand, at `mikrofon` the prompt "Läs ett utrop" and three guests seated at the terrace; E (a real key): `vatten`, Stig turned to the terrace (within 0.05 rad), the glasses up at once, his line first, three spit lines with the glasses down and `yell`, the camera behind him (`camOff`, within 0.1), no prompt while it plays, no announcement from E in the cooldown; E: `grisfest`, the free gang (Fru Storch, Ole, Robban, Berra, Herr Storch; not Siv, the giver, or Majsan, her extra) and six tourists, the gang `npcPosed`, out of `honk.free`, `spot` `mic`, busy; everyone within 0.8 m of his place, a cheer, then in order Robban's Benidorm, Fru Storch's coffee, "Ja.", "Norsk, da?", "Ja.", and no chatter from Affe or Gabbe meanwhile; E: "Klockan är tre spansk tid…" and Ole's lost watch; with the klocka found at 15:30 "halv fyra" and the watch's line; E: `friskotek`, everyone leaving slumped, the guests slumped (and up again), the tourist's and Berra's lines; the crowd gone: the tourists hidden, the gang free and within 3 m of home; eight bathers forced onto the pool's loungers: E: `hajar`, all eight up, running from the pool flailing (over 3 m further in 1.5 s), "Hjälp!", "En haj!", Lasse's line and Stig's answer, then no flailing and nobody back on those loungers; the fin squashed: the turn skips the shark; the grisfest again, Stig warped 21 m off after Fru Storch's question: no "Ja." or "Norsk, da?"; `missions.begin()` with the crowd on the lawn: no crowd, extras or guests, the gang let go, no prompt. `utrop`: one tourist from each entry's outermost start to a place (under 20 s, within 0.6 m: west 9.6 s, east 14.4 s, south 10.8 s); the guests at 09:00 and 22:30, none at 23:30 or 05:00 (after a cut), at 15:00 again; no prompt in a SKANDAL pursuit; index 6 (friskotek): six tourists only, no question time, the giver and his extras not taken; index 13 after `unlock('bodega')`: none of the pool fest's dancers in the crowd; the flight level (index 2) inert. Shots `mikrofon_1_prompt`, `_2_vatten`, `_3_publiken`, `_4_hurra`, `_5_norsk`, `_6_friskotek`, `_7_hajar`, `utrop_1_friskotek`, `utrop_2_efter_slutet` |
 | `faglar`, `storken` [feature 43] | Fåglarna som lyfter (§10.31). `faglar`, at index 6 (free roam): `live`; the flocks `plaza` 15 `duva`, `kiosk` 8 `mas`, `piren` 9 `mas`, `charca` the two herons and the stork; the herons at (−255, 169.5) and (−249, 179), y 0.15 (where nature.js drew them); every ground spot `spotFree` (no bird a solid); shots of the four flocks; standing still 2.5 m from a pigeon for 2.5 s: no lift; a sprint in from the south: the first lift `plaza`, cause `foot`, the four north pigeons still on the ground; "Oj! Förlåt, förlåt!" and `placate` 1, then 0; at least six pigeons up, the gulls untouched; 14 m off and still: every pigeon back down 22–70 s after the first take-off (37–42 s measured), each within 1.01 m (its steps) of its spot; a pedestrian and a traffic car put among them: no lift; his car west along the beach through the kiosk's sand spots from 40 m: the gulls lift (`car`), no gull still on the ground within 6 m of the moving car (11.6 m at 18–26 m/s), at most two left on the ground; at the quay a standing car: no lift; H: the pier's first lift `horn`, the whole pier up 2 s later; the pigeons up again, then `T.startMission()`: not `live`, every bird on its spot, the stork home; in the mission a sprint among the pigeons: no lift; index 2 (the flight level): not `live`, no lift. `storken`, at index 7 (the Storches on the beach; at 6 the friskotek holds them): `pair()`, the stork home, no `records.stork`; a sprint at the lagoon from the east: the stork `out` (one trip), both herons `fly`; it lands 1.8 m from Fru Storch, farther from Herr Storch, facing her; Stig 9.5 m off: the scene, "Oj, en stork!" then Fru Storch's "Vi heter faktiskt Storch, inte Stork.", Herr Storch `film` and posed, `records.stork` true in the game and the save; `back` with the camera down, then home on its spot (within 0.01 m); a trip nobody follows (`waitSecs` set to 4): home without a stork line; a third, followed: "Oj, en stork!" and the filming but no correction; `T.startMission()` then: the stork home, the camera down, not posed; index 13 after `unlock('bodega')`: no pair, and scared it circles with the herons (`fly`, no trip). Shots `faglar_plaza`, `_kiosk`, `_piren`, `_charca`, `_lyfter`, `_lyfter2`, `_lyfter3`, `_cirklar`, `_landat`, `_bil`, `_tuta`, `_uppdrag`, `storken_flyger`, `_landat`, `_rattelse`, `_filmar` |
 | `gags`, `gagshots` [feature 47] | Gags på E (§10.32). `gags`, at index 9 (free roam): at `gagKamera` the prompt "Titta på Oles kameraväska" with Ole at home; none 2.5 m off; none with Ole hidden, again once he is placed home. E: the lines (Ole's four, Stig's "Ja." and "Fast det är blixt.", "Si omelett!") in order, a dialogue and the letterbox at each, Ole and Stig on their marks, Ole posed throughout, `camShow` in the shot `two` for the first five lines, `film` in the shot `ole` for the last; after it a white flash and one `shutter`. Then Ole on the spot he stood on with his `busy` and `spot`, no pose, not posed; Stig on `gagKamera` facing −π/2; no letterbox, dialogue or cutaway; no prompt (rest); +100, the collect card and the legend "Gags 1/2", the save `["kamera"]`; the chase eye 5.8 m from his head and in no solid, and a 24-yaw sweep round him with no eye in a solid (nearest 2.1 m); after `rest` E again: the six lines, no pay, still 1/2. At `gagViking` "Beställ en juice": Angerud's order and Stig's in the shot `bar` (Stig's cup out, `cupHeld`, for his), Carmencita there for both and gone for the lamp, the shot `lamp` with Stig facing the lamp, `cupHeld` + `cupUp`, Angerud posed; no flash; then Angerud and Carmencita on their spots (`busy`, `spot`, shown), Stig on `gagViking` facing π with the cup down, +100, "Gags 2/2", `["kamera","viking"]`; the eye 5.8 m behind him, in no solid; the sweep with no eye in a solid (nearest 0.92 m with the camera between him and the wall or an arcade pillar: the arcade's camera residue, §14.5, HANDOFF §4.4). In a pursuit no prompt, back after it; after a mission start none (`canPlay` false). A reload keeps 2/2. Index 7 (Ole asnan's giver at `flamenco`): the bag's gag plays, Ole is back on the giver's spot and his talk is the prompt beside him. Index 13 after `unlock('bodega')`: Angerud hidden, no Viking prompt, the bag's still there. Index 2: not `live`, nothing playable. `gagshots`: the bag's prompt, the bag up close, the lamp's prompt; each line of both scenes held (`autoDialog` off), the flash's white frame, each scene's after (the collect card); with `SHOTS=1` also eight yaws of the chase camera at each end mark. Shots `gag_bag_prompt`, `gag_bag_close`, `gag_lamp_prompt`, `gag_kamera_0`–`_5`, `gag_kamera_flash`, `gag_kamera_after`, `gag_viking_0`–`_3`, `gag_viking_after`, `gag_sweep_<lm>_0`–`_7` |
+| `strandkyssen`, `strandefter` [feature 57] | Strandkyssen i bränningen (§10.33). `strandkyssen`, at index 7 (asnan: Ole the giver, Siv free at home): every line in `STRANDKYSSEN` tagged in the file; the towel at (−30, 300.9), in the scene, no collider (`spotFree` on it); no prompt 2.6 m off, "E Lägg dig i vattenbrynet" 1.2 m off, none in a SKANDAL pursuit or a car; E: lying (`lying`) at once with the letterbox and `inDialog`; at 1.2 s the white wash over 0.5; at 2.6 s the dream: `sky` `sunset`, `body.dream` with the canvas blur, `#dream` shown with DAGDRÖM, the tune `vals`, Majsan's double `lying` 0.62 m to his left, him flat (lean −π/2), the real Majsan unmoved and unheld, the foam's front at z 302–306; at 9.3 s the camera 1.2 m or more higher than at 2.6 s; at 10.3 s the wake: the palette, the tune and the picture as before E, the double hidden, Stig still lying, the wave on its way; three splashes by 12.9 s; then free roam (`normal`, no `inDialog`, letterbox or cutaway, `last.ended` `done`) beside the towel (0.6 m to its left, 1.7 m landward), dripping; said: the double's "Då kanske vi ses…" and Stig's "Blött."; nobody on the sand at the first dream. The second: Siv on the sand (`variant` `siv`), "Giraffen, då? Fyra.", posed (`npcPosed`, not `honk.free`, `busy`, `spot` `strand`) within 4 m of the towel; still there 2.5 s after the scene; Stig warped 48 m off: she is home (her home spot, not busy, not posed). The third: nobody. A fifth (`dreams` set to 4) at 01:00: the night before, the sunset in the dream, the night at the wake and after, no Siv. Then a dream with `missions.begin()` at 3.2 s: the scene gone at once (`ended` `reset`), no sunset, no waltz, no `body.dream`, no `#dream`, the double hidden, Stig standing, the foam hidden, the mission under way; once it runs: no `inDialog`, no dream filter, the wash clear. `strandefter`, at index 13 after `unlock('bodega')`: the dream as above, then Majsan herself on the sand (`variant` `after`): her "Vill du dansa med mig?" then Stig's "Ja.", she dances (`anim.dance`), posed, `spot` `strand`, within 4 m; still there 1.5 s later; Stig warped 48 m off: she is home (her home spot, not dancing, not busy, not posed); with Majsan held (`busy`) nobody comes; index 2 (the flight level): not `live`, no `canUse()`. Shots `strandkyssen_0_handduk`, `strandkyssen_1_ligger` … `_9_efter`, `strandsiv_*` (`_8_besok1`, `_8_besok2`), `strandnatt_*`, `strandefter_*`, `strandefter_dans` |
 | `badgaster`, `stekt` [feature 32] | Badgäster på solstolarna (§10.22). `badgaster`, at index 6 (free roam): bodies only on taken sun loungers, their hips on the seat, at most `max` (10), none on Berra's or Robban's; on the main beach no taken lounger within `r` left empty nearer than the bodies (shot `badgaster_strand`); one rebuilt body's ms logged. The burn: three loungers in the z 250 row; a bather lain past `burn[0]` stays pale while in view within `seenR` and is pink once out of view; past `burn[1]` lobster red (skins from `skins`; shot `badgaster_stadier`). A kick at a free lounger and at a taken one give the same SKANDAL; the bather off it in a backward somersault (`flip` < 0) along the lounger's facing (vz > 2), an OUCH bark, a GETUP bark on his feet (shots `badgaster_kullerbytta`, `badgaster_upp`), gone once Stig is 30 m off; no `onCharHit`, no "hit" sorry. His car at 10 m/s through a taken lounger: SKANDAL 1 × 1.2 × gain only, the bather off along the car (vz > 5; shot `badgaster_bil`). The lounger back after its smash (respawn 0, him 100 m off): `n` + 1, a new seed, stage 0, a pale newcomer on it. At 22:00 nobody (after a cut); at 10:00 `dayN` + 1 and a new crowd. A mission start (friskotek) takes every body away at once, none in the mission; the flight level (index 2) makes none. `stekt`, at index 6: Berra and Robban `lying` on their loungers, outfit `stekt` (skin `STEKT_SKIN`), `slump`, busy, spot `stekt`; both snore within 9.5 s (shots `stekt_bar`, `stekt`); the E point `stekt:wake` at Berra's feet: Stig's line, then Berra's with `lift` > 0.6 (shot `stekt_fem_minuter`), then Robban's, in that order, and `lift` back under 0.1; a kick at Berra's lounger: `flung`, then `down` with his timer held (> 100), still `stekt`, only snores from him (shot `stekt_sparkad`); the lounger back with him 100 m off: on it again. A mission start (friskotek): both `normal`, outfit `sol`, no slump, within 2.5 m of their homes at the bar. Index 7: on their loungers; 5 and 8: not |
 | `talk` [Phase 0] | `autoDialog = false`, walk to Ole at `gateQueue`, E, Space twice |
 | `fullstory` [Phase 0b] | swaps the literal §8 missions (`tools/fixtures/full-missions.js`) into `MISSIONS` and plays all 13 per §16.3 (`FROM`/`TO` as `story`); must end `#13 idle`, `RESULT: PASS` |
@@ -9786,3 +9901,25 @@ the fixer's group.
   `mapLegend` the row. Deviations from the idea: "Gammelt…" for agreement; Carmencita silent; the lamp
   raised; Angerud waits for his drink rather than reacting; the bag's gag also with Ole as a giver.
   Scenarios `gags`, `gagshots` (§16.4).
+- Feature 57, "Strandkyssen i bränningen" (`features/implemented/strandkyssen.md`, 2026-10-17): Stig's
+  daydream on a towel at the water's edge below Flamenco (§10.33; new `src/game/beachDream.js`,
+  `STRANDKYSSEN` in content/island.js; §1.6, §12.1, §14.1–§14.3, §14.6, §14.8, §16.4). The towel (Majsan's
+  dress's blue with white dots, no collider) at (−30, 300.9); between missions, on foot, no pursuit:
+  "E Lägg dig i vattenbrynet" [N]. He lies down on it, the picture washes to white, and for eight
+  seconds the island is a dream: the sunset palette, a soft picture (`body.dream` filters the canvas)
+  with a white vignette and DAGDRÖM [N] (hud.js `dream`, `dreamWash`, `dreamFlash`; style.css), the
+  `vals`, and Majsan's double (the real Majsan never moves) lying beside him in each other's arms (the
+  lie pose's new `roll`, `turn` and given [R, L] arm rotations, models.js), the foam washing over their
+  legs, her "Då kanske vi ses…" [F*](t); the camera glides up and away before the kiss. A white flash:
+  the clock's palette, the music and the picture back, Stig alone, a real wave (foam lumps, no collider)
+  over him with three splashes and `audio.splash(1)`, "Blött." [N]. On every third dream from the
+  second, by day, Siv on the sand with "Giraffen, då? Fyra." [F*](t), laughing; after the end Majsan
+  herself, "Vill du dansa med mig?" [F*], Stig's "Ja." [N], and she dances; the visitor posed
+  (`npcPosed`, honk's `free`) and home once out of the camera's view. He gets up dripping. Only when
+  `missions.state === 'idle'` on the island: a mission start or the other level ends it all at once (a
+  mission's own dialogue, letterbox and camera kept), so no mission, stage kind, timer, fixture or
+  calibration pool changed; nothing saved, no solid or world random draw added. main.js: `dream` after
+  `birds`, `dream.update` after `birds.update`, `npcPosed` asks it. Deviations from the idea: a double
+  instead of placing the real Majsan; a clock in `update`, not an async method; the bathers' lie pose
+  extended, not a new anim flag; Siv every third dream; Stig's "Ja." and her dance after the end; by
+  night too; no landmark. Scenarios `strandkyssen`, `strandefter` (§16.4).

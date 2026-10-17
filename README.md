@@ -353,6 +353,15 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   gången ger varje gag 100 pesetas och ett streck på raden "Gags" (på den stora kartan, M), sedan kan
   den spelas om hur många gånger som helst. Bara mellan uppdragen och inte under en jakt. Efter slutet
   ligger Angerud på sjukhus, så då finns bara kameraväskan kvar.
+- **Strandkyssen i bränningen**: nere i vattenbrynet nedanför Flamenco ligger en ensam handduk, blå
+  med vita prickar som Majsans klänning. Ställ dig vid den mellan uppdragen och tryck **E** (Lägg dig i
+  vattenbrynet), så lägger sig Stig på den och bilden bleknar till vitt. I åtta sekunder är ön en dröm:
+  solnedgång, mjuk bild med vita kanter, DAGDRÖM och valsen, och Majsan ligger bredvid honom i
+  bränningen medan skummet sköljer över dem. Hon viskar "Då kanske vi ses…", och kameran glider bort
+  mot himlen innan något hinner hända. Sedan en vit blixt: det är som förut igen, Majsan är borta och
+  en riktig våg rullar in över honom. "Blött." Ibland står Siv på sanden och sätter poäng ("Giraffen,
+  då? Fyra."), och efter berättelsen står Majsan själv där och frågar om han vill dansa. Stig reser sig
+  och droppar en stund. Ingenting av drömmen finns kvar under uppdragen.
 
 ## Vad är påhittat?
 
@@ -453,6 +462,9 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
   "Gags" (i filmen pratar Ole och Stig kameror i rum 107, "Säg omelett." sägs under köpäventyret,
   Viking special dricker Angerud i baren efter grisfesten, och muggen lyfts mot anropsknappen på
   planet)
+- handduken i vattenbrynet och Stigs dagdröm där om strandkyssen med Majsan, vågen som väcker honom med
+  "Blött.", Siv som sätter poäng på sanden och Majsan som efter berättelsen bjuder upp honom där (i
+  filmen dagdrömmer han om kyssen i Stockholm, efter bärgningen, och ingen våg väcker honom)
 - fårrusningen i Fataga, kappkörningen mot nattbussen och porslinskrosset på tid
 - att samla ihop julfestgästerna
 - Oles prylar och hajfenorna som samlarföremål, utspridda över ön
@@ -563,6 +575,7 @@ src/game/roofJump.js            Hoppet mellan hotelltaken in free roam: the walk
 src/game/mic.js                 Mikrofonen på scenen in free roam: Lasse's announcements at the SunTrip stage, the crowd, the reactions
 src/game/birds.js               Fåglarna som lyfter in free roam: the flocks that lift and land, Stig's sorry, the stork's trip and scene
 src/game/gags.js                Gags på E in free roam: Ole's flash at his camera bag, the juice under Viking Bar's lamp, the Gags count
+src/game/beachDream.js          Strandkyssen i bränningen in free roam: the towel, the daydream with Majsan's double, the wave, Siv or Majsan on the sand
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
@@ -570,8 +583,8 @@ tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, 
                                 paintshop, berra, glide, simhopp, tuta, dygn, super8, eslov, grodorna,
                                 artig, grisar, bagage, lapplisa, torsdag, frukt, hopptorn, hund,
                                 badgaster, butik, brodrost, rum107, solkram, skjortbyte,
-                                stunthopp, prata, takhopp, mikrofon, faglar, gags, calibrate,
-                                calibflight)
+                                stunthopp, prata, takhopp, mikrofon, faglar, gags, strandkyssen,
+                                calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
 tools/pool.mjs                  re-derives every random stage's timer from the ledger
@@ -628,6 +641,7 @@ node tools/shot.mjs takhopp              # the hotel roofs: the stairs up, the j
 node tools/shot.mjs mikrofon utrop       # the SunTrip stage's mic: the five announcements and their reactions, the crowd's ways in, the terrace's hours, a mission start
 node tools/shot.mjs faglar storken       # the birds: the four flocks, the lift on foot, by car and by the horn, the landing, a mission start; the stork's trip and the Storch scene
 node tools/shot.mjs gags gagshots        # the two gags on E: the prompts, the lines, shots and poses, the flash, everyone back, the pay, Gags n/2 and the save; every line as seen
+node tools/shot.mjs strandkyssen strandefter  # the towel's daydream: the dream, the wave, Siv on the sand, by night, a mission start; after the end Majsan's invitation
 node tools/shot.mjs fullstory kinds      # the literal §8 missions and the stage-kind checks
 node tools/shot.mjs calibrate calibflight  # timer and FLYGRÄDSLA calibration (slow; see DESIGN §8, §16.4)
 node tools/pool.mjs                      # random-stage timers from the raw runs in notes/calibration-samples.md

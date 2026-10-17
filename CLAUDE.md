@@ -104,7 +104,11 @@ opens with a summary of the rounds and the timer changes.
     gagshots` (Gags på E, two film scenes between missions: Ole's camera bag under Flamenco's pergola
     and his flash, "Si omelett!"; Stig's cup under the lamp at Viking Bar's door with Angerud and
     Carmencita; the cast put back, the pay, Gags n/2 and the save, no prompt in a pursuit or a mission,
-    the Viking gag gone after the end; every line as seen, DESIGN §10.32)
+    the Viking gag gone after the end; every line as seen, DESIGN §10.32), `strandkyssen
+    strandefter` (Strandkyssen i bränningen, the towel at the water's edge below Flamenco: Stig's
+    daydream with Majsan's double in the surf, the sunset, DAGDRÖM and the waltz, the camera gliding
+    away, the white flash and the real wave, "Blött.", Siv's score on the sand, by night, a mission
+    start mid-dream; after the end Majsan asking him to dance, DESIGN §10.33)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

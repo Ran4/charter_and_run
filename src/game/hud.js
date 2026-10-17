@@ -38,6 +38,7 @@ export const hud = {
     root = $('hud');
     root.innerHTML = `
       <div id="vignette"></div>
+      <div id="dream"><div class="dr-title"></div></div>
       <div id="sirenlights"><div class="sl-l"></div><div class="sl-r"></div></div>
       <div id="panik"></div>
       <div id="coins"><span class="coin-icon"></span><span id="coin-n">0 pta</span></div>
@@ -59,6 +60,7 @@ export const hud = {
       <div id="filmnight"></div>
       <div id="dialog"><div class="dlg-portrait"><img alt=""></div><div class="dlg-body"><div class="dlg-name"></div><div class="dlg-text"></div></div><div class="dlg-next">${S.dialogNext}</div></div>
       <div id="flash"></div>
+      <div id="dreamwash"></div>
       <div id="bigmap"><canvas width="760" height="760"></canvas><div class="bm-legend"></div></div>
     `;
     mapCanvas = $('minimap');
@@ -90,6 +92,8 @@ export const hud = {
     this.vfEl = $('viewfinder');
     this.fnEl = $('filmnight');
     this.flash = $('flash');
+    this.dreamEl = $('dream');
+    this.washEl = $('dreamwash');
     this.bigmap = $('bigmap');
   },
 
@@ -391,6 +395,31 @@ export const hud = {
     e.className = 'show';
   },
   filmNightStep(cls) { this.fnEl.classList.add(cls); },
+
+  // Stig's daydream on the beach (game/beachDream.js, §10.33): the white vignette and `title` over
+  // the 3D view (under the bubbles and the letterbox), and the soft picture (body.dream filters the
+  // canvas); null ends it. Both at once: the dream comes and goes under its white wash.
+  dream(title) {
+    const on = title != null;
+    if (on) this.dreamEl.querySelector('.dr-title').textContent = upper(title);
+    this.dreamEl.classList.toggle('show', on);
+    document.body.classList.toggle('dream', on);
+  },
+  // The dream's white over everything: on, fading in over `secs` s (0: at once), or off, fading out.
+  dreamWash(on, secs = 0.8) {
+    const e = this.washEl;
+    e.style.transitionDuration = `${secs}s`;
+    e.classList.toggle('on', !!on);
+  },
+  // A white flash out of the dream: white at once, fading out over `secs` s.
+  dreamFlash(secs = 0.7) {
+    const e = this.washEl;
+    e.style.transitionDuration = '0s';
+    e.classList.add('on');
+    void e.offsetWidth;
+    e.style.transitionDuration = `${secs}s`;
+    e.classList.remove('on');
+  },
 
   // ------------------------------------------------------------------------------------------
   // Dialogue: lines of { who, text, cue }. game.cue(cue) fires when a line starts. Resolves when

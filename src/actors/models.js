@@ -909,7 +909,7 @@ export function buildCharacter(d) {
 // ---------------------------------------------------------------------------------------------
 // Pose the model for this frame.
 //   st: { speed, air, vy, kick (0..1), talk, seated, flung, down, wave, cheer, t, sprint, yell,
-//         lie ({ lean, arms, tilt, lift } on a sun lounger, else null),
+//         lie ({ lean, arms, tilt, lift, roll?, turn? } on a sun lounger or the sand, else null),
 //         + the anim flags (character.js ANIM_FLAGS) }
 
 const _v = new THREE.Vector3(), _w = new THREE.Vector3(), DOWN = new THREE.Vector3(0, -1, 0);
@@ -936,18 +936,21 @@ export function animateCharacter(m, st, dt) {
     arms[0].rotation.set(-1.15 + Math.sin(t * 3) * 0.04, 0, 0.18);
     arms[1].rotation.set(-1.15 - Math.sin(t * 3) * 0.04, 0, -0.18);
   } else if (st.lie) {
-    // On a sun lounger (Character.lieAt): the root leans back `lean` on the backrest, the legs lie
-    // straight along the bed, toes up; the arms at his sides or the hands on his belly, the head
-    // tipped `tilt` to a side (asleep, `slump`: lolling, the mouth open). `lift` (0..1) raises the
-    // head off the backrest.
+    // On a sun lounger (Character.lieAt): the root leans back `lean` on the backrest (flat on the
+    // sand: −π/2), the legs lie straight along the bed, toes up; the arms at his sides, the hands on
+    // his belly or as given, the head tipped `tilt` to a side and turned `turn` (asleep, `slump`:
+    // lolling, the mouth open). `lift` (0..1) raises the head off the backrest.
     const L = st.lie, k = -Math.PI / 2 - L.lean, br = Math.sin(t * 1.4) * 0.012;
     m.body.position.y = 0;
     m.hips.rotation.x = br;
     legs[0].rotation.set(k, 0, -0.06); legs[1].rotation.set(k + 0.03, 0, 0.07);
     if (L.arms === 'belly') { arms[0].rotation.set(-0.72, 0, 0.32); arms[1].rotation.set(-0.72, 0, -0.32); }   // the hands folded on the belly
+    else if (Array.isArray(L.arms)) { arms[0].rotation.set(...L.arms[0]); arms[1].rotation.set(...L.arms[1]); }   // [right, left] as given (two in each other's arms on the sand, game/beachDream.js)
     else { arms[0].rotation.set(0.12, 0, -0.3); arms[1].rotation.set(0.12, 0, 0.3); }
     const lift = L.lift || 0;
-    m.neck.rotation.set(-0.1 - br + 0.55 * lift, 0, ((st.slump ? 0.45 : 0) + (L.tilt || 0)) * (1 - lift));
+    m.neck.rotation.set(-0.1 - br + 0.55 * lift, L.turn || 0, ((st.slump ? 0.45 : 0) + (L.tilt || 0)) * (1 - lift));
+    // `roll`: turned onto his side about his own long axis (+: his front towards his left).
+    if (L.roll) m.body.rotation.y = L.roll;
   } else if (st.flung) {
     m.body.position.y = 0;
     legs[0].rotation.set(-0.6 + Math.sin(t * 20) * 0.4, 0, -0.5);
