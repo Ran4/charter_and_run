@@ -21,7 +21,8 @@
 // and the queue at Flamenco's reception and the bell that answers on its tenth pling (§10.37), and
 // José's street races with his mother in the car, the bet at the pool bar and the sisters' six (§10.38),
 // and the boat trip with PALOMA from the marina's kiosk to the lighthouse and back (§10.41), and the pool
-// bar open after friskoteket, its bartender, the Swedish coffee's sprint and the cup for Fru Storch (§10.44).
+// bar open after friskoteket, its bartender, the Swedish coffee's sprint and the cup for Fru Storch (§10.44),
+// and the fishing at the marina's pier end, its catches and the FÅNGST card (§10.45).
 
 export const HOMES_ISLAND = {
   ole: ['flamenco', 2.0, 1.0, 0],     // yaw 0: under the pergola, facing the pool (flamenco faces π)
@@ -2228,4 +2229,77 @@ export const KAFFE = {
     ],
     toast: 'Fru Storch betalar kaffet: {n} pta.',                                  // [N]
   },
+};
+
+// Meta från piren (free roam; feature 107, DESIGN §10.45; game/fishing.js). At the marina's pier end the
+// rod stands in its holder on the green harbour light (`lamp`, [left, forward] from the `lm` landmark
+// `fiske`; the holder `rodOff` m from the post towards the spot, the rod leaning `rodLean` rad out) with
+// the tin bucket at `bucket`. On the island with no mission running (`missions.state === 'idle'`), on
+// foot within `r` m of the spot with no dialogue, carry, pursuit, bust, PANIK, pool-fest ring, belt, gang
+// talk, nap, sun cream, toaster game, rollerskis or street race: `prompt`. E stands Stig on the spot
+// facing the basin (`inDialog`), the camera cuts to `shots.fish` ([left, forward, height] from the spot
+// at deck height: `eye`, `look`) and he casts (`castSecs`; the float leaves the rod at `release` of it
+// and flies `flySecs` s to `float` [left, forward], on the water at `water`). It bobs `waitSecs` s (a
+// random span) with up to `nibbles` dips, then dives: E within `window` s hooks the catch, which comes
+// up the line in `reelSecs` s; the camera cuts to `shots.show` and Stig shows it for `show[kind]` s with
+// the next of `lines[kind]` (the first fish line with his arms spread, `sizeLine`) and the toast
+// `toasts[kind]`; the fish goes back into the water and the rest into the bucket (`tossSecs`). E before
+// the dive (`early`) or none in the window (`late`): a splash, an empty hook and `emptyToast`, `emptySecs`
+// s. Q while he waits (`hint.wait`) puts the rod down. The catch is drawn from `weights` (`pity`: the
+// pack at the latest on the pity-th hook of a session without it, while it is not on the card); every
+// catch counts in `records.fiske` (saved) and the FÅNGST card (`card`, top left, within `cardR` m of
+// the spot or while he fishes) shows the four kinds, the ones not caught yet as `card.unknown`. The
+// first time all four are on it: `allToast` and Stig's `allLine`. Invented (§1.6): the fishing, the
+// rod, the catches and the card; the pack's line is the customs' at Arlanda and the size line the
+// knäckebröd hunt's, both relocated.
+export const FISKE = {
+  lm: 'fiske', r: 1.6, cardR: 14,
+  lamp: [-1.6, 0.2], rodOff: 0.46, rodLean: 0.12, bucket: [-1.45, -0.5],
+  float: [0, 4.6], water: 0.19,
+  castSecs: 0.9, release: 0.5, flySecs: 0.55,
+  waitSecs: [2.2, 5.5], nibbles: 2, window: 0.5, reelSecs: 0.85, tossSecs: 0.7, emptySecs: 1.8,
+  show: { fisk: 2.6, sko: 2.6, fena: 2.8, knacke: 3.4 },
+  weights: { fisk: 0.55, sko: 0.25, fena: 0.14, knacke: 0.06 }, pity: 12,
+  shots: {
+    fish: { eye: [3.0, -3.2, 3.1], look: [0.0, 3.3, 0.3] },                        // behind his left shoulder, the float ahead
+    show: { eye: [2.0, 3.3, 1.7], look: [0.25, 0, 1.3] },                           // over the water before him, his face
+  },
+  prompt: '<b>E</b> Meta',                                                         // [N]
+  hint: {
+    wait: 'Vänta tills flötet dyker… <b>Q</b> Lägg ner spöt',                        // [N]
+    bite: '<b>E</b> Dra upp!',                                                     // [N]
+  },
+  names: { fisk: 'Fisk', sko: 'Gammal sko', fena: 'Hajfena (plast)', knacke: 'Knäckebrödspaket' },   // [N]
+  card: { title: 'Fångst', unknown: '???', all: 'Alla fyra!' },                    // [N]
+  lines: {
+    fisk: [
+      'Det är ungefär så här stort.',          // [F*](t) the knäckebröd hunt in the shops (research-plot.md:301, no speaker named), Stig's at a fish
+      'Simma hem nu, lilla vän.',              // [N]
+      'Ole kommer aldrig att tro mig.',        // [N]
+    ],
+    sko: [
+      'Någon har visst fått ta av sig skon.',  // [N] (the security check's "Vill ni vara vänlig och ta av er skon.", research-plot.md:166)
+      'En sko till. Fortfarande inte min.',    // [N]
+    ],
+    fena: [
+      'Haj!… Nej. Plast.',                     // [N]
+      'Ole sa ju att det fanns hajar.',        // [N] (his "Understrømmer, solstikk og haier.", research-characters.md:186)
+    ],
+    knacke: [
+      'En julklapp. Den är inte till mig.',    // [F*] the customs at Arlanda (research-plot.md:162; Stig's per design-A-film.md:520–522), relocated to the pier
+    ],
+  },
+  sizeLine: 0,
+  toasts: {
+    fisk: 'Fångst: en fisk!',                                                      // [N]
+    sko: 'Fångst: en gammal sko.',                                                 // [N]
+    fena: 'Fångst: en hajfena… av plast.',                                         // [N]
+    knacke: 'Fångst: ett blött SPORT-KNÄCKE-paket. Tomt.',                         // [N]
+  },
+  early: 'För tidigt…',                                                            // [N] Stig
+  late: 'Den slapp.',                                                              // [N] Stig
+  emptyToast: 'Tom krok.',                                                         // [N]
+  allToast: '<span><b>Alla fyra!</b> Fisk, sko, hajfena och knäckebröd.</span>',  // [N] (one flex item in the toast)
+  allLine: 'Nu finns det inget mer kvar i hela hamnen.',                           // [N] Stig
+  allAt: 1.6,
 };

@@ -56,6 +56,7 @@ import { GolfCarts } from './game/golfCart.js';
 import { BoatTrip } from './game/boatTrip.js';
 import { Residents } from './game/residents.js';
 import { PoolBar } from './game/poolBar.js';
+import { Fishing } from './game/fishing.js';
 import { Lighthouse } from './game/lighthouse.js';
 import { ReceptionBell } from './game/receptionBell.js';
 import { StreetRace } from './game/streetRace.js';
@@ -235,6 +236,7 @@ class Game {
     this.residents = new Residents(this); // free roam: the neighbours on the balconies, the siesta and its slipper (§10.42)
     this.hytt = new PhoneBooth(this);     // free roam: booth 2 at Centro Nórdico, ring for a car to the car park (§10.43)
     this.bar = new PoolBar(this);         // free roam after friskoteket: the pool bar's Swedish coffee, its sprint, the cup for Fru Storch (§10.44)
+    this.fiske = new Fishing(this);       // free roam: the rod at the pier's end, the float, the catches and the FÅNGST card (§10.45)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -1589,6 +1591,7 @@ class Game {
     this.residents.update(dt);
     this.hytt.update(dt);
     this.bar.update(dt);
+    this.fiske.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);
@@ -2141,6 +2144,9 @@ class Game {
         prompt = this.fyren.prompt(prompt);   // the J hint on the lighthouse's gallery (§10.35)
       }
       if (this.belt.seated && !this.inDialog) prompt = this.belt.cfg.prompt;
+      // Fishing at the pier's end (§10.45): the wait's hint and the dive's "E Dra upp!".
+      const fh = this.fiske.hint();
+      if (fh != null) prompt = fh;
       hud.setPrompt(prompt);
     }
     if (this.frame % 2 === 0) {

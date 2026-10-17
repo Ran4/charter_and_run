@@ -45,6 +45,7 @@ export const hud = {
       <div id="klocka"><span class="pryl-icon"></span><span class="k-main"></span><span class="k-side"><span class="k-zone"></span><span class="k-sub"></span></span></div>
       <div id="collect"></div>
       <div id="menu"><div class="mn-title"></div><div class="mn-rows"></div><div class="mn-note"></div><div class="mn-keys"></div></div>
+      <div id="fangst"><div class="fg-head"><span class="fg-title"></span><span class="fg-count"></span></div><div class="fg-rows"></div><div class="fg-all"></div></div>
       <div id="shame"><div class="shame-label"></div><div class="shame-row"><div class="meter-icon"><i></i></div><div class="shame-bar"><div class="shame-fill"></div><div class="shame-ticks"></div></div></div></div>
       <div id="objective"><div class="obj-title"></div><div class="obj-text"></div><div class="obj-timer"></div><div class="obj-bar"><div class="obj-zone"></div><div class="obj-bar-fill"></div><div class="obj-marker"></div><span class="obj-bar-label"></span></div></div>
       <div id="minimap-wrap"><canvas id="minimap" width="220" height="220"></canvas><div class="mm-n">N</div></div>
@@ -89,6 +90,7 @@ export const hud = {
     this.dialog = $('dialog');
     this.collectEl = $('collect');
     this.menuEl = $('menu');
+    this.fangstEl = $('fangst');
     this.clockEl = $('klocka');
     this.fadeEl = $('fade');
     this.scoreEl = $('score');
@@ -386,6 +388,27 @@ export const hud = {
     });
     e.querySelector('.mn-note').textContent = o.note || '';
     e.querySelector('.mn-keys').innerHTML = o.keys || '';
+    e.classList.add('show');
+  },
+  // The FÅNGST card at the pier's end (Meta från piren, game/fishing.js, §10.45), top left under Ole's
+  // watch: the `title` and the kinds caught out of the rows, one row a kind ({ label, n }: n 0 is one not
+  // caught yet, its label the `unknown` mark, greyed), then `all` once all are caught; null hides it.
+  // Touches the DOM only on a change.
+  setFangst(o) {
+    const e = this.fangstEl, key = o ? JSON.stringify(o) : null;
+    if (key === this._fangstKey) return;
+    this._fangstKey = key;
+    if (!o) { e.classList.remove('show'); return; }
+    e.querySelector('.fg-title').textContent = upper(o.title);
+    e.querySelector('.fg-count').textContent = `${o.rows.filter((r) => r.n > 0).length}/${o.rows.length}`;
+    const box = e.querySelector('.fg-rows');
+    box.textContent = '';
+    for (const r of o.rows) {
+      const row = el('div', 'fg-row' + (r.n > 0 ? '' : ' none'), box);
+      el('span', 'fg-label', row).textContent = r.label;
+      el('span', 'fg-n', row).textContent = r.n > 0 ? `×${r.n}` : '';
+    }
+    e.querySelector('.fg-all').textContent = o.all ? upper(o.all) : '';
     e.classList.add('show');
   },
   // A live line in the same place (the stunt jump's LUFTTID while his car is in the air, §10.27): the

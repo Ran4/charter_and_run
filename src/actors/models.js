@@ -710,6 +710,7 @@ const PROP_GEO = {
   skiR: rollerski, skiL: rollerski,
   // A pole: the grip at the origin, the shaft down -y to the hard tip `POLE_LEN` below it.
   poleR: skiPole, poleL: skiPole,
+  metspo: fishingRod,   // Stig's rod at the pier's end (anim.fish, game/fishing.js)
 };
 function rollerski(g) {
   g.box(0xd8321e, 0, -0.025, 0.02, 0.075, 0.03, 0.74);
@@ -723,6 +724,23 @@ function skiPole(g) {
   g.cone(0x5a6068, 0, -1.29, 0, 0.013, 0.06, 5, Math.PI);
 }
 const SKI_LIFT = 0.11, POLE_LEN = 1.32;
+// A 1979 fishing rod (Meta från piren, game/fishing.js, §10.45): the grip at the origin (where the
+// hand holds it, above the cork), the butt `0.36` below, a glass-fibre blank in two tapering sections up
+// +y to the tip ring `ROD_LEN` above, three guides and a fixed-spool reel under it (+z). Also the rod
+// leaning in its holder on the green harbour light when nobody fishes.
+export const ROD_LEN = 2.1;
+export function fishingRod(g) {
+  g.cyl(0x1d1d22, 0, -0.34, 0, 0.024, 0.04, 8);
+  g.cyl(0xb07a48, 0, -0.16, 0, 0.022, 0.34, 8);
+  g.cyl(0x8a8f99, 0, 0.03, 0, 0.018, 0.08, 8);
+  g.box(0x8a8f99, 0, 0.03, 0.035, 0.012, 0.03, 0.05);
+  g.cyl(0x6a6e78, 0, 0.03, 0.075, 0.038, 0.034, 12, 0, 0, Math.PI / 2);
+  g.cyl(0xd8dce0, 0.024, 0.03, 0.075, 0.03, 0.012, 10, 0, 0, Math.PI / 2);
+  g.cyl(0xc8a050, 0, 0.6, 0, 0.012, 1.06, 6);
+  g.cyl(0xd8b868, 0, 1.6, 0, 0.0075, 1.0, 6);
+  for (const y of [0.75, 1.35, 1.85]) g.sphere(0xd8dce0, 0, y, 0.022, 0.018, 0.018, 0.018);
+  g.sphere(0xd8dce0, 0, ROD_LEN, 0, 0.02, 0.02, 0.02);
+}
 const _propCache = {};
 // The number on a score card (`anim.card`, a string such as '10' or '–1'): a plane on each side of
 // the board, its texture drawn once per number.
@@ -1055,7 +1073,7 @@ function heldPose(m, st, t, place = false) {
   const h = m.def.held;
   if (!h || !PROP_GEO[h]) return;
   const [R, L] = m.arms;
-  const busy = st.wings || st.cupUp || st.cupHeld || st.push || st.rub || st.hold || st.flail || st.oath || st.dance || st.laugh || st.mirror || st.film || st.camShow || st.giraffe || st.butterKnife || st.ticket || st.carryOver || st.shoeOff || st.calc || st.groda || st.placate || st.tap || st.scratch || st.point || st.cheer || st.wave || st.kick > 0;
+  const busy = st.wings || st.cupUp || st.cupHeld || st.push || st.rub || st.hold || st.flail || st.oath || st.dance || st.laugh || st.mirror || st.film || st.camShow || st.giraffe || st.butterKnife || st.ticket || st.carryOver || st.shoeOff || st.calc || st.groda || st.placate || st.tap || st.scratch || st.point || st.cheer || st.wave || st.fish || st.kick > 0;
   const pose = !place && !busy;
   const moving = st.speed > 0.3;
   switch (h) {
@@ -1410,7 +1428,59 @@ function poseFlags(m, st, t) {
     sock.position.set(0, -m.legLen + 0.05 * s, 0.06 * s);
     sock.scale.setScalar(s);
   }
+  if (st.fish) fishPose(m, st, t);
 }
+
+// Stig fishing at the pier's end (anim.fish, game/fishing.js, §10.45), the rod (`metspo`) in his right
+// hand, tilted `a` forward from straight up (and `side` out to his right). `fishK` (0..1) runs a move:
+//  - 'cast': both arms up and the rod back over his shoulder, the whip forward past level, the settle;
+//  - 'wait': the rod out over the water, the hands before his belly, the head bent to the float;
+//  - 'bite': the tip pulled down, quivering; 'reel': the yank, the rod up high;
+//  - 'show': the rod up beside him, the catch held up in his left hand, his head bent to it;
+//  - 'size': both arms spread wide ("Det är ungefär så här stort."), the rod up out to his right;
+//  - 'toss': the left arm swinging the catch out forward.
+function fishPose(m, st, t) {
+  const [R, L] = m.arms, k = clamp01(st.fishK ?? 1), e = (x) => (1 - Math.cos(Math.PI * clamp01(x))) / 2;
+  let a = 0.95, side = 0.08, rx = -0.95, lx = -0.8, lz = -0.28;
+  switch (st.fish) {
+    case 'cast':
+      if (k < 0.4) { const u = e(k / 0.4); a = lerpN(0.95, -0.55, u); rx = lerpN(-0.95, -2.55, u); lx = lerpN(-0.8, -2.3, u); }
+      else if (k < 0.62) { const u = e((k - 0.4) / 0.22); a = lerpN(-0.55, 1.3, u); rx = lerpN(-2.55, -1.2, u); lx = lerpN(-2.3, -1.05, u); }
+      else { const u = e((k - 0.62) / 0.38); a = lerpN(1.3, 0.95, u); rx = lerpN(-1.2, -0.95, u); lx = lerpN(-1.05, -0.8, u); }
+      break;
+    case 'wait':
+      a = 0.95 + Math.sin(t * 1.3) * 0.025;
+      m.neck.rotation.x = 0.18;
+      m.body.rotation.y = Math.sin(t * 0.7) * 0.03;
+      break;
+    case 'bite':
+      a = 1.12 + Math.sin(t * 43) * 0.045;
+      rx = -1.0; m.neck.rotation.x = 0.22;
+      break;
+    case 'reel': {
+      const u = e(k * 1.6);
+      a = lerpN(1.05, -0.12, u); rx = lerpN(-1.0, -2.25, u); lx = lerpN(-0.85, -1.9, u);
+      m.hips.rotation.x -= 0.08 * u; m.neck.rotation.x = -0.12 * u;
+      break;
+    }
+    case 'show':
+      a = 0.22; side = 0.38; rx = -0.7; lx = -1.6; lz = -0.12;
+      m.neck.rotation.x = 0.12;
+      break;
+    case 'size':
+      a = 0.12; side = 0.62; R.rotation.set(-1.2, 0, -0.95); L.rotation.set(-1.2, 0, 0.95);
+      m.neck.rotation.x = -0.05;
+      break;
+    case 'toss':
+      a = 0.25; side = 0.4; rx = -0.7; lx = -1.6 - Math.sin(Math.PI * k) * 0.7; lz = -0.12;
+      break;
+    default:
+  }
+  if (st.fish !== 'size') { R.rotation.set(rx, 0, 0.16); L.rotation.set(lx, 0, lz); }
+  inHand(m, prop(m, 'metspo'), 0, 0, 0, 0, a, 0, side);
+}
+const clamp01 = (x) => (x < 0 ? 0 : x > 1 ? 1 : x);
+const lerpN = (p, q, u) => p + (q - p) * u;
 
 // The rollerskier (anim.ski, game/eslov.js): a red rollerski under each shoe (the body rides
 // SKI_LIFT up on their wheels, the skis kept level whatever the legs do) and a pole in each hand.

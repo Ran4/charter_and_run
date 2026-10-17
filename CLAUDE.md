@@ -170,7 +170,11 @@ opens with a summary of the rounds and the timer changes.
     cold; no prompt in a pursuit, ended by Eslövloppet's or a mission's start; Berra's "Ska du ha?" at
     index 8; the toaster's E kept; `kaffestorch`: the cup for Fru Storch, her question and his "Ja.", 50
     pta, and calibrate's walker from the counter to her within the coffee's 30 s, `KAFFE_RUNS`, DESIGN
-    §10.44)
+    §10.44), `meta` (Meta från piren, the rod in its holder on the green harbour light at the marina's
+    pier end between missions: E casts, the float's nibbles and dive, E within 0.5 s, the fish, the shoe,
+    the plastic fin (never collected) and the rare wet SPORT-KNÄCKE pack with "En julklapp. Den är inte
+    till mig.", the face shot, too early, too late, Q, the FÅNGST card and `records.fiske`, the draw's
+    weights and pity rule, by night, a mission start mid-cast, DESIGN §10.45)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

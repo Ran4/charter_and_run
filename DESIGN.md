@@ -318,7 +318,12 @@ betala!", neither speaker named); BAR PISCINA open after friskoteket with a bart
 pta that makes Stig sprint faster for 30 s ("Äntligen riktigt bryggkaffe."), a refill, Berra raising
 his glass at the bar with "Ska du ha?", and the cup carried to Fru Storch on the beach, his "Ja." to her
 "Finns det svenskt kaffe på hotellet?" (free roam, §10.44; the men's-room exchange is at Arlanda, the
-question and its "Ja." are said at the welcome meeting, and no bar in the film serves Stig).
+question and its "Ja." are said at the welcome meeting, and no bar in the film serves Stig); fishing
+from the marina's pier end by the green harbour light, the rod in its holder, the float's dive and the
+E in time, the catches (a fish, an old shoe, an inflatable shark fin and, very rarely, a wet and empty
+SPORT-KNÄCKE pack) and the FÅNGST card, with Stig's "En julklapp. Den är inte till mig." at the pack and
+"Det är ungefär så här stort." at a fish (free roam, §10.45; the film has no fishing: the first line is
+his at the customs at Arlanda, the second the knäckebröd hunt's in the shops, no speaker named).
 The film's flight has **no turbulence** and **no in-flight toilet scene**: both toilet scenes are
 at Arlanda (we keep them there). The plane's toilets are only an invented hideout.
 
@@ -509,6 +514,9 @@ Physical keys are unchanged from Bigmouth. The level config turns verbs on and o
 - **The pool bar's coffee** (free roam after friskoteket, §10.44): E at the counter's north end ("E Köp
   svenskt kaffe (40 pta)"; with coffee left "E Påtår (40 pta)"): Shift sprints 20 % faster for 30 s.
   With the cup still in his hand, E at Fru Storch ("E Ge fru Storch kaffet").
+- **Fishing** (free roam, §10.45): E by the rod at the marina's pier end ("E Meta") casts; when the float
+  dives, E within half a second ("E Dra upp!") hooks the catch. Q (Backspace, the pad's B) puts the rod
+  down while he waits. Stig stands still while he fishes.
 - **The nap** (free roam, §10.10): E at Stig's bed in room 107 ("E Kvarta en stund") sleeps on to
   the next part of the day; E at a mission giver in the evening or at night starts it the next
   morning.
@@ -1332,7 +1340,7 @@ standing there faces. `y` (optional) = absolute height for collectible spots on 
 | (0,4), (0,5) | `dyner` → `dyner` (D1, nature.js) | large sand dunes (ramps), palm grove, lagoon pond (its two herons and a stork are game/birds.js's since feature 43, §10.31); behind them, beyond the west bound, a row of big visual-only dunes from town.js (§6.4, Phase 3 r2) | `dyner` (0, 0, π − 0.4) on (0,4) (faces the arch, so the views camera stands on the sand south of it, clear of the boardwalk palms; Phase 3) | — |
 | (0,6) | `fyren` → `fyren` (D2, coast.js) | **Faro de Maspalomas**: ~55 m grey-blue stone tower (tallest landmark, visible from everywhere), keeper's house (roof top ≈ 4.0, reachable by a dune ramp); the tower's solid stops at its gallery floor (51.3), with the lantern and a closed railing ring as walls up there, and a door on the lantern's north-east side (feature 52, §10.35) | `fyren` (0, 10, π) (coin arc on the keeper's-house roof); `fyrDorr` (0, 1.4, π) before the keeper's door, `fyrGalleri` (1.70, −9.70, 3π/4, y 51.3) on the gallery (§10.35) | — |
 | (1..4,6) | `playa` → `playa` (D2, coast.js) | sand, sunbed rows (`solstol`), parasols, `HELADOS` kiosk, lifeguard tower, pedal boats on the sand, towels on sunbeds | `playa` on (3,6): (0, 10, 0) · `fena_hav` world (0, 304) (sea shallows, y 0.35) | — |
-| (5,6) | `hamn` → `hamn` (D2, coast.js) | small marina: walkable shallow basin (`water` box), pier (deck top 0.55), moored boats; PALOMA, the excursion boat at (16.6, 14), is her own mesh with her name board as a child, exported as `PALOMA` (her collider unchanged; feature 76, §10.41) | `hamn` (0, 0, π) · `fena_hamn` (−8, 10, 0, 0.35) · `pryl_glasogon` (12, 28, 0, 1.2) (pier end) · `battur` (18.5, −0.4, π) (before the PASEOS EN BARCO kiosk's window, the boat trip's E, §10.41) | — |
+| (5,6) | `hamn` → `hamn` (D2, coast.js) | small marina: walkable shallow basin (`water` box), pier (deck top 0.55), moored boats; PALOMA, the excursion boat at (16.6, 14), is her own mesh with her name board as a child, exported as `PALOMA` (her collider unchanged; feature 76, §10.41) | `hamn` (0, 0, π) · `fena_hamn` (−8, 10, 0, 0.35) · `pryl_glasogon` (12, 28, 0, 1.2) (pier end) · `battur` (18.5, −0.4, π) (before the PASEOS EN BARCO kiosk's window, the boat trip's E, §10.41) · `fiske` (14.2, 27.4, π/2) (at the east edge of the pier's end platform, 1.6 m north of the green harbour light, facing the basin: the fishing's E spot; the rod's holder on the light's post and the tin bucket beside it are game/fishing.js's meshes; feature 107, §10.45) | — |
 
 **Rio end card** (WP-B, `world/rio.js`, P1): `buildRioCard(scene)` at **x = −3000, z = 0**: water
 plane `#1c7fb8` r 400, a white motor yacht deck (top 0.55 solid), Sugarloaf cone, a strip of
@@ -3560,7 +3568,7 @@ Key **`charter-and-run-v1`** (localStorage):
 { v: 1, mission: index, coins, collected: { prylar: [ids], fenor: [ids], brodrostar: [ids] },
   unlocked: ['grisbil', ...], outfit: 'kostym' | 'arlanda' | 'hawaii' | 'rio', tune: 'sol' | 'samba',
   records: { simhopp: n, eslov: s, solkram: n, stunts: { planka: m, gula: m, garage: m }, stork: true,
-             gatlopp: { won: 0..3, sex: true }, eslovSkidor: s },
+             gatlopp: { won: 0..3, sex: true }, eslovSkidor: s, fiske: { fisk: n, sko: n, fena: n, knacke: n } },
   shop: { owned: ['hatt', 'glas', 'skjorta', 'nasa'], off: [ids], trapp: 0..2, trappT: s, bag: bool },
   gags: ['kamera', 'viking'] }
 ```
@@ -3584,7 +3592,9 @@ best points (5–7), saved at once when beaten (feature 35, §10.26), whose once
 decimal), saved at once with a new record (feature 40, §10.27; a jump with none is not yet passed);
 `stork`, true once Fru Storch has corrected Stig by the stork on the beach, saved at once (feature
 43, §10.31); `gatlopp` { won: 0–3 (José's street races won, in order), sex: true once the sisters
-have given the six }, saved at once with a win and with the six (feature 69, §10.38). `shop` (feature 34, §10.23):
+have given the six }, saved at once with a win and with the six (feature 69, §10.38); `fiske` { fisk,
+sko, fena, knacke }, the catches at the pier's end by kind (the FÅNGST card), saved at once with every
+catch (feature 107, §10.45). `shop` (feature 34, §10.23):
 SunTrip-butiken's purchases (`owned`), the ones taken off at the counter (`off`), the Trapp Trull
 account's instalments still to pay (`trapp`) and its free-roam seconds towards the next (`trappT`,
 whole), and the beach bag taken (`bag`); saved at once with every purchase, change and instalment; a
@@ -7080,6 +7090,102 @@ subtitle's question and answer are the film's, relocated [F*].
   coffee's own 30 s as its limit (measured above), Fru Storch paying 50 pta, and the sprint ending
   with the cup.
 
+### 10.45 Meta från piren (free roam; feature 107, 2026-10-17)
+
+`game/fishing.js` (`Fishing`, owned by Game as `fiske`), config `FISKE` in content/island.js, the landmark
+`fiske` in landmarks-island.js, the rod `fishingRod`/`ROD_LEN`, the prop `metspo` and the `fish` pose in
+models.js (§14.6), the FÅNGST card `hud.setFangst` (`#fangst` in style.css, §11.4), hooks in main.js
+(built after the pool bar, `fiske.update` after `bar.update`, `fiske.hint()` in updateHud). The pier's
+end at the marina (block (5,6), the green harbour light at block-local (14.4, 29.0), until now only Ole's
+glasses and the gulls) gets a quiet minigame: Stig fishes, and among the catches is the film's whole plot,
+the SPORT-KNÄCKE pack, which he hands straight back with the customs' line. The fishing, the rod, the
+catches and the card are ours [N] (§1.6).
+
+- **The rod**: a 1979 rod (`fishingRod`: cork grip, a fixed-spool reel under it, a two-section blank, three
+  guides, the tip ring `ROD_LEN` 2.1 above the grip; × 1.12, Stig's scale) stands in a holder on the
+  harbour light's post, `rodOff` 0.46 m from its axis towards the spot and leaning `rodLean` 0.12 rad out,
+  with a tin bucket at `bucket` [−1.45, −0.5] ([left, forward] from `fiske`, world (173.75, 268.85)).
+  Meshes of fishing.js, no collider (the bucket is 0.29 high, a floor; the rod is thin). The rod in the
+  holder hides while Stig holds his (the `metspo` prop, the same geometry).
+- **The spot**: E within `r` 1.6 m of `fiske` (block-local (14.2, 27.4), world (174.2, 267.4), facing the
+  basin, π/2; 0.6 m inside the end platform's east edge, 1.6 m north of the light, 2.3 m from
+  `pryl_glasogon`, 4.3 m from the last pier coin, out of the coin pull's 3.7 m), prompt "E Meta" [N]. Only
+  on the island with `missions.state === 'idle'`, Stig on foot and on the ground, with no dialogue,
+  cutaway, car, carry, pursuit, bust or PANIK, not in the pool fest's ring, on the belt, in the gang's
+  talk, the nap, the SOLKRÄM scene or a toaster's game, not on the rollerskis or in a street race. By day
+  and by night (the light is lit after dark).
+- **The cast** (E): Stig stands on the spot facing the basin (`inDialog`: no walking, no look; the day
+  clock stands still, as in every scene), the rod in his right hand (`anim.fish`), and the camera cuts
+  behind his left shoulder (`shots.fish`: `eye` [3.0, −3.2, 3.1] → `look` [0.0, 3.3, 0.3], [left,
+  forward, height] from `fiske` at deck height 0.55), the light and the float both in the shot. `cast`
+  (`castSecs` 0.9 s): both arms up and the rod back over his shoulder, the whip forward past level, the
+  settle; at `release` 0.5 of it the float (red over white, × 1.35 so it reads from the shot) leaves the
+  tip and flies `flySecs` 0.55 s in an arc to `float` [0, 4.6] (4.6 m out over the basin, 2.1 m north
+  of the seawall, clear of the moored boats), on the water at `water` 0.19, with a plop and a little
+  spray. The line (a `THREE.Line`, 14 points) runs from the rod's tip to the float, sagging 0.45 m when
+  slack.
+- **The wait**: the float bobs for `waitSecs` 2.2–5.5 s (random), with up to `nibbles` 2 quick dips
+  (0.05 m, a tiny plip), none in the last 0.6 s. The prompt line shows "Vänta tills flötet dyker… Q Lägg
+  ner spöt" [N]. Q (Backspace, the pad's B; `hangUp`, §3) puts the rod down: the hook comes in, nothing
+  said. E now is too early (below).
+- **The dive**: the float goes under (0.15 m, quivering), a bloop and spray, the rod's tip pulled down,
+  and the prompt "E Dra upp!" [N]. E within `window` 0.5 s hooks the catch; none in the window is too
+  late. Both empty ends (`early`, `late`): a splash, the float yanked in to hang under the tip, Stig's
+  "För tidigt…" [N] or "Den slapp." [N] and the toast "Tom krok." [N], `emptySecs` 1.8 s, then free.
+  Nothing is counted.
+- **The catch**: a fish, an old shoe (a strand of weed on it), the inflatable shark fin on its float ring
+  (the Hajfenor set's look, × 0.4) or the SPORT-KNÄCKE pack (the money's pack, `COLLECT_KINDS.knacke`, ×
+  0.6: its own label on both faces, no picture of anyone, §1.5; wet, dripping, and empty). Drawn from
+  `weights` (fish 0.55, shoe 0.25, fin 0.14, pack 0.06), except that while the pack is not on the card
+  it comes at the latest on the `pity` 12th hook of a session without it (`since`). On E: a splash and
+  the reel's click; the catch comes up out of the water on the line in `reelSecs` 0.85 s (the yank, the
+  rod up high) to hang under the tip, then into his left hand. The camera cuts to his face
+  (`shots.show`: `eye` [2.0, 3.3, 1.7] → `look` [0.25, 0, 1.3], over the water before him) and he shows
+  it for `show` s (fish and shoe 2.6, fin 2.8, pack 3.4), broadside to the camera (the pack's label to
+  it), saying the next of his `lines` for that kind in turn, with the toast "Fångst: …" [N]:
+  - the fish: "Det är ungefär så här stort." [F*](t) (the knäckebröd hunt in the shops, research-plot.md
+    :301, no speaker named) with both arms spread wide, the tiny fish dangling from his left hand; then
+    "Simma hem nu, lilla vän." [N] and "Ole kommer aldrig att tro mig." [N]; toast "Fångst: en fisk!";
+  - the shoe: "Någon har visst fått ta av sig skon." [N] (a wink at the security check's "Vill ni vara
+    vänlig och ta av er skon.", research-plot.md:166) and "En sko till. Fortfarande inte min." [N];
+    toast "Fångst: en gammal sko.";
+  - the fin: "Haj!… Nej. Plast." [N] and "Ole sa ju att det fanns hajar." [N] (his statistics,
+    research-characters.md:186); toast "Fångst: en hajfena… av plast.". Only shown: never
+    `game.collect`, so the Hajfenor set (§10.1, `fena_hamn` in the same block) is untouched;
+  - the pack: always "En julklapp. Den är inte till mig." [F*] (the customs at Arlanda, research-plot.md
+    :162, Stig's per design-A-film.md:520–522; relocated to the pier, said by reflex); toast "Fångst: ett
+    blött SPORT-KNÄCKE-paket. Tomt.". The money is never in it (it turns up in the suitcase on julafton,
+    mission 13).
+  Then `tossSecs` 0.7 s: the fish is thrown back into the water (a plop), the rest go into the bucket
+  (a clunk). Stig is free on the spot, the rod back in its holder, the camera behind him (a cut), and E
+  casts again.
+- **The FÅNGST card** (`hud.setFangst`): top left under Ole's watch (where Hytt två!'s menu sits at
+  Centro Nórdico), shown while he fishes and between missions on foot within `cardR` 14 m of the spot:
+  FÅNGST and n/4, one row a kind in the order fish, shoe, fin, pack ("Fisk ×2"; one not caught yet
+  "???", greyed), and ALLA FYRA! in red once all four are caught. Every catch counts in `records.fiske`
+  ({ fisk, sko, fena, knacke }, saved with the records, §10.5). The first time the fourth kind comes up:
+  the toast "Alla fyra! Fisk, sko, hajfena och knäckebröd." [N], a chime, and after his own line
+  Stig's "Nu finns det inget mer kvar i hela hamnen." [N] (the show `allAt` 1.6 s longer). No money:
+  the hunt is the card.
+- **Only between missions**: `live` is the island with `missions.state === 'idle'`. A mission start or
+  the other level ends a cast at once (`last.kind` 'gone'): the rod back in its holder, the float, the
+  line and the catch gone, the pose off; the camera and `inDialog` are left to the mission. No card in a
+  mission. So no mission, stage, timer, fixture or calibration pool changes; the story never comes near.
+  The rod, its holder and the bucket change only the harbour's images (`views`, `islandtour`).
+- **Tests**: `fiske.sc` ({ phase: 'cast' | 'wait' | 'bite' | 'reel' | 'show' | 'toss' | 'empty', t, land,
+  kind, result, … }), `next` (the next catch's kind), `since`, `casts`, `last` ({ kind: 'fisk' | 'sko' |
+  'fena' | 'knacke' | 'early' | 'late' | 'quit' | 'gone', t, line, n, all, ended }), `tally`
+  (`records.fiske`), `rod`, `float`, `line`, `catches`, `canUse()`, `start()`, `pick()`, `hint()`.
+  Scenario `meta` (§16.4).
+- **Not done / changed** (deviations from the idea): the spot is 1.6 m north of the light, at the end
+  platform's east edge, not the light itself (its post is a solid), and he casts east over the basin (to
+  the south of the pier's end there is only the seawall, the promenade and the coast road); the camera
+  cuts (a fishing shot and a face shot) rather than staying on the chase eye; an E before the dive is an
+  empty hook too, and Q is a way out; the fin and the shoe are models of their own sizes (the fin the
+  set's look, small), the fish and the shoe new; the pack comes at the latest on the 12th hook so the
+  four can always be had; "Det är ungefär så här stort." is the first fish's line with the angler's
+  gesture; every kind has a second line; the card counts every catch and is saved.
+
 ## 11. HUD / UI strings (Swedish; `src/strings.js` owned by WP-H, created by Phase 0)
 
 `strings.js` exports `S` (flat object) and `fmt(key, vars)`. Engine code uses `S.key` only.
@@ -7132,7 +7238,7 @@ mutes without touching the button, which then said `Ljud: på` while muted).
 | dialogue next | `E ▸` |
 | minimap rim badge | `N` (island) / `FRAM` (flight) |
 | big-map legend | from `game.mapLegend()` (§10.1) |
-| prompts | `<b>E</b> Prata med {name}` (a giver, and since feature 39 anyone in the gang between missions, §10.28) · `<b>E</b> Kliv in` · `<b>E</b> Ta bilen` · `<b>E</b> Sätt dig` · `<b>E</b> Res dig` · `<b>E</b> Lås in dig` · `<b>E</b> Ta en juice` · `<b>E</b> Kvarta en stund` (Stig's bed, §10.10) · `<b>E</b> Titta i kameran` / `<b>E</b> Se filmen` (Herr Storch, §10.11) · `<b>E</b> Heja Eslöv!` / `<b>E</b> Eslövloppet – ett varv runt fälten` (the rollerskier, §10.12) · `<b>E</b> Får jag låna skidorna?` / `<b>E</b> Lämna tillbaka skidorna` / `<b>E</b> Eslövrundan – ett varv på skidor` (his skis, §10.39) · `<b>E</b> Dansa med` / `<b>E</b> Kliv ur ringen` (the pool fest's gap, §10.13) · `<b>E</b> Kontrollera brödrosten` / `<b>E</b> Upp med brödet!` (a G17 toaster, §10.24) · `<b>E</b> Kontrollera hyllan` · `<b>E</b> Ta upp giraffen` / `<b>E</b> Ställ tillbaka giraffen` · `<b>E</b> Spela samba` (room 107, §10.25) · `<b>E</b> Bergsprängaren` · `<b>E</b> Stäng av sambaen` · `<b>E</b> Byt kläder` (room 107, §10.36) · `<b>E</b> Smörj in ryggen` (Majsan's sun cream, §10.26) · `<b>E</b> Ta trappan upp` / `<b>E</b> Ta trappan ner` (the hotel roofs' stairs, §10.29) · `<b>E</b> Läs ett utrop` (the SunTrip stage's microphone, §10.30) · `<b>E</b> Gå upp i fyren` / `<b>E</b> Gå ner` (the lighthouse, §10.35) · `<b>E</b> Plinga på klockan` (the reception's bell, §10.37) · `<b>E</b> Köp svenskt kaffe (40 pta)` / `<b>E</b> Påtår (40 pta)` (the pool bar) · `<b>E</b> Ge fru Storch kaffet` (with its cup, §10.44) · `<b>SPACE</b> Håll i dig!` · `<b>J</b> håll: Jag kan flyga!` (the `<b>` keycap is Luckiest Guy: uppercase; since feature 52 shown on the lighthouse's gallery, after E's prompt when there is one). Order (`updateHud`): talk (a giver's or the gang's), then `Håll i dig!` while the cabin is turbulent and he stands without holding on (Phase 3 r3, §5.7), then the car, interactable (seats, toilets…) and stand prompts; then `fyren.prompt` adds the J hint up there |
+| prompts | `<b>E</b> Prata med {name}` (a giver, and since feature 39 anyone in the gang between missions, §10.28) · `<b>E</b> Kliv in` · `<b>E</b> Ta bilen` · `<b>E</b> Sätt dig` · `<b>E</b> Res dig` · `<b>E</b> Lås in dig` · `<b>E</b> Ta en juice` · `<b>E</b> Kvarta en stund` (Stig's bed, §10.10) · `<b>E</b> Titta i kameran` / `<b>E</b> Se filmen` (Herr Storch, §10.11) · `<b>E</b> Heja Eslöv!` / `<b>E</b> Eslövloppet – ett varv runt fälten` (the rollerskier, §10.12) · `<b>E</b> Får jag låna skidorna?` / `<b>E</b> Lämna tillbaka skidorna` / `<b>E</b> Eslövrundan – ett varv på skidor` (his skis, §10.39) · `<b>E</b> Dansa med` / `<b>E</b> Kliv ur ringen` (the pool fest's gap, §10.13) · `<b>E</b> Kontrollera brödrosten` / `<b>E</b> Upp med brödet!` (a G17 toaster, §10.24) · `<b>E</b> Kontrollera hyllan` · `<b>E</b> Ta upp giraffen` / `<b>E</b> Ställ tillbaka giraffen` · `<b>E</b> Spela samba` (room 107, §10.25) · `<b>E</b> Bergsprängaren` · `<b>E</b> Stäng av sambaen` · `<b>E</b> Byt kläder` (room 107, §10.36) · `<b>E</b> Smörj in ryggen` (Majsan's sun cream, §10.26) · `<b>E</b> Ta trappan upp` / `<b>E</b> Ta trappan ner` (the hotel roofs' stairs, §10.29) · `<b>E</b> Läs ett utrop` (the SunTrip stage's microphone, §10.30) · `<b>E</b> Gå upp i fyren` / `<b>E</b> Gå ner` (the lighthouse, §10.35) · `<b>E</b> Plinga på klockan` (the reception's bell, §10.37) · `<b>E</b> Köp svenskt kaffe (40 pta)` / `<b>E</b> Påtår (40 pta)` (the pool bar) · `<b>E</b> Ge fru Storch kaffet` (with its cup, §10.44) · `<b>E</b> Meta` (the rod at the pier's end, §10.45; while he fishes the prompt line is `Vänta tills flötet dyker… <b>Q</b> Lägg ner spöt`, then `<b>E</b> Dra upp!` at the dive, `fiske.hint()`) · `<b>SPACE</b> Håll i dig!` · `<b>J</b> håll: Jag kan flyga!` (the `<b>` keycap is Luckiest Guy: uppercase; since feature 52 shown on the lighthouse's gallery, after E's prompt when there is one). Order (`updateHud`): talk (a giver's or the gang's), then `Håll i dig!` while the cabin is turbulent and he stands without holding on (Phase 3 r3, §5.7), then the car, interactable (seats, toilets…) and stand prompts; then `fyren.prompt` adds the J hint up there |
 
 **The result line** (feature 4, §10.8): `#score`, low in the middle (bottom 92 px, under the
 prompt at 178 px), a cream card with the dive and its sum in Luckiest Guy over the record line
@@ -7178,6 +7284,15 @@ and a cup icon (`.kaffe-icon`), while Stig has coffee from the pool bar: `SVENSK
 low = false)` (null hides it; touches the DOM only on a change). While it shows the toast column starts
 at 142 px (196 px under both it and the hop counter, `#kaffe.show ~ #toasts`; the objective card's 196
 px wins when both show).
+
+**The FÅNGST card** (feature 107, §10.45): `#fangst`, top left under Ole's watch (left 22 px, top 140 px;
+196 px under Ole's watch and the collect card when both show, `#klocka.show ~ #collect.show ~ #fangst`),
+214 px wide: a cream note with an ink edge, tilted −1.5°, its head `FÅNGST` (Luckiest Guy 22 px,
+uppercased) and the count `n/4` in terracotta over a dashed rule, then one row a kind (Nunito 800 15 px:
+the name left, `×n` right in tabular figures; a kind not caught yet `???`, greyed and letter-spaced) and,
+once all four are caught, `ALLA FYRA!` in red Luckiest Guy, tilted −3°. `hud.setFangst({ title, rows:
+[{ label, n }], all })` slides it in (the DOM touched only on a change); `hud.setFangst(null)` hides it.
+It never shows with Hytt två!'s menu (Centro Nórdico is far from the pier).
 
 **Toasts, bubbles and the objective card** (Phase 3):
 - **Toasts** (`hud.toast(text, cls = '', secs)`; radio lines are toasts) stay up `secs`, by default
@@ -7497,7 +7612,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/strings.js` | new | **H** | `S`, `fmt()` (§11) |
 | `src/content/index.js` | new | none | merges `HOMES`, `MAP_LABELS`, `LEVEL_OUTFITS`, re-exports all content |
 | `src/content/flight.js` | new | **F** | `HOMES_GATE`, `HOMES_FLIGHT`, `MAP_LABELS_FLIGHT`, `CHATTER_FLIGHT`, `OLE_STATS`, `LEVEL_OUTFITS_GATE`, `LEVEL_OUTFITS_FLIGHT` |
-| `src/content/island.js` | new | **G** | `HOMES_ISLAND`, `MAP_LABELS_ISLAND`, `CHATTER`, `OUCH`, `GETUP`, `CARJACK`, `NPC_KICKED` (+ the `_OLE` / `_LOCAL` tables, `LOCAL_CAST`, `BARKS`: Phase 3 r2, §14.10; `STIG_SORRY`: feature 11, §10.14; `PIG_TRUCK`: feature 15, §10.15; `BAGGAGE_BELT`: feature 25, §10.16; `LAPPLISA`: feature 20, §10.17; `GRISFEST_FREE`: feature 21, §10.18; `FRUKTSTAND`: feature 28, §10.19; `TOWER`: feature 24, §10.20; `DOGS`: feature 31, §10.21; `BATHERS`: feature 32, §10.22; `RUM107`: feature 38, §10.25; `SOLKRAM`: feature 35, §10.26; `STUNTHOPP`: feature 40, §10.27; `TALK_ISLAND`: feature 39, §10.28; `TAKHOPP`: feature 41, §10.29; `MIKROFON`: feature 44, §10.30; `BIRDS`: feature 43, §10.31; `GAGS`: feature 47, §10.32; `STRANDKYSSEN`: feature 57, §10.33; `FYREN`: feature 52, §10.35; `RINGKLOCKA`: feature 59, §10.37; `BALKONG`: feature 77, §10.42; `HYTT_TVA`: feature 80, §10.43; `KAFFE`: feature 84, §10.44), `COLLECTIBLES`, `UNLOCKS`, `NAMED_CARS`, `LEVEL_OUTFITS_ISLAND` |
+| `src/content/island.js` | new | **G** | `HOMES_ISLAND`, `MAP_LABELS_ISLAND`, `CHATTER`, `OUCH`, `GETUP`, `CARJACK`, `NPC_KICKED` (+ the `_OLE` / `_LOCAL` tables, `LOCAL_CAST`, `BARKS`: Phase 3 r2, §14.10; `STIG_SORRY`: feature 11, §10.14; `PIG_TRUCK`: feature 15, §10.15; `BAGGAGE_BELT`: feature 25, §10.16; `LAPPLISA`: feature 20, §10.17; `GRISFEST_FREE`: feature 21, §10.18; `FRUKTSTAND`: feature 28, §10.19; `TOWER`: feature 24, §10.20; `DOGS`: feature 31, §10.21; `BATHERS`: feature 32, §10.22; `RUM107`: feature 38, §10.25; `SOLKRAM`: feature 35, §10.26; `STUNTHOPP`: feature 40, §10.27; `TALK_ISLAND`: feature 39, §10.28; `TAKHOPP`: feature 41, §10.29; `MIKROFON`: feature 44, §10.30; `BIRDS`: feature 43, §10.31; `GAGS`: feature 47, §10.32; `STRANDKYSSEN`: feature 57, §10.33; `FYREN`: feature 52, §10.35; `RINGKLOCKA`: feature 59, §10.37; `BALKONG`: feature 77, §10.42; `HYTT_TVA`: feature 80, §10.43; `KAFFE`: feature 84, §10.44; `FISKE`: feature 107, §10.45), `COLLECTIBLES`, `UNLOCKS`, `NAMED_CARS`, `LEVEL_OUTFITS_ISLAND` |
 | `src/game/missions/index.js` | new | none | `MISSIONS = [...FLIGHT_MISSIONS, ...ISLAND_MISSIONS]`, `MissionRunner` re-export |
 | `src/game/missions/runner.js` | new (from missions.js) | none | `MissionRunner` (§9.4) |
 | `src/game/missions/kinds/core.js` | new | **none** (frozen after Phase 0) | getInCar goto pickup dropoff follow rabbits race destroy grab scene |
@@ -7538,6 +7653,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/boatTrip.js` | new (feature 76, 2026-10-17) | — | `BoatTrip` (`game.battur`): Båtturen med PALOMA in free roam: the kiosk's interactable and the fare, the trip's fixed shots and flashes, PALOMA moved and moored again, Stig seated aboard, the doubles of Ole (Majsan, Siv), the shark fin, the sunset, the end card again after the end, E's skip, the doubles' stay on the quay, the reset at a mission start (§10.41) |
 | `src/game/residents.js` | new (feature 77, 2026-10-17) | — | `Residents` (`game.residents`): Balkongerna lever in free roam: the residents of the slabs' balconies (`balconyLots`), at most 10 bodies placed by hand on the occupied balconies nearest Stig (popped unseen), their waves, calls and turns, the parking comment on his car left on the sidewalk, the señora's yell and slipper at siesta for his horn (`game.hornAt`) or a smash near her (`onPropBroken`), Stig's "Förlåt!" (§10.42) |
 | `src/game/phoneBooth.js` | new (feature 80, 2026-10-17) | — | `PhoneBooth` (`game.hytt`): Hytt två! in free roam: booth 2's interactable at Centro Nórdico, the cut, the menu of the named cars (`hud.menu`, the keys), the call, the named car moved whole to a free spot in the car park out of the camera's view, the fare, Stig turned to the car (§10.43) |
+| `src/game/fishing.js` | new (feature 107, 2026-10-17) | — | `Fishing` (`game.fiske`): Meta från piren in free roam: the rod in its holder on the harbour light, its holder and the tin bucket (meshes of their own), the spot's interactable, the cut, the cast, the float, the line, the nibbles and the dive, the hook and the window, the four catches (`FISH_KINDS`; the fin and the pack the collectibles' looks, never collected) and their draw (`pick`: the weights and the pity rule), the show with Stig's lines and the face shot, the toss, the empty hook, Q, the FÅNGST card and `records.fiske`, the reset at a mission start (§10.45) |
 | `src/game/poolBar.js` | new (feature 84, 2026-10-17) | — | `PoolBar` (`game.bar`): Poolbaren öppnar in free roam after friskoteket: the bartender hidden before (`hides`, for main.placeNpcs), the coffee's interactable at the counter and the sale or the head shaken, the cup handed over, the sprint's factor (`sprintK`, for main.fixedStep) and its 30 s, Stig's cup, the coffee box, Berra's "Ska du ha?", the cup for Fru Storch and her pay, the scenes' holds (`posed`), the reset at a mission start or Eslövloppet's (§10.44) |
 | `src/game/golfCart.js` | new (feature 74, 2026-10-17) | — | `GolfCarts` (`game.golf`): Golfbilen in free roam: `open()`/`refuse()` for main.enterCar and updateHud (a golf cart only between missions on the island), the pip-pip, the bunkers' and the pond's brake (`step`) with the sand, the splash and Stig's lines, a wreck back on its spot, both home at a mission start (§10.40) |
 | `src/game/streetRace.js` | new (feature 69, 2026-10-17) | — | `StreetRace` (`game.gatlopp`): Gatlopp mot pizza-racern in free roam after Gamla kläder: José's "!" and challenge, the grid in the hire car behind a fade, the three courses run on the mission kind `race` outside the runner, the start and finish banners, the result, the prize and `records.gatlopp`, José's drive back and the walk to his place with his mother, the bet at the chalkboard by Berra and Robban, the sisters' six, the reset at a mission start (§10.38) |
@@ -7549,7 +7665,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/mic.js` | new (feature 44, 2026-10-17) | — | `Mic` (`game.mic`): Mikrofonen på scenen in free roam: the mic's interactable and the turn of Lasse's announcements, the chime, Stig's facing and the camera's ease, the lines one after another, the terrace's guests and their spit, the crowd (tourists and the free gang: the ways in and out, the places, the cheer, the question time), Ole's answer to the time, the slump, the shark warning through `bathers.scare`, the reset (§10.30) |
 | `src/game/bathers.js` | new (feature 32, 2026-10-17) | — | `Bathers` (`game.bathers`): Badgäster på solstolarna in free roam: tourists on the sun loungers nearest him by day, their burn (pale, pink, lobster red), the fly-off from a kicked or smashed lounger, a newcomer on a lounger back; Berra and Robban fried and asleep on two Flamenco loungers between buss17 and the bodega, their snores and the wake (§10.22); `scare` for the shark warning (feature 44, §10.30) |
 | `src/game/suntripShop.js` | new (feature 34, 2026-10-17) | — | `SuntripShop` (`game.shop`): Bränsletillägg tillkommer in free roam: SunTrip-butiken's counter shown and its solids live between missions, the travel agent, the wares' and the bag's interactables, the receipts, the Trapp Trull account's instalments, "Paketet!", Ole's line; his bought look as a layer over his outfit (`dress`), saved (§10.23) |
-| `src/game/hud.js` | edit | **H** | map sources, meter, strings, legend, ring, blips, zone bar, markers; `renderPortrait` restores the model transform (§14.8); `dream`, `dreamWash`, `dreamFlash` (feature 57, §10.33); `menu` (feature 80, §10.43); `setKaffe`, the coffee box (feature 84, §10.44) |
+| `src/game/hud.js` | edit | **H** | map sources, meter, strings, legend, ring, blips, zone bar, markers; `renderPortrait` restores the model transform (§14.8); `dream`, `dreamWash`, `dreamFlash` (feature 57, §10.33); `menu` (feature 80, §10.43); `setKaffe`, the coffee box (feature 84, §10.44); `setFangst`, the FÅNGST card (feature 107, §10.45) |
 | `src/game/camera.js` | edit | **A1** | profile, frameOne, cutTo, `clampZ` |
 | `src/game/fx.js` | edit | **A1** | `snow`, `steam`, `meterPuff` (rename of `shame`); `splash`'s `up` (feature 24, §10.20) |
 | `src/game/markers.js` | unchanged | none | |
@@ -7572,13 +7688,13 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/world/cabin.js` | new | **A1** | §5 interior, collision, seats, trolley, turbulence, fear, interactables, blockers, `CAM_CABIN`, `FLIGHT_PALETTES`, `FEAR`; calls `buildFlightScenery` |
 | `src/world/flightScenery.js` | new | **A2** | §5.6 visuals: gate-set visuals, airframe, animated scenery per phase, `buildFlightScenery`, `buildPlaneExterior` |
 | `src/world/rio.js` | new | **B** | `buildRioCard` (P1) |
-| `src/actors/models.js` | edit | **E** | `CHARS`, `CAST`, new def fields, anim flags, `buildBustGeo`, `outfitDef`, `randomPed` palette; the `ticket` flag and its `lappblock`/`penna` props (feature 20, §10.17); the `leap` and `bomb` poses (feature 24, §10.20); the `placate` pose (feature 31, §10.21); the `lie` pose, the `stekt` outfits and `STEKT_SKIN` (feature 32, §10.22); the `rub` pose (feature 35, §10.26); the `camShow` pose and `cupHeld` raised standing with `cupUp` (feature 47, §10.32); the `lie` pose's `roll`, `turn` and given arms (feature 57, §10.33); the `eyesShut` lids (feature 52, §10.35); the `tap` pose (feature 59, §10.37); the `scratch` pose (feature 60, §7.2); the `point` pose and `cupHeld: 'low'` (feature 76, §10.41); a held broom's bristles stop at his soles (feature 77, §10.42); the bartender `camarero` (feature 84, §10.44) |
-| `src/actors/character.js` | edit | **E** | `setDef`, `hidden`, `seatAt`, `standAt`, new anim flag defaults (`placate`: feature 31; `rub`: feature 35; `camShow`: feature 47; `eyesShut`: feature 52; `tap`: feature 59; `scratch`: feature 60; `point`: feature 76); the state `lying`, `lieAt`, `fling`'s `flip` (feature 32, §10.22) |
+| `src/actors/models.js` | edit | **E** | `CHARS`, `CAST`, new def fields, anim flags, `buildBustGeo`, `outfitDef`, `randomPed` palette; the `ticket` flag and its `lappblock`/`penna` props (feature 20, §10.17); the `leap` and `bomb` poses (feature 24, §10.20); the `placate` pose (feature 31, §10.21); the `lie` pose, the `stekt` outfits and `STEKT_SKIN` (feature 32, §10.22); the `rub` pose (feature 35, §10.26); the `camShow` pose and `cupHeld` raised standing with `cupUp` (feature 47, §10.32); the `lie` pose's `roll`, `turn` and given arms (feature 57, §10.33); the `eyesShut` lids (feature 52, §10.35); the `tap` pose (feature 59, §10.37); the `scratch` pose (feature 60, §7.2); the `point` pose and `cupHeld: 'low'` (feature 76, §10.41); a held broom's bristles stop at his soles (feature 77, §10.42); the bartender `camarero` (feature 84, §10.44); the `fish` pose with `fishK`, the prop `metspo` and the exported `fishingRod`, `ROD_LEN` (feature 107, §10.45) |
+| `src/actors/character.js` | edit | **E** | `setDef`, `hidden`, `seatAt`, `standAt`, new anim flag defaults (`placate`: feature 31; `rub`: feature 35; `camShow`: feature 47; `eyesShut`: feature 52; `tap`: feature 59; `scratch`: feature 60; `point`: feature 76; `fish`: feature 107); the state `lying`, `lieAt`, `fling`'s `flip` (feature 32, §10.22) |
 | `src/actors/car.js` | edit | **E** | §6.6 types/flags, `registerCarType`, `build`/`noWheels`/`noSpeedo`/`noExplode`/`livery`; the grisbil's pig meshes `PIG_SLOTS`, `pigMesh`, `car.pigs`, `setPig`, `pigWorld` (feature 15, §10.15); `car.lift`, the nose raised on the tow truck's hook (feature 20, §10.17); a prop is known by its block's `ref`, `game.breakProp` may refuse, `def.slow` (feature 28, §10.19); the flight's `airT`, `airFrom` and `game.onCarAirEnd` (feature 40, §10.27) |
 | `src/actors/pickups.js` | edit | **E** | `COLLECT_KINDS`, `registerCollectKind`, `Collectible` table, `Rabbit` meshes, coin value 25; the `brodrost` kind, `TOASTER`, `setToaster`, `Collectible.mark` and the `yaw` option (feature 33, §10.24); `PRYL_IDS` exported (feature 38, §10.25) |
 | `src/actors/peds.js` | edit | **E** | Swedish/Spanish shouts; `dodge`, `startle` (feature 5, §6.7) |
 | `src/actors/drivers.js` | Phase 2 edit | none | (accepts duck-typed paths); an AI bus's lane path starts its turns 11 m from the junction centre instead of 8.5 (left-turn radius 13.75 m > the bus's ≈ 12 m minimum), so the excursion bus no longer swings into the grisfest farm wall; right turns stay too tight for buses (mission bus routes turn left only); traffic holds short of a closed race junction (`game.closure`, §9.2 race); feature 51: a `traffic` car gives way to the borrowed jeep's siren (`game.sirenYield`, `yieldK`: slows and keeps to the right, §10.34) |
-| `index.html`, `style.css` | edit | **H** | §11, §13.4; the beach dream's `body.dream`, `#dream`, `#dreamwash` (feature 57, §10.33); `body.siren` shows `#sirenlights` (feature 51, §10.34); the choice menu `#menu` (feature 80, §10.43); the coffee box `#kaffe` and its cup icon (feature 84, §10.44) |
+| `index.html`, `style.css` | edit | **H** | §11, §13.4; the beach dream's `body.dream`, `#dream`, `#dreamwash` (feature 57, §10.33); `body.siren` shows `#sirenlights` (feature 51, §10.34); the choice menu `#menu` (feature 80, §10.43); the coffee box `#kaffe` and its cup icon (feature 84, §10.44); the FÅNGST card `#fangst` (feature 107, §10.45) |
 | `tools/shot.mjs`, `tools/lib.mjs`, `tools/scenarios/core.mjs`, `tools/story/common.mjs` | edit/new | none (Phase 2) | harness, `T` API, core scenarios `start walk aerial drive traffic title talk missions views transition` + `levels` (boots into both levels) + `api` (Game API smoke test) |
 | `tools/fixtures/full-missions.js`, `tools/scenarios/kinds.mjs` | new (Phase 0b) | none (Phase 2) | the literal §8 missions as a test fixture; scenarios `fullstory` (plays them per §16.3) and `kinds` (option checks) |
 | `notes/calibration-samples.md`, `tools/pool.mjs` | new (Phase 3 r1 repair 2) | none | the raw-sample ledger of the random stages' timers (every run's time, code, autopilot version, exclusions) and the tool that pools it by stage and pool and prints n, median, p75, T_ref, timer and the 90 % range (§8 "Timers and difficulty") |
@@ -7628,7 +7744,7 @@ carts, last: feature 74) → traffic (20)
 → peds (34) → NPC `Character`s (one per `CHARS` key except `stig`, the radio-only keys `levander
 kapten pa guardia pax telefonist` and the cabin-owned `vardinna2`; `key` field; hidden until placed, §2.3) →
 player `Character(CHARS.stig)` (`key = 'stig'`) → collectibles (`COLLECTIBLES`) → markers → `Shame`
-→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `DiveTower` (feature 24, §10.20; registers the ladder's two interactables, sets `DIVE_TOWER.live`) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `Eslov` (feature 7, §10.12; registers the rollerskier's interactable) → `PoolFest` (feature 8, §10.13) → `StigSorry` (feature 11, §10.14) → `PigTruck` (feature 15, §10.15) → `BaggageBelt` (feature 25, §10.16) → `Lapplisa` (feature 20, §10.17) → `GrisfestFree` (feature 21, §10.18; registers the gate's and the tourists' interactables) → `FruitStands` (feature 28, §10.19) → `Dogs` (feature 31, §10.21) → `Bathers` (feature 32, §10.22; registers the wake's interactable) → `SuntripShop` (feature 34, §10.23; registers the four wares' and the bag's interactables, sets `SUNTRIP_SHOP.live`) → `Toasters` (feature 33, §10.24; registers the seven toasters' interactables) → `Room107` (feature 38, §10.25; registers room 107's three interactables) → `Solkram` (feature 35, §10.26; registers Majsan's interactable) → `Stunts` (feature 40, §10.27) → `GangTalk` (feature 39, §10.28) → `RoofJump` (feature 41, §10.29; registers the three stair doors, sets `ROOF_JUMP.live`, places the roof coins) → `Mic` (feature 44, §10.30; registers the mic's interactable) → `Birds` (feature 43, §10.31; builds the four kinds' instanced meshes and puts every bird on its spot) → `Gags` (feature 47, §10.32; registers the two gags' interactables) → `BeachDream` (feature 57, §10.33; builds the towel and the foam, registers the towel's interactable) → `GuardiaJeep` (feature 51, §10.34) → `Lighthouse` (feature 52, §10.35; registers the two doors' interactables) → `ReceptionBell` (feature 59, §10.37; builds the bell, the card and the three suitcases with their solids, registers the bell's interactable) → `StreetRace` (feature 69, §10.38; registers José's and the chalkboard's interactables) → `GolfCarts` (feature 74, §10.40) → `BoatTrip` (feature 76, §10.41; builds the fin, registers the kiosk's interactable) → `Residents` (feature 77, §10.42) → `PhoneBooth` (feature 80, §10.43; registers booth 2's interactable) → `PoolBar` (feature 84, §10.44; registers the counter's and Fru Storch's interactables) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
+→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `DiveTower` (feature 24, §10.20; registers the ladder's two interactables, sets `DIVE_TOWER.live`) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `Eslov` (feature 7, §10.12; registers the rollerskier's interactable) → `PoolFest` (feature 8, §10.13) → `StigSorry` (feature 11, §10.14) → `PigTruck` (feature 15, §10.15) → `BaggageBelt` (feature 25, §10.16) → `Lapplisa` (feature 20, §10.17) → `GrisfestFree` (feature 21, §10.18; registers the gate's and the tourists' interactables) → `FruitStands` (feature 28, §10.19) → `Dogs` (feature 31, §10.21) → `Bathers` (feature 32, §10.22; registers the wake's interactable) → `SuntripShop` (feature 34, §10.23; registers the four wares' and the bag's interactables, sets `SUNTRIP_SHOP.live`) → `Toasters` (feature 33, §10.24; registers the seven toasters' interactables) → `Room107` (feature 38, §10.25; registers room 107's three interactables) → `Solkram` (feature 35, §10.26; registers Majsan's interactable) → `Stunts` (feature 40, §10.27) → `GangTalk` (feature 39, §10.28) → `RoofJump` (feature 41, §10.29; registers the three stair doors, sets `ROOF_JUMP.live`, places the roof coins) → `Mic` (feature 44, §10.30; registers the mic's interactable) → `Birds` (feature 43, §10.31; builds the four kinds' instanced meshes and puts every bird on its spot) → `Gags` (feature 47, §10.32; registers the two gags' interactables) → `BeachDream` (feature 57, §10.33; builds the towel and the foam, registers the towel's interactable) → `GuardiaJeep` (feature 51, §10.34) → `Lighthouse` (feature 52, §10.35; registers the two doors' interactables) → `ReceptionBell` (feature 59, §10.37; builds the bell, the card and the three suitcases with their solids, registers the bell's interactable) → `StreetRace` (feature 69, §10.38; registers José's and the chalkboard's interactables) → `GolfCarts` (feature 74, §10.40) → `BoatTrip` (feature 76, §10.41; builds the fin, registers the kiosk's interactable) → `Residents` (feature 77, §10.42) → `PhoneBooth` (feature 80, §10.43; registers booth 2's interactable) → `PoolBar` (feature 84, §10.44; registers the counter's and Fru Storch's interactables) → `Fishing` (feature 107, §10.45; builds the rod, its holder, the bucket, the float, the line and the four catches, registers the spot's interactable) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
 `placeNpcs(true)` → spawn the player → portraits for every key in `CAST` (`renderPortrait`
 restores each model's parent and transform, so seated cast members stay in their seats) →
 `applySaveToWorld()` →
@@ -7640,7 +7756,7 @@ mantra/hold and the sprint × `bar.sprintK()` (feature 84), AI, cars (a landing 
 traffic/peds skipped when `!levelDef.sim.*`) → `syncAll` (also
 writes `ch.x/y/z` from `car.seatWorld(ch.seatSide)` for every car-seated character, player
 included, so framing, bubbles and distance checks see where they really are) → `missions.update` →
-`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `tower.update` (feature 24) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `skis.update` (feature 71) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `stands.update` (feature 28) → `dogs.update` (feature 31) → `bathers.update` (feature 32) → `shop.update` (feature 34) → `toasters.update` (feature 33) → `room107.update` (feature 38) → `solkram.update` (feature 35) → `stunts.update` (feature 40) → `chat.update` (feature 39) → `roofs.update` (feature 41) → `mic.update` (feature 44) → `birds.update` (feature 43) → `dream.update` (feature 57) → `jeep.update` (feature 51) → `fyren.update` (feature 52) → `bell.update` (feature 59) → `gatlopp.update` (feature 69) → `golf.update` (feature 74) → `battur.update` (feature 76) → `residents.update` (feature 77) → `hytt.update` (feature 80) → `bar.update` (feature 84) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
+`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `tower.update` (feature 24) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `skis.update` (feature 71) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `stands.update` (feature 28) → `dogs.update` (feature 31) → `bathers.update` (feature 32) → `shop.update` (feature 34) → `toasters.update` (feature 33) → `room107.update` (feature 38) → `solkram.update` (feature 35) → `stunts.update` (feature 40) → `chat.update` (feature 39) → `roofs.update` (feature 41) → `mic.update` (feature 44) → `birds.update` (feature 43) → `dream.update` (feature 57) → `jeep.update` (feature 51) → `fyren.update` (feature 52) → `bell.update` (feature 59) → `gatlopp.update` (feature 69) → `golf.update` (feature 74) → `battur.update` (feature 76) → `residents.update` (feature 77) → `hytt.update` (feature 80) → `bar.update` (feature 84) → `fiske.update` (feature 107) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
 pickups/collectibles → props → `fx.tick` → `tickTown` → markers → camera → sun/sky → HUD → audio →
 traffic recycling (island) → autosave. `loop` then renders, and when `film.grabNow` is set calls
 `film.grab()` in the same task (Herr Storch's still from the frame's buffer, feature 6, §10.11).
@@ -7776,6 +7892,10 @@ game.bar;          // PoolBar (feature 84, §10.44): the pool bar's Swedish coff
                    // canBuy(), buy(), canGive(), give(), update(dt), reset(), t (s of coffee left),
                    // scene, held, stigCup, storchCup, bought, refills, refused, delivered, berraTalks,
                    // last, ended, cfg (KAFFE)
+game.fiske;        // Fishing (feature 107, §10.45): the rod at the marina's pier end; live, busy, tally
+                   // (records.fiske), spot(), canUse(), start(), update(dt), hint() (updateHud's prompt
+                   // line while he fishes, else null), pick(), end(kind), sc, next, since, casts, last,
+                   // rod, float, line, catches, cfg (FISKE)
 game.npcPosed(key) -> bool   // an NPC held in a pose of its own: §9.4 idleAnim or a free-roam module's
                    // (berraJob, judges, film, eslov, fest, lapp, party, stands, mic, birds, gags, dream, bell, gatlopp, bar); syncAll gives it no
                    // wave, turn or chatter, and the gang's talk leaves it be (§10.28)
@@ -8149,6 +8269,17 @@ counts it as busy.
 only `game.battur` sets it (Ole at the shark fin on PALOMA); `heldPose` counts it as busy. `cupHeld:
 'low'` (feature 76): the cup held before the chest (R (−1.05, 0, 0.12)), seated or standing (the drinks
 on PALOMA after the end); `true` keeps its raised and held-out poses.
+`fish` (feature 107, §10.45): Stig with the rod at the pier's end, the `metspo` prop (`fishingRod`: the
+grip at the origin, the tip `ROD_LEN` 2.1 up its +y, × his scale) in his right hand, tilted `a` forward
+from straight up and `side` out to his right; `fishK` (0..1) runs a move. 'cast': to 0.4 the arms up
+(R x −2.55) and the rod back over his shoulder (a −0.55), to 0.62 the whip (a 1.3), then the settle;
+'wait': the rod out over the water (a 0.95, breathing), the head bent to the float (neck 0.18); 'bite':
+the tip pulled down and quivering (a 1.12 ± 0.045 at 43 rad/s); 'reel': the yank, the rod up high (a
+−0.12, R x −2.25); 'show': the rod up beside him (a 0.22, side 0.38), the left arm up before him (L x
+−1.6) holding the catch, his head bent to it; 'size': both arms spread (R (−1.2, 0, −0.95), L (−1.2, 0,
+0.95)), the rod up out to his right; 'toss': the left arm swinging out. Only `game.fiske` sets it;
+`heldPose` counts it as busy. game/fishing.js reads the tip from the prop and the left hand from the arm
+after the pose, for the line and the catch.
 `lie` (feature 32, §10.22; not a flag: `anim.lie` is the lying pose, `{ lean, arms, tilt, lift }`,
 set by `sync` in state `lying`, else null): on a sun lounger the root leans back `lean` (the
 backrest's −0.75) about the hips, so the legs are laid straight along the bed (x = −π/2 − lean,
@@ -8492,6 +8623,8 @@ shame.chase(car) (feature 60): a Land Rover's chase AI with the catch-up band (s
 //   'goal' for 0.9 s; feature 8, §10.13)
 // hud.js: setKaffe(text, low) (#kaffe, the pool bar's coffee box under the meter, under the hop
 //   counter when both show; null hides it; low pulses it; feature 84, §10.44)
+// hud.js: setFangst({ title, rows: [{ label, n }], all } | null) (#fangst, the FÅNGST card top left at
+//   the pier's end; feature 107, §10.45)
 // storchFilm.js (feature 6, §10.11): game.film = new StorchFilm(game) after the clock (it registers
 //   the interactable `storchFilm` and loads the stills); trick(kind) from handleOneShots (the double
 //   jump), onBounce, shame.add's witness branch (free roam) and its own watchAir (the glide);
@@ -8680,6 +8813,11 @@ shame.chase(car) (feature 60): a Land Rover's chase AI with the catch-up band (s
 //   start ends the coffee, the countdown, the scene's steps and its break-off, the held people turned
 //   to Stig, Fru Storch's cup, Stig's cup, the box); fixedStep multiplies the sprint by sprintK();
 //   placeNpcs asks hides(key), npcPosed and honk.free ask posed(key)
+// fishing.js (feature 107, §10.45): game.fiske = new Fishing(game) after the pool bar (registers `fiske`
+//   at the pier's end); update(dt) after bar.update (the FÅNGST card; with a cast under way (inDialog):
+//   its phases, the keys (input.pressed interact, hangUp; not on the frame that cast), the float, the
+//   line and the catch placed after the pose (the rod's tip from the `metspo` prop, the left hand from
+//   the arm), ended at once when free roam ends); updateHud takes fiske.hint() as the prompt line
 // golfCart.js (feature 74, §10.40): game.golf = new GolfCarts(game) after the street races; step(h)
 //   after the cars' steps in fixedStep (the bunker's and the pond's brake on his golf cart); update(dt)
 //   after gatlopp.update (out of a golf cart in a mission, both home at a mission start, a wreck back
@@ -9330,6 +9468,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `balkong`, `balkongshots` [feature 77] | Balkongerna lever (§10.42). `balkong`, at index 6 (free roam, the held clock's 15:00, siesta): `balconyLots` has 52 slabs and 963 spots, each on its balcony's floor (CURB + fl · 2.9 + 0.02, floors 1 to floors − 1) and none over a solid; the residents' draw (2–4 a slab: señoras, mirror tourists, Swedes) is the same again from its seed. On the sidewalk before slab `4,4,1,0` (a señora, the mirror tourist, a Swede): at most 10 bodies, every one of the slab's residents with one, each exactly on its spot and shown, still there a second later (never stepped), none in `allChars`; the señora's broom, the mirror tourist's mirror held out. The Swedes wave; a Swede calls "Hallå där nere! Är du också från Sverige?" and the mirror tourist asks "Kallar ni det här för havsutsikt?" (each the session's first), the second call 10 s or more after the first; the Swedes in front turn to him, at most `turnMax` off the façade. His horn in a car on the street before her balcony: the slab's señora yells "¡Silencio! ¡Siesta!" (mouth wide, broom up), throws, the slipper comes down on the car's roof, lies on the ground beside the car, Stig says "Förlåt!", the Swedes laugh, the SKANDAL unchanged, no pursuit; a second press within `every` s: no second yell. On foot, a pot by the entrance smashed: the slipper on his head (his squash), "Förlåt!" again, not knocked over. At 10:00 the horn waves the Swedes and the señora says nothing. His car left with two wheels on the sidewalk: a Swede's "Här nere parkerar de hursomhelst.", the only resident line then; on the road: none. At 02:00 (after a cut) nobody; at 15:00 again. A mission start hides every body and slipper; the flight level has none. `balkongshots`: `balk_street` (across the street), `balk_near`, `balk_slipper` (the game held with the slipper in the air), `balk_sorry`, `balk_park` |
 | `hytt` [feature 80] | Hytt två! (§10.43). At index 9 (free roam, the grisbil not unlocked) on foot before booth 2: the prompt "E Ring efter bil" (the nearest interactable `hytt`). E: the menu open, Stig held at `stand` facing the door, the camera cut, no prompt, the telefonist's "Hytt två!"; the rows the hire car and bus 17 only, the title HYTT TVÅ · VILKEN BIL?, the rows with "25 pta", the note and the keys line; S, S again (wraps), ↑ (wraps back); W held 0.6 s: Stig does not move. Q: shut, free roam, nothing paid, the hire car not moved. E again (opens on the hire car), E: the hire car itself on `hyttBil1` while the camera is still on the booth and no corner of it in the camera's view, unpaid until the telefonist asks; then "Ja, hej. Hyrbilen, tack.", "Señor, betala!", 25 pta, "Tack så mycket!", the toast; free roam, Stig over 3 m back from the booth turned to the car (under 0.05 rad), the camera behind him, the car in its view. Ole pays with 10 pta in the purse ("Jeg spanderer!", the purse unchanged). A dented hire car comes repaired, the same car, on `hyttBil1`; bus 17 itself on `hyttBil2`, neither over a solid or a car. The grisbil unlocked and wrecked: three rows; called, one new grisbil (the wreck gone, one car of the name), whole, on `hyttBil3`, out of view when moved, its bed full, then "Den luktar lite."; delivered, wrecked and called: its bed empty and `pigs.delivered` kept. Three other cars on the spots: "Ingen plats på parkeringen, señor!", nothing paid, nothing moved, Stig at the booth. No prompt at the wheel of a car by the booth or in a pursuit; the prompt again after it; in a mission (ropavieja) no prompt and `open()` by hand opens nothing; after the mission (Q) the prompt again. At index 5 bus 17 called to the car park is back in its bay at the airport when Lasse's mission starts. Shots `hytt_prompt`, `_menu`, `_ring`, `_pay`, `_reveal`, `_lot`, `_menu3`, `_grisbil` |
 | `kaffe`, `kaffestorch` [feature 84] | Poolbaren öppnar (§10.44). `kaffe`: at index 6 (friskoteket still to come) no bartender (hidden), no prompt at the counter's north end, the sprint's wish 8.8. At index 7: the bartender at `camarero`, in no solid; at `poolbarKaffe` the prompt "Köp svenskt kaffe (40 pta)"; E with 0 pta: refused, his head shaken, "¡No, señor!" and "Jag har bara kronor…", nothing paid, the prompt back after; with 100 pta: 60 left, the bartender holding the cup out, then the cup in Stig's hand (`'low'`), "¡Gracias, señor!" and "Äntligen riktigt bryggkaffe.", 30 s, the box `SVENSKT KAFFE · SPRINT +20 % · 0:30`; on the pool deck the sprint's wish and speed 10.56, the walk 5.4, the cup carried; "Påtår (40 pta)" with 12 s left: 20 pta left, 30 s again, "Påtår. Precis som hemma.", still 10.56; with 4 s left the box pulses (`0:04`), then cold: no box, no cup, `sprintK` 1, the sprint 8.8; in a SKANDAL pursuit no prompt; Eslövloppet running: `sprintK` 1 and the coffee ends (`race`); a coffee bought and then a mission start (asnan): over (`mission`), no box or cup, no prompt in the mission, the bartender still there, the sprint 8.8. At index 8 (Berra the bodega's giver at `flamencoBar`, 3.56 m off): at the spot E buys, not the giver's talk; Berra holds his glass out and the lines in order "¡Gracias, señor!", "Äntligen riktigt bryggkaffe.", "Ska du ha?", "Nej tack, jag tål inte starksprit.", "Nej, vem fan gör det?"; then the glass down and Berra free; a refill at once has no men's room; the G17 toaster at the counter's south end keeps its own E. `kaffestorch` at index 9: no "Ge fru Storch kaffet" without coffee; with 18 s of coffee the prompt, E: the countdown stands still, "Finns det svenskt kaffe på hotellet?", "Ja." with the cup held out, the cup in her hands, +50 pta and the toast, the coffee over (`given`), she free again holding the cup, the cup gone after 14 s; then calibrate's walker from the cup in his hand at the counter to her E, sprinting with the coffee (`KAFFE_RUNS`, default 3): every run there with coffee left, and `CAL kaffeStorch` with T_ref (median + 0.5 s) and the house rule's ceil(1.25 × T_ref) ≤ the coffee's 30 s. Shots `kaffe_stangd`, `kaffe_oppen`, `kaffe_nej`, `kaffe_kopp`, `kaffe_bryggkaffe`, `kaffe_sprint`, `kaffe_sista`, `kaffe_skadu`, `kaffe_starksprit`, `kaffe_vemfan`, `kaffe_ja`, `kaffe_varmt` |
+| `meta` [feature 107] | Meta från piren (§10.45). At index 9 (free roam): no FÅNGST card at the spawn; 9 m from `fiske` the card (FÅNGST, 0/4, four ???) and no prompt, the rod in its holder; 1 m behind the spot the prompt "E Meta". E: Stig on the spot (under 0.05 m) facing the basin (π/2), `anim.fish` 'cast', the rod in his hand, the holder empty, the camera cut, no prompt; the wait: the float within 0.15 m of the landing point 4.6 m ahead, on the water (y 0.12–0.24), the line, the hint "Vänta tills flötet dyker… Q Lägg ner spöt"; W held 0.5 s: he does not move; the dive (polled every frame): the float under (y < 0.12), "E Dra upp!"; E: the fish on the line, the float gone; the show: `size`, the camera recut, "Det är ungefär så här stort.", "Fångst: en fisk!", `records.fiske.fisk` 1, the card 1/4 with "Fisk×1"; then free on the spot, the rod back in its holder, nothing on the water, "E Meta" again. The second fish: `show`, "Simma hem nu, lilla vän.", ×2. E right after the cast: `early`, "För tidigt…", "Tom krok."; no E in the window: `late`, "Den slapp.", "Tom krok."; Q in the wait: `quit`, no line; nothing counted. The shoe ("Någon har visst fått ta av sig skon.", "Fångst: en gammal sko."), the fin ("Haj!… Nej. Plast.", "Fångst: en hajfena… av plast.", the `fenor` set unchanged, no Hajfenor toast; 3/4 with the pack ???), the pack ("En julklapp. Den är inte till mig.", "Fångst: ett blött SPORT-KNÄCKE-paket. Tomt."; `last.all`, "Alla fyra!…", 4/4 and ALLA FYRA!, then "Nu finns det inget mer kvar i hela hamnen."); a second pack: no "Alla fyra!". `records.fiske` in the saved JSON. `pick()`: the pack on the pity-th hook with no pack on the card; 4000 draws within 0.025 of each weight. A cast by night (22:30): the float and the line. No prompt at the wheel of a car by the spot or in a pursuit; `missions.begin()` mid-cast: `last.kind` 'gone', the rod in its holder, no float, line, pose or card; in the running mission no prompt and no card, `start()` by hand nothing; after the mission (Q) the prompt and the card again. Shots `meta_prompt`, `_kast`, `_vantar`, `_napp`, `_fisk`, `_tom`, `_sko`, `_fena`, `_knacke`, `_kort`, `_natt` |
 | `golfbil` [feature 74] | Golfbilen (§10.40) at index 9: the two golf carts on the boxes' spots, named, unlocked, the toy type, no `'cart'` solid left, not the first free small car; E from the driver's side (the prompt, "Golfbilen" on the speedo), Stig full size under the roof (side, front and rear stills); held W tops out at 6.0–6.6 m/s, the speedo 21–24 km/h, the motor `electric`; H a pip-pip, again while held (every 0.45 s), never the two-tone horn, the island hears it; a bunker brakes it to 1.6 m/s with sand off the rear wheels and "Jag pliktar ett slag.", a second within 12 s no line; the pond splashes and brakes it to 0.9 m/s, "Oj… ett vattenhinder."; a wreck steams, no SKANDAL, back on its spot only once Stig is far; a mission start puts a moved one back; in the mission no prompt, E gives the toast and no seat, a debug seat is undone, `retryCar` gives a spare; after Q E gets in again |
 | `eslovlopp` [feature 7] | Eslövloppet's timer (§10.12, §8 "Timers and difficulty"): calibrate's walker runs the lap `ESLOV_RUNS` (3) times at `&ts=1` with the clock raised; prints `CAL eslovLopp` (the median + 2.5 s → the timer) and `CAL CHECK` against the shipped timer (the sample's 90 % bootstrap range); its raw times go into the ledger (`eslovLopp`) |
 | `grodorna` [feature 8] | Små grodorna i poolen (§10.13): no fest at index 11 (Lasse at SunTrip in `sol`) nor at index 13 without `bodega`; with it (unlock + forced placement) Lasse wears `jul` and he, Affe, Gabbe and Fru Storch stand at their pool-deck homes, Herr Storch on the beach; at 23.30 no visit; Stig on the deck: all seven ours (`poolFest`, busy, invulnerable, posed), wading 0.5 m in their places facing the middle; the exchange in order, once; round 1 on the audio clock; sampled in the page: in the air 0.17–0.22 s after an even beat with tails (beats 0–7), Affe hopping without `groda`, down at 0.55–0.75 s, ears on 8–11, the chorus higher; the porter at his spot with his line and the head shake, then home and free; on the coping dry with "Dansa med" and the gap marked; E: in the gap, stiff (`groda` 3), wading, `I TAKT 0 / 8`, "Kliv ur ringen"; J no kick; E out onto the coping, dry; in again and a step out; no SKANDAL; round 2 two beats after round 1 (±0.06 s), the pause 12 s (±0.8); a dancer does not answer the horn; off the deck all walk home and are free with their spot ids; julafton's unlock gone mid-visit: home at once. Shots `grodorna_vadar`, `_portier`, `_ring`, `_kanten` |
@@ -9455,6 +9594,7 @@ brodrost_supermercado brodrost_grillpaco brodrost_hittegods` (feature 33, §10.2
 + the boat trip's kiosk `battur` (feature 76, §10.41)
 + the car park's spots for a called car `hyttBil1 hyttBil2 hyttBil3` (feature 80, §10.43)
 + the pool bar's bartender and coffee `camarero poolbarKaffe` (feature 84, §10.44)
++ the fishing spot at the pier's end `fiske` (feature 107, §10.45)
 + collectibles `pryl_klocka pryl_poolpen pryl_kalkylator pryl_kniv pryl_kamera pryl_glasogon
 pryl_pung fena_flamenco fena_suntrip fena_plaza fena_golf fena_bungalow fena_hamn fena_hav` + Rio
 `rioBoat rioCam`.
@@ -11660,3 +11800,20 @@ the fixer's group.
   'idle'`: a mission start, the other level or Eslövloppet's start ends it, no purchase in a pursuit,
   so no mission, stage, timer, fixture or calibration pool changed. `castsheet` counts 35 CHARS.
   Scenarios `kaffe`, `kaffestorch` (§16.4).
+- Feature 107, "Meta från piren" (`features/implemented/meta_fran_piren.md`, 2026-10-17): fishing at the
+  marina's pier end by the green harbour light (§10.45; new `src/game/fishing.js` (`game.fiske`), `FISKE`
+  in content/island.js, the landmark `fiske`, the rod `fishingRod`/`ROD_LEN`, the prop `metspo` and the
+  `fish` pose in models.js, the anim flag `fish` in character.js, `hud.setFangst` and `#fangst`; main.js
+  (constructor, update, updateHud's prompt line), style.css; §1.6, §3, §6.3, §10.5, §11, §11.4,
+  §14.1–14.3, §14.6, §14.8, §16.4, Appendix A). Between missions, on foot by the rod in its holder on the
+  light: E ("E Meta") stands Stig at the edge with the rod and cuts the camera; he casts, the float lands
+  4.6 m out, bobs 2.2–5.5 s with a nibble or two and dives; E within 0.5 s ("E Dra upp!") hooks a fish,
+  an old shoe, the inflatable shark fin (a look only, never the Hajfenor set's collect) or, very rarely
+  (6 %, at the latest the 12th hook of a session while it is not on the card), a wet and empty
+  SPORT-KNÄCKE pack, which comes up on the line; the camera cuts to his face and he shows it with his
+  line ("Det är ungefär så här stort." [F*](t) at the first fish with his arms spread; "En julklapp. Den
+  är inte till mig." [F*] at the pack), the fish back into the water, the rest into the bucket. Too early
+  or too late: a splash and "Tom krok."; Q puts the rod down. The FÅNGST card (top left, near the pier or
+  while he fishes) counts every catch (`records.fiske`, saved) and stamps ALLA FYRA! when all four are
+  caught, with a toast and Stig's "Nu finns det inget mer kvar i hela hamnen." [N]. A mission start ends a
+  cast at once. No mission, stage, timer, fixture or calibration pool changed. Scenario `meta` (§16.4).

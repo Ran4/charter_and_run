@@ -175,6 +175,20 @@ body.panik #app canvas { filter: saturate(1.5) contrast(1.08); }
 .mn-note:empty { display: none; }
 .mn-keys { font: 700 14px/1.7 var(--body); margin: 4px 4px 0; }
 .mn-keys b { background: var(--sun); color: var(--ink); border: 1px solid var(--ink); border-radius: 5px; padding: 1px 6px 0; font: 15px/1.2 var(--display); box-shadow: 0 2px 0 #b8860b; }
+/* The FÅNGST card at the pier's end (Meta från piren, §10.45): a cream note pinned top left under Ole's
+   watch (where Hytt två!'s menu sits at Centro Nórdico), a little askew; under the collect card when
+   both show. The kinds not caught yet greyed, ALLA FYRA! stamped in red under the rows. */
+#fangst { position: absolute; left: 22px; top: 140px; width: 214px; background: var(--cream); border: 3px solid var(--ink); border-radius: 8px 8px 14px 14px; padding: 9px 13px 9px; box-shadow: 3px 4px 0 var(--ink); opacity: 0; transform: translateX(-30px) rotate(-1.5deg); transition: opacity 0.25s, transform 0.3s, top 0.25s; pointer-events: none; }
+#fangst.show { opacity: 1; transform: rotate(-1.5deg); }
+#klocka.show ~ #collect.show ~ #fangst { top: 196px; }
+.fg-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px; border-bottom: 2px dashed rgba(29, 20, 38, 0.35); padding-bottom: 4px; }
+.fg-title { font: 22px/1 var(--display); letter-spacing: 1px; color: var(--ink); }
+.fg-count { font: 900 15px/1 var(--body); color: var(--terracotta); font-variant-numeric: tabular-nums; }
+.fg-row { display: flex; justify-content: space-between; gap: 10px; font: 800 15px/1.45 var(--body); color: var(--ink); }
+.fg-row.none { color: rgba(29, 20, 38, 0.38); letter-spacing: 2px; }
+.fg-n { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.fg-all { font: 17px/1 var(--display); letter-spacing: 1px; color: #c8202a; margin-top: 6px; text-align: center; transform: rotate(-3deg); }
+.fg-all:empty { display: none; }
 /* The pool fest's hop counter (§10.13): top right under the meter; the toasts move down under it. */
 #takt { position: absolute; top: 88px; right: 24px; font: 26px/1 var(--display); letter-spacing: 1px; color: var(--ink); background: var(--cream); border: 3px solid var(--ink); border-radius: 14px; padding: 7px 14px 5px; box-shadow: 3px 4px 0 var(--ink); opacity: 0; transform: translateX(20px); transition: opacity 0.25s, transform 0.25s; white-space: nowrap; pointer-events: none; }
 #takt.show { opacity: 1; transform: none; }

@@ -217,6 +217,10 @@ export const ISLAND_LANDMARKS = {
   // Båtturen med PALOMA (free roam, §10.41): before the PASEOS EN BARCO kiosk's window at the pier
   // root, facing it (E: the trip).
   battur: { b: [5, 6], at: [18.5, -0.4], yaw: PI },
+  // Meta från piren (free roam, §10.45): Stig's spot at the east edge of the pier's end platform (x 9–15,
+  // z 26–29.5, deck 0.55), 1.6 m north of the green harbour light, facing the basin (E: a cast); 0.6 m
+  // inside the edge, 2.3 m from pryl_glasogon and out of the pier coins' pull.
+  fiske: { b: [5, 6], at: [14.2, 27.4], yaw: PI / 2 },
   // The G17 toasters (feature 33, §10.24), on things that were there, with no collider of their own:
   // `y` is the top a toaster stands on, `yaw` the side Stig checks it from (its front).
   brodrost_ferreteria: { b: [4, 2], at: [25.6, 13.0], yaw: 0, y: 0.65 },          // FERRETERÍA's paint-can crate
