@@ -330,6 +330,33 @@ export const BRODROST = {
     line: 'Bara de inte är ingenjörer.' },                                        // [F*] said on the plane (research-plot.md:199)
 };
 
+// Rum 107 fylls med resans minnen (free roam; feature 38, §10.25; game/room107.js). The keepsakes in
+// room 107 show by themselves (hotels.js roomKeepsakes); these are the room's three E spots (their
+// landmarks), on foot on the island with no mission running, each `r` m round its spot. The shelf:
+// Stig checks it (`line`, or `empty` with nothing found), the collect card counts the gadgets and the
+// fins, and `oleAt` s later Ole on the radio counts his gadgets (`count` with `nums[n]`, `none` or
+// `full`); the next check after `gap` s. The giraffe (after julafton): Stig holds it up for `holdSecs`
+// s with `line` (put back sooner with E, `putBack`, or over `dropR` m from its spot). The boombox (after the samba unlock,
+// while the samba is not playing): the island tune to samba, and Ole's `line` on the radio.
+// Invented (§1.6): the shelf and what is put on it.
+export const RUM107 = {
+  shelf: { lm: 'rum107Hylla', r: 1.3, gap: 4, oleAt: 1.4,
+    prompt: '<b>E</b> Kontrollera hyllan',                                        // [N]
+    line: 'Kontrollerad av G17.',                                                  // [F*] his boast (research-plot.md:61), relocated
+    empty: 'Inget att kontrollera.',                                               // [N]
+    nums: ['Ingen', 'En', 'To', 'Tre', 'Fire', 'Fem', 'Seks', 'Sju'],
+    count: '{n} av sju! Snart er hylla full.',                                     // [N]
+    none: 'Hylla er tom – dingsene mine er spredt over hele øya!',                // [N] after his line in friskotek's outro
+    full: 'Alle sju! Nå er hylla full.' },                                         // [N]
+  giraffe: { lm: 'rum107Giraff', r: 0.55, holdSecs: 3.5, dropR: 2.5,
+    prompt: '<b>E</b> Ta upp giraffen',                                            // [N]
+    putBack: '<b>E</b> Ställ tillbaka giraffen',                                   // [N]
+    line: 'Precis en sån har jag önskat mig.' },                                   // [F*](t) Majsan's present at the julfest (research-plot.md:371)
+  radio: { lm: 'rum107Radio', r: 0.8,
+    prompt: '<b>E</b> Spela samba',                                                // [N]
+    line: 'Ja, det er fint! Samba!' },                                             // [F*] Ole furnishing for the boombox (research-plot.md:254)
+};
+
 export const UNLOCKS = {
   grisbil: { car: { type: 'grisbil', name: 'grisbil', at: 'flamencoDrive', dx: 4, dz: 0 },
     toast: 'Upplåst: <b>Grisbilen</b> – parkerad vid Hotell Flamenco. Den luktar.' },   // [N]

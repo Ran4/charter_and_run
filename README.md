@@ -121,6 +121,12 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   Godkänd!", och rosten får etiketten KONTROLLERAD AV G17. För tidigt blir det blekt, för sent bränt
   (och kanske en kommentar från någon av systrarna), men du kan försöka igen direkt. Mätaren går lite
   fortare för varje godkänd rost. Alla sju: bonus och ett radiosamtal från Majsan.
+- **Rum 107**: det Stig hittar kommer hem till hans och Oles rum på Hotel Flamenco. Oles prylar
+  ställs på en hylla ovanför tavlan, var och en på sin plats, och de nedtrampade hajfenorna ligger
+  platta i en hög vid Stigs säng. Efter julafton står också väskan, plastgiraffen och
+  knäckebrödspaketet där. Mellan uppdragen: E vid hyllan, så kontrollerar Stig den som den G17 han är
+  och Ole räknar sina prylar i radion; E vid giraffen ("Precis en sån har jag önskat mig."); och när
+  sambamusiken är upplåst spelar E vid Oles bergsprängare samban.
 - **Pesetas**: mynten i gatorna, i trasiga prylar och i vrak är värda 25 pta styck. De går åt
   till grisfesten (800), julafton (100), åsnan, hittelön, böter (¡MULTA!: 20 % av kassan,
   250–1500), PANIK (−50), portiern (500) och målarverkstaden (1 000). Har du inte råd betalar Ole – men inte
@@ -336,6 +342,9 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
   som köper nässkyddet)
 - brödrostarna runt ön, provrostningen och etiketten KONTROLLERAD AV G17 som Stig sätter på en
   godkänd rost (i filmen är G17 bara det han skryter om för Majsan vid poolen, och ingen rostar bröd)
+- hyllan i rum 107 som Oles prylar hamnar på när de hittas, hajfenorna i en hög vid Stigs säng, Stigs
+  "Kontrollerad av G17." vid hyllan och Oles räkning i radion (i filmen visar Ole sina prylar i rummet,
+  men där finns ingen hylla)
 - fårrusningen i Fataga, kappkörningen mot nattbussen och porslinskrosset på tid
 - att samla ihop julfestgästerna
 - Oles prylar och hajfenorna som samlarföremål, utspridda över ön
@@ -437,6 +446,7 @@ src/game/dogs.js                Fin hund… in free roam: the watchdogs in the b
 src/game/bathers.js             Badgäster på solstolarna in free roam: bathers on the loungers, their burn, the fly-off, Berra and Robban fried
 src/game/suntripShop.js         Bränsletillägg tillkommer in free roam: SunTrip-butiken, the receipts, the Trapp Trull account, his bought look
 src/game/toasters.js            Kontrollerad av G17 in free roam: the seven toasters, the timing game, the label, the sisters' line
+src/game/room107.js             Rum 107 fylls med resans minnen in free roam: the keepsake shelf, the giraffe, the boombox
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
@@ -492,6 +502,7 @@ node tools/shot.mjs hund                 # the watchdogs: the wall, the rush, th
 node tools/shot.mjs badgaster stekt      # bathers on the loungers: the burn, the kick and the car, the newcomer, night; Berra and Robban fried, the wake
 node tools/shot.mjs butik butikbil       # SunTrip-butiken: the receipts, the Trapp Trull account, "Paketet!", the look, a mission start; the look in every car
 node tools/shot.mjs brodrost rostar      # the G17 toasters: pale, burnt, golden, the label, 7/7 and Majsan, the save; the seven spots
+node tools/shot.mjs rum107 troferum      # room 107: the shelf and Ole's count, the giraffe, the boombox's samba, the save; the room from the patio, the nap
 node tools/shot.mjs fullstory kinds      # the literal §8 missions and the stage-kind checks
 node tools/shot.mjs calibrate calibflight  # timer and FLYGRÄDSLA calibration (slow; see DESIGN §8, §16.4)
 node tools/pool.mjs                      # random-stage timers from the raw runs in notes/calibration-samples.md

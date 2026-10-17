@@ -74,7 +74,9 @@ opens with a summary of the rounds and the timer changes.
     Trull account's instalments, "Paketet!", his bought look as a layer in free roam only, saved; the
     look seated in every car, DESIGN §10.23), `brodrost rostar`
     (Kontrollerad av G17, the seven toasters' timing game, the label, 7/7 and the save; the seven
-    spots and their looks, DESIGN §10.24)
+    spots and their looks, DESIGN §10.24), `rum107 troferum` (Rum 107 fylls med resans minnen, the
+    keepsake shelf and Ole's count, the giraffe, the boombox's samba and the save; the room from the
+    patio and the nap, DESIGN §10.25)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

@@ -231,7 +231,10 @@ nose guard is unknown); seven chrome toasters round the island that
 Stig-Helmer checks with a timing game, the KONTROLLERAD AV G17 label he puts on one that comes out
 golden brown, Siv's or Majsan's "Bara de inte är ingenjörer." at a burnt one and Majsan's radio line
 when all seven pass (free roam, §10.24; in the film G17 is only his boast to Majsan by the pool, and
-nobody toasts anything).
+nobody toasts anything); the shelf in room 107 that Ole's gadgets come home to as they are found, the
+fins Stig trod down in a pile by his bed, Stig checking it all with "Kontrollerad av G17." and Ole
+counting on the radio (free roam, §10.25; in the film Ole shows his gadgets in the room, but there is
+no shelf, and the suitcase, the giraffe and the crispbread pack are only the film's own scenes).
 The film's flight has **no turbulence** and **no in-flight toilet scene**: both toilet scenes are
 at Arlanda (we keep them there). The plane's toilets are only an invented hideout.
 
@@ -388,6 +391,9 @@ Physical keys are unchanged from Bigmouth. The level config turns verbs on and o
   bather off.
 - **The G17 toasters** (free roam, §10.24): E at a toaster ("E Kontrollera brödrosten") pushes its
   lever down; E again ("E Upp med brödet!") pops the bread, golden brown in the bar's field.
+- **Room 107** (free roam, §10.25): E at the keepsake shelf ("E Kontrollera hyllan"); after julafton
+  at the plastic giraffe on Stig's bed ("E Ta upp giraffen", then "E Ställ tillbaka giraffen"); after
+  the samba unlock at Ole's boombox ("E Spela samba").
 - **The horn** (free roam, §10.9): H in a car makes pedestrians ahead hop aside and the nearest of
   the gang answer; in a mission it is only the sound. The grisbil's horn is a grunt everywhere.
 - **The nap** (free roam, §10.10): E at Stig's bed in room 107 ("E Kvarta en stund") sleeps on to
@@ -1185,7 +1191,7 @@ standing there faces. `y` (optional) = absolute height for collectible spots on 
 
 | block (i,j) | type → builder (owner, file) | content | landmarks: `id` (lx, lz, yaw[, y]) | named / parked cars |
 |---|---|---|---|---|
-| (3,3) | `flamenco` → `hotelFlamenco` (C1, hotels.js) | 7-storey white slab x [−26, 26], z [−27, −14] with balcony rows, terracotta accents, `HOTEL FLAMENCO` roof sign; open reception porch (canopy, desk, plastic Christmas tree `julgran` prop, `RECEPCIÓN`; Phase 3 r2: `HOTEL FLAMENCO · RECEPCIÓN` stands on a terracotta panel above the pergola's fascia, where it no longer fills the top of the chase frame, and the garland runs across the fascia's face) at the slab's south face; ground-floor room patios along the south face (Stig & Ole's room west, room 113 east) with a visible 1st-floor balcony above 113; terracotta piers at the bay lines, solid (Phase 3 r2); pool deck south with a **walkable shallow pool** (flat blue slab at CURB+0.02 + `box(..., CURB, 'water')`, sign "TRE METER DJUPT I ENA ÄNDEN, / EN METER I DEN ANDRA. / BARNVÄNLIG!" (three lines) [F*] (the bungalow seller's line, relocated)); the **10 m diving tower** `TRAMPOLÍN 10 M` [N] at the deep end, on the strip between the hedge and the pool north of the low board (feature 24, §10.20: a white room over the whole footprint x [−17.4, −14.8], z [2.4, 4.8], four posts and two terracotta landings, the railed platform at C + 9.8 = 9.95 (the hotel's fourth floor), the board 1.4 m out over the deep end, the ladder up the north face; its solids `DIVE_TOWER.blocks`, live only between missions); poolbar with straw parasols (`BAR PISCINA · SVENSKT KAFFE`); the julafton party `julgran` on the pool deck at (2.2, 16), in the party and sunset-duet shots (Phase 3); room numbers: a closed room's centred above its own glass door, an open room's (107, 113) on its right-hand pier (Phase 3); parking lot on the west (its eight painted 2.8 × 5 m bays exported as `flamencoBays`, feature 20, §10.17); the parking signs here and at SunTrip's lot are a blue `P` plate over a name strip (`HOTEL FLAMENCO`, `SUNTRIP`) on a post that stops under them (Phase 3 r2: one two-line plate had shrunk the P to the name's size, and the post ran through both faces); **PEPES BODEGA**: small whitewashed annex x [4, 12], z [−31, −27] on the north side with a green door, barrels, sign `PEPES BODEGA · VINOS · RON` facing north (`worldHooks.bodegaLit(on)` lights it after julafton) | `flamenco` (−4, −8, π) (faces the hotel, so the views/cutaway camera stands on the pool deck; Phase 2) · `flamencoRecepcion` (2, −10, 0) · `flamencoPatio` (−18, −11, 0) · `rum113` (18, −11, 0) · `flamencoBalcony` (18, −8, π) · `flamencoPool` (−3, 18, π) · cut anchors (Phase 3; a cut stands `dist` m behind one, looking the way it faces): `rum107Cam` (−18, −11, π) = `flamencoPatio` turned round (looks into room 107), `recepcionCam` (2, −10, π) = `flamencoRecepcion` turned round (the desk from the porch front) · `flamencoDeck` (−4, −2.5, 0) (the island spawn: approachSpot puts the player on the pool deck at (−4, −1) facing the hotel, the chase camera over the pool rather than under the pergola slats; Phase 2) · `flamencoBar` (16, 12, −π/2) · `stektBerra` (8.2, 21.6, 0) · `stektRobban` (6.6, 21.6, 0) (the pool deck's two sun loungers in the north row where Berra and Robban lie fried, §10.22; their props, not standing spots) · `brodrost_poolbar` (18.0, 15.45, −π/2, 1.33) (a G17 toaster on BAR PISCINA's counter top, its south end, 3.6 m from `flamencoBar`; facing the deck) · `brodrost_portier` (3.75, −11.2, 0, 1.28) (a G17 toaster on the porter's desk east of the bell; §10.24; not standing spots) · `flamencoDrive` (−26, 22, π) · `flamencoBack` (−6, −33.5, 0) · `bodega` (8, −33.5, 0) · `fena_flamenco` (−3, 7, 0, 0.35) · `flamencoBoard` (−14.1, 7, π/2) (the middle of the diving board's bounce pad, facing out over the deep end: the judged board and the anchor of the sisters' spots at the pool's edge; not a standing spot; §10.8) · `stigSang` (−19.75, −20.35, 0) (the middle of Stig's turquoise bed in room 107, the way a sleeper on his back faces: the nap's E spot and the anchor of Ole's and Stig's places; not a standing spot, `teleport` puts him on the 0.70 mattress; §10.10) · `flamencoRing` (2, 8, 0) (the middle of the pool fest's ring in the shallow end, 2.5 m east of the circling fin's path; Lasse's place; the ring's places and Stig's gap are round it; §10.13) · `hopptorn` (−15.5, 1.55, 0) (the foot of the diving tower's ladder, facing it: KLÄTTRA UPP's E spot, and where KLÄTTRA NER puts him, turned round; §10.20) · `hopptornTopp` (−15.6, 3.15, π/2, 9.95) (on the platform beside the ladder's top, facing along the board: KLÄTTRA NER's E spot and where KLÄTTRA UPP puts him; not a standing spot for `teleport`; §10.20) | `hyrbil` (sedan `0xf4f4f0`) at `flamencoDrive` — default `getInCar` car and test car |
+| (3,3) | `flamenco` → `hotelFlamenco` (C1, hotels.js) | 7-storey white slab x [−26, 26], z [−27, −14] with balcony rows, terracotta accents, `HOTEL FLAMENCO` roof sign; open reception porch (canopy, desk, plastic Christmas tree `julgran` prop, `RECEPCIÓN`; Phase 3 r2: `HOTEL FLAMENCO · RECEPCIÓN` stands on a terracotta panel above the pergola's fascia, where it no longer fills the top of the chase frame, and the garland runs across the fascia's face) at the slab's south face; ground-floor room patios along the south face (Stig & Ole's room west, room 113 east) with a visible 1st-floor balcony above 113; terracotta piers at the bay lines, solid (Phase 3 r2); pool deck south with a **walkable shallow pool** (flat blue slab at CURB+0.02 + `box(..., CURB, 'water')`, sign "TRE METER DJUPT I ENA ÄNDEN, / EN METER I DEN ANDRA. / BARNVÄNLIG!" (three lines) [F*] (the bungalow seller's line, relocated)); the **10 m diving tower** `TRAMPOLÍN 10 M` [N] at the deep end, on the strip between the hedge and the pool north of the low board (feature 24, §10.20: a white room over the whole footprint x [−17.4, −14.8], z [2.4, 4.8], four posts and two terracotta landings, the railed platform at C + 9.8 = 9.95 (the hotel's fourth floor), the board 1.4 m out over the deep end, the ladder up the north face; its solids `DIVE_TOWER.blocks`, live only between missions); poolbar with straw parasols (`BAR PISCINA · SVENSKT KAFFE`); the julafton party `julgran` on the pool deck at (2.2, 16), in the party and sunset-duet shots (Phase 3); room numbers: a closed room's centred above its own glass door, an open room's (107, 113) on its right-hand pier (Phase 3); parking lot on the west (its eight painted 2.8 × 5 m bays exported as `flamencoBays`, feature 20, §10.17); the parking signs here and at SunTrip's lot are a blue `P` plate over a name strip (`HOTEL FLAMENCO`, `SUNTRIP`) on a post that stops under them (Phase 3 r2: one two-line plate had shrunk the P to the name's size, and the post ran through both faces); **PEPES BODEGA**: small whitewashed annex x [4, 12], z [−31, −27] on the north side with a green door, barrels, sign `PEPES BODEGA · VINOS · RON` facing north (`worldHooks.bodegaLit(on)` lights it after julafton); room 107's keepsake shelf over the print (3.8 m, its top at 2.75, no collider) and the keepsakes on it, on the floor and on the beds, meshes of their own shown by `worldHooks.rum107(collected, unlocked)` (`ROOM107`; feature 38, §10.25) | `flamenco` (−4, −8, π) (faces the hotel, so the views/cutaway camera stands on the pool deck; Phase 2) · `flamencoRecepcion` (2, −10, 0) · `flamencoPatio` (−18, −11, 0) · `rum113` (18, −11, 0) · `flamencoBalcony` (18, −8, π) · `flamencoPool` (−3, 18, π) · cut anchors (Phase 3; a cut stands `dist` m behind one, looking the way it faces): `rum107Cam` (−18, −11, π) = `flamencoPatio` turned round (looks into room 107), `recepcionCam` (2, −10, π) = `flamencoRecepcion` turned round (the desk from the porch front) · `flamencoDeck` (−4, −2.5, 0) (the island spawn: approachSpot puts the player on the pool deck at (−4, −1) facing the hotel, the chase camera over the pool rather than under the pergola slats; Phase 2) · `flamencoBar` (16, 12, −π/2) · `stektBerra` (8.2, 21.6, 0) · `stektRobban` (6.6, 21.6, 0) (the pool deck's two sun loungers in the north row where Berra and Robban lie fried, §10.22; their props, not standing spots) · `brodrost_poolbar` (18.0, 15.45, −π/2, 1.33) (a G17 toaster on BAR PISCINA's counter top, its south end, 3.6 m from `flamencoBar`; facing the deck) · `brodrost_portier` (3.75, −11.2, 0, 1.28) (a G17 toaster on the porter's desk east of the bell; §10.24; not standing spots) · `flamencoDrive` (−26, 22, π) · `flamencoBack` (−6, −33.5, 0) · `bodega` (8, −33.5, 0) · `fena_flamenco` (−3, 7, 0, 0.35) · `flamencoBoard` (−14.1, 7, π/2) (the middle of the diving board's bounce pad, facing out over the deep end: the judged board and the anchor of the sisters' spots at the pool's edge; not a standing spot; §10.8) · `stigSang` (−19.75, −20.35, 0) (the middle of Stig's turquoise bed in room 107, the way a sleeper on his back faces: the nap's E spot and the anchor of Ole's and Stig's places; not a standing spot, `teleport` puts him on the 0.70 mattress; §10.10) · `rum107Hylla` (−18, −18.9, π) · `rum107Giraff` (−18.85, −21.05, −π/2) · `rum107Radio` (−18, −20.45, π) (room 107's E spots, where Stig stands facing the keepsake shelf, the giraffe on his bed and Ole's boombox; §10.25) · `flamencoRing` (2, 8, 0) (the middle of the pool fest's ring in the shallow end, 2.5 m east of the circling fin's path; Lasse's place; the ring's places and Stig's gap are round it; §10.13) · `hopptorn` (−15.5, 1.55, 0) (the foot of the diving tower's ladder, facing it: KLÄTTRA UPP's E spot, and where KLÄTTRA NER puts him, turned round; §10.20) · `hopptornTopp` (−15.6, 3.15, π/2, 9.95) (on the platform beside the ladder's top, facing along the board: KLÄTTRA NER's E spot and where KLÄTTRA UPP puts him; not a standing spot for `teleport`; §10.20) | `hyrbil` (sedan `0xf4f4f0`) at `flamencoDrive` — default `getInCar` car and test car |
 | (3,2) | `suntrip` → `hotelSunTrip` (C1, hotels.js) | lower U-shaped hotel on red rock; welcome **stage** with SunTrip sun backdrop (red text on yellow sun), accordion/conga props; pool; **friskotek lawn**; SunTrip office porch on the south side facing Flamenco's back; posters `GRISFEST TORSDAG · 800 PTA`, `FRISKOTEKET 9.30`; the free-standing `FRISKOTEKET / VARJE MORGON 9.30` board on the lawn's west edge is solid (Phase 3 r3: only its posts were, so he walked through it and the chase eye stood behind it); SunTrip-butiken (feature 34, §10.23: hotels.js `suntripShop`, `SUNTRIP_SHOP`): a yellow counter on the porch by the east window, x [−11.9, −8.5] from the window to z 22.2, top C + 1.0, with `SUNTRIP-BUTIKEN` over it, `BRÄNSLETILLÄGG TILLKOMMER` on its front, the price board west of it and the four wares, in its own group shown only between missions on the island, its two solids (the counter, the board) live only then | `suntrip` (−14, 24, π) (faces the office porch; Phase 2) · `butik` (−10.2, 22.95, π) (Stig's spot in front of the counter's middle, facing it; feature 34, §10.23) · `scen` (0, −14, 0) · `friskotek` (−10, 8, 0) · `suntripPool` (14, 4, π) · `suntripLot` (24, 22, π) · `fena_suntrip` (14, 8, 0, 0.35) · `berraSolstol` (17.4, 2.2, 0) (the pool lounger Berra naps on, on its prop, facing its backrest end; §10.6) | — |
 | (1,2) | `kasbah` → `kasbah` (C2, centre.js) | **Centro La Medina** (fictional; internal id `kasbah`): two-level nightlife courtyard centre: arcade, stairs (ramp) to a roof terrace (top ≈ 6.0) with a balustrade above the bottom three steps and a sloped wall collider along it (Phase 3: the way on is over those three steps), neon signs `CENTRO LA MEDINA`, `VIKING BAR` (horned helmet), `TONGA TONGA` (mirror ball), `BAR SVENSKA · SMÖRGÅSAR` | `kasbah` (0, 22, π) · `vikingbar` (−16, 18, π) · `tongatonga` (14, 18, π) · `tongaLot` (20, 27, π) · `tongaSlump` (16.3, 17.4, 0.5) (where Berra slumps after Tonga Tonga and is picked up, at the right of the group in the street shot; Phase 3 r3) · `pryl_poolpen` (8, −6, 0, 7.2) · `angerudBil` (−7, 32.75, −π/2) (Angerud's hire car on the south sidewalk between missions, feature 20, §10.17) | — |
 | (4,2) | `cita` → `cita` (C2, centre.js) | **Centro Nórdico** (fictional; internal id `cita`) strip mall, sign `CENTRO NÓRDICO`: `SUPERMERCADO`, `FERRETERÍA`, `FARMACIA`, `ESTANCO`, `TELÉFONOS · HYTT 1·2·3`, `SOUVENIRS`, `SVENSKT KAFFE`, `CAMBIO · 1 KR = 17 PTA` (Phase 3: the north shop row and its canopy fit the courtyard between the wings, x ±11; `SOUVENIRS · REGALOS` and `FARMACIA` with its green cross sit on the wings' courtyard faces) | `cita` (0, 22, π) · `supermercado` (−18, 18, π) · `ferreteria` (18, 18, π) · `telefon` (0, 8, π) · `brodrost_ferreteria` (25.6, 13.0, 0, 0.65) (a G17 toaster on the east end of FERRETERÍA's paint-can crate, whose two east cans of each row are gone) · `brodrost_supermercado` (−24.15, 13.0, 0, 0.6) (one on SUPERMERCADO's east fruit crate, its fruit gone; §10.24; not standing spots) | — |
@@ -3105,6 +3111,8 @@ the radio (prylar only).
 | fenor | inflatable shark fins circling (r 1.2, y 0.35) in: Flamenco pool, SunTrip pool, plaza fountain, golf pond, bungalow pool, harbour basin, sea shallows (0, 304) | walk in, kick/stomp (or drive through) |
 | brodrostar | chrome toasters standing on: FERRETERÍA's paint-can crate (4,2) · BAR PISCINA's counter (3,3) · market stall K's counter (2,1) · the porter's desk at Flamenco (3,3) · SUPERMERCADO's fruit crate (4,2) · a Casa Lola terrace table (2,3) · the lost-and-found counter at Gando (6,0) | on foot, E and the timing game (§10.24), only between missions |
 
+- What `prylar` and `fenor` find also comes home to room 107 (feature 38, §10.25): the gadgets on its
+  shelf, the fins in a pile by Stig's bed (`collect` calls `dressRoom107`).
 - Per pickup: +250 pta, `hud.showCollect('<span class="pryl-icon"></span> Oles prylar <b>n/7</b>')`
   and Ole's radio line (prylar) / squeak + splash (fenor) / the `pling` and a golden sparkle, the
   toaster kept with its label (brodrostar). 7/7: `bonus` pta + `complete` radio.
@@ -3158,6 +3166,8 @@ UNLOCKS = {
 Herr Storch counts (§7.2). The same unlock is his "after the end" in `game.film` (`after: 'bodega'`).
 `glid` (feature 3, §10.7) carries only the toast: the glide comes with `bodega`, and `game.glide`
 unlocks `glid` the first time he is in the air in free roam after it, so the toast shows then, once.
+`bodega` also puts the suitcase, the plastic giraffe and the SPORT-KNÄCKE pack in room 107 (feature
+38, §10.25): `unlock` and `applySaveToWorld` call `dressRoom107`, so it needs no `hook` of its own.
 A name not in `UNLOCKS` is only added to `game.unlocked` (saved with it): the glide keeps its
 once-ever marker `glidPlask` (Lasse's pool line has been said) there.
 `home` overrides the island HOMES entry (main.js `homeOverrides`); a `null` home hides the NPC
@@ -4864,6 +4874,83 @@ whose pickup is a timing game. The game, the toasters and the label on them are 
   a little from try to try; Stig gets a line at a pale one too (the idea's "Blekt. Underkänd.") and the
   toasts word the retry; the label and the counter carry the film's boast, which is not said again.
 
+### 10.25 Rum 107 fylls med resans minnen – the keepsakes in room 107 (free roam; feature 38, 2026-10-17)
+
+`game/room107.js` (`Room107`, owned by Game as `room107`), config `RUM107` in content/island.js, the
+shelf and the keepsakes in world/blocks/hotels.js (`stigOleRoom`, `roomKeepsakes`, `ROOM107`). In the
+film Ole shows his gadgets in the hotel room (the watch "digital och analog", the calculator with an
+alarm, "'Pool Pen.'", the knife's "Sax – utan skruvmejsel.", the cameras; research-plot.md:255; the
+money pouch and the goggles come later, :280–281) and furnishes it for his boombox: "Ja, det är fint!
+Samba!" (:254). The suitcase comes back to the room's door on julafton morning (:362; the game cuts to
+room 107 there), Majsan gives Stig the plastic giraffe at the julfest, "Precis en sån har jag önskat
+mig." (:371; the speaker is the source's reading), and the money is in the crispbread pack (:373).
+Now the trip comes home to room 107: what the collectibles find stands in the room. The shelf, what is
+put on it and the lines at it are invented (§1.6).
+
+- **The shelf** (hotels.js `stigOleRoom`; block (3,3), local = world; room 107 is x [−21, −15],
+  z [−21.5, −14]): a wooden board over the print on the back wall, 3.8 × 0.24 m, its top at
+  C + 2.6 = 2.75, on two brackets. Static and out of reach, with no collider, like everything here:
+  no route, mission, timer, fixture or calibration pool changed.
+- **The keepsakes** (`roomKeepsakes`): the collectibles' own models (`COLLECT_KINDS`, pickups.js),
+  each a mesh of its own (the block's geometry is merged and cannot show one thing at a time), still,
+  without the beam:
+  - Ole's seven gadgets in `PRYL_IDS` order (klocka, poolpen, kalkylator, kniv, kamera, glasogon,
+    pung) at 0.45 of their street size, standing on the shelf 0.5 m apart, each in its own place, so
+    one not found yet is a gap;
+  - the fins Stig trod down, flattened (each 0.7 m across and 0.14 m high), one more in the pile for
+    each fin, each 3.5 cm higher and turned 0.95 rad further, on the floor before his bed's foot
+    (about (−20.35, −18.9));
+  - after julafton (unlock `bodega`): the suitcase (`vaska`, × 0.9, standing on the floor by the foot
+    of Ole's bed; its green-white sticker is all there is of Hammarby, no text), the plastic giraffe
+    (`giraff`, × 0.45, on Stig's bed by the pillow's outer end: in the nap his head lies beside it)
+    and the SPORT-KNÄCKE pack (`knacke`, × 0.55, flat on Ole's bed, the label up). Not the painted
+    donkey (Stig leaves it at Viking Bar for Angerud) and not the pack bought in asnan (it went into
+    the fake present): only the one the money was in. During the trip the room fills only with gadgets
+    and fins.
+  `worldHooks.rum107(collected, unlocked)` shows what is there; main.js `dressRoom107()` calls it at
+  every pickup (`collect`), every unlock (`unlock`) and a load (`applySaveToWorld`). `ROOM107` holds
+  the meshes (`gadgets` by id, `fins`, `after` by kind) and `held`, the keepsake in his hand, hidden
+  from its place meanwhile. The room is the same in missions: buss17's havsutsikt line and
+  julafton's knock cut to `rum107Cam` and show what has been found (on julafton morning nothing of
+  julafton's yet).
+- **The E spots** (`RUM107`; landmarks `rum107Hylla`, `rum107Giraff`, `rum107Radio`, §6.3), live on
+  the island with `missions.state === 'idle'`. Free: on foot, `normal`, not in a dialogue (the nap, a
+  talk), not carrying, not frozen, no PANIK, no SKANDAL pursuit, not in the pool fest's ring or on the
+  baggage belt (the toasters' rule). Priority 0, so the nearest wins; the nap's `stigSang` (r 2.0)
+  still answers from the middle of the side of Stig's bed and from its foot.
+  - **The shelf** (`rum107Hylla` (−18, −18.9, π), between the beds' feet; `r` 1.3):
+    `<b>E</b> Kontrollera hyllan` [N]. Stig turns to it and says "Kontrollerad av G17." [F*] (his
+    boast, research-plot.md:61, relocated), or "Inget att kontrollera." [N] with no gadget and no fin
+    found; the collect card shows `Oles prylar n/7 · Hajfenor m/7`; `oleAt` 1.4 s later Ole on the
+    radio counts his gadgets: "{N} av sju! Snart er hylla full." [N] with N in bokmål (`nums`: En, To,
+    Tre, Fire, Fem, Seks), "Hylla er tom – dingsene mine er spredt over hele øya!" [N] (after his line
+    in friskotek's outro) with none, "Alle sju! Nå er hylla full." [N] with all seven. The next check
+    after `gap` 4 s (no prompt meanwhile).
+  - **The giraffe** (after julafton; `rum107Giraff` (−18.85, −21.05, −π/2), in the gap between the
+    bed's head and the dresser, facing it; `r` 0.55): `<b>E</b> Ta upp giraffen` [N]. Stig turns to
+    it and holds it up (the julfest's anim `giraffe`), the bed's one hidden (`held`), with "Precis en
+    sån har jag önskat mig." [F*](t). For `holdSecs` 3.5 s the prompt is
+    `<b>E</b> Ställ tillbaka giraffen` [N] (`dropR` 2.5 m, priority 100: over the nap's prompt and a
+    giver's talk); it goes back on the bed with E, after 3.5 s, more than 2.5 m from the spot, or
+    when he is no longer free.
+  - **The boombox** (after the samba unlock, while the samba is not playing; `rum107Radio`
+    (−18, −20.45, π), before the dresser; `r` 0.8): `<b>E</b> Spela samba` [N]. The island tune to
+    the samba as the pause menu's Musik button sets it (`setIslandTune('samba')`, saved as `tune`; the
+    music on if it was off), and Ole on the radio: "Ja, det er fint! Samba!" [F*] (his line in the
+    room, in bokmål). The samba stays the gadgets' reward: the boombox is another way to the pause
+    menu's choice, and back to the sol tune is the pause menu's.
+- **Off.** A mission start or the other level (`reset`): the giraffe back on the bed, Ole's queued
+  count dropped.
+- **Saved**: nothing new; the room follows `collected` and `unlocked` (§10.5). `room107.last`
+  ({ what, … }) and `room107.world` (= `ROOM107`) are for tests. Scenarios `rum107` and `troferum`
+  (§16.4).
+- **Not done / changed** (deviations from the idea): Ole is on the radio, not in the room (he lives
+  under the pergola, and every gadget line is on the radio); the giraffe stands by the pillow, not at
+  the bed's foot as in the sketch (in the nap Stig's legs lay round it there), so its E spot is
+  beside the bed's head; Ole's full-shelf line is not "Ja, det er fint! Samba!" (the boombox's); the
+  G17 toasters (feature 33) stay where they stand with their labels and are not in the room; the
+  boombox only switches to the samba.
+
 ## 11. HUD / UI strings (Swedish; `src/strings.js` owned by WP-H, created by Phase 0)
 
 `strings.js` exports `S` (flat object) and `fmt(key, vars)`. Engine code uses `S.key` only.
@@ -4916,7 +5003,7 @@ mutes without touching the button, which then said `Ljud: på` while muted).
 | dialogue next | `E ▸` |
 | minimap rim badge | `N` (island) / `FRAM` (flight) |
 | big-map legend | from `game.mapLegend()` (§10.1) |
-| prompts | `<b>E</b> Prata med {name}` · `<b>E</b> Kliv in` · `<b>E</b> Ta bilen` · `<b>E</b> Sätt dig` · `<b>E</b> Res dig` · `<b>E</b> Lås in dig` · `<b>E</b> Ta en juice` · `<b>E</b> Kvarta en stund` (Stig's bed, §10.10) · `<b>E</b> Titta i kameran` / `<b>E</b> Se filmen` (Herr Storch, §10.11) · `<b>E</b> Heja Eslöv!` / `<b>E</b> Eslövloppet – ett varv runt fälten` (the rollerskier, §10.12) · `<b>E</b> Dansa med` / `<b>E</b> Kliv ur ringen` (the pool fest's gap, §10.13) · `<b>E</b> Kontrollera brödrosten` / `<b>E</b> Upp med brödet!` (a G17 toaster, §10.24) · `<b>SPACE</b> Håll i dig!` · `<b>J</b> håll: Jag kan flyga!` (the `<b>` keycap is Luckiest Guy: uppercase). Order (`updateHud`): talk, then `Håll i dig!` while the cabin is turbulent and he stands without holding on (Phase 3 r3, §5.7), then the car, interactable (seats, toilets…) and stand prompts |
+| prompts | `<b>E</b> Prata med {name}` · `<b>E</b> Kliv in` · `<b>E</b> Ta bilen` · `<b>E</b> Sätt dig` · `<b>E</b> Res dig` · `<b>E</b> Lås in dig` · `<b>E</b> Ta en juice` · `<b>E</b> Kvarta en stund` (Stig's bed, §10.10) · `<b>E</b> Titta i kameran` / `<b>E</b> Se filmen` (Herr Storch, §10.11) · `<b>E</b> Heja Eslöv!` / `<b>E</b> Eslövloppet – ett varv runt fälten` (the rollerskier, §10.12) · `<b>E</b> Dansa med` / `<b>E</b> Kliv ur ringen` (the pool fest's gap, §10.13) · `<b>E</b> Kontrollera brödrosten` / `<b>E</b> Upp med brödet!` (a G17 toaster, §10.24) · `<b>E</b> Kontrollera hyllan` · `<b>E</b> Ta upp giraffen` / `<b>E</b> Ställ tillbaka giraffen` · `<b>E</b> Spela samba` (room 107, §10.25) · `<b>SPACE</b> Håll i dig!` · `<b>J</b> håll: Jag kan flyga!` (the `<b>` keycap is Luckiest Guy: uppercase). Order (`updateHud`): talk, then `Håll i dig!` while the cabin is turbulent and he stands without holding on (Phase 3 r3, §5.7), then the car, interactable (seats, toilets…) and stand prompts |
 
 **The result line** (feature 4, §10.8): `#score`, low in the middle (bottom 92 px, under the
 prompt at 178 px), a cream card with the dive and its sum in Luckiest Guy over the record line
@@ -5240,7 +5327,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/strings.js` | new | **H** | `S`, `fmt()` (§11) |
 | `src/content/index.js` | new | none | merges `HOMES`, `MAP_LABELS`, `LEVEL_OUTFITS`, re-exports all content |
 | `src/content/flight.js` | new | **F** | `HOMES_GATE`, `HOMES_FLIGHT`, `MAP_LABELS_FLIGHT`, `CHATTER_FLIGHT`, `OLE_STATS`, `LEVEL_OUTFITS_GATE`, `LEVEL_OUTFITS_FLIGHT` |
-| `src/content/island.js` | new | **G** | `HOMES_ISLAND`, `MAP_LABELS_ISLAND`, `CHATTER`, `OUCH`, `GETUP`, `CARJACK`, `NPC_KICKED` (+ the `_OLE` / `_LOCAL` tables, `LOCAL_CAST`, `BARKS`: Phase 3 r2, §14.10; `STIG_SORRY`: feature 11, §10.14; `PIG_TRUCK`: feature 15, §10.15; `BAGGAGE_BELT`: feature 25, §10.16; `LAPPLISA`: feature 20, §10.17; `GRISFEST_FREE`: feature 21, §10.18; `FRUKTSTAND`: feature 28, §10.19; `TOWER`: feature 24, §10.20; `DOGS`: feature 31, §10.21; `BATHERS`: feature 32, §10.22), `COLLECTIBLES`, `UNLOCKS`, `NAMED_CARS`, `LEVEL_OUTFITS_ISLAND` |
+| `src/content/island.js` | new | **G** | `HOMES_ISLAND`, `MAP_LABELS_ISLAND`, `CHATTER`, `OUCH`, `GETUP`, `CARJACK`, `NPC_KICKED` (+ the `_OLE` / `_LOCAL` tables, `LOCAL_CAST`, `BARKS`: Phase 3 r2, §14.10; `STIG_SORRY`: feature 11, §10.14; `PIG_TRUCK`: feature 15, §10.15; `BAGGAGE_BELT`: feature 25, §10.16; `LAPPLISA`: feature 20, §10.17; `GRISFEST_FREE`: feature 21, §10.18; `FRUKTSTAND`: feature 28, §10.19; `TOWER`: feature 24, §10.20; `DOGS`: feature 31, §10.21; `BATHERS`: feature 32, §10.22; `RUM107`: feature 38, §10.25), `COLLECTIBLES`, `UNLOCKS`, `NAMED_CARS`, `LEVEL_OUTFITS_ISLAND` |
 | `src/game/missions/index.js` | new | none | `MISSIONS = [...FLIGHT_MISSIONS, ...ISLAND_MISSIONS]`, `MissionRunner` re-export |
 | `src/game/missions/runner.js` | new (from missions.js) | none | `MissionRunner` (§9.4) |
 | `src/game/missions/kinds/core.js` | new | **none** (frozen after Phase 0) | getInCar goto pickup dropoff follow rabbits race destroy grab scene |
@@ -5269,6 +5356,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/diveTower.js` | new (feature 24, 2026-10-16) | — | `DiveTower` (`game.tower`): Från fjärde våningen in free roam: the tower's solids live between missions, the ladder's two E points and fades, the dive off the platform (the mantra, the poses), the cannonball and the belly flop into the water, Lasse's line (§10.20) |
 | `src/game/dogs.js` | new (feature 31, 2026-10-17) | — | `Dogs` (`game.dogs`): Fin hund… in free roam: the watchdogs' lots (`Lot`), looks and dogs (`Dog`), their rush, bay, call and calm, Stig's hands, lines and thanks (§10.21) |
 | `src/game/toasters.js` | new (feature 33, 2026-10-17) | — | `Toasters` (`game.toasters`): Kontrollerad av G17 in free roam: the seven toasters' interactables, the timing game and its card, the pop and its three results, the sister's line, the reset at a mission start (§10.24) |
+| `src/game/room107.js` | new (feature 38, 2026-10-17) | — | `Room107` (`game.room107`): Rum 107 fylls med resans minnen in free roam: the shelf's, the giraffe's and the boombox's interactables, Stig's lines and Ole's count on the radio, the giraffe held and put back, the reset (§10.25) |
 | `src/game/bathers.js` | new (feature 32, 2026-10-17) | — | `Bathers` (`game.bathers`): Badgäster på solstolarna in free roam: tourists on the sun loungers nearest him by day, their burn (pale, pink, lobster red), the fly-off from a kicked or smashed lounger, a newcomer on a lounger back; Berra and Robban fried and asleep on two Flamenco loungers between buss17 and the bodega, their snores and the wake (§10.22) |
 | `src/game/suntripShop.js` | new (feature 34, 2026-10-17) | — | `SuntripShop` (`game.shop`): Bränsletillägg tillkommer in free roam: SunTrip-butiken's counter shown and its solids live between missions, the travel agent, the wares' and the bag's interactables, the receipts, the Trapp Trull account's instalments, "Paketet!", Ole's line; his bought look as a layer over his outfit (`dress`), saved (§10.23) |
 | `src/game/hud.js` | edit | **H** | map sources, meter, strings, legend, ring, blips, zone bar, markers; `renderPortrait` restores the model transform (§14.8) |
@@ -5287,7 +5375,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/world/props.js` | edit | **B** | `TYPES` (§6.8), flags, `reviveProps`, `propsOfType`; the `frutas` stall, its flags, the debris palette, `spawnShreds` and the signs (feature 28, §10.19) |
 | `src/world/collision.js` | edit | none | `segmentBlocked` nearest hit |
 | `src/world/blocks/index.js` | new | none | `BLOCK_BUILDERS` merge |
-| `src/world/blocks/hotels.js` | new | **C1** | `flamenco`, `suntrip`; `flamencoBays` (feature 20, §10.17); the diving tower `diveTower` and its solids `DIVE_TOWER` (feature 24, §10.20); SunTrip-butiken's counter `suntripShop` and `SUNTRIP_SHOP` (feature 34, §10.23) |
+| `src/world/blocks/hotels.js` | new | **C1** | `flamenco`, `suntrip`; `flamencoBays` (feature 20, §10.17); the diving tower `diveTower` and its solids `DIVE_TOWER` (feature 24, §10.20); SunTrip-butiken's counter `suntripShop` and `SUNTRIP_SHOP` (feature 34, §10.23); room 107's keepsake shelf, `roomKeepsakes`, `ROOM107` and `worldHooks.rum107` (feature 38, §10.25) |
 | `src/world/blocks/centre.js` | new | **C2** | `kasbah`, `cita`, `plaza`, `marknad`, `kyrka`, `bensin`, `guardia`; the market's five fruit stalls as `frutas` props (feature 28, §10.19); room for three G17 toasters (two paint cans a row, a fruit crate's fruit, stall K's radio 5 via `stall`'s `gap`; feature 33, §10.24) |
 | `src/world/blocks/nature.js` | new | **D1** | `tomat`, `grisfest`, `fataga`, `golf`, `bungalow`, `bygge`, `dyner`; `FARM_YARD` (feature 31, §10.21) |
 | `src/world/blocks/coast.js` | new | **D2** | `flygplats`, `dromplan`, `fyren`, `playa`, `hamn`; `BELT` (feature 25, §10.16) |
@@ -5297,7 +5385,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/actors/models.js` | edit | **E** | `CHARS`, `CAST`, new def fields, anim flags, `buildBustGeo`, `outfitDef`, `randomPed` palette; the `ticket` flag and its `lappblock`/`penna` props (feature 20, §10.17); the `leap` and `bomb` poses (feature 24, §10.20); the `placate` pose (feature 31, §10.21); the `lie` pose, the `stekt` outfits and `STEKT_SKIN` (feature 32, §10.22) |
 | `src/actors/character.js` | edit | **E** | `setDef`, `hidden`, `seatAt`, `standAt`, new anim flag defaults (`placate`: feature 31); the state `lying`, `lieAt`, `fling`'s `flip` (feature 32, §10.22) |
 | `src/actors/car.js` | edit | **E** | §6.6 types/flags, `registerCarType`, `build`/`noWheels`/`noSpeedo`/`noExplode`/`livery`; the grisbil's pig meshes `PIG_SLOTS`, `pigMesh`, `car.pigs`, `setPig`, `pigWorld` (feature 15, §10.15); `car.lift`, the nose raised on the tow truck's hook (feature 20, §10.17); a prop is known by its block's `ref`, `game.breakProp` may refuse, `def.slow` (feature 28, §10.19) |
-| `src/actors/pickups.js` | edit | **E** | `COLLECT_KINDS`, `registerCollectKind`, `Collectible` table, `Rabbit` meshes, coin value 25; the `brodrost` kind, `TOASTER`, `setToaster`, `Collectible.mark` and the `yaw` option (feature 33, §10.24) |
+| `src/actors/pickups.js` | edit | **E** | `COLLECT_KINDS`, `registerCollectKind`, `Collectible` table, `Rabbit` meshes, coin value 25; the `brodrost` kind, `TOASTER`, `setToaster`, `Collectible.mark` and the `yaw` option (feature 33, §10.24); `PRYL_IDS` exported (feature 38, §10.25) |
 | `src/actors/peds.js` | edit | **E** | Swedish/Spanish shouts; `dodge`, `startle` (feature 5, §6.7) |
 | `src/actors/drivers.js` | Phase 2 edit | none | (accepts duck-typed paths); an AI bus's lane path starts its turns 11 m from the junction centre instead of 8.5 (left-turn radius 13.75 m > the bus's ≈ 12 m minimum), so the excursion bus no longer swings into the grisfest farm wall; right turns stay too tight for buses (mission bus routes turn left only); traffic holds short of a closed race junction (`game.closure`, §9.2 race) |
 | `index.html`, `style.css` | edit | **H** | §11, §13.4 |
@@ -5336,7 +5424,7 @@ Init: `initGfx` → `input.init` → `hud.init` → `fx.init` → fonts (Luckies
 → peds (34) → NPC `Character`s (one per `CHARS` key except `stig`, the radio-only keys `levander
 kapten pa guardia pax telefonist` and the cabin-owned `vardinna2`; `key` field; hidden until placed, §2.3) →
 player `Character(CHARS.stig)` (`key = 'stig'`) → collectibles (`COLLECTIBLES`) → markers → `Shame`
-→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `DiveTower` (feature 24, §10.20; registers the ladder's two interactables, sets `DIVE_TOWER.live`) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `Eslov` (feature 7, §10.12; registers the rollerskier's interactable) → `PoolFest` (feature 8, §10.13) → `StigSorry` (feature 11, §10.14) → `PigTruck` (feature 15, §10.15) → `BaggageBelt` (feature 25, §10.16) → `Lapplisa` (feature 20, §10.17) → `GrisfestFree` (feature 21, §10.18; registers the gate's and the tourists' interactables) → `FruitStands` (feature 28, §10.19) → `Dogs` (feature 31, §10.21) → `Bathers` (feature 32, §10.22; registers the wake's interactable) → `SuntripShop` (feature 34, §10.23; registers the four wares' and the bag's interactables, sets `SUNTRIP_SHOP.live`) → `Toasters` (feature 33, §10.24; registers the seven toasters' interactables) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
+→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `DiveTower` (feature 24, §10.20; registers the ladder's two interactables, sets `DIVE_TOWER.live`) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `Eslov` (feature 7, §10.12; registers the rollerskier's interactable) → `PoolFest` (feature 8, §10.13) → `StigSorry` (feature 11, §10.14) → `PigTruck` (feature 15, §10.15) → `BaggageBelt` (feature 25, §10.16) → `Lapplisa` (feature 20, §10.17) → `GrisfestFree` (feature 21, §10.18; registers the gate's and the tourists' interactables) → `FruitStands` (feature 28, §10.19) → `Dogs` (feature 31, §10.21) → `Bathers` (feature 32, §10.22; registers the wake's interactable) → `SuntripShop` (feature 34, §10.23; registers the four wares' and the bag's interactables, sets `SUNTRIP_SHOP.live`) → `Toasters` (feature 33, §10.24; registers the seven toasters' interactables) → `Room107` (feature 38, §10.25; registers room 107's three interactables) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
 `placeNpcs(true)` → spawn the player → portraits for every key in `CAST` (`renderPortrait`
 restores each model's parent and transform, so seated cast members stay in their seats) →
 `applySaveToWorld()` →
@@ -5406,6 +5494,9 @@ game.dogs;         // Dogs (feature 31, §10.21): the watchdogs in free roam; do
 game.toasters;     // Toasters (feature 33, §10.24): the G17 toasters' timing game; toasters.live, active
                    // ({ c, mk, secs, zone, tickT } | null), canUse(c), press(c), judge(), cancel(),
                    // reset(), objective() (updateHud), restT, last, tries, cfg (BRODROST)
+game.room107;      // Room107 (feature 38, §10.25): room 107's shelf, giraffe and boombox; room107.live,
+                   // canUse(), shelf(), giraffe(), hold(on), radio(), reset(), holdT, restT, last,
+                   // world (= hotels.js ROOM107), cfg (RUM107)
 game.bathers;      // Bathers (feature 32, §10.22): tourists on the sun loungers, Berra and Robban fried;
                    // bathers.loose (the bathers off their loungers: allChars, areaHit), step(h)
                    // (fixedStep), onPropBroken(p, vx, vz) (from onPropBroken, after the lounger's own
@@ -5525,6 +5616,8 @@ game.frozenT                              // > 0 while frozen (bust freeze); inp
 game.collectibles[set] -> [Collectible]   // built from COLLECTIBLES (§10.1) at their landmarks
 game.collect(set, c)  // +250, the set's jingle/splash/sparkle, the collect card, the radio, 7/7, save;
                       // a `keep` set's c is marked (c.mark()), the others' removed (feature 33)
+game.dressRoom107()   // worldHooks.rum107(collected, unlocked): room 107 shows what is found (feature 38,
+                      // §10.25); called by collect, unlock and applySaveToWorld
 
 // ---- map ----
 game.mapMarkers(all);  game.mapLabels();  game.mapLegend() -> html
@@ -5809,7 +5902,8 @@ export function registerCarType(key, spec)            // used by cabin.js for 't
 export const COLLECT_KINDS = { pryl, fena, brodrost, flaska, juice, knacke, asna, vaska, giraff };
 //   each { build(id) -> Object3D, motion: 'spin' | 'circle' | 'bob' | 'roll' | 'none', beam?: bool, scale?,
 //   mark?(mesh) (a kept one dressed once collected) }
-//   pryl.build(id) picks the gadget by prylar id (the watch as fallback)
+//   pryl.build(id) picks the gadget by prylar id (the watch as fallback); PRYL_IDS: the gadgets' ids in
+//   order (room 107's shelf, feature 38, §10.25)
 //   brodrost (feature 33, §10.24): the G17 toaster, standing on y = 0 facing +z; mark: label on, golden
 //   bread up. TOASTER = { top, breadUp, leverUp, leverDown }; setToaster(mesh, { bread?: 'pale' |
 //   'golden' | 'burnt', up?, lever?, label? })
@@ -5860,7 +5954,8 @@ export const ISLAND_LANDMARKS = { name: { b: [i, j], at: [lx, lz], yaw, y? } | {
 export function registerIslandLandmarks()                 // writes layout.landmarks
 
 // world/registry.js
-export const worldHooks = {};   // e.g. worldHooks.bodegaLit = (on) => {...} set by the flamenco builder
+export const worldHooks = {};   // e.g. worldHooks.bodegaLit = (on) => {...} set by the flamenco builder;
+                                // worldHooks.rum107(collected, unlocked) room 107's keepsakes (§10.25)
 
 // world/blocks/*.js
 export const BUILDERS = { type: (f, W, ctx) => void };   // ctx = { i, j, scene, rnd }
@@ -6751,6 +6846,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `hund` [feature 31] | Fin hund… (§10.21), at index 13: 12 bungalow dogs (the 7 trampoline lots among them) and Chispa at the farm, 13 names, each lying in its own lot, the ones beyond 75 m hidden; at the dog with the most others within 70 m, 2 or more awake at ≥ 45 fps; on Bobi's sidewalk `alert` inside the wall (lot-local z 1.3–3) and "VOFF! VOFF!"; through the gate (W 1.1 s) `bay` 1.1–1.8 m off, `placate` 1, "Fin hund… fin hund…"; walked at, it stands its ground (> 0.6 m); out through the gate again it never comes nearer the street than z 1.3, barks after him (`back`) and his hands come down; on the trampoline behind the house it gets round the house to under him (< 3.6 m), rears up, `placate` 2 with the mantra: Stig's first line "Snälla hund… sitt!", then the mantra, the owner's "¡Bobi! Hit!" from a door, "Tack… tack så mycket!", `calm` > 30 s, his hands down and no rush when he walks in again; up the farm tank's ramp (W 1.4 s) he is up at 1.95 and Chispa bays below him (< 5 m, on the ground), "¡Guau! ¡Guau!", the mantra pose, then "¡Chispa! ¡Ven aquí!"; on the roof of the car in Tango's drive he is up and Tango at him; Kasper with `groundCall` 4 s: a kick and a stomp at him change nothing (SKANDAL not up), then the call; at index 9 Pirre at him, `missions.begin()`: no dog visible, `placate` 0, `held` false; at index 0 (the flight level) no dog visible. Shots `hund_trottoar`, `_fin`, `_studsmatta`, `_visslar`, `_gard`, `_biltak`, `_kasper`, `_pudel` |
 | `butik`, `butikbil` [feature 34] | Bränsletillägg tillkommer – SunTrip-butiken (§10.23). `butik`, at index 6 (free roam, hawaii): the counter's group shown, its two solids live (the counter a wall), the clerk behind it, the greeting; E at the hat with 30 pta "Det räcker inte ens till bränsletillägget.", with 60 the total 225 and nothing paid; with the purse the hat on the Trapp Trull account (75 paid, 2 instalments, the receipt's 7 lines one by one, its text, the sell line, Stig's sigh after the total, the hat with `hatSun` on him, headTop up, the bag shown); "Paketet!" walking 8 m off, once a departure, again after coming back; E at the bag; no call once taken; the glasses 275, the shirt 350, the nose guard 50 (its receipt, "Nässkydd – det får du också gratis.", "Gratis… plus bränsletillägg."); the full look (`worn` `hatt glas skjorta nasa`, shades, no glasses, dots, the nose guard, no suit); E takes the glasses off (his own back, free) and on; the instalments held back while short, then 2 of 3 and 3 of 3 (75 each, the account paid); Ole's line within 7 m; the save's `shop` and a reload (not fresh): all of it on him, Ole silent; a mission start (friskotek): group, bag and clerk gone, solids dead, his own hawaii look; an abort: back; `rio` takes no layer, the island outfit takes it again. `butikbil`, at index 9 with the full look: seated in hatch, sedan, taxi, wagon, pickup, grisbil, van, icecream, guardia and bus, the head with the hat under `roofY` and its x extent within the body's half width, a shot of each from the driver's side; on foot again with the look |
 | `brodrost`, `rostar` [feature 33] | Kontrollerad av G17 (§10.24). `brodrost`, at index 9 (free roam): the seven toasters in `IDS` order; none on the minimap from the golf, the pool bar's one there (one marker) with pale bread up and no label; its prompt from the front; E starts a try (the first at `secs`): the card (title, bar, zone, marker), "Upp med brödet!", bread and lever down; E early: pale, "Blekt. Underkänd.", the toast, nothing collected; left alone: burnt at the end, Stig flailing with his line, the toast, and Majsan's or Siv's "Bara de inte är ingenjörer." from the pool deck; E (a real key) in the field: `ok`, +250, `G17-brödrostar 1/7`, Stig's cheer and line, the label on and golden bread, no prompt or marker there; the porter's: the sweep × 0.92, a try off 4 m away; a mission start: the try off, none usable, no markers; at index 8 the pool bar's prompt at its front over Berra's talk (3.6 m); all seven: 7 × 250 + 1000 and Majsan on the radio, the legend 7/7; the save (v 1, the set's seven ids) and a reload with all seven labelled; a v 1 save without the set loads with none; the flight level inert. `rostar`, at index 13: each toaster on its landmark (top and yaw), its prompt from 0.9 m in front, shots coming up (3 m) and close beside it, asnan's cut to the FERRETERÍA front, the pool bar's in its three looks |
+| `rum107`, `troferum` [feature 38] | Rum 107 fylls med resans minnen (§10.25). `rum107`, at index 9 (free roam): the room bare on a fresh save (7 gadget, 7 fin and 3 julafton meshes built, none shown); E at the shelf with nothing found: "Inget att kontrollera.", he faces it, the card `Oles prylar 0/7 · Hajfenor 0/7`, Ole's "Hylla er tom…"; four gadgets and three fins collected (`collect`) show at once, each gadget in its own place 0.5 m apart standing on the shelf's 2.75; no prompt for `gap` s, then "Kontrollerad av G17.", 4/7 · 3/7 and "Fire av sju! Snart er hylla full."; before the unlocks the nap answers at the giraffe's spot and no boombox; all seven: the samba unlock, "Spela samba" sets and saves the samba with Ole's "Ja, det er fint! Samba!", no prompt while it plays, back with the sol tune; after `unlock('bodega')` the suitcase, the giraffe and the pack; E at the giraffe: held, the bed's hidden, "Precis en sån…", the prompt "Ställ tillbaka giraffen", back after `holdSecs`, at once 3 m off and with E; the nap beside his bed; a full shelf's "Alle sju! Nå er hylla full."; a reload dresses the room; at index 12 a mission start leaves none usable and the giraffe back; the flight level inert. `troferum`, at index 13: the room from the patio (`rum107Cam` at 5.5 and 7.5 m, buss17's and julafton's cuts) bare, mid-trip and after julafton, close shots of the shelf, the pile and the beds, Stig at the shelf, Stig with the giraffe, and the nap with the giraffe by his head |
 | `badgaster`, `stekt` [feature 32] | Badgäster på solstolarna (§10.22). `badgaster`, at index 6 (free roam): bodies only on taken sun loungers, their hips on the seat, at most `max` (10), none on Berra's or Robban's; on the main beach no taken lounger within `r` left empty nearer than the bodies (shot `badgaster_strand`); one rebuilt body's ms logged. The burn: three loungers in the z 250 row; a bather lain past `burn[0]` stays pale while in view within `seenR` and is pink once out of view; past `burn[1]` lobster red (skins from `skins`; shot `badgaster_stadier`). A kick at a free lounger and at a taken one give the same SKANDAL; the bather off it in a backward somersault (`flip` < 0) along the lounger's facing (vz > 2), an OUCH bark, a GETUP bark on his feet (shots `badgaster_kullerbytta`, `badgaster_upp`), gone once Stig is 30 m off; no `onCharHit`, no "hit" sorry. His car at 10 m/s through a taken lounger: SKANDAL 1 × 1.2 × gain only, the bather off along the car (vz > 5; shot `badgaster_bil`). The lounger back after its smash (respawn 0, him 100 m off): `n` + 1, a new seed, stage 0, a pale newcomer on it. At 22:00 nobody (after a cut); at 10:00 `dayN` + 1 and a new crowd. A mission start (friskotek) takes every body away at once, none in the mission; the flight level (index 2) makes none. `stekt`, at index 6: Berra and Robban `lying` on their loungers, outfit `stekt` (skin `STEKT_SKIN`), `slump`, busy, spot `stekt`; both snore within 9.5 s (shots `stekt_bar`, `stekt`); the E point `stekt:wake` at Berra's feet: Stig's line, then Berra's with `lift` > 0.6 (shot `stekt_fem_minuter`), then Robban's, in that order, and `lift` back under 0.1; a kick at Berra's lounger: `flung`, then `down` with his timer held (> 100), still `stekt`, only snores from him (shot `stekt_sparkad`); the lounger back with him 100 m off: on it again. A mission start (friskotek): both `normal`, outfit `sol`, no slump, within 2.5 m of their homes at the bar. Index 7: on their loungers; 5 and 8: not |
 | `talk` [Phase 0] | `autoDialog = false`, walk to Ole at `gateQueue`, E, Space twice |
 | `fullstory` [Phase 0b] | swaps the literal §8 missions (`tools/fixtures/full-missions.js`) into `MISSIONS` and plays all 13 per §16.3 (`FROM`/`TO` as `story`); must end `#13 idle`, `RESULT: PASS` |
@@ -6835,6 +6931,7 @@ fatagaDukar golf bungalow bygge dromplan airport hittegods busBay bagageband dyn
 + SunTrip-butiken's counter front `butik` (feature 34, §10.23)
 + the G17 toasters `brodrost_ferreteria brodrost_poolbar brodrost_marknad brodrost_portier
 brodrost_supermercado brodrost_grillpaco brodrost_hittegods` (feature 33, §10.24)
++ room 107's E spots `rum107Hylla rum107Giraff rum107Radio` (feature 38, §10.25)
 + collectibles `pryl_klocka pryl_poolpen pryl_kalkylator pryl_kniv pryl_kamera pryl_glasogon
 pryl_pung fena_flamenco fena_suntrip fena_plaza fena_golf fena_bungalow fena_hamn fena_hav` + Rio
 `rioBoat rioCam`.
@@ -8544,3 +8641,22 @@ the fixer's group.
   hard-coded fins; `hud.setObjective` takes `zoneColor`, and the bar's marker has a cream edge. No
   mission, stage kind, timer, fixture or calibration pool changed (no solid moved). Scenarios
   `brodrost`, `rostar` (§16.4).
+- Feature 38, "Rum 107 fylls med resans minnen" (`features/implemented/rum_107_troferum.md`,
+  2026-10-17): room 107 fills with the trip (§10.25; new `src/game/room107.js`, `RUM107` in
+  content/island.js; §1.6, §3, §6.3, §10.1, §10.3, §11.4, §14.1–14.3, §14.6, §14.7, §16.4, Appendix
+  A). World (§6.3): a keepsake shelf over the print in hotels.js `stigOleRoom` (top 2.75, no collider)
+  and `roomKeepsakes`, the collectibles' own models as meshes of their own, still, no beam, no
+  collider: Ole's seven gadgets at 0.45 on the shelf, each in its place (a gap for one not found); the
+  trodden fins flat in a pile before Stig's bed's foot, one per fin; after julafton (unlock `bodega`)
+  the suitcase by Ole's bed, the plastic giraffe on Stig's bed by the pillow and the SPORT-KNÄCKE pack
+  on Ole's. `worldHooks.rum107(collected, unlocked)` shows them; main.js `dressRoom107` calls it at
+  every pickup, unlock and load, so a loaded save shows the right room; `PRYL_IDS` exported from
+  pickups.js. With `missions.state === 'idle'`, on foot: E at the shelf (`rum107Hylla`): "Kontrollerad
+  av G17." [F*] or "Inget att kontrollera." [N], the collect card with both counts and Ole counting his
+  gadgets on the radio in bokmål [N]; E at the giraffe (`rum107Giraff`, after julafton): Stig holds it
+  up with "Precis en sån har jag önskat mig." [F*](t), "E Ställ tillbaka giraffen" puts it back (also
+  after 3.5 s or 2.5 m off); E at the boombox (`rum107Radio`, after the samba unlock, while the samba
+  is not playing): the samba, as the pause menu's choice, saved, with Ole's "Ja, det er fint! Samba!"
+  [F*]. Deviations: Ole on the radio, not in the room; the giraffe by the pillow, not at the bed's foot
+  (the nap); the toasters are not in the room. No mission, stage kind, timer, fixture or calibration
+  pool changed (no solid). Scenarios `rum107`, `troferum` (§16.4).

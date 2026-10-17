@@ -196,7 +196,7 @@ const PRYL = {
     g.cyl(0x3a8a3a, -0.1, -0.05, 0.09, 0.07, 0.02, 10, Math.PI / 2);
   },
 };
-const PRYL_IDS = Object.keys(PRYL);
+export const PRYL_IDS = Object.keys(PRYL);   // also the shelf order in room 107 (hotels.js roomKeepsakes)
 
 function fin(g) {        // inflatable shark fin on a float ring
   const F = 0x6a8aa8, B = 0xe8eef4;

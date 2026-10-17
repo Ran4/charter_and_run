@@ -41,6 +41,7 @@ import { Dogs } from './game/dogs.js';
 import { Bathers } from './game/bathers.js';
 import { SuntripShop } from './game/suntripShop.js';
 import { Toasters } from './game/toasters.js';
+import { Room107 } from './game/room107.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
 import { LEVELS, ISLAND_PALETTES } from './level.js';
@@ -194,6 +195,7 @@ class Game {
     this.bathers = new Bathers(this);     // free roam: tourists on the sun loungers, Berra and Robban fried (§10.22)
     this.shop = new SuntripShop(this);    // free roam: SunTrip-butiken on the office porch, its add-ons and his look (§10.23)
     this.toasters = new Toasters(this);   // free roam: the G17 toasters' timing game (§10.24)
+    this.room107 = new Room107(this);     // free roam: room 107's keepsake shelf, the giraffe and the boombox (§10.25)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -1239,6 +1241,7 @@ class Game {
     const first = !this.unlocked.has(name);
     this.unlocked.add(name);
     this.applyUnlock(name);
+    this.dressRoom107();
     const toast = (first && UNLOCKS[name].toast) || null;
     if (toast && !holdToast) hud.toast(toast);
     this.save();
@@ -1263,6 +1266,9 @@ class Game {
     if (u.witness) this.witnessOverride = u.witness;
     // u.tune: offered by the pause-menu Musik button once unlocked (cycleMusic); never auto-played.
   }
+  // Rum 107's keepsakes (feature 38, §10.25): the room shows what is collected and unlocked
+  // (hotels.js roomKeepsakes) after a pickup, an unlock and a load.
+  dressRoom107() { worldHooks.rum107?.(this.collected, this.unlocked); }
   // The Rio end card (§11.7; set built by rio.js at x = -3000, landmarks rioBoat/rioCam): a white
   // flash, then Stig (outfit rio), Majsan, Ole (rio) and Siv on the yacht's aft deck at sunset to
   // the samba, the film's opening card as the banner; another flash, back to the island at the
@@ -1423,6 +1429,7 @@ class Game {
       for (const c of list) if (this.collected[setName]?.has(c.id)) { if (COLLECTIBLES[setName].keep) c.mark(); else c.remove(); }
     }
     for (const u of this.unlocked) this.applyUnlock(u);
+    this.dressRoom107();
     if (this.homeOverrides && Object.keys(this.homeOverrides).length) this.placeNpcs(true);
   }
   resetSave() {
@@ -1497,6 +1504,7 @@ class Game {
     this.bathers.update(dt);
     this.shop.update(dt);
     this.toasters.update(dt);
+    this.room107.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);
@@ -1877,6 +1885,7 @@ class Game {
     const mp = c.mesh.position;
     if (set.keep) c.mark(); else c.remove();
     this.collected[setName].add(c.id);
+    this.dressRoom107();
     const n = this.collected[setName].size, total = set.items.length;
     this.addCoins(250);
     if (set.jingle === 'pryl') audio.jingle('pryl'); else audio[set.jingle]?.();

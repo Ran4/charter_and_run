@@ -11,6 +11,7 @@ import { THREE, PRIM, mat, GeoBuilder, MAT, toonMesh, skyDark } from '../../gfx.
 import { CURB } from '../layout.js';
 import { box } from '../collision.js';
 import { worldHooks } from '../registry.js';
+import { COLLECT_KINDS, PRYL_IDS } from '../../actors/pickups.js';
 
 const C = CURB;
 const PI = Math.PI;
@@ -485,7 +486,8 @@ function bed(f, x, z, w, blanket) {
   f.solid(x, z, w, 2.05, C + 0.55, 'furniture');
 }
 
-// Room 107: Stig-Helmer and Ole share it (overbooking). Two single beds, Ole's boombox.
+// Room 107: Stig-Helmer and Ole share it (overbooking). Two single beds, Ole's boombox, and over
+// the print the shelf for the trip's keepsakes (roomKeepsakes).
 function stigOleRoom(f, bx) {
   const z = ROOM_BACK + 1.05;
   bed(f, bx - 1.75, z, 1.0, 0x1e9aa0);
@@ -498,6 +500,77 @@ function stigOleRoom(f, bx) {
   f.box(ORANGE, bx, C + 1.65, ROOM_BACK + 0.05, 0.6, 0.6, 0.03);
   f.box(WOOD, bx - 2.55, C, -15.6, 0.8, 2.0, 1.4);                        // wardrobe
   f.solid(bx - 2.55, -15.6, 0.8, 1.4, 99, 'furniture');
+  // The keepsake shelf over the print, on two brackets; out of reach, so no collider.
+  f.box(WOOD, bx, KEEP.shelfTop - 0.05, ROOM_BACK + KEEP.shelfZ, 3.8, 0.05, 0.24);
+  for (const s of [-1, 1]) f.box(WOOD_D, bx + s * 1.65, KEEP.shelfTop - 0.27, ROOM_BACK + 0.09, 0.05, 0.22, 0.1);
+  roomKeepsakes(f, bx);
+}
+
+// Rum 107 fylls med resans minnen (free roam; feature 38, DESIGN §10.25). What the collectibles find
+// comes home to room 107: Ole's seven gadgets stand on the shelf, each in its own place (a gap for one
+// not found yet), and the fins Stig trod down lie flat in a pile by his bed's foot, one more for each;
+// after julafton (unlock 'bodega') his suitcase stands on the floor by Ole's bed, Majsan's plastic
+// giraffe on his bed and the SPORT-KNÄCKE pack (the one with the money in it) on Ole's. They are the
+// collectibles' own models (COLLECT_KINDS), still and without a beam, as meshes of their own (the
+// block's geometry is merged, so it cannot show one thing at a time), and none has a collider.
+// worldHooks.rum107(collected, unlocked) shows what is there (main.js `dressRoom107`: at a pickup, an
+// unlock and a load); ROOM107 holds the meshes, and `held` is the keepsake Stig has in his hand
+// (game/room107.js: the giraffe), hidden from its place meanwhile.
+const KEEP = {
+  shelfTop: C + 2.6, shelfZ: 0.16,                     // the board's top; its middle off the back wall
+  gadget: 0.45, gadgetGap: 0.5,                        // of their street size; between two places
+  fin: [-2.35, 2.6, 0.7, 0.14, 0.035],                 // the pile before his bed's foot: lx off bx, lz off ROOM_BACK, width, height of one, step
+  vaska: [2.4, 2.8, -0.45, 0.9],                       // lx, lz, yaw, scale (on the floor)
+  giraff: [-2.08, 0.35, 0.25, 0.45],                   // on Stig's bed by the pillow's outer end (his nap has his head beside it)
+  knacke: [1.65, 1.6, 0.3, 0.55],                      // flat on Ole's bed
+};
+export const ROOM107 = { gadgets: {}, fins: [], after: {}, held: null };
+function roomKeepsakes(f, bx) {
+  const scene = f.scene;
+  if (!scene) return;
+  const FLOOR = C + 0.02, BED = C + 0.55;
+  // Stood (or laid) with its lowest point on y, its middle at (lx, lz) of the room.
+  const put = (m, lx, y, lz) => {
+    m.position.set(0, 0, 0);
+    m.updateMatrixWorld(true);
+    const b = new THREE.Box3().setFromObject(m), c = b.getCenter(new THREE.Vector3());
+    m.position.set(f.wx(lx, lz) - c.x, y - b.min.y, f.wz(lx, lz) - c.z);
+    m.visible = false;
+    scene.add(m);
+    return m;
+  };
+  PRYL_IDS.forEach((id, k) => {
+    const m = COLLECT_KINDS.pryl.build(id);
+    m.scale.setScalar(KEEP.gadget);
+    m.rotation.y = f.yaw;
+    ROOM107.gadgets[id] = put(m, bx + (k - 3) * KEEP.gadgetGap, KEEP.shelfTop, ROOM_BACK + KEEP.shelfZ);
+  });
+  // Seven fins trodden flat, each turned a little further, one on top of the other.
+  const [fx, fz, fw, fh, step] = KEEP.fin;
+  for (let k = 0; k < 7; k++) {
+    const m = COLLECT_KINDS.fena.build();
+    const b = new THREE.Box3().setFromObject(m), sz = b.getSize(new THREE.Vector3());
+    m.scale.set(fw / Math.max(sz.x, sz.z), fh / sz.y, fw / Math.max(sz.x, sz.z));
+    m.rotation.y = f.yaw + k * 0.95;
+    ROOM107.fins.push(put(m, bx + fx + Math.sin(k * 2.4) * 0.06, FLOOR + k * step, ROOM_BACK + fz + Math.cos(k * 2.4) * 0.06));
+  }
+  const after = (kind, [lx, lz, ly, s], y, flat = false) => {
+    const m = COLLECT_KINDS[kind].build();
+    m.scale.setScalar(s);
+    if (flat) m.rotation.set(-PI / 2, f.yaw + ly, 0, 'YXZ');   // the label up
+    else m.rotation.y = f.yaw + ly;
+    ROOM107.after[kind] = put(m, bx + lx, y, ROOM_BACK + lz);
+  };
+  after('vaska', KEEP.vaska, FLOOR);
+  after('giraff', KEEP.giraff, BED);                     // its near legs in the pillow
+  after('knacke', KEEP.knacke, BED, true);
+  worldHooks.rum107 = (collected, unlocked) => {
+    for (const [id, m] of Object.entries(ROOM107.gadgets)) m.visible = !!collected?.prylar?.has(id);
+    const n = collected?.fenor?.size || 0;
+    ROOM107.fins.forEach((m, k) => { m.visible = k < n; });
+    const home = !!unlocked?.has('bodega');
+    for (const [kind, m] of Object.entries(ROOM107.after)) m.visible = home && ROOM107.held !== kind;
+  };
 }
 
 // Room 113: director Angerud's. A double bed, his "röka" on the night stand, his suitcase.

@@ -57,6 +57,13 @@ export const ISLAND_LANDMARKS = {
   // pillow by the back wall). The nap's E spot, and Ole's and Stig's places are offsets from it
   // (DAY.nap). Not a standing spot: `teleport` would put him on the mattress.
   stigSang: { b: [3, 3], at: [-19.75, -20.35], yaw: 0 },
+  // Rum 107 fylls med resans minnen (free roam, §10.25): the room's three E spots, each where Stig
+  // stands, facing what it is for (hotels.js stigOleRoom): the keepsake shelf over the print (between
+  // the beds' feet), the plastic giraffe on his bed by the pillow (from the gap between the bed's head
+  // and the dresser; the nap's spot is the middle of that side) and Ole's boombox on the dresser.
+  rum107Hylla: { b: [3, 3], at: [-18, -18.9], yaw: PI },
+  rum107Giraff: { b: [3, 3], at: [-18.85, -21.05], yaw: -PI / 2 },
+  rum107Radio: { b: [3, 3], at: [-18, -20.45], yaw: PI },
   // (3,2) Hotel SunTrip
   suntrip: { b: [3, 2], at: [-14, 24], yaw: PI },     // faces the office porch (C1)
   // Bränsletillägg tillkommer (free roam, §10.23): Stig's spot in front of the middle of SunTrip-
