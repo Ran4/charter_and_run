@@ -696,7 +696,7 @@ function flamencoPorch(f, glow, rnd) {
   f.box(WOOD, 2, C, -11.2, 4.0, 1.05, 0.8);
   f.box(TERRA, 2, C + 0.1, -10.79, 3.9, 0.7, 0.02);
   f.box(TRIM, 2, C + 1.05, -11.2, 4.2, 0.08, 0.95);
-  f.sphere(GOLD, 3.3, C + 1.18, -10.95, 0.16, 0.1, 0.16);       // the bell
+  // The bell (3, -10.95) is game/receptionBell.js's own mesh: it plings and goes under the desk (§10.37).
   f.box(0x8a2a2a, 1.0, C + 1.13, -11.0, 0.5, 0.05, 0.35);        // guest book
   f.box(WOOD_D, 2, C, -12.65, 4.2, 2.6, 0.2);
   for (let r = 0; r < 4; r++) for (let q = 0; q < 8; q++) {

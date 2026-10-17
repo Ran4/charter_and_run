@@ -52,6 +52,7 @@ import { Gags } from './game/gags.js';
 import { BeachDream } from './game/beachDream.js';
 import { GuardiaJeep } from './game/guardiaJeep.js';
 import { Lighthouse } from './game/lighthouse.js';
+import { ReceptionBell } from './game/receptionBell.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
 import { LEVELS, ISLAND_PALETTES } from './level.js';
@@ -217,6 +218,7 @@ class Game {
     this.jeep = new GuardiaJeep(this);    // free roam after the bodega: the borrowed Guardia jeep, its siren on H (§10.34)
     this.sirenYield = null;               // the jeep's siren the traffic gives way to: { x, z, fx, fz, r, … } (drivers.js)
     this.fyren = new Lighthouse(this);    // free roam: up Faro de Maspalomas, the mantra on the gallery 51 m up (§10.35)
+    this.bell = new ReceptionBell(this);  // free roam: the queue at Flamenco's reception, the bell's tenth pling (§10.37)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -796,6 +798,7 @@ class Game {
     out.push(...this.party.extras);   // the grisfest's band and tourists (§10.18)
     out.push(...this.bathers.loose);  // bathers off their loungers (§10.22)
     out.push(...this.mic.extras);     // the tourists come to hear Stig at the SunTrip stage (§10.30)
+    out.push(...this.bell.extras);    // the departing guests queueing at Flamenco's reception (§10.37)
     return out;
   }
 
@@ -1555,6 +1558,7 @@ class Game {
     this.dream.update(dt);
     this.jeep.update(dt);
     this.fyren.update(dt);
+    this.bell.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);
@@ -1757,6 +1761,7 @@ class Game {
     this.party.step(h);   // the grisfest's band and tourists (§10.18)
     this.bathers.step(h); // bathers off their loungers (§10.22)
     this.mic.step(h);     // the tourists at the SunTrip stage (§10.30)
+    this.bell.step(h);    // the queue at Flamenco's reception (§10.37)
     this.carsVsPeople();
   }
 
@@ -1766,9 +1771,9 @@ class Game {
     let broke = null, bowled = false;
     // A fruit stall is the car's only (`carOnly`, §10.19).
     for (const prop of propsNear(x, z, r)) { if (prop.def.carOnly) continue; const b = breakProp(prop, dx * 8, dz * 8, this); if (b && !broke?.def.explode) broke = b; }
-    // Pedestrians, the grisfest's band and tourists (§10.18), bathers off their loungers (§10.22) and
-    // the tourists at the SunTrip stage (§10.30).
-    const people = (this.levelDef.sim.peds ? this.peds.map((ped) => ped.char) : []).concat(this.party.extras, this.bathers.loose, this.mic.extras);
+    // Pedestrians, the grisfest's band and tourists (§10.18), bathers off their loungers (§10.22), the
+    // tourists at the SunTrip stage (§10.30) and the queue at Flamenco's reception (§10.37).
+    const people = (this.levelDef.sim.peds ? this.peds.map((ped) => ped.char) : []).concat(this.party.extras, this.bathers.loose, this.mic.extras, this.bell.extras);
     for (const c of people) {
       if (c.state !== 'normal' || Math.abs(c.y - y) > 1.6 || dist(c.x, c.z, x, z) > r + 0.4) continue;
       c.fling(dx * 7 + (c.x - x) * 2, 5, dz * 7 + (c.z - z) * 2);
@@ -1852,12 +1857,12 @@ class Game {
   // the rollerskier's laps (§10.12), the pool fest's dancers and porter (§10.13), Majsan on her round
   // with the ticket pad or Angerud in the tow scene (§10.17), the grisfest's evening (§10.18), the
   // souvenir seller swearing at a smashed fruit stall (§10.19), the crowd at the SunTrip stage
-  // (§10.30), Herr Storch filming the stork (§10.31), someone in a gag's scene (§10.32) or Siv or
-  // Majsan on the sand by Stig's towel (§10.33). syncAll gives such an NPC no wave, turn or chatter, and
-  // the gang's talk leaves them be (§10.28).
+  // (§10.30), Herr Storch filming the stork (§10.31), someone in a gag's scene (§10.32), Siv or
+  // Majsan on the sand by Stig's towel (§10.33) or the porter ringing for the site manager (§10.37).
+  // syncAll gives such an NPC no wave, turn or chatter, and the gang's talk leaves them be (§10.28).
   npcPosed(k) {
     return !!this.missions.idlePose(k) || this.berraJob.posed(k) || this.judges.posed(k) || this.film.posed(k) || this.eslov.posed(k) || this.fest.posed(k) || this.lapp.posed(k) || this.party.posed(k)
-      || this.stands.posed(k) || !!this.mic?.posed(k) || this.birds.posed(k) || !!this.gags?.posed(k) || !!this.dream?.posed(k);
+      || this.stands.posed(k) || !!this.mic?.posed(k) || this.birds.posed(k) || !!this.gags?.posed(k) || !!this.dream?.posed(k) || !!this.bell?.posed(k);
   }
 
   syncAll(dt, title) {

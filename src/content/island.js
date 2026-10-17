@@ -17,7 +17,8 @@
 // that flies from La Charca to the Storches on the beach with Fru Storch's correction there (§10.31),
 // two gags on E, Ole's flash at his camera bag and Stig's cup under Viking Bar's lamp (§10.32), and
 // the towel at the water's edge, Stig's daydream in the surf, the wave and the visitors on the sand
-// (§10.33), and the borrowed Guardia jeep, its siren on H and the traffic giving way to it (§10.34).
+// (§10.33), and the borrowed Guardia jeep, its siren on H and the traffic giving way to it (§10.34),
+// and the queue at Flamenco's reception and the bell that answers on its tenth pling (§10.37).
 
 export const HOMES_ISLAND = {
   ole: ['flamenco', 2.0, 1.0, 0],     // yaw 0: under the pergola, facing the pool (flamenco faces π)
@@ -1007,6 +1008,41 @@ export const FYREN = {
     orbit: { r: 7.4, h: 2.6, look: 1.2, turn: 0.004, max: 1.1 },
     pose: { r: 6.0, h: 1.4, look: 1.5 },
     vista: { back: 0.45, side: 0, h: 3.4, out: 34, down: 15, still: 0.8, face: 0.9, turn: 0.003, max: 0.6 },
+  },
+};
+
+// Ringklockan i receptionen – "Och när ska vi lämna rummen?" (free roam, DESIGN §10.37;
+// game/receptionBell.js). Places are block-local to `block` (Hotel Flamenco, as in
+// world/blocks/hotels.js). On the island with no mission running (`missions.state === 'idle'`) three
+// departing guests (last week's, not Stig's party) queue at the porter's desk (`queue.spots`, each
+// facing the one ahead, the first the porter at `lm`), a suitcase at each one's right hand (`caseOut`
+// m out, solid while the queue is out); now and then, Stig within `askR` m of the porter, one of them
+// asks `ask` and the porter answers `momento` `replyAt` s later. The bell on the desk (`bell`, the
+// counter top at `top`): E within `r` m plings it, at most every `rest` s, and the porter answers
+// `momento` `answerAt` s on; nothing else happens until the `goal`th pling: the porter turns to the key
+// board and rings for the site manager, Lasse answers in the radio box (`lasse`), the first guest asks
+// again (`ask`), Stig mumbles `sorry` and the porter puts the bell under the desk (`call`: when, in s
+// after that pling). Once Stig has been `backR` m away with the desk out of view the bell is back, the
+// hotel's hand-written card (`signText`) beside it (`sign`) for the rest of the session. Nothing is
+// saved. Invented (§1.6): the queue in free roam, the bell's ten plings, the call, the card; the lines
+// are the film's, relocated, and Stig's sorry.
+export const RINGKLOCKA = {
+  block: [3, 3], lm: 'flamencoRecepcion', porter: 'portier', porterR: 1.5,
+  bell: [3.0, -10.95], top: 1.28, sign: [2.45, -10.88],
+  r: 1.2, priority: -1, rest: 0.4, tapSecs: 0.45, goal: 10, answerAt: 0.35, quietSecs: 6,
+  backR: 20, popR: 45, sorryR: 12,
+  prompt: '<b>E</b> Plinga på klockan',                                             // [N]
+  pling: '*pling*',                                                                  // [N] the bell's sound, over it
+  momento: 'Momento.',                                                               // [F*] the porter's line in the sea-view scene (research-plot.md:253)
+  lasse: 'Klockan 12. Ställ väskorna utanför receptionen.',                         // [F*] Lasse's answer in the hotel interlude (research-plot.md:229)
+  ask: 'Och när ska vi lämna rummen?',                                               // [F*](t) the departing guests' question (research-plot.md:229, :231)
+  sorry: 'Förlåt…',                                                                  // [N] Stig
+  signText: 'PLINGA EN GÅNG\nTOQUE UNA VEZ',                                         // [N] the hotel's card
+  call: { turn: 0.5, ring: 0.7, lasse: 2.3, back: 2.8, ask: 4.6, sorry: 6.8, take: 7.8, takeSecs: 0.6, done: 8.8 },
+  queue: {
+    seed: 5959, walk: 1.3, askR: 9, every: [10, 16], replyAt: 1.3, lookFrom: 4, lookSecs: 1.8,
+    spots: [[0.7, -9.8], [-0.35, -9.4], [-1.4, -9.0]],
+    caseOut: 0.8, caseR: 0.32, cases: [0x8a5a3a, 0x6e4529, 0x9a6a3e],
   },
 };
 

@@ -1,10 +1,6 @@
 # Gör dessa grejer (flytta filen till features/implemented/ och uppdatera den när du är klar, och
 # flytta den till "färdiga features"-sektionen nedan)
 # markörer: ⟨par N⟩ = de två raderna med samma N körs samtidigt (var sin worktree/gren, sedan rebase på main och push), ⟨solo⟩ = körs ensam; ta grupperna uppifrån och ned
-
-# Vänta med dessa tills spelaren säger till
-# markörer som ovan: ⟨par N⟩ = de två raderna med samma N körs samtidigt, ⟨solo⟩ = körs ensam; här från par 6 och uppåt så att taggarna är unika när rader köas en och en
-- features/ringklockan_och_kon.md – 59. Ringklockan i receptionen – ”Och när ska vi lämna rummen?” [M] ⟨par 9⟩
 - features/kyrkfrid.md – 60. Kyrkfrid i Templo Ecuménico [M] ⟨solo⟩
 - features/pizza_racern.md – 69. Gatlopp mot pizza-racern – mamma åker med [L] ⟨solo⟩
 - features/lana_rullskidorna.md – 71. Låna rullskidorna – åk fort på asfalt [L] ⟨solo⟩
@@ -20,6 +16,9 @@
 - features/lopande_bandet.md – 109. Stig på löpande band – sortera tomater i packhuset [M] ⟨par 13⟩
 - features/strandvolley.md – 111. Strandvolley mot Berra och Robban [M] ⟨par 13⟩
 - features/ta_ett_kort_pa_oss.md – 110. ”Kan du ta ett kort på oss?” – turistparet vid fyren [M] ⟨solo⟩
+
+# Vänta med dessa tills spelaren säger till
+# markörer som ovan: ⟨par N⟩ = de två raderna med samma N körs samtidigt, ⟨solo⟩ = körs ensam; här från par 6 och uppåt så att taggarna är unika när rader köas en och en
 - features/guaguan_fotbollssnack.md – 112. Guaguan – åk buss och snacka fotboll [M] ⟨par 14⟩
 - features/hittelon_pa_hittegods.md – 116. Hittelön – de borttappade väskorna [M] ⟨par 14⟩
 - features/systrarnas_balkong_whisky.md – 117. Systrarnas balkong – ”Vi är väl inte på nåt jäkla vernissage?” [M] ⟨par 15⟩
@@ -71,3 +70,4 @@
 - features/implemented/guardia_jeepen.md – 51. Låna Guardia-jeepen – ”Ursäkta, är det din bil?” [M]
 - features/implemented/fyren_mantrat.md – 52. Uppför fyren – mantrat på 51 meters höjd [M]
 - features/implemented/garderoben_i_rum_107.md – 67. Garderoben och bergsprängaren i rum 107 [S]
+- features/implemented/ringklockan_och_kon.md – 59. Ringklockan i receptionen – ”Och när ska vi lämna rummen?” [M]

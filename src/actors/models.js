@@ -1050,7 +1050,7 @@ function heldPose(m, st, t, place = false) {
   const h = m.def.held;
   if (!h || !PROP_GEO[h]) return;
   const [R, L] = m.arms;
-  const busy = st.wings || st.cupUp || st.cupHeld || st.push || st.rub || st.hold || st.flail || st.oath || st.dance || st.laugh || st.mirror || st.film || st.camShow || st.giraffe || st.butterKnife || st.ticket || st.carryOver || st.shoeOff || st.calc || st.groda || st.placate || st.cheer || st.wave || st.kick > 0;
+  const busy = st.wings || st.cupUp || st.cupHeld || st.push || st.rub || st.hold || st.flail || st.oath || st.dance || st.laugh || st.mirror || st.film || st.camShow || st.giraffe || st.butterKnife || st.ticket || st.carryOver || st.shoeOff || st.calc || st.groda || st.placate || st.tap || st.cheer || st.wave || st.kick > 0;
   const pose = !place && !busy;
   const moving = st.speed > 0.3;
   switch (h) {
@@ -1165,6 +1165,7 @@ function poseFlags(m, st, t) {
     }
   }
   if (st.cupUp) R.rotation.set(-2.75, 0, -0.08);   // an empty hand up (the stowers at the rack, the carried juice)
+  if (st.tap) { R.rotation.set(-1.05, 0, 0.16); m.neck.rotation.x = 0.26; }   // a pling on the reception's bell (game/receptionBell.js)
   if (st.cupHeld) {
     // A paper cup in the right hand: raised from a seat (Stig's "Ja." to the call button, §8.3),
     // held out to the row standing (the trolley stewardess serving); with `cupUp` raised standing

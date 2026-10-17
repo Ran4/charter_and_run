@@ -391,6 +391,15 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   ögonen är det natt, lanterninen lyser och ljuskäglan sveper förbi över hans huvud. Ner kommer du med
   **E** vid lanterninens dörr ("… och lika många ner.") eller med R. Räcket är stängt runt om och man
   kan inte hoppa där uppe. Under en jakt med Guardia Civil är dörren stängd.
+- **Ringklockan i receptionen**: vid portierns disk på Hotel Flamenco står tre avresande gäster med
+  resväskor i kö mellan uppdragen, förra veckans gäster och inte Stigs sällskap. Då och då frågar
+  någon "Och när ska vi lämna rummen?", och portiern svarar "Momento.". Tryck **E** vid klockan på
+  disken (Plinga på klockan): pling, och portiern säger "Momento." igen. Ingenting händer, ända tills
+  det tionde plinget i rad. Då ringer portiern efter platschefen, Lasse svarar i radiorutan "Klockan
+  12. Ställ väskorna utanför receptionen.", och direkt efteråt frågar nästa gäst i kön samma sak igen.
+  Stig mumlar "Förlåt…" och portiern lägger klockan under disken. När Stig har varit borta en stund
+  står den där igen, med en handskriven lapp bredvid: PLINGA EN GÅNG · TOQUE UNA VEZ. Under
+  uppdragen är kön borta och klockan bara en klocka.
 
 ## Vad är påhittat?
 
@@ -504,6 +513,9 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
 - klättringen upp i Faro de Maspalomas, svindeln på galleriet och Levanders övning mot lanterninen med
   slutna ögon tills det blir natt (fyren finns på riktigt men är ingen filmplats: övningen gör Stig på
   flygrädsleklinken, och mantrat säger han till Majsan en varm natt på ön)
+- kön av avresande gäster vid Flamencos reception, ringklockan som först svarar på tionde plinget,
+  portierns samtal till Lasse och lappen PLINGA EN GÅNG (i filmen frågar gästerna Lasse på hotellet
+  medan planet flyger söderut, och portierns "Momento." hör till scenen med havsutsikten)
 - fårrusningen i Fataga, kappkörningen mot nattbussen och porslinskrosset på tid
 - att samla ihop julfestgästerna
 - Oles prylar och hajfenorna som samlarföremål, utspridda över ön
@@ -617,6 +629,7 @@ src/game/gags.js                Gags på E in free roam: Ole's flash at his came
 src/game/beachDream.js          Strandkyssen i bränningen in free roam: the towel, the daydream with Majsan's double, the wave, Siv or Majsan on the sand
 src/game/guardiaJeep.js         Låna Guardia-jeepen in free roam: the loan and its SKANDAL, the bust's question and tow, the siren on H, the traffic giving way
 src/game/lighthouse.js          Uppför fyren in free roam: the stairs up the lighthouse, the gallery's cameras and vertigo, the exercise, the night
+src/game/receptionBell.js       Ringklockan i receptionen in free roam: the queue at Flamenco's desk, the bell's plings, the tenth's call, the card
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
@@ -625,7 +638,7 @@ tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, 
                                 artig, grisar, bagage, lapplisa, torsdag, frukt, hopptorn, hund,
                                 badgaster, butik, brodrost, rum107, solkram, skjortbyte,
                                 stunthopp, prata, takhopp, mikrofon, faglar, gags, strandkyssen,
-                                guardiajeep, fyren, klader, calibrate, calibflight)
+                                guardiajeep, fyren, klader, ringklocka, calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
 tools/pool.mjs                  re-derives every random stage's timer from the ledger
@@ -686,6 +699,7 @@ node tools/shot.mjs strandkyssen strandefter  # the towel's daydream: the dream,
 node tools/shot.mjs guardiajeep jeepsiren     # the borrowed Guardia jeep: the loan, his, the bust's question and tow, a mission start; the siren, the traffic giving way, Angerud
 node tools/shot.mjs fyren                # up the lighthouse: the gallery's solids, the stairs and the clock, the views, the railing, the exercise, the long blink, down, R, a pursuit, a mission start
 node tools/shot.mjs klader kladshots     # room 107's wardrobe and boombox: the outfits in turn, the shot, the save, a mission start, Skjortbytet, the samba on and off; shots
+node tools/shot.mjs ringklocka ringshots # the reception's queue and bell: the queue unseen, its suitcases, the prompt, the toaster beside it, plings, the tenth's call, the card, a mission start; shots
 node tools/shot.mjs fullstory kinds      # the literal §8 missions and the stage-kind checks
 node tools/shot.mjs calibrate calibflight  # timer and FLYGRÄDSLA calibration (slow; see DESIGN §8, §16.4)
 node tools/pool.mjs                      # random-stage timers from the raw runs in notes/calibration-samples.md

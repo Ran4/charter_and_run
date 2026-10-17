@@ -121,7 +121,11 @@ opens with a summary of the rounds and the timer changes.
     at room 107's wardrobe between missions with no pursuit: the outfits in turn (the suit and the
     Arlanda coat, the shirt after buss17, the Rio jacket after the end), the change's shot, the lines,
     the save, the story's outfit in a mission (`islandWear`), Skjortbytet's spot kept; the boombox's
-    locked answer and the samba on and off, DESIGN §10.36)
+    locked answer and the samba on and off, DESIGN §10.36), `ringklocka ringshots` (Ringklockan i
+    receptionen, the departing guests' queue at Flamenco's desk between missions: out unseen, the
+    suitcases solid, "Och när ska vi lämna rummen?" and "Momento.", E at the bell, the toaster beside it
+    keeping its front, the tenth pling's call with Lasse on the radio, "Förlåt…", the bell under the desk
+    and back with the card, a mission start, DESIGN §10.37)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

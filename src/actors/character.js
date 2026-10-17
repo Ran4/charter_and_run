@@ -9,13 +9,14 @@
 // `placate`: 1 hands up to a barking watchdog, 2 arms out out of its reach (game/dogs.js).
 // `rub`: 1 the hands on the shoulders of someone shorter in front, 2 rubbing (the sun cream, game/solkram.js).
 // `eyesShut`: the lids down (the exercise on the lighthouse gallery, game/lighthouse.js).
+// `tap`: the right hand down on the bell on a desk, his head bent to it (game/receptionBell.js).
 
 import { buildCharacter, animateCharacter } from './models.js';
 import { queryBlocks, circleVsBlock, groundAt, groundInfo, topAt, RAMP } from '../world/collision.js';
 import { dampAngle, yawTo } from '../util.js';
 
 export const STEP = 0.45;
-export const ANIM_FLAGS = ['wings', 'cupUp', 'cupHeld', 'push', 'planeSeat', 'hold', 'flail', 'oath', 'dance', 'laugh', 'slump', 'shoeOff', 'mirror', 'film', 'camShow', 'giraffe', 'butterKnife', 'carryOver', 'glide', 'swan', 'calc', 'ski', 'groda', 'ticket', 'leap', 'bomb', 'placate', 'rub', 'eyesShut'];
+export const ANIM_FLAGS = ['wings', 'cupUp', 'cupHeld', 'push', 'planeSeat', 'hold', 'flail', 'oath', 'dance', 'laugh', 'slump', 'shoeOff', 'mirror', 'film', 'camShow', 'giraffe', 'butterKnife', 'carryOver', 'glide', 'swan', 'calc', 'ski', 'groda', 'ticket', 'leap', 'bomb', 'placate', 'rub', 'eyesShut', 'tap'];
 export const GRAV = 24;
 const _blocks = [], _hit = {};
 

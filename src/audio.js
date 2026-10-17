@@ -289,6 +289,8 @@ export const audio = {
   chime() { this.tone(659, 0.5, 'sine', 0.1); this.tone(1318, 0.3, 'sine', 0.015); this.tone(523, 0.8, 'sine', 0.1, null, 0.4); this.tone(1046, 0.4, 'sine', 0.015, null, 0.4); },
   // The call button.
   pling() { this.tone(1300, 0.35, 'sine', 0.12); this.tone(2600, 0.12, 'sine', 0.02); },
+  // The porter's desk phone ringing for the site manager (the reception's bell, §10.37): two trills.
+  phone() { for (const d of [0, 0.55]) for (let k = 0; k < 10; k++) this.tone(k % 2 ? 1180 : 960, 0.028, 'square', 0.035, null, d + k * 0.03); },
   // PA "ding-dong" before an announcement.
   dingdong() { this.tone(659, 0.45, 'sine', 0.11); this.tone(1318, 0.2, 'sine', 0.012); this.tone(523, 0.45, 'sine', 0.11, null, 0.45); this.tone(1046, 0.2, 'sine', 0.012, null, 0.45); },
   // The metal-detector arch.
