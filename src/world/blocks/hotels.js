@@ -577,16 +577,17 @@ function roomKeepsakes(f, bx) {
 // Skjortbytet (free roam; feature 36, DESIGN §7.2): the wardrobe inside room 107's door, its front at
 // local x `fx`, facing into the room (+x). Shut it is the room's box with a seam and two knobs on its
 // front; open (game/closet.js: `worldHooks.wardrobe(hang)`) the two leaves stand out into the room
-// over a dark inside, a mirror on the right-hand one, and `hang` ('kostym' | 'hawaii') hangs on the
-// hanger: the suit or the hawaii shirt and shorts. null shuts it. Meshes of their own (the block's
-// geometry is merged), no colliders: Stig stands between the leaves.
+// over a dark inside, a mirror on the right-hand one, and `hang` ('kostym' | 'hawaii' | 'arlanda' |
+// 'rio') hangs on the hanger: the suit, the hawaii shirt and shorts, the Arlanda coat with the cap on
+// the hat shelf, or the white Rio jacket (feature 67's wardrobe, game/room107.js). null shuts it.
+// Meshes of their own (the block's geometry is merged), no colliders: Stig stands between the leaves.
 export const WARDROBE = { open: null, hang: {} };
 function wardrobe(f, fx, z) {
   const scene = f.scene;
   f.box(WOOD_D, fx + 0.006, C + 0.08, z, 0.012, 1.84, 0.025);                              // the seam
   for (const s of [-1, 1]) f.box(GOLD, fx + 0.012, C + 1.02, z + s * 0.07, 0.025, 0.07, 0.035);   // knobs
   if (!scene) return;
-  const O = new GeoBuilder(), K = new GeoBuilder(), H = new GeoBuilder(), a = 0.26, L = 0.68;
+  const O = new GeoBuilder(), K = new GeoBuilder(), H = new GeoBuilder(), A = new GeoBuilder(), R = new GeoBuilder(), a = 0.26, L = 0.68;
   f.box(0x3a2a20, fx + 0.035, C + 0.07, z, 0.02, 1.86, 1.3, 0, O);                      // the inside
   f.box(WOOD_D, fx + 0.05, C + 1.82, z, 0.02, 0.03, 1.3, 0, O);                          // the hat shelf
   for (const s of [-1, 1]) {
@@ -595,14 +596,15 @@ function wardrobe(f, fx, z) {
     f.box(WOOD, fx + dx * L / 2, C + 0.06, hz + dz * L / 2, L, 1.88, 0.035, -s * a, O);
     if (s > 0) f.box(0xbcd8e8, fx + dx * 0.36 + Math.sin(a) * 0.02, C + 0.75, hz + dz * 0.36 - Math.cos(a) * 0.02, 0.4, 0.95, 0.01, -a, O);   // the mirror
   }
-  for (const G of [K, H]) {
+  for (const G of [K, H, A, R]) {
     f.box(CHROME, fx + 0.11, C + 1.66, z, 0.025, 0.025, 0.46, 0, G);                     // the hanger
     f.box(CHROME, fx + 0.11, C + 1.68, z, 0.02, 0.1, 0.02, 0, G);
   }
-  // The suit (models.js kostym): the light jacket, the brown shirt and the tie, the trousers under it.
-  f.box(0xe8e0d0, fx + 0.11, C + 0.98, z, 0.1, 0.68, 0.5, 0, K);
-  for (const s of [-1, 1]) f.box(0xe8e0d0, fx + 0.1, C + 1.0, z + s * 0.3, 0.08, 0.6, 0.1, 0, K);
-  f.box(0x4a3426, fx + 0.165, C + 1.36, z, 0.01, 0.28, 0.16, 0, K);
+  // The suit (models.js kostym: `shirt` is the jacket, `suit` the shirt front): the brown jacket, the
+  // light shirt front and the tie, the trousers under it.
+  f.box(0x4a3426, fx + 0.11, C + 0.98, z, 0.1, 0.68, 0.5, 0, K);
+  for (const s of [-1, 1]) f.box(0x4a3426, fx + 0.1, C + 1.0, z + s * 0.3, 0.08, 0.6, 0.1, 0, K);
+  f.box(0xe8e0d0, fx + 0.165, C + 1.36, z, 0.01, 0.28, 0.16, 0, K);
   f.box(0x7a2a2a, fx + 0.172, C + 1.1, z, 0.012, 0.5, 0.06, 0, K);
   for (const s of [-1, 1]) f.box(0x3a2a1e, fx + 0.1, C + 0.32, z + s * 0.11, 0.07, 0.66, 0.17, 0, K);
   // The hawaii shirt (models.js hawaii): red with yellow, green and blue flowers, and the shorts.
@@ -613,9 +615,28 @@ function wardrobe(f, fx, z) {
     f.box([0xffd23f, 0x3f7a3a, 0x2f6ad8][k % 3], fx + 0.152, C + y, z + u, 0.008, 0.07, 0.07, 0, H);
   });
   f.box(0xe8dcb8, fx + 0.1, C + 0.52, z, 0.07, 0.44, 0.44, 0, H);
+  // The Arlanda coat (models.js arlanda): the long dark-brown coat (a shade lighter than his, to read
+  // against the dark inside), the tweed scarf over the hanger, a white mitten out of a pocket, and the
+  // flat tweed cap on the hat shelf.
+  f.box(0x5a4432, fx + 0.12, C + 0.42, z, 0.12, 1.2, 0.54, 0, A);
+  for (const s of [-1, 1]) f.box(0x5a4432, fx + 0.11, C + 0.62, z + s * 0.31, 0.1, 0.98, 0.1, 0, A);
+  f.box(0x2a1e16, fx + 0.185, C + 0.5, z - 0.02, 0.01, 1.08, 0.02, 0, A);                // the front's edge
+  f.box(0x8a7a5a, fx + 0.19, C + 1.3, z + 0.08, 0.012, 0.32, 0.08, 0, A);                // the scarf's ends
+  f.box(0x8a7a5a, fx + 0.19, C + 1.24, z - 0.1, 0.012, 0.38, 0.08, 0, A);
+  f.box(0xf4f0e6, fx + 0.19, C + 0.84, z - 0.17, 0.02, 0.13, 0.09, 0, A);                // a mitten
+  f.box(0x9a3a2a, fx + 0.2, C + 0.9, z - 0.17, 0.012, 0.025, 0.09, 0, A);
+  f.box(0x8a7a5a, fx + 0.13, C + 1.85, z, 0.24, 0.06, 0.24, 0, A);                        // the cap
+  f.box(0x7a6a4a, fx + 0.27, C + 1.85, z, 0.06, 0.025, 0.2, 0, A);
+  // The white Rio jacket (models.js rio): the white jacket, the whiter shirt front, the black bow tie,
+  // the black trousers under it.
+  f.box(0xf4f0e6, fx + 0.11, C + 0.98, z, 0.1, 0.68, 0.5, 0, R);
+  for (const s of [-1, 1]) f.box(0xf4f0e6, fx + 0.1, C + 1.0, z + s * 0.3, 0.08, 0.6, 0.1, 0, R);
+  f.box(0xffffff, fx + 0.165, C + 1.36, z, 0.01, 0.28, 0.16, 0, R);
+  f.box(0x1d1426, fx + 0.172, C + 1.5, z, 0.014, 0.05, 0.12, 0, R);
+  for (const s of [-1, 1]) f.box(0x1d1426, fx + 0.1, C + 0.32, z + s * 0.11, 0.07, 0.66, 0.17, 0, R);
   const put = (G) => { const m = toonMesh(G.build(), { outline: 0.02 }); m.visible = false; scene.add(m); return m; };
   WARDROBE.open = put(O);
-  WARDROBE.hang = { kostym: put(K), hawaii: put(H) };
+  WARDROBE.hang = { kostym: put(K), hawaii: put(H), arlanda: put(A), rio: put(R) };
   worldHooks.wardrobe = (hang) => {
     WARDROBE.open.visible = !!hang;
     for (const [k, m] of Object.entries(WARDROBE.hang)) m.visible = k === hang;

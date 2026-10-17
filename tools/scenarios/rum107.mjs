@@ -4,10 +4,11 @@
 //             collect card 0/7 · 0/7 and Ole's "Hylla er tom…" on the radio. Four gadgets and three fins
 //             (collected the real way, `collect`) show at once, each gadget in its own place on the shelf
 //             and three fins in the pile; E: "Kontrollerad av G17." and Ole's "Fire av sju! Snart er
-//             hylla full.", then no prompt for `gap` s. Before the unlocks the giraffe and the boombox
-//             have no prompt (the nap's by Stig's bed as before). All seven: the samba unlock;
-//             the boombox's "Spela samba" sets the island tune to samba (saved), Ole's "Ja, det er fint!
-//             Samba!", and no prompt while it plays. After the bodega unlock (julafton) the suitcase, the
+//             hylla full.", then no prompt for `gap` s. Before the unlocks the giraffe has no prompt
+//             (the nap's by Stig's bed as before) and the boombox no samba (feature 67: "Bergsprängaren",
+//             klader.mjs). All seven: the samba unlock; the boombox's "Spela samba" sets the island tune
+//             to samba (saved), Ole's "Ja, det er fint! Samba!", and while it plays "Stäng av sambaen"
+//             (feature 67). After the bodega unlock (julafton) the suitcase, the
 //             giraffe and the knäcke pack show; E at the giraffe: he holds it ("Precis en sån har jag
 //             önskat mig."), the bed's is hidden, and it is back after holdSecs, or at once 3 m off; the
 //             nap still answers beside his bed. A full shelf: "Alle sju! Nå er hylla full.". The save
@@ -124,8 +125,9 @@ export const SCENARIOS = {
     r = { giraffe: await near(T) };
     await at(T, 'rum107Radio');
     r.radio = await near(T);
+    r.radioPrompt = await prompt(T);
     T.log('locked', JSON.stringify(r));
-    check(r.giraffe === 'kvarta' && r.radio !== 'rum107:radio', 'before the unlocks: the nap by the bed\'s head, no boombox');
+    check(r.giraffe === 'kvarta' && r.radio === 'rum107:radio' && !/Spela samba/.test(r.radioPrompt), 'before the unlocks: the nap by the bed\'s head, no samba at the boombox (feature 67: "Bergsprängaren")');
 
     // 4. All seven: the samba unlock; the boombox.
     await collect(T, 'prylar');
@@ -136,10 +138,10 @@ export const SCENARIOS = {
     check(r.near === 'rum107:radio' && /Spela samba/.test(r.prompt) && r.tune === 'sol', `the boombox after the unlock (${JSON.stringify(r)})`);
     await T.tap('KeyE');
     await T.frames(6);
-    r = { tune: await T.ev(() => __game.islandTune), playing: await T.ev(() => __game.levelTune()), saved: await T.ev(() => JSON.parse(localStorage.getItem('charter-and-run-v1')).tune), toasts: await toasts(T), near: await near(T) };
+    r = { tune: await T.ev(() => __game.islandTune), playing: await T.ev(() => __game.levelTune()), saved: await T.ev(() => JSON.parse(localStorage.getItem('charter-and-run-v1')).tune), toasts: await toasts(T), near: await near(T), prompt: await prompt(T) };
     T.log('samba', JSON.stringify(r));
     check(r.tune === 'samba' && r.playing === 'samba' && r.saved === 'samba', 'the samba plays and is saved');
-    check(r.toasts.some((t) => t.includes(cfg.radio.line)) && r.near !== 'rum107:radio', 'Ole: "Ja, det er fint! Samba!"; no prompt while it plays');
+    check(r.toasts.some((t) => t.includes(cfg.radio.line)) && r.near === 'rum107:radio' && /Stäng av sambaen/.test(r.prompt), 'Ole: "Ja, det er fint! Samba!"; while it plays "Stäng av sambaen" (feature 67)');
     // The pause menu's tune back to sol: the prompt again.
     await T.ev(() => __game.setIslandTune('sol'));
     await T.frames(3);

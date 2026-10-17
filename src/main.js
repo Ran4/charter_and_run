@@ -127,7 +127,7 @@ class Game {
     this.speedCap = null;   // m/s cap on the player's walk/sprint (carry stages)
     this.bumpedT = 0;
     this.frozenT = 0;
-    this.islandOutfit = 'kostym';
+    this.islandOutfit = 'kostym';  // his free-roam outfit on the island (§10.4, §10.5 save `outfit`)
     this.islandTune = 'sol';     // 'sol' | 'samba' (§10.3 samba unlock, §10.5 save `tune`)
     // Player anim flags the engine itself drives; it clears only what it set, so a cue's timed
     // pose on the player (e.g. `wings` in the grisfest/julafton outros) survives (§9.3 anim).
@@ -918,8 +918,14 @@ class Game {
       const want = set[key] ?? null;
       if ((this.npcs[key].outfit ?? null) !== want) this.setNpcOutfit(key, want);
     }
-    const p = this.level === 'flight' ? (set.stig ?? 'kostym') : this.islandOutfit;
+    const p = this.level === 'flight' ? (set.stig ?? 'kostym') : this.islandWear();
     if ((this.player.outfit ?? null) !== p) this.setPlayerOutfit(p, { persist: false });
+  }
+  // His outfit on the island: in free roam `islandOutfit` (room 107's wardrobe picks it, saved; feature
+  // 67, §10.36), in a mission the story's: the suit until buss17, the hawaii shirt after it (§10.4).
+  islandWear() {
+    const ms = this.missions;
+    return ms.state === 'idle' ? this.islandOutfit : ms.index > 5 ? 'hawaii' : 'kostym';
   }
   setNpcOutfit(key, name) {
     const n = key === 'vardinna2' ? this.cabin.pusher : this.npcs[key];

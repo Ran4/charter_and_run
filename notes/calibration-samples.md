@@ -141,6 +141,15 @@ landmark is only a map label), and its geometry draws no random numbers, so the 
 before. The climb moves the free-roam clock (§10.10), which every mission start already sets to the
 day palette. Every pool below stands and no timer changed.
 
+**Feature 67 (Garderoben och bergsprängaren i rum 107, 2026-10-17) touches no pool.** Room 107's
+wardrobe changes Stig's free-roam outfit only with `missions.state === 'idle'` (DESIGN §10.36), and in
+a mission he wears the story's outfit as before (main.js `islandWear()`: `kostym` up to index 5,
+`hawaii` after; `runner.begin` puts it on before the talk), so every stage sees the same actor; outfits
+change colours and details, never size. The wardrobe's two new hanger meshes are hidden, without a
+collider, and draw no random numbers; the suit's hanger only changed colour. No route, stage, car,
+autopilot or timer changed (scenario `klader` checks the mission start and the runner going idle).
+Every pool below stands.
+
 ## `friskotekBalls` · §8.7 s1 · six fleeing beach balls · on foot: timer = ceil(1.25 × (p75 + 6 × 0.5))
 
 Phase 3 r2 island-staging placed everyone for the intro's group shot (Stig, Lasse, the sisters, the

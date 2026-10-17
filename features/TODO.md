@@ -5,7 +5,6 @@
 # Vänta med dessa tills spelaren säger till
 # markörer som ovan: ⟨par N⟩ = de två raderna med samma N körs samtidigt, ⟨solo⟩ = körs ensam; här från par 6 och uppåt så att taggarna är unika när rader köas en och en
 - features/ringklockan_och_kon.md – 59. Ringklockan i receptionen – ”Och när ska vi lämna rummen?” [M] ⟨par 9⟩
-- features/garderoben_i_rum_107.md – 67. Garderoben och bergsprängaren i rum 107 [S] ⟨par 9⟩
 - features/kyrkfrid.md – 60. Kyrkfrid i Templo Ecuménico [M] ⟨solo⟩
 - features/pizza_racern.md – 69. Gatlopp mot pizza-racern – mamma åker med [L] ⟨solo⟩
 - features/lana_rullskidorna.md – 71. Låna rullskidorna – åk fort på asfalt [L] ⟨solo⟩
@@ -71,3 +70,4 @@
 - features/implemented/strandkyssen.md – 57. Strandkyssen i bränningen [M]
 - features/implemented/guardia_jeepen.md – 51. Låna Guardia-jeepen – ”Ursäkta, är det din bil?” [M]
 - features/implemented/fyren_mantrat.md – 52. Uppför fyren – mantrat på 51 meters höjd [M]
+- features/implemented/garderoben_i_rum_107.md – 67. Garderoben och bergsprängaren i rum 107 [S]

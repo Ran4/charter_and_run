@@ -1,6 +1,6 @@
 // Skjortbytet (free roam, DESIGN §7.2; feature 36): skjortbyte, garderob.
-//   skjortbyte: at index 6 (free roam, the hawaii shirt): no prompt at room 107's wardrobe without a
-//               pursuit. In a pursuit on foot: "Byt till kostymen" (priority over everything), a
+//   skjortbyte: at index 6 (free roam, the hawaii shirt): no hideout prompt at room 107's wardrobe
+//               without a pursuit (feature 67's "Byt kläder" there, klader.mjs). In a pursuit on foot: "Byt till kostymen" (priority over everything), a
 //               friend marker on the map, the shirt taunt among the shouts. E: frozen `secs` s, the
 //               wardrobe open with the suit, Stig's line; then the suit (not saved), no pursuit, no
 //               fine, the banner, its own cooldown; the officer (40 m off: from an end of the walk out

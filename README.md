@@ -126,8 +126,15 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   ställs på en hylla ovanför tavlan, var och en på sin plats, och de nedtrampade hajfenorna ligger
   platta i en hög vid Stigs säng. Efter julafton står också väskan, plastgiraffen och
   knäckebrödspaketet där. Mellan uppdragen: E vid hyllan, så kontrollerar Stig den som den G17 han är
-  och Ole räknar sina prylar i radion; E vid giraffen ("Precis en sån har jag önskat mig."); och när
-  sambamusiken är upplåst spelar E vid Oles bergsprängare samban.
+  och Ole räknar sina prylar i radion; E vid giraffen ("Precis en sån har jag önskat mig."); och E vid
+  Oles bergsprängare: innan sambamusiken är upplåst svarar Ole bara "Kvarts og digital.", sedan slår
+  den på samban och av den igen.
+- **Garderoben i rum 107**: mellan uppdragen, när ingen jagar dig, byter Stig kläder med E vid
+  garderoben innanför dörren. Kostymen och Arlanda-rocken med kepsen och vantarna hänger där från
+  början, hawaiiskjortan efter buss 17 och den vita Rio-smokingen när resan är slut. Varje tryck tar
+  nästa plagg, med en vit blixt, Helan går och en replik från filmen ("Det måste vara värmen." i
+  rocken, Oles "Du kan ikke gå sånn her nede!" i kostymen). Valet sparas och följer med ut på ön, men
+  i uppdragen har Stig de kläder berättelsen ger honom: kostymen före buss 17 och skjortan efter.
 - **Pesetas**: mynten i gatorna, i trasiga prylar och i vrak är värda 25 pta styck. De går åt
   till grisfesten (800), julafton (100), åsnan, hittelön, böter (¡MULTA!: 20 % av kassan,
   250–1500), PANIK (−50), portiern (500) och målarverkstaden (1 000). Har du inte råd betalar Ole – men inte
@@ -464,6 +471,10 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
 - hyllan i rum 107 som Oles prylar hamnar på när de hittas, hajfenorna i en hög vid Stigs säng, Stigs
   "Kontrollerad av G17." vid hyllan och Oles räkning i radion (i filmen visar Ole sina prylar i rummet,
   men där finns ingen hylla)
+- garderoben i rum 107 som klädmeny, med rocken, skjortan och Rio-smokingen, och Oles repliker om
+  kläderna i radion (i filmen klär Ole om Stig i rummet en gång, Arlanda-rocken syns bara på
+  flygplatsen och smokingen bara i slutscenen; "Det måste vara värmen." säger Angerud efter golfen och
+  Oles bergsprängare demonstreras på planet)
 - SOLKRÄM-mätaren när Stig smörjer in Majsans rygg, Sivs poänglappar för det och krämen som rinner
   när han tar för mycket (i filmen är solkrämen bara poolprat, och ingen sätter poäng på den)
 - samtalen med gänget på E mellan uppdragen, där Stig svarar (replikerna kommer från andra scener i
@@ -595,7 +606,7 @@ src/game/dogs.js                Fin hund… in free roam: the watchdogs in the b
 src/game/bathers.js             Badgäster på solstolarna in free roam: bathers on the loungers, their burn, the fly-off, Berra and Robban fried
 src/game/suntripShop.js         Bränsletillägg tillkommer in free roam: SunTrip-butiken, the receipts, the Trapp Trull account, his bought look
 src/game/toasters.js            Kontrollerad av G17 in free roam: the seven toasters, the timing game, the label, the sisters' line
-src/game/room107.js             Rum 107 fylls med resans minnen in free roam: the keepsake shelf, the giraffe, the boombox
+src/game/room107.js             Rum 107 fylls med resans minnen in free roam: the keepsake shelf, the giraffe, the boombox; the wardrobe's outfits (feature 67)
 src/game/solkram.js             Smörj in Majsans rygg in free roam: the SOLKRÄM meter, Siv's cards, the cream running
 src/game/stunts.js              Stunthopp med G17-stämpel in free roam: his car's jumps measured, LUFTTID, the stamp, the records
 src/game/gangTalk.js            Prata med gänget in free roam: E talks to the gang, the exchanges by part of the trip
@@ -614,7 +625,7 @@ tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, 
                                 artig, grisar, bagage, lapplisa, torsdag, frukt, hopptorn, hund,
                                 badgaster, butik, brodrost, rum107, solkram, skjortbyte,
                                 stunthopp, prata, takhopp, mikrofon, faglar, gags, strandkyssen,
-                                guardiajeep, fyren, calibrate, calibflight)
+                                guardiajeep, fyren, klader, calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
 tools/pool.mjs                  re-derives every random stage's timer from the ledger
@@ -674,6 +685,7 @@ node tools/shot.mjs gags gagshots        # the two gags on E: the prompts, the l
 node tools/shot.mjs strandkyssen strandefter  # the towel's daydream: the dream, the wave, Siv on the sand, by night, a mission start; after the end Majsan's invitation
 node tools/shot.mjs guardiajeep jeepsiren     # the borrowed Guardia jeep: the loan, his, the bust's question and tow, a mission start; the siren, the traffic giving way, Angerud
 node tools/shot.mjs fyren                # up the lighthouse: the gallery's solids, the stairs and the clock, the views, the railing, the exercise, the long blink, down, R, a pursuit, a mission start
+node tools/shot.mjs klader kladshots     # room 107's wardrobe and boombox: the outfits in turn, the shot, the save, a mission start, Skjortbytet, the samba on and off; shots
 node tools/shot.mjs fullstory kinds      # the literal §8 missions and the stage-kind checks
 node tools/shot.mjs calibrate calibflight  # timer and FLYGRÄDSLA calibration (slow; see DESIGN §8, §16.4)
 node tools/pool.mjs                      # random-stage timers from the raw runs in notes/calibration-samples.md

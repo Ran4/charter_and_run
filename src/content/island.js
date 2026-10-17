@@ -600,6 +600,18 @@ export const BRODROST = {
 // s with `line` (put back sooner with E, `putBack`, or over `dropR` m from its spot). The boombox (after the samba unlock,
 // while the samba is not playing): the island tune to samba, and Ole's `line` on the radio.
 // Invented (§1.6): the shelf and what is put on it.
+// Garderoben och bergsprängaren i rum 107 (free roam; feature 67, §10.36): the boombox is the pause
+// menu's Musik in the room. Before the samba unlock (`locked`) Ole's `quartz` on the radio and no
+// tune, the next E after `gap` s; after it E plays the samba (`prompt`; Ole's `line`, then `again`
+// in turn) and, while the samba plays, back to the island's sol tune (`off`). The wardrobe
+// (`wardrobe`, at the Skjortbytet hideout's spot `lm`, `r` m) changes his free-roam outfit to the
+// next in `order` that is in it (`from`: the missions.index it hangs there from; 13 = after the
+// end): frozen `secs` s with the next on the hanger, then a white flash and the outfit (saved), the
+// one he took off on the hanger, the doors shut `shutSecs` s later, and `show` s more in the shot
+// (`shot`: the eye and the look in `lm`'s frame, [left, forward, height]; Stig on `mark`, [left,
+// forward], beside the hanger as the shot sees it) turned to the eye. Each outfit's `say` is
+// Stig's, its `radio` Ole's `radioAt` s after the flash (while it is still on).
+// Invented (§1.6): the wardrobe as a menu; the lines are the film's, relocated.
 export const RUM107 = {
   shelf: { lm: 'rum107Hylla', r: 1.3, gap: 4, oleAt: 1.4,
     prompt: '<b>E</b> Kontrollera hyllan',                                        // [N]
@@ -613,9 +625,25 @@ export const RUM107 = {
     prompt: '<b>E</b> Ta upp giraffen',                                            // [N]
     putBack: '<b>E</b> Ställ tillbaka giraffen',                                   // [N]
     line: 'Precis en sån har jag önskat mig.' },                                   // [F*](t) Majsan's present at the julfest (research-plot.md:371)
-  radio: { lm: 'rum107Radio', r: 0.8,
+  radio: { lm: 'rum107Radio', r: 0.8, gap: 1.5,
     prompt: '<b>E</b> Spela samba',                                                // [N]
-    line: 'Ja, det er fint! Samba!' },                                             // [F*] Ole furnishing for the boombox (research-plot.md:254)
+    line: 'Ja, det er fint! Samba!',                                               // [F*] Ole furnishing for the boombox (research-plot.md:254)
+    again: 'Hører du? Samba.',                                                     // [F*] his demonstration on the plane (research-characters.md:179), relocated
+    locked: '<b>E</b> Bergsprängaren',                                             // [N]
+    quartz: 'Kvarts og digital.',                                                  // [F*] the same demonstration, shortened
+    off: '<b>E</b> Stäng av sambaen' },                                            // [N]
+  wardrobe: { lm: 'rum107Garderob', r: 1.2, secs: 1.0, shutSecs: 0.8, show: 1.4, radioAt: 0.7,
+    prompt: '<b>E</b> Byt kläder',                                                 // [N]
+    order: ['kostym', 'arlanda', 'hawaii', 'rio'],
+    from: { kostym: 0, arlanda: 0, hawaii: 6, rio: 13 },
+    mark: [0.45, 0], shot: { eye: [-2.0, -3.6, 2.0], look: [0.2, 0.3, 1.15] },
+    lines: {
+      kostym: { radio: ['ole', 'Du kan ikke gå sånn her nede! Den buksa og det slipset! … Shorts.'] },   // [F*] room 107 in buss17's outro (research-characters.md:184), on the radio
+      arlanda: { say: 'Det måste vara värmen.' },                                  // [F*] Angerud's excuse after the golf (research-plot.md:294), Stig's here
+      hawaii: { say: 'Är den inte lite skrikig?',                                  // [F*] Stig in room 107 (buss17's outro), relocated
+        radio: ['ole', 'Du skal ha sterke farger, du som er mørk.'] },             // [F*] Ole's answer there, on the radio
+      rio: { radio: ['ole', 'Og så Rio! Stranda, jentene og samba.'] },           // [F*] his Concorde dream on the plane (research-characters.md:177), relocated
+    } },
 };
 
 // Smörj in Majsans rygg – the SOLKRÄM meter (free roam; feature 35, DESIGN §10.26; game/solkram.js).
