@@ -879,6 +879,30 @@ export const TOWER = {
   radio: ['lasse', 'Från fjärde våningen? Ner i poolen? Ring kliniken.'],   // [F*] Lasse's phone call in the film (research-plot.md:292), now about Stig
 };
 
+// Hoppet mellan hotelltaken – the jump between the hotel roofs (free roam, DESIGN §10.29;
+// game/roofJump.js, the roofs in world/town.js `roofWalk`). E at a door (`doors`: its landmark `at`,
+// within `r` m) takes the stairs to the other end (`to`): a black fade of `fadeSecs` s, held
+// `holdSecs` s. Up: on APARTAMENTOS SOL DE INVIERNO's roof by the lift room, facing the gap, out of
+// breath (`anim.slump` for at most `puffSecs` s, until he moves) with `top`. Down: out of the lobby
+// the door belongs to, `outStep` m from its E spot and turned away from it. Off a roof he spreads his arms (`anim.leap`) and says the mantra
+// (S.mantraLine, [F*]: the exercise at Levander's clinic, relocated) over the gap, or as soon as he
+// is `dropBy` m under the roof he left; into the water a stomp is a cannonball, anything else a belly
+// flop (`flopSecs`). On HOTEL ATLÁNTICO's roof, standing within `view.r` m of `view.lm`, `view.line`
+// once a visit (until he is down off the roofs). Invented (§1.6): the walkable roofs, the stairs, the
+// jump and the dive into the pool.
+export const TAKHOPP = {
+  r: 1.3, fadeSecs: 0.5, holdSecs: 0.3, outStep: 2.8, puffSecs: 2.2, dropBy: 0.4, flopSecs: 1.6,
+  promptUp: '<b>E</b> Ta trappan upp',     // [N]
+  promptDown: '<b>E</b> Ta trappan ner',   // [N]
+  doors: [
+    { id: 'upp', at: 'takSolLobby', to: 'takSolTopp', up: true },
+    { id: 'solNer', at: 'takSolTopp', to: 'takSolLobby' },
+    { id: 'atlNer', at: 'takAtlTopp', to: 'takAtlLobby' },
+  ],
+  top: 'Sju våningar…',   // [N]
+  view: { lm: 'takUtsikt', r: 2.2, line: 'Nu har jag havsutsikt.' },   // [N] (his "Kallar ni det här för havsutsikt?" answered at last, research-plot.md:252)
+};
+
 // Stunthopp med G17-stämpel – his car's jumps judged (free roam, DESIGN §10.27; game/stunts.js, the
 // plank in world/blocks/nature.js `bygge`). A flight of his car (car.js `air`: the ground more than
 // 0.35 m below it) is a jump when its first flight lasts `minAir` s and goes `minDist` m (the

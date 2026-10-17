@@ -13,7 +13,7 @@
 import { THREE, GeoBuilder, toonMesh, MAT, PRIM, mat, makeWedge, textCanvas, skyDark } from '../gfx.js';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { N, HALF, RHW, SW, CURB, EDGE, BOUND, rc, blockInterior, MAP, landmarks } from './layout.js';
-import { box, circle, ramp } from './collision.js';
+import { box, circle, ramp, queryBlocks, CIRCLE } from './collision.js';
 import { placeProp } from './props.js';
 import { Frame, parkedCars, setFrameScene } from './frame.js';
 import { registerIslandLandmarks } from './landmarks-island.js';
@@ -56,6 +56,15 @@ export const bouncers = [];     // trampoline ('bounce') blocks
 // Filled as the lots are built, with no random draws of its own: the world builds as before.
 export const dogLots = [];
 export const frameRamps = [];   // half-built frames: { x, z, yaw, top, top2, deck: { x, z, w, d } } = the foot of ramp 1, deck heights, deck 1's centre and size (w across the lot, d deep; the stunt jumps' take-off, §10.27)
+// Hoppet mellan hotelltaken (feature 41, DESIGN §10.29): the two seven-storey slabs in (4,4)'s north
+// row, HOTEL ATLÁNTICO (lot 1) and APARTAMENTOS SOL DE INVIERNO (lot 2), 3.7 m apart, get walkable
+// roofs between missions. `lots`: residential lot id (bi, bj, side, k) -> roof key. Filled by
+// roofWalk with no random draws of its own (the world builds as before): `roofs[key]` = { name,
+// minX, maxX, minZ, maxZ (the slab's footprint), floor (the roof's height), blocks (what he stands
+// on up there) }, `gap` = { x0, x1, z0, z1 } between them, `coins` [[x, y, z]] for game/roofJump.js
+// to place. The slab's own solids (top 99) give way to the roof's while `live()` (set by the game
+// module: the island with no mission running); in a mission every stage meets the world as before.
+export const ROOF_JUMP = { lots: { '4,4,0,1': 'atl', '4,4,0,2': 'sol' }, roofs: {}, gap: null, coins: [], live: () => false };
 // Lit after dark (§13.3): the street lamps' lantern panes and star centres go into one unlit mesh
 // that draws only while the sky is dark, as the hotels' lit windows do. The block builders run
 // inside buildTown and may add their own night lights here (world coordinates); buildTown makes
@@ -402,14 +411,15 @@ const CAFES = [
 ];
 
 // A 4-7 storey 1970s apartment-hotel slab: balcony rows, concrete fins, awnings, towels, roof sign.
-function slabLot(f, LW, LD, r) {
+// `id`: the residential lot (bi, bj, side, k), for the walkable roofs (ROOF_JUMP).
+function slabLot(f, LW, LD, r, id) {
   const floors = 4 + Math.floor(r() * 4), fh = 2.9, H = floors * fh;
   const w = R(15.2, 17.4, r), d = R(10, 12, r), front = R(6.2, 7.6, r), cz = front + d / 2;
   const wall = pick([C.white, C.white2, C.white, C.cream, C.ochreWall], r);
   const accent = pick(AWNINGS, r);
   const rail = pick([C.white2, C.white2, C.white2, 0x1e9aa0, C.terracotta, 0x2f6ad1, 0xd8a24a], r);   // balcony fronts
   f.box(wall, 0, CURB, cz, w, H, d);
-  f.solid(0, cz, w, d, 99);
+  const body = f.solid(0, cz, w, d, 99);
   // Ground floor: glass lobby band, entrance canopy on two poles, forecourt paving.
   f.box(C.glassDark, 0, CURB, front - 0.04, w - 2.4, 2.4, 0.1);
   f.box(0xd8cbb4, 0, CURB, front - 0.07, w + 0.1, 0.35, 0.12);
@@ -440,7 +450,7 @@ function slabLot(f, LW, LD, r) {
   const stx = st * (w / 2 - 1.7), stz = front + d + 1.0;
   f.box(stC, stx, CURB, stz, 3.4, H + 1.6, 2.4);
   f.box(0xd8e6ee, stx + st * 1.71, CURB + 1.2, stz, 0.06, H - 1.0, 0.9);
-  f.solid(stx, stz, 3.4, 2.4, 99);
+  const stair = f.solid(stx, stz, 3.4, 2.4, 99);
   // Sides and back: small windows per floor.
   for (let fl = 0; fl < floors; fl++) {
     const y = CURB + fl * fh + 1.0;
@@ -460,6 +470,7 @@ function slabLot(f, LW, LD, r) {
   for (const s of [-1, 1]) f.box(C.iron, s * (sw / 2 - 0.8), top + 0.6, sz, 0.12, 2.3, 0.12);
   f.box(C.iron, 0, top + 0.6, sz + 0.06, sw, 0.1, 0.1);
   addSign(name, sw, 1.7, { ...style, scale: 0.62, borderW: 0.08 }, f.wx(0, sz - 0.08), top + 2.1, f.wz(0, sz - 0.08), f.yaw + Math.PI);
+  if (ROOF_JUMP.lots[id]) roofWalk(f, ROOF_JUMP.lots[id], { name, w, d, front, cz, top, stx, stz, sw, sz, body, stair });
   // Forecourt: planters with bougainvillea flanking the entrance (or a café terrace on one side);
   // palms; sometimes a car.
   const cafe = r() < 0.35 ? (r() < 0.5 ? -1 : 1) : 0;
@@ -489,6 +500,75 @@ function slabLot(f, LW, LD, r) {
   f.prop('palmkruka', -3.4, front - 0.6, 0);
   f.prop('palmkruka', 3.4, front - 0.6, 0);
   if (!cafe && r() < 0.35) f.car(pick(['hatch', 'sedan', 'hatch', 'van'], r), (r() < 0.5 ? -1 : 1) * (w / 2 - 2.6), 3.6, Math.PI / 2);
+}
+
+// Hoppet mellan hotelltaken (feature 41, §10.29): a slab's roof made walkable between missions. The
+// roof is the parapet's top (top + 0.64, over the slab's footprint), the lift room, the two water
+// tanks, the antenna, the name sign and the stair tower's head walls up there; the slab's own 99 m
+// solids are dead while ROOF_JUMP.live() and these are dead otherwise. Both lobbies get a glass door,
+// both lift rooms a door to the stairs (game/roofJump.js puts its E points by them); SOL DE INVIERNO's
+// lobby has ASCENSOR AVERIADO over its door and the coin line to the jump, ATLÁNTICO the brochure's
+// sign and a little stash of coins by its south (sea) edge. No random draws: the world builds as before.
+function roofWalk(f, key, { name, w, d, front, cz, top, stx, stz, sw, sz, body, stair }) {
+  const J = ROOF_JUMP, floor = top + 0.64, lz = cz + d / 4, liftZ = lz - 1.4;
+  const blocks = [
+    f.solid(0, cz, w, d, floor, 'building'),
+    f.solid(stx, stz, 3.4, 2.4, top + 1.6, 'building'),
+    f.solid(w / 4, lz, 3.2, 2.8, top + 2.6, 'roof'),
+    f.circ(-w / 3, lz, 0.7, top + 2.1, 'roof'),
+    f.circ(w / 3, lz, 0.7, top + 2.1, 'roof'),
+    f.circ(-w / 4, cz + d / 3, 0.12, top + 3.4, 'roof'),
+    f.solid(0, sz, sw, 0.3, top + 2.95, 'roof'),
+  ];
+  // The lobby's glass door (bronze frame, two leaves) and the lift room's door to the stairs.
+  f.box(0x6a4a2a, 0, CURB, front - 0.12, 2.1, 2.2, 0.05);
+  for (const s of [-1, 1]) {
+    f.box(C.glass, s * 0.5, CURB + 0.06, front - 0.15, 0.9, 2.04, 0.04);
+    f.box(0xd8cbb4, s * 0.12, CURB + 0.95, front - 0.19, 0.05, 0.3, 0.04);
+  }
+  f.box(0x6a4a2a, w / 4, floor, liftZ - 0.03, 1.0, 1.82, 0.05);
+  f.box(0x1e7a78, w / 4, floor, liftZ - 0.06, 0.86, 1.74, 0.04);
+  f.box(0xd8cbb4, w / 4 + 0.3, floor + 0.9, liftZ - 0.09, 0.05, 0.05, 0.04);
+  if (key === 'sol') {
+    addSign('ASCENSOR AVERIADO', 1.9, 0.34, { bg: '#fbf7ee', fg: '#d8321e', border: '#d8321e', scale: 0.62 }, f.wx(0, front - 0.16), CURB + 2.38, f.wz(0, front - 0.16), f.yaw + Math.PI);   // [N] the lift out of order
+    // The coins from in front of the lift room's door (out of the coin magnet's reach where the stairs
+    // put him) to the west edge, where the jump goes over (world z of the line in `jz`;
+    // roofJumpFinish adds the three over the gap).
+    J.jz = f.wz(0, front + 4.2);
+    for (let k = 0; k < 8; k++) {
+      const t = k / 7, x = w / 4 - 4.3 + (-w / 2 + 0.8 - (w / 4 - 4.3)) * t, z = liftZ - 1.2 + (front + 4.2 - (liftZ - 1.2)) * t;
+      J.coins.push([f.wx(x, z), floor + 0.75, f.wz(x, z)]);
+    }
+  } else {
+    // The brochure's promise on two posts by the south edge, facing the roof (the sea behind it),
+    // and the stash beside the view.
+    const bz = front + d - 0.45;
+    for (const s of [-1, 1]) f.box(C.iron, -2.4 + s * 1.3, floor, bz, 0.08, 1.98, 0.08);
+    f.box(C.white2, -2.4, floor + 0.98, bz, 3.3, 1.05, 0.05);
+    addSign('BALKONG MED HAVSUTSIKT\nOCH KVÄLLSSOL', 3.2, 1.0, { bg: '#fbf7ee', fg: '#c0623a', border: '#c0623a', scale: 0.62 }, f.wx(-2.4, bz - 0.04), floor + 1.5, f.wz(-2.4, bz - 0.04), f.yaw + Math.PI);   // [F*] the brochure (research-plot.md:253)
+    blocks.push(f.solid(-2.4, bz, 3.4, 0.3, floor + 2.05, 'roof'));
+    for (const x of [0.4, 1.1, 1.8]) for (const z of [front + d - 0.55, front + d - 1.2]) J.coins.push([f.wx(x, z), floor + 0.75, f.wz(x, z)]);
+  }
+  J.roofs[key] = { name, minX: body.minX, maxX: body.maxX, minZ: body.minZ, maxZ: body.maxZ, floor, blocks };
+  for (const b of [body, stair]) Object.defineProperty(b, 'dead', { get: () => J.live(), set() {}, configurable: true });
+  for (const b of blocks) Object.defineProperty(b, 'dead', { get: () => !J.live(), set() {}, configurable: true });
+}
+
+// After every block: the gap between the two roofs, its three coins, and the palms that stand in it.
+// A tree's trunk collider reaches 99 m, so up there a palm would be a wall in the air; between
+// missions those in the gap stop at 8 m (the tallest crown is 7.6).
+function roofJumpFinish() {
+  const J = ROOF_JUMP, { atl, sol } = J.roofs;
+  if (!atl || !sol) return;
+  const g = J.gap = { x0: atl.maxX, x1: sol.minX, z0: Math.max(atl.minZ, sol.minZ), z1: Math.min(atl.maxZ, sol.maxZ) };
+  const mx = (g.x0 + g.x1) / 2, y = Math.max(atl.floor, sol.floor);
+  for (const [dx, dy] of [[1.1, 1.2], [0, 1.6], [-1.1, 1.2]]) J.coins.push([mx + dx, y + dy, J.jz]);
+  for (const b of queryBlocks(g.x0, g.z0, g.x1, g.z1, [])) {
+    if (b.kind !== 'tree' || b.shape !== CIRCLE) continue;
+    const low = circle(b.x, b.z, b.r, 8, 'tree');
+    Object.defineProperty(b, 'dead', { get: () => J.live(), set() {}, configurable: true });
+    Object.defineProperty(low, 'dead', { get: () => !J.live(), set() {}, configurable: true });
+  }
 }
 
 // Half-finished concrete frame: a ramp to the first deck, a ramp to the second, rebar, a mixer.
@@ -571,7 +651,7 @@ function residential(bi, bj, b, S, F, type) {
       if (!ew) f = side === 0 ? new Frame(S, F, b.x0 + along, b.z0, 0) : new Frame(S, F, b.x1 - along, b.z1, Math.PI);
       else f = side === 0 ? new Frame(S, F, b.x0, b.z1 - along, Math.PI / 2) : new Frame(S, F, b.x1, b.z0 + along, -Math.PI / 2);
       if (type === 'bungalowR') bungalowLot(f, LW, LD, r, side === 0 && k === 0);
-      else if (k !== special) slabLot(f, LW, LD, r);
+      else if (k !== special) slabLot(f, LW, LD, r, `${bi},${bj},${side},${k}`);
       else if ((bi + bj + side) % 2) frameLot(f, LW, LD, r);
       else poolLot(f, LW, LD, r);
     }
@@ -981,6 +1061,7 @@ export function buildTown(sc) {
     outskirts(S, F);
     add(S, F);
   }
+  roofJumpFinish();
   flushSigns();
   nightLights();
   addPedLoops();

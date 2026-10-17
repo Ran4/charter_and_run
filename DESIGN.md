@@ -247,7 +247,11 @@ plane, the mantra in the air and Stig's arms out by the plane (free roam, §10.2
 the label on his toasters, and the dream plane is a vision in fog, no car flies); the gang's short
 exchanges with Stig on E between missions and their order through the trip (free roam, §10.28; the
 lines are the film's from other scenes, relocated, or ours: Ole's Rio line is at the welcome meeting,
-the julfest's on julafton morning, Berra's "Ska du ha?" in Arlanda's men's room).
+the julfest's on julafton morning, Berra's "Ska du ha?" in Arlanda's men's room); the roofs of HOTEL
+ATLÁNTICO and APARTAMENTOS SOL DE INVIERNO walkable between missions, the stairs up with the lift out of
+order, the jump over the gap between them with the mantra and his arms out, the brochure's sign and
+Stig's sea view up there, and the dive off the roof into the pool next door (free roam, §10.29; in the
+film the sea view is the porter's mirror held out of the hotel room, and nobody goes on a roof).
 The film's flight has **no turbulence** and **no in-flight toilet scene**: both toilet scenes are
 at Arlanda (we keep them there). The plane's toilets are only an invented hideout.
 
@@ -1288,7 +1292,15 @@ Copacabana beach with palms, a small orchestra of busts (five on the wheelhouse 
   names (never the real 1960s complexes of this coast: Las Olas, Los Caracoles, Las Arenas, Las
   Brisas): `HOTEL LAS GAVIOTAS`, `APARTAMENTOS SOL`, `BUNGALOWS LOS CACTUS`, `APARTAMENTOS VIENTO
   SUR`, `HOTEL MAR AZUL`, `HOTEL ATLÁNTICO`, `APARTAMENTOS SOL DE INVIERNO` (Phase 3: was
-  `APARTAMENTOS TAMARINDO`, too close to the real 1974 Hotel Tamarindos in San Agustín).
+  `APARTAMENTOS TAMARINDO`, too close to the real 1974 Hotel Tamarindos in San Agustín). Two of
+  them, HOTEL ATLÁNTICO and APARTAMENTOS SOL DE INVIERNO in (4,4)'s north row (lots `4,4,0,1` and
+  `4,4,0,2`; `slabLot` gets its lot id), have walkable roofs between missions, glass lobby doors, lift-room
+  doors, `ASCENSOR AVERIADO` over SOL DE INVIERNO's lobby door, the brochure's sign on ATLÁNTICO's roof
+  and 17 roof coins (feature 41, §10.29: `ROOF_JUMP`, `roofWalk`, `roofJumpFinish`), with no random
+  draw of their own, so the lots build as before. Landmarks `takSolLobby` (100.667, 54.3, 0),
+  `takSolTopp` (104.97, 61.46, −π/2, 21.09), `takAtlTopp` (84.2, 61.65, 0, 21.09), `takAtlLobby` (80,
+  54.85, 0), `takUtsikt` (80.0, 65.9, 0, 21.09) (world coordinates; the stairs' E spots and the view,
+  §10.29).
 - Ped loops: `addPedLoops()` unchanged (one loop per block).
 
 ### 6.6 Vehicles (`CAR_TYPES`, car.js; WP-E). Physics numbers unchanged unless listed.
@@ -5319,6 +5331,102 @@ the bodega after the end (the gate's men's room, §8.1), Lasse's oath, Robban's 
   lost-and-found man's), as `UNLOCKS.bodega.chatter` (§10.3); the radius is 3.0 m (not the giver's
   3.4) so that Majsan's sun cream keeps its 1.8 m.
 
+### 10.29 Hoppet mellan hotelltaken – the jump between the hotel roofs (free roam; feature 41, 2026-10-17)
+
+`game/roofJump.js` (`RoofJump`, owned by Game as `roofs`), config `TAKHOPP` in content/island.js, the
+roofs in world/town.js (`roofWalk`, `roofJumpFinish`, `ROOF_JUMP`). Levander's exercise ("Jag kan
+flyga, jag är inte rädd.", research-plot.md:122–123) moves to a rooftop, seven storeys up, where the man
+with a fear of flying has to jump a gap; on the far roof the brochure's promise ("Balkong med havsutsikt
+och kvällssol.", research-plot.md:253) and, at last, his own sea view. The walkable roofs, the stairs,
+the jump and the dive into the pool are [N] (§1.6); the high-rises are the 1980 resort's setting
+(research-setting.md:117), not a film scene.
+
+- **The pair** (§6.5): in (4,4)'s north row, opposite the petrol station, residential lots
+  `4,4,0,1` and `4,4,0,2` (`ROOF_JUMP.lots`; `slabLot` now gets its lot id): HOTEL ATLÁNTICO (`atl`,
+  x [71.61, 88.39], z [55.88, 66.64]) and APARTAMENTOS SOL DE INVIERNO (`sol`, x [92.06, 109.27], z
+  [55.33, 66.57]), both seven storeys, the parapet's top at `floor` = C + 7·2.9 + 0.64 = 21.09. The gap
+  between them (`ROOF_JUMP.gap`) is x [88.39, 92.06], z [55.88, 66.57]: 3.68 m (3.38 m between the
+  parapets' 0.15 m overhangs, which are not floors). The fronts face north (−z) to the street, the
+  backs south to the sea. Their names come from the hotel pool's order (`hotelNext`), as before.
+- **Its solids.** `roofWalk` adds, per roof, `blocks`: the roof floor (the slab's footprint, top
+  21.09, kind `'building'`), the stair tower's head (its footprint, top C + H + 1.6: 0.96 over the
+  roof), and kind `'roof'` walls up there: the lift room (3.2 × 2.8, top C + H + 2.6), the two water
+  tanks (r 0.7, C + H + 2.1), the antenna (r 0.12, C + H + 3.4), the name sign on its posts (the
+  sign's width, 0.3 deep, C + H + 2.95) and on ATLÁNTICO the brochure's sign (3.4 × 0.3, the floor +
+  2.05). Each one's `dead` is a getter, `!ROOF_JUMP.live()`; the slab's own two solids (the body and
+  the stair tower, top 99) are captured in `slabLot` and get the opposite getter, `ROOF_JUMP.live()`.
+  `roofJumpFinish` (after every block, before the signs are flushed) does the same for the trees in
+  the gap: a tree's trunk collider reaches 99, so its two palms ((89.59, 58.38) and (90.86, 56.83))
+  would be walls in the air up there; while live a twin circle stops at 8 m (the tallest crown 7.6).
+  `roofs` sets `live` to `level === 'island' && missions.state === 'idle'` (before that, during the
+  build, it is false). **So no mission sees the roofs:** in any other state every block there is what
+  it was (the slabs and the palms to 99, no roof floor, no `'roof'` block), and between missions
+  everything under 8 m is the same footprint at the same height, so `queryBlocks`, `groundAt`,
+  `spotFree`, `freeSpot`, `footReach`, the cars, peds, the camera at street level and calibrate's
+  walker meet the same walls. No stage's world, timer, fixture or calibration pool changes. No random
+  draw is added (the lot's stream and frame.js's are untouched): the world builds as before.
+- **The look** (static geometry, every state): on both slabs a glass door in the lobby (a bronze frame
+  2.1 × 2.2 with two leaves) and a teal door on the lift room's north face (0.86 × 1.74). Over SOL DE
+  INVIERNO's lobby door the sign `ASCENSOR AVERIADO` [N] (§1.3; 1.9 × 0.34, under the entrance
+  canopy). By ATLÁNTICO's south edge, facing the roof with the sea behind it, the brochure's sign
+  `BALKONG MED HAVSUTSIKT / OCH KVÄLLSSOL` [F*] on two posts (3.2 × 1.0, local x −2.4).
+- **Coins** (`ROOF_JUMP.coins`, placed once by `roofs` with `placeCoin`, so not saved: every session
+  has them again, as the street lines): 8 on SOL DE INVIERNO from 4.3 m in front of the lift room's
+  door (out of the coin magnet's 3.7 m where the stairs put him) to the west edge at z 59.53 (`jz`),
+  3 over the gap on that line (1.1 m apart, 1.2, 1.6 and 1.2 m over the roof: a running jump takes
+  all three) and 6 in a stash by ATLÁNTICO's south edge beside the view: 17 coins, 425 pta.
+- **The stairs.** Three interactables (§14.3), `r` = 1.3, held to their own level by the ±2.5 m height
+  rule of `bestInteractable`: `takhopp:upp` at `takSolLobby` (100.667, 54.3), `promptUp` "<b>E</b> Ta
+  trappan upp" [N]; `takhopp:solNer` at `takSolTopp` (104.97, 61.46, y 21.09) and `takhopp:atlNer` at
+  `takAtlTopp` (84.2, 61.65, y 21.09), `promptDown` "<b>E</b> Ta trappan ner" [N]. ATLÁNTICO's lobby
+  has no way up: its roof is reached over the gap. All only when `canUse()`: on the island, idle, no
+  stairs under way, no dialogue, on foot and on the ground, not carrying, **no SKANDAL pursuit** (the
+  roof would be a free hideout where the porter's costs 500 pta, §7.2), no bust freeze or PANIK, not in
+  the pool fest's ring or on the baggage belt. E: `inDialog` holds his keys and the camera, a black fade
+  (`fadeSecs` 0.5 s), he is `put` by hand (`teleport` snaps to ground-level floors only), `holdSecs`
+  0.3 s, the fade lifts. Up: on SOL DE INVIERNO's roof at `takSolTopp`, facing the gap (yaw −π/2), the
+  camera behind him; out of breath: `anim.slump` (head down, mouth open) until he moves or `puffSecs`
+  2.2 s, and `top` "Sju våningar…" [N]. Down: `outStep` 2.8 m out from the door's lobby spot, turned
+  away from the door, so he walks out from under the entrance canopy (at the door the canopy held the
+  chase camera at his shoulder).
+- **The jump.** `on` is the roof he stands on (any of its `blocks`: he can hop onto the lift room and
+  the tanks). Airborne from a roof, the fall starts over the gap (x and z inside `gap`, no more than
+  3 m under the floor) or as soon as he is `dropBy` 0.4 m under the roof he left: `anim.leap` (the
+  tower's: Levander's arms straight out, tipping forward as the fall gathers speed; only a look, his
+  wish and air control are untouched, where `wings` would stop him) and the mantra (`S.mantraLine` [F*],
+  through `game.say`). J in the air is the stomp (§3): `anim.bomb` instead. After julafton a held J
+  glides (§10.7) and the glide takes the fall over. A sprint jump (8.8 m/s, 8.6 up) carries 5.4–6.3 m
+  and the roof's step catch (0.45) forgives a little more, so a jump within about 2 m of the edge
+  makes it; from a walk, or later, the double jump does. Measured by `takhopp`: jumped 1.2 m before
+  SOL DE INVIERNO's edge, down 0.5 m in on ATLÁNTICO after 0.55 s (v 8.2, an ordinary landing:
+  `last.kind` `'roof'`). Short, he hits ATLÁNTICO's wall and drops into the gap (dust; no fall damage
+  anywhere, §1.2).
+- **The landing.** `game.onLand(ch, v, y)` calls `roofs.onLand(v, y)` beside the tower's (both are
+  called; a splash from either replaces the dust). A fall that ends on a `water` floor (`waterAt`, not
+  on a car roof) splashes through `game.waterSplash(x, z, v, bomb)`: a stomp **the cannonball**
+  (`'bomb'`), anything else **the belly flop** (`'magplask'`, `flop(flopSecs = 1.6)`). Sprinting
+  straight off ATLÁNTICO's west edge (x 71.61) he comes down after 1.13 s at x 61.1 in the pool lot
+  next door (its pool x [53.83, 64.83], z [60.75, 67.25]) at v 31.6 m/s; with J 34.4. Elsewhere it is
+  `'roof'` or `'dry'` (dust). `roofs.last` ({ kind, x, z, v, t, secs, gap }), `climbs` and `mantras`
+  are for tests.
+- **The view.** On ATLÁNTICO's roof, standing within `view.r` 2.2 m of `takUtsikt` (80.0, 65.9, y
+  21.09, facing the sea), `view.line` "Nu har jag havsutsikt." [N] (his "Kallar ni det här för
+  havsutsikt?" at the hotel answered, research-plot.md:252; "Momento." stays the porter's). Once a
+  visit: again only after he has stood somewhere off the roofs.
+- **A mission start** (any state but `idle`) or the other level: the solids go (above), the fall and
+  the out-of-breath pose are dropped, and if he is up there (over a roof's footprint grown by 0.5 m,
+  within 1.5 m under its floor) he is `put` at that roof's lobby, so he never falls through a slab. A
+  real start finds him at ground level anyway (the giver's talk is on the ground, and the intro
+  stands him in its scene). Nothing is saved. Scenario `takhopp` (§16.4).
+- **Not done / changed** (deviations from the idea): `leap` (the tower's arms-out pose) instead of
+  `wings` over the gap, so no flag for the pose in the air was needed; no new splash effect (feature
+  24's `waterSplash` covers any hard landing in water) but the tower's belly flop and cannonball; a
+  third stair door, on ATLÁNTICO's lift room (the idea's "TA TRAPPAN NER" from there), and none in
+  ATLÁNTICO's lobby; the roof floors are the slabs' footprints, 0.15 m inside the parapets' visible
+  edge; the palms in the gap stop at 8 m between missions (they would have been walls in the air); the
+  coins respawn every session (world coins are not saved); the way down by the stairs leaves him 2.8 m
+  out of the lobby.
+
 ## 11. HUD / UI strings (Swedish; `src/strings.js` owned by WP-H, created by Phase 0)
 
 `strings.js` exports `S` (flat object) and `fmt(key, vars)`. Engine code uses `S.key` only.
@@ -5371,7 +5479,7 @@ mutes without touching the button, which then said `Ljud: på` while muted).
 | dialogue next | `E ▸` |
 | minimap rim badge | `N` (island) / `FRAM` (flight) |
 | big-map legend | from `game.mapLegend()` (§10.1) |
-| prompts | `<b>E</b> Prata med {name}` (a giver, and since feature 39 anyone in the gang between missions, §10.28) · `<b>E</b> Kliv in` · `<b>E</b> Ta bilen` · `<b>E</b> Sätt dig` · `<b>E</b> Res dig` · `<b>E</b> Lås in dig` · `<b>E</b> Ta en juice` · `<b>E</b> Kvarta en stund` (Stig's bed, §10.10) · `<b>E</b> Titta i kameran` / `<b>E</b> Se filmen` (Herr Storch, §10.11) · `<b>E</b> Heja Eslöv!` / `<b>E</b> Eslövloppet – ett varv runt fälten` (the rollerskier, §10.12) · `<b>E</b> Dansa med` / `<b>E</b> Kliv ur ringen` (the pool fest's gap, §10.13) · `<b>E</b> Kontrollera brödrosten` / `<b>E</b> Upp med brödet!` (a G17 toaster, §10.24) · `<b>E</b> Kontrollera hyllan` · `<b>E</b> Ta upp giraffen` / `<b>E</b> Ställ tillbaka giraffen` · `<b>E</b> Spela samba` (room 107, §10.25) · `<b>E</b> Smörj in ryggen` (Majsan's sun cream, §10.26) · `<b>SPACE</b> Håll i dig!` · `<b>J</b> håll: Jag kan flyga!` (the `<b>` keycap is Luckiest Guy: uppercase). Order (`updateHud`): talk (a giver's or the gang's), then `Håll i dig!` while the cabin is turbulent and he stands without holding on (Phase 3 r3, §5.7), then the car, interactable (seats, toilets…) and stand prompts |
+| prompts | `<b>E</b> Prata med {name}` (a giver, and since feature 39 anyone in the gang between missions, §10.28) · `<b>E</b> Kliv in` · `<b>E</b> Ta bilen` · `<b>E</b> Sätt dig` · `<b>E</b> Res dig` · `<b>E</b> Lås in dig` · `<b>E</b> Ta en juice` · `<b>E</b> Kvarta en stund` (Stig's bed, §10.10) · `<b>E</b> Titta i kameran` / `<b>E</b> Se filmen` (Herr Storch, §10.11) · `<b>E</b> Heja Eslöv!` / `<b>E</b> Eslövloppet – ett varv runt fälten` (the rollerskier, §10.12) · `<b>E</b> Dansa med` / `<b>E</b> Kliv ur ringen` (the pool fest's gap, §10.13) · `<b>E</b> Kontrollera brödrosten` / `<b>E</b> Upp med brödet!` (a G17 toaster, §10.24) · `<b>E</b> Kontrollera hyllan` · `<b>E</b> Ta upp giraffen` / `<b>E</b> Ställ tillbaka giraffen` · `<b>E</b> Spela samba` (room 107, §10.25) · `<b>E</b> Smörj in ryggen` (Majsan's sun cream, §10.26) · `<b>E</b> Ta trappan upp` / `<b>E</b> Ta trappan ner` (the hotel roofs' stairs, §10.29) · `<b>SPACE</b> Håll i dig!` · `<b>J</b> håll: Jag kan flyga!` (the `<b>` keycap is Luckiest Guy: uppercase). Order (`updateHud`): talk (a giver's or the gang's), then `Håll i dig!` while the cabin is turbulent and he stands without holding on (Phase 3 r3, §5.7), then the car, interactable (seats, toilets…) and stand prompts |
 
 **The result line** (feature 4, §10.8): `#score`, low in the middle (bottom 92 px, under the
 prompt at 178 px), a cream card with the dive and its sum in Luckiest Guy over the record line
@@ -5707,7 +5815,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/strings.js` | new | **H** | `S`, `fmt()` (§11) |
 | `src/content/index.js` | new | none | merges `HOMES`, `MAP_LABELS`, `LEVEL_OUTFITS`, re-exports all content |
 | `src/content/flight.js` | new | **F** | `HOMES_GATE`, `HOMES_FLIGHT`, `MAP_LABELS_FLIGHT`, `CHATTER_FLIGHT`, `OLE_STATS`, `LEVEL_OUTFITS_GATE`, `LEVEL_OUTFITS_FLIGHT` |
-| `src/content/island.js` | new | **G** | `HOMES_ISLAND`, `MAP_LABELS_ISLAND`, `CHATTER`, `OUCH`, `GETUP`, `CARJACK`, `NPC_KICKED` (+ the `_OLE` / `_LOCAL` tables, `LOCAL_CAST`, `BARKS`: Phase 3 r2, §14.10; `STIG_SORRY`: feature 11, §10.14; `PIG_TRUCK`: feature 15, §10.15; `BAGGAGE_BELT`: feature 25, §10.16; `LAPPLISA`: feature 20, §10.17; `GRISFEST_FREE`: feature 21, §10.18; `FRUKTSTAND`: feature 28, §10.19; `TOWER`: feature 24, §10.20; `DOGS`: feature 31, §10.21; `BATHERS`: feature 32, §10.22; `RUM107`: feature 38, §10.25; `SOLKRAM`: feature 35, §10.26; `STUNTHOPP`: feature 40, §10.27; `TALK_ISLAND`: feature 39, §10.28), `COLLECTIBLES`, `UNLOCKS`, `NAMED_CARS`, `LEVEL_OUTFITS_ISLAND` |
+| `src/content/island.js` | new | **G** | `HOMES_ISLAND`, `MAP_LABELS_ISLAND`, `CHATTER`, `OUCH`, `GETUP`, `CARJACK`, `NPC_KICKED` (+ the `_OLE` / `_LOCAL` tables, `LOCAL_CAST`, `BARKS`: Phase 3 r2, §14.10; `STIG_SORRY`: feature 11, §10.14; `PIG_TRUCK`: feature 15, §10.15; `BAGGAGE_BELT`: feature 25, §10.16; `LAPPLISA`: feature 20, §10.17; `GRISFEST_FREE`: feature 21, §10.18; `FRUKTSTAND`: feature 28, §10.19; `TOWER`: feature 24, §10.20; `DOGS`: feature 31, §10.21; `BATHERS`: feature 32, §10.22; `RUM107`: feature 38, §10.25; `SOLKRAM`: feature 35, §10.26; `STUNTHOPP`: feature 40, §10.27; `TALK_ISLAND`: feature 39, §10.28; `TAKHOPP`: feature 41, §10.29), `COLLECTIBLES`, `UNLOCKS`, `NAMED_CARS`, `LEVEL_OUTFITS_ISLAND` |
 | `src/game/missions/index.js` | new | none | `MISSIONS = [...FLIGHT_MISSIONS, ...ISLAND_MISSIONS]`, `MissionRunner` re-export |
 | `src/game/missions/runner.js` | new (from missions.js) | none | `MissionRunner` (§9.4) |
 | `src/game/missions/kinds/core.js` | new | **none** (frozen after Phase 0) | getInCar goto pickup dropoff follow rabbits race destroy grab scene |
@@ -5741,6 +5849,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/gangTalk.js` | new (feature 39, 2026-10-17) | — | `GangTalk` (`game.chat`): Prata med gänget in free roam: who can be talked to and which exchange is next, the chain of bubbles with Stig's answers and their poses, the stop, the hush after it (§10.28) |
 | `src/game/solkram.js` | new (feature 35, 2026-10-17) | — | `Solkram` (`game.solkram`): Smörj in Majsans rygg in free roam: Majsan's interactable, the scene (the ask, her back turned, the meter's card and the held E, the result's shots, cards and bubbles), the bottle and the cream, the record and `sjuPoang`, the reset (§10.26) |
 | `src/game/stunts.js` | new (feature 40, 2026-10-17) | — | `Stunts` (`game.stunts`): Stunthopp med G17-stämpel in free roam: his car's jumps measured (from car.js `airT`/`airFrom`), LUFTTID in the air, the settle and the verdict, the stamp and the card, the named jumps' take-offs, pay and records, the mantra off the plank, Stig's lines, his arms out by the dream plane, the reset (§10.27) |
+| `src/game/roofJump.js` | new (feature 41, 2026-10-17) | — | `RoofJump` (`game.roofs`): Hoppet mellan hotelltaken in free roam: `ROOF_JUMP.live`, the roof coins, the three stair doors and their fades, the out-of-breath arrival, the fall off a roof (the mantra over the gap or off an edge, the poses), the splash in the pool, the view line, the put-down at a mission start (§10.29) |
 | `src/game/bathers.js` | new (feature 32, 2026-10-17) | — | `Bathers` (`game.bathers`): Badgäster på solstolarna in free roam: tourists on the sun loungers nearest him by day, their burn (pale, pink, lobster red), the fly-off from a kicked or smashed lounger, a newcomer on a lounger back; Berra and Robban fried and asleep on two Flamenco loungers between buss17 and the bodega, their snores and the wake (§10.22) |
 | `src/game/suntripShop.js` | new (feature 34, 2026-10-17) | — | `SuntripShop` (`game.shop`): Bränsletillägg tillkommer in free roam: SunTrip-butiken's counter shown and its solids live between missions, the travel agent, the wares' and the bag's interactables, the receipts, the Trapp Trull account's instalments, "Paketet!", Ole's line; his bought look as a layer over his outfit (`dress`), saved (§10.23) |
 | `src/game/hud.js` | edit | **H** | map sources, meter, strings, legend, ring, blips, zone bar, markers; `renderPortrait` restores the model transform (§14.8) |
@@ -5755,7 +5864,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/world/registry.js` | new | none | `worldHooks` |
 | `src/world/layout.js` | edit | **B** | `MAP`, `BLOCK_MAP_COLORS`, `laneSpot` (Phase 0); `sidewalkAt` (feature 20, §10.17) |
 | `src/world/landmarks-island.js` | new | none (Phase 2 applies reported changes) | canonical island landmark table |
-| `src/world/town.js` | edit | **B** | streets, outskirts, residential, dispatch via `BLOCK_BUILDERS`; `dogLots` (feature 31, §10.21); `frameRamps[].deck` (feature 40, §10.27) |
+| `src/world/town.js` | edit | **B** | streets, outskirts, residential, dispatch via `BLOCK_BUILDERS`; `dogLots` (feature 31, §10.21); `frameRamps[].deck` (feature 40, §10.27); `slabLot`'s lot id, `ROOF_JUMP`, `roofWalk`, `roofJumpFinish` (feature 41, §10.29) |
 | `src/world/props.js` | edit | **B** | `TYPES` (§6.8), flags, `reviveProps`, `propsOfType`; the `frutas` stall, its flags, the debris palette, `spawnShreds` and the signs (feature 28, §10.19) |
 | `src/world/collision.js` | edit | none | `segmentBlocked` nearest hit |
 | `src/world/blocks/index.js` | new | none | `BLOCK_BUILDERS` merge |
@@ -5792,6 +5901,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `tools/scenarios/badgaster.mjs` | new (feature 32) | — | badgaster, stekt |
 | `tools/scenarios/butik.mjs` | new (feature 34) | — | butik, butikbil |
 | `tools/scenarios/stunthopp.mjs` | new (feature 40) | — | stunthopp, stuntzoner |
+| `tools/scenarios/takhopp.mjs` | new (feature 41) | — | takhopp |
 | `tools/story/flight.mjs` | new | **F** | `M_FLIGHT` (M[0..4]) |
 | `tools/story/island.mjs` | new | **G** | `M_ISLAND` (M[5..12]) |
 
@@ -5810,7 +5920,7 @@ Init: `initGfx` → `input.init` → `hud.init` → `fx.init` → fonts (Luckies
 → peds (34) → NPC `Character`s (one per `CHARS` key except `stig`, the radio-only keys `levander
 kapten pa guardia pax telefonist` and the cabin-owned `vardinna2`; `key` field; hidden until placed, §2.3) →
 player `Character(CHARS.stig)` (`key = 'stig'`) → collectibles (`COLLECTIBLES`) → markers → `Shame`
-→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `DiveTower` (feature 24, §10.20; registers the ladder's two interactables, sets `DIVE_TOWER.live`) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `Eslov` (feature 7, §10.12; registers the rollerskier's interactable) → `PoolFest` (feature 8, §10.13) → `StigSorry` (feature 11, §10.14) → `PigTruck` (feature 15, §10.15) → `BaggageBelt` (feature 25, §10.16) → `Lapplisa` (feature 20, §10.17) → `GrisfestFree` (feature 21, §10.18; registers the gate's and the tourists' interactables) → `FruitStands` (feature 28, §10.19) → `Dogs` (feature 31, §10.21) → `Bathers` (feature 32, §10.22; registers the wake's interactable) → `SuntripShop` (feature 34, §10.23; registers the four wares' and the bag's interactables, sets `SUNTRIP_SHOP.live`) → `Toasters` (feature 33, §10.24; registers the seven toasters' interactables) → `Room107` (feature 38, §10.25; registers room 107's three interactables) → `Solkram` (feature 35, §10.26; registers Majsan's interactable) → `Stunts` (feature 40, §10.27) → `GangTalk` (feature 39, §10.28) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
+→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `DiveTower` (feature 24, §10.20; registers the ladder's two interactables, sets `DIVE_TOWER.live`) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `Eslov` (feature 7, §10.12; registers the rollerskier's interactable) → `PoolFest` (feature 8, §10.13) → `StigSorry` (feature 11, §10.14) → `PigTruck` (feature 15, §10.15) → `BaggageBelt` (feature 25, §10.16) → `Lapplisa` (feature 20, §10.17) → `GrisfestFree` (feature 21, §10.18; registers the gate's and the tourists' interactables) → `FruitStands` (feature 28, §10.19) → `Dogs` (feature 31, §10.21) → `Bathers` (feature 32, §10.22; registers the wake's interactable) → `SuntripShop` (feature 34, §10.23; registers the four wares' and the bag's interactables, sets `SUNTRIP_SHOP.live`) → `Toasters` (feature 33, §10.24; registers the seven toasters' interactables) → `Room107` (feature 38, §10.25; registers room 107's three interactables) → `Solkram` (feature 35, §10.26; registers Majsan's interactable) → `Stunts` (feature 40, §10.27) → `GangTalk` (feature 39, §10.28) → `RoofJump` (feature 41, §10.29; registers the three stair doors, sets `ROOF_JUMP.live`, places the roof coins) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
 `placeNpcs(true)` → spawn the player → portraits for every key in `CAST` (`renderPortrait`
 restores each model's parent and transform, so seated cast members stay in their seats) →
 `applySaveToWorld()` →
@@ -5822,7 +5932,7 @@ mantra/hold, AI, cars (a landing calls `onCarAirEnd`, feature 40), people (`glid
 traffic/peds skipped when `!levelDef.sim.*`) → `syncAll` (also
 writes `ch.x/y/z` from `car.seatWorld(ch.seatSide)` for every car-seated character, player
 included, so framing, bubbles and distance checks see where they really are) → `missions.update` →
-`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `tower.update` (feature 24) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `stands.update` (feature 28) → `dogs.update` (feature 31) → `bathers.update` (feature 32) → `shop.update` (feature 34) → `toasters.update` (feature 33) → `room107.update` (feature 38) → `solkram.update` (feature 35) → `stunts.update` (feature 40) → `chat.update` (feature 39) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
+`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `tower.update` (feature 24) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `stands.update` (feature 28) → `dogs.update` (feature 31) → `bathers.update` (feature 32) → `shop.update` (feature 34) → `toasters.update` (feature 33) → `room107.update` (feature 38) → `solkram.update` (feature 35) → `stunts.update` (feature 40) → `chat.update` (feature 39) → `roofs.update` (feature 41) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
 pickups/collectibles → props → `fx.tick` → `tickTown` → markers → camera → sun/sky → HUD → audio →
 traffic recycling (island) → autosave. `loop` then renders, and when `film.grabNow` is set calls
 `film.grab()` in the same task (Herr Storch's still from the frame's buffer, feature 6, §10.11).
@@ -5895,6 +6005,10 @@ game.onCarAirEnd(car, impact); // car.js: every landing of every car, soft ones 
 game.chat;         // GangTalk (feature 39, §10.28): E talks to the gang between missions; chat.nearest()
                    // (nearestInteractable's 'chat'), start(who) (interact), busy (syncAll holds the
                    // chatter), update(); free(key), options(key), nextFor(key), lastId, last, cfg (TALK_ISLAND)
+game.roofs;        // RoofJump (feature 41, §10.29): the walkable roofs of HOTEL ATLÁNTICO and APARTAMENTOS SOL
+                   // DE INVIERNO; roofs.live, canUse(), stairs(door), put(name, up), on ('sol' | 'atl' | null),
+                   // dive ({ t, x, z, y0, gap } | null), roofUnder(m), overGap(), onLand(v, y) (game.onLand),
+                   // last, climbs, mantras, cfg (TAKHOPP)
 game.npcPosed(key) -> bool   // an NPC held in a pose of its own: §9.4 idleAnim or a free-roam module's
                    // (berraJob, judges, film, eslov, fest, lapp, party, stands); syncAll gives it no
                    // wave, turn or chatter, and the gang's talk leaves it be (§10.28)
@@ -5911,8 +6025,9 @@ game.breakProp(p, vx, vz, car) -> p | null   // car.js's smash: null when refuse
 game.outfitOverrides; // { key: outfit } from UNLOCKS[name].outfit, merged over the island set by applyOutfits (§10.3)
 game.witnessOverride; // null | UNLOCKS[name].witness, merged over the witness rule's config on the island (§7.2)
 game.onBounce(ch, b);   // Character.step: ch bounced on trampoline block b (the boing; the judges, §10.8; film.trick('studs'))
-game.onLand(ch, v, y);  // Character.step: ch landed at v m/s (> 6) on floor height y (tower.onLand(v, y), then the
-                        // judges; film.onLand; any other landing in water waterSplash's for the dust; the stomp)
+game.onLand(ch, v, y);  // Character.step: ch landed at v m/s (> 6) on floor height y (tower.onLand(v, y) and
+                        // roofs.onLand(v, y), feature 41, then the judges; film.onLand; any other landing in
+                        // water waterSplash's for the dust; the stomp)
 game.waterSplash(x, z, v, bomb = false);   // water thrown up by a hard landing at v m/s in a pool or pond: the
                         // drops (fx.splash) and audio.splash(k) grow with k = (v − 6) / 16 (clamped 0..1); a
                         // bomb (a stomp) adds a column and a boom and shakes the camera to 0.6 + 0.8 k (feature 24)
@@ -6336,7 +6451,8 @@ export class Frame { constructor(S, F, ox, oz, yaw = 0, scene) ...  mark(name, l
 // world/town.js (WP-B): lamps, animated, pedLoops, DC8_SPOT, parkedCars, bouncers (the trampoline
 //   'bounce' blocks), frameRamps [{ x, z, yaw, top, top2, deck: { x, z, w, d } }] (foot of each
 //   half-built frame's ramp 1, both deck heights, deck 1's centre and size: w across the lot, d deep;
-//   feature 40, §10.27). world/rio.js: RIO_X (= −3000).
+//   feature 40, §10.27), ROOF_JUMP (the walkable hotel roofs, feature 41, §10.29). world/rio.js:
+//   RIO_X (= −3000).
 //   all Bigmouth Frame methods; sign() adds to this.scene; car(type, lx, lz, ly = 0, extra)
 
 // world/layout.js
@@ -6651,6 +6767,18 @@ shame.closet (Closet, §7.2; feature 36): configure(h) from setupHideouts (h = t
 //   fromTop; busy; flopped; radioSaid; radioAt; last { kind, x, z, v, t, secs }; climbs
 // glide.js: radioSaid (its once-ever pool line said this session; held back after the tower's)
 // hotels.js: DIVE_TOWER { top, blocks, live() } (the tower's solids, `dead` = !live())
+// roofJump.js (feature 41, §10.29): game.roofs = new RoofJump(game) after the chat (sets
+//   ROOF_JUMP.live, places ROOF_JUMP.coins, registers takhopp:upp, takhopp:solNer, takhopp:atlNer);
+//   onLand(v, y) from game.onLand beside the tower's (true: a fall off a roof splashed into the water,
+//   so no dust); update(dt) after chat.update (not live: him down at the lobby from a roof, the fall and
+//   the pose dropped; the out-of-breath pose, `on`, the view line, the fall off a roof and its poses);
+//   live; canUse(); roofUnder(m); overGap(); stairs(d); put(name, up); puff(on); start(gap); end();
+//   land(kind, d, v); on; dive; busy; puffT; viewSaid; last { kind, x, z, v, t, secs, gap }; climbs;
+//   mantras
+// town.js: ROOF_JUMP { lots, roofs: { atl, sol: { name, minX, maxX, minZ, maxZ, floor, blocks } }, gap
+//   { x0, x1, z0, z1 }, jz, coins [[x, y, z]], live() } (feature 41; the roofs' blocks `dead` =
+//   !live(), the slabs' body and stair tower and the gap's two palms `dead` = live(), each palm with a
+//   twin to 8 m)
 // areaHit: props with def.carOnly are skipped (a kick never breaks a fruit stall)
 // bathers.js (feature 32, §10.22): game.bathers = new Bathers(game) after the stands (registers
 //   stekt:wake); update(dt) after stands.update and before tickProps (reset() while not live: every
@@ -7271,6 +7399,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `skjortbyte`, `garderob` [feature 36] | Skjortbytet (§7.2). `skjortbyte`, at index 6 (free roam, the shirt): on foot with both Land Rovers chasing for 9 s, no `onRam` (their wall hits are no rams on him, `main.onCarImpact`); no prompt at the wardrobe without a pursuit; in one (the officer 40 m off on the pool deck): `Byt till kostymen`, the `friend` marker, the shirt taunt among the `taunts`; E: frozen 2.5 s, the wardrobe open with the suit, "De letar ju efter skjortan…", he faces it, no second prompt; then the suit, `islandOutfit` hawaii, no pursuit, no fine, the cooldown, the shirt on the hanger, the banner, the doors shut; the officer walks onto the patio (within 1 m of the spot), "¿Dónde está el de la camisa?", the scene (cinematic and cut), "Buenas tardes.", the scene over as he walks on, no back prompt meanwhile, out of sight, Ole's "Du kan ikke gå sånn her nede! …", one line only; the save keeps hawaii; a pursuit in the suit: no hideout, no back, no shirt taunt, no marker; back: `Byt till hawaiiskjortan`, the shirt on the hanger, "Är den inte lite skrikig?", the shirt, Ole's "sterke farger"; the cooldown (the porter's untouched); the officer on the walk 6 m off: busted in the wardrobe, fined, still in the shirt, the doors shut; under the dotted shirt (bought, `shop.refresh`): no hideout, no shirt taunt, and without it again; the officer 20.6 m off on the pool deck (placed and E in one frame): he makes it, and the officer comes on from where he was; a mission start while he walks off: the shirt back on, the officer gone, neither prompt; index 5 (the suit): no prompt, no shirt taunt; the flight level: no wardrobe. `garderob`: shots of the wardrobe shut from the patio and with Stig at it, open with the suit (from the room and the patio), the change done, the officer looking, "Buenas tardes." in the scene, the officer walking off with Ole's radio, back to the shirt |
 | `stunthopp`, `stuntzoner` [feature 40] | Stunthopp med G17-stämpel (§10.27), driven by a route follower in his car's `ai` (pure pursuit, as calibrate's), the peds and traffic near the bygge sent away. `stunthopp`, at index 11 (free roam): `stunt_planka` at (182, −161.4); the plank's ground 4.42 at its end, 3.6 near its foot, the ground past it; the route up the big ramp, round the S at 3.5 m/s, flat out along the strip: off the plank's end (`airFrom` y over 4.3, zone `planka`), `LUFTTID 0,n S` on the result line with no sub, the mantra said in the air; the verdict: passed, one flight, 0.85–1.05 s and 14.5–20 m (0.93 s, 16.4 m), the banner KONTROLLERAD AV G17 (cls `stamp`, not `fail`), the card `LUFTTID 0,9 S · 16 M · +100 PTA` / `NYTT REKORD: BYGGET – DRÖMPLANET` (record), +100 pta, `records.stunts.planka` its distance, no SKANDAL, "Godkänd av G17. Det är ju jag."; stopped on the dream plane's lot (x 205–222) with over 80 hp; out of the car: arms out facing `pryl_kamera`, down after 3 s; the plank again: passed, no pay, the card's `REKORD 16 M`; the best set to 10: a record, +25; the save (v 1, `records.stunts`) and a reload keep it; a parked car at (205, −161.4): UNDERKÄND (`krock`, cls `stamp fail`), the card with the name, no pay, the fail line. `stuntzoner`: the yellow ramp at 20 m/s from the yard: `gula`, two flights, over 0.7 s and 14 m, +100; at 16 m/s into the big ramp's side: UNDERKÄND; at 6 m/s a hop under 6 m: no verdict, no line; off deck 1's front edge of `frameRamps[0]` at 14 m/s: `garage`, +100; a mission started (`T.startMission`): not `live`, no jump, no line, no verdict; at index 9 (before fataga) the yellow ramp's stamp GODKÄND; the flight level inert. Shots `stunt_planka_luft`, `_stampel`, `stunt_dromplanet`, `stunt_underkand`, `stunt_gula_luft`, `_stampel`, `stunt_garage`, `stunt_godkand` |
 | `prata` [feature 39] | Prata med gänget (§10.28). The table: 12 people, 33 exchanges of 2–4 lines, speakers the person, Stig or a `with`, windows on known missions (none of Angerud's after the end), no ä or ö in Ole's lines, no line a chatter line (CHATTER, CHATTER_FLIGHT, unlocks'), a source tag on every line row in content/island.js; who can be talked to and with what at every island index 5–13 (at 15:00, at 08:00, at 15:00 with Ole's watch found; the pool fest out of its hours let go first): every exchange somewhere, Ole's Rio at 9 and none at 12 (the giver), no Lasse at 5–6 (the giver), the gang at the airport at 5, Majsan's julfest at 12 and not 11, no Angerud and Berra's "Ska du ha?" after the end. At index 9 by Ole under the pergola: `chat` / Ole, `E Prata med Ole`; E (a real key): Stig turned to him, no `inDialog`, no talk prompt and an empty prompt while it runs, the Rio lines in order, nothing else said meanwhile (no chatter), a line at a time (2.2–6 s apart), the NPCs within 9 m quiet ≥ 3 s after; E again the donkey, again Rio; with the klocka the watch, "15:00 spansk tid. 16:00 norsk och svensk."; the morning one at 08:00, not at 15:00; warped 9 m off mid-talk: `left`, no more lines; Robban's customs with Berra's "Va? Var jag med där?"; Siv (the giver) a `talk`; a mission begun mid-talk: `free roam`, the bubble down. Index 12: within 1.4 m of Majsan the `solkram` interactable, at 2.5 m the talk, the julfest's four lines; Ole (the giver) none. Index 13 after `unlock('bodega')`: at 15:00 on the deck the fest's dancers not to be talked to; Berra at the bodega (the Berra job held off) "Ska du ha?" …; Angerud hidden, none; at 08:00 Lasse's oath with `oath` on Stig during his line and off after; Ole's Concorde with `wings` and the arms down after. The flight level: nothing. Shots `prata_1_prompt`, `_2_rio`, `_3_julfest`, `_4_bodega`, `_5_eden`, `_6_concorde` |
+| `takhopp` [feature 41] | Hoppet mellan hotelltaken (§10.29), at index 13 (free roam): `ROOF_JUMP` live, the roofs HOTEL ATLÁNTICO and APARTAMENTOS SOL DE INVIERNO, both floors at 21.09 (`groundAt` from 25 on each roof and at `takSolTopp`, `takAtlTopp`, `takUtsikt`), the gap 3.68 m with no floor in it, the lift room a wall (23.05), 17 coins, the gap's two palms at 8 m, no 99 m slab solid under the roofs; at `takSolLobby` the prompt "Ta trappan upp", E fades to black and puts him on the roof at `takSolTopp` facing the gap (yaw −π/2, `on` `sol`, `climbs` 1), `slump` and "Sju våningar…", no coin collected there, the prompt "Ta trappan ner"; W + Shift along the coins (a frame hook aims the camera) and a jump 1.2 m before the edge (as Space does): over the gap `dive.gap`, `leap`, the mantra once, down on ATLÁNTICO (`last.kind` `roof`, `gap`, the arms in), at least 11 coins on the way; run to `takUtsikt`: "Nu har jag havsutsikt." once (not again after a step away on the roof), at least 4 coins of the stash; `takAtlTopp`: "Ta trappan ner", E: out of ATLÁNTICO's lobby 2.8 m from `takAtlLobby`, facing out, no stairs there; on the roof again the view line again; sprinting off ATLÁNTICO's west edge at z 62: `leap` (not `bomb`, not `gap`), the mantra, a belly flop in the pool next door (x 53.9–64.8, v > 28, `down`) and its splash; with J 3 m under the roof a cannonball (`bomb`, `waterSplash` with bomb, no flop); a SKANDAL pursuit: no "Ta trappan" prompt at the lobby. At index 9, up by the stairs: the runner's state set to `intro` alone (a real start's intro stands him by the giver at once): `put` once to `takSolLobby`, out of the lobby with no landing over 6 m/s; from the roof `missions.begin()`: no landing over 6 m/s, on the ground; in the mission no `roof` block, every slab solid and stair tower to 99, the palms to 99, no roof floor at (100, 60), no `takhopp` prompt. Shots `takhopp_paret`, `_ascensor`, `_uppe`, `_glipan`, `_atlantico`, `_utsikt`, `_kvallssol`, `_nere`, `_fall`, `_plask` |
 | `badgaster`, `stekt` [feature 32] | Badgäster på solstolarna (§10.22). `badgaster`, at index 6 (free roam): bodies only on taken sun loungers, their hips on the seat, at most `max` (10), none on Berra's or Robban's; on the main beach no taken lounger within `r` left empty nearer than the bodies (shot `badgaster_strand`); one rebuilt body's ms logged. The burn: three loungers in the z 250 row; a bather lain past `burn[0]` stays pale while in view within `seenR` and is pink once out of view; past `burn[1]` lobster red (skins from `skins`; shot `badgaster_stadier`). A kick at a free lounger and at a taken one give the same SKANDAL; the bather off it in a backward somersault (`flip` < 0) along the lounger's facing (vz > 2), an OUCH bark, a GETUP bark on his feet (shots `badgaster_kullerbytta`, `badgaster_upp`), gone once Stig is 30 m off; no `onCharHit`, no "hit" sorry. His car at 10 m/s through a taken lounger: SKANDAL 1 × 1.2 × gain only, the bather off along the car (vz > 5; shot `badgaster_bil`). The lounger back after its smash (respawn 0, him 100 m off): `n` + 1, a new seed, stage 0, a pale newcomer on it. At 22:00 nobody (after a cut); at 10:00 `dayN` + 1 and a new crowd. A mission start (friskotek) takes every body away at once, none in the mission; the flight level (index 2) makes none. `stekt`, at index 6: Berra and Robban `lying` on their loungers, outfit `stekt` (skin `STEKT_SKIN`), `slump`, busy, spot `stekt`; both snore within 9.5 s (shots `stekt_bar`, `stekt`); the E point `stekt:wake` at Berra's feet: Stig's line, then Berra's with `lift` > 0.6 (shot `stekt_fem_minuter`), then Robban's, in that order, and `lift` back under 0.1; a kick at Berra's lounger: `flung`, then `down` with his timer held (> 100), still `stekt`, only snores from him (shot `stekt_sparkad`); the lounger back with him 100 m off: on it again. A mission start (friskotek): both `normal`, outfit `sol`, no slump, within 2.5 m of their homes at the bar. Index 7: on their loungers; 5 and 8: not |
 | `talk` [Phase 0] | `autoDialog = false`, walk to Ole at `gateQueue`, E, Space twice |
 | `fullstory` [Phase 0b] | swaps the literal §8 missions (`tools/fixtures/full-missions.js`) into `MISSIONS` and plays all 13 per §16.3 (`FROM`/`TO` as `story`); must end `#13 idle`, `RESULT: PASS` |
@@ -7357,6 +7486,8 @@ fatagaDukar golf bungalow bygge dromplan airport hittegods busBay bagageband dyn
 brodrost_supermercado brodrost_grillpaco brodrost_hittegods` (feature 33, §10.24)
 + room 107's E spots `rum107Hylla rum107Giraff rum107Radio` (feature 38, §10.25)
 + room 107's wardrobe `rum107Garderob` (feature 36, §7.2)
++ the hotel roofs' stairs and view `takSolLobby takSolTopp takAtlTopp takAtlLobby takUtsikt` (feature 41,
+§10.29)
 + collectibles `pryl_klocka pryl_poolpen pryl_kalkylator pryl_kniv pryl_kamera pryl_glasogon
 pryl_pung fena_flamenco fena_suntrip fena_plaza fena_golf fena_bungalow fena_hamn fena_hav` + Rio
 `rioBoat rioCam`.
@@ -9174,3 +9305,29 @@ the fixer's group.
   the end (their stale ones: the grisfest bus, "Hammarby…?"). Deviations: twelve people, not twenty;
   one bubble at a time; a fourth line to the julfest exchange; the radius 3.0 m. No mission, stage
   kind, timer, fixture or calibration pool changed. Scenario `prata` (§16.4).
+- Feature 41, "Hoppet mellan hotelltaken" (`features/implemented/hoppet_mellan_hotelltaken.md`, 2026-10-17):
+  the roofs of HOTEL ATLÁNTICO and APARTAMENTOS SOL DE INVIERNO in (4,4)'s north row walkable between
+  missions (§10.29; new `src/game/roofJump.js`, `TAKHOPP` in content/island.js; §1.6, §6.5, §14.1–§14.3,
+  §14.7, §14.8, §16.4, Appendix A). World (town.js): `slabLot` gets its lot id and keeps its body's and
+  stair tower's solids; `roofWalk` for lots `4,4,0,1` (`atl`) and `4,4,0,2` (`sol`): the roof floor at
+  21.09 (the parapet's top), the stair tower's head, the lift room, tanks, antenna and name sign as
+  walls up there, the brochure's sign `BALKONG MED HAVSUTSIKT / OCH KVÄLLSSOL` [F*] on ATLÁNTICO, a
+  glass door in both lobbies, a door on both lift rooms, `ASCENSOR AVERIADO` [N] over SOL DE INVIERNO's
+  lobby door, 17 coins (`ROOF_JUMP.coins`); `roofJumpFinish` after every block: the gap (3.68 m), its 3
+  coins, the gap's two palms (a tree's collider reaches 99) with an 8 m twin. Every one of these solids
+  has a `dead` getter on `ROOF_JUMP.live()` (`roofs`: the island, idle): the roof's blocks are dead in
+  any other state, the slabs' 99 m body and stair tower and the palms' 99 m trunks dead between
+  missions. So in a mission every stage meets the world as before, and between missions nothing under
+  8 m changed: no mission, stage kind, timer, fixture or calibration pool changed, and no random draw
+  was added. Landmarks `takSolLobby`, `takSolTopp`, `takAtlTopp`, `takAtlLobby`, `takUtsikt`. The
+  stairs (three E doors, `takhopp:upp` in SOL DE INVIERNO's lobby, `takhopp:solNer` and `takhopp:atlNer`
+  by the lift rooms; shut in a SKANDAL pursuit): a black fade, up out of breath with "Sju våningar…"
+  [N], down 2.8 m out of the lobby. Off a roof (over the gap, or 0.4 m under it) `anim.leap` and the
+  mantra; into the pool next door off ATLÁNTICO's west edge (a sprint lands at x 61.1, v 31.6) a belly
+  flop or, with J, a cannonball through `waterSplash`; by `takUtsikt` "Nu har jag havsutsikt." [N] once
+  a visit. main.js: `roofs` after `chat`, `roofs.update` after `chat.update`, `game.onLand` calls
+  `roofs.onLand` beside the tower's. Deviations from the idea: `leap` instead of `wings` over the gap;
+  the tower's belly flop and cannonball instead of a new splash; a third stair door on ATLÁNTICO's lift
+  room and none in its lobby; the roof floors are the slabs' footprints (0.15 m inside the parapets);
+  the gap's palms stop at 8 m between missions; the coins respawn every session; down by the stairs he
+  stands 2.8 m out of the lobby. Scenario `takhopp` (§16.4).

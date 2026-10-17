@@ -159,6 +159,16 @@ export const ISLAND_LANDMARKS = {
   // the yellow ramp's crest.
   stunt_planka: { b: [5, 1], at: [22, -1.4], yaw: PI / 2, y: 4.45 },
   stunt_gula: { b: [5, 1], at: [-16, 4], yaw: PI, y: 1.95 },
+  // (4,4) Hoppet mellan hotelltaken (feature 41, §10.29): the seven-storey pair in the north row
+  // (town.js roofWalk; ATLÁNTICO lot-local x = world x − 80, SOL DE INVIERNO x − 100.667, both z − 49).
+  // The lobbies' E spots face their doors (the stairs down put him there turned round); the roof
+  // spots stand in front of the lift rooms' doors, SOL DE INVIERNO's facing the gap (where the stairs
+  // up put him); `takUtsikt` faces the sea by ATLÁNTICO's south edge (not an E spot).
+  takSolLobby: { world: [100.667, 54.3], yaw: 0 },
+  takSolTopp: { world: [104.97, 61.46], yaw: -PI / 2, y: 21.09 },
+  takAtlTopp: { world: [84.2, 61.65], yaw: 0, y: 21.09 },
+  takAtlLobby: { world: [80, 54.85], yaw: 0 },
+  takUtsikt: { world: [80.0, 65.9], yaw: 0, y: 21.09 },
   // (6,1) the old dream plane
   dromplan: { b: [6, 1], at: [0, 20], yaw: PI },
   pryl_kamera: { b: [6, 1], at: [-4, -2], yaw: 0, y: 3.6 },

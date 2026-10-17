@@ -306,6 +306,18 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   Efter slutet har alla nya repliker, och vid bodegan frågar Berra "Ska du ha?". Tryck E igen så
   kommer nästa växling, och när de är slut börjar de om. Den som delar ut nästa uppdrag har sitt
   vanliga E, och de som dansar Små grodorna i poolen får du prata med på kvällen eller morgonen.
+- **Hoppet mellan hotelltaken**: mitt emot bensinstationen står APARTAMENTOS SOL DE INVIERNO och HOTEL
+  ATLÁNTICO, sju våningar höga med en smal glipa emellan. Mellan uppdragen kan du gå in genom
+  lobbydörren till SOL DE INVIERNO (hissen är trasig, ASCENSOR AVERIADO) och trycka E, "Ta trappan
+  upp". Efter en kort övertoning står Stig andfådd vid hisshuset på taket ("Sju våningar…"). Följ
+  mynten till västra kanten, ta sats och hoppa: över glipan slår han ut armarna och säger "Jag kan
+  flyga, jag är inte rädd.". Ett hopp i full fart räcker om du hoppar nära kanten, annars får
+  dubbelhoppet hjälpa till. På ATLÁNTICOS tak står broschyrens skylt BALKONG MED HAVSUTSIKT OCH
+  KVÄLLSSOL vid södra kanten, det ligger mynt bredvid, och där säger Stig äntligen "Nu har jag
+  havsutsikt.". Ner kommer du med trappan (dörren på hisshuset), med R, eller genom att springa rakt
+  ut över västra kanten och ner i hotellpoolen intill: ett magplask, eller en bomb om du trycker J i
+  luften. Under en jakt med Guardia Civil är trappan stängd, och under uppdragen går taken inte att
+  stå på.
 
 ## Vad är påhittat?
 
@@ -390,6 +402,10 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
   när han tar för mycket (i filmen är solkrämen bara poolprat, och ingen sätter poäng på den)
 - samtalen med gänget på E mellan uppdragen, där Stig svarar (replikerna kommer från andra scener i
   filmen eller är våra: Oles Rio-replik sägs på välkomstmötet, julfestrepliken på julaftons morgon)
+- taken på HOTEL ATLÁNTICO och APARTAMENTOS SOL DE INVIERNO, trappan upp med den trasiga hissen,
+  hoppet över glipan med mantrat, broschyrskylten och Stigs havsutsikt där uppe, och språnget ner i
+  poolen (i filmen är havsutsikten en spegel som portiern håller ut från hotellrummet, och ingen går
+  upp på något tak)
 - fårrusningen i Fataga, kappkörningen mot nattbussen och porslinskrosset på tid
 - att samla ihop julfestgästerna
 - Oles prylar och hajfenorna som samlarföremål, utspridda över ön
@@ -496,6 +512,7 @@ src/game/room107.js             Rum 107 fylls med resans minnen in free roam: th
 src/game/solkram.js             Smörj in Majsans rygg in free roam: the SOLKRÄM meter, Siv's cards, the cream running
 src/game/stunts.js              Stunthopp med G17-stämpel in free roam: his car's jumps measured, LUFTTID, the stamp, the records
 src/game/gangTalk.js            Prata med gänget in free roam: E talks to the gang, the exchanges by part of the trip
+src/game/roofJump.js            Hoppet mellan hotelltaken in free roam: the walkable hotel roofs, the stairs, the jump, the pool
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
@@ -503,7 +520,7 @@ tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, 
                                 paintshop, berra, glide, simhopp, tuta, dygn, super8, eslov, grodorna,
                                 artig, grisar, bagage, lapplisa, torsdag, frukt, hopptorn, hund,
                                 badgaster, butik, brodrost, rum107, solkram, skjortbyte,
-                                stunthopp, prata, calibrate, calibflight)
+                                stunthopp, prata, takhopp, calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
 tools/pool.mjs                  re-derives every random stage's timer from the ledger
@@ -556,6 +573,7 @@ node tools/shot.mjs solkram              # Majsan's sun cream: the ask, the mete
 node tools/shot.mjs stunthopp stuntzoner # the stunt jumps: the plank to the dream plane, the stamp, the pay and the record, UNDERKÄND; the yellow ramp, a garage deck, GODKÄND
 node tools/shot.mjs skjortbyte garderob  # room 107's wardrobe in a pursuit: the change, busted in there, the officer walking past, back to the shirt; shots
 node tools/shot.mjs prata                # the gang's talk: the table, who at every index, Rio, the round, the stops, the julfest, after the end; shots
+node tools/shot.mjs takhopp              # the hotel roofs: the stairs up, the jump over the gap, the view, the stairs down, into the pool, a mission start
 node tools/shot.mjs fullstory kinds      # the literal §8 missions and the stage-kind checks
 node tools/shot.mjs calibrate calibflight  # timer and FLYGRÄDSLA calibration (slow; see DESIGN §8, §16.4)
 node tools/pool.mjs                      # random-stage timers from the raw runs in notes/calibration-samples.md
