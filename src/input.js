@@ -19,9 +19,13 @@ const KEYS = {
   skip: ['Space', 'KeyE', 'Enter', 'Mouse0'],
   mute: ['KeyN'],
   reset: ['KeyR'],
+  // A choice menu (Hytt två!'s cars, §10.43): W/S or the arrows choose, Q hangs up.
+  menuUp: ['KeyW', 'ArrowUp'],
+  menuDown: ['KeyS', 'ArrowDown'],
+  hangUp: ['KeyQ', 'Backspace'],
 };
-// Standard gamepad layout (Start = button 9 = pause).
-const PAD = { jump: [0], handbrake: [0], sprint: [1], attack: [2], interact: [3], horn: [10], pause: [9], map: [8], skip: [0, 3], lookBack: [11] };
+// Standard gamepad layout (Start = button 9 = pause; the d-pad's up and down = 12 and 13).
+const PAD = { jump: [0], handbrake: [0], sprint: [1], attack: [2], interact: [3], horn: [10], pause: [9], map: [8], skip: [0, 3], lookBack: [11], menuUp: [12], menuDown: [13], hangUp: [1] };
 
 export const input = {
   locked: false,

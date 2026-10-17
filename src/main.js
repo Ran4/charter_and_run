@@ -58,6 +58,7 @@ import { Residents } from './game/residents.js';
 import { Lighthouse } from './game/lighthouse.js';
 import { ReceptionBell } from './game/receptionBell.js';
 import { StreetRace } from './game/streetRace.js';
+import { PhoneBooth } from './game/phoneBooth.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
 import { LEVELS, ISLAND_PALETTES } from './level.js';
@@ -231,6 +232,7 @@ class Game {
     this.golf = new GolfCarts(this);      // free roam: the golf carts at the clubhouse, pip-pip, the bunkers and the pond (§10.40)
     this.battur = new BoatTrip(this);     // free roam: the boat trip with PALOMA from the marina's kiosk, the end card again after the end (§10.41)
     this.residents = new Residents(this); // free roam: the neighbours on the balconies, the siesta and its slipper (§10.42)
+    this.hytt = new PhoneBooth(this);     // free roam: booth 2 at Centro Nórdico, ring for a car to the car park (§10.43)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -1581,6 +1583,7 @@ class Game {
     this.golf.update(dt);
     this.battur.update(dt);
     this.residents.update(dt);
+    this.hytt.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);

@@ -157,7 +157,13 @@ opens with a summary of the rounds and the timer changes.
     nere!", the mirror tourist's "Kallar ni det här för havsutsikt?", "Här nere parkerar de
     hursomhelst." at a car left on the sidewalk; at siesta (13–17, the held test clock's 15:00) the
     horn or a smash brings "¡Silencio! ¡Siesta!", the slipper on his head or the car's roof and
-    "Förlåt!"; nobody at night, in a mission or in the flight level, DESIGN §10.42)
+    "Förlåt!"; nobody at night, in a mission or in the flight level, DESIGN §10.42), `hytt` (Hytt två!,
+    E at booth 2 of Centro Nórdico's phone pavilion between missions on foot: the cut, "Hytt två!", the
+    menu of named cars (the hire car, bus 17, the grisbil once unlocked; W/S, Q hangs up), the call:
+    the named car itself moved whole to a free spot in the car park out of the camera's view, "Señor,
+    betala!" and 25 pta (Ole when short), Stig turned to it; a dent, a wreck, a delivered grisbil's bed,
+    a full car park; no prompt in a car, a pursuit or a mission; bus 17 home at its mission's start,
+    DESIGN §10.43)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

@@ -161,6 +161,20 @@ body.panik #app canvas { filter: saturate(1.5) contrast(1.08); }
 .res-time { text-align: right; font-variant-numeric: tabular-nums; }
 .res-caption { font: 700 italic 16px/1.3 var(--body); text-align: center; margin-top: 8px; color: var(--cream); }
 .res-caption:empty { display: none; }
+/* A choice box on the left (Hytt två!'s cars at the phone, §10.43): a cream card with the objective
+   card's stripe, the chosen row in sun yellow, the keys under it. Under Ole's watch (top 76 px). */
+#menu { position: absolute; left: 22px; top: 140px; width: min(370px, 86vw); background: var(--cream); border: 3px solid var(--ink); border-radius: 18px; padding: 14px 14px 10px; box-shadow: 4px 5px 0 var(--ink); opacity: 0; transform: translateX(-40px); transition: opacity 0.2s, transform 0.3s cubic-bezier(.3, 1.4, .5, 1); pointer-events: none; }
+#menu::before { content: ""; position: absolute; left: 14px; right: 14px; top: -3px; height: 6px; border-radius: 0 0 4px 4px; background: linear-gradient(90deg, var(--orange) 0 33%, var(--sun) 33% 66%, var(--terracotta) 66%); }
+#menu.show { opacity: 1; transform: none; }
+.mn-title { font: 24px/1.1 var(--display); letter-spacing: 1px; color: var(--ink); margin: 0 4px 8px; }
+.mn-rows { display: flex; flex-direction: column; gap: 4px; }
+.mn-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font: 800 17px/1.25 var(--body); padding: 6px 10px; border: 2px solid transparent; border-radius: 10px; }
+.mn-row.sel { background: var(--sun); border-color: var(--ink); box-shadow: 0 2px 0 #b8860b; }
+.mn-side { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.mn-note { font: 700 14px/1.3 var(--body); margin: 10px 4px 0; }
+.mn-note:empty { display: none; }
+.mn-keys { font: 700 14px/1.7 var(--body); margin: 4px 4px 0; }
+.mn-keys b { background: var(--sun); color: var(--ink); border: 1px solid var(--ink); border-radius: 5px; padding: 1px 6px 0; font: 15px/1.2 var(--display); box-shadow: 0 2px 0 #b8860b; }
 /* The pool fest's hop counter (§10.13): top right under the meter; the toasts move down under it. */
 #takt { position: absolute; top: 88px; right: 24px; font: 26px/1 var(--display); letter-spacing: 1px; color: var(--ink); background: var(--cream); border: 3px solid var(--ink); border-radius: 14px; padding: 7px 14px 5px; box-shadow: 3px 4px 0 var(--ink); opacity: 0; transform: translateX(20px); transition: opacity 0.25s, transform 0.25s; white-space: nowrap; pointer-events: none; }
 #takt.show { opacity: 1; transform: none; }

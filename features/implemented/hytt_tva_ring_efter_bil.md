@@ -1,18 +1,54 @@
 # 80. Hytt två! – ring efter en bil
 
+**Implementerat.** (2026-10-17) Mellan uppdragen, till fots: **E** vid hytt 2 i telefonpaviljongen på
+Centro Nórdico ("E Ring efter bil") ställer Stig vid dörren, kameran klipper till en bild över hans axel,
+telefonisten ropar "Hytt två!" i radiorutan och menyn HYTT TVÅ · VILKEN BIL? glider in till vänster:
+Hyrbilen, SunTrips buss 17 och Grisbilen (bara när den är upplåst), 25 pta styck. W/S (pilarna,
+styrkorset) väljer, Q (Backspace) lägger på utan att något händer och E ringer: signalen går fram två
+gånger, Stig säger "Ja, hej. Hyrbilen, tack.", den namngivna bilen själv flyttas, hel och lagad, till
+den första lediga av tre rutor på parkeringen bakom kameran, telefonisten säger "Señor, betala!", 25 pta
+dras (Ole betalar om det inte räcker) och Stig säger "Tack så mycket!". Sedan har han klivit ett par
+steg bort från hytten och vänt sig mot bilen, kameran står bakom honom och en ruta säger att bilen står
+på parkeringen vid Centro Nórdico. Vid grisbilen säger han dessutom "Den luktar lite.".
+- **Var:** `src/game/phoneBooth.js` (`PhoneBooth`, `game.hytt`), konfigurationen och replikerna i
+  `HYTT_TVA` (`src/content/island.js`), rutorna `hyttBil1–3` i `src/world/landmarks-island.js`,
+  valrutan `hud.menu` i `src/game/hud.js` och `#menu` i `style.css`, menytangenterna `menuUp`,
+  `menuDown`, `hangUp` i `src/input.js`, och två rader i `src/main.js`. DESIGN §10.43 (plus §1.6, §3,
+  §6.3, §10.2, §11.4, §14, §16.4, Appendix A och changeloggen), README och CLAUDE.md.
+- **Hel och lagad:** en bucklig bil repareras (samma bil), en kvaddad (eller borttagen) kommer
+  tillbaka genom `ensureNamedCar` som en enda ny bil med det namnet. En grisbil vars grisar redan är
+  levererade kommer med tomt flak, så att leveransen inte kan betalas två gånger. Bilens `home` är
+  orörd, så bärgningen och uppdragens `getInCar` med `atHome` (buss 17, grisfestens hyrbil) ställer
+  tillbaka den som förut: ingen genväg i uppdragen.
+- **Avvikelser från idén:** tre egna rutor i parkeringens körfält (11, 18.6), (11, 22.4) och (−11,
+  18.6) i stället för en vid ungefär (87, −63), alla bakom kamerans öga och fria från lyktstolparna och
+  Josés plats; en egen kamerabild över axeln i stället för `cutTo('telefon')`, vars öga 9 m bak står på
+  parkeringen; Stig beställer högt, och "Tack så mycket! … Den luktar lite." är två repliker (tacket
+  till telefonisten, lukten när han har vänt sig mot grisbilen); han kliver bakåt innan han vänder sig,
+  annars hamnade kameran rakt ovanför honom mot paviljongväggen; en full parkering ("Ingen plats på
+  parkeringen, señor!") kostar inget. Lapplisans lapp ger upp av sig själv när bilen flyttas, så
+  `lapplisa.js` är orörd. "Hytt två! – Stig ringer hem" är inte byggd.
+- **Verifierat headless (port 8861):** nytt scenario `hytt` (prompten, menyn och dess rader, W/S med
+  omslag, att Stig står still, Q, ett samtal där bilen flyttas utanför kamerans bild och betalningen
+  kommer efter, Ole som betalar, lagning, buss 17 på nästa ruta utan krock med väggar eller bilar, en
+  kvaddad grisbil som kommer tillbaka ny, ett levererat flak som förblir tomt, full parkering, ingen
+  prompt i bil, under jakt eller i uppdrag, och buss 17 tillbaka på flygplatsen när Lasses uppdrag
+  börjar): `RESULT: PASS`. `story` och `fullstory` gav `RESULT: PASS`, liksom `ui`, `snackrutor`,
+  `grisar` och `api`. Skärmbilderna (menyn, samtalet, bilen på parkeringen, grisbilen) är granskade.
+
 **Betyg:** 5/10 · wow 3 · film 2,7 · Stig-Helmer 2,3 — *Hit & Runs telefonkiosk gör upplåsta bilar användbara och lagar den kvaddade grisbilen, men ”Hytt två!” räcker inte för en filmupplevelse.*
 
 *Stig går fram till telefonpaviljongen i Centro Nórdico och väljer Hyrbilen, SunTrips buss 17 eller Grisbilen i en liten meny. När han vänder sig om står bilen och väntar på parkeringen.*
 
 **Kategori:** Fordon · **Var:** Centro Nórdico i kvarter (4,2): telefonpaviljongen TELÉFONOS · HYTT 1·2·3 vid (80, −72) och parkeringen söder om den, där bilen ställs vid ungefär (87, −63) · **Insats:** M – det enda helt nya är en liten valmeny som styrs med tangenterna. Resten är en interaktionspunkt och att flytta och laga tre bilar som redan finns.
 
-![Centro Nórdico med telefonpaviljongen och den tomma parkeringen](free_roam_bilder/hytt-tva-ring-efter-bil-1.jpg)
+![Centro Nórdico med telefonpaviljongen och den tomma parkeringen](../free_roam_bilder/hytt-tva-ring-efter-bil-1.jpg)
 *Bild 1 (nuläge): Centro Nórdico sett snett uppifrån från sydväst. Stig står vid hytterna under skylten TELÉFONOS · HYTT 1·2·3. José står på parkeringen, och rutorna till höger är tomma. Paviljongen är bara kuliss i dag. De namngivna bilarna står långt härifrån: Hyrbilen och Grisbilen vid Hotell Flamenco, ungefär 140 m bort, och buss 17 vid flygplatsen, ungefär 230 m bort.*
 
-![Skiss: menyn ”Hytt två · vilken bil?” vid hytterna](free_roam_bilder/hytt-tva-ring-efter-bil-2.jpg)
+![Skiss: menyn ”Hytt två · vilken bil?” vid hytterna](../free_roam_bilder/hytt-tva-ring-efter-bil-2.jpg)
 *Bild 2 (SKISS – tillfälligt uppställd i en headless-körning, finns inte i spelet): Stig står vid hytterna. Menyn HYTT TVÅ · VILKEN BIL? visar bara de tre namngivna bilar som spelaren faktiskt får köra: Hyrbilen, SunTrips buss 17 och Grisbilen, 25 pta styck. Under raderna står ”Bilen väntar på parkeringen.” och tangenterna ”W/S välj · E ring · Q lägg på”. Uppe till höger ropar telefonisten ”Hytt två!” i porträttrutan. Menyn är en ruta som lagts ovanpå spelet för skissens skull.*
 
-![Skiss: Grisbilen levererad på parkeringen, telefonisten kräver betalt](free_roam_bilder/hytt-tva-ring-efter-bil-3.jpg)
+![Skiss: Grisbilen levererad på parkeringen, telefonisten kräver betalt](../free_roam_bilder/hytt-tva-ring-efter-bil-3.jpg)
 *Bild 3 (SKISS – tillfälligt uppställd i en headless-körning, finns inte i spelet): Grisbilen står på parkeringen framför paviljongen, och Stig får rutan ”Kliv in”. En ruta meddelar att Grisbilen står på parkeringen vid Centro Nórdico, telefonisten säger ”Señor, betala!” och plånboken har gått från 1 250 till 1 225 PTA. Stig säger artigt ”Tack så mycket! … Den luktar lite.” José står kvar på sin vanliga plats till vänster.*
 
 **Idén.** När inget uppdrag pågår och Stig går till fots står det ”E Ring efter bil” vid hytt 2. Kameran klipper till hytterna, telefonisten ropar ”Hytt två!”, och menyn visar de namngivna bilar han får köra. Hyrbilen och SunTrips buss 17 finns från början på ön, och Grisbilen tillkommer när den har låsts upp efter Pepes Bodega. Stig står still medan menyn är öppen. W/S väljer bil, E ringer och Q lägger på. Medan kameran fortfarande är riktad mot hytten flyttas bilen till en ledig ruta på parkeringen, hel och lagad, så att ingen bil dyker upp ur tomma luften. Sedan säger telefonisten ”Señor, betala!” och 25 pta dras. Räcker inte plånboken betalar Ole som alltid (”Jeg spanderer!”). Belöningen är att bussen från flygplatsen och grisbilen från Flamenco kommer till stan när man vill ha dem. Dessutom kommer en kvaddad Grisbil tillbaka, som i dag är borta tills spelet laddas om.

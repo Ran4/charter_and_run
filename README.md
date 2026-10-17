@@ -44,7 +44,7 @@ Samma tangenter i båda nivåerna; nivån bestämmer vad de gör.
 | Shift | spring | | skynda – men det ökar rädslan |
 | Space | hoppa, i luften igen för dubbelhopp | handbroms (sladd!) | **håll i dig**: ta tag i närmaste stolsrygg vid turbulens |
 | J / klick | sparka, i luften: stampa (efter julafton: **håll in i luften** för att glidflyga) | | **håll in**: "Jag kan flyga, jag är inte rädd" – sänker FLYGRÄDSLA |
-| E | prata (med uppdragsgivaren, och mellan uppdragen med gänget), kliv in, sno en bil, kvarta en stund i Stigs säng i rum 107, titta i herr Storchs kamera, heja på rullskidåkaren, dansa med i poolen, smörja in Majsans rygg (**håll in** och släpp i det gröna), byta om i garderoben i rum 107, söka skydd i kyrkan | kliv ur (i fart: rulla ur) | prata, **sätt dig / res dig**, lås in dig på toaletten, anropsknappen, serveringsvagnen |
+| E | prata (med uppdragsgivaren, och mellan uppdragen med gänget), kliv in, sno en bil, kvarta en stund i Stigs säng i rum 107, titta i herr Storchs kamera, heja på rullskidåkaren, dansa med i poolen, smörja in Majsans rygg (**håll in** och släpp i det gröna), byta om i garderoben i rum 107, söka skydd i kyrkan, ringa efter en bil från hytt 2 | kliv ur (i fart: rulla ur) | prata, **sätt dig / res dig**, lås in dig på toaletten, anropsknappen, serveringsvagnen |
 | H | | tuta (utanför uppdragen hör folk den; i den lånade Guardia-jeepen: sirenen) | |
 | B | | titta bakåt | |
 | M / Tab | stor karta | stor karta | plan över gaten/kabinen |
@@ -56,7 +56,8 @@ Sitter Stig-Helmer ner i planet rör han sig inte; E reser honom upp (eller tryc
 ovanför stolen), J håller mantrat. På julafton blir J mantrat även på ön, liksom uppe på fyrens
 galleri (där man inte kan hoppa), och efter julafton kan
 Stig-Helmer glidflyga: tryck J i luften och håll in (ett kort tryck stampar som förut). Handkontroll fungerar
-också: A hopp/handbroms, B spring, X sparka/mantra, Y prata, Start paus, triggrarna kör.
+också: A hopp/handbroms, B spring, X sparka/mantra, Y prata, Start paus, triggrarna kör. I telefonens
+bilmeny väljer W/S (pilarna, styrkorsets upp och ner), E ringer och Q (Backspace, B) lägger på.
 
 Vägen visas av den gula pilen över Stig-Helmers huvud, ljuskäglan och ringen vid målet och
 stjärnan på kartan. På Arlanda och i planet går pilen runt bänkar, väggar och stolsrader i
@@ -255,6 +256,14 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   mellan ett och fem spansk tid, ska man inte tuta eller slå sönder något framför en señoras balkong:
   "¡Silencio! ¡Siesta!", och en rosa toffel kommer farande ner i huvudet på Stig (eller på biltaket).
   "Förlåt!", säger Stig till balkongen, och grannarna skrattar.
+- **Hytt två! – ring efter en bil**: i telefonpaviljongen TELÉFONOS · HYTT 1·2·3 på Centro Nórdico
+  kan Stig ringa efter en bil mellan uppdragen. Tryck **E** vid hytt 2: telefonisten ropar "Hytt två!"
+  och en meny visar de namngivna bilar han får köra – Hyrbilen, SunTrips buss 17 och, när den är
+  upplåst, Grisbilen – för 25 pta styck. **W/S** väljer, **E** ringer och **Q** lägger på. "Ja, hej.
+  Hyrbilen, tack." Medan kameran är på hytten ställs bilen på parkeringen bakom honom, hel och lagad
+  (en kvaddad bil kommer tillbaka som ny), telefonisten säger "Señor, betala!" (räcker inte kassan
+  betalar Ole) och Stig tackar artigt. När han vänder sig om står bilen och väntar. Grisbilen? "Den
+  luktar lite."
 - **Små grodorna i poolen** (efter slutet): julfesten är inte riktigt över. Varje gång du kommer in
   på Flamencos pooldäck (mellan nio på morgonen och elva på kvällen) vadar SunTrip-gänget ut i den
   grunda änden och ställer sig i ring runt Lasse i tomteluva. Affe spelar Små grodorna på dragspelet,
@@ -500,6 +509,9 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
 - grannarna på balkongerna, señoran och hennes toffel på siestan och Stigs "Förlåt!" (i filmen är
   spegeln portierns i rum 107, havsutsiktsrepliken sägs där och parkeringsrepliken är Majsans på
   systrarnas balkong)
+- att ringa efter en bil från hytt 2 på Centro Nórdico, bilmenyn och telefonisten som ställer bilen på
+  parkeringen (i filmen ringer Angerud Levander från en telefonstation; "Hytt två" sägs på engelska och
+  någon kräver "Señor, betala!", men anteckningarna säger inte vem)
 - poolfesten efter slutet: ringen runt Lasse, portierns promenad, att Stig hoppar med och
   takträknaren (i filmen dansar de andra Små grodorna i poolen på julfesten medan Stig-Helmer och Ole
   öppnar knäckebrödet, och Stig-Helmer dansar aldrig)
@@ -701,6 +713,7 @@ src/game/streetRace.js          Gatlopp mot pizza-racern in free roam: José's t
 src/game/golfCart.js            Golfbilen in free roam: the golf carts (never a mission's), the pip-pip, the bunkers' sand and the pond's splash
 src/game/boatTrip.js            Båtturen med PALOMA in free roam: the kiosk, the trip's fixed shots, the doubles, the fin, the end card again after the end
 src/game/residents.js           Balkongerna lever in free roam: the residents on the slabs' balconies, their calls, the parking line, the señora's slipper at siesta
+src/game/phoneBooth.js          Hytt två! in free roam: booth 2 at Centro Nórdico, the menu of named cars, the call, the car moved whole to the car park
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
@@ -710,7 +723,7 @@ tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, 
                                 badgaster, butik, brodrost, rum107, solkram, skjortbyte,
                                 stunthopp, prata, takhopp, mikrofon, faglar, gags, strandkyssen,
                                 guardiajeep, fyren, klader, ringklocka, kyrkfrid, gatlopp, skidor,
-                                golfbil, battur, balkong, calibrate, calibflight)
+                                golfbil, battur, balkong, hytt, calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
 tools/pool.mjs                  re-derives every random stage's timer from the ledger
@@ -751,6 +764,7 @@ node tools/shot.mjs eslovrundankal       # measure the skier's two times with th
 node tools/shot.mjs golfbil              # the golf carts: E, top speed, the pip-pip, a bunker, the pond, a wreck, the mission lock
 node tools/shot.mjs battur batturrio     # the boat trip: the kiosk, the four shots, Ole paying, E's skip, a mission start; the end card again after the end
 node tools/shot.mjs balkong balkongshots # the balconies' residents: the calls, the mirror, the parking line, the siesta's slipper
+node tools/shot.mjs hytt                 # the phone at Centro Nórdico: the menu, Q, a call, the car out of view, the fare, a wreck, a full car park, the locks
 node tools/shot.mjs grodorna grodtakt    # the pool fest after the end: the ring, the porter, Stig in the ring, eight on the beat
 node tools/shot.mjs artig                # Stig says sorry: kicks, run over, a pump, bins, carjackings and the driver's "Nej."
 node tools/shot.mjs grisar               # the grisbil's pigs: the falls, the catch on foot and by creeping, Lasse, the pen

@@ -1942,6 +1942,42 @@ export const GOLFBIL = {
   respawnR: 60,
 };
 
+// Hytt två! – ring efter en bil (free roam, DESIGN §10.43; game/phoneBooth.js). On the island with no
+// mission running (`missions.state === 'idle'`), Stig on foot within `r` m of booth 2 of the phone
+// pavilion in Centro Nórdico (`stand`: [left, forward] from the `lm` landmark, facing the booth) gets
+// `prompt`. E: Stig stands at the booth, the camera cuts to it (`eye`, `look`: [left, forward, height]
+// from `lm`), the telefonist (`who`, radio only) calls `booth` and the menu shows `cars` that are on
+// the island and not locked (the grisbil only once it is unlocked), each at `price`, under `title`,
+// with `note` and `keys`. W/S chooses, Q hangs up (nothing paid), E rings: the line rings `ringSecs`
+// s, Stig orders (`order`), and `moveAt` s after the ring his car is moved to the first free one of
+// `spots` (landmarks in the car park behind the camera: no car, person or loose pig within `pad` m of
+// its footprint), whole: a wreck is replaced, a dent repaired, a delivered grisbil's bed stays empty.
+// `payAt` s after the ring `pay` and `game.pay(price)` (Ole pays when the purse is short), Stig's
+// `thanks`; `endAt` s after the ring Stig has stepped back from the booth (`after`, [left, forward]
+// from `lm`) and turned to the car, the camera is behind him again, the `toast` names it, and the
+// grisbil gets `pig` `pigAt` s later. No free spot: `full`, nothing paid, Stig back at the booth. Invented
+// (§1.6): the car call, the menu and the car park's spots; the two calls are the film's, moved.
+export const HYTT_TVA = {
+  lm: 'telefon', stand: [0, 2.5], after: [0, -2.5], r: 1.6,
+  eye: [1.0, -3.4, 2.8], look: [-0.5, 3.0, 1.7],
+  cars: ['hyrbil', 'buss17', 'grisbil'],
+  spots: ['hyttBil1', 'hyttBil2', 'hyttBil3'], pad: 0.5,
+  price: 25,
+  ringSecs: 1.0, moveAt: 1.9, payAt: 2.6, endAt: 4.4, pigAt: 0.9,
+  who: 'telefonist',
+  prompt: '<b>E</b> Ring efter bil',                       // [N]
+  title: 'Hytt två · vilken bil?',                         // [N]
+  note: 'Bilen väntar på parkeringen.',                    // [N]
+  keys: '<b>W</b>/<b>S</b> välj · <b>E</b> ring · <b>Q</b> lägg på',   // [N]
+  booth: 'Hytt två!',                                      // [F*](t) the phone station in 7.12 (research-plot.md:322, said in English in the film), the speaker interpreted
+  order: 'Ja, hej. {name}, tack.',                         // [N] Stig
+  pay: 'Señor, betala!',                                   // [F*](t) after Angerud's call in 7.12 (research-plot.md:322), the speaker interpreted
+  thanks: 'Tack så mycket!',                               // [N] Stig
+  pig: 'Den luktar lite.',                                 // [N] Stig, at the grisbil (UNLOCKS.grisbil's "Den luktar." [N])
+  full: 'Ingen plats på parkeringen, señor!',              // [N]
+  toast: '<span><b>{name}</b> står på parkeringen vid Centro Nórdico.</span>',   // [N] (one flex item in the toast)
+};
+
 export const NAMED_CARS = {
   buss17: 'SunTrips buss 17', hyrbil: 'Hyrbilen', grisbil: 'Grisbilen', nattbuss: 'Nattbussen', joseBil: 'Josés bil', guardiaJeep: 'Guardia-jeepen',
   grisbilFollow: 'Grisbilen', utflyktsbuss: 'Utflyktsbussen', guardia1: 'Guardia-jeepen',   // [N]

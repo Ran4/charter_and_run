@@ -44,6 +44,7 @@ export const hud = {
       <div id="coins"><span class="coin-icon"></span><span id="coin-n">0 pta</span></div>
       <div id="klocka"><span class="pryl-icon"></span><span class="k-main"></span><span class="k-side"><span class="k-zone"></span><span class="k-sub"></span></span></div>
       <div id="collect"></div>
+      <div id="menu"><div class="mn-title"></div><div class="mn-rows"></div><div class="mn-note"></div><div class="mn-keys"></div></div>
       <div id="shame"><div class="shame-label"></div><div class="shame-row"><div class="meter-icon"><i></i></div><div class="shame-bar"><div class="shame-fill"></div><div class="shame-ticks"></div></div></div></div>
       <div id="objective"><div class="obj-title"></div><div class="obj-text"></div><div class="obj-timer"></div><div class="obj-bar"><div class="obj-zone"></div><div class="obj-bar-fill"></div><div class="obj-marker"></div><span class="obj-bar-label"></span></div></div>
       <div id="minimap-wrap"><canvas id="minimap" width="220" height="220"></canvas><div class="mm-n">N</div></div>
@@ -86,6 +87,7 @@ export const hud = {
     this.bubbles = $('bubbles');
     this.dialog = $('dialog');
     this.collectEl = $('collect');
+    this.menuEl = $('menu');
     this.clockEl = $('klocka');
     this.fadeEl = $('fade');
     this.scoreEl = $('score');
@@ -363,6 +365,27 @@ export const hud = {
     this._resT = setTimeout(() => e.classList.remove('show'), secs * 1000);
   },
   hideResults() { clearTimeout(this._resT); this.resultsEl.classList.remove('show'); },
+  // A small choice box on the left (Hytt två!'s cars at the phone, game/phoneBooth.js, §10.43): the
+  // `title`, one row a choice ({ label, side }: the `sel`th highlighted), then the `note` and the
+  // `keys` line (HTML: keycaps in <b>); null hides it. Chosen with the keys, never the mouse (a click
+  // releases the pointer lock, which pauses the game). Touches the DOM only on a change.
+  menu(o) {
+    const e = this.menuEl, key = o ? JSON.stringify(o) : null;
+    if (key === this._menuKey) return;
+    this._menuKey = key;
+    if (!o) { e.classList.remove('show'); return; }
+    e.querySelector('.mn-title').textContent = upper(o.title);
+    const box = e.querySelector('.mn-rows');
+    box.textContent = '';
+    o.rows.forEach((r, k) => {
+      const row = el('div', 'mn-row' + (k === o.sel ? ' sel' : ''), box);
+      el('span', 'mn-label', row, r.label);
+      el('span', 'mn-side', row, r.side || '');
+    });
+    e.querySelector('.mn-note').textContent = o.note || '';
+    e.querySelector('.mn-keys').innerHTML = o.keys || '';
+    e.classList.add('show');
+  },
   // A live line in the same place (the stunt jump's LUFTTID while his car is in the air, §10.27): the
   // text changes without the pop-in; up `secs` s after the last call, or until hideScore.
   liveScore(main, secs = 1.2) {

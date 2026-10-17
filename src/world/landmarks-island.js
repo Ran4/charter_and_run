@@ -102,6 +102,12 @@ export const ISLAND_LANDMARKS = {
   supermercado: { b: [4, 2], at: [-18, 18], yaw: PI },
   ferreteria: { b: [4, 2], at: [18, 18], yaw: PI },
   telefon: { b: [4, 2], at: [0, 8], yaw: PI },
+  // Hytt två! (free roam, §10.43): the car park's three spots for a car called from booth 2, in the
+  // aisle north of the bays (z 25.7) and clear of the lamp posts at (±14, 24.6), facing the street
+  // ends (out of the camera's view at the booth; a bus is 10.5 m long).
+  hyttBil1: { b: [4, 2], at: [11, 18.6], yaw: PI / 2 },
+  hyttBil2: { b: [4, 2], at: [11, 22.4], yaw: PI / 2 },
+  hyttBil3: { b: [4, 2], at: [-11, 18.6], yaw: -PI / 2 },
   // (2,3) Plaza · Casa Lola
   plaza: { b: [2, 3], at: [0, 6.8], yaw: PI },        // south of the fountain rim, facing it (C2)
   grillpaco: { b: [2, 3], at: [20, 22], yaw: PI },

@@ -180,6 +180,14 @@ from their own seed, and a mission start hides every one of them (and the señor
 held broom's bristles now stop at the holder's soles (models.js), a look only. `story` and `fullstory`
 passed on the feature's tree. Every pool below stands and no timer changed.
 
+**Feature 80 (Hytt två!, 2026-10-17) touches no pool.** E at booth 2 of Centro Nórdico's phone pavilion
+works only with `missions.state === 'idle'` (DESIGN §10.43): it moves a named car (the hire car, bus 17,
+the grisbil) to one of three spots in block (4,2)'s car park, off every road. The cars' `home` is
+unchanged, so a mission's `getInCar` `atHome` (buss17's bus, grisfest's hire car) puts a called car back
+in its bay as it does a driven one, and the tow does too; no stage, route, actor or autopilot changed.
+The world builds as before (three landmarks, no geometry). `story` and `fullstory` passed on the
+feature's tree. Every pool below stands and no timer changed.
+
 ## `friskotekBalls` · §8.7 s1 · six fleeing beach balls · on foot: timer = ceil(1.25 × (p75 + 6 × 0.5))
 
 Phase 3 r2 island-staging placed everyone for the intro's group shot (Stig, Lasse, the sisters, the
