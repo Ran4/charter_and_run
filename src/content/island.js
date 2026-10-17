@@ -11,9 +11,10 @@
 // the bungalow gardens and the farmyard on vischan, with their owners' calls (§10.21), and the
 // bathers on the sun loungers, their burn and the fly-off, Berra waking for five minutes more
 // (§10.22), the SOLKRÄM meter for Majsan's sun cream, Siv's cards for it and the cream running
-// (§10.26), the gang's short exchanges on E between missions, Stig answering (§10.28), and Stig
+// (§10.26), the gang's short exchanges on E between missions, Stig answering (§10.28), Stig
 // reading Lasse's announcements at the SunTrip stage's microphone, the island doing what he says
-// (§10.30).
+// (§10.30), and the island's birds that lift and land again, Stig's sorry to them, and the stork
+// that flies from La Charca to the Storches on the beach with Fru Storch's correction there (§10.31).
 
 export const HOMES_ISLAND = {
   ole: ['flamenco', 2.0, 1.0, 0],     // yaw 0: under the pergola, facing the pool (flamenco faces π)
@@ -997,6 +998,61 @@ export const MIKROFON = {
     cries: ['Hjälp!' /* [N] */, 'En haj!' /* [N] */],
     lasse: 'Hajar i poolen igen? Ring kliniken!',                                             // [F*] Lasse's phone call in the film, adapted (as COLLECTIBLES.fenor.first)
     stig: 'Men den är ju där…',                                                               // [N]
+  },
+};
+
+// Fåglarna som lyfter – och storken i La Charca (free roam, DESIGN §10.31; game/birds.js). Four
+// flocks: `kind` (game/birds.js KINDS), the block `b` their `spots` and `loop` are given in (block-
+// local metres), the circle they fly round when scared (`loop`: centre `at`, radius `r` (±20 % a
+// bird), height band `h`, after `secs` s each lands again); a spot is [lx, lz, y?, yaw?, perch?] (y
+// on the floor there when left out, a perch takes no steps). Pigeons round the plaza's fountain (three
+// on its rim), gulls at HELADOS · GLASS (two on the kiosk's roof) and on the marina's pier (three on
+// its bollards), and La Charca's two herons where they stood in the dunes block's geometry
+// (world/blocks/nature.js) with the stork between them. A bird lifts with Stig on foot within
+// `foot.base` + `foot.perSpeed` × his speed m (a jump's speed counts; a kick at least `foot.kick`),
+// with his car within `car.base` + `car.perSpeed` × its speed above `car.minSpeed` (else
+// `car.still`), each times its kind's shyness and no more than `dy` m above or below it, after
+// `react` s; the horn (game.hornAt) lifts every bird within `horn.r` m, `horn.lag` s a metre later.
+// None lands while Stig stands within his radius + `clear` m of its spot; a flock `farR` m off is
+// put back on its spots and not run, a kind `drawR` m from the camera is not drawn. Sounds within
+// `sound.r` m: the flap, the gulls' cries every `sound.cry` s while they circle, the herons' croak
+// (`sound.croak`: audio.gull's pitch). Among the take-offs he caused on foot within `sorry.r` m (a
+// pigeon counts 1, a gull or heron 2; `sorry.min`) Stig says `sorry.line` with his hands up
+// (`anim.placate` 1 for `sorry.poseSecs` s), at most every `sorry.every` s. The stork (`stork`, in
+// `stork.flock` at `at`): scared while the Storches (`pair`) stand within `pairR` m of `beach`, not
+// held by anyone, and `again` s after its last trip, it flies a Bézier over `via` (world x, z) at
+// `cruise` m up and `speed` m/s to `side` m beyond Fru Storch from her husband; with Stig (or his
+// car) within `sceneR` m of it: `stig`, `correctAt` s later Fru Storch's `correct` the first time
+// ever (`records.stork`, saved), `filmAt` s after that Herr Storch films it (`anim.film`, the whirr)
+// for `filmSecs` s, and it flies home. Unvisited it flies home after `waitSecs` s. Invented (§1.6):
+// the flocks lifting and landing, the stork, its trip and the scene.
+export const BIRDS = {
+  seed: 4343, farR: 140, drawR: 260, dy: 6, react: [0.02, 0.14], clear: 1.5,
+  foot: { base: 1.0, perSpeed: 0.5, kick: 3 },
+  car: { base: 4, perSpeed: 0.5, minSpeed: 1.5, still: 2.5 },
+  horn: { r: 28, lag: 0.015 },
+  sound: { r: 50, cry: [1.2, 3.4], croak: 0.32 },
+  sorry: { line: 'Oj! Förlåt, förlåt!', r: 7, min: 2, every: 25, poseSecs: 1.3 },   // [N]
+  flocks: [
+    { id: 'plaza', kind: 'duva', b: [2, 3], loop: { at: [0, 0], r: 9.5, h: [5, 8], secs: [24, 34] },
+      spots: [[4.8, 5.6], [5.9, 4.4], [6.6, 6.2], [4.2, 7.0], [7.4, 3.3], [5.4, 7.8], [-6.8, 2.6], [-7.0, -2.2], [-6.2, 4.9],
+        [-2.4, -6.8], [1.8, -7.2], [3.9, -6.3], [4.8, 1.99, 0.55, null, true], [-4.8, 1.99, 0.55, null, true], [1.99, -4.8, 0.55, null, true]] },
+    { id: 'kiosk', kind: 'mas', b: [3, 6], loop: { at: [-17, -14], r: 12, h: [7, 11], secs: [24, 34] },
+      spots: [[-19.0, -19.6, 3.1, null, true], [-15.2, -17.6, 3.1, null, true], [-23.5, -15.2], [-22.0, -13.6], [-24.8, -13.0],
+        [-11.0, -15.0], [-12.6, -13.2], [-9.8, -13.8]] },
+    { id: 'piren', kind: 'mas', b: [5, 6], loop: { at: [12, 17], r: 13, h: [6, 10], secs: [24, 34] },
+      spots: [[13.8, 12, 1.05, null, true], [10.2, 18, 1.05, null, true], [13.8, 24, 1.05, null, true], [11.2, 8.5, 0.55], [12.6, 15.2, 0.55],
+        [11.6, 21.3, 0.55], [10.6, 27.6, 0.55], [12.6, 28.6, 0.55], [13.9, 27.0, 0.55]] },
+    { id: 'charca', kind: 'hager', b: [0, 5], loop: { at: [-12, 14], r: 15, h: [7, 10], secs: [26, 36] },
+      spots: [[-15, 9.5, null, 0.971], [-9, 19, null, -0.829]] },
+  ],
+  stork: {
+    flock: 'charca', at: [-12.4, 14.2], yaw: 0.4,
+    pair: ['herrStorch', 'fruStorch'], beach: 'playa', pairR: 8, again: 45, side: 1.8,
+    via: [[-212, 236], [-100, 262]], cruise: 16, speed: 11, sceneR: 11, waitSecs: 75,
+    stig: 'Oj, en stork!',                                     // [N]
+    correct: ['fruStorch', 'Vi heter faktiskt Storch, inte Stork.'],   // [F*] the welcome meeting's (research-plot.md:269), relocated
+    correctAt: 1.9, filmAt: 2.6, filmSecs: 5,
   },
 };
 

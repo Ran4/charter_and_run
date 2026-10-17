@@ -331,6 +331,17 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   solstolarna medan Lasse viftar bort det. Varje tryck tar nästa utrop i tur och ordning, och efter
   ett par sekunder kan du ta nästa. Under en jakt med Guardia Civil är mikrofonen avstängd, och när
   ett uppdrag börjar går alla hem.
+- **Fåglarna som lyfter**: duvorna runt fontänen på plazan, måsarna vid glasskiosken HELADOS · GLASS
+  på stranden och på piren i hamnen, och de två hägrarna i La Charca pickar, tar några steg och
+  vänder sig. Spring, hoppa eller kör in bland dem, eller tuta, så lyfter de som är närmast med
+  vingslag (måsarna skriker, hägrarna kraxar), flyger några varv och landar på sina platser igen
+  efter ungefär en halv minut. Står du still kan du stå mitt bland dem, och bara du skrämmer dem,
+  aldrig trafiken. Springer Stig rakt in i flocken håller han upp händerna och säger "Oj! Förlåt,
+  förlåt!". Ingen fågel kommer till skada: de lyfter alltid i tid. Bland hägrarna står en stork. När
+  paret Storch står på stranden cirklar den inte, utan flyger österut längs kusten och landar bredvid
+  fru Storch. Följ efter, så säger Stig "Oj, en stork!", fru Storch rättar honom första gången ("Vi
+  heter faktiskt Storch, inte Stork.") och herr Storch filmar storken en stund innan den flyger hem.
+  Under uppdragen står fåglarna stilla.
 
 ## Vad är påhittat?
 
@@ -423,6 +434,10 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
   med frågestunden, Oles svar om klockan, publiken som sjunker ihop vid friskoteket och solbadarna som
   flyr en hajvarning som stämmer (i filmen läser Lasse utropen i transferbussen och på välkomstmötet,
   och "Hajar i poolen?" säger han i telefon)
+- fåglarna som lyfter och landar igen när Stig springer, kör eller tutar bland dem, Stigs ursäkt till
+  dem, och storken i La Charca som flyger till paret Storch på stranden (i filmen syns inga fåglar, och
+  storken är bara ett skämt om parets namn: på Arlanda, på välkomstmötet, i telegrammet och på
+  friskoteket)
 - fårrusningen i Fataga, kappkörningen mot nattbussen och porslinskrosset på tid
 - att samla ihop julfestgästerna
 - Oles prylar och hajfenorna som samlarföremål, utspridda över ön
@@ -531,6 +546,7 @@ src/game/stunts.js              Stunthopp med G17-stämpel in free roam: his car
 src/game/gangTalk.js            Prata med gänget in free roam: E talks to the gang, the exchanges by part of the trip
 src/game/roofJump.js            Hoppet mellan hotelltaken in free roam: the walkable hotel roofs, the stairs, the jump, the pool
 src/game/mic.js                 Mikrofonen på scenen in free roam: Lasse's announcements at the SunTrip stage, the crowd, the reactions
+src/game/birds.js               Fåglarna som lyfter in free roam: the flocks that lift and land, Stig's sorry, the stork's trip and scene
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
@@ -538,7 +554,7 @@ tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, 
                                 paintshop, berra, glide, simhopp, tuta, dygn, super8, eslov, grodorna,
                                 artig, grisar, bagage, lapplisa, torsdag, frukt, hopptorn, hund,
                                 badgaster, butik, brodrost, rum107, solkram, skjortbyte,
-                                stunthopp, prata, takhopp, mikrofon, calibrate, calibflight)
+                                stunthopp, prata, takhopp, mikrofon, faglar, calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
 tools/pool.mjs                  re-derives every random stage's timer from the ledger
@@ -593,6 +609,7 @@ node tools/shot.mjs skjortbyte garderob  # room 107's wardrobe in a pursuit: the
 node tools/shot.mjs prata                # the gang's talk: the table, who at every index, Rio, the round, the stops, the julfest, after the end; shots
 node tools/shot.mjs takhopp              # the hotel roofs: the stairs up, the jump over the gap, the view, the stairs down, into the pool, a mission start
 node tools/shot.mjs mikrofon utrop       # the SunTrip stage's mic: the five announcements and their reactions, the crowd's ways in, the terrace's hours, a mission start
+node tools/shot.mjs faglar storken       # the birds: the four flocks, the lift on foot, by car and by the horn, the landing, a mission start; the stork's trip and the Storch scene
 node tools/shot.mjs fullstory kinds      # the literal §8 missions and the stage-kind checks
 node tools/shot.mjs calibrate calibflight  # timer and FLYGRÄDSLA calibration (slow; see DESIGN §8, §16.4)
 node tools/pool.mjs                      # random-stage timers from the raw runs in notes/calibration-samples.md

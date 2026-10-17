@@ -381,6 +381,29 @@ export const audio = {
   },
   // A dog's owner whistling it home from the house (§10.21): a short note up, then a long one sliding down.
   whistle() { this.tone(1700, 0.14, 'sine', 0.07, 2400); this.tone(2350, 0.36, 'sine', 0.07, 1500, 0.2); },
+  // A flock lifting (Fåglarna som lyfter, §10.31): `n` birds' wing claps, soft band-passed noise
+  // bursts a little apart (more and longer for more birds), over a rising whoosh; `vol` 0..1 for the
+  // distance.
+  flap(n = 1, vol = 1) {
+    const k = Math.min(12, 3 + n * 2);
+    for (let i = 0; i < k; i++) this.noise(0.05, 0.1 * vol * (1 - i / (k + 4)), 800 + Math.random() * 800, 'bandpass', i * 0.05 + Math.random() * 0.04, 0.9);
+    this.sweep(0.25 + Math.min(n, 8) * 0.04, 0.05 * vol, 500, 1700, 'bandpass', 0.8);
+  },
+  // A gull's cry (§10.31): a nasal sawtooth gliding up, then a longer one down ("kie-ow"), through a
+  // band-pass; `low` under 1 lowers it into a heron's hoarse croak (with a breath of noise).
+  gull(vol = 1, low = 1) {
+    if (!ctx) return;
+    for (const [d, f0, f1, len] of [[0, 1150, 1650, 0.14], [0.17, 1550, 880, 0.34]]) {
+      const t = ctx.currentTime + d, o = ctx.createOscillator(), f = ctx.createBiquadFilter(), g = ctx.createGain();
+      o.type = 'sawtooth';
+      o.frequency.setValueAtTime(f0 * low, t); o.frequency.exponentialRampToValueAtTime(f1 * low, t + len);
+      f.type = 'bandpass'; f.frequency.value = 1900 * low; f.Q.value = 1.6;
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.12 * vol, t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + len);
+      o.connect(f).connect(g).connect(sfx);
+      o.start(t); o.stop(t + len + 0.05);
+    }
+    if (low < 0.6) this.noise(0.4, 0.06 * vol, 700, 'bandpass', 0, 1.2);
+  },
   helanGar() { this.trad('helanGar'); },
 
   // Public-domain traditional cue (§12.1): a one-shot accordion melody with an oom-pah under it,

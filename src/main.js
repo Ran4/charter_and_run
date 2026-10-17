@@ -47,6 +47,7 @@ import { Solkram } from './game/solkram.js';
 import { GangTalk } from './game/gangTalk.js';
 import { RoofJump } from './game/roofJump.js';
 import { Mic } from './game/mic.js';
+import { Birds } from './game/birds.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
 import { LEVELS, ISLAND_PALETTES } from './level.js';
@@ -206,6 +207,7 @@ class Game {
     this.chat = new GangTalk(this);       // free roam: E talks to the gang, and Stig answers (§10.28)
     this.roofs = new RoofJump(this);      // free roam: the stairs up SOL DE INVIERNO, the jump to HOTEL ATLÁNTICO's roof (§10.29)
     this.mic = new Mic(this);             // free roam: Stig reads Lasse's announcements at the SunTrip stage's mic (§10.30)
+    this.birds = new Birds(this);         // free roam: the flocks that lift, the stork in La Charca (§10.31)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -1532,6 +1534,7 @@ class Game {
     this.chat.update(dt);
     this.roofs.update(dt);
     this.mic.update(dt);
+    this.birds.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);
@@ -1826,12 +1829,12 @@ class Game {
   // Berra job (§10.6), the diving judges at the pool's edge (§10.8), Herr Storch's filming (§10.11),
   // the rollerskier's laps (§10.12), the pool fest's dancers and porter (§10.13), Majsan on her round
   // with the ticket pad or Angerud in the tow scene (§10.17), the grisfest's evening (§10.18), the
-  // souvenir seller swearing at a smashed fruit stall (§10.19) or the crowd at the SunTrip stage
-  // (§10.30). syncAll gives such an NPC no wave, turn or chatter, and the gang's talk leaves them be
-  // (§10.28).
+  // souvenir seller swearing at a smashed fruit stall (§10.19), the crowd at the SunTrip stage
+  // (§10.30) or Herr Storch filming the stork (§10.31). syncAll gives such an NPC no wave, turn or
+  // chatter, and the gang's talk leaves them be (§10.28).
   npcPosed(k) {
     return !!this.missions.idlePose(k) || this.berraJob.posed(k) || this.judges.posed(k) || this.film.posed(k) || this.eslov.posed(k) || this.fest.posed(k) || this.lapp.posed(k) || this.party.posed(k)
-      || this.stands.posed(k) || !!this.mic?.posed(k);
+      || this.stands.posed(k) || !!this.mic?.posed(k) || this.birds.posed(k);
   }
 
   syncAll(dt, title) {

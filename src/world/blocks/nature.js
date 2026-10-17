@@ -1141,7 +1141,8 @@ function dyner(f, W, ctx) {
     dune(f, 16.5, -17, -0.05, 27, 13, 5.6, 2.6);
     dune(f, 17, 6, -0.06, 26, 11, 5, 2.2);
     for (const [x, z, s] of [[-24, -26, 1.1], [-14, -27, 1.2], [-6, -22, 1], [-26, -16, 0.95], [-17, -18, 1.15], [-8, -12, 1.05], [-26, -6, 1.2], [2.2, -27, 1], [2.2, -12, 1.1], [26, 18, 1], [-29, 1, 1], [-16, -6, 0.9]]) palm(f, x, z, s, rnd() < 0.5);
-    // The lagoon: overlapping shallow discs make an irregular pond; reeds, rocks, two herons.
+    // The lagoon: overlapping shallow discs make an irregular pond; reeds, rocks. Its two herons and
+    // the stork stand in game/birds.js (feature 43, §10.31: BIRDS' `charca` flock), where they can lift.
     const LAG = [[-14, 13, 6.5], [-8.5, 17.5, 4.6], [-20, 18.5, 5.2], [-21, 10, 3.6], [-9, 8.5, 3.8], [-14.5, 22, 3.6], [-5.5, 21.5, 2.6]];
     for (const [x, z, r] of LAG) f.F.cyl(0xd8c08a, f.wx(x, z), CURB + 0.012, f.wz(x, z), r + 1.1, 0.02, 28);
     for (const [x, z, r] of LAG) f.F.cyl(SEA, f.wx(x, z), CURB + 0.03, f.wz(x, z), r, 0.03, 28);
@@ -1150,19 +1151,9 @@ function dyner(f, W, ctx) {
     for (const [x, z, r] of LAG) circle(f.wx(x, z), f.wz(x, z), r, CURB, 'water');
     for (const [x, z] of [[-24.5, 7.5], [-19, 5], [-12, 5.2], [-26, 15], [-25, 21], [-3.8, 18], [-4, 13.5], [-11, 26]]) reeds(f, x, z, rnd, 8);
     for (const [x, z] of [[-29, 14], [-28, 25], [5, 23], [4, 12], [-17.5, 27]]) rock(f, x, z, 1.6, 1.0, 1.3, 0x8a7a6a, x, false);
-    for (const [x, z, a] of [[-15, 9.5, 0.6], [-9, 19, 2.4]]) heron(f, x, z, a);
     postSign(f, 'LA CHARCA', 2.4, 6, 2.6, 0.7, 1.0, -PI / 2, { bg: '#f4efe6', fg: '#1c7fb8' });
     scrubs(18, (x, z) => Math.hypot(x + 14, z - 15) < 13);
   }
-}
-
-function heron(f, lx, lz, a) {
-  const x = f.wx(lx, lz), z = f.wz(lx, lz), c = Math.cos(a), s = Math.sin(a), G = f.S;
-  for (const o of [-0.1, 0.1]) G.cyl(0xc8a040, x - s * o, CURB + 0.45, z + c * o, 0.03, 0.9, 4);
-  G.sphere(0xb8c0c8, x, CURB + 1.05, z, 0.8, 0.4, 0.36, 0, -a, 0.3, 8);
-  G.cyl(0xd8dce0, x + c * 0.35, CURB + 1.45, z + s * 0.35, 0.05, 0.6, 5, 0, -a, -0.3);
-  G.sphere(0xe8ecf0, x + c * 0.45, CURB + 1.75, z + s * 0.45, 0.2, 0.18, 0.18);
-  G.cone(0xd8a030, x + c * 0.65, CURB + 1.73, z + s * 0.65, 0.04, 0.32, 5, 0, -a, -PI / 2);
 }
 
 export const BUILDERS = {

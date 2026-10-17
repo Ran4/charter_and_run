@@ -96,7 +96,11 @@ opens with a summary of the rounds and the timer changes.
     scenen, E at the SunTrip stage's mic between missions: Lasse's announcements in turn, the terrace's
     guests spitting, the crowd on the lawn and the question time with Stig's "Ja.", Ole and the time,
     the slump at friskoteket, the bathers fleeing the shark warning, a mission start; the crowd's ways
-    in, the terrace's hours, index 6, after the end, DESIGN §10.30)
+    in, the terrace's hours, index 6, after the end, DESIGN §10.30), `faglar storken` (Fåglarna som
+    lyfter, the flocks between missions: the pigeons at the plaza's fountain, the gulls at the beach
+    kiosk and on the pier, La Charca's herons; the lift on foot, by car and by the horn, never traffic,
+    the landing on their spots, Stig's sorry, a mission start; the stork's trip to the Storches on the
+    beach, "Oj, en stork!", the correction once, Herr Storch filming it, DESIGN §10.31)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

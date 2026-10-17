@@ -46,7 +46,8 @@ export class Honk {
       && !g.eslov.owns(key)    // the rollerskier answers himself (§10.12)
       && !g.lapp?.owns(key)    // Majsan on her round, Angerud in the tow scene (§10.17)
       && !g.party?.posed(key)  // the grisfest's evening (§10.18)
-      && !g.mic?.posed(key);   // the crowd at the SunTrip stage (§10.30)
+      && !g.mic?.posed(key)    // the crowd at the SunTrip stage (§10.30)
+      && !g.birds?.posed(key); // Herr Storch filming the stork (§10.31)
   }
   // main.js syncAll: an answerer whose pose is the wave waves.
   waving(key) { return this.react[key]?.flag === 'wave'; }

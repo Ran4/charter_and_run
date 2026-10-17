@@ -256,7 +256,12 @@ at the SunTrip stage's microphone reading Lasse's announcements, the guests at t
 their drinks, the crowd on the lawn with the question time, Ole's answer to the time, the crowd sinking
 at friskoteket and the bathers fleeing a shark warning that is true (free roam, §10.30; in the film
 Lasse reads them in the transfer bus and at the welcome meeting, and "Hajar i poolen?" is his phone
-call).
+call); the island's birds that lift when Stig runs, drives or honks among them (pigeons round the
+plaza's fountain, gulls at the beach kiosk and on the marina's pier, La Charca's herons), his "Oj!
+Förlåt, förlåt!" to them, and a stork in La Charca that flies to the Storches on the beach, Stig's "Oj, en
+stork!" and Fru Storch's correction there (free roam, §10.31; in the film no bird is seen, and the
+stork is a running joke on the Storches' name: Arlanda's PA, the welcome meeting, the telegram, the
+friskotek).
 The film's flight has **no turbulence** and **no in-flight toilet scene**: both toilet scenes are
 at Arlanda (we keep them there). The plane's toilets are only an invented hideout.
 
@@ -1232,7 +1237,7 @@ standing there faces. `y` (optional) = absolute height for collectible spots on 
 | (5,1) | `bygge` → `bygge` (D1, nature.js) | half-built hotel frame, crane, girder deck with ramp (Bigmouth construction reworked), `PRÓXIMAMENTE · HOTEL NUEVA ESTOCOLMO II`, cones/barrels; the storeys under the 2nd- and 3rd-floor slabs are closed (dark core, brick infill on the faces the floor below walks along), since their colliders are solid from the ground (Phase 3); the plank at the 1st floor's east end, local x [19.2, 22], z [−2.7, −0.1], up to S1 + 0.9 (feature 40, §10.27) | `bygge` (0, 22, π) · `pryl_klocka` (6, −6, 0, 7.6) · `stunt_planka` (22, −1.4, π/2, 4.45), `stunt_gula` (−16, 4, π, 1.95) (the stunt jumps' take-offs, §10.27) | — |
 | (6,1) | `dromplan` → `dromplan` (D2, coast.js) | **the old propeller "drömplanet"**: faded red 4-engine prop plane (DC-7-like) on a dirt lot by the road, wing reachable via a crate ramp, windsock, sign `AERÓDROMO`; its scraggly palm at (−24, 6), out of the plank jump's run-out (it was at (−24, −2); feature 40, §10.27) | `dromplan` (0, 20, π) · `pryl_kamera` (−4, −2, 0, 3.6) (on the wing) · `stunt_landning` (−26, −1.4, π/2) (the plank jump's run-out, §10.27) | — |
 | (6,0) | `flygplats` → `gando` (D2, coast.js) | low terminal with open arrivals canopy `LLEGADAS · ANKOMST`, baggage carousel (animated ring of suitcases; its belt carries Stig in free roam, §10.16: the belt a `carousel` floor at CURB + 0.64, the centre island its own stepped floor, the sign's post a pole), `OBJETOS PERDIDOS · HITTEGODS` desk with a wall of suitcase silhouettes, bus bay `BUSS 17`; **the parked DC-8** (`buildPlaneExterior`) **outside the bound wall at (240, −335)** — WP-B clears the tree ring **and the hills** in that sector (§6.4) | `airport` (0, 22, π) · `hittegods` (−14, 6, 0) · `busBay` (16, 24, −π/2) · `bagageband` (6, 11, π) (south of the carousel, facing it, so the views camera stands on the forecourt; Phase 3) · `brodrost_hittegods` (−17.4, 7.35, 0, 1.23) (a G17 toaster on the lost-and-found counter, 4 m from the clerk; §10.24; not a standing spot) | `buss17` (bus, livery `suntrip`) at `busBay`; `taxiAirport` (taxi, locked) |
-| (0,4), (0,5) | `dyner` → `dyner` (D1, nature.js) | large sand dunes (ramps), palm grove, lagoon pond; behind them, beyond the west bound, a row of big visual-only dunes from town.js (§6.4, Phase 3 r2) | `dyner` (0, 0, π − 0.4) on (0,4) (faces the arch, so the views camera stands on the sand south of it, clear of the boardwalk palms; Phase 3) | — |
+| (0,4), (0,5) | `dyner` → `dyner` (D1, nature.js) | large sand dunes (ramps), palm grove, lagoon pond (its two herons and a stork are game/birds.js's since feature 43, §10.31); behind them, beyond the west bound, a row of big visual-only dunes from town.js (§6.4, Phase 3 r2) | `dyner` (0, 0, π − 0.4) on (0,4) (faces the arch, so the views camera stands on the sand south of it, clear of the boardwalk palms; Phase 3) | — |
 | (0,6) | `fyren` → `fyren` (D2, coast.js) | **Faro de Maspalomas**: ~55 m grey-blue stone tower (tallest landmark, visible from everywhere), keeper's house (roof top ≈ 4.0, reachable by a dune ramp) | `fyren` (0, 10, π) (coin arc on the keeper's-house roof) | — |
 | (1..4,6) | `playa` → `playa` (D2, coast.js) | sand, sunbed rows (`solstol`), parasols, `HELADOS` kiosk, lifeguard tower, pedal boats on the sand, towels on sunbeds | `playa` on (3,6): (0, 10, 0) · `fena_hav` world (0, 304) (sea shallows, y 0.35) | — |
 | (5,6) | `hamn` → `hamn` (D2, coast.js) | small marina: walkable shallow basin (`water` box), pier (deck top 0.55), moored boats | `hamn` (0, 0, π) · `fena_hamn` (−8, 10, 0, 0.35) · `pryl_glasogon` (12, 28, 0, 1.2) (pier end) | — |
@@ -3337,7 +3342,7 @@ Key **`charter-and-run-v1`** (localStorage):
 ```js
 { v: 1, mission: index, coins, collected: { prylar: [ids], fenor: [ids], brodrostar: [ids] },
   unlocked: ['grisbil', ...], outfit: 'kostym' | 'hawaii', tune: 'sol' | 'samba',
-  records: { simhopp: n, eslov: s, solkram: n, stunts: { planka: m, gula: m, garage: m } },
+  records: { simhopp: n, eslov: s, solkram: n, stunts: { planka: m, gula: m, garage: m }, stork: true },
   shop: { owned: ['hatt', 'glas', 'skjorta', 'nasa'], off: [ids], trapp: 0..2, trappT: s, bag: bool } }
 ```
 
@@ -3353,7 +3358,9 @@ saved at once when beaten (feature 4, §10.8); `eslov`, Eslövloppet's best time
 decimals), saved at once with a win that beats it (feature 7, §10.12); `solkram`, the sun cream's
 best points (5–7), saved at once when beaten (feature 35, §10.26), whose once-ever marker
 `solkramFilm` is in `unlocked`; `stunts`, the named car jumps' best distances in metres (one
-decimal), saved at once with a new record (feature 40, §10.27; a jump with none is not yet passed). `shop` (feature 34, §10.23):
+decimal), saved at once with a new record (feature 40, §10.27; a jump with none is not yet passed);
+`stork`, true once Fru Storch has corrected Stig by the stork on the beach, saved at once (feature
+43, §10.31). `shop` (feature 34, §10.23):
 SunTrip-butiken's purchases (`owned`), the ones taken off at the counter (`off`), the Trapp Trull
 account's instalments still to pay (`trapp`) and its free-roam seconds towards the next (`trappT`,
 whole), and the beach bag taken (`bag`); saved at once with every purchase, change and instalment; a
@@ -5551,6 +5558,108 @@ The microphone's use, the crowd and every reaction are [N] (§1.6).
   squashed, so five of five could be lost for good). The welcome meeting (the idea Välkomstmötet) is
   not built; if it is, the mic should be shut while it plays, and the oath stays there.
 
+### 10.31 Fåglarna som lyfter – the flocks that lift, and the stork in La Charca (free roam; feature 43, 2026-10-17)
+
+`game/birds.js` (`Birds`, owned by Game as `birds`; the looks and motions in its `KINDS`), config
+`BIRDS` in content/island.js. Before it nothing on the island moved but people and cars: La Charca's
+two herons were statues in the dunes block's merged geometry. Now small flocks peck, step and turn on
+four spots and lift when Stig comes at them, and the stork among the herons flies to the Storches.
+The film has no bird scene: the herons are the lagoon's setting ("med flyttfåglar som hägrar och
+strandpipare", research-setting.md:109, about today's reserve), the pigeons are "(osäkert)"
+(research-setting.md:131), the gulls are ours. The stork is the film's running joke on the Storches'
+name (Arlanda's PA "Herr Stork ombedes kontakta informationen i avgångshallen.", research-plot.md:167;
+the welcome meeting's "Vi heter faktiskt Storch, inte Stork." and the telegram's "…för om nio månader
+kommer storken.", :269; "Kolla storken!" at the friskotek, :282), here given a real stork. The birds'
+flight, the stork, its trip and the scene are [N] (§1.6). No bird is named after the Arlanda joke's
+real people (§1.5).
+
+- **The flocks** (`BIRDS.flocks`; a spot is block-local [lx, lz, y?, yaw?, perch?], y the floor
+  there when left out, a perch never steps):
+  - `plaza`, 15 pigeons (`duva`) round the fountain of (2,3): six south-east of it, three west and
+    three north on the paving ring (r 6.5–9.5 from its column), three on the rim (r 5.2, y 0.55,
+    perches);
+  - `kiosk`, 8 gulls (`mas`) at HELADOS · GLASS on (3,6): two on the kiosk's roof (y 3.1, perches),
+    three on the sand west of it and three east;
+  - `piren`, 9 gulls on the marina's pier in (5,6): three on its bollards (y 1.05, perches), six on
+    the deck (0.55);
+  - `charca`, La Charca's two herons (`hager`) at (0,5)'s (−15, 9.5) and (−9, 19), facing as before
+    (yaw 0.971 and −0.829; world (−255, 169.5) and (−249, 179)), and between them the stork at
+    (−12.4, 14.2).
+  World (nature.js `dyner`): `heron()` and its two calls are gone. It drew into the merged `f.S` with
+  no random draw, so the block builds as before otherwise; the herons had no collider and none of the
+  birds has one. birds.js draws from its own `mulberry32(BIRDS.seed = 4343)`: the world's, the town's
+  and `Math.random`'s streams are untouched.
+- **The look.** Four instanced meshes a kind (standing, flying, the left and the right wing; `MAT.toon`
+  with an inverted-hull outline on the same matrices, 0.02 for pigeons and gulls, 0.03 for the herons
+  and the stork): 16 meshes and 16 outlines for 36 birds. A kind whose every bird is over `drawR` 260 m
+  from the camera is hidden (the flight level draws none). Scales: pigeon × 1.45 and gull × 1.3 (drawn
+  large, as the chase camera sees them), heron × 1 (the old size), stork × 1.05. The body pitches
+  about its `hip`; the wings hinge at the `shoulder` and flap (`flap` Hz: pigeon 7.5, gull 3.4, heron
+  and stork 2.0) or glide on spread wings for 0.8–2.4 s (about `glide` of the time: 0.2, 0.55, 0.25,
+  0.45). Flying, the herons fold their necks back and trail their legs, the stork stretches its neck
+  out; a landing bird puts its legs down for the last `legs` m.
+- **On the ground** (between missions): it pecks (1–3 times, `peck.secs`), takes a step within
+  `wander` m of its spot (pigeon 1.0, gull 0.8, heron 0.5, stork 0.4), turns, or stands, each pause
+  `next` s (pigeon 0.4–1.6, gull 0.8–2.6, heron and stork 2.5–6).
+- **The scare.** Only the player: Stig on foot within `foot.base` 1.0 + `foot.perSpeed` 0.5 × his
+  speed (a jump's vertical speed counts; a kick at least `foot.kick` 3 m): a walk 3.7 m, a sprint 5.4;
+  his car within `car.base` 4 + `car.perSpeed` 0.5 × its speed above `car.minSpeed` 1.5 m/s (standing
+  `car.still` 2.5 m): at 20 m/s 14 m; each times the kind's `shy` (pigeon 1, gull 1.1, heron and stork
+  1.6), within `dy` 6 m above or below, lifting `react` 0.02–0.14 s later. Standing still he can stand
+  among them. The horn (`game.hornAt`, the free-roam press, §10.9) lifts every bird within `horn.r`
+  28 m of the car, `horn.lag` 0.015 s a metre later. A lifting bird takes its neighbours on the ground
+  within `chain` m (pigeon 2.6, gull 4.5, heron and stork 14) 0.05–0.25 s later, so the near side
+  goes first and the far side of the plaza pecks on. Traffic, pedestrians and the cast never scare
+  them.
+- **The flight.** Away from what scared it (± 0.55 rad) and up for `liftSecs` (`lift` [away, up] m/s),
+  then round the flock's `loop` (one way round per take-off, a radius ± 20 % and a height in the band
+  per bird, at `cruise` m/s): the plaza r 9.5 at 5–8 m, the kiosk 12 at 7–11, the pier 13 at 6–10,
+  La Charca 15 at 7–10. After `loop.secs` (24–34 s, La Charca 26–36) each bird lands on its own spot:
+  from its own side of the circle (within 1 rad of its spot's bearing from the centre, or 15 s later),
+  down a sinking glide (it aims 0.45 × the distance above the spot), never while Stig stands within his
+  radius + `clear` 1.5 m of the spot (a landing at half that margin turns back up for 3–6 s more).
+  Measured by `faglar`: the plaza's last pigeon down 37–42 s after the first take-off. A flock more
+  than `farR` 140 m from Stig is put back on its spots and not run.
+- **No bird is hurt** (§1.2): at speed the car's radius is 12–18 m, so a bird is up before the car is
+  there, and the car passes through where one stood (`faglar`: at 18–26 m/s it never came within
+  11.6 m of a gull still on the ground). No feathers, no solid, no SKANDAL.
+- **Sounds** within `sound.r` 50 m (by distance): `audio.flap(n, vol)` for the take-offs of each
+  0.15 s; `audio.gull(vol)` at a gull flock's take-off and every `sound.cry` 1.2–3.4 s while it
+  circles; the herons' croak `audio.gull(vol, sound.croak = 0.32)` (§12.3).
+- **Stig's sorry.** The take-offs he caused on foot within `sorry.r` 7 m of him (a pigeon counts 1, a
+  gull, heron or the stork 2; the count fades over 1.2 s) reaching `sorry.min` 2: "Oj! Förlåt, förlåt!"
+  [N] with his hands up by his head (`anim.placate` 1, the watchdog's pose, §10.21) for
+  `sorry.poseSecs` 1.3 s, at most every `sorry.every` 25 s, never over a line of his own or in a
+  dialogue; the pose only when it is free (not the dogs').
+- **The stork** (`stork`). Scared, or taken along by the herons, while the Storches (`pair`: shown,
+  standing, within `pairR` 8 m of `beach` `playa`, posed by no other module) are on the beach and
+  `again` 45 s after its last trip, it does not circle: it flies a cubic Bézier from its spot over `via`
+  (−212, 236) and (−100, 262) (world) to `side` 1.8 m beyond Fru Storch from her husband, 278 m north of
+  the lighthouse and then east along the beach, climbing to `cruise` 16 m over its first fifth and
+  down over its last 28 %, at `speed` 11 m/s (slower at both ends): about 27 s. It lands facing her and
+  pecks and turns there. With Stig (on foot or in his car) within `sceneR` 11 m of it, no dialogue and
+  no gang talk under way: Stig's "Oj, en stork!" [N]; `correctAt` 1.9 s later Fru Storch's "Vi heter
+  faktiskt Storch, inte Stork." [F*] (the welcome meeting's, research-plot.md:269, relocated) **the
+  first time ever** (`records.stork`, saved at once, §10.5); `filmAt` 2.6 s after that (0.4 s without
+  the line) Herr Storch lifts his camera (`anim.film`, `audio.whirr`) and films it for `filmSecs` 5 s,
+  turned to it and posed (`npcPosed`: no turn to Stig, no wave, no chatter; the horn's answers leave
+  him be); then the stork flies home the same way reversed and lands on its spot. Herr Storch off
+  filming one of Stig's tricks (§10.11): no filming (or it stops there). Nobody within `waitSecs` 75 s,
+  or the pair gone: home without a word. Without the pair it circles with the herons (at index 6 the
+  friskotek holds them; after the end Fru Storch is at the pool fest, §10.13).
+- **A mission start** (any state but `idle`) or the other level: every bird is put on its spot at once
+  and stands still there through the mission (no pecking, no take-off), the stork home, Herr Storch's
+  camera down, Stig's hands down. So no mission, stage kind, timer, fixture or calibration pool
+  changes (the José stage's walk to the fountain meets standing pigeons). Only `records.stork` is
+  saved. Scenarios `faglar`, `storken` (§16.4).
+- **Not done / changed** (deviations from the idea): the module is `game/birds.js` like the other
+  free-roam modules, not `world/birds.js`, and is ticked after `mic.update` (not beside
+  `tickProps`), with the horn read from `game.hornAt`; two body meshes a kind (standing and flying)
+  besides the wings; no gulls on HOTEL LAS GAVIOTAS's roof (the idea's optional wink: the name is dealt
+  to several slabs, and 25 m up nothing scares them); the correction is heard once ever (saved), the
+  filming every visit; Stig's sorry also among gulls and herons; in a mission the flocks stand still
+  rather than being hidden.
+
 ## 11. HUD / UI strings (Swedish; `src/strings.js` owned by WP-H, created by Phase 0)
 
 `strings.js` exports `S` (flat object) and `fmt(key, vars)`. Engine code uses `S.key` only.
@@ -5839,6 +5948,8 @@ Scheduler fixes (Phase 0): catch-up guard `if (next < ctx.currentTime) next = ct
 | `oink()` | the grisbil's horn (feature 5, §10.9): two nasal grunts 0.22 s apart, each a 190 → 120 Hz sawtooth and a band-passed noise burst; `honk.update` plays it on H and every 0.75 s while H is held, and `updateAudio` keeps `horn` off in the grisbil |
 | `woof(size = 1, n = 2, vol = 1)` | a watchdog (feature 31, §10.21): `n` barks 0.23 s apart, each a sawtooth (300–350 Hz ÷ `size`) jumping up 1.2× and falling to 0.55× in 0.15 s through a band-pass at 950 Hz ÷ `size`, with a band-passed noise breath; `size` the dog's (the poodle's 0.72 yaps higher), `vol` 0..1 for the distance |
 | `whistle()` | a dog's owner whistling it home (feature 31, §10.21): a sine 1700 → 2400 Hz (0.14 s), then 2350 → 1500 Hz (0.36 s) |
+| `flap(n = 1, vol = 1)` | a flock lifting (feature 43, §10.31): 3 + 2n (at most 12) wing claps 0.05 s apart, band-passed noise bursts of 0.05 s at 0.8–1.6 kHz, fading, over a 500 → 1700 Hz noise sweep of 0.25–0.57 s; `vol` 0..1 for the distance; `birds` plays it for the take-offs of each 0.15 s |
+| `gull(vol = 1, low = 1)` | a gull's cry (feature 43, §10.31): two sawtooth glides through a band-pass at 1.9 kHz, 1150 → 1650 Hz (0.14 s) and, 0.17 s on, 1550 → 880 Hz (0.34 s); `low` scales every frequency, and under 0.6 adds a 0.4 s noise breath: the herons' croak at 0.32 |
 | `thud()`, `crash()`, `coin()`, `pickup()` | existing |
 | `toasterDown()`, `pop()` | a G17 toaster (feature 33, §10.24): the lever going down (a band-passed noise clack and a 170 → 110 Hz square), the bread popping up (a short 2.6 kHz noise burst and a 380 → 900 Hz sine) |
 | `stamp()`, `stampFail()` | the stunt jumps' stamp (feature 40, §10.27): a rubber thump on paper (a 1.5 kHz noise slap, a 96 → 52 Hz sine, a low noise tail); UNDERKÄND adds a falling two-tone square buzz (196 → 98, 147 → 74 Hz) |
@@ -5939,7 +6050,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/strings.js` | new | **H** | `S`, `fmt()` (§11) |
 | `src/content/index.js` | new | none | merges `HOMES`, `MAP_LABELS`, `LEVEL_OUTFITS`, re-exports all content |
 | `src/content/flight.js` | new | **F** | `HOMES_GATE`, `HOMES_FLIGHT`, `MAP_LABELS_FLIGHT`, `CHATTER_FLIGHT`, `OLE_STATS`, `LEVEL_OUTFITS_GATE`, `LEVEL_OUTFITS_FLIGHT` |
-| `src/content/island.js` | new | **G** | `HOMES_ISLAND`, `MAP_LABELS_ISLAND`, `CHATTER`, `OUCH`, `GETUP`, `CARJACK`, `NPC_KICKED` (+ the `_OLE` / `_LOCAL` tables, `LOCAL_CAST`, `BARKS`: Phase 3 r2, §14.10; `STIG_SORRY`: feature 11, §10.14; `PIG_TRUCK`: feature 15, §10.15; `BAGGAGE_BELT`: feature 25, §10.16; `LAPPLISA`: feature 20, §10.17; `GRISFEST_FREE`: feature 21, §10.18; `FRUKTSTAND`: feature 28, §10.19; `TOWER`: feature 24, §10.20; `DOGS`: feature 31, §10.21; `BATHERS`: feature 32, §10.22; `RUM107`: feature 38, §10.25; `SOLKRAM`: feature 35, §10.26; `STUNTHOPP`: feature 40, §10.27; `TALK_ISLAND`: feature 39, §10.28; `TAKHOPP`: feature 41, §10.29; `MIKROFON`: feature 44, §10.30), `COLLECTIBLES`, `UNLOCKS`, `NAMED_CARS`, `LEVEL_OUTFITS_ISLAND` |
+| `src/content/island.js` | new | **G** | `HOMES_ISLAND`, `MAP_LABELS_ISLAND`, `CHATTER`, `OUCH`, `GETUP`, `CARJACK`, `NPC_KICKED` (+ the `_OLE` / `_LOCAL` tables, `LOCAL_CAST`, `BARKS`: Phase 3 r2, §14.10; `STIG_SORRY`: feature 11, §10.14; `PIG_TRUCK`: feature 15, §10.15; `BAGGAGE_BELT`: feature 25, §10.16; `LAPPLISA`: feature 20, §10.17; `GRISFEST_FREE`: feature 21, §10.18; `FRUKTSTAND`: feature 28, §10.19; `TOWER`: feature 24, §10.20; `DOGS`: feature 31, §10.21; `BATHERS`: feature 32, §10.22; `RUM107`: feature 38, §10.25; `SOLKRAM`: feature 35, §10.26; `STUNTHOPP`: feature 40, §10.27; `TALK_ISLAND`: feature 39, §10.28; `TAKHOPP`: feature 41, §10.29; `MIKROFON`: feature 44, §10.30; `BIRDS`: feature 43, §10.31), `COLLECTIBLES`, `UNLOCKS`, `NAMED_CARS`, `LEVEL_OUTFITS_ISLAND` |
 | `src/game/missions/index.js` | new | none | `MISSIONS = [...FLIGHT_MISSIONS, ...ISLAND_MISSIONS]`, `MissionRunner` re-export |
 | `src/game/missions/runner.js` | new (from missions.js) | none | `MissionRunner` (§9.4) |
 | `src/game/missions/kinds/core.js` | new | **none** (frozen after Phase 0) | getInCar goto pickup dropoff follow rabbits race destroy grab scene |
@@ -5955,7 +6066,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/berraJob.js` | new (feature 2, 2026-10-14) | — | `BerraJob` (`game.berraJob`): Bärra hem Berra in free roam: the naps, Robban's ask, the carry, the drops, the desk and the pay (§10.6) |
 | `src/game/glide.js` | new (feature 3, 2026-10-14) | — | `Glide` (`game.glide`): Jag kan flyga in free roam after julafton: the tap-or-hold J in the air, the glide, walls, the landing roll, the lines (§10.7) |
 | `src/game/poolJudges.js` | new (feature 4, 2026-10-15) | — | `PoolJudges` (`game.judges`): Siv och Majsan sätter poäng in free roam: the board's hops, the call and the walk to the edge, the verdicts, cards, lines, result line and record (§10.8) |
-| `src/game/honk.js` | new (feature 5, 2026-10-15) | — | `Honk` (`game.honk`): Tutan som folk reagerar på in free roam: the pedestrians' hop, the cast's answers and poses, Stig's lines, the grisbil's grunt (§10.9) |
+| `src/game/honk.js` | new (feature 5, 2026-10-15) | — | `Honk` (`game.honk`): Tutan som folk reagerar på in free roam: the pedestrians' hop, the cast's answers and poses, Stig's lines, the grisbil's grunt (§10.9); `free` leaves Herr Storch filming the stork be (feature 43, §10.31) |
 | `src/game/dayClock.js` | new (feature 30, 2026-10-15) | — | `DayClock` (`game.day`): Dygnet runt in free roam: the island's clock, the palette blend and night lights, Ole's watch in the HUD, NÄSTA MORGON before a mission, the nap in room 107, chatter by the hour (§10.10) |
 | `src/game/storchFilm.js` | new (feature 6, 2026-10-15) | — | `StorchFilm` (`game.film`): Lite film. in free roam: Herr Storch trots over the sand to film Stig's tricks, his viewfinder (black before the end), the stills and the film night after it (§10.11) |
 | `src/game/eslov.js` | new (feature 7, 2026-10-15) | — | `Eslov` (`game.eslov`): Heja Eslöv! in free roam: the rollerskier skis up and down the Eslöv lane, answers the horn and E, "Spår!", Eslövloppet round the tomato fields (§10.12) |
@@ -5973,6 +6084,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/gangTalk.js` | new (feature 39, 2026-10-17) | — | `GangTalk` (`game.chat`): Prata med gänget in free roam: who can be talked to and which exchange is next, the chain of bubbles with Stig's answers and their poses, the stop, the hush after it (§10.28) |
 | `src/game/solkram.js` | new (feature 35, 2026-10-17) | — | `Solkram` (`game.solkram`): Smörj in Majsans rygg in free roam: Majsan's interactable, the scene (the ask, her back turned, the meter's card and the held E, the result's shots, cards and bubbles), the bottle and the cream, the record and `sjuPoang`, the reset (§10.26) |
 | `src/game/stunts.js` | new (feature 40, 2026-10-17) | — | `Stunts` (`game.stunts`): Stunthopp med G17-stämpel in free roam: his car's jumps measured (from car.js `airT`/`airFrom`), LUFTTID in the air, the settle and the verdict, the stamp and the card, the named jumps' take-offs, pay and records, the mantra off the plank, Stig's lines, his arms out by the dream plane, the reset (§10.27) |
+| `src/game/birds.js` | new (feature 43, 2026-10-17) | — | `Birds` (`game.birds`), `KINDS`: Fåglarna som lyfter in free roam: the four kinds' looks and instanced meshes, the flocks on their spots (pecking, steps, turns), the scare (Stig on foot, his car, the horn), the take-off, the circle and the landing, the sounds, Stig's sorry and hands up, the stork's trip to the Storches and the scene, the put-back at a mission start (§10.31) |
 | `src/game/roofJump.js` | new (feature 41, 2026-10-17) | — | `RoofJump` (`game.roofs`): Hoppet mellan hotelltaken in free roam: `ROOF_JUMP.live`, the roof coins, the three stair doors and their fades, the out-of-breath arrival, the fall off a roof (the mantra over the gap or off an edge, the poses), the splash in the pool, the view line, the put-down at a mission start (§10.29) |
 | `src/game/mic.js` | new (feature 44, 2026-10-17) | — | `Mic` (`game.mic`): Mikrofonen på scenen in free roam: the mic's interactable and the turn of Lasse's announcements, the chime, Stig's facing and the camera's ease, the lines one after another, the terrace's guests and their spit, the crowd (tourists and the free gang: the ways in and out, the places, the cheer, the question time), Ole's answer to the time, the slump, the shark warning through `bathers.scare`, the reset (§10.30) |
 | `src/game/bathers.js` | new (feature 32, 2026-10-17) | — | `Bathers` (`game.bathers`): Badgäster på solstolarna in free roam: tourists on the sun loungers nearest him by day, their burn (pale, pink, lobster red), the fly-off from a kicked or smashed lounger, a newcomer on a lounger back; Berra and Robban fried and asleep on two Flamenco loungers between buss17 and the bodega, their snores and the wake (§10.22); `scare` for the shark warning (feature 44, §10.30) |
@@ -5982,7 +6094,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/fx.js` | edit | **A1** | `snow`, `steam`, `meterPuff` (rename of `shame`); `splash`'s `up` (feature 24, §10.20) |
 | `src/game/markers.js` | unchanged | none | |
 | `src/gfx.js` | edit | none | `setSkyPalette`, `setCloudsVisible`, `setShadows`, `MAT.sky`, `MAT.water` sea colour |
-| `src/audio.js` | edit | **H** | §12 API; `splash(k)`'s size (feature 24, §10.20); `woof`, `whistle` (feature 31, §10.21); `toasterDown`, `pop` (feature 33, §10.24); `squirt`, `splat` (feature 35, §10.26); `stamp`, `stampFail` (feature 40, §10.27) |
+| `src/audio.js` | edit | **H** | §12 API; `splash(k)`'s size (feature 24, §10.20); `woof`, `whistle` (feature 31, §10.21); `toasterDown`, `pop` (feature 33, §10.24); `squirt`, `splat` (feature 35, §10.26); `stamp`, `stampFail` (feature 40, §10.27); `flap`, `gull` (feature 43, §10.31) |
 | `src/input.js` | edit | none | pad Start → `pause` |
 | `src/util.js` | unchanged | none | |
 | `src/world/frame.js` | new (from town.js) | none | `Frame` (`prop(…, opts)` passes `opts` to `placeProp`: feature 28) |
@@ -5995,7 +6107,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/world/blocks/index.js` | new | none | `BLOCK_BUILDERS` merge |
 | `src/world/blocks/hotels.js` | new | **C1** | `flamenco`, `suntrip`; `flamencoBays` (feature 20, §10.17); the diving tower `diveTower` and its solids `DIVE_TOWER` (feature 24, §10.20); SunTrip-butiken's counter `suntripShop` and `SUNTRIP_SHOP` (feature 34, §10.23); room 107's keepsake shelf, `roomKeepsakes`, `ROOM107` and `worldHooks.rum107` (feature 38, §10.25) |
 | `src/world/blocks/centre.js` | new | **C2** | `kasbah`, `cita`, `plaza`, `marknad`, `kyrka`, `bensin`, `guardia`; the market's five fruit stalls as `frutas` props (feature 28, §10.19); room for three G17 toasters (two paint cans a row, a fruit crate's fruit, stall K's radio 5 via `stall`'s `gap`; feature 33, §10.24) |
-| `src/world/blocks/nature.js` | new | **D1** | `tomat`, `grisfest`, `fataga`, `golf`, `bungalow`, `bygge`, `dyner`; `FARM_YARD` (feature 31, §10.21); the bygge's plank (feature 40, §10.27) |
+| `src/world/blocks/nature.js` | new | **D1** | `tomat`, `grisfest`, `fataga`, `golf`, `bungalow`, `bygge`, `dyner`; `FARM_YARD` (feature 31, §10.21); the bygge's plank (feature 40, §10.27); La Charca's herons moved out to game/birds.js (feature 43, §10.31) |
 | `src/world/blocks/coast.js` | new | **D2** | `flygplats`, `dromplan`, `fyren`, `playa`, `hamn`; `BELT` (feature 25, §10.16); the dream plane lot's palm moved (feature 40, §10.27) |
 | `src/world/cabin.js` | new | **A1** | §5 interior, collision, seats, trolley, turbulence, fear, interactables, blockers, `CAM_CABIN`, `FLIGHT_PALETTES`, `FEAR`; calls `buildFlightScenery` |
 | `src/world/flightScenery.js` | new | **A2** | §5.6 visuals: gate-set visuals, airframe, animated scenery per phase, `buildFlightScenery`, `buildPlaneExterior` |
@@ -6028,6 +6140,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `tools/scenarios/stunthopp.mjs` | new (feature 40) | — | stunthopp, stuntzoner |
 | `tools/scenarios/takhopp.mjs` | new (feature 41) | — | takhopp |
 | `tools/scenarios/mikrofon.mjs` | new (feature 44) | — | mikrofon, utrop |
+| `tools/scenarios/faglar.mjs` | new (feature 43) | — | faglar, storken |
 | `tools/story/flight.mjs` | new | **F** | `M_FLIGHT` (M[0..4]) |
 | `tools/story/island.mjs` | new | **G** | `M_ISLAND` (M[5..12]) |
 
@@ -6046,7 +6159,7 @@ Init: `initGfx` → `input.init` → `hud.init` → `fx.init` → fonts (Luckies
 → peds (34) → NPC `Character`s (one per `CHARS` key except `stig`, the radio-only keys `levander
 kapten pa guardia pax telefonist` and the cabin-owned `vardinna2`; `key` field; hidden until placed, §2.3) →
 player `Character(CHARS.stig)` (`key = 'stig'`) → collectibles (`COLLECTIBLES`) → markers → `Shame`
-→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `DiveTower` (feature 24, §10.20; registers the ladder's two interactables, sets `DIVE_TOWER.live`) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `Eslov` (feature 7, §10.12; registers the rollerskier's interactable) → `PoolFest` (feature 8, §10.13) → `StigSorry` (feature 11, §10.14) → `PigTruck` (feature 15, §10.15) → `BaggageBelt` (feature 25, §10.16) → `Lapplisa` (feature 20, §10.17) → `GrisfestFree` (feature 21, §10.18; registers the gate's and the tourists' interactables) → `FruitStands` (feature 28, §10.19) → `Dogs` (feature 31, §10.21) → `Bathers` (feature 32, §10.22; registers the wake's interactable) → `SuntripShop` (feature 34, §10.23; registers the four wares' and the bag's interactables, sets `SUNTRIP_SHOP.live`) → `Toasters` (feature 33, §10.24; registers the seven toasters' interactables) → `Room107` (feature 38, §10.25; registers room 107's three interactables) → `Solkram` (feature 35, §10.26; registers Majsan's interactable) → `Stunts` (feature 40, §10.27) → `GangTalk` (feature 39, §10.28) → `RoofJump` (feature 41, §10.29; registers the three stair doors, sets `ROOF_JUMP.live`, places the roof coins) → `Mic` (feature 44, §10.30; registers the mic's interactable) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
+→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `DiveTower` (feature 24, §10.20; registers the ladder's two interactables, sets `DIVE_TOWER.live`) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `Eslov` (feature 7, §10.12; registers the rollerskier's interactable) → `PoolFest` (feature 8, §10.13) → `StigSorry` (feature 11, §10.14) → `PigTruck` (feature 15, §10.15) → `BaggageBelt` (feature 25, §10.16) → `Lapplisa` (feature 20, §10.17) → `GrisfestFree` (feature 21, §10.18; registers the gate's and the tourists' interactables) → `FruitStands` (feature 28, §10.19) → `Dogs` (feature 31, §10.21) → `Bathers` (feature 32, §10.22; registers the wake's interactable) → `SuntripShop` (feature 34, §10.23; registers the four wares' and the bag's interactables, sets `SUNTRIP_SHOP.live`) → `Toasters` (feature 33, §10.24; registers the seven toasters' interactables) → `Room107` (feature 38, §10.25; registers room 107's three interactables) → `Solkram` (feature 35, §10.26; registers Majsan's interactable) → `Stunts` (feature 40, §10.27) → `GangTalk` (feature 39, §10.28) → `RoofJump` (feature 41, §10.29; registers the three stair doors, sets `ROOF_JUMP.live`, places the roof coins) → `Mic` (feature 44, §10.30; registers the mic's interactable) → `Birds` (feature 43, §10.31; builds the four kinds' instanced meshes and puts every bird on its spot) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
 `placeNpcs(true)` → spawn the player → portraits for every key in `CAST` (`renderPortrait`
 restores each model's parent and transform, so seated cast members stay in their seats) →
 `applySaveToWorld()` →
@@ -6058,7 +6171,7 @@ mantra/hold, AI, cars (a landing calls `onCarAirEnd`, feature 40), people (`glid
 traffic/peds skipped when `!levelDef.sim.*`) → `syncAll` (also
 writes `ch.x/y/z` from `car.seatWorld(ch.seatSide)` for every car-seated character, player
 included, so framing, bubbles and distance checks see where they really are) → `missions.update` →
-`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `tower.update` (feature 24) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `stands.update` (feature 28) → `dogs.update` (feature 31) → `bathers.update` (feature 32) → `shop.update` (feature 34) → `toasters.update` (feature 33) → `room107.update` (feature 38) → `solkram.update` (feature 35) → `stunts.update` (feature 40) → `chat.update` (feature 39) → `roofs.update` (feature 41) → `mic.update` (feature 44) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
+`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `tower.update` (feature 24) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `stands.update` (feature 28) → `dogs.update` (feature 31) → `bathers.update` (feature 32) → `shop.update` (feature 34) → `toasters.update` (feature 33) → `room107.update` (feature 38) → `solkram.update` (feature 35) → `stunts.update` (feature 40) → `chat.update` (feature 39) → `roofs.update` (feature 41) → `mic.update` (feature 44) → `birds.update` (feature 43) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
 pickups/collectibles → props → `fx.tick` → `tickTown` → markers → camera → sun/sky → HUD → audio →
 traffic recycling (island) → autosave. `loop` then renders, and when `film.grabNow` is set calls
 `film.grab()` in the same task (Herr Storch's still from the frame's buffer, feature 6, §10.11).
@@ -6139,8 +6252,12 @@ game.mic;          // Mic (feature 44, §10.30): Stig reads Lasse's announcement
                    // busy, canUse(), speak() (the interactable), nextId(), clockWords(h), free(key),
                    // posed(key) (npcPosed, honk.free), extras (the crowd's tourists: allChars, areaHit),
                    // step(h) (fixedStep), update(dt), reset(), crowd, drinkers, last, said, cfg (MIKROFON)
+game.birds;        // Birds (feature 43, §10.31): the flocks that lift and the stork in La Charca; birds.live,
+                   // flocks [{ id, birds, cx, cz, dir, quiet }], all (every bird: { kind, st ground | fly | land
+                   // | trip | beach, x, y, z, home, ... }), stork ({ b, st home | out | beach | scene | back, path,
+                   // to, sc, trips, scenes, nextT }), posed(key), pair(), rest(), events, cfg (BIRDS)
 game.npcPosed(key) -> bool   // an NPC held in a pose of its own: §9.4 idleAnim or a free-roam module's
-                   // (berraJob, judges, film, eslov, fest, lapp, party, stands, mic); syncAll gives it no
+                   // (berraJob, judges, film, eslov, fest, lapp, party, stands, mic, birds); syncAll gives it no
                    // wave, turn or chatter, and the gang's talk leaves it be (§10.28)
 game.bathers;      // Bathers (feature 32, §10.22): tourists on the sun loungers, Berra and Robban fried;
                    // bathers.loose (the bathers off their loungers: allChars, areaHit), step(h)
@@ -6906,6 +7023,14 @@ shame.closet (Closet, §7.2; feature 36): configure(h) from setupHideouts (h = t
 //   live; canUse(); roofUnder(m); overGap(); stairs(d); put(name, up); puff(on); start(gap); end();
 //   land(kind, d, v); on; dive; busy; puffT; viewSaid; last { kind, x, z, v, t, secs, gap }; climbs;
 //   mantras
+// birds.js (feature 43, §10.31): game.birds = new Birds(game) after the mic (builds KINDS' four
+//   instanced meshes a kind, stand / fly / left wing / right wing, each with an outline on its matrices,
+//   and the flocks of BIRDS on their spots: groundAt when a spot gives no y); update(dt) after
+//   mic.update (not live: rest() once, every bird settled on its spot and drawn; live: the threat from
+//   game.focus(), game.hornAt once, each flock within farR, the stork, Stig's sorry, the matrices);
+//   scare(b, x, z, delay, cause); lift(b); idle / fly / land / settle(b); tripOk(); startTrip();
+//   flyHome(); startScene(pair); tickScene(dt); endFilm(); posed(key) (npcPosed, honk.free); pair();
+//   rest(); restFlock(fl); events [{ t, flock, n, cause } | { t, stork }] (the last 60); sorryN; posing
 // town.js: ROOF_JUMP { lots, roofs: { atl, sol: { name, minX, maxX, minZ, maxZ, floor, blocks } }, gap
 //   { x0, x1, z0, z1 }, jz, coins [[x, y, z]], live() } (feature 41; the roofs' blocks `dead` =
 //   !live(), the slabs' body and stair tower and the gap's two palms `dead` = live(), each palm with a
@@ -7549,6 +7674,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `prata` [feature 39] | Prata med gänget (§10.28). The table: 12 people, 33 exchanges of 2–4 lines, speakers the person, Stig or a `with`, windows on known missions (none of Angerud's after the end), no ä or ö in Ole's lines, no line a chatter line (CHATTER, CHATTER_FLIGHT, unlocks'), a source tag on every line row in content/island.js; who can be talked to and with what at every island index 5–13 (at 15:00, at 08:00, at 15:00 with Ole's watch found; the pool fest out of its hours let go first): every exchange somewhere, Ole's Rio at 9 and none at 12 (the giver), no Lasse at 5–6 (the giver), the gang at the airport at 5, Majsan's julfest at 12 and not 11, no Angerud and Berra's "Ska du ha?" after the end. At index 9 by Ole under the pergola: `chat` / Ole, `E Prata med Ole`; E (a real key): Stig turned to him, no `inDialog`, no talk prompt and an empty prompt while it runs, the Rio lines in order, nothing else said meanwhile (no chatter), a line at a time (2.2–6 s apart), the NPCs within 9 m quiet ≥ 3 s after; E again the donkey, again Rio; with the klocka the watch, "15:00 spansk tid. 16:00 norsk och svensk."; the morning one at 08:00, not at 15:00; warped 9 m off mid-talk: `left`, no more lines; Robban's customs with Berra's "Va? Var jag med där?"; Siv (the giver) a `talk`; a mission begun mid-talk: `free roam`, the bubble down. Index 12: within 1.4 m of Majsan the `solkram` interactable, at 2.5 m the talk, the julfest's four lines; Ole (the giver) none. Index 13 after `unlock('bodega')`: at 15:00 on the deck the fest's dancers not to be talked to; Berra at the bodega (the Berra job held off) "Ska du ha?" …; Angerud hidden, none; at 08:00 Lasse's oath with `oath` on Stig during his line and off after; Ole's Concorde with `wings` and the arms down after. The flight level: nothing. Shots `prata_1_prompt`, `_2_rio`, `_3_julfest`, `_4_bodega`, `_5_eden`, `_6_concorde` |
 | `takhopp` [feature 41] | Hoppet mellan hotelltaken (§10.29), at index 13 (free roam): `ROOF_JUMP` live, the roofs HOTEL ATLÁNTICO and APARTAMENTOS SOL DE INVIERNO, both floors at 21.09 (`groundAt` from 25 on each roof and at `takSolTopp`, `takAtlTopp`, `takUtsikt`), the gap 3.68 m with no floor in it, the lift room a wall (23.05), 17 coins, the gap's two palms at 8 m, no 99 m slab solid under the roofs; at `takSolLobby` the prompt "Ta trappan upp", E fades to black and puts him on the roof at `takSolTopp` facing the gap (yaw −π/2, `on` `sol`, `climbs` 1), `slump` and "Sju våningar…", no coin collected there, the prompt "Ta trappan ner"; W + Shift along the coins (a frame hook aims the camera) and a jump 1.2 m before the edge (as Space does): over the gap `dive.gap`, `leap`, the mantra once, down on ATLÁNTICO (`last.kind` `roof`, `gap`, the arms in), at least 11 coins on the way; run to `takUtsikt`: "Nu har jag havsutsikt." once (not again after a step away on the roof), at least 4 coins of the stash; `takAtlTopp`: "Ta trappan ner", E: out of ATLÁNTICO's lobby 2.8 m from `takAtlLobby`, facing out, no stairs there; on the roof again the view line again; sprinting off ATLÁNTICO's west edge at z 62: `leap` (not `bomb`, not `gap`), the mantra, a belly flop in the pool next door (x 53.9–64.8, v > 28, `down`) and its splash; with J 3 m under the roof a cannonball (`bomb`, `waterSplash` with bomb, no flop); a SKANDAL pursuit: no "Ta trappan" prompt at the lobby. At index 9, up by the stairs: the runner's state set to `intro` alone (a real start's intro stands him by the giver at once): `put` once to `takSolLobby`, out of the lobby with no landing over 6 m/s; from the roof `missions.begin()`: no landing over 6 m/s, on the ground; in the mission no `roof` block, every slab solid and stair tower to 99, the palms to 99, no roof floor at (100, 60), no `takhopp` prompt. Shots `takhopp_paret`, `_ascensor`, `_uppe`, `_glipan`, `_atlantico`, `_utsikt`, `_kvallssol`, `_nere`, `_fall`, `_plask` |
 | `mikrofon`, `utrop` [feature 44] | Mikrofonen på scenen (§10.30). `mikrofon`: every line in MIKROFON has its source tag in content/island.js and Ole's have no ä or ö; `clockWords` (tre, halv fyra from a quarter past, fyra from a quarter to, tolv, halv två); at index 9 (free roam, 15:00): no mic prompt from the lawn 2.8 m in front of the stand, at `mikrofon` the prompt "Läs ett utrop" and three guests seated at the terrace; E (a real key): `vatten`, Stig turned to the terrace (within 0.05 rad), the glasses up at once, his line first, three spit lines with the glasses down and `yell`, the camera behind him (`camOff`, within 0.1), no prompt while it plays, no announcement from E in the cooldown; E: `grisfest`, the free gang (Fru Storch, Ole, Robban, Berra, Herr Storch; not Siv, the giver, or Majsan, her extra) and six tourists, the gang `npcPosed`, out of `honk.free`, `spot` `mic`, busy; everyone within 0.8 m of his place, a cheer, then in order Robban's Benidorm, Fru Storch's coffee, "Ja.", "Norsk, da?", "Ja.", and no chatter from Affe or Gabbe meanwhile; E: "Klockan är tre spansk tid…" and Ole's lost watch; with the klocka found at 15:30 "halv fyra" and the watch's line; E: `friskotek`, everyone leaving slumped, the guests slumped (and up again), the tourist's and Berra's lines; the crowd gone: the tourists hidden, the gang free and within 3 m of home; eight bathers forced onto the pool's loungers: E: `hajar`, all eight up, running from the pool flailing (over 3 m further in 1.5 s), "Hjälp!", "En haj!", Lasse's line and Stig's answer, then no flailing and nobody back on those loungers; the fin squashed: the turn skips the shark; the grisfest again, Stig warped 21 m off after Fru Storch's question: no "Ja." or "Norsk, da?"; `missions.begin()` with the crowd on the lawn: no crowd, extras or guests, the gang let go, no prompt. `utrop`: one tourist from each entry's outermost start to a place (under 20 s, within 0.6 m: west 9.6 s, east 14.4 s, south 10.8 s); the guests at 09:00 and 22:30, none at 23:30 or 05:00 (after a cut), at 15:00 again; no prompt in a SKANDAL pursuit; index 6 (friskotek): six tourists only, no question time, the giver and his extras not taken; index 13 after `unlock('bodega')`: none of the pool fest's dancers in the crowd; the flight level (index 2) inert. Shots `mikrofon_1_prompt`, `_2_vatten`, `_3_publiken`, `_4_hurra`, `_5_norsk`, `_6_friskotek`, `_7_hajar`, `utrop_1_friskotek`, `utrop_2_efter_slutet` |
+| `faglar`, `storken` [feature 43] | Fåglarna som lyfter (§10.31). `faglar`, at index 6 (free roam): `live`; the flocks `plaza` 15 `duva`, `kiosk` 8 `mas`, `piren` 9 `mas`, `charca` the two herons and the stork; the herons at (−255, 169.5) and (−249, 179), y 0.15 (where nature.js drew them); every ground spot `spotFree` (no bird a solid); shots of the four flocks; standing still 2.5 m from a pigeon for 2.5 s: no lift; a sprint in from the south: the first lift `plaza`, cause `foot`, the four north pigeons still on the ground; "Oj! Förlåt, förlåt!" and `placate` 1, then 0; at least six pigeons up, the gulls untouched; 14 m off and still: every pigeon back down 22–70 s after the first take-off (37–42 s measured), each within 1.01 m (its steps) of its spot; a pedestrian and a traffic car put among them: no lift; his car west along the beach through the kiosk's sand spots from 40 m: the gulls lift (`car`), no gull still on the ground within 6 m of the moving car (11.6 m at 18–26 m/s), at most two left on the ground; at the quay a standing car: no lift; H: the pier's first lift `horn`, the whole pier up 2 s later; the pigeons up again, then `T.startMission()`: not `live`, every bird on its spot, the stork home; in the mission a sprint among the pigeons: no lift; index 2 (the flight level): not `live`, no lift. `storken`, at index 7 (the Storches on the beach; at 6 the friskotek holds them): `pair()`, the stork home, no `records.stork`; a sprint at the lagoon from the east: the stork `out` (one trip), both herons `fly`; it lands 1.8 m from Fru Storch, farther from Herr Storch, facing her; Stig 9.5 m off: the scene, "Oj, en stork!" then Fru Storch's "Vi heter faktiskt Storch, inte Stork.", Herr Storch `film` and posed, `records.stork` true in the game and the save; `back` with the camera down, then home on its spot (within 0.01 m); a trip nobody follows (`waitSecs` set to 4): home without a stork line; a third, followed: "Oj, en stork!" and the filming but no correction; `T.startMission()` then: the stork home, the camera down, not posed; index 13 after `unlock('bodega')`: no pair, and scared it circles with the herons (`fly`, no trip). Shots `faglar_plaza`, `_kiosk`, `_piren`, `_charca`, `_lyfter`, `_lyfter2`, `_lyfter3`, `_cirklar`, `_landat`, `_bil`, `_tuta`, `_uppdrag`, `storken_flyger`, `_landat`, `_rattelse`, `_filmar` |
 | `badgaster`, `stekt` [feature 32] | Badgäster på solstolarna (§10.22). `badgaster`, at index 6 (free roam): bodies only on taken sun loungers, their hips on the seat, at most `max` (10), none on Berra's or Robban's; on the main beach no taken lounger within `r` left empty nearer than the bodies (shot `badgaster_strand`); one rebuilt body's ms logged. The burn: three loungers in the z 250 row; a bather lain past `burn[0]` stays pale while in view within `seenR` and is pink once out of view; past `burn[1]` lobster red (skins from `skins`; shot `badgaster_stadier`). A kick at a free lounger and at a taken one give the same SKANDAL; the bather off it in a backward somersault (`flip` < 0) along the lounger's facing (vz > 2), an OUCH bark, a GETUP bark on his feet (shots `badgaster_kullerbytta`, `badgaster_upp`), gone once Stig is 30 m off; no `onCharHit`, no "hit" sorry. His car at 10 m/s through a taken lounger: SKANDAL 1 × 1.2 × gain only, the bather off along the car (vz > 5; shot `badgaster_bil`). The lounger back after its smash (respawn 0, him 100 m off): `n` + 1, a new seed, stage 0, a pale newcomer on it. At 22:00 nobody (after a cut); at 10:00 `dayN` + 1 and a new crowd. A mission start (friskotek) takes every body away at once, none in the mission; the flight level (index 2) makes none. `stekt`, at index 6: Berra and Robban `lying` on their loungers, outfit `stekt` (skin `STEKT_SKIN`), `slump`, busy, spot `stekt`; both snore within 9.5 s (shots `stekt_bar`, `stekt`); the E point `stekt:wake` at Berra's feet: Stig's line, then Berra's with `lift` > 0.6 (shot `stekt_fem_minuter`), then Robban's, in that order, and `lift` back under 0.1; a kick at Berra's lounger: `flung`, then `down` with his timer held (> 100), still `stekt`, only snores from him (shot `stekt_sparkad`); the lounger back with him 100 m off: on it again. A mission start (friskotek): both `normal`, outfit `sol`, no slump, within 2.5 m of their homes at the bar. Index 7: on their loungers; 5 and 8: not |
 | `talk` [Phase 0] | `autoDialog = false`, walk to Ole at `gateQueue`, E, Space twice |
 | `fullstory` [Phase 0b] | swaps the literal §8 missions (`tools/fixtures/full-missions.js`) into `MISSIONS` and plays all 13 per §16.3 (`FROM`/`TO` as `story`); must end `#13 idle`, `RESULT: PASS` |
@@ -9502,3 +9628,25 @@ the fixer's group.
   the time read off the island's clock; Ole's answer by his watch; six tourists; the terrace's guests
   sit there all day and evening; no wave-off pose for Lasse; a camera ease at E; no reward. Scenarios
   `mikrofon`, `utrop` (§16.4).
+- Feature 43, "Fåglarna som lyfter – och storken i La Charca" (`features/implemented/faglar_som_lyfter.md`,
+  2026-10-17): small flocks that lift between missions (§10.31; new `src/game/birds.js`, `BIRDS` in
+  content/island.js; §1.6, §6.3, §10.5, §12.3, §14.1–§14.3, §14.8, §16.4). Pigeons round the plaza's
+  fountain (15, three on the rim), gulls at HELADOS · GLASS (8, two on the kiosk's roof) and on the
+  marina's pier (9, three on bollards), La Charca's two herons, moved out of nature.js's merged
+  geometry (`heron()` removed; no random draw was involved) to the same spots, and a stork between
+  them; instanced meshes (standing, flying, two wings a kind) with outlines, hidden over 260 m from the
+  camera. Stig on foot (1 + 0.5 × his speed m), his car (4 + 0.5 × its speed) or the horn (28 m) lift
+  them, times the kind's shyness, and a lifting bird takes its neighbours; they circle their place and
+  land on their spots again after 24–36 s (all down 37–42 s after the first take-off, measured);
+  traffic and pedestrians never scare them, no bird is a solid or is hurt. `audio.flap`, `audio.gull`
+  (the herons' croak at 0.32). On foot among them "Oj! Förlåt, förlåt!" [N] with `anim.placate` 1. The
+  stork flies to the Storches on the beach at playa (278 m, about 27 s) when they stand there; within
+  11 m of it Stig's "Oj, en stork!" [N], Fru Storch's "Vi heter faktiskt Storch, inte Stork." [F*] the
+  first time ever (`records.stork`, saved), Herr Storch filming it (`npcPosed`, honk's `free`), then it
+  flies home. Only when `missions.state === 'idle'` on the island: in any other state every bird stands
+  still on its spot and the stork is home, so no mission, stage kind, timer, fixture or calibration pool
+  changed. main.js: `birds` after `mic`, `birds.update` after `mic.update`, `npcPosed` asks it.
+  Deviations from the idea: `game/` rather than `world/`, ticked after the roofs; two body meshes a
+  kind; no gulls on HOTEL LAS GAVIOTAS's roof; the correction once ever, the filming every visit; the
+  sorry also among gulls and herons; standing still, not hidden, in missions. Scenarios `faglar`,
+  `storken` (§16.4).
