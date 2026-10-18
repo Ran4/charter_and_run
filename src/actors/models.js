@@ -1089,7 +1089,7 @@ function heldPose(m, st, t, place = false) {
   const h = m.def.held;
   if (!h || !PROP_GEO[h]) return;
   const [R, L] = m.arms;
-  const busy = st.wings || st.cupUp || st.cupHeld || st.push || st.rub || st.hold || st.flail || st.oath || st.dance || st.laugh || st.mirror || st.film || st.camShow || st.giraffe || st.butterKnife || st.ticket || st.carryOver || st.shoeOff || st.calc || st.groda || st.placate || st.tap || st.scratch || st.point || st.cheer || st.wave || st.fish || st.thumb || st.ride || st.kikare || st.sort || st.kick > 0;
+  const busy = st.wings || st.cupUp || st.cupHeld || st.push || st.rub || st.hold || st.flail || st.oath || st.dance || st.laugh || st.mirror || st.film || st.camShow || st.giraffe || st.butterKnife || st.ticket || st.carryOver || st.shoeOff || st.calc || st.groda || st.placate || st.tap || st.scratch || st.point || st.cheer || st.wave || st.fish || st.thumb || st.ride || st.kikare || st.sort || st.volley || st.kick > 0;
   const pose = !place && !busy;
   const moving = st.speed > 0.3;
   switch (h) {
@@ -1485,6 +1485,21 @@ function poseFlags(m, st, t) {
     m.body.rotation.z = lean;
     m.neck.rotation.z = -lean * 0.5;
     m.neck.rotation.x = -0.08;
+  }
+  if (st.volley) {
+    // Beach volleyball (game/volley.js, §10.50): 'bump', the forearm pass, both arms out and down
+    // before him with the hands together, knees bent and leaning in; 'up', the ball held up over his
+    // head for the serve, both hands under it.
+    if (st.volley === 'up') {
+      R.rotation.set(-2.85, 0, 0.32); L.rotation.set(-2.85, 0, -0.32);
+      m.neck.rotation.x = -0.25;
+    } else {
+      R.rotation.set(-1.0, 0, 0.36); L.rotation.set(-1.0, 0, -0.36);
+      m.body.position.y -= 0.08 * s;
+      legs[0].rotation.set(-0.3, 0, -0.12); legs[1].rotation.set(-0.3, 0, 0.12);
+      m.hips.rotation.x += 0.28;
+      m.neck.rotation.x = -0.18;
+    }
   }
 }
 

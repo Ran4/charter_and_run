@@ -56,6 +56,7 @@ export const hud = {
       <div id="fade"></div>
       <div id="takt"></div>
       <div id="kaffe"><span class="kaffe-icon"></span><span class="kf-text"></span></div>
+      <div id="volley"><div class="vb-row"><span class="vb-team us"></span><span class="vb-n us"></span><span class="vb-dash">–</span><span class="vb-n them"></span><span class="vb-team them"></span></div><div class="vb-sub"></div></div>
       <div id="toasts"></div>
       <div id="banner"><div class="banner-main"></div><div class="banner-sub"></div></div>
       <div id="bubbles"></div>
@@ -98,6 +99,7 @@ export const hud = {
     this.resultsEl = $('results');
     this.taktEl = $('takt');
     this.kaffeEl = $('kaffe');
+    this.volleyEl = $('volley');
     this.vfEl = $('viewfinder');
     this.fnEl = $('filmnight');
     this.kkEl = $('kikare');
@@ -450,6 +452,32 @@ export const hud = {
     if (on && text !== this._kaffeText) { this._kaffeText = text; e.querySelector('.kf-text').textContent = upper(text); }
     if (on !== this._kaffeOn) { this._kaffeOn = on; e.classList.toggle('show', on); }
     if ((on && low) !== this._kaffeLow) { this._kaffeLow = on && low; e.classList.toggle('low', on && low); }
+  },
+
+  // The beach volleyball's scoreboard (game/volley.js, §10.50), top in the middle (where the objective
+  // card would be): o = { us, them, a, b, sub, why } or null. `us` and `them` are the teams, `a` and `b`
+  // their points, `sub` the line under them, `why` a point's reason in its place (red). A changed point
+  // bumps its number. Touches the DOM only on a change.
+  setVolley(o) {
+    const e = this.volleyEl, key = o ? JSON.stringify(o) : null;
+    if (key === this._volleyKey) return;
+    const was = this._volley;
+    this._volleyKey = key;
+    this._volley = o;
+    if (!o) { e.classList.remove('show'); return; }
+    const q = (s) => e.querySelector(s);
+    q('.vb-team.us').textContent = upper(o.us);
+    q('.vb-team.them').textContent = upper(o.them);
+    q('.vb-n.us').textContent = String(o.a);
+    q('.vb-n.them').textContent = String(o.b);
+    q('.vb-sub').textContent = upper(o.why || o.sub || '');
+    e.classList.toggle('why', !!o.why);
+    for (const [side, n, m] of [['us', o.a, was?.a], ['them', o.b, was?.b]]) {
+      if (m == null || n === m) continue;
+      const el = q(`.vb-n.${side}`);
+      el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump');
+    }
+    e.classList.add('show');
   },
 
   letterbox(on) { $('letterbox').classList.toggle('on', on); },

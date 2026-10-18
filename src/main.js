@@ -65,6 +65,7 @@ import { MarketRoofs } from './game/marketRoofs.js';
 import { Hitch } from './game/hitch.js';
 import { Binoculars } from './game/binoculars.js';
 import { Packhus } from './game/packhus.js';
+import { Volley } from './game/volley.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
 import { LEVELS, ISLAND_PALETTES } from './level.js';
@@ -245,6 +246,7 @@ class Game {
     this.hitch = new Hitch(this);         // free roam: hitch-hiking on the country roads, standing in a grisbil's bed into town (§10.47)
     this.kikare = new Binoculars(this);   // free roam: the lifeguard's binoculars on the beach's tower, eight things to spot (§10.48)
     this.packhus = new Packhus(this);     // free roam: the foreman at the packing shed, a shift at the tomato sorting belt (§10.49)
+    this.volley = new Volley(this);       // the beach volleyball court's live ball; free roam: the match against Berra and Robban (§10.50)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -682,6 +684,7 @@ class Game {
     this.hitch.reset('warp');   // off a hitch truck's bed, the truck gone (§10.47)
     if (this.kikare.busy) this.kikare.end('down');   // the binoculars down (§10.48)
     this.packhus.end('gone');                        // off the packing shed's belt (§10.49)
+    if (this.volley.mode) this.volley.end('warp');   // off the volleyball court: the match off (§10.50)
     if (this.playerCar) this.playerCar.place(x, z, yaw);
     else this.player.teleport(x, z, yaw);
     this.cam.snapNext = true;
@@ -1611,6 +1614,7 @@ class Game {
     this.hitch.update(dt);
     this.kikare.update(dt);
     this.packhus.update(dt);
+    this.volley.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);
@@ -1695,9 +1699,10 @@ class Game {
     if (input.pressed('attack') && verbs.kick && !this.mantraMode && this.kickT <= 0) {
       // After julafton the glide takes the air press: a quick release still stomps (§10.7).
       if (!p.onGround && p.y > groundAt(p.x, p.z, p.y, 0.45) + 0.8) { if (!this.glide.press()) this.stomp(); }
-      else if (!this.skis.on) { p.anim.kick = 1; this.kickT = 0.38; this.kickHitT = 0.11; audio.kick(); }   // no kick on the rollerskis (§10.39)
+      else if (!this.skis.on) { p.anim.kick = 1; this.kickT = 0.38; this.kickHitT = 0.11; audio.kick(); this.volley.swing(); }   // no kick on the rollerskis (§10.39); the volleyball's window (§10.50)
     }
-    if (input.pressed('interact')) this.interact();
+    // In a volleyball match E does nothing (Q gives up, §10.50).
+    if (input.pressed('interact') && !this.volley.playing) this.interact();
   }
 
   // R: back to the road (island) or the level's reset spot (flight, §3). False when R does nothing
@@ -1786,7 +1791,8 @@ class Game {
     }
     if (this.kickHitT > 0) {
       this.kickHitT -= h;
-      if (this.kickHitT <= 0) {
+      // In a volleyball match, or when it met the ball, the kick is the ball's (§10.50).
+      if (this.kickHitT <= 0 && !this.volley.ate()) {
         const fx = Math.sin(p.yaw), fz = Math.cos(p.yaw);
         this.areaHit(p.x + fx * 0.9, p.z + fz * 0.9, p.y, 1.0, fx, fz, false);
       }
@@ -1821,6 +1827,7 @@ class Game {
     this.mic.step(h);     // the tourists at the SunTrip stage (§10.30)
     this.bell.step(h);    // the queue at Flamenco's reception (§10.37)
     this.packhus.step(h); // the foreman on the packing shed's yard (§10.49)
+    this.volley.step(h);  // the volleyball: Stig's kick and header, the others' hits, the ball (§10.50)
     this.carsVsPeople();
   }
 
@@ -1920,12 +1927,13 @@ class Game {
   // (§10.30), Herr Storch filming the stork (§10.31), someone in a gag's scene (§10.32), Siv or
   // Majsan on the sand by Stig's towel (§10.33), the porter ringing for the site manager (§10.37),
   // José and his mother walking back to his place after a street race (§10.38), or the bartender,
-  // Berra or Fru Storch in a scene at the pool bar or with its cup (§10.44).
+  // Berra or Fru Storch in a scene at the pool bar or with its cup (§10.44), or Ole, Berra and Robban in a
+  // volleyball match or Berra and Robban walking off from it (§10.50).
   // syncAll gives such an NPC no wave, turn or chatter, and the gang's talk leaves them be (§10.28).
   npcPosed(k) {
     return !!this.missions.idlePose(k) || this.berraJob.posed(k) || this.judges.posed(k) || this.film.posed(k) || this.eslov.posed(k) || this.fest.posed(k) || this.lapp.posed(k) || this.party.posed(k)
       || this.stands.posed(k) || !!this.mic?.posed(k) || this.birds.posed(k) || !!this.gags?.posed(k) || !!this.dream?.posed(k) || !!this.bell?.posed(k)
-      || !!this.gatlopp?.posed(k) || !!this.bar?.posed(k);
+      || !!this.gatlopp?.posed(k) || !!this.bar?.posed(k) || !!this.volley?.posed(k);
   }
 
   syncAll(dt, title) {
@@ -2168,8 +2176,9 @@ class Game {
       }
       if (this.belt.seated && !this.inDialog) prompt = this.belt.cfg.prompt;
       // Fishing at the pier's end (§10.45): the wait's hint and the dive's "E Dra upp!".
-      // Or the keys in a hitch truck's bed (§10.47), or at the packing shed's belt (§10.49).
-      const fh = this.fiske.hint() ?? this.hitch.hint() ?? this.packhus.hint();
+      // Or the keys in a hitch truck's bed (§10.47), at the packing shed's belt (§10.49) or in a volleyball
+      // match (§10.50).
+      const fh = this.fiske.hint() ?? this.hitch.hint() ?? this.packhus.hint() ?? this.volley.hint();
       if (fh != null) prompt = fh;
       hud.setPrompt(prompt);
     }

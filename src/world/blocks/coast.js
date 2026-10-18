@@ -953,7 +953,8 @@ function playa(f, W, ctx) {
   f.prop('dusch', -9, -24.2, 0);
   f.prop('dusch', 21, -24.2, 0);
   const bwX = lane ? 0 : i === 1 ? 12 : -12;
-  const bwEnd = lane ? 26 : 12;
+  // On (4,6) it stops short of the volleyball court's north line (local z 0; §10.50: it ran over the court).
+  const bwEnd = lane ? 26 : i === 4 ? -1.5 : 12;
   f.flat(0xb08a5a, bwX, (bwEnd - 26) / 2, 2.6, bwEnd + 26, CURB + 0.06);
   for (let z = -25.5; z < bwEnd; z += 0.9) f.flat(0x8a6a44, bwX, z, 2.6, 0.08, CURB + 0.065);
   // Sunbed rows: parasol between two sunbeds, facing the sea (+z).
@@ -1057,7 +1058,8 @@ function playaMain(f) {
   pedalBoat(f, 6, 88, 0.6, SUNY, 0.17);
 }
 
-// (4,6): pedal-boat rental on the sand, beach volleyball, pedal boats out at sea.
+// (4,6): pedal-boat rental on the sand, beach volleyball (the net's middle is the landmark `volley`), pedal
+// boats out at sea.
 function playaBoats(f) {
   postSign(f, 'PATINES · TRAMPBÅTAR · 200 PTA/H', 18, 15, 0, 6.5, 0.8, CURB + 1.6, { bg: '#1e9aa0', fg: '#fbf6ec' });
   const cols = [SUNY, TEAL, 0xf4f4f0, RED, SUNY];
@@ -1068,7 +1070,7 @@ function playaBoats(f) {
   for (let x = -4.4; x <= 4.4; x += 0.4) f.box(0x3a3a40, vx + x, CURB + 1.75, vz, 0.02, 0.6, 0.02);
   f.box(0x3a3a40, vx, CURB + 1.48, vz, 9, 0.03, 0.02);
   for (const [x, z, w, d] of [[vx, vz - 4, 9, 0.12], [vx, vz + 4, 9, 0.12], [vx - 4.5, vz, 0.12, 8], [vx + 4.5, vz, 0.12, 8]]) f.flat(0xf4f4f0, x, z, w, d, CURB + 0.04);
-  f.sphere(0xf4f4f0, vx + 2, CURB + 0.22, vz + 1.8, 0.42);
+  // No ball here: the court's ball is a live one (game/volley.js, §10.50).
   pedalBoat(f, -8, 82, 0.4, TEAL, 0.17);
   pedalBoat(f, 4, 80, -0.3, SUNY, 0.17);
 }

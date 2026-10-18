@@ -49,7 +49,8 @@ export class Honk {
       && !g.mic?.posed(key)    // the crowd at the SunTrip stage (§10.30)
       && !g.birds?.posed(key)  // Herr Storch filming the stork (§10.31)
       && !g.dream?.posed(key)  // Siv or Majsan on the sand by Stig's towel (§10.33)
-      && !g.bar?.posed(key);   // the bartender, Berra or Fru Storch in a pool-bar scene (§10.44)
+      && !g.bar?.posed(key)    // the bartender, Berra or Fru Storch in a pool-bar scene (§10.44)
+      && !g.volley?.posed(key);   // Ole, Berra and Robban in a volleyball match (§10.50)
   }
   // main.js syncAll: an answerer whose pose is the wave waves.
   waving(key) { return this.react[key]?.flag === 'wave'; }

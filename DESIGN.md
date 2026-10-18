@@ -343,7 +343,12 @@ behöver folk till skiftet!") and two workers, the belt that runs faster and fas
 KONTROLLERAD AV G17, the pile of missed tomatoes that gives way with Stig's "Ursäkta… ett ögonblick
 bara…", and Siv's "Spänn av, Stig-Helmer. Du är ledig." afterwards (free roam, §10.49; in the film Stig
 checks toasters at home, the tomatoes go by truck to the packing sheds, and the line to relax is
-Majsan's).
+Majsan's); the beach volleyball match against Berra and Robban on the court by the pedal-boat rental,
+first to five with Ole on Stig's side, the two slower and sloppier the thirstier they get, their thirst
+lines between the points and their walk off to the bar ("Nu går vi till baren, Robban.") (free roam,
+§10.50; the film has no volleyball: "Jag är törstig, Berra." / "Du har ingen karaktär alls, Robban." are
+said on the walk to the bodega, "Ska vi ta Pepes Bodega i dag?" / "Vi kan väl ta det lite lugnt?" by the
+pool, "Fan, vad jag är törstig." on vischan, and Ole's "Heia Norge!" ends his solo dance at the grisfest).
 The film's flight has **no turbulence** and **no in-flight toilet scene**: both toilet scenes are
 at Arlanda (we keep them there). The plane's toilets are only an invented hideout.
 
@@ -548,6 +553,11 @@ Physical keys are unchanged from Bigmouth. The level config turns verbs on and o
   yard ("E Ta ett skift") starts it. A (←, the pad's d-pad ←) throws the tomato in the yellow zone into
   ROJOS, S (↓) into the bucket, D (→) into VERDES; Q (Backspace, the pad's B) ends the shift. Stig
   stands still at the belt (A, S and D are the sorting keys there, not steps).
+- **Beach volleyball** (free roam, §10.50): E at the ball on the volleyball court by the pedal-boat rental
+  ("E Spela volley") starts a match against Berra and Robban. J kicks the ball over the net when it is
+  within reach (his facing aims it sideways; facing away, the camera's), Space jumps for a header, Q
+  (Backspace, the pad's B) gives up; E does nothing in a match. Out of a match J kicks the ball about.
+  After a lost match E is "E Revansch!".
 - **The nap** (free roam, §10.10): E at Stig's bed in room 107 ("E Kvarta en stund") sleeps on to
   the next part of the day; E at a mission giver in the evening or at night starts it the next
   morning.
@@ -1370,7 +1380,7 @@ standing there faces. `y` (optional) = absolute height for collectible spots on 
 | (6,0) | `flygplats` → `gando` (D2, coast.js) | low terminal with open arrivals canopy `LLEGADAS · ANKOMST`, baggage carousel (animated ring of suitcases; its belt carries Stig in free roam, §10.16: the belt a `carousel` floor at CURB + 0.64, the centre island its own stepped floor, the sign's post a pole), `OBJETOS PERDIDOS · HITTEGODS` desk with a wall of suitcase silhouettes, bus bay `BUSS 17`; **the parked DC-8** (`buildPlaneExterior`) **outside the bound wall at (240, −335)** — WP-B clears the tree ring **and the hills** in that sector (§6.4) | `airport` (0, 22, π) · `hittegods` (−14, 6, 0) · `busBay` (16, 24, −π/2) · `bagageband` (6, 11, π) (south of the carousel, facing it, so the views camera stands on the forecourt; Phase 3) · `brodrost_hittegods` (−17.4, 7.35, 0, 1.23) (a G17 toaster on the lost-and-found counter, 4 m from the clerk; §10.24; not a standing spot) | `buss17` (bus, livery `suntrip`) at `busBay`; `taxiAirport` (taxi, locked) |
 | (0,4), (0,5) | `dyner` → `dyner` (D1, nature.js) | large sand dunes (ramps), palm grove, lagoon pond (its two herons and a stork are game/birds.js's since feature 43, §10.31); behind them, beyond the west bound, a row of big visual-only dunes from town.js (§6.4, Phase 3 r2) | `dyner` (0, 0, π − 0.4) on (0,4) (faces the arch, so the views camera stands on the sand south of it, clear of the boardwalk palms; Phase 3) | — |
 | (0,6) | `fyren` → `fyren` (D2, coast.js) | **Faro de Maspalomas**: ~55 m grey-blue stone tower (tallest landmark, visible from everywhere), keeper's house (roof top ≈ 4.0, reachable by a dune ramp); the tower's solid stops at its gallery floor (51.3), with the lantern and a closed railing ring as walls up there, and a door on the lantern's north-east side (feature 52, §10.35) | `fyren` (0, 10, π) (coin arc on the keeper's-house roof); `fyrDorr` (0, 1.4, π) before the keeper's door, `fyrGalleri` (1.70, −9.70, 3π/4, y 51.3) on the gallery (§10.35) | — |
-| (1..4,6) | `playa` → `playa` (D2, coast.js) | sand, sunbed rows (`solstol`), parasols, `HELADOS` kiosk, lifeguard tower (on (3,6) at (17, 18): its roof 2.75 over the 2.75 platform, a camera ceiling, since feature 108), pedal boats on the sand, towels on sunbeds | `playa` on (3,6): (0, 10, 0) · `kikare` on (3,6): (17, 18, 0, y 2.75) (the middle of the lifeguard tower's platform, facing the sea: the binoculars' E spot; the pair on the south railing is game/binoculars.js's mesh; feature 108, §10.48) · `fena_hav` world (0, 304) (sea shallows, y 0.35) | — |
+| (1..4,6) | `playa` → `playa` (D2, coast.js) | sand, sunbed rows (`solstol`), parasols, `HELADOS` kiosk, lifeguard tower (on (3,6) at (17, 18): its roof 2.75 over the 2.75 platform, a camera ceiling, since feature 108), pedal boats on the sand, towels on sunbeds; on (4,6) the beach volleyball court (net at (−16, 4); its ball a live one since feature 111, the boardwalk ending at z −1.5 short of it) | `playa` on (3,6): (0, 10, 0) · `kikare` on (3,6): (17, 18, 0, y 2.75) (the middle of the lifeguard tower's platform, facing the sea: the binoculars' E spot; the pair on the south railing is game/binoculars.js's mesh; feature 108, §10.48) · `volley` on (4,6): (−16, 4, 0) (the volleyball net's middle on the sand, facing the sea; feature 111, §10.50) · `fena_hav` world (0, 304) (sea shallows, y 0.35) | — |
 | (5,6) | `hamn` → `hamn` (D2, coast.js) | small marina: walkable shallow basin (`water` box), pier (deck top 0.55), moored boats; PALOMA, the excursion boat at (16.6, 14), is her own mesh with her name board as a child, exported as `PALOMA` (her collider unchanged; feature 76, §10.41) | `hamn` (0, 0, π) · `fena_hamn` (−8, 10, 0, 0.35) · `pryl_glasogon` (12, 28, 0, 1.2) (pier end) · `battur` (18.5, −0.4, π) (before the PASEOS EN BARCO kiosk's window, the boat trip's E, §10.41) · `fiske` (14.2, 27.4, π/2) (at the east edge of the pier's end platform, 1.6 m north of the green harbour light, facing the basin: the fishing's E spot; the rod's holder on the light's post and the tin bucket beside it are game/fishing.js's meshes; feature 107, §10.45) | — |
 
 **Rio end card** (WP-B, `world/rio.js`, P1): `buildRioCard(scene)` at **x = −3000, z = 0**: water
@@ -3611,7 +3621,7 @@ Key **`charter-and-run-v1`** (localStorage):
   unlocked: ['grisbil', ...], outfit: 'kostym' | 'arlanda' | 'hawaii' | 'rio', tune: 'sol' | 'samba',
   records: { simhopp: n, eslov: s, solkram: n, stunts: { planka: m, gula: m, garage: m }, stork: true,
              gatlopp: { won: 0..3, sex: true }, eslovSkidor: s, fiske: { fisk: n, sko: n, fena: n, knacke: n },
-             kikare: ['flotte', 'fena', …], packhus: n },
+             kikare: ['flotte', 'fena', …], packhus: n, volley: { won: n, lost: n } },
   shop: { owned: ['hatt', 'glas', 'skjorta', 'nasa'], off: [ids], trapp: 0..2, trappT: s, bag: bool },
   gags: ['kamera', 'viking'] }
 ```
@@ -3640,7 +3650,8 @@ sko, fena, knacke }, the catches at the pier's end by kind (the FÅNGST card), s
 catch (feature 107, §10.45); `kikare`, the ids of the binoculars' targets found, in the order found (a fin
 already taken goes in at the next look), saved at once with every find (feature 108, §10.48); `packhus`,
 the most boxes filled in one shift at the packing shed's belt, saved at once when beaten (feature 109,
-§10.49). `shop`
+§10.49); `volley` { won, lost }, the beach volleyball matches won and lost against Berra and Robban, saved
+at once at a match's end (feature 111, §10.50). `shop`
 (feature 34, §10.23):
 SunTrip-butiken's purchases (`owned`), the ones taken off at the counter (`off`), the Trapp Trull
 account's instalments still to pay (`trapp`) and its free-roam seconds towards the next (`trappT`,
@@ -7630,6 +7641,141 @@ the Canarian pace. The shift, the belt, the foreman and the workers are ours [N]
   of both kinds (TAPPADE). The foreman is there by day only. The pay is for a whole shift only; a collapsed
   shift's crates still count for the record. The "Moderna tider" thought stays out of the game's text.
 
+### 10.50 Strandvolley mot Berra och Robban (free roam; feature 111, 2026-10-18)
+
+`game/volley.js` (`Volley`, owned by Game as `volley`), config `VOLLEY` in content/island.js, the landmark
+`volley` in landmarks-island.js, the anim flag `volley` in character.js and its poses in models.js (§14.6),
+the scoreboard `hud.setVolley` (`#volley` in style.css, §11.4), hooks in main.js (built after the
+packing shed, `volley.update` after `packhus.update`, `volley.step` in fixedStep after `packhus.step`, `swing()`
+when a kick starts, `ate()` before the kick's areaHit, E off in a match, `hint()` for the keys, `posed`,
+`debugWarp` ends a match), `honk.free` (no horn answer from a player in a match), and the court in coast.js
+(block (4,6), `playaBoats`). The film has no volleyball: the match is ours [N] (§1.6). Its opponents and
+their thirst are the film's: Robban "trögare och mer stillsam än Berra, men lika törstig"
+(research-characters.md:375), their lines between the points relocated from the walk to the bodega and the
+pool [F*].
+
+- **The court**: the landmark `volley` is the net's middle on the sand (block-local (−16, 4), world (64,
+  244)), facing the sea. Court places are [u, v]: u metres to its left (+x), v forward (+z, the sea); Stig's
+  half is v < 0, the land side, so the chase camera behind him looks over the net at the sea. The lines
+  `court` [4.5, 4.0] (9 × 8 m, as painted), the net along u over v 0 from `net` [1.45, 2.45] m over the
+  sand (its posts are the only solids, as before; nobody walks into the mesh). The court's fixed white
+  ball is gone from the merged geometry, and the boardwalk on (4,6) now ends 1.5 m short of the court's
+  north line (local z −1.5; it ran over the court's east part). No other world change; no collider added.
+- **The ball** (`ball`): `r` 0.24 m, red and white gores (one toon mesh), a blob shadow on the sand under it
+  (smaller and fainter with height) and, while a ball comes down on Stig's half in a rally, a cream ring with
+  a dot where it will land. Gravity `g` 12 m/s², no drag (so its landing is predicted exactly); on the
+  sand it bounces with `bounce` 0.42 (and 0.62 of its speed along) above `stopV` 1.3 m/s, then rolls,
+  slowing by `roll` 2.4/s. Off walls, posts and props taller than its bottom (×1.55 of the speed into
+  them back out), off the net (the tape bumps it up and on, the mesh drops it back on its side) and off
+  bodies: Stig's always (walking into it pushes it along, a hop at a walk), Ole's, Berra's and Robban's in a
+  match (never the one who touched it within 0.4 s, nor the ball waiting for Stig's serve). A car knocks it
+  on (× 1.3 of its velocity and up); it is never an obstacle to one. Its physics runs only on the island
+  with no mission running; in a mission it lies at `rest` and nothing moves it.
+- **Free roam, no match**: the ball lies at `rest` [1.2, −1.6] on Stig's half. J with it in reach (below)
+  kicks it `free.dist` 7 m along his facing, its arc `free.apex` 3.0 m up, and a kick that meets it does no
+  areaHit. Off the court and Stig (on foot or driving) over `homeR` 35 m from both it and its rest spot,
+  it is back at `rest`; a mission start or the other level puts it back at once.
+- **The start**: on the island with `missions.state === 'idle'`, the ball on the court (within 1.5 m of the
+  lines), Stig on foot, on the ground and in no other hold (no dialogue, cutaway, car, carry, pursuit, bust,
+  PANIK, pool-fest ring, belt, gang talk, nap, SOLKRÄM, toaster game, rollerskis, street race, cast, look
+  through the binoculars, hitch, daydream, boat trip or phone call), and Ole, Berra and Robban each free
+  (shown, standing, not busy, in no car or seat, not walked by a module, not posed, free for the horn) and
+  none of them the idle mission's giver or extra (so not at asnan, the bodega, grisfest or julafton; always
+  after the end): E within `r` 1.6 m of the ball, "E Spela volley" [N]. Stig is held through a black fade
+  (`fadeSecs` 0.7 s; `hud.fade`, the 0.6 s CSS one) and the three are ours from the press (busy, `steer`,
+  posed). Behind the black: Stig on `marks.stig` [1.0, −2.8], Ole on [−2.2, −2.0], both facing the sea,
+  Berra on [1.9, 2.3] and Robban on [−2.0, 2.6] facing them; the ball on the sand 0.9 m before Stig; the
+  camera behind him, snapped. The banner STRANDVOLLEY · Först till fem [N] (2.2 s), the board, Berra's "En
+  match. Sen går vi till baren." [N] and Ole's "Nå tar vi dem, Stig!" [N]. Stig serves first.
+- **Stig's kick** (J on the ground: the engine's kick, `swing()` opens a window of `kick.window` 0.4 s): the
+  first step in it with the ball within `reach` 1.05 m of the point `ahead` 0.55 m before him, its bottom
+  −0.3 to `high` 1.6 m over his feet, and him on his feet (as the kick's own test). The ball goes over the net
+  to a spot `depth` [1.3, 3.3] m into their half, sideways by his facing's sideways part × `side` 0.5
+  (clamped at ±1.2 of the depth to go), ± `spread` 0.35 m (± 0.21 deep), its arc `apex` 4.4 m over the sand,
+  raised by 0.4 m at a time while it would touch the net (checked over the net's slab, its radius either
+  side). The facing is his; when it points less than `minFwd` 0.3 towards the net (he walked back or
+  sideways to the ball), the camera's, and when that does too, straight over. He turns to the kick. A
+  kick that meets the ball does no areaHit, and in a match no kick does (nobody is bowled, nothing breaks).
+  Never from their half (Stig over v 0.5) nor at a ball over the net (v over 0.15). The stomp and the glide
+  in the air are as ever.
+- **The header**: Stig in the air (a jump) with the ball's middle within `header.r` 0.62 m of his head
+  (0.25 m under his top) heads it: as a kick, the arc `apex` 3.6 m (quicker), and their miss chance on it
+  `harder` +0.15. Not twice running.
+- **Ole** takes a ball coming down on his side over `ole.take` 2.3 m from Stig and nearer Ole (judged at the
+  touch, never his own twice running), `react` 0.15 s after it, at `speed` 4.2 m/s, and bumps it up for
+  Stig (`anim.volley` 'bump'): to `ahead` 0.9 m before Stig, inside the lines and 0.7–3.6 m from the net,
+  arc `apex` 4.6 m; `bad` 0.08 of them go astray (3.5–6 m to a side, 2.5–5 m back). Otherwise he stands at
+  `base` [±2.2, −2.0], on the other side from Stig. A ball he sees going out he leaves (`leaveOut` 0.9),
+  calling "Ute!" [N] (the word is the same in bokmål).
+- **Berra and Robban**: the one who gets to where their ball will be `hitH` 1.2 m over the sand sooner
+  goes for it, `react` 0.35 s after the touch, at `speed` (Berra 2.5, Robban 2.0 m/s: he is the slower),
+  × (1 − `slow` 0.04 × the thirst), the points played. In reach (within `reach` 0.95 m, the ball `low` 0.35 to
+  `high` 2.3 m over his feet, coming down) he bumps it: a miss with `miss` [0.08 + 0.06 × the thirst + `tire`
+  0.04 × their touches in this rally, at most 0.6] (+0.15 on a header): 0.45 of them low into the net's
+  mesh, the rest out to a side (1.1–3.5 m out, up to 1.5 m behind Stig's line). Otherwise a lob into Stig's
+  half, `to` u ±3.8, v −3.5 to −0.9, each off by `err` 0.3 + 0.12 × the thirst m, arc `apex` 4.0–5.0 m;
+  with `smash.p` 0.3 − 0.04 × the thirst a hard low one (arc 3.1 m) into a back corner (u ±2.4–4.1, v
+  −3.7 to −2.4). A ball they see going out they leave (`leaveOut` 0.75), Berra calling "Ute!" [N].
+  Standing, they and Ole watch the ball.
+- **Their serve** (they serve when they won the last point, taking turns from Berra): the server walks to his
+  `serveSpot` (Berra [1.3, 3.5], Robban [−1.3, 3.5]) with the ball tossed to him, holds it up over his head
+  (`anim.volley` 'up') and after `serveHold` 1.3 s there (or 5.3 s on the way) serves: a fault into the
+  net with `fault` 0.08 + 0.03 × the thirst (at most 0.3), else a lob to v −3.6 to −1.6. Stig's serve: the
+  ball tossed onto the sand 0.9 m before him (if he is on his half, else before his mark), still until he
+  kicks it (pushed or knocked off his half, it is put back there); after `serveHintSecs` 8 s without a
+  kick, once a match, the toast "J Sparka bollen över nätet!". The toss to either server flies clear of
+  posts, the net and bodies (a post once sent it back onto their side).
+- **A point**: the ball's first touch of the ground after a hit. In the lines (with half its radius over
+  them): the other side's point if it came down on its own side of the net, else a point against the
+  hitter's side ("Inne!" for the former; "I nätet!" if it touched the net, "Fel serve!" for a serve fault,
+  "Miss!" otherwise). Out: a point against the hitter's side ("Ute!", or the net's or the fault's). A rally
+  with no touch for `stall` 12 s, or the ball over `farR` 30 m off: out. The whistle, the point on the
+  board (its number bumps) and the reason in red under it for the `pointSecs` 2.6 s pause; `tossAt` 1.1 s in
+  the ball flies to the next server. Ole after Stig's side's point: "Heia Norge!" [F*] (his solo dance at
+  the grisfest, research-characters.md:192) then "Bra, Stig!" [N] in turn; after theirs, 0.6 of the time,
+  "Kom igjen, Stig!" or "Det var nære på." [N]. After the 2nd, 4th and 6th point played the thirst:
+  Robban's "Jag är törstig, Berra." and Berra's "Du har ingen karaktär alls, Robban." [F*]
+  (research-plot.md:316); "Ska vi ta Pepes Bodega i dag?" / "Vi kan väl ta det lite lugnt?" [F*](t)
+  (research-plot.md:285, the speakers ours); Robban's "Fan, vad jag är törstig." [F*] (research-plot.md:318).
+- **The board** (`hud.setVolley`, §11.4): top in the middle while a match is under way and through its end:
+  STIG & OLE n – m BERRA & ROBBAN [N], under it FÖRST TILL 5, or a point's reason in red. The keys (the
+  prompt, `hint()`): "J Sparka · SPACE Hoppa och nicka · Q Ge upp" [N]. E does nothing in a match.
+- **The end** (`winTo` 5): the banner MATCHEN VUNNEN! or MATCHEN FÖRLORAD with the score (Stig & Ole a–b
+  Berra & Robban) [N], the jingle (and applause for a win), `records.volley` { won, lost } saved at once.
+  Won: Ole's "Heia Norge!", Berra's "Nu går vi till baren, Robban." and Robban's "Äntligen." [N]; after
+  `endSecs` 4.2 s Berra and Robban walk off along `walkOff.path` ([1.5, −14], then up to the paseo [1.5, −33])
+  at 1.6 m/s and are free there (or after `secs` 24 s), Ole free at once; `placeNpcs` puts them home once
+  Stig is 50 m off. Lost: Berra's "Fem! Nu tar vi en öl." and Ole's "Vi må ha revansj, Stig!" [N]; for
+  `rematchSecs` 14 s they stay on the court and E anywhere within 2 m of the lines is "E Revansch!" [N]: the
+  fade and a new match at 0–0 (the thirst back to 0); after it, or Stig over `leaveR` 7 m off the lines, in a
+  car or in a pursuit, they walk off as above. No pay either way.
+- **Balance** (no timer: nothing is timed or paid; modelled with an autopilot in Stig's place that walks at
+  5.4 m/s 0.35 s after each touch to where the ball comes down, kicks in time with a given share of the
+  balls and aims up to 25° off straight): at 0.75 of the kicks in time it won 5–4, 5–2 and 5–3, Berra and
+  Robban winning points with their corners and Stig's outs and losing them with their nets and outs as
+  they tire; the scenario's 0.92 won 5–0, 5–2 and 5–1; Stig idle lost 0–5 twice. Before the last tuning
+  (their misses 0.1 + 0.04 × the thirst, `tire` 0.05, a 0.32 s window) 0.85 won 5–3, 5–1, 5–1 with most of
+  its points their own errors and 0.7 lost 1–5 and 2–5; now they start surer and tire faster.
+- **Off**: Q (Backspace, the pad's B) gives a match up; Stig over `leaveR` 7 m outside the lines (or in a
+  car) for `leaveSecs` 1.5 s, a pursuit or a debug warp ends it the same way: Berra's "Då går vi till baren
+  då." [N] (not on a warp), the walk off, Ole free, the board off, the ball where it is. A mission start or
+  the other level ends it at once (`last.kind` 'gone'): everyone home (as `placeNpcs` puts them), the
+  ball back at `rest`, the board off, a fade undone. So no mission, stage, timer, fixture or calibration
+  pool sees any of it, and nothing is paid.
+- **Tests**: `volley.mode` (null | 'fade' | 'serve' | 'rally' | 'point' | 'end' | 'rematch'), `playing`,
+  `score`, `thirst`, `next`, `server`, `touch` ({ team, who, kind, t }), `plan` ({ side, chaser, leave, land,
+  hit, out, go }), `b` (the ball: x, y, z, vx, vy, vz, held, landed), `log` (the points: { team, why, score
+  }), `last`, `walk`, `held`, `won`, `lost`, `F` (the court's frame), `w(u, v)`, `c(x, z)`, `predict(y)`,
+  `launch(u, v, apex, o)`, `home()`, `atRest()`, `canStart()`, `start()`, `rematch()`, `giveUp()`,
+  `end(kind)`, `swing()`, `cfg` (VOLLEY). Scenarios `volley`, `volleyfree`, `volleyshots` (§16.4).
+- **Not done / changed** (deviations from the idea): no rematch against the Storches (the idea's maybe);
+  the net has no solid (people still pass through its mesh, as before); Stig always kicks over the net
+  when he meets the ball (his facing aims it sideways, the camera's when he faces away), and Ole only sets
+  up, never plays it over; a point is decided by where the ball first lands (no touch count, no rotation),
+  and the side that won the point serves (Berra and Robban in turn). Berra and Robban walk
+  off up to the paseo, not all the way to the bar (they are home once Stig is away), and they do not get
+  slower with the time of day, only with the points played.
+
 ## 11. HUD / UI strings (Swedish; `src/strings.js` owned by WP-H, created by Phase 0)
 
 `strings.js` exports `S` (flat object) and `fmt(key, vars)`. Engine code uses `S.key` only.
@@ -7682,7 +7828,7 @@ mutes without touching the button, which then said `Ljud: på` while muted).
 | dialogue next | `E ▸` |
 | minimap rim badge | `N` (island) / `FRAM` (flight) |
 | big-map legend | from `game.mapLegend()` (§10.1) |
-| prompts | `<b>E</b> Prata med {name}` (a giver, and since feature 39 anyone in the gang between missions, §10.28) · `<b>E</b> Kliv in` · `<b>E</b> Ta bilen` · `<b>E</b> Sätt dig` · `<b>E</b> Res dig` · `<b>E</b> Lås in dig` · `<b>E</b> Ta en juice` · `<b>E</b> Kvarta en stund` (Stig's bed, §10.10) · `<b>E</b> Titta i kameran` / `<b>E</b> Se filmen` (Herr Storch, §10.11) · `<b>E</b> Heja Eslöv!` / `<b>E</b> Eslövloppet – ett varv runt fälten` (the rollerskier, §10.12) · `<b>E</b> Får jag låna skidorna?` / `<b>E</b> Lämna tillbaka skidorna` / `<b>E</b> Eslövrundan – ett varv på skidor` (his skis, §10.39) · `<b>E</b> Dansa med` / `<b>E</b> Kliv ur ringen` (the pool fest's gap, §10.13) · `<b>E</b> Kontrollera brödrosten` / `<b>E</b> Upp med brödet!` (a G17 toaster, §10.24) · `<b>E</b> Kontrollera hyllan` · `<b>E</b> Ta upp giraffen` / `<b>E</b> Ställ tillbaka giraffen` · `<b>E</b> Spela samba` (room 107, §10.25) · `<b>E</b> Bergsprängaren` · `<b>E</b> Stäng av sambaen` · `<b>E</b> Byt kläder` (room 107, §10.36) · `<b>E</b> Smörj in ryggen` (Majsan's sun cream, §10.26) · `<b>E</b> Ta trappan upp` / `<b>E</b> Ta trappan ner` (the hotel roofs' stairs, §10.29) · `<b>E</b> Läs ett utrop` (the SunTrip stage's microphone, §10.30) · `<b>E</b> Gå upp i fyren` / `<b>E</b> Gå ner` (the lighthouse, §10.35) · `<b>E</b> Plinga på klockan` (the reception's bell, §10.37) · `<b>E</b> Köp svenskt kaffe (40 pta)` / `<b>E</b> Påtår (40 pta)` (the pool bar) · `<b>E</b> Ge fru Storch kaffet` (with its cup, §10.44) · `<b>E</b> Meta` (the rod at the pier's end, §10.45; while he fishes the prompt line is `Vänta tills flötet dyker… <b>Q</b> Lägg ner spöt`, then `<b>E</b> Dra upp!` at the dive, `fiske.hint()`) · `<b>E</b> Lifta` (a hitch-hiking spot, §10.47; standing in the truck's bed the prompt line is `<b>A</b>/<b>D</b> Luta dig · <b>E</b> Hoppa av`, `hitch.hint()`) · `<b>E</b> Ta kikaren` (the lifeguard tower's platform, §10.48; while they are up the keys are in the binoculars' overlay, §11.4) · `<b>E</b> Ta ett skift` (the foreman on the packing shed's yard, §10.49; at the belt the prompt line is `<b>A</b> Röda · <b>S</b> Ruttna · <b>D</b> Gröna · <b>Q</b> Sluta`, `packhus.hint()`) · `<b>SPACE</b> Håll i dig!` · `<b>J</b> håll: Jag kan flyga!` (the `<b>` keycap is Luckiest Guy: uppercase; since feature 52 shown on the lighthouse's gallery, after E's prompt when there is one). Order (`updateHud`): talk (a giver's or the gang's), then `Håll i dig!` while the cabin is turbulent and he stands without holding on (Phase 3 r3, §5.7), then the car, interactable (seats, toilets…) and stand prompts; then `fyren.prompt` adds the J hint up there |
+| prompts | `<b>E</b> Prata med {name}` (a giver, and since feature 39 anyone in the gang between missions, §10.28) · `<b>E</b> Kliv in` · `<b>E</b> Ta bilen` · `<b>E</b> Sätt dig` · `<b>E</b> Res dig` · `<b>E</b> Lås in dig` · `<b>E</b> Ta en juice` · `<b>E</b> Kvarta en stund` (Stig's bed, §10.10) · `<b>E</b> Titta i kameran` / `<b>E</b> Se filmen` (Herr Storch, §10.11) · `<b>E</b> Heja Eslöv!` / `<b>E</b> Eslövloppet – ett varv runt fälten` (the rollerskier, §10.12) · `<b>E</b> Får jag låna skidorna?` / `<b>E</b> Lämna tillbaka skidorna` / `<b>E</b> Eslövrundan – ett varv på skidor` (his skis, §10.39) · `<b>E</b> Dansa med` / `<b>E</b> Kliv ur ringen` (the pool fest's gap, §10.13) · `<b>E</b> Kontrollera brödrosten` / `<b>E</b> Upp med brödet!` (a G17 toaster, §10.24) · `<b>E</b> Kontrollera hyllan` · `<b>E</b> Ta upp giraffen` / `<b>E</b> Ställ tillbaka giraffen` · `<b>E</b> Spela samba` (room 107, §10.25) · `<b>E</b> Bergsprängaren` · `<b>E</b> Stäng av sambaen` · `<b>E</b> Byt kläder` (room 107, §10.36) · `<b>E</b> Smörj in ryggen` (Majsan's sun cream, §10.26) · `<b>E</b> Ta trappan upp` / `<b>E</b> Ta trappan ner` (the hotel roofs' stairs, §10.29) · `<b>E</b> Läs ett utrop` (the SunTrip stage's microphone, §10.30) · `<b>E</b> Gå upp i fyren` / `<b>E</b> Gå ner` (the lighthouse, §10.35) · `<b>E</b> Plinga på klockan` (the reception's bell, §10.37) · `<b>E</b> Köp svenskt kaffe (40 pta)` / `<b>E</b> Påtår (40 pta)` (the pool bar) · `<b>E</b> Ge fru Storch kaffet` (with its cup, §10.44) · `<b>E</b> Meta` (the rod at the pier's end, §10.45; while he fishes the prompt line is `Vänta tills flötet dyker… <b>Q</b> Lägg ner spöt`, then `<b>E</b> Dra upp!` at the dive, `fiske.hint()`) · `<b>E</b> Lifta` (a hitch-hiking spot, §10.47; standing in the truck's bed the prompt line is `<b>A</b>/<b>D</b> Luta dig · <b>E</b> Hoppa av`, `hitch.hint()`) · `<b>E</b> Ta kikaren` (the lifeguard tower's platform, §10.48; while they are up the keys are in the binoculars' overlay, §11.4) · `<b>E</b> Ta ett skift` (the foreman on the packing shed's yard, §10.49; at the belt the prompt line is `<b>A</b> Röda · <b>S</b> Ruttna · <b>D</b> Gröna · <b>Q</b> Sluta`, `packhus.hint()`) · `<b>E</b> Spela volley` (the ball on the volleyball court, §10.50; `<b>E</b> Revansch!` after a lost match; in a match the prompt line is `<b>J</b> Sparka · <b>SPACE</b> Hoppa och nicka · <b>Q</b> Ge upp`, `volley.hint()`) · `<b>SPACE</b> Håll i dig!` · `<b>J</b> håll: Jag kan flyga!` (the `<b>` keycap is Luckiest Guy: uppercase; since feature 52 shown on the lighthouse's gallery, after E's prompt when there is one). Order (`updateHud`): talk (a giver's or the gang's), then `Håll i dig!` while the cabin is turbulent and he stands without holding on (Phase 3 r3, §5.7), then the car, interactable (seats, toilets…) and stand prompts; then `fyren.prompt` adds the J hint up there |
 
 **The result line** (feature 4, §10.8): `#score`, low in the middle (bottom 92 px, under the
 prompt at 178 px), a cream card with the dive and its sum in Luckiest Guy over the record line
@@ -7760,6 +7906,15 @@ it (the DOM touched only on a change); `hud.setKikare(null)` hides it and the ri
 keys), the stamp banner (`stamp`, as the stunt jumps', §10.27) for a whole shift, and the score card
 (`#score`): `SKIFTET KLART · n LÅDOR · 100 PTA`, `TOMATRAS · n LÅDOR` or `SKIFTET SLUT · n LÅDOR` (one
 `LÅDA`), its sub `NYTT REKORD!` (teal) or `REKORD: n LÅDOR`, up until the fade.
+
+**The volleyball board** (feature 111, §10.50): `#volley`, top in the middle where the objective card would
+be (no objective card shows in a match: no mission runs and no other free-roam card can), sliding down as
+the card does: a cream board with an ink edge and a red-and-white stripe over its top, the two teams in
+terracotta Luckiest Guy 15 px (`STIG & OLE`, `BERRA & ROBBAN`, uppercased) round their points in ink
+Luckiest Guy 40 px with a dash between, and under them `FÖRST TILL 5` in Nunito 900 13 px, or a point's
+reason (`INNE!`, `UTE!`, `I NÄTET!`, `MISS!`, `FEL SERVE!`) in red. A changed point bumps its number (the
+`bump` animation, red). `hud.setVolley({ us, them, a, b, sub, why })` shows it (the DOM touched only on a
+change); `hud.setVolley(null)` hides it.
 
 **Toasts, bubbles and the objective card** (Phase 3):
 - **Toasts** (`hud.toast(text, cls = '', secs)`; radio lines are toasts) stay up `secs`, by default
@@ -8123,6 +8278,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/fishing.js` | new (feature 107, 2026-10-17) | — | `Fishing` (`game.fiske`): Meta från piren in free roam: the rod in its holder on the harbour light, its holder and the tin bucket (meshes of their own), the spot's interactable, the cut, the cast, the float, the line, the nibbles and the dive, the hook and the window, the four catches (`FISH_KINDS`; the fin and the pack the collectibles' looks, never collected) and their draw (`pick`: the weights and the pity rule), the show with Stig's lines and the face shot, the toss, the empty hook, Q, the FÅNGST card and `records.fiske`, the reset at a mission start (§10.45) |
 | `src/game/marketRoofs.js` | new (feature 92, 2026-10-17) | — | `MarketRoofs` (`game.awnings`): Pesetas på marknadstaken: the trail's coins placed (`minY`), the roof's four after asnan, Stig on the souvenir stand's roof and the seller's "¡No, no, no!", the last roof coin's swear and Stig's sorry (§10.46) |
 | `src/game/binoculars.js` | new (feature 108, 2026-10-18) | — | `Binoculars` (`game.kikare`): Livräddarens kikare in free roam: the pair on the lifeguard tower's south railing, the platform's interactable, the look (the camera's `scope`, Stig in the middle with them at his eyes, hidden), the turn by mouse and keys, the eight targets (`points`: fixed points, Herr Storch, the fin's live mesh, the lighthouse) and the aim (`aimed`, the ring, the hold), a find (the list, the pay, Stig's line, `records.kikare`), a taken fin counted, the end shot with "Inga hajar. Bara svenskar.", Herr Storch filming the tower while watched, the reset at a mission start (§10.48) |
+| `src/game/volley.js` | new (feature 111, 2026-10-18) | — | `Volley` (`game.volley`): Strandvolley in free roam: the court's live ball (its physics: the sand, walls, the net, bodies, cars; the shadow and the landing ring), the free kick, the start (the fade, the marks), Stig's kick and header (`swing`, `ate`), Ole's set, Berra's and Robban's walk, bump, misses, smashes and serve, the points and their reasons, the thirst lines, the board, the end, the rematch, the walk off, the reset at a mission start (§10.50) |
 | `src/game/packhus.js` | new (feature 109, 2026-10-18) | — | `Packhus` (`game.packhus`): Stig på löpande band in free roam: the foreman on the packing shed's yard (shown by day between missions, his wave, turn and call, his interactable, back to his spot after a knock), the shift (the fade, the belt, its zone, cleats, bins, signs and the tomato crate, built at the first shift; the two workers; the camera cut), the tomatoes (three instanced kinds with outlines: on the belt, flown to a crate, the bucket or the ground, dropped onto the pile, rolling), the crates (filled, stamped KONTROLLERAD AV G17 and stacked, a new one on the bin), the speed and the foreman's hurries, the collapse (TOMATRAS), the whole shift's pay, the record, Siv's line after, the tests' autopilot, the reset at a mission start (§10.49) |
 | `src/game/hitch.js` | new (feature 106, 2026-10-17) | — | `Hitch` (`game.hitch`): Vi liftar in free roam: the two hitch-hiking spots' interactables, the thumb, the grisbil from up the road with the grisbonde's bust and its stop beside him, the cut, the question and the answer, the hop up, Stig standing on the truck's tilt, the balance (the pull, the lean, ÅKSJUKA), the fall, E's step or jump off, the drop behind Hotel Flamenco, the truck driving off and taken away out of sight, the reset at a mission start or a debug warp (§10.47) |
 | `src/game/poolBar.js` | new (feature 84, 2026-10-17) | — | `PoolBar` (`game.bar`): Poolbaren öppnar in free roam after friskoteket: the bartender hidden before (`hides`, for main.placeNpcs), the coffee's interactable at the counter and the sale or the head shaken, the cup handed over, the sprint's factor (`sprintK`, for main.fixedStep) and its 30 s, Stig's cup, the coffee box, Berra's "Ska du ha?", the cup for Fru Storch and her pay, the scenes' holds (`posed`), the reset at a mission start or Eslövloppet's (§10.44) |
@@ -8136,7 +8292,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/mic.js` | new (feature 44, 2026-10-17) | — | `Mic` (`game.mic`): Mikrofonen på scenen in free roam: the mic's interactable and the turn of Lasse's announcements, the chime, Stig's facing and the camera's ease, the lines one after another, the terrace's guests and their spit, the crowd (tourists and the free gang: the ways in and out, the places, the cheer, the question time), Ole's answer to the time, the slump, the shark warning through `bathers.scare`, the reset (§10.30) |
 | `src/game/bathers.js` | new (feature 32, 2026-10-17) | — | `Bathers` (`game.bathers`): Badgäster på solstolarna in free roam: tourists on the sun loungers nearest him by day, their burn (pale, pink, lobster red), the fly-off from a kicked or smashed lounger, a newcomer on a lounger back; Berra and Robban fried and asleep on two Flamenco loungers between buss17 and the bodega, their snores and the wake (§10.22); `scare` for the shark warning (feature 44, §10.30) |
 | `src/game/suntripShop.js` | new (feature 34, 2026-10-17) | — | `SuntripShop` (`game.shop`): Bränsletillägg tillkommer in free roam: SunTrip-butiken's counter shown and its solids live between missions, the travel agent, the wares' and the bag's interactables, the receipts, the Trapp Trull account's instalments, "Paketet!", Ole's line; his bought look as a layer over his outfit (`dress`), saved (§10.23) |
-| `src/game/hud.js` | edit | **H** | map sources, meter, strings, legend, ring, blips, zone bar, markers; `renderPortrait` restores the model transform (§14.8); `dream`, `dreamWash`, `dreamFlash` (feature 57, §10.33); `menu` (feature 80, §10.43); `setKaffe`, the coffee box (feature 84, §10.44); `setFangst`, the FÅNGST card (feature 107, §10.45); `setKikare`, `kikareRing`, the binoculars' overlay (feature 108, §10.48) |
+| `src/game/hud.js` | edit | **H** | map sources, meter, strings, legend, ring, blips, zone bar, markers; `renderPortrait` restores the model transform (§14.8); `dream`, `dreamWash`, `dreamFlash` (feature 57, §10.33); `menu` (feature 80, §10.43); `setKaffe`, the coffee box (feature 84, §10.44); `setFangst`, the FÅNGST card (feature 107, §10.45); `setKikare`, `kikareRing`, the binoculars' overlay (feature 108, §10.48); `setVolley`, the volleyball board (feature 111, §10.50) |
 | `src/game/camera.js` | edit | **A1** | profile, frameOne, cutTo, `clampZ`; `scope`, the binoculars' eye (feature 108, §10.48) |
 | `src/game/fx.js` | edit | **A1** | `snow`, `steam`, `meterPuff` (rename of `shame`); `splash`'s `up` (feature 24, §10.20) |
 | `src/game/markers.js` | unchanged | none | |
@@ -8216,7 +8372,7 @@ carts, last: feature 74) → traffic (20)
 → peds (34) → NPC `Character`s (one per `CHARS` key except `stig`, the radio-only keys `levander
 kapten pa guardia pax telefonist` and the cabin-owned `vardinna2`; `key` field; hidden until placed, §2.3) →
 player `Character(CHARS.stig)` (`key = 'stig'`) → collectibles (`COLLECTIBLES`) → markers → `Shame`
-→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `DiveTower` (feature 24, §10.20; registers the ladder's two interactables, sets `DIVE_TOWER.live`) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `Eslov` (feature 7, §10.12; registers the rollerskier's interactable) → `PoolFest` (feature 8, §10.13) → `StigSorry` (feature 11, §10.14) → `PigTruck` (feature 15, §10.15) → `BaggageBelt` (feature 25, §10.16) → `Lapplisa` (feature 20, §10.17) → `GrisfestFree` (feature 21, §10.18; registers the gate's and the tourists' interactables) → `FruitStands` (feature 28, §10.19) → `Dogs` (feature 31, §10.21) → `Bathers` (feature 32, §10.22; registers the wake's interactable) → `SuntripShop` (feature 34, §10.23; registers the four wares' and the bag's interactables, sets `SUNTRIP_SHOP.live`) → `Toasters` (feature 33, §10.24; registers the seven toasters' interactables) → `Room107` (feature 38, §10.25; registers room 107's three interactables) → `Solkram` (feature 35, §10.26; registers Majsan's interactable) → `Stunts` (feature 40, §10.27) → `GangTalk` (feature 39, §10.28) → `RoofJump` (feature 41, §10.29; registers the three stair doors, sets `ROOF_JUMP.live`, places the roof coins) → `Mic` (feature 44, §10.30; registers the mic's interactable) → `Birds` (feature 43, §10.31; builds the four kinds' instanced meshes and puts every bird on its spot) → `Gags` (feature 47, §10.32; registers the two gags' interactables) → `BeachDream` (feature 57, §10.33; builds the towel and the foam, registers the towel's interactable) → `GuardiaJeep` (feature 51, §10.34) → `Lighthouse` (feature 52, §10.35; registers the two doors' interactables) → `ReceptionBell` (feature 59, §10.37; builds the bell, the card and the three suitcases with their solids, registers the bell's interactable) → `StreetRace` (feature 69, §10.38; registers José's and the chalkboard's interactables) → `GolfCarts` (feature 74, §10.40) → `BoatTrip` (feature 76, §10.41; builds the fin, registers the kiosk's interactable) → `Residents` (feature 77, §10.42) → `PhoneBooth` (feature 80, §10.43; registers booth 2's interactable) → `PoolBar` (feature 84, §10.44; registers the counter's and Fru Storch's interactables) → `Fishing` (feature 107, §10.45; builds the rod, its holder, the bucket, the float, the line and the four catches, registers the spot's interactable) → `MarketRoofs` (feature 92, §10.46; places the market's coin trail) → `Hitch` (feature 106, §10.47; registers the two spots' interactables) → `Binoculars` (feature 108, §10.48; builds the pair on the railing, registers the platform's interactable) → `Packhus` (feature 109, §10.49; builds the foreman, hidden, registers his interactable; the belt, its bins and the workers wait for the first shift) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
+→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `DiveTower` (feature 24, §10.20; registers the ladder's two interactables, sets `DIVE_TOWER.live`) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `Eslov` (feature 7, §10.12; registers the rollerskier's interactable) → `PoolFest` (feature 8, §10.13) → `StigSorry` (feature 11, §10.14) → `PigTruck` (feature 15, §10.15) → `BaggageBelt` (feature 25, §10.16) → `Lapplisa` (feature 20, §10.17) → `GrisfestFree` (feature 21, §10.18; registers the gate's and the tourists' interactables) → `FruitStands` (feature 28, §10.19) → `Dogs` (feature 31, §10.21) → `Bathers` (feature 32, §10.22; registers the wake's interactable) → `SuntripShop` (feature 34, §10.23; registers the four wares' and the bag's interactables, sets `SUNTRIP_SHOP.live`) → `Toasters` (feature 33, §10.24; registers the seven toasters' interactables) → `Room107` (feature 38, §10.25; registers room 107's three interactables) → `Solkram` (feature 35, §10.26; registers Majsan's interactable) → `Stunts` (feature 40, §10.27) → `GangTalk` (feature 39, §10.28) → `RoofJump` (feature 41, §10.29; registers the three stair doors, sets `ROOF_JUMP.live`, places the roof coins) → `Mic` (feature 44, §10.30; registers the mic's interactable) → `Birds` (feature 43, §10.31; builds the four kinds' instanced meshes and puts every bird on its spot) → `Gags` (feature 47, §10.32; registers the two gags' interactables) → `BeachDream` (feature 57, §10.33; builds the towel and the foam, registers the towel's interactable) → `GuardiaJeep` (feature 51, §10.34) → `Lighthouse` (feature 52, §10.35; registers the two doors' interactables) → `ReceptionBell` (feature 59, §10.37; builds the bell, the card and the three suitcases with their solids, registers the bell's interactable) → `StreetRace` (feature 69, §10.38; registers José's and the chalkboard's interactables) → `GolfCarts` (feature 74, §10.40) → `BoatTrip` (feature 76, §10.41; builds the fin, registers the kiosk's interactable) → `Residents` (feature 77, §10.42) → `PhoneBooth` (feature 80, §10.43; registers booth 2's interactable) → `PoolBar` (feature 84, §10.44; registers the counter's and Fru Storch's interactables) → `Fishing` (feature 107, §10.45; builds the rod, its holder, the bucket, the float, the line and the four catches, registers the spot's interactable) → `MarketRoofs` (feature 92, §10.46; places the market's coin trail) → `Hitch` (feature 106, §10.47; registers the two spots' interactables) → `Binoculars` (feature 108, §10.48; builds the pair on the railing, registers the platform's interactable) → `Packhus` (feature 109, §10.49; builds the foreman, hidden, registers his interactable; the belt, its bins and the workers wait for the first shift) → `Volley` (feature 111, §10.50; builds the ball, its shadow and the landing ring, registers the ball's interactable) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
 `placeNpcs(true)` → spawn the player → portraits for every key in `CAST` (`renderPortrait`
 restores each model's parent and transform, so seated cast members stay in their seats) →
 `applySaveToWorld()` →
@@ -8224,11 +8380,11 @@ loop → `window.__ready = true` → `start()` in test mode.
 
 Frame (`update`): hooks → one-shots (incl. E/J/R while seated) → fixed steps (player intent incl.
 mantra/hold and the sprint × `bar.sprintK()` (feature 84), AI, cars (a landing calls `onCarAirEnd`, feature 40), `golf.step` (feature 74), people (`glide.step` → `skis.step`, feature 71 → the player's step → `glide.after` → `skis.after`, feature 3, 71 →
-`belt.carry`, feature 25 → the NPCs → `party.step`, feature 21 → `bathers.step`, feature 32 → `mic.step`, feature 44 → `bell.step`, feature 59 → `packhus.step`, feature 109) —
+`belt.carry`, feature 25 → the NPCs → `party.step`, feature 21 → `bathers.step`, feature 32 → `mic.step`, feature 44 → `bell.step`, feature 59 → `packhus.step`, feature 109 → `volley.step`, feature 111) —
 traffic/peds skipped when `!levelDef.sim.*`) → `syncAll` (also
 writes `ch.x/y/z` from `car.seatWorld(ch.seatSide)` for every car-seated character, player
 included, so framing, bubbles and distance checks see where they really are) → `missions.update` →
-`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `tower.update` (feature 24) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `skis.update` (feature 71) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `stands.update` (feature 28) → `dogs.update` (feature 31) → `bathers.update` (feature 32) → `shop.update` (feature 34) → `toasters.update` (feature 33) → `room107.update` (feature 38) → `solkram.update` (feature 35) → `stunts.update` (feature 40) → `chat.update` (feature 39) → `roofs.update` (feature 41) → `mic.update` (feature 44) → `birds.update` (feature 43) → `dream.update` (feature 57) → `jeep.update` (feature 51) → `fyren.update` (feature 52) → `bell.update` (feature 59) → `gatlopp.update` (feature 69) → `golf.update` (feature 74) → `battur.update` (feature 76) → `residents.update` (feature 77) → `hytt.update` (feature 80) → `bar.update` (feature 84) → `fiske.update` (feature 107) → `awnings.update` (feature 92) → `hitch.update` (feature 106) → `kikare.update` (feature 108) → `packhus.update` (feature 109) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
+`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `tower.update` (feature 24) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `skis.update` (feature 71) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `stands.update` (feature 28) → `dogs.update` (feature 31) → `bathers.update` (feature 32) → `shop.update` (feature 34) → `toasters.update` (feature 33) → `room107.update` (feature 38) → `solkram.update` (feature 35) → `stunts.update` (feature 40) → `chat.update` (feature 39) → `roofs.update` (feature 41) → `mic.update` (feature 44) → `birds.update` (feature 43) → `dream.update` (feature 57) → `jeep.update` (feature 51) → `fyren.update` (feature 52) → `bell.update` (feature 59) → `gatlopp.update` (feature 69) → `golf.update` (feature 74) → `battur.update` (feature 76) → `residents.update` (feature 77) → `hytt.update` (feature 80) → `bar.update` (feature 84) → `fiske.update` (feature 107) → `awnings.update` (feature 92) → `hitch.update` (feature 106) → `kikare.update` (feature 108) → `packhus.update` (feature 109) → `volley.update` (feature 111) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
 pickups/collectibles → props → `fx.tick` → `tickTown` → markers → camera → sun/sky → HUD → audio →
 traffic recycling (island) → autosave. `loop` then renders, and when `film.grabNow` is set calls
 `film.grab()` in the same task (Herr Storch's still from the frame's buffer, feature 6, §10.11).
@@ -8391,8 +8547,13 @@ game.packhus;      // Packhus (feature 109, §10.49): the foreman on the packing
                    // 'out', toms, v, spawned, sorted, dropped, wrong, filled, bins, hold, next, … }), auto
                    // (tests' autopilot: { react, wrong }), seed, shifts, sivDue, crates, last, cfg
                    // (LOPANDE_BAND)
+game.volley;       // Volley (feature 111, §10.50): the volleyball court's live ball and the match against
+                   // Berra and Robban; live, playing, mode, score, thirst, next, server, touch, plan, b, log,
+                   // last, walk, held, won, lost (records.volley), F, w(u, v), c(x, z), predict(y),
+                   // launch(u, v, apex, o), home(), atRest(), canStart(), start(), rematch(), giveUp(),
+                   // end(kind), reset(), swing(), ate(), step(h), update(dt), hint(), posed(key), cfg (VOLLEY)
 game.npcPosed(key) -> bool   // an NPC held in a pose of its own: §9.4 idleAnim or a free-roam module's
-                   // (berraJob, judges, film, eslov, fest, lapp, party, stands, mic, birds, gags, dream, bell, gatlopp, bar); syncAll gives it no
+                   // (berraJob, judges, film, eslov, fest, lapp, party, stands, mic, birds, gags, dream, bell, gatlopp, bar, volley); syncAll gives it no
                    // wave, turn or chatter, and the gang's talk leaves it be (§10.28)
 game.bathers;      // Bathers (feature 32, §10.22): tourists on the sun loungers, Berra and Robban fried;
                    // bathers.loose (the bathers off their loungers: allChars, areaHit), step(h)
@@ -8525,7 +8686,7 @@ game.dressRoom107()   // worldHooks.rum107(collected, unlocked): room 107 shows 
 game.mapMarkers(all);  game.mapLabels();  game.mapLegend() -> html
 
 // ---- tests ----
-game.debugWarp(x, z, yaw)                 // stands up first if seated, off a hitch truck (§10.47), the binoculars down (§10.48), off the packing shed's belt (§10.49); snapNext
+game.debugWarp(x, z, yaw)                 // stands up first if seated, off a hitch truck (§10.47), the binoculars down (§10.48), off the packing shed's belt (§10.49), a volleyball match off (§10.50); snapNext
 game.approachSpot(lm) -> { x, z, yaw }    // §4.4 spawn rule (landmark + 1.5 m facing back, else the landmark)
 game.freeSpot(cx, cz, rMin, rMax, ok?) -> { x, z }   // random free ground spot; ok(x, z) filters (Phase 2)
 game.footReach(cx, cz, R) -> (x, z) => bool   // on-foot flood fill (0.5 m grid, 0.45 m step, no jumps; Phase 2)
@@ -8800,6 +8961,11 @@ that arm out to its side (z ∓1.25 at the peak, x easing back by 0.5) while the
 'C' lowers both hands 0.25 further (the bucket at his feet). Only a look; `game.packhus` sets it on Stig
 for 0.3 s a key (a whiff too) and cycles it on the two workers ('C' for the one at the belt's head, 'R'
 and 'L' in turn for the other); `heldPose` counts it as busy.
+`volley` (feature 111, §10.50): beach volleyball. 'bump': the forearm pass, both arms out and down before
+him with the hands together (R (−1.0, 0, 0.36), L (−1.0, 0, −0.36)), knees bent (legs (−0.3, 0, ∓0.12)),
+the body 0.08 × scale lower, the hips 0.28 forward and the head down 0.18; 'up': the ball held up over his
+head for the serve (R (−2.85, 0, 0.32), L (−2.85, 0, −0.32), the head up 0.25). Only `game.volley` sets it
+(on Ole, Berra and Robban, for 0.45 s a touch, 'up' while a serve waits); `heldPose` counts it as busy.
 `lie` (feature 32, §10.22; not a flag: `anim.lie` is the lying pose, `{ lean, arms, tilt, lift }`,
 set by `sync` in state `lying`, else null): on a sun lounger the root leans back `lean` (the
 backrest's −0.75) about the hips, so the legs are laid straight along the bed (x = −π/2 − lean,
@@ -9366,6 +9532,14 @@ shame.chase(car) (feature 60): a Land Rover's chase AI with the catch-up band (s
 //   sortRed, sortRotten, sortGreen, hangUp), the flights, the crates, the poses and the instances);
 //   allChars and areaHit count packhus.extras; updateHud takes packhus.objective() last and
 //   packhus.hint() after hitch.hint(); debugWarp calls end('gone')
+// volley.js (feature 111, §10.50): game.volley = new Volley(game) after the packing shed (registers
+//   `volley`: "E Spela volley" at the ball, "E Revansch!" round Stig after a lost match); update(dt) after
+//   packhus.update (not live: reset(); the modes, Q's giveUp, the leave rule, the walk off, the ball home,
+//   the faces, the board, the meshes); step(h) in fixedStep after packhus.step (the kick window, Stig's kick
+//   and header, the others' hits, the ball's physics); handleOneShots calls swing() with a ground kick and
+//   skips E while playing; the kick's areaHit only when !ate(); npcPosed and honk.free read posed(key);
+//   updateHud takes volley.hint() after packhus.hint(); debugWarp calls end('warp') while a mode is on
+// hud.js: setVolley({ us, them, a, b, sub, why } | null) (#volley, the board top in the middle)
 // golfCart.js (feature 74, §10.40): game.golf = new GolfCarts(game) after the street races; step(h)
 //   after the cars' steps in fixedStep (the bunker's and the pond's brake on his golf cart); update(dt)
 //   after gatlopp.update (out of a golf cart in a mission, both home at a mission start, a wreck back
@@ -10021,6 +10195,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `lifta`, `liftaFall` [feature 106] | Vi liftar (§10.47). `lifta` at index 9 (free roam): by the CAMINO SIN ASFALTAR sign the prompt "E Lifta"; E: Stig on `liftaVischan` facing the road, the thumb out, the card (LIFTA · Tummen upp – vänta på en bil.), a grisbil set off out of the camera's view and over 70 m up the road, locked, `noEnter`, the farmer's bust at the wheel, three pigs; it stops with its tail 0.6 m (± 1) past him on the lane beside him; the cut across the road and the hold; Stig's question and the farmer's answer; mid-hop off the kerb; in the bed: 'seated' on the truck's tilt at the bed's middle, the `ride` pose, no hold, the chase camera 6–14 m from the truck, the card (LIFTA TILL STAN · Håll dig kvar på flaket!) with the ÅKSJUKA bar, the keys, the pig's NÖFF!, R does nothing, "Det luktar lite… lantligt."; unbalanced in the first turn he tips (over 0.15 rad); leaning the probe's exact lean all the way: off at `flamencoBack` (within 0.3 m) on his feet, `rides` 1, the peak under 60 %, "Jättefint! Tack.", the farmer's "¡Adiós, señor!", no SKANDAL, no pay; the truck drives off and is gone once out of sight; the prompt again. `liftaFall` at index 9: at the packing shed with no lean, past half "Jag har lite anlag för åksjuka.", off in a turn (`fall`, `falls` 1), tumbling, down, up, the truck on its way with the adiós; walking off the spot: `cancel` 'walk', the truck by or away; E as the ride starts: `step` with his thanks; E at over 6 m/s: `jump`; A held all the way: a fall before the drop; a debug warp: off the truck, it gone; a traffic car at 14 m/s into its side: ÅKSJUKA + 10 or more, the truck whole; no SKANDAL added while hitching; a mission start mid-ride: off the truck on his feet, `last` 'gone', no truck, no card; in the mission no prompt and `start()` refuses; after it the prompt again. Shots `lifta_prompt`, `lifta_tumme`, `lifta_kommer`, `lifta_fraga`, `lifta_hopp`, `lifta_flaket`, `lifta_kurva`, `lifta_framme`, `lifta_adios`, `lifta_packhus_tumme`, `lifta_packhus`, `lifta_lutar`, `lifta_ramlar`, `lifta_liggande` |
 | `kikare`, `kikareshots` [feature 108] | Livräddarens kikare (§10.48). `kikare` at index 9 (free roam): the pair on the SOCORRISTA tower's south railing, nothing found; on the sand beside the tower no prompt, up on the platform "E Ta kikaren"; E: the binoculars up (the scope at 12°, Stig in the middle with them at his eyes, hidden, the eye 2.3 m up and 0.45 m before him, the railing empty), the overlay (SPANING, eight unchecked, KIKAREN · HITTAT 0 / 8, the keys) and Ole's warning in Stig's mouth; Herr Storch turns to the tower and films it; D turns the view right and W tilts it up while he stays put, the pitch stops at 0.32; the raft held in the middle fills the ring, away it empties, held 1 s it is found (checked, +25 pta, HITTAT 1 / 8 · FLOTTEN, Stig's line, `records.kikare` saved) and is not aimed at again; E lowers them (the pair back, Stig seen and free, the view at 62°, Herr Storch stops filming and turns back to the sea), and the chase eye sees his head with no roof between (the roof's camera ceiling); a fin already taken counts at the next look, with no second warning; Q lowers them; the other five and RESERVADO-raden: ALLA ÅTTA!, every row checked, the cut to him from the sand with the binoculars at his chest facing the sea and "Inga hajar. Bara svenskar.", the toast, then free; a later look opens with that line. No prompt at the wheel or in a pursuit; a mission start mid-look puts everything down ('gone'); in the mission no prompt and `start()` refuses; after it (aborted) the prompt again; seven found and the fin taken since: the next look makes eight and ends with the cut. Shots `kikare_prompt`, `_upp`, `_ring`, `_fynd`, `_ner`, `_slut`. `kikareshots`: every target through the binoculars, aimed at its first point (`kikare_fena` … `kikare_handdukar`), the far pedal boats, a look down at the sand, and Stig on the platform from outside with them at his eyes and at his chest (`kikare_stig`, `kikare_stig_low`) |
 | `packhus`, `packhusbalans` [feature 109] | Stig på löpande band (§10.49). `packhus` at index 8 (free roam, the held clock's 15:00): the foreman on his spot, nothing of the belt (not built); 6 m off he waves and calls "¡Señor! Vi behöver folk till skiftet!", no prompt; at him "E Ta ett skift". E: the shift behind a black fade (`hud.fade` on in 'in', off in 'intro'), the belt and two workers shown, the camera cut, Stig at his spot facing the camera, the foreman by the belt's end, the card SORTERA TOMATER · Tomat 0 / 40 · Lådor 0 · TAPPADE 0 / 8, the keys' line, the intro's two lines; W does not move him. The belt held (`sc.hold`) with forced kinds (`sc.next`): A on a red in the zone (Stig's 'R' throw) puts it in ROJOS's crate, S a rotten one in the bucket, D a green one in VERDES's crate; A on a green one bounces it onto the ground (one dropped, TAPPADE 1 / 8, "Den är grön, señor!"); a key with the zone empty changes nothing. Five reds (the autopilot): the crate stamped (its label), on ROJOS's stack at −2.9, a new crate on the bin, "Kontrollerad av G17.", Lådor 1; a tomato let past onto the pile. The autopilot (0.3 s) to the end: the belt's speed follows the tomatoes come on (> 1.5 m/s at 30), both hurries, a whole shift: 100 pta, the stamp banner, the card SKIFTET KLART · n LÅDOR · 100 PTA with NYTT REKORD!, the foreman's and Stig's lines, `records.packhus` saved; after the fade the belt and workers gone, Stig at `after`, free, the prompt again, the coins only the pay. Siv at the pool: her line once, not on a second visit. "¡Señor! Ett skift till?"; a shift let go: TOMATRAS at eight dropped (the belt's and the pile's tomatoes rolling, Stig's arms out with two in his hands, his and the foreman's lines, no pay, the card with REKORD); Q: "Redan trött, señor?", no pay, free. A kick: the foreman down, SKANDAL, no prompt; back on his spot, the prompt. By night nobody on the yard and no prompt; by day again. No prompt at the wheel or in a pursuit; a mission start mid-shift: everything gone at once ('gone'), the foreman hidden; in the mission nobody and no prompt, `start()` refuses; after it (aborted) the foreman and the prompt again. Shots `packhus_gard`, `_prompt`, `_intro`, `_sortera`, `_fel`, `_lada`, `_fort`, `_stampel`, `_klart`, `_efter`, `_siv`, `_ras`, `_natt`. `packhusbalans`: `PACKHUS_RUNS` (default 3) shifts each of five autopilot models (the reaction from a tomato's being the front one in the zone, a share of wrong keys): quick clean (0.3 s) and slow clean (0.55 s) must finish every shift, 15 % wrong at 0.45 s most of them; careless (30 % wrong) and too slow (0.75 s) are logged |
+| `volley`, `volleyfree`, `volleyshots` [feature 111] | Strandvolley (§10.50). `volley` at index 9 (free roam): the ball at its rest spot, no match; "E Spela volley" at it; E: the fade (Stig held, the three posed), then Stig, Ole, Berra and Robban on their marks (within 0.6 m), the ball on the sand before Stig, the board STIG & OLE 0–0 BERRA & ROBBAN · FÖRST TILL 5, the keys in the prompt, Berra's and Ole's intro; a real J serves (a rally, the ball over the net); an autopilot in Stig's place (5.4 m/s to where the ball comes down, the kick in time 0.92 of the time, aimed up to 20° off) plays it out: first to five in 5–9 points, `records.volley`, the first thirst pair after the 2nd point, no coins and no SKANDAL; won: Berra's "Nu går vi till baren, Robban.", the walk off to the paseo and free; then (or lost) a match with Stig idle lost to five, "E Revansch!", E: 0–0 again, Q: given up, Berra's "Då går vi till baren då.", Ole free; off the court: the match off ('leave'); a mission start mid-rally: all off, everyone home over 40 m away, the ball back, the board off ('gone'). `volleyfree` at index 7: no prompt while Ole is asnan's giver; a J kick sends the ball on, a car knocks it on, away 60 m it is back at rest. `volleyshots`: the court from the land side, the start, a kick over, their lob coming down (the ring), a point (the reason), the end banner. |
 | `golfbil` [feature 74] | Golfbilen (§10.40) at index 9: the two golf carts on the boxes' spots, named, unlocked, the toy type, no `'cart'` solid left, not the first free small car; E from the driver's side (the prompt, "Golfbilen" on the speedo), Stig full size under the roof (side, front and rear stills); held W tops out at 6.0–6.6 m/s, the speedo 21–24 km/h, the motor `electric`; H a pip-pip, again while held (every 0.45 s), never the two-tone horn, the island hears it; a bunker brakes it to 1.6 m/s with sand off the rear wheels and "Jag pliktar ett slag.", a second within 12 s no line; the pond splashes and brakes it to 0.9 m/s, "Oj… ett vattenhinder."; a wreck steams, no SKANDAL, back on its spot only once Stig is far; a mission start puts a moved one back; in the mission no prompt, E gives the toast and no seat, a debug seat is undone, `retryCar` gives a spare; after Q E gets in again |
 | `eslovlopp` [feature 7] | Eslövloppet's timer (§10.12, §8 "Timers and difficulty"): calibrate's walker runs the lap `ESLOV_RUNS` (3) times at `&ts=1` with the clock raised; prints `CAL eslovLopp` (the median + 2.5 s → the timer) and `CAL CHECK` against the shipped timer (the sample's 90 % bootstrap range); its raw times go into the ledger (`eslovLopp`) |
 | `grodorna` [feature 8] | Små grodorna i poolen (§10.13): no fest at index 11 (Lasse at SunTrip in `sol`) nor at index 13 without `bodega`; with it (unlock + forced placement) Lasse wears `jul` and he, Affe, Gabbe and Fru Storch stand at their pool-deck homes, Herr Storch on the beach; at 23.30 no visit; Stig on the deck: all seven ours (`poolFest`, busy, invulnerable, posed), wading 0.5 m in their places facing the middle; the exchange in order, once; round 1 on the audio clock; sampled in the page: in the air 0.17–0.22 s after an even beat with tails (beats 0–7), Affe hopping without `groda`, down at 0.55–0.75 s, ears on 8–11, the chorus higher; the porter at his spot with his line and the head shake, then home and free; on the coping dry with "Dansa med" and the gap marked; E: in the gap, stiff (`groda` 3), wading, `I TAKT 0 / 8`, "Kliv ur ringen"; J no kick; E out onto the coping, dry; in again and a step out; no SKANDAL; round 2 two beats after round 1 (±0.06 s), the pause 12 s (±0.8); a dancer does not answer the horn; off the deck all walk home and are free with their spot ids; julafton's unlock gone mid-visit: home at once. Shots `grodorna_vadar`, `_portier`, `_ring`, `_kanten` |
@@ -10149,6 +10324,7 @@ brodrost_supermercado brodrost_grillpaco brodrost_hittegods` (feature 33, §10.2
 + the fishing spot at the pier's end `fiske` (feature 107, §10.45)
 + the hitch-hiking spots `liftaVischan liftaPackhus` (feature 106, §10.47)
 + the binoculars' spot on the lifeguard tower `kikare` (feature 108, §10.48)
++ the volleyball court's net `volley` (feature 111, §10.50)
 + collectibles `pryl_klocka pryl_poolpen pryl_kalkylator pryl_kniv pryl_kamera pryl_glasogon
 pryl_pung fena_flamenco fena_suntrip fena_plaza fena_golf fena_bungalow fena_hamn fena_hav` + Rio
 `rioBoat rioCam`.
@@ -12442,3 +12618,26 @@ the fixer's group.
   mission start ends a shift at once and nobody stands on the yard in a mission, so no mission, stage,
   timer, fixture or calibration pool changed. The balance is modelled with the autopilot
   (`packhusbalans`). Scenarios `packhus`, `packhusbalans` (§16.4).
+- Feature 111, "Strandvolley mot Berra och Robban" (`features/implemented/strandvolley.md`, 2026-10-18): a
+  beach volleyball match on the court by the pedal-boat rental in block (4,6) (§10.50; new
+  `src/game/volley.js` (`game.volley`), `VOLLEY` in content/island.js, the landmark `volley`, the `volley`
+  pose ('bump', 'up') in models.js and its anim flag in character.js, `hud.setVolley` and `#volley`; main.js
+  (constructor, update, fixedStep: the kick's window and its areaHit, `volley.step`; handleOneShots: E off
+  in a match; `npcPosed`, updateHud's prompt line, debugWarp), honk.js (`free`); coast.js: the court's fixed
+  ball gone, the boardwalk on (4,6) ending at z −1.5 short of the court; §1.6, §3, §6.3, §10.5, §11, §11.4,
+  §14.1–14.3, §14.6, §16.4, Appendix A). The court's ball is a live one: it rolls when Stig kicks it (J),
+  walks into it or drives into it, and is back on the court once he is away. Between missions, with Ole,
+  Berra and Robban free and none of them the idle mission's giver, E at the ball ("E Spela volley") fades to
+  black and back with Ole beside Stig and Berra and Robban across the net: first to five. J kicks the ball
+  over when it is within reach (his facing aims it sideways, the camera's when he faces away), a jump into
+  it is a header; Ole sets up the balls that land far from Stig; Berra and Robban lumber after theirs (Robban
+  slower) and lob them back, with hard ones into the corners early on, and miss more the thirstier they get
+  and the longer a rally lasts. A ball landing in a half is the other side's point, one out the hitter's
+  loss; the whistle, the board top in the middle (STIG & OLE n – m BERRA & ROBBAN, the reason in red), Ole's
+  "Heia Norge!" [F*], and after the 2nd, 4th and 6th point their thirst: "Jag är törstig, Berra." / "Du har
+  ingen karaktär alls, Robban." [F*], "Ska vi ta Pepes Bodega i dag?" / "Vi kan väl ta det lite lugnt?"
+  [F*](t), "Fan, vad jag är törstig." [F*]. Won: "Nu går vi till baren, Robban." [N] and they walk off up to
+  the paseo; lost: "E Revansch!" for 14 s. Q gives up; walking off, a warp or a pursuit ends a match, a
+  mission start at once with everyone home and the ball back. No pay; `records.volley` { won, lost } is
+  saved. Nothing in a mission, stage, timer, fixture or calibration pool changed (no collider added).
+  Scenarios `volley`, `volleyfree`, `volleyshots` (§16.4).

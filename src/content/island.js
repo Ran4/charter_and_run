@@ -26,7 +26,8 @@
 // and the fishing at the marina's pier end, its catches and the FÅNGST card (§10.45), and Stig
 // hitch-hiking on the country roads, standing in the farmer's grisbil bed into town (§10.47), and the
 // lifeguard's binoculars on the beach's tower, the eight things to spot and their list (§10.48), and the
-// shift at the packing shed's tomato sorting belt, its foreman and workers and Siv's line after it (§10.49).
+// shift at the packing shed's tomato sorting belt, its foreman and workers and Siv's line after it (§10.49),
+// and the beach volleyball match against Berra and Robban on the court by the pedal-boat rental (§10.50).
 
 export const HOMES_ISLAND = {
   ole: ['flamenco', 2.0, 1.0, 0],     // yaw 0: under the pergola, facing the pool (flamenco faces π)
@@ -2518,4 +2519,79 @@ export const LOPANDE_BAND = {
   card: { done: 'Skiftet klart · {lador} · {pay} pta', ras: 'Tomatras · {lador}', quit: 'Skiftet slut · {lador}' },   // [N]
   sub: { record: 'Nytt rekord!', best: 'Rekord: {lador}' },                        // [N]
   siv: 'Spänn av, Stig-Helmer. Du är ledig.',                                      // [F*](t) "Spänn av, Majsan. Du är ledig." (research-characters.md:212-213), turned to Stig
+};
+
+// Strandvolley mot Berra och Robban (free roam; feature 111, DESIGN §10.50; game/volley.js). The beach
+// volleyball court in block (4,6) by the pedal-boat rental: the landmark `lm` is the net's middle on the
+// sand, facing the sea; court places are [u, v]: u metres to its left, v forward (Stig's half v < 0). The
+// lines `court` [half width, half length] (9 × 8 m), the net along u over v 0 from `net` [bottom, top] m
+// over the sand. The ball (`ball.r` m, gravity `g`, the sand's bounce, rolling decay `roll`/s) lies at
+// `rest` between matches and rolls when kicked (`kick.free`: along his facing) or walked or driven into;
+// out of the court and Stig `homeR` m off, it is back at `rest`. On the island with no mission running
+// (`missions.state === 'idle'`), the ball on the court, Stig on foot and in no other hold, and Ole, Berra
+// and Robban free (none the idle mission's giver or extra): `prompt` at the ball. E: a black fade
+// (`fadeSecs`), then Stig, Ole, Berra and Robban on their `marks`, the ball on the sand before Stig, the
+// banner and the `intro`: first to `winTo`. J kicks (a window of `kick.window` s from the press): the ball
+// within `kick.reach` m of the point `ahead` m before him and up to `high` m over his feet. It flies over
+// the net to a spot `depth` m into their half along his facing (its sideways part × `side`; the camera's
+// when he faces away from the net, straight ahead when that does too), ± `spread`, the top of its arc `apex` m up (raised to clear the
+// net). In a jump the ball within `header.r` m of his head is a header (lower, harder for them). Not from
+// their half. Ole takes a ball landing over `ole.take` m from Stig and nearer Ole (never twice running) and
+// sets it up for Stig, `ole.ahead` m before him (`ole.bad` of them go astray). Berra and Robban walk to
+// theirs `react` s after the touch (`them.speed`, slower by `slow` × the thirst, the points played) and lob
+// it back into Stig's half (`to`, off by `err`; `smash.p` [base, per point] of them a hard low one into a
+// back corner), or miss (`miss`: [base, per point, max], plus `tire` for
+// each of their touches in the rally; into the net or out); a ball landing
+// out they leave (`leaveOut`), Berra calling `outCall`. Their serve after `serveHold` s, a fault
+// `fault`. A ball landing in a half is the other side's point, one landing out the hitter's loss; the
+// point's whistle, the reason on the board (`why`) and `pointSecs` s later the next serve, by the winner.
+// Lines: Ole's after a point, Berra's and Robban's thirst after the 2nd, 4th and 6th point. The end:
+// `win` (Berra and Robban walk off to the bar: `walkOff`) or `lose` (the rematch, `promptRematch`, for
+// `rematchSecs` s). Q gives up (`quit`); Stig over `leaveR` m outside the lines for `leaveSecs` s, a warp
+// or a pursuit ends it the same way; a mission start or the other level at once, everyone home and the ball
+// back. No pay; `records.volley` { won, lost }. Invented (§1.6): the match; the thirst lines are the film's.
+export const VOLLEY = {
+  lm: 'volley', r: 1.6, court: [4.5, 4.0], net: [1.45, 2.45], rest: [1.2, -1.6], homeR: 35,
+  ball: { r: 0.24, g: 12, bounce: 0.42, roll: 2.4, stopV: 1.3 },
+  marks: { stig: [1.0, -2.8], ole: [-2.2, -2.0], berra: [1.9, 2.3], robban: [-2.0, 2.6] },
+  serveSpot: { berra: [1.3, 3.5], robban: [-1.3, 3.5] },
+  kick: { reach: 1.05, ahead: 0.55, high: 1.6, window: 0.4, apex: 4.4, depth: [1.3, 3.3], side: 0.5, spread: 0.35, minFwd: 0.3, free: { apex: 3.0, dist: 7 } },
+  header: { r: 0.62, apex: 3.6, harder: 0.15 },
+  ole: { who: 'ole', speed: 4.2, react: 0.15, take: 2.3, bad: 0.08, apex: 4.6, ahead: 0.9, base: [2.2, -2.0], leaveOut: 0.9 },
+  them: {
+    speed: { berra: 2.5, robban: 2.0 }, slow: 0.04, react: 0.35, reach: 0.95, low: 0.35, high: 2.3, hitH: 1.2,
+    miss: [0.08, 0.06, 0.6], tire: 0.04, err: [0.3, 0.12], leaveOut: 0.75, apex: [4.0, 5.0], to: { u: 3.8, v: [-3.5, -0.9] },
+    smash: { p: [0.3, -0.04], apex: 3.1, u: [2.4, 4.1], v: [-3.7, -2.4] },
+    serveHold: 1.3, serveTo: [-3.6, -1.6], fault: [0.08, 0.03, 0.3],
+  },
+  winTo: 5, pointSecs: 2.6, tossAt: 1.1, stall: 12, farR: 30, leaveR: 7, leaveSecs: 1.5, rematchSecs: 14, endSecs: 4.2,
+  fadeSecs: 0.7, serveHintSecs: 8, walkOff: { path: [[1.5, -14], [1.5, -33]], speed: 1.6, secs: 24 },
+  prompt: '<b>E</b> Spela volley',                                                 // [N]
+  promptRematch: '<b>E</b> Revansch!',                                             // [N]
+  keys: '<b>J</b> Sparka · <b>SPACE</b> Hoppa och nicka · <b>Q</b> Ge upp',        // [N]
+  board: { us: 'Stig & Ole', them: 'Berra & Robban', sub: 'Först till {n}' },      // [N] · [N] · [N]
+  why: { in: 'Inne!', out: 'Ute!', net: 'I nätet!', miss: 'Miss!', fault: 'Fel serve!' },   // [N]
+  banner: ['Strandvolley', 'Först till fem'],                                       // [N] · [N]
+  serveHint: '<span><b>J</b> Sparka bollen över nätet!</span>',                     // [N] (one flex item in the toast)
+  intro: [
+    [0.3, 'berra', 'En match. Sen går vi till baren.'],                             // [N]
+    [2.0, 'ole', 'Nå tar vi dem, Stig!'],                                           // [N]
+  ],
+  ours: [['ole', 'Heia Norge!'], ['ole', 'Bra, Stig!']],                            // [F*] his solo dance at the grisfest (research-characters.md:192), relocated · [N]
+  theirs: [['ole', 'Kom igjen, Stig!'], ['ole', 'Det var nære på.']],               // [N] · [N]
+  outCall: { berra: 'Ute!', ole: 'Ute!' },                                          // [N] · [N] (the same word in bokmål)
+  thirst: [
+    [[0, 'robban', 'Jag är törstig, Berra.'], [1.7, 'berra', 'Du har ingen karaktär alls, Robban.']],   // [F*] · [F*] the walk to the bodega (research-plot.md:316), relocated
+    [[0, 'berra', 'Ska vi ta Pepes Bodega i dag?'], [1.7, 'robban', 'Vi kan väl ta det lite lugnt?']],  // [F*](t) · [F*](t) by the pool (research-plot.md:285), relocated
+    [[0, 'robban', 'Fan, vad jag är törstig.']],                                                      // [F*] on vischan (research-plot.md:318), relocated
+  ],
+  win: {
+    banner: ['Matchen vunnen!', 'Stig & Ole {a}–{b} Berra & Robban'],              // [N] · [N]
+    lines: [[0.3, 'ole', 'Heia Norge!'], [1.9, 'berra', 'Nu går vi till baren, Robban.'], [3.4, 'robban', 'Äntligen.']],   // [F*] as above · [N] · [N]
+  },
+  lose: {
+    banner: ['Matchen förlorad', 'Stig & Ole {a}–{b} Berra & Robban'],             // [N] · [N]
+    lines: [[0.3, 'berra', 'Fem! Nu tar vi en öl.'], [1.9, 'ole', 'Vi må ha revansj, Stig!']],   // [N] · [N]
+  },
+  quit: { lines: [[0.2, 'berra', 'Då går vi till baren då.']] },                   // [N]
 };

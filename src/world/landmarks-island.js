@@ -219,6 +219,9 @@ export const ISLAND_LANDMARKS = {
   // Livräddarens kikare (free roam, §10.48): the middle of the lifeguard tower's platform (deck 2.75,
   // the plank ramp up from the north), facing the sea (E: the binoculars on the south railing).
   kikare: { b: [3, 6], at: [17, 18], yaw: 0, y: 2.75 },
+  // Strandvolley (free roam, §10.50): the middle of the beach volleyball court's net on the sand, facing
+  // the sea (Stig's half behind it, Berra's and Robban's ahead). Not a standing spot (under the net).
+  volley: { b: [4, 6], at: [-16, 4], yaw: 0 },
   fena_hav: { world: [0, 304], yaw: 0, y: 0.35 },
   hamn: { b: [5, 6], at: [0, 0], yaw: PI },
   fena_hamn: { b: [5, 6], at: [-8, 10], yaw: 0, y: 0.35 },

@@ -199,7 +199,14 @@ opens with a summary of the rounds and the timer changes.
     bin and a miss on the ground, a box stamped KONTROLLERAD AV G17 and stacked, the foreman's hurries, a
     whole shift's 100 pta and `records.packhus`, TOMATRAS at eight dropped with Stig's arms full, Q,
     Siv's "Spänn av, Stig-Helmer. Du är ledig." once, a kick, by night, the locks and a mission start;
-    `packhusbalans` models the shift's balance with the autopilot, `PACKHUS_RUNS`, DESIGN §10.49)
+    `packhusbalans` models the shift's balance with the autopilot, `PACKHUS_RUNS`, DESIGN §10.49),
+    `volley volleyfree volleyshots` (Strandvolley mot Berra och Robban, the court's live ball by the
+    pedal-boat rental: "E Spela volley" between missions with Ole, Berra and Robban free, the fade and the
+    marks, J's kick over the net and the header, Ole's set, their walk, lob, smash and misses, the points'
+    reasons on the board STIG & OLE n – m BERRA & ROBBAN, the thirst lines, first to five, the walk off,
+    "E Revansch!", Q, off the court, a mission start; an autopilot in Stig's place plays a match out; no
+    prompt while Ole or Berra has a mission to give; the ball kicked and knocked about in free roam and
+    back once Stig is away, DESIGN §10.50)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)
