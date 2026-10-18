@@ -1,7 +1,8 @@
 // Level 2 content (DESIGN §2.3, §10, §11.6, §14.9, §14.10): homes on the island, map labels, chatter
 // and bark tables, collectibles, unlocks, named-car names, outfits. Owner: WP-G. Source tags per
 // DESIGN §1.4 (bark tables are [F*]: every film line is relocated there). Invented (§1.6): Oles
-// prylar and hajfenor as collectibles, the grisbil unlock, the glide after julafton, the sisters
+// prylar and hajfenor as collectibles, the strangers' lost suitcases Stig hands in at Gando for a
+// finder's fee (§10.52), the grisbil unlock, the glide after julafton, the sisters
 // judging his dives at Flamenco's pool, the island answering his horn, Herr Storch filming his
 // tricks and his film night, the rollerskier's training, his answer to the horn and his race, the
 // pool fest after the end (Små grodorna in Flamenco's pool, Stig hopping with them in his suit),
@@ -570,6 +571,50 @@ export const COLLECTIBLES = {
     items: ['ferreteria', 'poolbar', 'marknad', 'portier', 'supermercado', 'grillpaco', 'hittegods']
       .map((id) => ({ id, lm: 'brodrost_' + id })),
   },
+  // Hittelön (feature 116, §10.52): six strangers' suitcases inland. `carry`: never by touch; game/
+  // lostBags.js lifts one onto Stig's head and collects it when he hands it in at Gando. `pay`: 0, the
+  // clerk pays HITTELON.pay in the exchange. An item's `color` and `tag` (the label, a place name only,
+  // §1.5) dress its bag; `say` is Stig's line when he lifts it (not the first time, HITTELON.pickFirst).
+  vaskor: {
+    kind: 'hittevaska', motion: 'none', beam: true, pickup: 'carry', idle: true, pay: 0, jingle: 'chime', sparkle: 0x9fdcff,
+    label: 'Borttappade väskor', marker: 'vaska', icon: 'vaska-icon', bonus: 1000,                    // [N]
+    complete: ['angerud', 'Sex väskor, och du lämnade in allihop? Det var inte riktigt så jag menade.'],  // [N] his tip (HITTELON.pickFirst), taken literally
+    items: [
+      { id: 'hangar', lm: 'vaska_hangar', color: 0x2f5a8a, tag: 'LAS PALMAS', say: 'Den här har flugit utan sin ägare.' },          // [N] · tag [N]
+      { id: 'bygge', lm: 'vaska_bygge', color: 0x6a6a72, tag: 'LAS PALMAS', say: 'Full med cement, känns det som.' },              // [N] · tag [N]
+      { id: 'packhus', lm: 'vaska_packhus', color: 0xc0392b, tag: 'LAS PALMAS', say: 'Den ska inte på export. Den ska till hittegods.' },   // [N] · tag [N]
+      { id: 'tomater', lm: 'vaska_tomater', color: 0xf2e6c0, tag: 'AKUREYRI', say: 'AKUREYRI? Då har den kommit lite fel.' },      // [N] · tag [N]
+      { id: 'grisfest', lm: 'vaska_grisfest', color: 0x2f6a4a, tag: 'LAS PALMAS', say: 'Den har varit på grisfest, den också.' },  // [N] · tag [N]
+      { id: 'golf', lm: 'vaska_golf', color: 0xc2307a, tag: 'LAS PALMAS', say: 'Det är i alla fall ingen golfbag.' },               // [N] · tag [N]
+    ],
+  },
+};
+
+// Hittelön – de borttappade väskorna (free roam; feature 116, §10.52; game/lostBags.js, invented §1.6).
+// On the island with no mission running, on foot and free, Stig walking within `pickR` m (and `pickDy`
+// m up or down) of a lost suitcase lifts it onto his head (`carryOver`, at walk speed): the first time
+// with Angerud's tip in his mouth (`pickFirst`), later with the bag's own `say`. He can take a car (the
+// bag rides along out of sight). A fall drops it at his feet (it tumbles down in `tumbleSecs` s), R where
+// he stood; a mission start or the other level puts it back on its spot. Carried, the card (`title`,
+// `text`), the beacon and the arrow point at the lost-and-found counter at Gando; there E within `r` m
+// of `lm` ("E Lämna in väskan", the clerk at his post within `clerkR` m of `hittegods`) puts it on the
+// counter (`disk`), cuts to `cam` and plays `lines`: the clerk reads the tag, Stig's "Nej, inte min.", the clerk pays
+// `pay` pta with "Hittelön." and the toast, Stig thanks him; then the set's card, the save and at 6/6
+// its bonus and Angerud on the radio (COLLECTIBLES.vaskor).
+export const HITTELON = {
+  set: 'vaskor', pay: 100, pickR: 1.3, pickDy: 1.6, r: 1.6, clerkR: 2.5, tumbleSecs: 0.45, sayGap: 1.2,
+  lm: 'hittegodsLamna', disk: 'hittegodsDisk', cam: { at: 'hittegodsCam', dist: 2.8, height: 2.5 },
+  prompt: '<b>E</b> Lämna in väskan',                                                    // [N]
+  title: 'Hittelön',                                                                     // [F*] the film's word (research-plot.md:326)
+  text: 'Bär väskan till hittegods på Gando',                                            // [N]
+  pickFirst: 'Om man hittar något, så kan man få hittelön…',                             // [F*] Angerud's tip at the pool (research-plot.md:326), Stig taking it literally
+  lines: [
+    ['hittegods', 'Hammarby…?', { anim: { who: 'hittegods', flag: 'scratch', secs: 1.6 } }],  // [F*] julafton's (research-plot.md:362), at every bag
+    ['stig', 'Nej, inte min.'],                                                           // [N]
+    ['hittegods', 'Hittelön.', { pays: true }],                                          // [F*](t) julafton's, the money the other way
+    ['stig', 'Tack så mycket.'],                                                          // [F*](t) julafton's
+  ],
+  toast: 'Hittelön: +{n} pta',                                                           // [N] (with the pay, the coin and the money on `pays`)
 };
 
 // The G17 toasters' timing game (free roam; feature 33, §10.24; game/toasters.js, invented §1.6).

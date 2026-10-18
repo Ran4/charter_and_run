@@ -42,6 +42,7 @@ import { Dogs } from './game/dogs.js';
 import { Bathers } from './game/bathers.js';
 import { SuntripShop } from './game/suntripShop.js';
 import { Toasters } from './game/toasters.js';
+import { LostBags } from './game/lostBags.js';
 import { Stunts } from './game/stunts.js';
 import { Room107 } from './game/room107.js';
 import { Solkram } from './game/solkram.js';
@@ -223,6 +224,7 @@ class Game {
     this.bathers = new Bathers(this);     // free roam: tourists on the sun loungers, Berra and Robban fried (§10.22)
     this.shop = new SuntripShop(this);    // free roam: SunTrip-butiken on the office porch, its add-ons and his look (§10.23)
     this.toasters = new Toasters(this);   // free roam: the G17 toasters' timing game (§10.24)
+    this.bags = new LostBags(this);       // free roam: the strangers' lost suitcases, carried on his head to Gando's lost and found (§10.52)
     this.room107 = new Room107(this);     // free roam: room 107's keepsake shelf, the giraffe and the boombox (§10.25)
     this.solkram = new Solkram(this);     // free roam: the SOLKRÄM meter at Majsan's back by the pool (§10.26)
     this.stunts = new Stunts(this);       // free roam: his car's jumps judged, the G17 stamp (§10.27)
@@ -553,7 +555,7 @@ class Game {
         if (!l) { console.warn('collectible: missing landmark', it.lm); return null; }
         const y = l.y ?? groundAt(l.x, l.z, 0.2, 0.6) + 1.2;
         // A standing one (motion 'none': the G17 toasters) faces its landmark's yaw.
-        const c = new Collectible(scene, set.kind, it.id, l.x, y, l.z, { motion: set.motion, beam: set.beam, yaw: set.motion === 'none' ? l.yaw : undefined });
+        const c = new Collectible(scene, set.kind, it.id, l.x, y, l.z, { motion: set.motion, beam: set.beam, yaw: set.motion === 'none' ? l.yaw : undefined, item: it });
         c.set = setName;
         c.item = it;
         return c;
@@ -1446,8 +1448,9 @@ class Game {
     const skis = this.skis.on;
     const top = this.bestInteractable((i) => !i.whileSeated && (i.priority || 0) >= 100 && (!skis || i.skis));
     if (top) return { type: 'it', it: top };
-    // Not with Berra on his shoulders (§10.6): the carry would follow him into the mission.
-    if (ms.state === 'idle' && ms.current && ms.current.level === this.level && !this.carrying) {
+    // Not with Berra on his shoulders (§10.6): the carry would follow him into the mission. A lost
+    // suitcase on his head (§10.52) goes back to its spot at the mission's start instead.
+    if (ms.state === 'idle' && ms.current && ms.current.level === this.level && (!this.carrying || this.carrying.bag)) {
       const g = this.npcs[ms.current.giver];
       if (g && g.state !== 'hidden' && dist(g.x, g.z, p.x, p.z) < 3.4 && Math.abs(g.y - p.y) < 2) return { type: 'talk', who: g };
     }
@@ -1597,6 +1600,7 @@ class Game {
     this.bathers.update(dt);
     this.shop.update(dt);
     this.toasters.update(dt);
+    this.bags.update(dt);
     this.room107.update(dt);
     this.solkram.update(dt);
     this.stunts.update(dt);
@@ -2022,14 +2026,15 @@ class Game {
         if (set.pickup === 'touch') {
           if (d < (this.playerCar ? 2.6 : 1.4) && Math.abs(mp.y - (f.y + 1)) < 1.8) this.collect(setName, c);
         } else if (set.pickup === 'squash' && this.playerCar && d < 2.8 && mp.y < f.y + this.playerCar.height + 1.2) this.collect(setName, c);
-        // 'inspect' (the G17 toasters): game/toasters.js collects one that passes.
+        // 'inspect' (the G17 toasters): game/toasters.js collects one that passes; 'carry' (the lost
+        // suitcases): game/lostBags.js lifts one and collects it when it is handed in.
       }
     }
   }
 
-  // A collectible picked up (or a fin squashed, a toaster passed): +250 pta, HUD, radio, set bonus,
-  // save. A `keep` set's one stays where it stands, marked (the G17 toasters' label); the set's
-  // `splash` and `sparkle` colour are its effects.
+  // A collectible picked up (or a fin squashed, a toaster passed, a suitcase handed in): the set's
+  // `pay` (default +250 pta), HUD, radio, set bonus, save. A `keep` set's one stays where it stands,
+  // marked (the G17 toasters' label); the set's `splash` and `sparkle` colour are its effects.
   collect(setName, c) {
     if (!c.alive) return;
     const set = COLLECTIBLES[setName];
@@ -2038,7 +2043,7 @@ class Game {
     this.collected[setName].add(c.id);
     this.dressRoom107();
     const n = this.collected[setName].size, total = set.items.length;
-    this.addCoins(250);
+    if (set.pay ?? 250) this.addCoins(set.pay ?? 250);
     if (set.jingle === 'pryl') audio.jingle('pryl'); else audio[set.jingle]?.();
     if (set.splash) fx.splash(mp.x, mp.z);
     fx.sparkle(mp.x, mp.y + (set.keep ? 0.3 : 0), mp.z, set.sparkle ?? 0xf07a1e, 20);
@@ -2063,7 +2068,7 @@ class Game {
       const g = this.npcs[ms.current.giver];
       if (g) out.push({ type: 'mission', x: g.x, z: g.z, edge: true });
     }
-    const t = ms.target() || this.berraJob.target() || this.eslov.target() || this.skis.target() || this.pigs.target() || this.gatlopp.target();
+    const t = ms.target() || this.berraJob.target() || this.eslov.target() || this.skis.target() || this.pigs.target() || this.gatlopp.target() || this.bags.target();
     if (t && !t.follow) out.push({ type: 'objective', x: t.x, z: t.z, edge: true });
     if (t && t.follow) out.push({ type: ms.stage?.car?.isTarget ? 'enemy' : 'friend', x: t.x, z: t.z, edge: true });
     out.push(...ms.markers());
@@ -2083,7 +2088,7 @@ class Game {
       for (const [setName, list] of Object.entries(this.collectibles)) {
         const { marker: type, idle } = COLLECTIBLES[setName];
         if (idle && ms.state !== 'idle') continue;   // only while they can be used (the G17 toasters)
-        for (const c of list) if (c.alive && dist(c.x, c.z, f.x, f.z) < 45) out.push({ type, x: c.x, z: c.z });
+        for (const c of list) if (c.alive && !c.held && dist(c.x, c.z, f.x, f.z) < 45) out.push({ type, x: c.x, z: c.z });   // `held`: on Stig's head
       }
     }
     return out;
@@ -2133,8 +2138,8 @@ class Game {
       if (dist(g.x, g.z, f.x, f.z) > 25) target = { x: g.x, z: g.z };
     } else this.bang.show(false);
     // Or the free-roam Berra job's (§10.6), Eslövloppet's (§10.12), Eslövrundan's (§10.39), the grisbil's
-    // pigs' (§10.15), José's street race's (§10.38).
-    const t = ms.target() || this.berraJob.target() || this.eslov.target() || this.skis.target() || this.pigs.target() || this.gatlopp.target();
+    // pigs' (§10.15), José's street race's (§10.38), a lost suitcase's (the lost and found, §10.52).
+    const t = ms.target() || this.berraJob.target() || this.eslov.target() || this.skis.target() || this.pigs.target() || this.gatlopp.target() || this.bags.target();
     if (t) {
       target = t;
       const y = t.follow ? groundAt(t.x, t.z, 0.2, 0.6) + 2.5 : groundAt(t.x, t.z, 0.2, 0.6);
@@ -2164,10 +2169,10 @@ class Game {
     // No mission running: the SOLKRÄM meter (§10.26; first, as its scene holds him), the paint
     // shop's wet-paint card (§7.2), the church's while Guardia Civil waits outside (§7.2), the Berra
     // job's (§10.6), Eslövloppet's (§10.12), Eslövrundan's (§10.39), the grisbil's pigs' (§10.15), a G17 toaster's scale
-    // (§10.24), José's street race's (§10.38), a hitch's (§10.47) or a shift at the packing shed's belt
-    // (§10.49), if any.
+    // (§10.24), José's street race's (§10.38), a hitch's (§10.47), a shift at the packing shed's belt
+    // (§10.49) or a lost suitcase on his head (§10.52), if any.
     hud.setObjective(this.missions.objective() || this.solkram.objective() || this.shame.paint.objective() || this.shame.church.objective() || this.berraJob.objective() || this.eslov.objective() || this.skis.objective()
-      || this.pigs.objective() || this.toasters.objective() || this.gatlopp.objective() || this.hitch.objective() || this.packhus.objective());
+      || this.pigs.objective() || this.toasters.objective() || this.gatlopp.objective() || this.hitch.objective() || this.packhus.objective() || this.bags.objective());
     hud.setSpeedo(this.playerCar);
     if (this.missions.state !== 'failed') {
       let prompt = '';

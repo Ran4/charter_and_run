@@ -130,6 +130,13 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   Godkänd!", och rosten får etiketten KONTROLLERAD AV G17. För tidigt blir det blekt, för sent bränt
   (och kanske en kommentar från någon av systrarna), men du kan försöka igen direkt. Mätaren går lite
   fortare för varje godkänd rost. Alla sju: bonus och ett radiosamtal från Majsan.
+- **Borttappade väskor** (6): främmande resväskor med LAS PALMAS-lappar står där de inte hör hemma –
+  vid HANGAR 2 bakom drömplanet, vid byggets bod, på packhusets lastkaj, i tomatraderna på vischan,
+  utanför grisfestgårdens hus och på golfbanans artonde green. Mellan uppdragen: gå fram till en, så
+  lyfter Stig upp den över huvudet ("Om man hittar något, så kan man få hittelön…") och bär den i
+  gångfart, eller tar bilen. Ramlar han tappar han den; R lämnar den där han stod. Vid hittegodsdisken
+  på flygplatsen: E, så läser killen på lappen ("Hammarby…?"), Stig svarar "Nej, inte min." och får
+  100 pesetas i hittelön. Alla sex: bonus och ett radiosamtal från Angerud.
 - **Rum 107**: det Stig hittar kommer hem till hans och Oles rum på Hotel Flamenco. Oles prylar
   ställs på en hylla ovanför tavlan, var och en på sin plats, och de nedtrampade hajfenorna ligger
   platta i en hög vid Stigs säng. Efter julafton står också väskan, plastgiraffen och
@@ -659,6 +666,10 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
   som köper nässkyddet)
 - brödrostarna runt ön, provrostningen och etiketten KONTROLLERAD AV G17 som Stig sätter på en
   godkänd rost (i filmen är G17 bara det han skryter om för Majsan vid poolen, och ingen rostar bröd)
+- de borttappade väskorna i inlandet som Stig bär på huvudet till hittegods och får hittelön för, och
+  Angeruds radiosamtal när alla sex är inlämnade (i filmen är det Stigs egen väska som kommer bort och
+  kommer tillbaka på julafton med "Hammarby…?" och "Hittelön.", och Angeruds tips om hittelön är en
+  vink om att stjäla)
 - hyllan i rum 107 som Oles prylar hamnar på när de hittas, hajfenorna i en hög vid Stigs säng, Stigs
   "Kontrollerad av G17." vid hyllan och Oles räkning i radion (i filmen visar Ole sina prylar i rummet,
   men där finns ingen hylla)
@@ -805,6 +816,7 @@ src/game/dogs.js                Fin hund… in free roam: the watchdogs in the b
 src/game/bathers.js             Badgäster på solstolarna in free roam: bathers on the loungers, their burn, the fly-off, Berra and Robban fried
 src/game/suntripShop.js         Bränsletillägg tillkommer in free roam: SunTrip-butiken, the receipts, the Trapp Trull account, his bought look
 src/game/toasters.js            Kontrollerad av G17 in free roam: the seven toasters, the timing game, the label, the sisters' line
+src/game/lostBags.js            Hittelön in free roam: the lost suitcases' lift onto his head, the carry, the drop, the counter at Gando, the exchange and the pay
 src/game/room107.js             Rum 107 fylls med resans minnen in free roam: the keepsake shelf, the giraffe, the boombox; the wardrobe's outfits (feature 67)
 src/game/solkram.js             Smörj in Majsans rygg in free roam: the SOLKRÄM meter, Siv's cards, the cream running
 src/game/stunts.js              Stunthopp med G17-stämpel in free roam: his car's jumps measured, LUFTTID, the stamp, the records
@@ -836,7 +848,7 @@ tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statis
 tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, meter, kinds, perf,
                                 paintshop, berra, glide, simhopp, tuta, dygn, super8, eslov, grodorna,
                                 artig, grisar, bagage, lapplisa, torsdag, frukt, hopptorn, hund,
-                                badgaster, butik, brodrost, rum107, solkram, skjortbyte,
+                                badgaster, butik, brodrost, hittelon, rum107, solkram, skjortbyte,
                                 stunthopp, prata, takhopp, mikrofon, faglar, gags, strandkyssen,
                                 guardiajeep, fyren, klader, ringklocka, kyrkfrid, gatlopp, skidor,
                                 golfbil, battur, balkong, hytt, kaffe, meta, marknadstak, lifta,
@@ -902,6 +914,7 @@ node tools/shot.mjs hund                 # the watchdogs: the wall, the rush, th
 node tools/shot.mjs badgaster stekt      # bathers on the loungers: the burn, the kick and the car, the newcomer, night; Berra and Robban fried, the wake
 node tools/shot.mjs butik butikbil       # SunTrip-butiken: the receipts, the Trapp Trull account, "Paketet!", the look, a mission start; the look in every car
 node tools/shot.mjs brodrost rostar      # the G17 toasters: pale, burnt, golden, the label, 7/7 and Majsan, the save; the seven spots
+node tools/shot.mjs hittelon hittelonshots  # the lost suitcases: the lift, the car, the drop, R, the exchange and the pay, a mission start, 6/6 and Angerud, the save; the spots, the carry, the counter
 node tools/shot.mjs rum107 troferum      # room 107: the shelf and Ole's count, the giraffe, the boombox's samba, the save; the room from the patio, the nap
 node tools/shot.mjs solkram              # Majsan's sun cream: the ask, the meter held, 7/6/5, early, over from behind, the record and Siv's chatter, the save
 node tools/shot.mjs stunthopp stuntzoner # the stunt jumps: the plank to the dream plane, the stamp, the pay and the record, UNDERKÄND; the yellow ramp, a garage deck, GODKÄND

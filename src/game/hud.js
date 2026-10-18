@@ -952,6 +952,11 @@ function drawMarker(c, m, clamped, scale = 1) {
   } else if (m.type === 'rost') {   // a G17 toaster (§10.24): a chrome block, two slices up
     c.fillStyle = '#d88c2a'; c.fillRect(-3.5, -6, 2.4, 3); c.fillRect(1.1, -6, 2.4, 3);
     c.fillStyle = '#d8dce0'; c.strokeStyle = '#1d1426'; c.lineWidth = 1.5; c.fillRect(-5, -3.5, 10, 7); c.strokeRect(-5, -3.5, 10, 7);
+  } else if (m.type === 'vaska') {   // a lost suitcase (§10.52): a blue case, its handle and a white label
+    c.strokeStyle = '#1d1426'; c.lineWidth = 1.5;
+    c.strokeRect(-2, -6.5, 4, 2.5);
+    c.fillStyle = '#2f6ad8'; c.fillRect(-5.5, -4, 11, 8); c.strokeRect(-5.5, -4, 11, 8);
+    c.fillStyle = '#fbf6ec'; c.fillRect(-2.5, -1.5, 5, 3);
   } else if (m.type === 'item') {
     c.fillStyle = '#ffffff'; c.strokeStyle = '#1d1426'; c.lineWidth = 2;
     c.beginPath(); c.arc(0, 0, 5, 0, Math.PI * 2); c.fill(); c.stroke();

@@ -53,6 +53,9 @@ body:not(.playing) #hud { opacity: 0; }
 /* A G17 toaster (§10.24): chrome body on a black base, two golden slices up. */
 .rost-icon { width: 22px; height: 21px; display: inline-block; flex: none; background: linear-gradient(#d88c2a 0 0) 5px 0 / 4px 7px no-repeat, linear-gradient(#d88c2a 0 0) 13px 0 / 4px 7px no-repeat, linear-gradient(var(--ink) 0 0) 0 100% / 100% 4px no-repeat, linear-gradient(180deg, #f4f6f8, #a8adb6) 1px 5px / 20px 13px no-repeat; }
 .lg-rost { color: #d8dce0; }
+/* A lost suitcase (§10.52): a blue case with its handle, straps and a white label. */
+.vaska-icon { width: 22px; height: 20px; display: inline-block; flex: none; border-radius: 3px; background: linear-gradient(#fbf6ec 0 0) 50% 11px / 8px 4px no-repeat, linear-gradient(90deg, transparent 0 4px, #1b3f8a 4px 6px, transparent 6px 16px, #1b3f8a 16px 18px, transparent 18px) 0 5px / 100% 15px no-repeat, linear-gradient(#2f6ad8 0 0) 0 5px / 100% 15px no-repeat, linear-gradient(var(--ink) 0 0) 7px 1px / 8px 4px no-repeat; }
+.lg-vaska { color: #6a9ae8; }
 /* The Gags row (§10.32): a clapperboard, striped arm over the slate. */
 .gag-icon { width: 22px; height: 20px; display: inline-block; flex: none; border-radius: 2px; background: repeating-linear-gradient(135deg, var(--ink) 0 4px, #fff8e6 4px 8px) 0 0 / 100% 6px no-repeat, linear-gradient(var(--ink) 0 0) 0 8px / 100% 12px no-repeat; }
 

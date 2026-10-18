@@ -234,7 +234,11 @@ nose guard is unknown); seven chrome toasters round the island that
 Stig-Helmer checks with a timing game, the KONTROLLERAD AV G17 label he puts on one that comes out
 golden brown, Siv's or Majsan's "Bara de inte är ingenjörer." at a burnt one and Majsan's radio line
 when all seven pass (free roam, §10.24; in the film G17 is only his boast to Majsan by the pool, and
-nobody toasts anything); the shelf in room 107 that Ole's gadgets come home to as they are found, the
+nobody toasts anything); six strangers' suitcases lying about inland, carried on Stig's head to the
+lost-and-found counter at Gando and handed in for a finder's fee of 100 pesetas each, the clerk's
+"Hammarby…?" at every one, Stig's "Nej, inte min." and Angerud's radio line when all six are in (free
+roam, §10.52; in the film it is Stig's own suitcase that goes astray and comes back on Christmas Eve
+with "Hammarby…?" and "Hittelön.", and Angerud's tip about finder's fees hints at stealing); the shelf in room 107 that Ole's gadgets come home to as they are found, the
 fins Stig trod down in a pile by his bed, Stig checking it all with "Kontrollerad av G17." and Ole
 counting on the radio (free roam, §10.25; in the film Ole shows his gadgets in the room, but there is
 no shelf, and the suitcase, the giraffe and the crispbread pack are only the film's own scenes);
@@ -515,6 +519,8 @@ Physical keys are unchanged from Bigmouth. The level config turns verbs on and o
   bather off.
 - **The G17 toasters** (free roam, §10.24): E at a toaster ("E Kontrollera brödrosten") pushes its
   lever down; E again ("E Upp med brödet!") pops the bread, golden brown in the bar's field.
+- **The lost suitcases** (free roam, §10.52): walking into one lifts it onto his head (walk speed, no
+  sprint; a car takes it along); E at the lost-and-found counter at Gando ("E Lämna in väskan") hands it in.
 - **Room 107** (free roam, §10.25): E at the keepsake shelf ("E Kontrollera hyllan"); after julafton
   at the plastic giraffe on Stig's bed ("E Ta upp giraffen", then "E Ställ tillbaka giraffen"); at
   Ole's boombox ("E Bergsprängaren" before the samba unlock, then "E Spela samba" and "E Stäng av
@@ -688,7 +694,7 @@ export const LEVELS = {
 | title orbit | around the cabin, gate phase, snowing | around `flamencoPool` |
 | music | `muzak` + fear low-pass + heartbeat | `sol` (pursuit: `skandal`) |
 | ped/NPC chatter | `CHATTER_FLIGHT` | `CHATTER` |
-| collectibles | none (cabin coins only) | prylar + hajfenor + G17-brödrostar (feature 33, §10.24) |
+| collectibles | none (cabin coins only) | prylar + hajfenor + G17-brödrostar (feature 33, §10.24) + borttappade väskor (feature 116, §10.52) |
 | audio drone | `audio.drone()` driven by cabin | off |
 
 ### 4.4 Level API (main.js, Phase 0)
@@ -1386,7 +1392,7 @@ standing there faces. `y` (optional) = absolute height for collectible spots on 
 | (5,0) | `bungalow` → `bungalowTomt` (D1, nature.js) | Angerud's show bungalow: one-storey white cube, pool, plot fence, `SE VENDE · BUNGALOW · 4 RUM OCH KÖK` | `bungalow` (0, 22, π) · `fena_bungalow` (6, −4, 0, 0.35) | — |
 | (5,1) | `bygge` → `bygge` (D1, nature.js) | half-built hotel frame, crane, girder deck with ramp (Bigmouth construction reworked), `PRÓXIMAMENTE · HOTEL NUEVA ESTOCOLMO II`, cones/barrels; the storeys under the 2nd- and 3rd-floor slabs are closed (dark core, brick infill on the faces the floor below walks along), since their colliders are solid from the ground (Phase 3); the plank at the 1st floor's east end, local x [19.2, 22], z [−2.7, −0.1], up to S1 + 0.9 (feature 40, §10.27) | `bygge` (0, 22, π) · `pryl_klocka` (6, −6, 0, 7.6) · `stunt_planka` (22, −1.4, π/2, 4.45), `stunt_gula` (−16, 4, π, 1.95) (the stunt jumps' take-offs, §10.27) | — |
 | (6,1) | `dromplan` → `dromplan` (D2, coast.js) | **the old propeller "drömplanet"**: faded red 4-engine prop plane (DC-7-like) on a dirt lot by the road, wing reachable via a crate ramp, windsock, sign `AERÓDROMO`; its scraggly palm at (−24, 6), out of the plank jump's run-out (it was at (−24, −2); feature 40, §10.27) | `dromplan` (0, 20, π) · `pryl_kamera` (−4, −2, 0, 3.6) (on the wing) · `stunt_landning` (−26, −1.4, π/2) (the plank jump's run-out, §10.27) | — |
-| (6,0) | `flygplats` → `gando` (D2, coast.js) | low terminal with open arrivals canopy `LLEGADAS · ANKOMST`, baggage carousel (animated ring of suitcases; its belt carries Stig in free roam, §10.16: the belt a `carousel` floor at CURB + 0.64, the centre island its own stepped floor, the sign's post a pole), `OBJETOS PERDIDOS · HITTEGODS` desk with a wall of suitcase silhouettes, bus bay `BUSS 17`; **the parked DC-8** (`buildPlaneExterior`) **outside the bound wall at (240, −335)** — WP-B clears the tree ring **and the hills** in that sector (§6.4) | `airport` (0, 22, π) · `hittegods` (−14, 6, 0) · `busBay` (16, 24, −π/2) · `bagageband` (6, 11, π) (south of the carousel, facing it, so the views camera stands on the forecourt; Phase 3) · `brodrost_hittegods` (−17.4, 7.35, 0, 1.23) (a G17 toaster on the lost-and-found counter, 4 m from the clerk; §10.24; not a standing spot) | `buss17` (bus, livery `suntrip`) at `busBay`; `taxiAirport` (taxi, locked) |
+| (6,0) | `flygplats` → `gando` (D2, coast.js) | low terminal with open arrivals canopy `LLEGADAS · ANKOMST`, baggage carousel (animated ring of suitcases; its belt carries Stig in free roam, §10.16: the belt a `carousel` floor at CURB + 0.64, the centre island its own stepped floor, the sign's post a pole), `OBJETOS PERDIDOS · HITTEGODS` desk with a wall of suitcase silhouettes, bus bay `BUSS 17`; **the parked DC-8** (`buildPlaneExterior`) **outside the bound wall at (240, −335)** — WP-B clears the tree ring **and the hills** in that sector (§6.4) | `airport` (0, 22, π) · `hittegods` (−14, 6, 0) · `busBay` (16, 24, −π/2) · `bagageband` (6, 11, π) (south of the carousel, facing it, so the views camera stands on the forecourt; Phase 3) · `hittegodsLamna` (−14, 8.35, π) · `hittegodsDisk` (−14, 7.3, 0, 1.23) · `hittegodsCam` (−11.9, 10.0, −2.5) (the lost suitcases' counter: Stig's E spot before the clerk, a bag's place on the counter, the exchange's cut anchor; §10.52) · `brodrost_hittegods` (−17.4, 7.35, 0, 1.23) (a G17 toaster on the lost-and-found counter, 4 m from the clerk; §10.24; not a standing spot) | `buss17` (bus, livery `suntrip`) at `busBay`; `taxiAirport` (taxi, locked) |
 | (0,4), (0,5) | `dyner` → `dyner` (D1, nature.js) | large sand dunes (ramps), palm grove, lagoon pond (its two herons and a stork are game/birds.js's since feature 43, §10.31); behind them, beyond the west bound, a row of big visual-only dunes from town.js (§6.4, Phase 3 r2) | `dyner` (0, 0, π − 0.4) on (0,4) (faces the arch, so the views camera stands on the sand south of it, clear of the boardwalk palms; Phase 3) · `kortDyner` (0, −1.6, 0) on (0,4) (on the boardwalk before the DUNAS DE MASPALOMAS sign, the two big north dunes behind: a tourist couple's place; feature 110, §10.51) | — |
 | (0,6) | `fyren` → `fyren` (D2, coast.js) | **Faro de Maspalomas**: ~55 m grey-blue stone tower (tallest landmark, visible from everywhere), keeper's house (roof top ≈ 4.0, reachable by a dune ramp); the tower's solid stops at its gallery floor (51.3), with the lantern and a closed railing ring as walls up there, and a door on the lantern's north-east side (feature 52, §10.35) | `fyren` (0, 10, π) (coin arc on the keeper's-house roof); `fyrDorr` (0, 1.4, π) before the keeper's door, `fyrGalleri` (1.70, −9.70, 3π/4, y 51.3) on the gallery (§10.35); `kortFyren` (−1.6, 4.4, 0) (left of the keeper's door, 3.4 m from `fyrDorr`, the compass rose 12 m south: a tourist couple's place; feature 110, §10.51) | — |
 | (1..4,6) | `playa` → `playa` (D2, coast.js) | sand, sunbed rows (`solstol`), parasols, `HELADOS` kiosk, lifeguard tower (on (3,6) at (17, 18): its roof 2.75 over the 2.75 platform, a camera ceiling, since feature 108), pedal boats on the sand, towels on sunbeds; on (4,6) the beach volleyball court (net at (−16, 4); its ball a live one since feature 111, the boardwalk ending at z −1.5 short of it) | `playa` on (3,6): (0, 10, 0) · `kikare` on (3,6): (17, 18, 0, y 2.75) (the middle of the lifeguard tower's platform, facing the sea: the binoculars' E spot; the pair on the south railing is game/binoculars.js's mesh; feature 108, §10.48) · `volley` on (4,6): (−16, 4, 0) (the volleyball net's middle on the sand, facing the sea; feature 111, §10.50) · `fena_hav` world (0, 304) (sea shallows, y 0.35) | — |
@@ -3472,6 +3478,17 @@ COLLECTIBLES = {
     complete: ['majsan', 'Så det är du som är G17! Nu vågar jag köpa en brödrost.'],              // [N]
     items: ['ferreteria', 'poolbar', 'marknad', 'portier', 'supermercado', 'grillpaco', 'hittegods']
       .map((id) => ({ id, lm: 'brodrost_' + id })) },
+  vaskor: { kind: 'hittevaska', motion: 'none', beam: true, pickup: 'carry', idle: true, pay: 0, jingle: 'chime', sparkle: 0x9fdcff,
+    label: 'Borttappade väskor', marker: 'vaska', icon: 'vaska-icon', bonus: 1000,                    // [N] feature 116, §10.52
+    complete: ['angerud', 'Sex väskor, och du lämnade in allihop? Det var inte riktigt så jag menade.'],  // [N]
+    items: [
+      { id: 'hangar', lm: 'vaska_hangar', color: 0x2f5a8a, tag: 'LAS PALMAS', say: 'Den här har flugit utan sin ägare.' },          // [N] · tag [N]
+      { id: 'bygge', lm: 'vaska_bygge', color: 0x6a6a72, tag: 'LAS PALMAS', say: 'Full med cement, känns det som.' },              // [N] · tag [N]
+      { id: 'packhus', lm: 'vaska_packhus', color: 0xc0392b, tag: 'LAS PALMAS', say: 'Den ska inte på export. Den ska till hittegods.' },   // [N] · tag [N]
+      { id: 'tomater', lm: 'vaska_tomater', color: 0xf2e6c0, tag: 'AKUREYRI', say: 'AKUREYRI? Då har den kommit lite fel.' },      // [N] · tag [N]
+      { id: 'grisfest', lm: 'vaska_grisfest', color: 0x2f6a4a, tag: 'LAS PALMAS', say: 'Den har varit på grisfest, den också.' },  // [N] · tag [N]
+      { id: 'golf', lm: 'vaska_golf', color: 0xc2307a, tag: 'LAS PALMAS', say: 'Det är i alla fall ingen golfbag.' },               // [N] · tag [N]
+    ] },
 };
 ```
 Set fields (feature 33 made the effects and the kinds of pickup the set's own): `pickup` `touch` (on
@@ -3481,25 +3498,32 @@ dressed by its kind's `mark`, `Collectible.mark()`; otherwise `remove()` hides i
 minimap markers only while `missions.state === 'idle'`); `splash` (a water splash at it) and
 `sparkle` (the sparkle's colour, default orange 0xf07a1e); `jingle` an `audio` method or `pryl` (the
 jingle). A standing kind (`motion: 'none'`) faces its landmark's `yaw`. An item's `line` is Ole's on
-the radio (prylar only).
+the radio (prylar only). Feature 116 (§10.52) added `pickup: 'carry'` (never by touch: game/lostBags.js
+lifts one onto Stig's head and collects it when he hands it in at Gando) and `pay` (pesetas per pickup,
+default 250; the suitcases' 0, the clerk pays in the exchange); an item is handed to its kind's
+`build(id, item)` (the suitcases' `color` and `tag`; `say` is Stig's line at the lift).
 
 | set | spots (block) | how to reach |
 |---|---|---|
 | prylar | klocka: bygge girder deck (5,1) y 7.6 · poolpen: Kasbah roof terrace (1,2) y 7.2 · kalkylator: market awning roof (2,1) y 3.4 · kniv: Fataga square (0,0) · kamera: dream-plane wing (6,1) y 3.6 · glasogon: harbour pier end (5,6) · pung: grisfest barn roof (2,0) y 5.4 | ramps, bounce awnings, crate stacks (block agents provide a route and screenshot it) |
 | fenor | inflatable shark fins circling (r 1.2, y 0.35) in: Flamenco pool, SunTrip pool, plaza fountain, golf pond, bungalow pool, harbour basin, sea shallows (0, 304) | walk in, kick/stomp (or drive through) |
+| vaskor | strangers' suitcases standing: before HANGAR 2 behind the dream plane (6,1) · by the bygge's site hut (5,1) · on the packing shed's dock (3,0) y 1.1 · in a vischan tomato furrow (0,1) · before the grisfest farmhouse (2,0) · on the golf's 18th green (4,0) | on foot, walk into one, carry it on his head (or by car) to the lost-and-found counter at Gando, E (§10.52), only between missions |
 | brodrostar | chrome toasters standing on: FERRETERÍA's paint-can crate (4,2) · BAR PISCINA's counter (3,3) · market stall K's counter (2,1) · the porter's desk at Flamenco (3,3) · SUPERMERCADO's fruit crate (4,2) · a Casa Lola terrace table (2,3) · the lost-and-found counter at Gando (6,0) | on foot, E and the timing game (§10.24), only between missions |
 
 - What `prylar` and `fenor` find also comes home to room 107 (feature 38, §10.25): the gadgets on its
   shelf, the fins in a pile by Stig's bed (`collect` calls `dressRoom107`).
 - Per pickup: +250 pta, `hud.showCollect('<span class="pryl-icon"></span> Oles prylar <b>n/7</b>')`
   and Ole's radio line (prylar) / squeak + splash (fenor) / the `pling` and a golden sparkle, the
-  toaster kept with its label (brodrostar). 7/7: `bonus` pta + `complete` radio.
+  toaster kept with its label (brodrostar) / no pay of its own, the chime and a sparkle at the counter
+  after the clerk's 100 pta in the exchange (vaskor, §10.52). 7/7 (6/6): `bonus` pta + `complete` radio.
 - Collectibles exist on the island only; the big-map legend comes from `game.mapLegend()`:
-  `M stänger · ! uppdrag · ● Oles prylar n/7 · ● Hajfenor n/7 · ● G17-brödrostar n/7 · Gags n/2`
+  `M stänger · ! uppdrag · ● Oles prylar n/7 · ● Hajfenor n/7 · ● G17-brödrostar n/7 · ● Borttappade väskor n/6 · Gags n/2`
   (flight: `M stänger · ! uppdrag`). The Gags row (feature 47, §10.32) counts the gags played at
   least once (`game.gags.count`/`total`); it has no dot, as gags have no map marker.
-- Minimap markers within 45 m: types `pryl` (orange dot), `fena` (blue dot) and `rost` (a chrome
-  block with two golden slices; only while no mission runs, `idle`), drawn by hud.js.
+- Minimap markers within 45 m: types `pryl` (orange dot), `fena` (blue dot), `rost` (a chrome
+  block with two golden slices; only while no mission runs, `idle`) and `vaska` (a blue suitcase with
+  its handle and a white label; `idle`, and not one on Stig's head: a `held` collectible has none),
+  drawn by hud.js.
 
 ### 10.2 Currency: pesetas
 
@@ -3626,7 +3650,7 @@ level the set's `stig` wins.
 Key **`charter-and-run-v1`** (localStorage):
 
 ```js
-{ v: 1, mission: index, coins, collected: { prylar: [ids], fenor: [ids], brodrostar: [ids] },
+{ v: 1, mission: index, coins, collected: { prylar: [ids], fenor: [ids], brodrostar: [ids], vaskor: [ids] },
   unlocked: ['grisbil', ...], outfit: 'kostym' | 'arlanda' | 'hawaii' | 'rio', tune: 'sol' | 'samba',
   records: { simhopp: n, eslov: s, solkram: n, stunts: { planka: m, gula: m, garage: m }, stork: true,
              gatlopp: { won: 0..3, sex: true }, eslovSkidor: s, fiske: { fisk: n, sko: n, fena: n, knacke: n },
@@ -3640,7 +3664,7 @@ Key **`charter-and-run-v1`** (localStorage):
 `outfit` is his free-roam outfit on the island (§10.4): room 107's wardrobe saves it at once (feature
 67, §10.36); a save from before holds `kostym` or `hawaii`, as the story had them.
 `collected` holds every set in `COLLECTIBLES` (feature 33: saved and read set by set, so a v1 save
-from before `brodrostar` loads with none of it, still `v: 1`); `applySaveToWorld` marks a `keep`
+from before `brodrostar` loads with none of it, still `v: 1`; so does one from before `vaskor`, feature 116); `applySaveToWorld` marks a `keep`
 set's collected ones (the toasters' labels) and removes the others'.
 Saved on mission complete, collectible pickup, level transition, and every 30 s. The free-roam
 Berra job (§10.6) is not saved. `unlocked` also holds the glide's `glid` (its toast shown) and the
@@ -7900,6 +7924,94 @@ julfest's and the witness box's).
   the photo shop (the idea's maybe); the frozen picture is not kept; no occlusion test. "Si omelett!" is
   Ole's in Gags på E (§10.32); "Säg… omelett." in Swedish had no use before.
 
+### 10.52 Hittelön – de borttappade väskorna (free roam; feature 116, 2026-10-18)
+
+`game/lostBags.js` (`LostBags`, owned by Game as `bags`), config `HITTELON` and the set `COLLECTIBLES.vaskor`
+in content/island.js (§10.1), the kind `hittevaska` (`lostBag`, `LOST_BAG`) in actors/pickups.js, the
+landmarks `vaska_hangar`, `vaska_bygge`, `vaska_packhus`, `vaska_tomater`, `vaska_grisfest`, `vaska_golf`,
+`hittegodsLamna`, `hittegodsDisk`, `hittegodsCam` in landmarks-island.js, the minimap marker `vaska` (hud.js)
+and `.vaska-icon`/`.lg-vaska` (style.css), hooks in main.js (built after the toasters, `bags.update` after
+`toasters.update`; `target()` last in the target chains of updateMarkers and mapMarkers, `objective()` last in
+updateHud's card; `collect` pays the set's `pay`; mapMarkers skips a `held` collectible; the idle mission's
+giver can be talked to with a suitcase on his head). A fourth collectible set whose last act is a delivery:
+six strangers' suitcases lie about inland, Stig carries them on his head to the lost-and-found counter at
+Gando and for once gets a finder's fee himself. In the film it is Stig's own suitcase that never comes ("Min
+väska har inte kommit."), goes round the world ("Den här väskan ska till Las Palmas", research-plot.md:238)
+and comes back on Christmas Eve with a man from the airport who reads "Hammarby…?" off it: "Hittelön." /
+"Tack så mycket." (research-plot.md:362; the game has the man take Stig's 25 pta, §8.12). By the pool
+Angerud tips Stig: "För om man hittar något, så kan man få hittelön. Tänk på det." (research-plot.md:326), a
+veiled hint at stealing; here Stig takes it literally. The bags, their spots, the carry and the pay are ours
+(§1.6).
+
+- **The bags** (`kind: 'hittevaska'`, `motion: 'none'`, `beam`, `pickup: 'carry'`, `idle`, `pay` 0, `jingle`
+  `chime`, `bonus` 1000, label `Borttappade väskor` [N], marker `vaska`, icon `vaska-icon`): Stig's suitcase
+  model without his Hammarby sticker (`lostBag`: 0.8 × 0.56 × 0.26 m standing on y = 0, darker straps,
+  chrome corners, the handle and a luggage tag on a string; the geometry shared per colour) in each item's
+  `color`, with a cream label on both faces naming where it was going (`tag`: `LAS PALMAS`, one `AKUREYRI`
+  [N]; a place name only, never an airline, §1.5). Built by `buildCollectibles` (the item is handed to the
+  kind's `build(id, item)`; `Collectible` names its beam `beam`), standing on its landmark's `y` and facing
+  its `yaw` (the label):
+  - `vaska_hangar` (6,1) (18, −14.6), y 0.19: before HANGAR 2's door, behind the dream plane; blue
+  - `vaska_bygge` (5,1) (−24.2, 23.3): by the site hut's OBRA sign; grey
+  - `vaska_packhus` (3,0) (8.6, 5.1), y 1.1: on the packing shed's dock before the east bay, clear of the
+    shift's belt (x ≤ 3.2, §10.49); red
+  - `vaska_tomater` (0,1) (14.4, 8): in a furrow of the field east of the vischan track; cream, AKUREYRI
+  - `vaska_grisfest` (2,0) (−22, −10.5): before the farmhouse, between its doors; green
+  - `vaska_golf` (4,0) (−18.6, −22.4): on the 18th green beside the flag; pink
+
+  Ole's gadgets already have the dream plane's wing (`pryl_kamera`) and the bygge's top deck
+  (`pryl_klocka`), so the bags stand by the hangar and the hut. The ground spots stand at y 0.19, over the
+  blocks' ground flats. No mission's giver or route stops within reach of one.
+- **When**: on the island with `missions.state === 'idle'` (`live`). Otherwise every bag is hidden (none
+  has a body or a collider at any time) and one carried, tumbling or dropped is back on its spot (`reset`,
+  `home`), so no mission, stage, timer, fixture or calibration pool sees them; the minimap shows them only
+  while idle (`idle`), within 45 m.
+- **The lift**: on foot and free (no dialogue or cut, no car, `carrying` empty, `state 'normal'`, not
+  frozen or flailing, not on the rollerskis, the baggage belt, a hitch truck or in the pool fest), walking
+  within `pickR` 1.3 m of a bag (and `pickDy` 1.6 m up or down: the dock's bag from the yard) lifts it:
+  `game.carrying = { item: 'vaska', bag }` (no `who`, so a car still takes him; every other free-roam E
+  spot waits for empty hands), `speedCap` the walk (5.4 m/s; no sprint), `carryOver`, the pickup sound, its
+  beam off and its marker gone. Stig says, the first time in a session with none handed in, Angerud's tip:
+  "Om man hittar något, så kan man få hittelön…" [F*] (`pickFirst`), otherwise the bag's `say` [N]: "Den
+  här har flugit utan sin ägare." / "Full med cement, känns det som." / "Den ska inte på export. Den ska
+  till hittegods." / "AKUREYRI? Då har den kommit lite fel." / "Den har varit på grisfest, den också." /
+  "Det är i alla fall ingen golfbag.".
+- **Carried**: over his head between his raised hands, lying on its back (the label up), its length across
+  his shoulders, the handle behind him (`place`: 0.28 m forward, the head's top + 0.14). The card (`title`
+  "Hittelön" [F*], `text` "Bär väskan till hittegods på Gando" [N]), the beacon (r `r` 1.6), the guide
+  arrow and the minimap star point at `hittegodsLamna`. In a car (a golf cart too) the bag rides along
+  hidden and his arms are down; on foot it is back on his head. A fall (`flung`, `down`: a car, a kick, a
+  fast exit) drops it at his feet: it tumbles to the floor there in `tumbleSecs` 0.45 s (from his head,
+  turning upright, the thud) and lies where it fell, its beam and marker with it, to be lifted again; so
+  does another carry taking `carrying` over (Robban's ask lifting Berra onto him, §10.6). R on
+  foot spills it where he stood the frame before ("a reset spills a carry", §14.3); R in a car keeps it in
+  the car. The idle mission's giver can be talked to with a bag on his head: the mission's start puts it
+  back on its spot.
+- **The counter** (Gando's lost and found, coast.js; the clerk `hittegods` at his post (−14, 6)):
+  `hittegodsLamna` (−14, 8.35, π) on the hall side of the counter (its top at z 7.0–7.7, 1.23 m up), before
+  the clerk and facing him. With a bag on his head, on foot, and the clerk free (`honk.free`) within
+  `clerkR` 2.5 m of his post: "E Lämna in väskan" [N] within `r` 1.6 m (interactable `hittelon:lamna`,
+  priority 0; the G17 toaster on the counter, 3.4 m off, waits for empty hands). E puts the bag on the
+  counter (`hittegodsDisk` (−14, 7.3, 0, y 1.23), between the bell and the ledger, its label to the hall),
+  stands Stig on the spot, cuts to `hittegodsCam` (−11.9, 10.0, yaw −2.5; `cam` dist 2.8, height 2.5: from
+  the hall across the counter, Stig from behind at three-quarters, the bag and the clerk) with the
+  letterbox, and plays `lines`:
+  - hittegods: "Hammarby…?" [F*] (julafton's, at every bag; he scratches his head, `scratch` 1.6 s)
+  - stig: "Nej, inte min." [N]
+  - hittegods: "Hittelön." [F*](t), `pays`: + `pay` 100 pta (`coins`), the coin and the toast "Hittelön:
+    +100 pta" [N]
+  - stig: "Tack så mycket." [F*](t)
+
+  The julafton morning's two lines with the money going the other way. Then `game.collect('vaskor', bag)`:
+  the bag gone, the chime and a sparkle, the card `Borttappade väskor n/6`, the save (the set's `pay` is 0:
+  the clerk paid). 6/6: the set's `bonus` 1000 pta and 2.4 s later Angerud on the radio: "Sex väskor, och du
+  lämnade in allihop? Det var inte riktigt så jag menade." [N].
+- **Saved** in the set (`collected.vaskor`, §10.5); a load removes the handed-in ones. A bag carried or
+  dropped is not saved (it is back on its spot). `bags.last` ({ kind: 'lift' | 'drop' | 'home' | 'hand', id,
+  … }) and `bags.handed` are for tests.
+- Nothing in a mission, stage, timer, fixture or calibration pool changed (no collider added). Scenarios
+  `hittelon`, `hittelonshots` (§16.4).
+
 ## 11. HUD / UI strings (Swedish; `src/strings.js` owned by WP-H, created by Phase 0)
 
 `strings.js` exports `S` (flat object) and `fmt(key, vars)`. Engine code uses `S.key` only.
@@ -8401,6 +8513,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/diveTower.js` | new (feature 24, 2026-10-16) | — | `DiveTower` (`game.tower`): Från fjärde våningen in free roam: the tower's solids live between missions, the ladder's two E points and fades, the dive off the platform (the mantra, the poses), the cannonball and the belly flop into the water, Lasse's line (§10.20) |
 | `src/game/dogs.js` | new (feature 31, 2026-10-17) | — | `Dogs` (`game.dogs`): Fin hund… in free roam: the watchdogs' lots (`Lot`), looks and dogs (`Dog`), their rush, bay, call and calm, Stig's hands, lines and thanks (§10.21) |
 | `src/game/toasters.js` | new (feature 33, 2026-10-17) | — | `Toasters` (`game.toasters`): Kontrollerad av G17 in free roam: the seven toasters' interactables, the timing game and its card, the pop and its three results, the sister's line, the reset at a mission start (§10.24) |
+| `src/game/lostBags.js` | new (feature 116, 2026-10-18) | — | `LostBags` (`game.bags`): Hittelön in free roam: each suitcase's home noted, shown and hidden with `live`, the lift (the carry, the walk speed, Stig's line), the bag over his head and hidden in a car, the drop on a fall and an R (the tumble), the counter's interactable, the exchange (the bag on the counter, the cut, the lines, the pay) and `collect`, the reset at a mission start (§10.52) |
 | `src/game/room107.js` | new (feature 38, 2026-10-17) | — | `Room107` (`game.room107`): Rum 107 fylls med resans minnen in free roam: the shelf's, the giraffe's and the boombox's interactables, Stig's lines and Ole's count on the radio, the giraffe held and put back, the reset (§10.25); feature 67: the boombox both ways and its locked answer, the wardrobe's "Byt kläder", the change and its shot (§10.36) |
 | `src/game/gangTalk.js` | new (feature 39, 2026-10-17) | — | `GangTalk` (`game.chat`): Prata med gänget in free roam: who can be talked to and which exchange is next, the chain of bubbles with Stig's answers and their poses, the stop, the hush after it (§10.28) |
 | `src/game/solkram.js` | new (feature 35, 2026-10-17) | — | `Solkram` (`game.solkram`): Smörj in Majsans rygg in free roam: Majsan's interactable, the scene (the ask, her back turned, the meter's card and the held E, the result's shots, cards and bubbles), the bottle and the cream, the record and `sjuPoang`, the reset (§10.26) |
@@ -8456,7 +8569,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/actors/models.js` | edit | **E** | `CHARS`, `CAST`, new def fields, anim flags, `buildBustGeo`, `outfitDef`, `randomPed` palette; the `ticket` flag and its `lappblock`/`penna` props (feature 20, §10.17); the `leap` and `bomb` poses (feature 24, §10.20); the `placate` pose (feature 31, §10.21); the `lie` pose, the `stekt` outfits and `STEKT_SKIN` (feature 32, §10.22); the `rub` pose (feature 35, §10.26); the `camShow` pose and `cupHeld` raised standing with `cupUp` (feature 47, §10.32); the `lie` pose's `roll`, `turn` and given arms (feature 57, §10.33); the `eyesShut` lids (feature 52, §10.35); the `tap` pose (feature 59, §10.37); the `scratch` pose (feature 60, §7.2); the `point` pose and `cupHeld: 'low'` (feature 76, §10.41); a held broom's bristles stop at his soles (feature 77, §10.42); the bartender `camarero` (feature 84, §10.44); the `fish` pose with `fishK`, the prop `metspo` and the exported `fishingRod`, `ROD_LEN` (feature 107, §10.45); the `thumb` and `ride` poses with `rideLean`, and a seated `ride` standing (feature 106, §10.47); the `kikare` pose, the prop `kikare` and the exported `binoculars` (feature 108, §10.48); the `sort` pose with `sortK` (feature 109, §10.49); the `foto` pose and the props `fotokamera`, `fotorem` (feature 110, §10.51) |
 | `src/actors/character.js` | edit | **E** | `setDef`, `hidden`, `seatAt`, `standAt`, new anim flag defaults (`placate`: feature 31; `rub`: feature 35; `camShow`: feature 47; `eyesShut`: feature 52; `tap`: feature 59; `scratch`: feature 60; `point`: feature 76; `fish`: feature 107; `thumb`, `ride`: feature 106; `kikare`: feature 108; `sort`: feature 109; `foto`: feature 110); the state `lying`, `lieAt`, `fling`'s `flip` (feature 32, §10.22) |
 | `src/actors/car.js` | edit | **E** | §6.6 types/flags, `registerCarType`, `build`/`noWheels`/`noSpeedo`/`noExplode`/`livery`; the grisbil's pig meshes `PIG_SLOTS`, `pigMesh`, `car.pigs`, `setPig`, `pigWorld` (feature 15, §10.15); `car.lift`, the nose raised on the tow truck's hook (feature 20, §10.17); a prop is known by its block's `ref`, `game.breakProp` may refuse, `def.slow` (feature 28, §10.19); the flight's `airT`, `airFrom` and `game.onCarAirEnd` (feature 40, §10.27) |
-| `src/actors/pickups.js` | edit | **E** | `COLLECT_KINDS`, `registerCollectKind`, `Collectible` table, `Rabbit` meshes, coin value 25; the `brodrost` kind, `TOASTER`, `setToaster`, `Collectible.mark` and the `yaw` option (feature 33, §10.24); `PRYL_IDS` exported (feature 38, §10.25); `placeCoin`'s `tag` and `minY` (feature 92, §10.46) |
+| `src/actors/pickups.js` | edit | **E** | `COLLECT_KINDS`, `registerCollectKind`, `Collectible` table, `Rabbit` meshes, coin value 25; the `brodrost` kind, `TOASTER`, `setToaster`, `Collectible.mark` and the `yaw` option (feature 33, §10.24); `PRYL_IDS` exported (feature 38, §10.25); `placeCoin`'s `tag` and `minY` (feature 92, §10.46); the `hittevaska` kind (`lostBag`, `LOST_BAG`), the `item` option handed to `build(id, item)`, the beam named `beam` (feature 116, §10.52) |
 | `src/actors/peds.js` | edit | **E** | Swedish/Spanish shouts; `dodge`, `startle` (feature 5, §6.7) |
 | `src/actors/drivers.js` | Phase 2 edit | none | (accepts duck-typed paths); an AI bus's lane path starts its turns 11 m from the junction centre instead of 8.5 (left-turn radius 13.75 m > the bus's ≈ 12 m minimum), so the excursion bus no longer swings into the grisfest farm wall; right turns stay too tight for buses (mission bus routes turn left only); traffic holds short of a closed race junction (`game.closure`, §9.2 race); feature 51: a `traffic` car gives way to the borrowed jeep's siren (`game.sirenYield`, `yieldK`: slows and keeps to the right, §10.34) |
 | `index.html`, `style.css` | edit | **H** | §11, §13.4; the beach dream's `body.dream`, `#dream`, `#dreamwash` (feature 57, §10.33); `body.siren` shows `#sirenlights` (feature 51, §10.34); the choice menu `#menu` (feature 80, §10.43); the coffee box `#kaffe` and its cup icon (feature 84, §10.44); the FÅNGST card `#fangst` (feature 107, §10.45); the binoculars' overlay `#kikare` (feature 108, §10.48); the tourist couple's viewfinder `#kort` (feature 110, §10.51) |
@@ -8510,7 +8623,7 @@ carts, last: feature 74) → traffic (20)
 → peds (34) → NPC `Character`s (one per `CHARS` key except `stig`, the radio-only keys `levander
 kapten pa guardia pax telefonist` and the cabin-owned `vardinna2`; `key` field; hidden until placed, §2.3) →
 player `Character(CHARS.stig)` (`key = 'stig'`) → collectibles (`COLLECTIBLES`) → markers → `Shame`
-→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `DiveTower` (feature 24, §10.20; registers the ladder's two interactables, sets `DIVE_TOWER.live`) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `Eslov` (feature 7, §10.12; registers the rollerskier's interactable) → `PoolFest` (feature 8, §10.13) → `StigSorry` (feature 11, §10.14) → `PigTruck` (feature 15, §10.15) → `BaggageBelt` (feature 25, §10.16) → `Lapplisa` (feature 20, §10.17) → `GrisfestFree` (feature 21, §10.18; registers the gate's and the tourists' interactables) → `FruitStands` (feature 28, §10.19) → `Dogs` (feature 31, §10.21) → `Bathers` (feature 32, §10.22; registers the wake's interactable) → `SuntripShop` (feature 34, §10.23; registers the four wares' and the bag's interactables, sets `SUNTRIP_SHOP.live`) → `Toasters` (feature 33, §10.24; registers the seven toasters' interactables) → `Room107` (feature 38, §10.25; registers room 107's three interactables) → `Solkram` (feature 35, §10.26; registers Majsan's interactable) → `Stunts` (feature 40, §10.27) → `GangTalk` (feature 39, §10.28) → `RoofJump` (feature 41, §10.29; registers the three stair doors, sets `ROOF_JUMP.live`, places the roof coins) → `Mic` (feature 44, §10.30; registers the mic's interactable) → `Birds` (feature 43, §10.31; builds the four kinds' instanced meshes and puts every bird on its spot) → `Gags` (feature 47, §10.32; registers the two gags' interactables) → `BeachDream` (feature 57, §10.33; builds the towel and the foam, registers the towel's interactable) → `GuardiaJeep` (feature 51, §10.34) → `Lighthouse` (feature 52, §10.35; registers the two doors' interactables) → `ReceptionBell` (feature 59, §10.37; builds the bell, the card and the three suitcases with their solids, registers the bell's interactable) → `StreetRace` (feature 69, §10.38; registers José's and the chalkboard's interactables) → `GolfCarts` (feature 74, §10.40) → `BoatTrip` (feature 76, §10.41; builds the fin, registers the kiosk's interactable) → `Residents` (feature 77, §10.42) → `PhoneBooth` (feature 80, §10.43; registers booth 2's interactable) → `PoolBar` (feature 84, §10.44; registers the counter's and Fru Storch's interactables) → `Fishing` (feature 107, §10.45; builds the rod, its holder, the bucket, the float, the line and the four catches, registers the spot's interactable) → `MarketRoofs` (feature 92, §10.46; places the market's coin trail) → `Hitch` (feature 106, §10.47; registers the two spots' interactables) → `Binoculars` (feature 108, §10.48; builds the pair on the railing, registers the platform's interactable) → `Packhus` (feature 109, §10.49; builds the foreman, hidden, registers his interactable; the belt, its bins and the workers wait for the first shift) → `Volley` (feature 111, §10.50; builds the ball, its shadow and the landing ring, registers the ball's interactable) → `TouristPhoto` (feature 110, §10.51; registers the couple's interactable; the couple is made at its first show) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
+→ `MissionRunner` → `BerraJob` (feature 2, §10.6) → `Glide` (feature 3, §10.7) → `PoolJudges` (feature 4, §10.8) → `DiveTower` (feature 24, §10.20; registers the ladder's two interactables, sets `DIVE_TOWER.live`) → `Honk` (feature 5, §10.9) → `DayClock` (feature 30, §10.10; registers the bed's interactable) → `StorchFilm` (feature 6, §10.11; registers Herr Storch's interactable, reads its stills) → `Eslov` (feature 7, §10.12; registers the rollerskier's interactable) → `PoolFest` (feature 8, §10.13) → `StigSorry` (feature 11, §10.14) → `PigTruck` (feature 15, §10.15) → `BaggageBelt` (feature 25, §10.16) → `Lapplisa` (feature 20, §10.17) → `GrisfestFree` (feature 21, §10.18; registers the gate's and the tourists' interactables) → `FruitStands` (feature 28, §10.19) → `Dogs` (feature 31, §10.21) → `Bathers` (feature 32, §10.22; registers the wake's interactable) → `SuntripShop` (feature 34, §10.23; registers the four wares' and the bag's interactables, sets `SUNTRIP_SHOP.live`) → `Toasters` (feature 33, §10.24; registers the seven toasters' interactables) → `LostBags` (feature 116, §10.52; notes each suitcase's home, registers the counter's interactable) → `Room107` (feature 38, §10.25; registers room 107's three interactables) → `Solkram` (feature 35, §10.26; registers Majsan's interactable) → `Stunts` (feature 40, §10.27) → `GangTalk` (feature 39, §10.28) → `RoofJump` (feature 41, §10.29; registers the three stair doors, sets `ROOF_JUMP.live`, places the roof coins) → `Mic` (feature 44, §10.30; registers the mic's interactable) → `Birds` (feature 43, §10.31; builds the four kinds' instanced meshes and puts every bird on its spot) → `Gags` (feature 47, §10.32; registers the two gags' interactables) → `BeachDream` (feature 57, §10.33; builds the towel and the foam, registers the towel's interactable) → `GuardiaJeep` (feature 51, §10.34) → `Lighthouse` (feature 52, §10.35; registers the two doors' interactables) → `ReceptionBell` (feature 59, §10.37; builds the bell, the card and the three suitcases with their solids, registers the bell's interactable) → `StreetRace` (feature 69, §10.38; registers José's and the chalkboard's interactables) → `GolfCarts` (feature 74, §10.40) → `BoatTrip` (feature 76, §10.41; builds the fin, registers the kiosk's interactable) → `Residents` (feature 77, §10.42) → `PhoneBooth` (feature 80, §10.43; registers booth 2's interactable) → `PoolBar` (feature 84, §10.44; registers the counter's and Fru Storch's interactables) → `Fishing` (feature 107, §10.45; builds the rod, its holder, the bucket, the float, the line and the four catches, registers the spot's interactable) → `MarketRoofs` (feature 92, §10.46; places the market's coin trail) → `Hitch` (feature 106, §10.47; registers the two spots' interactables) → `Binoculars` (feature 108, §10.48; builds the pair on the railing, registers the platform's interactable) → `Packhus` (feature 109, §10.49; builds the foreman, hidden, registers his interactable; the belt, its bins and the workers wait for the first shift) → `Volley` (feature 111, §10.50; builds the ball, its shadow and the landing ring, registers the ball's interactable) → `TouristPhoto` (feature 110, §10.51; registers the couple's interactable; the couple is made at its first show) → `CamRig` → `load()` → `setLevel(levelFor(index), {instant:true})` →
 `placeNpcs(true)` → spawn the player → portraits for every key in `CAST` (`renderPortrait`
 restores each model's parent and transform, so seated cast members stay in their seats) →
 `applySaveToWorld()` →
@@ -8523,7 +8636,7 @@ tourist couple's viewfinder the frozen branch takes Stig's walk from `kort.wish(
 traffic/peds skipped when `!levelDef.sim.*`) → `syncAll` (also
 writes `ch.x/y/z` from `car.seatWorld(ch.seatSide)` for every car-seated character, player
 included, so framing, bubbles and distance checks see where they really are) → `missions.update` →
-`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `tower.update` (feature 24) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `skis.update` (feature 71) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `stands.update` (feature 28) → `dogs.update` (feature 31) → `bathers.update` (feature 32) → `shop.update` (feature 34) → `toasters.update` (feature 33) → `room107.update` (feature 38) → `solkram.update` (feature 35) → `stunts.update` (feature 40) → `chat.update` (feature 39) → `roofs.update` (feature 41) → `mic.update` (feature 44) → `birds.update` (feature 43) → `dream.update` (feature 57) → `jeep.update` (feature 51) → `fyren.update` (feature 52) → `bell.update` (feature 59) → `gatlopp.update` (feature 69) → `golf.update` (feature 74) → `battur.update` (feature 76) → `residents.update` (feature 77) → `hytt.update` (feature 80) → `bar.update` (feature 84) → `fiske.update` (feature 107) → `awnings.update` (feature 92) → `hitch.update` (feature 106) → `kikare.update` (feature 108) → `packhus.update` (feature 109) → `volley.update` (feature 111) → `kort.update` (feature 110) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
+`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `tower.update` (feature 24) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `skis.update` (feature 71) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `stands.update` (feature 28) → `dogs.update` (feature 31) → `bathers.update` (feature 32) → `shop.update` (feature 34) → `toasters.update` (feature 33) → `bags.update` (feature 116) → `room107.update` (feature 38) → `solkram.update` (feature 35) → `stunts.update` (feature 40) → `chat.update` (feature 39) → `roofs.update` (feature 41) → `mic.update` (feature 44) → `birds.update` (feature 43) → `dream.update` (feature 57) → `jeep.update` (feature 51) → `fyren.update` (feature 52) → `bell.update` (feature 59) → `gatlopp.update` (feature 69) → `golf.update` (feature 74) → `battur.update` (feature 76) → `residents.update` (feature 77) → `hytt.update` (feature 80) → `bar.update` (feature 84) → `fiske.update` (feature 107) → `awnings.update` (feature 92) → `hitch.update` (feature 106) → `kikare.update` (feature 108) → `packhus.update` (feature 109) → `volley.update` (feature 111) → `kort.update` (feature 110) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
 pickups/collectibles → props → `fx.tick` → `tickTown` → markers → camera → sun/sky → HUD → audio →
 traffic recycling (island) → autosave. `loop` then renders, and when `film.grabNow` is set calls
 `film.grab()` in the same task (Herr Storch's still from the frame's buffer, feature 6, §10.11), and when
@@ -8538,12 +8651,13 @@ game.level; game.levelDef; game.timeScale;            // §4.4
 game.cabin;                                           // cabin object (§14.7)
 game.player;  game.npcs[key];  game.cars;  game.named[name];
 game.coins;                                           // pesetas
-game.collected = { prylar: Set, fenor: Set, brodrostar: Set };  game.unlocked: Set;   // one Set per COLLECTIBLES set
+game.collected = { prylar: Set, fenor: Set, brodrostar: Set, vaskor: Set };  game.unlocked: Set;   // one Set per COLLECTIBLES set
 game.holding;      // bool: Space held in flight (set in fixedStep)
 game.mantraOn;     // bool: mantra currently held (after wind-up)
 game.mantraMode;   // bool: island J = mantra (mantra stage)
 game.carrying;     // null | { item } | { who } (the free-roam Berra job's { who: 'berra', job }, §10.6;
-                   // a pig over his head { who: 'gris', job: 'pigs' }, §10.15)
+                   // a pig over his head { who: 'gris', job: 'pigs' }, §10.15; a lost suitcase on his
+                   // head { item: 'vaska', bag }, §10.52: the idle giver can still be talked to)
 game.stomping;     // bool: a stomp is on its way down (onLand slams); the glide clears it (§10.7)
 game.glide;        // Glide (feature 3, §10.7): the free-roam glide after julafton
 game.judges;       // PoolJudges (feature 4, §10.8): the sisters judge his dives at Flamenco's pool
@@ -8587,6 +8701,9 @@ game.dogs;         // Dogs (feature 31, §10.21): the watchdogs in free roam; do
 game.toasters;     // Toasters (feature 33, §10.24): the G17 toasters' timing game; toasters.live, active
                    // ({ c, mk, secs, zone, tickT } | null), canUse(c), press(c), judge(), cancel(),
                    // reset(), objective() (updateHud), restT, last, tries, cfg (BRODROST)
+game.bags;         // LostBags (feature 116, §10.52): the lost suitcases carried to Gando; bags.live, bag,
+                   // holding, busy, list, free(), canHand(), clerkHere(), lift(b), drop(x, y, z), home(b),
+                   // reset(), handOver(), target(), objective(), update(dt), last, handed, cfg (HITTELON)
 game.room107;      // Room107 (feature 38, §10.25): room 107's shelf, giraffe and boombox; room107.live,
                    // canUse(), shelf(), giraffe(), hold(on), radio(), reset(), holdT, restT, last,
                    // world (= hotels.js ROOM107), cfg (RUM107); feature 67 (§10.36): the wardrobe,
@@ -9195,8 +9312,8 @@ export function registerCarType(key, spec)            // used by cabin.js for 't
 
 **pickups.js**
 ```js
-export const COLLECT_KINDS = { pryl, fena, brodrost, flaska, juice, knacke, asna, vaska, giraff };
-//   each { build(id) -> Object3D, motion: 'spin' | 'circle' | 'bob' | 'roll' | 'none', beam?: bool, scale?,
+export const COLLECT_KINDS = { pryl, fena, brodrost, flaska, juice, knacke, asna, vaska, hittevaska, giraff };
+//   each { build(id, item?) -> Object3D (item: its set's item, `opts.item`; hittevaska: lostBag(item), feature 116), motion: 'spin' | 'circle' | 'bob' | 'roll' | 'none', beam?: bool, scale?,
 //   mark?(mesh) (a kept one dressed once collected) }
 //   pryl.build(id) picks the gadget by prylar id (the watch as fallback); PRYL_IDS: the gadgets' ids in
 //   order (room 107's shelf, feature 38, §10.25)
@@ -9763,6 +9880,12 @@ shame.chase(car) (feature 60): a Land Rover's chase AI with the catch-up band (s
 //   saveData(); loadData(s); last
 // main.js: setPlayerOutfit builds outfitDef(stig, name) through shop.dress (none before the shop
 //   exists); save() writes shop.saveData() as `shop`, load() reads it (§10.5)
+// lostBags.js (feature 116, §10.52): game.bags = new LostBags(game) after the toasters (registers
+//   `hittelon:lamna` at the counter); update(dt) after toasters.update (the bags shown or hidden with
+//   live, not live: reset(); the tumbles; carried: on his head or hidden in a car, a drop on a fall or
+//   an R; free: the lift); main.js asks target() last in updateMarkers' and mapMarkers' chains and
+//   objective() last in updateHud's; collect pays the set's `pay`; mapMarkers skips a `held` one;
+//   nearestInteractable lets the idle giver talk with `carrying.bag`
 // collision.js: waterAt(x, z, y) -> the `water` block he stands in at that height, or null
 //   (feature 4; moved from glide.js)
 
@@ -10378,6 +10501,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `hund` [feature 31] | Fin hund… (§10.21), at index 13: 12 bungalow dogs (the 7 trampoline lots among them) and Chispa at the farm, 13 names, each lying in its own lot, the ones beyond 75 m hidden; at the dog with the most others within 70 m, 2 or more awake at ≥ 45 fps; on Bobi's sidewalk `alert` inside the wall (lot-local z 1.3–3) and "VOFF! VOFF!"; through the gate (W 1.1 s) `bay` 1.1–1.8 m off, `placate` 1, "Fin hund… fin hund…"; walked at, it stands its ground (> 0.6 m); out through the gate again it never comes nearer the street than z 1.3, barks after him (`back`) and his hands come down; on the trampoline behind the house it gets round the house to under him (< 3.6 m), rears up, `placate` 2 with the mantra: Stig's first line "Snälla hund… sitt!", then the mantra, the owner's "¡Bobi! Hit!" from a door, "Tack… tack så mycket!", `calm` > 30 s, his hands down and no rush when he walks in again; up the farm tank's ramp (W 1.4 s) he is up at 1.95 and Chispa bays below him (< 5 m, on the ground), "¡Guau! ¡Guau!", the mantra pose, then "¡Chispa! ¡Ven aquí!"; on the roof of the car in Tango's drive he is up and Tango at him; Kasper with `groundCall` 4 s: a kick and a stomp at him change nothing (SKANDAL not up), then the call; at index 9 Pirre at him, `missions.begin()`: no dog visible, `placate` 0, `held` false; at index 0 (the flight level) no dog visible. Shots `hund_trottoar`, `_fin`, `_studsmatta`, `_visslar`, `_gard`, `_biltak`, `_kasper`, `_pudel` |
 | `butik`, `butikbil` [feature 34] | Bränsletillägg tillkommer – SunTrip-butiken (§10.23). `butik`, at index 6 (free roam, hawaii): the counter's group shown, its two solids live (the counter a wall), the clerk behind it, the greeting; E at the hat with 30 pta "Det räcker inte ens till bränsletillägget.", with 60 the total 225 and nothing paid; with the purse the hat on the Trapp Trull account (75 paid, 2 instalments, the receipt's 7 lines one by one, its text, the sell line, Stig's sigh after the total, the hat with `hatSun` on him, headTop up, the bag shown); "Paketet!" walking 8 m off, once a departure, again after coming back; E at the bag; no call once taken; the glasses 275, the shirt 350, the nose guard 50 (its receipt, "Nässkydd – det får du också gratis.", "Gratis… plus bränsletillägg."); the full look (`worn` `hatt glas skjorta nasa`, shades, no glasses, dots, the nose guard, no suit); E takes the glasses off (his own back, free) and on; the instalments held back while short, then 2 of 3 and 3 of 3 (75 each, the account paid); Ole's line within 7 m; the save's `shop` and a reload (not fresh): all of it on him, Ole silent; a mission start (friskotek): group, bag and clerk gone, solids dead, his own hawaii look; an abort: back; `rio` takes no layer, the island outfit takes it again. `butikbil`, at index 9 with the full look: seated in hatch, sedan, taxi, wagon, pickup, grisbil, van, icecream, guardia and bus, the head with the hat under `roofY` and its x extent within the body's half width, a shot of each from the driver's side; on foot again with the look |
 | `brodrost`, `rostar` [feature 33] | Kontrollerad av G17 (§10.24). `brodrost`, at index 9 (free roam): the seven toasters in `IDS` order; none on the minimap from the golf, the pool bar's one there (one marker) with pale bread up and no label; its prompt from the front; E starts a try (the first at `secs`): the card (title, bar, zone, marker), "Upp med brödet!", bread and lever down; E early: pale, "Blekt. Underkänd.", the toast, nothing collected; left alone: burnt at the end, Stig flailing with his line, the toast, and Majsan's or Siv's "Bara de inte är ingenjörer." from the pool deck; E (a real key) in the field: `ok`, +250, `G17-brödrostar 1/7`, Stig's cheer and line, the label on and golden bread, no prompt or marker there; the porter's: the sweep × 0.92, a try off 4 m away; a mission start: the try off, none usable, no markers; at index 8 the pool bar's prompt at its front over Berra's talk (3.6 m); all seven: 7 × 250 + 1000 and Majsan on the radio, the legend 7/7; the save (v 1, the set's seven ids) and a reload with all seven labelled; a v 1 save without the set loads with none; the flight level inert. `rostar`, at index 13: each toaster on its landmark (top and yaw), its prompt from 0.9 m in front, shots coming up (3 m) and close beside it, asnan's cut to the FERRETERÍA front, the pool bar's in its three looks |
+| `hittelon`, `hittelonshots` [feature 116] | Hittelön – de borttappade väskorna (§10.52). `hittelon`, at index 9 (free roam): the six suitcases on their landmarks with their beams, a minimap marker within 45 m only, no prompt at the counter without one; walking into the golf one (a real key press): Angerud's tip in Stig's mouth, `carrying` { item, bag } with no `who`, `carryOver`, the walk speed even sprinting (Shift + W), the card and the target at `hittegodsLamna`, the objective star, no beam or marker; a car: hidden, arms down, back on his head on foot; a fling: dropped near where he fell (beam, marker), lifted again with its own line; R: left where he stood; at the counter the prompt (none with the clerk hidden), E: the bag on `hittegodsDisk`, the four lines in order, +100 pta only at "Hittelön.", the toast, the card 1/6, gone, his hands free, saved (v 1); a mission start with the hangar bag on his head (the giver talked to): home, all hidden, no markers or target, no pickup in the mission; a reload keeps the golf bag handed in, the other five handed in: 5 × 100 + 1000, Angerud on the radio, the legend 6/6; a v 1 save without the set: all six out; the flight level: hidden, inert. `hittelonshots`: every bag from before its label and from 14 m, one on his head from behind, the side and the front, walking and in a car, the counter's prompt and every line of the exchange, after |
 | `rum107`, `troferum` [feature 38] | Rum 107 fylls med resans minnen (§10.25). `rum107`, at index 9 (free roam): the room bare on a fresh save (7 gadget, 7 fin and 3 julafton meshes built, none shown); E at the shelf with nothing found: "Inget att kontrollera.", he faces it, the card `Oles prylar 0/7 · Hajfenor 0/7`, Ole's "Hylla er tom…"; four gadgets and three fins collected (`collect`) show at once, each gadget in its own place 0.5 m apart standing on the shelf's 2.75; no prompt for `gap` s, then "Kontrollerad av G17.", 4/7 · 3/7 and "Fire av sju! Snart er hylla full."; before the unlocks the nap answers at the giraffe's spot and the boombox plays no samba (feature 67: "Bergsprängaren"); all seven: the samba unlock, "Spela samba" sets and saves the samba with Ole's "Ja, det er fint! Samba!", "Stäng av sambaen" while it plays (feature 67), "Spela samba" back with the sol tune; after `unlock('bodega')` the suitcase, the giraffe and the pack; E at the giraffe: held, the bed's hidden, "Precis en sån…", the prompt "Ställ tillbaka giraffen", back after `holdSecs`, at once 3 m off and with E; the nap beside his bed; a full shelf's "Alle sju! Nå er hylla full."; a reload dresses the room; at index 12 a mission start leaves none usable and the giraffe back; the flight level inert. `troferum`, at index 13: the room from the patio (`rum107Cam` at 5.5 and 7.5 m, buss17's and julafton's cuts) bare, mid-trip and after julafton, close shots of the shelf, the pile and the beds, Stig at the shelf, Stig with the giraffe, and the nap with the giraffe by his head |
 | `solkram` [feature 35] | Smörj in Majsans rygg (§10.26). At index 10 (fataga waiting, Majsan its giver at the pool) the talk and no SOLKRÄM; at index 11 beside Majsan "Smörj in ryggen", none at 22:00 or with Siv 5 m off her spot; E: the film's pair in a dialogue (and the marker `solkramFilm`), then her back turned (yaw π/2), Stig 0.97 m behind her facing her with `rub` 1 and his hands 0–0.2 m over her shoulder pivots and 0.03–0.2 m behind her middle, both sisters `busy`, the bottle, no prompt, the card (SOLKRÄM, `Håll E · släpp i det gröna`, `Majsans rygg`, the field `w0` wide with its middle in `at`, the marker) with no letterbox; E held (a real key) 0.6 s: the fill at 1/`secs` a second (0.6–1.3 ×), `rub` 2, `Håll… håll…`; let go in the stripe: 7, a record, Siv's `7` card, `SOLKRÄM 7 P` / `NYTT REKORD!`, `records.solkram` 7 in the save, then her three lines in order and at the end the camera, the sisters and the pose back, no bottle, `sjuPoang` (Siv's chatter, the toast, both markers saved); again: one of `again`, the field × `shrink`, 6 with "Sex, tycker jag." and the record kept (`REKORD 7 P`); the field's edge: 5 and "Giraffen, då? Fem."; short of it: early, no card, `FÖR LITE!`, "Var det allt?"; held to the end: over at 1, Siv's `–1` and laugh, Stig flailing 1.42 m behind her, the cream running, the shot from behind, three drops at 1.1 s, back to the front shot for Siv, the lines, the flail and the cream gone; no hold: "Jaha. Då får jag väl göra det själv."; six tries; a mission start with Siv's card up: the card down and the intro's cinematic kept; a reload: the record 7, `sjuPoang`, Siv's chatter and no film pair again; at index 13 after `unlock('bodega')` at 15:00 the pool fest's ring has Majsan (none), at 08:00 she is home and it is there; the flight level inert. Shots `solkram_0_prompt`, `_1_ready`, `_1b_hold`, `_2_sju`, `_3_after`, `_4_over`, `_5_minus` |
 | `skjortbyte`, `garderob` [feature 36] | Skjortbytet (§7.2). `skjortbyte`, at index 6 (free roam, the shirt): on foot with both Land Rovers chasing for 9 s, no `onRam` (their wall hits are no rams on him, `main.onCarImpact`); no hideout prompt at the wardrobe without a pursuit (feature 67's "Byt kläder" there, `klader`); in one (the officer 40 m off on the pool deck): `Byt till kostymen`, the `friend` marker, the shirt taunt among the `taunts`; E: frozen 2.5 s, the wardrobe open with the suit, "De letar ju efter skjortan…", he faces it, no second prompt; then the suit, `islandOutfit` hawaii, no pursuit, no fine, the cooldown, the shirt on the hanger, the banner, the doors shut; the officer walks onto the patio (within 1 m of the spot), "¿Dónde está el de la camisa?", the scene (cinematic and cut), "Buenas tardes.", the scene over as he walks on, no back prompt meanwhile, out of sight, Ole's "Du kan ikke gå sånn her nede! …", one line only; the save keeps hawaii; a pursuit in the suit: no hideout, no back, no shirt taunt, no marker; back: `Byt till hawaiiskjortan`, the shirt on the hanger, "Är den inte lite skrikig?", the shirt, Ole's "sterke farger"; the cooldown (the porter's untouched); the officer on the walk 6 m off: busted in the wardrobe, fined, still in the shirt, the doors shut; under the dotted shirt (bought, `shop.refresh`): no hideout, no shirt taunt, and without it again; the officer 20.6 m off on the pool deck (placed and E in one frame): he makes it, and the officer comes on from where he was; a mission start while he walks off: the shirt back on, the officer gone, neither prompt; index 5 (the suit): no prompt, no shirt taunt; the flight level: no wardrobe. `garderob`: shots of the wardrobe shut from the patio and with Stig at it, open with the suit (from the room and the patio), the change done, the officer looking, "Buenas tardes." in the scene, the officer walking off with Ole's radio, back to the shirt |
@@ -10478,6 +10602,8 @@ fatagaDukar golf bungalow bygge dromplan airport hittegods busBay bagageband dyn
 + SunTrip-butiken's counter front `butik` (feature 34, §10.23)
 + the G17 toasters `brodrost_ferreteria brodrost_poolbar brodrost_marknad brodrost_portier
 brodrost_supermercado brodrost_grillpaco brodrost_hittegods` (feature 33, §10.24)
++ the lost suitcases and their counter `vaska_hangar vaska_bygge vaska_packhus vaska_tomater vaska_grisfest
+vaska_golf hittegodsLamna hittegodsDisk hittegodsCam` (feature 116, §10.52)
 + room 107's E spots `rum107Hylla rum107Giraff rum107Radio` (feature 38, §10.25)
 + room 107's wardrobe `rum107Garderob` (feature 36, §7.2; feature 67's "Byt kläder" too, §10.36)
 + the hotel roofs' stairs and view `takSolLobby takSolTopp takAtlTopp takAtlLobby takUtsikt` (feature 41,
@@ -10509,9 +10635,10 @@ races between missions, feature 69, §10.38).
 kon bagagevagn automat gaspump butano julgran tallrikar resvaska glasskylt frutas` (`frutas`:
 feature 28).
 
-**Collect kinds**: `pryl fena brodrost flaska juice knacke asna vaska giraff` (`brodrost`: feature 33).
-**Rabbit meshes**: `badboll faar blomma gris`. **Collectible sets**: `prylar fenor brodrostar`
-(`brodrostar`: feature 33). **Unlocks**: `grisbil samba bodega glid sjuPoang` (`sjuPoang`: feature 35,
+**Collect kinds**: `pryl fena brodrost flaska juice knacke asna vaska hittevaska giraff` (`brodrost`: feature 33;
+`hittevaska`: feature 116).
+**Rabbit meshes**: `badboll faar blomma gris`. **Collectible sets**: `prylar fenor brodrostar vaskor`
+(`brodrostar`: feature 33; `vaskor`: feature 116). **Unlocks**: `grisbil samba bodega glid sjuPoang` (`sjuPoang`: feature 35,
 §10.26) (+ the saved markers `glidPlask`, feature 3, §10.3, `lappFilm` `lappRuta`, feature 20,
 §10.17, and `solkramFilm`, feature 35, §10.26).
 
@@ -12833,3 +12960,22 @@ the fixer's group.
   knock, a warp, a pursuit or a mission start ends a view at once; in a mission the couple is hidden (no
   body, no collider). Nothing in a mission, stage, timer, fixture or calibration pool changed. Scenarios
   `kort`, `kortshots` (§16.4).
+- Feature 116, "Hittelön – de borttappade väskorna" (`features/implemented/hittelon_pa_hittegods.md`,
+  2026-10-18): six strangers' suitcases inland as a fourth collectible set whose last act is a delivery
+  (§10.52; new `src/game/lostBags.js` (`game.bags`), `HITTELON` and `COLLECTIBLES.vaskor` in
+  content/island.js, the kind `hittevaska` in pickups.js (an item handed to `build(id, item)`, the beam
+  named), the landmarks `vaska_*`, `hittegodsLamna`, `hittegodsDisk`, `hittegodsCam`, the minimap marker
+  `vaska` and `.vaska-icon`; main.js (constructor, update, `collect`'s set `pay`, mapMarkers' `held`, the
+  target and objective chains, the giver talk with `carrying.bag`); §1.6, §3, §4.3, §6.3, §10.1, §10.5,
+  §14.1–14.3, §14.6, §16.4, Appendix A). By HANGAR 2 behind the dream plane, the bygge's site hut, the
+  packing shed's dock, a vischan tomato furrow, the grisfest farmhouse and the golf's 18th green stand
+  suitcases with LAS PALMAS (one AKUREYRI) labels and beams. Between missions, on foot, walking into one
+  lifts it onto Stig's head (walk speed, the card "Hittelön" and the beacon at the lost-and-found counter
+  at Gando; a car takes it along hidden; a fall drops it at his feet, R where he stood): the first time with
+  Angerud's tip in his mouth, "Om man hittar något, så kan man få hittelön…" [F*], later the bag's own
+  line [N]. At the counter "E Lämna in väskan": the bag on the counter, a cut, and the julafton morning's
+  exchange turned round: "Hammarby…?" [F*], "Nej, inte min." [N], "Hittelön." [F*](t) with +100 pta and
+  the toast, "Tack så mycket." [F*](t); the card n/6 and the save. 6/6: the set's 1000 and Angerud on the
+  radio, "Sex väskor, och du lämnade in allihop? Det var inte riktigt så jag menade." [N]. In a mission the
+  bags are hidden and a carried one is back on its spot, so no mission, stage, timer, fixture or calibration
+  pool changed. Scenarios `hittelon`, `hittelonshots` (§16.4).

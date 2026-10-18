@@ -249,6 +249,21 @@ export const ISLAND_LANDMARKS = {
   brodrost_supermercado: { b: [4, 2], at: [-24.15, 13.0], yaw: 0, y: 0.6 },       // SUPERMERCADO's east fruit crate
   brodrost_grillpaco: { b: [2, 3], at: [15.0, 19.0], yaw: PI / 2, y: 0.945 },     // a café table on Casa Lola's terrace
   brodrost_hittegods: { b: [6, 0], at: [-17.4, 7.35], yaw: 0, y: 1.23 },          // the lost-and-found counter
+  // Hittelön (free roam, §10.52): the six lost suitcases (COLLECTIBLES.vaskor), on the ground (y just
+  // over the blocks' ground flats) or the packing shed's dock; `yaw` the side their label faces. And at
+  // Gando the E spot on the hall side of the lost-and-found counter, before the clerk and facing him,
+  // and the counter's top between the bell and the ledger, where a handed-in bag is put down; the
+  // exchange's cut anchor (a cut stands `dist` m behind it, looking the way it faces): in the hall
+  // before the booth's east half, looking across the counter at Stig, the bag and the clerk.
+  vaska_hangar: { b: [6, 1], at: [18, -14.6], yaw: 0.3, y: 0.19 },                  // before HANGAR 2's door, behind the dream plane
+  vaska_bygge: { b: [5, 1], at: [-24.2, 23.3], yaw: 0.15, y: 0.19 },                // by the site hut's OBRA sign
+  vaska_packhus: { b: [3, 0], at: [8.6, 5.1], yaw: 0.25, y: 1.1 },                  // on the dock before the east loading bay
+  vaska_tomater: { b: [0, 1], at: [14.4, 8], yaw: -PI / 2, y: 0.19 },               // in a furrow of the field east of the track
+  vaska_grisfest: { b: [2, 0], at: [-22, -10.5], yaw: 0, y: 0.19 },                 // before the farmhouse, between its doors
+  vaska_golf: { b: [4, 0], at: [-18.6, -22.4], yaw: 0.8, y: 0.19 },                 // on the 18th green, beside the flag
+  hittegodsLamna: { b: [6, 0], at: [-14, 8.35], yaw: PI },
+  hittegodsDisk: { b: [6, 0], at: [-14, 7.3], yaw: 0, y: 1.23 },
+  hittegodsCam: { b: [6, 0], at: [-11.9, 10.0], yaw: -2.5 },
 };
 
 export const blockCentre = (i, j) => ({ x: -HALF + P / 2 + P * i, z: -HALF + P / 2 + P * j });

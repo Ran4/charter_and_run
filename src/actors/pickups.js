@@ -325,6 +325,8 @@ export const COLLECT_KINDS = {
     g.cyl(0xf7c31b, 0.1, -0.12, 0.136, 0.07, 0.01, 12, Math.PI / 2);
     g.box(0xd8321e, -0.08, -0.14, 0.135, 0.14, 0.09, 0.01, 0, 0, 0.2);
   }) },
+  // A stranger's lost suitcase (COLLECTIBLES.vaskor, feature 116, §10.52): built per item (`lostBag`).
+  hittevaska: { motion: 'none', beam: true, build: (id, it) => lostBag(it) },
   // The plastic giraffe (Majsan's present).
   giraff: { motion: 'spin', beam: true, build: () => shared('giraff', (g) => {
     const Y = 0xf2c12e, Br = 0x9a5a22;
@@ -346,15 +348,41 @@ export const COLLECT_KINDS = {
 };
 export function registerCollectKind(kind, def) { COLLECT_KINDS[kind] = def; }
 
+// A stranger's lost suitcase (feature 116, §10.52): Stig's `vaska` without his Hammarby sticker, in
+// the item's `color` with darker straps, standing on y = 0, a paper label on both faces with its `tag`
+// (where it was going: a place name only, §1.5) and a luggage tag on a string from the handle. Its
+// geometry is shared per colour; the labels per text. Lifted onto Stig's head it lies on its back.
+export const LOST_BAG = { w: 0.8, h: 0.56, d: 0.26 };
+function lostBag(it = {}) {
+  const col = it.color ?? 0x2f5a8a, dark = new THREE.Color(col).multiplyScalar(0.55).getHex();
+  const { w, h, d } = LOST_BAG, y = h / 2;
+  const m = shared('hittevaska_' + col.toString(16), (g) => {
+    g.box(col, 0, y, 0, w, h, d);
+    for (const x of [-0.25, 0.25]) g.box(dark, x, y, 0, 0.06, h + 0.01, d + 0.01);
+    g.box(0x3a2a1e, 0, h + 0.04, 0, 0.26, 0.06, 0.06);
+    for (const x of [-0.14, 0.14]) g.box(0x3a2a1e, x, h + 0.02, 0, 0.04, 0.06, 0.06);
+    for (const x of [-0.36, 0.36]) for (const cy of [0.03, h - 0.03]) g.box(CHROME, x, cy, 0, 0.06, 0.06, d + 0.02);
+    g.box(INK, 0.08, h + 0.0, 0.035, 0.008, 0.1, 0.008);                // the tag's string, the tag
+    g.box(0xf4efe0, 0.08, h - 0.08, 0.04, 0.07, 0.1, 0.008, 0, 0, 0.12);
+  }, 0.025);
+  for (const side of [1, -1]) {
+    const l = label(it.tag || 'LAS PALMAS', 0.4, 0.16, { bg: '#fbf6ec', fg: '#1b2f6b', border: '#d8321e', ppm: 900, scale: 0.8 });
+    l.position.set(0, y, side * (d / 2 + 0.006));
+    l.rotation.set(0, side > 0 ? 0 : Math.PI, side * 0.06);
+    m.add(l);
+  }
+  return m;
+}
+
 export class Collectible {
-  // opts: { motion, beam, scale, yaw (a standing one's facing) }
+  // opts: { motion, beam, scale, yaw (a standing one's facing), item (its set's item, for a kind built per item) }
   constructor(scene, kind, id, x, y, z, opts = {}) {
     this.kind = kind; this.id = id; this.x = x; this.y = y; this.z = z;
     this.alive = true;
     this.marked = false;
     const def = COLLECT_KINDS[kind];
     this.motion = opts.motion ?? def?.motion ?? 'spin';
-    this.mesh = def ? def.build(id) : geoMesh((g) => g.box(0xffd23f, 0, 0, 0, 0.6, 0.6, 0.6));
+    this.mesh = def ? def.build(id, opts.item) : geoMesh((g) => g.box(0xffd23f, 0, 0, 0, 0.6, 0.6, 0.6));
     const sc = opts.scale ?? def?.scale;
     if (sc) this.mesh.scale.setScalar(sc);
     this.mesh.position.set(x, y, z);
@@ -362,6 +390,7 @@ export class Collectible {
     if (opts.beam ?? def?.beam) {
       const beam = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 6, 10, 1, true), new THREE.MeshBasicMaterial({ color: 0xffe7b8, transparent: true, opacity: 0.2, depthWrite: false }));
       beam.position.y = 3;
+      beam.name = 'beam';
       this.mesh.add(beam);
     }
     this.scene = scene;

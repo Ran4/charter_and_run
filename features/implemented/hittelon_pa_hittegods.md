@@ -1,18 +1,51 @@
 # 116. Hittelön – de borttappade väskorna
 
+**Implementerat.** En fjärde samlarserie, `vaskor` i `COLLECTIBLES` (src/content/island.js), med en egen
+modul `src/game/lostBags.js` (`game.bags`) och konfigurationen `HITTELON`; DESIGN §10.52. Sex främmande
+resväskor (modellen `hittevaska` i src/actors/pickups.js: Stigs väska utan Hammarby-dekalen, en färg per
+väska och en LAS PALMAS-lapp på båda sidor, en med AKUREYRI) står med ljuspelare vid HANGAR 2 bakom
+drömplanet, vid byggets bod, på packhusets lastkaj, i en fåra i tomatfältet på vischan, framför
+grisfestgårdens hus och på golfbanans artonde green (landmärkena `vaska_*` i
+src/world/landmarks-island.js). Mellan uppdragen lyfter Stig en väska över huvudet när han går fram till
+den (`game.carrying` = `{ item: 'vaska', bag }`, gångfart, armarna `carryOver`), första gången med
+Angeruds tips i munnen: ”Om man hittar något, så kan man få hittelön…”, sedan med väskans egen replik.
+Kortet ”Hittelön – Bär väskan till hittegods på Gando”, ljuspelaren och pilen pekar på disken. Han kan ta
+en bil, och väskan åker då med osynlig. Ramlar han faller väskan ner vid hans fötter, och R lämnar den där
+han stod. Vid disken ger E (”Lämna in väskan”, bara när killen står på sin plats) en klippbild från hallen
+med väskan på disken och repliksväxlingen ”Hammarby…?” (killen kliar sig i huvudet), ”Nej, inte min.”,
+”Hittelön.” (+100 pta och toasten ”Hittelön: +100 pta”) och ”Tack så mycket.”. Sedan kommer kortet
+”Borttappade väskor n/6” och sparningen. Alla sex ger seriens bonus på 1000 pta och Angerud i radion: ”Sex
+väskor, och du lämnade in allihop? Det var inte riktigt så jag menade.” I ett uppdrag och i flygnivån är
+väskorna dolda, och en buren väska går tillbaka till sin plats, så inget uppdrag, ingen timer och ingen
+kalibrering påverkas.
+
+Avvikelser från idén: väskan bärs över huvudet mellan de lyfta händerna (liggande, med lappen uppåt) i
+stället för rakt på huvudet. Bonusen är 1000 pta som för de andra serierna. Fallet, R och en annan bärning
+som tar över (Berra) tappar väskan, vilket idén inte nämner. Varje väska har en egen upplockningsreplik
+[N]. Ingen `first`-radio. Uppdragsgivaren går att prata med medan Stig bär en väska, och då går väskan
+tillbaka när uppdraget börjar. `collect()` betalar nu seriens `pay` (standard 250, väskorna 0 eftersom
+killen betalar i repliken), och ett objekt skickas till sin modells `build(id, item)`.
+
+Verifierat headless (port 8862): det nya scenariot `hittelon` (lyftet med riktig tangent, gångfart med
+Shift, bilen, fallet, R, en annan bärning, disken med och utan killen, replikerna i ordning, +100 pta bara
+på ”Hittelön.”, kortet 1/6, sparningen, uppdragsstart med väska, 6/6 med bonus och Angerud, omladdning,
+gammal sparfil utan serien, flygnivån) och `hittelonshots` (alla platser, bärandet, disken; bilderna
+granskade) ger `RESULT: PASS`, liksom `story`, `fullstory`, `api`, `start`, `brodrost`, `rum107`,
+`grisar`, `berra`, `kinds`, `foot` och `ui`.
+
 **Betyg:** 4,3/10 · wow 2 · film 3,7 · Stig-Helmer 3,3 — *Väskor på huvudet och en omvänd ”Hittelön.” är snällt, men det är en vanlig samlarrunda med ett nytt bärläge.*
 
 *Stig hittar andras borttappade resväskor runt om i inlandet, bär dem på huvudet till hittegodsdisken på Gando och får för en gångs skull själv hittelön.*
 
 **Kategori:** Samlarserie · **Var:** hittegodsdisken på flygplatsen i Gando (226, −234); sex väskor i inlandet: vid HANGAR 2 bakom drömplanet, vid bygget, på packhusets lastkaj, i tomatraderna på vischan, på grisfestens gård och på golfbanan · **Insats:** M – ett nytt bära-och-lämna-läge för samlarsaker och en E-prompt vid disken, cirka sex filer plus DESIGN
 
-![Stig vid hittegodsdisken i dag](free_roam_bilder/hittelon-pa-hittegods-1.jpg)
+![Stig vid hittegodsdisken i dag](../free_roam_bilder/hittelon-pa-hittegods-1.jpg)
 *Bild 1 (nuläge): Stig står vid disken under OBJETOS PERDIDOS · HITTEGODS. Killen bakom disken skyms av Stig, men hans ”Hammarby…?” syns i pratbubblan. Titta på hyllväggen full av väskor. Allt detta finns redan, men E gör ingenting här i dag.*
 
-![Skiss: hittelön utbetald vid disken](free_roam_bilder/hittelon-pa-hittegods-2.jpg)
+![Skiss: hittelön utbetald vid disken](../free_roam_bilder/hittelon-pa-hittegods-2.jpg)
 *Bild 2 (SKISS – tillfälligt uppställd i en headless-körning, finns inte i spelet): En blå väska med en LAS PALMAS-lapp står på disken. Killen säger ”Hittelön.”, Stig svarar ”Tack så mycket!”, rutan uppe till höger visar ”Hittelön: +100 pta” och kassan har gått från 0 till 100 PTA. Det är samma replikväxling som på julaftonsmorgonen, fast pengarna går åt andra hållet.*
 
-![Skiss: en borttappad väska på packhusets lastkaj](free_roam_bilder/hittelon-pa-hittegods-3.jpg)
+![Skiss: en borttappad väska på packhusets lastkaj](../free_roam_bilder/hittelon-pa-hittegods-3.jpg)
 *Bild 3 (SKISS – tillfälligt uppställd i en headless-körning, finns inte i spelet): Packhuset under TOMATES · EXPORTACIÓN. En röd väska med LAS PALMAS-lapp ligger på lastkajen i en ljuspelare, likadan som spelets andra samlarsaker har. Stig står nedanför och tänker högt: ”Om man hittar något, så kan man få hittelön…”.*
 
 **Idén.** Sex främmande resväskor har hamnat på fel ställen i inlandet. Man ser dem på minikartan och på ljuspelaren, precis som Oles prylar och hajfenorna. När Stig går fram till en väska lyfter han upp den över huvudet och bär den. Han kan också ta bilen, för packhuset ligger drygt 200 m från Gando, och då åker väskan med. Vid hittegodsdisken får han E-prompten ”Lämna in väskan”. Killen läser på lappen och frågar ”Hammarby…?”, Stig svarar ”Nej, inte min.”, och sedan betalar killen: ”Hittelön.” – ”Tack så mycket.” Det blir 100 pta per väska. När alla sex är inlämnade får han en extrabonus, på samma sätt som för de andra samlarserierna.

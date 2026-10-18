@@ -75,7 +75,13 @@ opens with a summary of the rounds and the timer changes.
     Trull account's instalments, "Paketet!", his bought look as a layer in free roam only, saved; the
     look seated in every car, DESIGN §10.23), `brodrost rostar`
     (Kontrollerad av G17, the seven toasters' timing game, the label, 7/7 and the save; the seven
-    spots and their looks, DESIGN §10.24), `rum107 troferum` (Rum 107 fylls med resans minnen, the
+    spots and their looks, DESIGN §10.24), `hittelon hittelonshots` (Hittelön, the six lost suitcases
+    inland between missions: walking into one lifts it onto Stig's head with Angerud's tip in his mouth,
+    walk speed, the card and the beacon at the lost-and-found counter at Gando, hidden in a car, dropped
+    by a fall, left by R; "E Lämna in väskan" at the counter, the bag on it, "Hammarby…?", "Nej, inte
+    min.", +100 pta at "Hittelön.", "Tack så mycket."; a mission start sends it home and hides them all;
+    6/6 with the set's 1000 and Angerud on the radio, the save; the spots, the carry and the counter as
+    seen, DESIGN §10.52), `rum107 troferum` (Rum 107 fylls med resans minnen, the
     keepsake shelf and Ole's count, the giraffe, the boombox's samba and the save; the room from the
     patio and the nap, DESIGN §10.25), `solkram` (Smörj in Majsans rygg, the SOLKRÄM meter at
     Flamenco's pool after fataga: the film's pair once, the held E, 7/6/5, early, the cream running from
