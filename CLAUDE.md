@@ -228,7 +228,13 @@ opens with a summary of the rounds and the timer changes.
     until heard through (`records.guagua`), the later rides' lines, W/S's stop, E off at once, the fade and
     the arrival with the bus, "¡Hasta luego, señor!"; Q, walking off ("¡Vámonos!"), a car on the stop,
     held up short of it, no prompt in a car, a pursuit or a mission, a warp and a mission start mid-ride;
-    every stop's start out of view, its door by the bench and its ride, DESIGN §10.53)
+    every stop's start out of view, its door by the bench and its ride, DESIGN §10.53), `traktor traktorshots`
+    (Traktorn med släpkärran, the farmer's tractor by the tomato fields' tool hut between missions: "E Låna
+    traktorn", 18 km/h, the farmer out of the hut's door running after it and never nearer than 3.2 m behind
+    its tail, his shouts and Stig's answers, his give-up and walk home, Stig out near him and "¡Mi tractor!
+    ¡Por fin!"; the furrows' jolts and "Jag har lite anlag för åksjuka.", tomatoes off at a knock, the
+    honking queue on the road and Stig's sorry, the fetch home unseen, a wreck, the mission lock and home
+    at a mission start; the shots, DESIGN §10.54)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

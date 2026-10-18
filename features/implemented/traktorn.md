@@ -1,15 +1,52 @@
 # 121. Traktorn med släpkärran
 
+**Implementerat.** (2026-10-18, DESIGN §10.54) Bondens lilla röda traktor med ett fast släp fullt av
+tomatlådor står på fältvägen framför redskapsboden i kvarter (1,0), vid (−159,8, −256) med nosen söderut.
+Den är en namngiven parkerad bil av en ny leksakstyp, `traktor` (car.js: egen modell med stora
+klackade bakhjul på gula fälgar, avgasrör framför föraren, högt sittande pannsäte och ett släp på
+dragstång; nya spec-fält `wheels`, `seat`/`car.seatAt`, `open`, `height`, `wb`, `diesel`). Mellan
+uppdragen ger **E** "Låna traktorn" och Stig säger "Jag lånar den bara en liten stund!". Traktorn går
+i 18 km/h med ett dovt dieselputter och puffar rök ur röret. Knappt en sekund senare kommer bonden (en
+egen figur i halmhatt, inte grisbonden) ut genom bodens dörr och springer efter med "¡Mi tractor!
+¡Señor!" och tre rop till. Han kommer aldrig närmare än 3,2 m bakom släpet, och Stig svarar artigt två
+gånger. Efter 20 s (eller 50 m från dörren, 26 m efter, eller om han blir påkörd) ger han upp med
+knytnäven i luften och "¡Ay… suecos!" och går in igen. Kliver Stig av nära honom kommer han fram: "¡Mi
+tractor! ¡Por fin!", och Stig svarar "Tack för lånet!". Varje tomatrad som en axel kör över ger ett
+skumpande ryck med löv som yr (raderna listas i `TOMATO_ROWS` i nature.js), och efter fyra ryck på tre
+sekunder säger Stig "Jag har lite anlag för åksjuka." [F*](t) eller en av två [N]-repliker. En hård
+smäll kastar tomater av släpet. Trafik som hålls upp bakom traktorn tutar, och Stig svarar "Förlåt! Den
+går inte fortare.". En traktor som lämnats någonstans, eller kvaddats, har bonden hämtat hem när ingen
+ser. Under ett uppdrag finns ingen prompt, och E ger "Traktorn går bara i 18 km/h – ta en riktig bil.";
+vid uppdragsstart går den hem. Koden ligger i `src/game/traktor.js` (`game.traktor`), konfigurationen
+`TRAKTORN` i content/island.js, och krokarna i main.js, golfCart.js och audio.js.
+
+*Avvikelser:* Traktorn står vid (0,2, −16) lokalt i stället för (3,5, −20). Där körde den rakt in i
+tomatlådan vid (2,6, −8), som en traktor inte orkar slå sönder (lådan kräver 5 m/s, mer än traktorns
+toppfart). Släpet är fast. Inga lådor trillar av, bara tomatskräp vid en smäll. Bonden kör aldrig
+själv: en kvarlämnad traktor hämtas hem osedd. Tutkön kräver `queueUp` i traktor.js, eftersom
+drivers.js egen tuta aldrig gick igång bakom traktorn (bilen glider in och ut ur sin framförhållning i
+samma fart). Berra och Robban åker inte med på släpet. Traktorn är en leksak som aldrig blir ett
+uppdrags bil (den bindande free-roam-regeln, som golfbilarna), så den kan inte väljas till den tidsatta
+vischan-körningen. Den har ändå passagerarsäte (en uppochnervänd låda på släpet) och flak. Ingen
+`calibrate`-körning gjordes för jeepen: världen där jeepjakten spelas är oförändrad, och ledgern
+noterar det (notes/calibration-samples.md, "Feature 121"). Ingen timer ändrades.
+
+*Verifierat* headless: det nya scenariot `traktor` (repliker och källtaggar, plats, prompt, säte,
+bondens ut-gång och jakt med minsta avstånd, 18 km/h, raderna och åksjukan, spillet, stillastående,
+återlämningen, hämtningen, uppgivandet efter 20 s, tutkön på vägen, uppdragslåset, vraket) och
+`traktorshots` (bilder tittade på), samt `story`, `fullstory`, `golfbil`, `cars`, `castsheet`, `lifta`,
+`guagua` och `kinds`, alla `RESULT: PASS`.
+
 **Betyg:** 4/10 · wow 3,3 · film 1,7 · Stig-Helmer 3,3 — *En traktor med en tutande kö och en bonde som springer efter är billig fordonskomik, men filmkopplingen är en flyttad replik och bilspecen ny.*
 
 *Vid redskapsboden på tomatfälten står en liten röd traktor med tomatlådor på släpet. Stig lånar den och tuffar i väg i 18 km/h, medan bonden springer efter och ropar.*
 
 **Kategori:** Fordon · **Var:** tomatfälten, kvarter (1,0), parkerad bredvid redskapsboden vid ungefär (−156,5, −260) · **Insats:** M – en ny bilspec med egen modell och ett fast släp, plus en ny liten bondefigur som springer efter. Släpet med gångjärn är en L för sig och hör inte till första versionen.
 
-![Tomatfälten i kvarter (1,0) ovanifrån, utan fordon](free_roam_bilder/traktorn-1.jpg)
+![Tomatfälten i kvarter (1,0) ovanifrån, utan fordon](../free_roam_bilder/traktorn-1.jpg)
 *Bild 1 (nuläge): Kvarter (1,0) sett från söder. Fältvägen går rakt upp till redskapsboden med tegeltak, och vattentanken står bredvid palmen. Lådorna och raderna finns där, men det finns inte ett fordon och inte en människa på fälten. Det enda som rör sig är trafiken på vägarna runtom.*
 
-![Skiss: Stig på en röd traktor med lådor på släpet](free_roam_bilder/traktorn-2.jpg)
+![Skiss: Stig på en röd traktor med lådor på släpet](../free_roam_bilder/traktorn-2.jpg)
 *Bild 2 (SKISS – tillfälligt uppställd i en headless-körning, finns inte i spelet): Stig sitter högt uppe på en röd traktor utan märke, med stora bakhjul och ett avgasrör framför sig, och på släpet står tomatlådor. Ovanför honom står ”Jag lånar den bara en liten stund!”. I skissen står bonden med halmhatt kvar uppe vid släpet och ropar ”¡Mi tractor! ¡Señor!”. I spelet ska han i stället springa efter till fots. Båda replikerna är nyskrivna [N].*
 
 **Idén.** Traktorn står parkerad vid boden, utanför vägarna och genvägen genom kvarteret. Spelaren tar den med E, och då kommer en bonde ut ur boden och springer efter med ”¡Mi tractor! ¡Señor!” utan att någonsin hinna ikapp, medan Stig artigt försäkrar att han bara ska låna den en liten stund. Traktorn är plågsamt långsam, hög och skumpig: på stadsvägarna samlas snart en kö av tutande bilar bakom den (AI-bilarna tutar redan när spelaren blockerar dem i 1,2 s, drivers.js:235), och vid varje guppig fåra muttrar Stig om sin åksjuka.

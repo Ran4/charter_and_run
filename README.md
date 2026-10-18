@@ -44,7 +44,7 @@ Samma tangenter i båda nivåerna; nivån bestämmer vad de gör.
 | Shift | spring | | skynda – men det ökar rädslan |
 | Space | hoppa, i luften igen för dubbelhopp | handbroms (sladd!) | **håll i dig**: ta tag i närmaste stolsrygg vid turbulens |
 | J / klick | sparka, i luften: stampa (efter julafton: **håll in i luften** för att glidflyga) | | **håll in**: "Jag kan flyga, jag är inte rädd" – sänker FLYGRÄDSLA |
-| E | prata (med uppdragsgivaren, och mellan uppdragen med gänget), kliv in, sno en bil, kvarta en stund i Stigs säng i rum 107, titta i herr Storchs kamera, heja på rullskidåkaren, dansa med i poolen, smörja in Majsans rygg (**håll in** och släpp i det gröna), byta om i garderoben i rum 107, söka skydd i kyrkan, ringa efter en bil från hytt 2, meta från piren (och **dra upp** när flötet dyker), lifta på landsvägen (på flaket: hoppa av), ta livräddarens kikare (och sänka den igen), ta ett skift vid packhusets sorteringsband, spela strandvolley (och ta revansch), ta ett kort åt ett turistpar (och ge tillbaka kameran), vänta på guaguan vid en hållplats och kliva på (i bussen: kliva av vid vald hållplats) | kliv ur (i fart: rulla ur) | prata, **sätt dig / res dig**, lås in dig på toaletten, anropsknappen, serveringsvagnen |
+| E | prata (med uppdragsgivaren, och mellan uppdragen med gänget), kliv in, sno en bil, kvarta en stund i Stigs säng i rum 107, titta i herr Storchs kamera, heja på rullskidåkaren, dansa med i poolen, smörja in Majsans rygg (**håll in** och släpp i det gröna), byta om i garderoben i rum 107, söka skydd i kyrkan, ringa efter en bil från hytt 2, meta från piren (och **dra upp** när flötet dyker), lifta på landsvägen (på flaket: hoppa av), ta livräddarens kikare (och sänka den igen), ta ett skift vid packhusets sorteringsband, spela strandvolley (och ta revansch), ta ett kort åt ett turistpar (och ge tillbaka kameran), vänta på guaguan vid en hållplats och kliva på (i bussen: kliva av vid vald hållplats), låna bondens traktor vid tomatfälten | kliv ur (i fart: rulla ur) | prata, **sätt dig / res dig**, lås in dig på toaletten, anropsknappen, serveringsvagnen |
 | H | | tuta (utanför uppdragen hör folk den; i den lånade Guardia-jeepen: sirenen) | |
 | B | | titta bakåt | |
 | M / Tab | stor karta | stor karta | plan över gaten/kabinen |
@@ -372,6 +372,16 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   hållplatsen med bussen bredvid sig: "¡Hasta luego, señor!" **E** kliver av där direkt. Trafikens
   guaguor går fortfarande att sno ("Ta bilen"), men den här är inte till salu. Guaguan går bara mellan
   uppdragen.
+- **Traktorn med släpkärran**: vid redskapsboden på tomatfälten (kvarteret norr om stan, väster om
+  grisfesten) står bondens lilla röda traktor med tomatlådor på släpet. Tryck **E** ("Låna traktorn"):
+  "Jag lånar den bara en liten stund!" Ur boden kommer bonden i halmhatt och springer efter med "¡Mi
+  tractor! ¡Señor!", men i 18 km/h hinner han ändå aldrig ikapp, och Stig ropar artigt tillbaka att
+  han ska ställa tillbaka den sen. Efter en stund ger bonden upp ("¡Ay… suecos!") och går in igen.
+  Kliver Stig av medan bonden är nära kommer han fram och tar tillbaka sin traktor: "¡Mi tractor! ¡Por
+  fin!" – "Tack för lånet!". Över tomatraderna skumpar traktorn rejält, löven yr och Stig muttrar "Jag
+  har lite anlag för åksjuka."; ute på vägarna samlas en kö av tutande bilar bakom den ("Förlåt! Den går
+  inte fortare."). En traktor som lämnats någonstans har bonden hämtat hem när ingen ser. Traktorn går
+  bara att låna mellan uppdragen: "Traktorn går bara i 18 km/h – ta en riktig bil."
 - **Små grodorna i poolen** (efter slutet): julfesten är inte riktigt över. Varje gång du kommer in
   på Flamencos pooldäck (mellan nio på morgonen och elva på kvällen) vadar SunTrip-gänget ut i den
   grunda änden och ställer sig i ring runt Lasse i tomteluva. Affe spelar Små grodorna på dragspelet,
@@ -643,6 +653,9 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
 - guaguan från hållplatserna, åkturen bredvid chauffören, hans repliker, biljetten och hållplatsernas
   namn (i filmen hörs fotbollssnacket "Las Palmas! … bra fotbollslag… Högsta divisionen!" / "Hammarby är
   också ett bra lag." / "Bajen… Hammarby… Bajen…" på transferbussen, och vem som säger vad är vår tolkning)
+- traktorn med släpkärran vid tomatfälten, bonden som springer efter, tutkön och skumpet över fårorna (i
+  filmen finns ingen traktor, och "Jag har lite anlag för åksjuka." sägs på bussen; att det är Stig-Helmer
+  som säger det är vår tolkning)
 - poolfesten efter slutet: ringen runt Lasse, portierns promenad, att Stig hoppar med och
   takträknaren (i filmen dansar de andra Små grodorna i poolen på julfesten medan Stig-Helmer och Ole
   öppnar knäckebrödet, och Stig-Helmer dansar aldrig)
@@ -859,6 +872,7 @@ src/game/packhus.js             Stig på löpande band in free roam: the packing
 src/game/volley.js              Strandvolley in free roam: the court's live ball, the match against Berra and Robban, Stig's kick and header, Ole's set, the thirst, the board
 src/game/touristPhoto.js        "Kan du ta ett kort på oss?" in free roam: the tourist couples at the lighthouse, the dunes and LA MEDINA, their camera's viewfinder (the scope, on end), the reading, the snap, the tips
 src/game/guagua.js              Guaguan in free roam: the 13 PARADA GUAGUA stops, the wait, the green guagua that stops at the bench, the seat beside the driver, the film's football talk, the stop chosen with W/S, the fade off there
+src/game/traktor.js             Traktorn med släpkärran in free roam: the farmer's tractor at the tomato fields (a toy: never a mission's), the farmer running after it, the furrows' jolts and the åksjuka, the honking queue, the fetch home
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
@@ -869,7 +883,7 @@ tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, 
                                 stunthopp, prata, takhopp, mikrofon, faglar, gags, strandkyssen,
                                 guardiajeep, fyren, klader, ringklocka, kyrkfrid, gatlopp, skidor,
                                 golfbil, battur, balkong, hytt, kaffe, meta, marknadstak, lifta,
-                                kikare, packhus, volley, kort, guagua, calibrate, calibflight)
+                                kikare, packhus, volley, kort, guagua, traktor, calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
 tools/pool.mjs                  re-derives every random stage's timer from the ledger
@@ -920,6 +934,7 @@ node tools/shot.mjs packhus packhusbalans   # the packing shed's belt: the forem
 node tools/shot.mjs volley volleyfree volleyshots   # beach volleyball: the prompt, the fade and the marks, a serve, a match played out by an autopilot, the rematch, Q, a mission start; the ball in free roam
 node tools/shot.mjs kort kortshots       # the tourist couples: the ask, the viewfinder, on end at the compass rose, the snap and the tip, the dunes and LA MEDINA, a miss, a speck, the locks; every view
 node tools/shot.mjs guagua guaguaKant guaguaLinje  # the guagua: the wait, the stop, the step in and the fare, the football talk, W/S, the fade off; Q, walking off, a car on the stop, held up, the locks, a mission start; every stop
+node tools/shot.mjs traktor traktorshots # the tractor: E, 18 km/h, the farmer's chase and give-up, the rows' jolts and the åksjuka, the honking queue, the fetch home, the mission lock; the shots
 node tools/shot.mjs grodorna grodtakt    # the pool fest after the end: the ring, the porter, Stig in the ring, eight on the beat
 node tools/shot.mjs artig                # Stig says sorry: kicks, run over, a pump, bins, carjackings and the driver's "Nej."
 node tools/shot.mjs grisar               # the grisbil's pigs: the falls, the catch on foot and by creeping, Lasse, the pen

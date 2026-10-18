@@ -341,7 +341,7 @@ export const getInCar = (o = {}) => common(o, {
     // A wrecked mission car cannot come back: fail (a retry starts over), never a soft lock.
     if (o.missionCar && this.car?.dead && g.playerCar !== this.car) return { fail: this.owner ? fmt('wreckedRide', { name: this.owner }) : S.wrecked };
     const pc = g.playerCar;
-    if (!pc || pc.spec.toy) return;   // never a golf cart (a toy: main.enterCar refuses it in a mission, §10.40)
+    if (!pc || pc.spec.toy) return;   // never a toy (a golf cart, §10.40; the tractor, §10.54: main.enterCar refuses it in a mission)
     if (o.any === false && this.car && pc !== this.car) return;
     if (o.passenger) { const n = g.npc(o.passenger); if (n && n.car !== pc) seatIn(g, o.passenger, pc, -1); }
     return 'done';

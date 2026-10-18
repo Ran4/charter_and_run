@@ -54,6 +54,7 @@ import { Gags } from './game/gags.js';
 import { BeachDream } from './game/beachDream.js';
 import { GuardiaJeep } from './game/guardiaJeep.js';
 import { GolfCarts } from './game/golfCart.js';
+import { Traktor } from './game/traktor.js';
 import { BoatTrip } from './game/boatTrip.js';
 import { Residents } from './game/residents.js';
 import { PoolBar } from './game/poolBar.js';
@@ -253,6 +254,7 @@ class Game {
     this.volley = new Volley(this);       // the beach volleyball court's live ball; free roam: the match against Berra and Robban (§10.50)
     this.kort = new TouristPhoto(this);   // free roam: the tourist couple's picture at the lighthouse, the dunes and LA MEDINA (§10.51)
     this.guagua = new Guagua(this);       // free roam: the guagua from the PARADA stops, the football talk on the way (§10.53)
+    this.traktor = new Traktor(this);     // free roam: the farmer's tractor at the tomato fields, the farmer running after it (§10.54)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -444,10 +446,9 @@ class Game {
 
   // A driver bust (traffic, mission cars): sits in the driver's seat.
   addBust(def, car) {
-    const s = car.spec;
-    const z = s.tall ? s.len / 2 - 1.6 : -0.05;
+    const at = car.seatAt(1);
     const obj = buildBust(def);
-    obj.position.set(s.wid * 0.22, car.seatY(), z);
+    obj.position.set(at.x, car.seatY(), at.z);
     obj.scale.setScalar(car.fitScale(obj.userData.h || 1.25));
     car.tilt.add(obj);
     car.driverBust = obj;
@@ -571,7 +572,6 @@ class Game {
   seat(ch, car, side) {
     if (ch.car) this.unseat(ch);
     if (ch.seatId) this.cabin.unseatCharacter(ch);
-    const s = car.spec;
     ch.state = 'seated';
     ch.car = car;
     ch.vx = ch.vz = ch.vy = 0;
@@ -583,9 +583,9 @@ class Game {
     let hips = car.seatY() + 0.12;
     const k = car.fitScale(h, hips);
     hips -= Math.max(0, h * k - (car.roofY() - hips));
-    const z = s.tall ? s.len / 2 - 1.6 : -0.05;
+    const at = car.seatAt(side);
     ch.root.scale.setScalar(k);
-    ch.root.position.set(side * s.wid * 0.22, hips - m.legLen * k, z + 0.12);
+    ch.root.position.set(at.x, hips - m.legLen * k, at.z + 0.12);
     ch.root.rotation.set(0, 0, 0);
     ch.root.visible = true;
     if (side > 0) {
@@ -702,7 +702,8 @@ class Game {
     if (!car || car.dead) return;
     if (!this.levelDef.verbs.enterCars || car.noEnter) { if (this.level === 'flight') hud.toast(S.noCars); return; }
     if (car.locked) { hud.toast(S.carBusy); return; }
-    if (car.spec.toy && !this.golf.open()) { this.golf.refuse(); return; }   // a golf cart is never a mission's car (§10.40)
+    // A toy (a golf cart, §10.40; the tractor, §10.54) is never a mission's car.
+    if (car.spec.toy && !this.golf.open()) { (this.traktor.isTraktor(car) ? this.traktor : this.golf).refuse(); return; }
     if (this.player.seatId) this.standPlayer();
     this.skis.giveBack('car');   // the borrowed rollerskis go back to the skier (§10.39)
     this.jeep.onEnter(car);   // the Guardia jeep at the barracks: the loan, SKANDAL (§10.34)
@@ -843,6 +844,7 @@ class Game {
     out.push(...this.bell.extras);    // the departing guests queueing at Flamenco's reception (§10.37)
     out.push(...this.packhus.extras); // the foreman on the packing shed's yard (§10.49)
     out.push(...this.kort.extras);    // the tourist couple who want their picture taken (§10.51)
+    out.push(...this.traktor.extras); // the farmer out of his hut after his tractor (§10.54)
     return out;
   }
 
@@ -1143,6 +1145,7 @@ class Game {
   onHonk(car) {
     const f = this.focus();
     if (dist(car.x, car.z, f.x, f.z) < 40) { audio.tone(330, 0.25, 'square', 0.05); audio.tone(415, 0.25, 'square', 0.04); }
+    this.traktor.onHonk(car);   // the queue behind his tractor (§10.54)
   }
 
   // ------------------------------------------------------------------------------------------
@@ -1629,6 +1632,7 @@ class Game {
     this.volley.update(dt);
     this.kort.update(dt);
     this.guagua.update(dt);
+    this.traktor.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);
@@ -1849,6 +1853,7 @@ class Game {
     this.packhus.step(h); // the foreman on the packing shed's yard (§10.49)
     this.volley.step(h);  // the volleyball: Stig's kick and header, the others' hits, the ball (§10.50)
     this.kort.step(h);    // the tourist couple (§10.51)
+    this.traktor.step(h); // the farmer running after his tractor (§10.54)
     this.carsVsPeople();
   }
 
@@ -2194,7 +2199,7 @@ class Game {
         const hold = this.level === 'flight' && this.cabin.turbulent && p.state === 'normal' && !this.holding;
         if (it?.type === 'talk' || it?.type === 'chat') prompt = fmt('promptTalk', { name: it.who.def.name });
         else if (hold) prompt = S.promptHold;
-        else if (it?.type === 'car') prompt = it.car.locked || (it.car.spec.toy && !this.golf.open()) ? '' : this.jeep.prompt(it.car) || (it.car.driverBust ? S.promptSteal : S.promptGetIn);
+        else if (it?.type === 'car') prompt = it.car.locked || (it.car.spec.toy && !this.golf.open()) ? '' : this.jeep.prompt(it.car) || this.traktor.prompt(it.car) || (it.car.driverBust ? S.promptSteal : S.promptGetIn);
         else if (it?.type === 'it') prompt = it.it.prompt || '';
         else if (it?.type === 'stand') prompt = S.promptStand;
         prompt = this.fyren.prompt(prompt);   // the J hint on the lighthouse's gallery (§10.35)
@@ -2218,7 +2223,7 @@ class Game {
   updateAudio(dt) {
     const c = this.playerCar;
     if (c && !c.dead) {
-      audio.engine(true, c.revs, c.ctrl.throttle, !!c.spec.electric);
+      audio.engine(true, c.revs, c.ctrl.throttle, !!c.spec.electric, !!c.spec.diesel);
       audio.skid(c.air ? 0 : c.skidAmt);
       // The grisbil grunts instead (honk.update, §10.9), a golf cart pips (golf.update, §10.40); the
       // borrowed Guardia jeep's H is its siren (§10.34).

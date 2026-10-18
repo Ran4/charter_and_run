@@ -267,7 +267,7 @@ export const SCENARIOS = {
     await T.ev(installStudio);
     const types = await T.ev(() => Object.keys(window.__cs.C.CAR_TYPES));
     T.log('car types', types.join(' '));
-    for (const k of ['sedan', 'hatch', 'wagon', 'van', 'pickup', 'bus', 'guagua', 'icecream', 'taxi', 'guardia', 'grisbil', 'trolley', 'golfbil']) check(types.includes(k), `car type ${k}`);
+    for (const k of ['sedan', 'hatch', 'wagon', 'van', 'pickup', 'bus', 'guagua', 'icecream', 'taxi', 'guardia', 'grisbil', 'trolley', 'golfbil', 'traktor']) check(types.includes(k), `car type ${k}`);
     // Two rows: small cars, then the tall ones; each from the front-left and the rear-right.
     // side: +1 = seen from the front-left, -1 = the cars turned round (seen from the rear-right).
     const lineup = async (name, list, gap, side, dist, h) => {
@@ -307,6 +307,8 @@ export const SCENARIOS = {
     await lineup('cars_grisbil', ['grisbil'], 1, -1, 7, 3.6);
     await lineup('cars_icecream', ['icecream', 'taxi'], 2, 1, 9, 3.0);
     await lineup('cars_golfbil', ['golfbil', 'hatch'], 2, 1, 8, 2.8);   // the golf cart (feature 74, §10.40) beside a small car
+    await lineup('cars_traktor', ['traktor', 'hatch'], 2.2, 1, 10, 3.2);   // the tractor (feature 121, §10.54) beside a small car
+    await lineup('cars_traktor_rear', ['traktor', 'hatch'], 2.2, -1, 10, 3.2);
     // Collectibles (every kind; all seven pryl variants) and rabbits: one row per group, each
     // label on the floor under its object, then a close-up of the two printed ones.
     const items = async (name, list, { gap = 1.7, h = 1.6, look = 0.6, dist = 0 } = {}) => {

@@ -29,7 +29,9 @@
 // lifeguard's binoculars on the beach's tower, the eight things to spot and their list (§10.48), and the
 // shift at the packing shed's tomato sorting belt, its foreman and workers and Siv's line after it (§10.49),
 // and the beach volleyball match against Berra and Robban on the court by the pedal-boat rental (§10.50),
-// and the guagua from the town's PARADA GUAGUA stops, the ride beside its driver and his lines (§10.53).
+// and the guagua from the town's PARADA GUAGUA stops, the ride beside its driver and his lines (§10.53),
+// and the farmer's tractor by the tomato fields' tool hut that Stig borrows, the farmer running after it,
+// the honking queue behind it and the furrows' jolts (§10.54).
 
 export const HOMES_ISLAND = {
   ole: ['flamenco', 2.0, 1.0, 0],     // yaw 0: under the pergola, facing the pool (flamenco faces π)
@@ -2057,6 +2059,7 @@ export const NAMED_CARS = {
   buss17: 'SunTrips buss 17', hyrbil: 'Hyrbilen', grisbil: 'Grisbilen', nattbuss: 'Nattbussen', joseBil: 'Josés bil', guardiaJeep: 'Guardia-jeepen',
   grisbilFollow: 'Grisbilen', utflyktsbuss: 'Utflyktsbussen', guardia1: 'Guardia-jeepen',   // [N]
   golfbil1: 'Golfbilen', golfbil2: 'Golfbilen',   // [N] feature 74 (§10.40)
+  traktor: 'Traktorn',                            // [N] feature 121 (§10.54)
 };
 
 export const LEVEL_OUTFITS_ISLAND = { ole: 'sol', berra: 'sol', robban: 'sol', angerud: 'sol', majsan: 'sol', siv: 'sol', lasse: 'sol' };
@@ -2783,4 +2786,56 @@ export const GUAGUA = {
   bye: '¡Vámonos!',                                                         // [N] the driver, leaving without him
   byeLine: '¡Hasta luego, señor!',                                          // [N] the driver
   thanks: 'Tack så mycket!',                                                // [N] Stig (HYTT_TVA's)
+};
+
+// Traktorn med släpkärran (free roam, DESIGN §10.54; game/traktor.js). The farmer's small red tractor
+// `name` (a named parked car of the toy type `traktor`, car.js; world/blocks/nature.js tomatFields)
+// stands with its trailer of tomato boxes by the tool hut in the tomato fields on (1,0). On the island
+// with no mission running (`missions.state === 'idle'`), E at it (`prompt`) borrows it: Stig says
+// `borrow`, and `outAfter` s later, if it is within `seeR` m of the hut's door (the landmark `door`),
+// the farmer (`farmer`, ours) comes out of the door and runs after it at `run` m/s, never nearer than
+// `keep` m behind its tail (there he slows to its speed: he never catches up), shouting `shouts` in
+// turn every `shoutEvery` s; `answerAfter` s after each of his first two Stig answers with `answers`.
+// He gives up `giveUpR` m from the door, `loseR` m behind the tail, `maxSecs` s in or knocked down:
+// `giveUp` with a raised fist for `sulkSecs` s, then he walks home at `walk` m/s and goes in at the door
+// (popped in unseen when stuck). Stig out of it with the farmer within `thanksR` m: he runs to it and
+// says `back`, and Stig `backStig`. In a mission or in the other level: no prompt, E gives the toast
+// `blocked` (a debug start puts him out of it); at a mission start the tractor goes home and the farmer
+// in. Between missions a tractor left elsewhere, or wrecked, is back on its spot once Stig is `homeR` m
+// from it and from the spot and neither is in view (the farmer fetched it). At the wheel: a bush row
+// (nature.js TOMATO_ROWS) crossed by the tractor's front or rear axle or the trailer's is a jolt
+// (`jolt`: m/s up, rad/s of pitch and roll) with leaves flying, and `sickBumps` jolts within
+// `sickWindow` s give Stig's `sick` lines in turn, at most every `sickGap` s; off the asphalt it rocks
+// now and then (`rough`); a traffic car queued behind it (within `queue.r` m of its tail, `queue.lat` m
+// of its line, going its way, 2 m/s under its cruise) for `queue.after` s honks, again every `queue.every` s or so, and a honk
+// behind him (that one, or drivers.js's own) gets `honked` in turn, at most every `honkGap` s; the stack
+// puffs every `smokeEvery` s (twice as often at full throttle); a knock that takes `spill` m/s off it
+// throws tomatoes off the trailer.
+export const TRAKTORN = {
+  name: 'traktor', door: 'traktorBod',
+  prompt: '<b>E</b> Låna traktorn',                                         // [N]
+  blocked: 'Traktorn går bara i 18 km/h – ta en riktig bil.',               // [N] toast
+  borrow: 'Jag lånar den bara en liten stund!',                             // [N] Stig
+  outAfter: 0.9, seeR: 40, run: 4.5, keep: 3.2, shoutEvery: 3.4, answerAfter: 1.5,
+  shouts: ['¡Mi tractor! ¡Señor!', '¡Pare, señor! ¡Pare!', '¡Es mi tractor!', '¡Señor, por favor!'],   // [N] · [N] · [N] · [N] the farmer
+  answers: ['Jag ställer tillbaka den sen!', 'Förlåt! Bara en liten bit!'],   // [N] · [N] Stig
+  giveUpR: 50, loseR: 26, maxSecs: 20, sulkSecs: 2.4, walk: 1.4,
+  giveUp: '¡Ay… suecos!',                                                   // [N] the farmer, out of breath
+  thanksR: 16,
+  back: '¡Mi tractor! ¡Por fin!',                                           // [N] the farmer
+  backStig: 'Tack för lånet!',                                              // [N] Stig
+  homeR: 50,
+  jolt: { y: 1.1, p: 0.9, r: 0.6 }, sickBumps: 4, sickWindow: 3, sickGap: 14,
+  sick: [
+    'Jag har lite anlag för åksjuka.',                                      // [F*](t) Stig's line from the bus (research-plot.md:248), relocated
+    'Oj… fårorna.',                                                         // [N]
+    'Det här är inte bra för magen.',                                       // [N]
+  ],
+  rough: 0.45, honkGap: 9, queue: { r: 26, lat: 2.2, after: 1.2, every: 3 },
+  honked: ['Förlåt! Den går inte fortare.', 'Ja, ja… jag kör så fort jag kan!', 'Det är en traktor!'],   // [N] · [N] · [N] Stig
+  smokeEvery: 0.22, spill: 3,
+  // An old farmer in a straw hat, a waistcoat over a faded blue shirt (ours; not the grisbonde, who is
+  // the bodega's: §10.54).
+  farmer: { kind: 'adult', name: 'Bonden', scale: 0.97, wide: 1.1, belly: true, skin: 0xb8865a, hair: 'short', hairC: 0x9a9a9a, brows: 0x7a7a7a, nose: 'big',
+    mustache: 0xa8a8a8, stache: 'walrus', shirt: 0x6a8ab0, longSleeves: false, vest: 0x4a3a2a, pants: 0x5a4632, shoes: 0x3a2a1a, hat: 'sunhat', hatC: 0xd8b868, voice: 190, local: true },
 };

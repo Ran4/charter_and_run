@@ -42,9 +42,11 @@ export class GolfCarts {
   open() { const g = this.g; return g.level === 'island' && g.missions.state === 'idle'; }
   refuse(kind = 'refuse') { hud.toast(this.cfg.blocked); this.last = { t: this.g.time, kind }; }
   // The player's golf cart, whole, on the island.
+  // A golf cart (the other toy, the tractor, is game/traktor.js's: §10.54).
+  isCart(c) { return c?.type === 'golfbil'; }
   mine() {
     const g = this.g, c = g.playerCar;
-    return c && c.spec.toy && !c.dead && g.level === 'island' ? c : null;
+    return this.isCart(c) && !c.dead && g.level === 'island' ? c : null;
   }
   // The course's hazard at (x, z): 'pond', 'sand' or null.
   surfaceAt(x, z) {
@@ -68,7 +70,7 @@ export class GolfCarts {
     const g = this.g, c = this.cfg;
     // Never a mission's car: out of it in a mission (only a debug start can find him in one), and at
     // a mission start both go back to their spots.
-    if (g.playerCar?.spec.toy && !this.open()) { g.exitCar(true); this.refuse('out'); }
+    if (this.isCart(g.playerCar) && !this.open()) { g.exitCar(true); this.refuse('out'); }
     const free = g.missions.state === 'idle';
     if (this.free && !free) this.home();
     this.free = free;

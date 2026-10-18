@@ -149,6 +149,9 @@ export const ISLAND_LANDMARKS = {
   // the vischan drive passes him (Phase 3 r2: mid-lane at (28, 4) he stood 33 m off the route).
   eslovVag: { b: [0, 1], at: [27.5, 24], yaw: 0 },
   packhus: { b: [3, 0], at: [0, 10], yaw: PI },
+  // Traktorn med släpkärran (free roam, §10.54): the step before the door of the tool hut on (1,0)
+  // (its east face), facing out; the farmer comes out and goes in here.
+  traktorBod: { b: [1, 0], at: [2.1, -24], yaw: PI / 2 },
   // Vi liftar (free roam, §10.47): the hitch-hiking spots, on the north sidewalk of a country road,
   // facing it, with the westbound lane's traffic coming from his left (the east): by the CAMINO SIN
   // ASFALTAR sign at the vischan track's mouth (the z −120 road), and before the packing shed's yard

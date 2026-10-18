@@ -205,6 +205,21 @@ autopilot passes the lane, and the shade's geometry draws no random number, so t
 builds as before. The coins change no stage. `story` and `fullstory` passed on the feature's tree. Every
 pool below stands and no timer changed.
 
+**Feature 121 (Traktorn med släpkärran, 2026-10-18) touches no pool.** It parked a car of the new toy
+type `traktor` (6.3 × 1.9, its trailer included) on the dirt track before the tool hut in block (1,0)
+(world (−159.8, −256), facing south; DESIGN §10.54), 24 m from the north ring road's centre line and
+56 m from the south road's, and listed the tomato fields' rows (`TOMATO_ROWS`, data only). It spawns with
+the golf carts after every other parked car, so every other car keeps its id and its place in
+`game.cars`; its geometry and the rows' list draw no random numbers, so the world builds as before. No
+mission stage, route or pooled stage plays in block (1,0) (it has no mission landmark; the jeep flees and
+the autopilot drives on the road network), and in a mission the tractor is a parked car nobody can take:
+`enterCar` refuses it, `getInCar` and `retryCar` never take a toy, the harness's `anyCar` skips it, and
+a mission start puts it back on its spot. Its farmer, its honking queue and its jolts exist only with
+`missions.state === 'idle'`. `car.seatAt` keeps every other car's seats where they were (main.seat,
+addBust, seatWorld). No `calibrate` run was made for it (as for features 74 and 76: the world the jeep's
+chase plays in is unchanged). `story` and `fullstory` passed on the feature's tree. Every pool below
+stands and no timer changed.
+
 ## `friskotekBalls` · §8.7 s1 · six fleeing beach balls · on foot: timer = ceil(1.25 × (p75 + 6 × 0.5))
 
 Phase 3 r2 island-staging placed everyone for the intro's group shot (Stig, Lasse, the sisters, the

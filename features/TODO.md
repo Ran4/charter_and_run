@@ -2,7 +2,6 @@
 # flytta den överst till "färdiga features"-sektionen nedan)
 # markörer: ⟨par N⟩ = de två raderna med samma N körs samtidigt (var sin worktree/gren, sedan rebase på main och push), ⟨solo⟩ = körs ensam; ta grupperna uppifrån och ned
 - features/systrarnas_balkong_whisky.md – 117. Systrarnas balkong – ”Vi är väl inte på nåt jäkla vernissage?” [M] ⟨par 15⟩
-- features/traktorn.md – 121. Traktorn med släpkärran [M] ⟨par 15⟩
 - features/kranen_pa_bygget.md – 118. Åk med byggkranen [L] ⟨solo⟩
 - features/trampbat.md – 120. Hyr en trampbåt (200 PTA/H) [L] ⟨solo⟩
 - features/roster.md – Röster – ett fullt röstsatt spel (ElevenLabs, som Saab- och Seinfeld-spelen; svara på de öppna frågorna i §13 först) [L] ⟨solo⟩
@@ -20,6 +19,7 @@
 - features/butaneron.md – 143. Butaneron och gasolbilen [M] ⟨solo⟩
 
 # Färdiga features (lägg till [färdig: yyyy-mm-dd hh:mm] i slutet)
+- features/implemented/traktorn.md – 121. Traktorn med släpkärran [M] [färdig: 2026-10-18 05:28]
 - features/implemented/guaguan_fotbollssnack.md – 112. Guaguan – åk buss och snacka fotboll [M] [färdig: 2026-10-18 04:35]
 - features/implemented/hittelon_pa_hittegods.md – 116. Hittelön – de borttappade väskorna [M] [färdig: 2026-10-18 04:16]
 - features/implemented/ta_ett_kort_pa_oss.md – 110. ”Kan du ta ett kort på oss?” – turistparet vid fyren [M] [färdig: 2026-10-18 03:20]

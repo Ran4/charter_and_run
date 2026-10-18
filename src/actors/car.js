@@ -12,6 +12,11 @@ import { fx as FX } from '../game/fx.js';
 // default 0.38), and for the golf cart (feature 74, §10.40): toy (a joke car, never a mission's:
 // main.enterCar refuses it outside free roam), governed (no pull past maxSpeed), horn ('pip': the
 // golf carts' pip-pip instead of the two-tone horn), electric (a hum for the engine), noExplode.
+// For the tractor (feature 121, §10.54): wheels (axles [{ z, r, x?, w?, front?, rim?, lugs? }] instead
+// of the four equal ones: centre z, radius, half track, tyre width scale, steered, rim colour, tread
+// lugs), seat ({ y, x, z, px, pz }: seatY and the driver's and the passenger's spots, car-local), open
+// (no roof over the seats: nobody is shrunk), height (the top people stand on and cars meet), wb (the
+// steering's wheelbase, default len × 0.62), diesel (a low putt for the engine).
 // Car fields set by game code: noEnter (never offered to the player), noExplode (damage -> dead +
 // steam, no fire; also from the spec), isPursuer, riders[] (decorative busts), locked. Physics
 // numbers are Bigmouth's except the ones §6.6 lists.
@@ -37,6 +42,13 @@ export const CAR_TYPES = {
   // The golf carts at the clubhouse (feature 74, §10.40): ×1.2 for the player, about 23 km/h.
   golfbil: { name: 'Golfbil', len: 2.4, wid: 1.3, bodyH: 0.45, cabinH: 1.48, wheelR: 0.25, wheelInset: 0.12, maxSpeed: 5.5, accel: 6, grip: 11, steer: 0.75, mass: 450, hp: 80,
     color: 0xf4f4f0, toy: true, governed: true, horn: 'pip', electric: true, noExplode: true, build: buildGolfbil },
+  // The tractor at the tomato fields' tool hut (feature 121, §10.54): ×1.2 for the player, 18 km/h. Its
+  // length is the tractor and the trailer of tomato boxes together (a fixed trailer: one rigid body).
+  traktor: { name: 'Traktor', len: 6.3, wid: 1.9, bodyH: 0.36, cabinH: 0, wheelR: 0.4, maxSpeed: 4.2, accel: 3, grip: 10, steer: 0.62, mass: 2200, hp: 140,
+    color: 0xc8281e, toy: true, governed: true, diesel: true, noExplode: true, bed: true, open: true, height: 1.6, wb: 2.4,
+    seat: { y: 1.0, x: 0, z: 0.5, px: -0.36, pz: -0.95 },
+    wheels: [{ z: 2.5, r: 0.34, x: 0.62, w: 0.26, front: true, rim: 0xf2c12e }, { z: 0.7, r: 0.64, x: 0.72, w: 0.56, rim: 0xf2c12e, lugs: true }, { z: -2.1, r: 0.34, x: 0.84, w: 0.28 }],
+    build: buildTraktor },
 };
 export function registerCarType(key, spec) { CAR_TYPES[key] = spec; }
 
@@ -491,6 +503,91 @@ function buildGolfbil(s, color) {
   return { geo: g.build(), glass: glass.build() };
 }
 
+// The tractor (feature 121, §10.54): a small red tractor with no badge (§1.5), a narrow bonnet with a
+// grille and lamps, the exhaust stack before the driver, big lugged rear wheels under round fenders,
+// a pan seat high over the rear axle and a steering wheel on a raked column; behind it on a drawbar a
+// fixed trailer of tomato boxes (its floor at the `bed` height, wheelR·0.95 + bodyH = 0.74). The
+// passenger sits on an upturned box at the trailer's front (spec.seat px, pz). Wheels: spec.wheels.
+const TRAK = { wood: 0x9a6a3a, box: 0xc08a50, slat: 0x8a5a2e, steel: 0x5a6068, tomato: [0xd8321e, 0xe8452a] };
+function buildTraktor(s, color) {
+  const g = new GeoBuilder(), dark = shade(color, 0.72), top = s.wheelR * 0.95 + s.bodyH;
+  // Front axle, the sump under the bonnet, the bonnet with a lighter top and vent slots.
+  g.box(TRIM, 0, 0.34, 2.5, 1.04, 0.12, 0.14);
+  g.boxB(TRIM, 0, 0.3, 2.05, 0.42, 0.34, 1.7);
+  g.boxB(color, 0, 0.62, 2.12, 0.7, 0.42, 1.66);
+  g.box(shade(color, 1.1), 0, 1.06, 2.12, 0.6, 0.05, 1.62);
+  for (const sx of [-1, 1]) for (let k = 0; k < 3; k++) g.box(TRIM, sx * 0.352, 0.86, 2.36 + k * 0.16, 0.01, 0.16, 0.06);
+  // Grille with chrome bars, a front weight, round lamps on brackets.
+  g.box(TRIM, 0, 0.84, 2.96, 0.56, 0.38, 0.03);
+  for (let k = 0; k < 4; k++) g.box(CHROME, 0, 0.71 + k * 0.09, 2.98, 0.52, 0.025, 0.02);
+  g.box(TRIM, 0, 0.5, 3.04, 0.82, 0.22, 0.16);
+  for (const sx of [-1, 1]) {
+    g.box(TRIM, sx * 0.4, 0.98, 2.84, 0.12, 0.04, 0.04);
+    lamp(g, sx * 0.47, 0.98, 2.87, 0.075, 0xfff6c0);
+  }
+  // The exhaust stack before the driver (smoke from its top: game/traktor.js) and the air intake.
+  g.cyl(0x3a3a40, 0.2, 1.42, 2.55, 0.045, 0.76, 8);
+  g.cyl(TRIM, 0.2, 1.82, 2.55, 0.06, 0.05, 8);
+  g.cyl(0x8a8f99, -0.18, 1.2, 2.25, 0.05, 0.32, 8);
+  g.cyl(TRAK.steel, -0.18, 1.38, 2.25, 0.08, 0.1, 10);
+  // Gearbox between bonnet and rear axle, the rear axle's housing, footplates.
+  g.boxB(dark, 0, 0.42, 0.98, 0.6, 0.5, 0.66);
+  g.cyl(TRIM, 0, 0.64, 0.7, 0.1, 1.3, 10, 0, 0, Math.PI / 2);
+  for (const sx of [-1, 1]) g.boxB(TRIM, sx * 0.42, 0.5, 1.12, 0.26, 0.04, 0.6);
+  // Round fenders over the rear wheels: plates on an arc about the axle (y 0.64, z 0.7).
+  for (const sx of [-1, 1]) for (let k = 0; k < 6; k++) {
+    const a = -1.0 + k * 0.46, R = 0.74;
+    g.box(color, sx * 0.72, 0.64 + R * Math.cos(a), 0.7 + R * Math.sin(a), 0.5, 0.05, 0.36, 0, a);
+  }
+  // The seat on its spring over the rear axle (pan top 1.02 = seat.y + 0.02), its back, the column
+  // and the wheel.
+  g.box(TRAK.steel, 0, 0.97, 0.5, 0.08, 0.12, 0.3);
+  g.boxB(TRIM, 0, 0.94, 0.5, 0.48, 0.08, 0.44);
+  g.box(TRIM, 0, 1.2, 0.26, 0.44, 0.3, 0.06, 0, -0.15);
+  g.cyl(TRIM, 0, 1.18, 1.16, 0.03, 0.55, 6, -0.55);
+  g.add(PRIM.torus(), TYRE, mat(0, 1.44, 0.98, -1.0, 0, 0, 0.4, 0.4, 0.4));
+  // Drawbar and the trailer's A-frame to its front.
+  g.box(TRIM, 0, 0.46, -0.1, 0.1, 0.08, 0.9);
+  g.cyl(CHROME, 0, 0.5, 0.18, 0.04, 0.16, 6);
+  for (const sx of [-1, 1]) g.box(TRIM, sx * 0.3, 0.5, -0.4, 0.07, 0.06, 0.72, -sx * 0.98);
+  // The trailer: beams, the plank floor (top = the bed), red sides, front board and tailgate, corner
+  // stakes, mudguards over its wheels, tail lamps.
+  const z0 = -0.57, z1 = -3.15, zm = (z0 + z1) / 2, len = z0 - z1, w = 1.48;
+  for (const sx of [-1, 1]) g.box(TRIM, sx * 0.6, 0.56, zm, 0.08, 0.1, len);
+  g.boxB(TRAK.wood, 0, top - 0.12, zm, w, 0.12, len);
+  for (let k = 1; k < 6; k++) g.box(TRAK.slat, 0, top + 0.002, z1 + (k * len) / 6, w - 0.1, 0.004, 0.03);
+  for (const sx of [-1, 1]) {
+    g.boxB(color, sx * (w / 2 - 0.03), top, zm, 0.06, 0.3, len);
+    g.box(shade(color, 1.1), sx * (w / 2 - 0.03), top + 0.31, zm, 0.08, 0.03, len);
+    for (const z of [z0 - 0.03, zm, z1 + 0.03]) g.boxB(dark, sx * (w / 2 - 0.02), top - 0.04, z, 0.08, 0.4, 0.08);
+    g.boxB(TRIM, sx * 0.84, 0.72, -2.1, 0.24, 0.04, 0.84);
+    g.box(0xe8322a, sx * 0.6, 0.66, z1 - 0.02, 0.12, 0.08, 0.03);
+  }
+  g.boxB(color, 0, top, z0 - 0.03, w, 0.36, 0.06);
+  g.boxB(color, 0, top, z1 + 0.03, w, 0.3, 0.06);
+  // Tomato boxes (one row upturned at the front left: the passenger's seat), two stacked at the back.
+  const crate = (x, z, ry, y = top, full = true) => {
+    g.boxB(TRAK.box, x, y, z, 0.6, 0.3, 0.46, ry);
+    for (const yy of [0.1, 0.22]) g.box(TRAK.slat, x, y + yy, z, 0.62, 0.03, 0.48, ry);
+    if (!full) return;
+    const c = Math.cos(ry), sn = Math.sin(ry);
+    [[-0.15, -0.1], [0.15, -0.1], [0, 0.11], [-0.17, 0.12], [0.17, 0.1]].forEach(([dx, dz], k) => {
+      g.sphere(TRAK.tomato[k % 2], x + dx * c + dz * sn, y + 0.31, z - dx * sn + dz * c, 0.17, 0.14, 0.17);
+    });
+  };
+  crate(-0.36, -0.95, 0.02, top, false);
+  crate(0.37, -1.05, -0.04);
+  crate(0.37, -1.6, 0.03);
+  crate(-0.36, -1.66, -0.05);
+  crate(0.36, -2.25, 0.02);
+  crate(-0.38, -2.3, 0.06);
+  crate(0.35, -2.85, -0.03);
+  crate(-0.36, -2.88, 0.02);
+  crate(0.36, -2.25, -0.1, top + 0.3);
+  crate(-0.36, -2.88, 0.08, top + 0.3);
+  return { geo: g.build(), glass: null };
+}
+
 function buildCarModel(s, color) {
   if (s.build) return s.build(s, color);
   const g = new GeoBuilder(), glass = new GeoBuilder(), extras = [];
@@ -505,14 +602,18 @@ function buildCarModel(s, color) {
   return { geo: g.build(), glass: glass.empty ? null : glass.build(), extras };
 }
 
-let wheelGeo;
-function getWheelGeo() {
-  if (wheelGeo) return wheelGeo;
+// A unit wheel (radius 1, axle along x), one per rim colour and tread: `lugs` adds the tractor's
+// tread lugs round the tyre.
+const wheelGeo = {};
+function getWheelGeo(rim = 0xc8ccd2, lugs = false) {
+  const key = `${rim}|${lugs}`;
+  if (wheelGeo[key]) return wheelGeo[key];
   const g = new GeoBuilder();
   g.cyl(0x1d1d22, 0, 0, 0, 1, 0.75, 16, 0, 0, Math.PI / 2);
-  g.cyl(0xc8ccd2, 0, 0, 0, 0.55, 0.8, 10, 0, 0, Math.PI / 2);
+  g.cyl(rim, 0, 0, 0, 0.55, 0.8, 10, 0, 0, Math.PI / 2);
   g.box(0x8a8f99, 0, 0, 0, 0.82, 0.2, 0.6);
-  return (wheelGeo = g.build());
+  if (lugs) for (let k = 0; k < 16; k++) { const a = (k / 16) * Math.PI * 2; g.box(0x1d1d22, 0, Math.cos(a) * 1.02, Math.sin(a) * 1.02, 0.7, 0.12, 0.2, 0, a); }
+  return (wheelGeo[key] = g.build());
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -551,17 +652,19 @@ export class Car {
         this.pigs.push({ mesh, in: true });
       }
     }
+    // Wheels: two axles of spec.wheelR at ±wz, or the spec's own axles (the tractor); `k` turns a
+    // wheel of another radius at its own rate.
     this.wheels = [];
-    const wg = getWheelGeo();
     const wr = spec.wheelR, wx = spec.wid / 2 - 0.02, wz = spec.len / 2 - wr - (spec.bus ? 1.2 : spec.wheelInset ?? 0.38);
-    for (const [sx, sz] of spec.noWheels ? [] : [[1, 1], [-1, 1], [1, -1], [-1, -1]]) {
-      const piv = new THREE.Group();
-      piv.position.set(sx * wx, wr, sz * wz);
-      const w = toonMesh(wg, { outline: 0.02 });
-      w.scale.set(0.36, wr, wr);
+    const axles = spec.wheels || (spec.noWheels ? [] : [{ z: wz, front: true }, { z: -wz }]);
+    for (const a of axles) for (const sx of [1, -1]) {
+      const r = a.r ?? wr, piv = new THREE.Group();
+      piv.position.set(sx * (a.x ?? wx), r, a.z);
+      const w = toonMesh(getWheelGeo(a.rim, a.lugs), { outline: 0.02 });
+      w.scale.set(a.w ?? 0.36, r, r);
       piv.add(w);
       this.tilt.add(piv);
-      this.wheels.push({ piv, mesh: w, front: sz > 0 });
+      this.wheels.push({ piv, mesh: w, front: !!a.front, k: wr / r });
     }
     this.x = opts.x || 0; this.z = opts.z || 0; this.y = 0.15; this.yaw = opts.yaw || 0;
     this.vx = 0; this.vz = 0; this.vy = 0; this.w = 0;
@@ -576,7 +679,7 @@ export class Car {
     this.ctrl = { throttle: 0, brake: 0, steer: 0, handbrake: false, park: true };
     this.obb = { x: 0, z: 0, fx: 0, fz: 1, hx: spec.wid / 2, hz: spec.len / 2 };
     this.radius = Math.hypot(spec.wid, spec.len) / 2;
-    this.height = spec.tall ? spec.wheelR * 0.95 + spec.bodyH : spec.wheelR * 0.95 + spec.bodyH + spec.cabinH + 0.13;
+    this.height = spec.height ?? (spec.tall ? spec.wheelR * 0.95 + spec.bodyH : spec.wheelR * 0.95 + spec.bodyH + spec.cabinH + 0.13);
     this.driver = null;      // Character at the wheel
     this.passengers = [];    // extra seated characters
     this.ai = null;          // controller object with update(car, dt)
@@ -609,7 +712,8 @@ export class Car {
   // from the physics state (not the last rendered matrix), so it is current within the frame.
   seatWorld(side = 1, out = { x: 0, y: 0, z: 0 }) {
     const s = this.spec;
-    const lx = side * s.wid * 0.22, ly = s.tall ? s.wheelR * 0.95 + 0.45 : s.wheelR * 0.95 + s.bodyH - 0.25, lz = s.tall ? s.len / 2 - 1.6 : -0.1;
+    let lx = side * s.wid * 0.22, ly = s.tall ? s.wheelR * 0.95 + 0.45 : s.wheelR * 0.95 + s.bodyH - 0.25, lz = s.tall ? s.len / 2 - 1.6 : -0.1;
+    if (s.seat) { const a = this.seatAt(side); lx = a.x; lz = a.z; ly = s.seat.y + 0.12; }
     const c = Math.cos(this.yaw), sn = Math.sin(this.yaw);
     out.x = this.x + lx * c + lz * sn;
     out.y = this.y + ly;
@@ -661,7 +765,7 @@ export class Car {
       vr *= Math.exp(-grip * dt);
       const maxSteer = (boost === 1 && s.aiSteer ? s.aiSteer : s.steer) / (1 + Math.abs(vf) / 15);
       this.steerAngle = damp(this.steerAngle, driven ? c.steer * maxSteer : 0, 12, dt);
-      const wb = s.len * 0.62;
+      const wb = s.wb ?? s.len * 0.62;
       const targetW = (-vf * Math.tan(this.steerAngle)) / wb * (c.handbrake && driven ? 1.5 : 1);
       this.w = damp(this.w, targetW, c.handbrake ? 4 : 8, dt);
     } else {
@@ -868,7 +972,7 @@ export class Car {
     // Hooked to the tow truck (§10.17): the nose `lift` rad up about the rear wheels.
     if (this.lift) this.tilt.position.y += Math.sin(this.lift) * (s.len / 2 - s.wheelR - 0.38);
     for (const w of this.wheels) {
-      w.mesh.rotation.x = this.wheelSpin;
+      w.mesh.rotation.x = this.wheelSpin * w.k;
       w.piv.rotation.y = w.front ? -this.steerAngle : 0;
     }
   }
@@ -879,8 +983,16 @@ export class Car {
   // body (its opaque sides hide the legs), the vans/jeep on their cab seats and buses on seats whose
   // heads fill the window band, so heads clear the roof; who is still taller than the room is
   // scaled down (fitScale, never below 0.72).
-  seatY() { const s = this.spec; return s.wheelR * 0.95 + (s.bus ? 0.55 : s.tall ? 0.36 : 0.2); }
-  roofY() { const s = this.spec; return s.wheelR * 0.95 + s.bodyH + (s.tall ? 0 : s.cabinH) - (s.bus ? 0.22 : 0) - 0.08; }
+  // A spec `seat` sets seatY and the seats' spots, and an `open` car has no roof: roofY leaves room for
+  // anyone (the tractor, §10.54). seatAt(side): the driver's (1) or the passenger's (−1) spot, car-local
+  // { x, z } (main.seat adds 0.12 to z for the hips).
+  seatY() { const s = this.spec; return s.seat?.y ?? s.wheelR * 0.95 + (s.bus ? 0.55 : s.tall ? 0.36 : 0.2); }
+  roofY() { const s = this.spec; return s.open ? this.seatY() + 2.5 : s.wheelR * 0.95 + s.bodyH + (s.tall ? 0 : s.cabinH) - (s.bus ? 0.22 : 0) - 0.08; }
+  seatAt(side = 1) {
+    const s = this.spec, o = s.seat;
+    if (o) return side > 0 ? { x: o.x, z: o.z } : { x: o.px, z: o.pz ?? o.z };
+    return { x: side * s.wid * 0.22, z: s.tall ? s.len / 2 - 1.6 : -0.05 };
+  }
   fitScale(h, base = this.seatY()) { return Math.min(1, Math.max(0.72, (this.roofY() - base) / h)); }
 }
 

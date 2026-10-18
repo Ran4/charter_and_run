@@ -171,14 +171,15 @@ export const audio = {
   resumeLoops() { if (!ctx) return; if (this._drone) this.drone(...this._drone); if (siren) siren.g.gain.setTargetAtTime(siren.level, ctx.currentTime, 0.05); },
 
   // `electric` (the golf cart, §10.40): a quiet hum rising to a thin whine instead of the motor.
-  engine(on, revs, load, electric = false) {
+  // `diesel` (the tractor, §10.54): a low, dark putt-putt that hardly rises.
+  engine(on, revs, load, electric = false, diesel = false) {
     if (!ctx) return;
     const t = ctx.currentTime;
-    const f = electric ? 150 + revs * 420 : 38 + revs * 95;
+    const f = electric ? 150 + revs * 420 : diesel ? 26 + revs * 30 : 38 + revs * 95;
     eng.o1.frequency.setTargetAtTime(f, t, 0.05);
-    eng.o2.frequency.setTargetAtTime(electric ? f * 1.004 : f * 0.5 + 1.5, t, 0.05);
-    eng.f.frequency.setTargetAtTime(electric ? 500 + revs * 1100 : 260 + revs * 900 + load * 600, t, 0.05);
-    eng.g.gain.setTargetAtTime(on ? (electric ? 0.008 + load * 0.01 : 0.035 + load * 0.04) : 0, t, on ? 0.08 : 0.25);
+    eng.o2.frequency.setTargetAtTime(electric ? f * 1.004 : diesel ? f * 0.5 : f * 0.5 + 1.5, t, 0.05);
+    eng.f.frequency.setTargetAtTime(electric ? 500 + revs * 1100 : diesel ? 200 + revs * 360 + load * 260 : 260 + revs * 900 + load * 600, t, 0.05);
+    eng.g.gain.setTargetAtTime(on ? (electric ? 0.008 + load * 0.01 : diesel ? 0.05 + load * 0.035 : 0.035 + load * 0.04) : 0, t, on ? 0.08 : 0.25);
   },
   skid(amount) {
     if (!ctx) return;

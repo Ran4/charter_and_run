@@ -279,8 +279,15 @@ function postSign(f, text, lx, lz, w, h, y0, ly = 0, opts = {}) {
 // ---------------------------------------------------------------------------------------------
 // tomat: tomato fields. Rows of low bushes on dark volcanic soil, merged, no solids (§6.3).
 
+// Every field of rows, for the tractor's bumps over them (feature 121, §10.54; game/traktor.js): { ox,
+// oz (the block centre: block frames have yaw 0, so local = world − it), x0, x1, z0, z1 (block-local),
+// dir, gap }; a bush row runs down the middle of each `gap` from x0 (dir 'z') or z0 (dir 'x').
+// Filled by tomatoRows, data only (no random draws).
+export const TOMATO_ROWS = [];
+
 // Rows running along z (dir 'z') or x inside the rect [x0, x1] × [z0, z1].
 function tomatoRows(f, x0, x1, z0, z1, dir, rnd, gap = 2.2) {
+  TOMATO_ROWS.push({ ox: f.ox, oz: f.oz, x0, x1, z0, z1, dir, gap });
   const along = dir === 'z';
   const a0 = along ? x0 : z0, a1 = along ? x1 : z1, b0 = along ? z0 : x0, b1 = along ? z1 : x1;
   f.flat(SOIL, (x0 + x1) / 2, (z0 + z1) / 2, x1 - x0, z1 - z0, CURB + 0.02);
@@ -428,7 +435,9 @@ function tomatPackhus(f, rnd) {
   f.prop('papelera', -15.4, 6.4);
 }
 
-// (1,0): plain fields, a cane windbreak, a tool hut and a water tank.
+// (1,0): plain fields, a cane windbreak, a tool hut and a water tank; the farmer's tractor with its
+// trailer of tomato boxes parked on the track before the hut, facing down it to the road, clear of the
+// track's crates (feature 121, §10.54: a named parked car of the toy type `traktor`, never a mission's).
 function tomatFields(f, rnd) {
   tomatoRows(f, -30, -4, -30, 30, 'z', rnd);
   tomatoRows(f, 4, 30, -30, 8, 'z', rnd);
@@ -445,6 +454,7 @@ function tomatFields(f, rnd) {
   f.solid(-0.5, -24, 4, 3.4, 99, 'shed');
   for (const [x, z] of [[2, 29], [-2.5, -14], [2.6, -8]]) f.prop('tomatlada', x, z);
   f.prop('butano', 1.6, -21.6);
+  f.car('traktor', 0.2, -16, 0, { color: 0xc8281e, name: 'traktor' });
   palm(f, 2.4, 24, 0.8, true);
   cardon(f, -2.2, 12, 0.9);
   agave(f, 3, 3);
