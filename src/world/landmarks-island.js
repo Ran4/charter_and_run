@@ -214,6 +214,13 @@ export const ISLAND_LANDMARKS = {
   // north-east side, facing out over the town (E: down again). Block-local: the tower's axis is (0, -8).
   fyrDorr: { b: [0, 6], at: [0, 1.4], yaw: PI },
   fyrGalleri: { b: [0, 6], at: [2.4 * Math.SQRT1_2, -8 - 2.4 * Math.SQRT1_2], yaw: PI * 0.75, y: 51.3 },
+  // "Kan du ta ett kort på oss?" (free roam, §10.51): where the tourist couple stands, the middle between
+  // the two, facing the way the picture is to be taken. On the lighthouse's plaza left of the keeper's
+  // door (3.4 m from fyrDorr), the compass rose 12 m south; on the dunes' boardwalk before the DUNAS DE
+  // MASPALOMAS sign, the two big dunes behind them; before the gate of LA MEDINA, its pylons behind them.
+  kortFyren: { b: [0, 6], at: [-1.6, 4.4], yaw: 0 },
+  kortDyner: { b: [0, 4], at: [0, -1.6], yaw: 0 },
+  kortMedina: { b: [1, 2], at: [0, 16.5], yaw: 0 },
   // (3,6) beach, (5,6) harbour
   playa: { b: [3, 6], at: [0, 10], yaw: 0 },
   // Livräddarens kikare (free roam, §10.48): the middle of the lifeguard tower's platform (deck 2.75,

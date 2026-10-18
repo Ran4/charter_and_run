@@ -19,13 +19,15 @@
 // (game/binoculars.js).
 // `sort`: sorting tomatoes at the packing shed's belt, 'R' / 'L' (a throw to his right or left) or 'C'
 // (into the bucket before him), `sortK` the move's 0..1 (game/packhus.js).
+// `foto`: the tourist couple's camera, 'eye' up at his eye, 'give' held out, 'belly' on its strap on his
+// belly (game/touristPhoto.js).
 
 import { buildCharacter, animateCharacter } from './models.js';
 import { queryBlocks, circleVsBlock, groundAt, groundInfo, topAt, RAMP } from '../world/collision.js';
 import { dampAngle, yawTo } from '../util.js';
 
 export const STEP = 0.45;
-export const ANIM_FLAGS = ['wings', 'cupUp', 'cupHeld', 'push', 'planeSeat', 'hold', 'flail', 'oath', 'dance', 'laugh', 'slump', 'shoeOff', 'mirror', 'film', 'camShow', 'giraffe', 'butterKnife', 'carryOver', 'glide', 'swan', 'calc', 'ski', 'groda', 'ticket', 'leap', 'bomb', 'placate', 'rub', 'eyesShut', 'tap', 'scratch', 'point', 'fish', 'thumb', 'ride', 'kikare', 'sort', 'volley'];
+export const ANIM_FLAGS = ['wings', 'cupUp', 'cupHeld', 'push', 'planeSeat', 'hold', 'flail', 'oath', 'dance', 'laugh', 'slump', 'shoeOff', 'mirror', 'film', 'camShow', 'giraffe', 'butterKnife', 'carryOver', 'glide', 'swan', 'calc', 'ski', 'groda', 'ticket', 'leap', 'bomb', 'placate', 'rub', 'eyesShut', 'tap', 'scratch', 'point', 'fish', 'thumb', 'ride', 'kikare', 'sort', 'volley', 'foto'];
 export const GRAV = 24;
 const _blocks = [], _hit = {};
 

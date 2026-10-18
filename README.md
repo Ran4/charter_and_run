@@ -44,7 +44,7 @@ Samma tangenter i båda nivåerna; nivån bestämmer vad de gör.
 | Shift | spring | | skynda – men det ökar rädslan |
 | Space | hoppa, i luften igen för dubbelhopp | handbroms (sladd!) | **håll i dig**: ta tag i närmaste stolsrygg vid turbulens |
 | J / klick | sparka, i luften: stampa (efter julafton: **håll in i luften** för att glidflyga) | | **håll in**: "Jag kan flyga, jag är inte rädd" – sänker FLYGRÄDSLA |
-| E | prata (med uppdragsgivaren, och mellan uppdragen med gänget), kliv in, sno en bil, kvarta en stund i Stigs säng i rum 107, titta i herr Storchs kamera, heja på rullskidåkaren, dansa med i poolen, smörja in Majsans rygg (**håll in** och släpp i det gröna), byta om i garderoben i rum 107, söka skydd i kyrkan, ringa efter en bil från hytt 2, meta från piren (och **dra upp** när flötet dyker), lifta på landsvägen (på flaket: hoppa av), ta livräddarens kikare (och sänka den igen), ta ett skift vid packhusets sorteringsband, spela strandvolley (och ta revansch) | kliv ur (i fart: rulla ur) | prata, **sätt dig / res dig**, lås in dig på toaletten, anropsknappen, serveringsvagnen |
+| E | prata (med uppdragsgivaren, och mellan uppdragen med gänget), kliv in, sno en bil, kvarta en stund i Stigs säng i rum 107, titta i herr Storchs kamera, heja på rullskidåkaren, dansa med i poolen, smörja in Majsans rygg (**håll in** och släpp i det gröna), byta om i garderoben i rum 107, söka skydd i kyrkan, ringa efter en bil från hytt 2, meta från piren (och **dra upp** när flötet dyker), lifta på landsvägen (på flaket: hoppa av), ta livräddarens kikare (och sänka den igen), ta ett skift vid packhusets sorteringsband, spela strandvolley (och ta revansch), ta ett kort åt ett turistpar (och ge tillbaka kameran) | kliv ur (i fart: rulla ur) | prata, **sätt dig / res dig**, lås in dig på toaletten, anropsknappen, serveringsvagnen |
 | H | | tuta (utanför uppdragen hör folk den; i den lånade Guardia-jeepen: sirenen) | |
 | B | | titta bakåt | |
 | M / Tab | stor karta | stor karta | plan över gaten/kabinen |
@@ -62,7 +62,9 @@ Stig metar lägger Q ner spöt medan han väntar. Står han på grisflaket när 
 emot i kurvorna. Med livräddarens kikare vrider musen eller W/A/S/D (pilarna) kikaren, och E eller Q
 sänker den. Vid packhusets sorteringsband slänger A (←) tomaten i ROJOS, S (↓) i hinken och D (→) i
 VERDES (styrkorset på handkontrollen), och Q avslutar skiftet. I strandvolleyn sparkar J bollen över nätet,
-Space hoppar för att nicka och Q ger upp matchen; E gör ingenting under matchen.
+Space hoppar för att nicka och Q ger upp matchen; E gör ingenting under matchen. I turistparets kamera
+siktar musen, W/A/S/D (pilarna) flyttar Stig, högerklick eller V vänder kameran på högkant och tillbaka,
+Space eller vänsterklick knäpper och E eller Q ger tillbaka kameran utan kort.
 
 Vägen visas av den gula pilen över Stig-Helmers huvud, ljuskäglan och ringen vid målet och
 stjärnan på kartan. På Arlanda och i planet går pilen runt bänkar, väggar och stolsrader i
@@ -338,6 +340,18 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   ställningen. Vinner Stig och Ole ger de andra upp och går mot baren; förlorar de kan du trycka **E** för
   revansch. **Q** ger upp. Matchen ger inga pengar, men vinster och förluster sparas. Den finns bara mellan
   uppdragen, och inte medan Ole eller Berra har ett uppdrag att ge.
+- **"Kan du ta ett kort på oss?"**: när "Caballo folklorístico" är klart står ett solbränt svenskt
+  turistpar på fyrplanen framför Faro de Maspalomas, han i blommig skjorta med kameran på magen och hon i
+  prickig klänning. Hon vill att Stig tar ett kort på dem, och fyren ska vara med. Tryck **E** så räcker
+  han över kameran ("Bara att knäppa. Den har motor!") och skärmen blir dess sökare. Sikta med musen, gå
+  med **W**/**A**/**S**/**D**, vänd kameran på högkant med **högerklick** eller **V** och knäpp med
+  **Space**: Stig säger "Säg… omelett." Under sökaren står om båda kommer med, om de syns ordentligt och
+  om fyren är hel. Fyren är 56 meter hög, så nära paret får du bara med foten, och backar du ända ner mot
+  vattnet blir paret bara prickar. Det finns ett rätt svar. Ett bra kort ger 100 pesetas i dricks ("Å, vad
+  fint det blir i albumet!"), bara foten eller ett pyttelitet par 10. Kommer de inte med alls får du
+  försöka igen. Sedan går paret vidare, och ett nytt par väntar vid dynerna (båda dynerna ska vara med)
+  och därefter vid porten till LA MEDINA (hela porten ska vara med), och sedan vid fyren igen. Paren finns
+  bara på dagen och mellan uppdragen.
 - **Små grodorna i poolen** (efter slutet): julfesten är inte riktigt över. Varje gång du kommer in
   på Flamencos pooldäck (mellan nio på morgonen och elva på kvällen) vadar SunTrip-gänget ut i den
   grunda änden och ställer sig i ring runt Lasse i tomteluva. Affe spelar Små grodorna på dragspelet,
@@ -604,6 +618,8 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
   sägs till Majsan)
 - strandvolleyn mot Berra och Robban (filmen har ingen volleyboll: törstreplikerna sägs på vägen till
   bodegan, vid poolen och på vischan, och Oles "Heia Norge!" avslutar hans dans på grisfesten)
+- turistparen som vill ha ett kort, kamerans sökare och dricksen (i filmen säger Ole "Säg omelett." när han
+  fotograferar Stig-Helmer under julklappsjakten, och svenskarna på gatorna går med kameran på magen)
 - poolfesten efter slutet: ringen runt Lasse, portierns promenad, att Stig hoppar med och
   takträknaren (i filmen dansar de andra Små grodorna i poolen på julfesten medan Stig-Helmer och Ole
   öppnar knäckebrödet, och Stig-Helmer dansar aldrig)
@@ -813,6 +829,7 @@ src/game/hitch.js               Vi liftar in free roam: the hitch-hiking spots, 
 src/game/binoculars.js          Livräddarens kikare in free roam: the lifeguard tower's binoculars, the 12° view (the camera's scope), the eight targets, the list, "Inga hajar. Bara svenskar."
 src/game/packhus.js             Stig på löpande band in free roam: the packing shed's foreman, the shift at the sorting belt, A/S/D, the G17 stamp, TOMATRAS, the record, Siv's line
 src/game/volley.js              Strandvolley in free roam: the court's live ball, the match against Berra and Robban, Stig's kick and header, Ole's set, the thirst, the board
+src/game/touristPhoto.js        "Kan du ta ett kort på oss?" in free roam: the tourist couples at the lighthouse, the dunes and LA MEDINA, their camera's viewfinder (the scope, on end), the reading, the snap, the tips
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
@@ -823,7 +840,7 @@ tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, 
                                 stunthopp, prata, takhopp, mikrofon, faglar, gags, strandkyssen,
                                 guardiajeep, fyren, klader, ringklocka, kyrkfrid, gatlopp, skidor,
                                 golfbil, battur, balkong, hytt, kaffe, meta, marknadstak, lifta,
-                                kikare, packhus, volley, calibrate, calibflight)
+                                kikare, packhus, volley, kort, calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
 tools/pool.mjs                  re-derives every random stage's timer from the ledger
@@ -872,6 +889,7 @@ node tools/shot.mjs lifta liftaFall      # hitch-hiking: the thumb, the stop, th
 node tools/shot.mjs kikare kikareshots   # the lifeguard's binoculars: the prompt up on the tower, the view, a find, all eight and the end shot, the locks; every target through them
 node tools/shot.mjs packhus packhusbalans   # the packing shed's belt: the foreman, the keys, a box stamped, a whole shift, TOMATRAS, Q, Siv, the locks; the balance with the autopilot
 node tools/shot.mjs volley volleyfree volleyshots   # beach volleyball: the prompt, the fade and the marks, a serve, a match played out by an autopilot, the rematch, Q, a mission start; the ball in free roam
+node tools/shot.mjs kort kortshots       # the tourist couples: the ask, the viewfinder, on end at the compass rose, the snap and the tip, the dunes and LA MEDINA, a miss, a speck, the locks; every view
 node tools/shot.mjs grodorna grodtakt    # the pool fest after the end: the ring, the porter, Stig in the ring, eight on the beat
 node tools/shot.mjs artig                # Stig says sorry: kicks, run over, a pump, bins, carjackings and the driver's "Nej."
 node tools/shot.mjs grisar               # the grisbil's pigs: the falls, the catch on foot and by creeping, Lasse, the pen

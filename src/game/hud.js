@@ -64,6 +64,7 @@ export const hud = {
       <div id="viewfinder"><div class="vf-title"></div><div class="vf-gate"><div class="vf-flicker"></div><div class="vf-dust"></div><div class="vf-label"></div></div><div class="vf-perf l"></div><div class="vf-perf r"></div><div class="vf-line"></div></div>
       <div id="filmnight"></div>
       <div id="kikare"><svg class="kk-glass" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><defs><mask id="kk-holes" maskUnits="userSpaceOnUse" x="-6000" y="-6000" width="13600" height="12900"><rect x="-6000" y="-6000" width="13600" height="12900" fill="#fff"/><circle cx="578" cy="440" r="392" fill="#000"/><circle cx="1022" cy="440" r="392" fill="#000"/></mask><radialGradient id="kk-shade" cx="800" cy="440" r="520" gradientUnits="userSpaceOnUse"><stop offset="0.72" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="0.42"/></radialGradient></defs><rect x="-6000" y="-6000" width="13600" height="12900" fill="url(#kk-shade)"/><rect x="-6000" y="-6000" width="13600" height="12900" fill="#0d0b10" mask="url(#kk-holes)"/><circle class="kk-aim" cx="800" cy="440" r="46"/><circle class="kk-fill" cx="800" cy="440" r="46" pathLength="100"/></svg><div class="kk-list"><div class="kk-title"></div><div class="kk-rows"></div></div><div class="kk-line"></div><div class="kk-bar"><span class="kk-count"></span><span class="kk-new"></span></div><div class="kk-keys"></div></div>
+      <div id="kort"><div class="ko-frame"><img class="ko-still" alt=""><i class="ko-c tl"></i><i class="ko-c tr"></i><i class="ko-c bl"></i><i class="ko-c br"></i><div class="ko-ring"></div><div class="ko-stamp"></div></div><div class="ko-keys"></div><div class="ko-line"></div><div class="ko-read"><span class="ko-par"></span><span class="ko-sub"></span></div></div>
       <div id="dialog"><div class="dlg-portrait"><img alt=""></div><div class="dlg-body"><div class="dlg-name"></div><div class="dlg-text"></div></div><div class="dlg-next">${S.dialogNext}</div></div>
       <div id="flash"></div>
       <div id="dreamwash"></div>
@@ -104,6 +105,7 @@ export const hud = {
     this.fnEl = $('filmnight');
     this.kkEl = $('kikare');
     this.kkFill = root.querySelector('.kk-fill');
+    this.koEl = $('kort');
     this.flash = $('flash');
     this.dreamEl = $('dream');
     this.washEl = $('dreamwash');
@@ -521,6 +523,36 @@ export const hud = {
     this._kkRing = v;
     this.kkEl.classList.toggle('aim', v != null);
     if (v != null) this.kkFill.style.strokeDashoffset = String(100 - v * 100);
+  },
+  // The tourist couple's viewfinder (game/touristPhoto.js, §10.51) over everything: o = { fw, fh (the
+  // frame's px), hog (on end), keys, par: [text, ok], sub: [text, ok], line, who, still (a data URL: the
+  // picture frozen in the frame), stamp: [text, ok] } or null. Outside the frame the camera's black, the
+  // corners and the ring in it, the keys over it (a line in their place while it is up), the reading under
+  // it. Touches the DOM only on a change.
+  setKort(o) {
+    const e = this.koEl, { still, ...rest } = o || {}, key = o ? JSON.stringify(rest) : null;
+    if (key !== this._koKey) {
+      this._koKey = key;
+      if (!o) { e.classList.remove('show', 'frozen'); this._koStill = null; return; }
+      e.style.setProperty('--fw', `${o.fw}px`);
+      e.style.setProperty('--fh', `${o.fh}px`);
+      e.classList.toggle('hog', !!o.hog);
+      e.querySelector('.ko-keys').innerHTML = o.keys || '';
+      const par = e.querySelector('.ko-par'), sub = e.querySelector('.ko-sub');
+      par.textContent = upper(o.par[0]); par.className = 'ko-par ' + (o.par[1] ? 'ok' : 'no');
+      sub.textContent = upper(o.sub[0]); sub.className = 'ko-sub ' + (o.sub[1] ? 'ok' : 'no');
+      e.querySelector('.ko-line').innerHTML = o.line ? `<span>${o.who}:</span> – ${o.line}` : '';
+      e.classList.toggle('saying', !!o.line);
+      const st = e.querySelector('.ko-stamp');
+      st.textContent = o.stamp ? upper(o.stamp[0]) : '';
+      st.className = 'ko-stamp ' + (o.stamp?.[1] ? 'ok' : 'no');
+      e.classList.add('show');
+    }
+    if (still !== this._koStill) {
+      this._koStill = still;
+      if (still) e.querySelector('.ko-still').src = still;
+      e.classList.toggle('frozen', !!still);
+    }
   },
   // His film night: o = { title, sub, who, week: [labels], weekLine, stills: [data URLs], label,
   // julLine } or null. The black week shows at once; filmNightStep('l1' | 'jul' | 'l2') brings in his

@@ -2595,3 +2595,73 @@ export const VOLLEY = {
   },
   quit: { lines: [[0.2, 'berra', 'Då går vi till baren då.']] },                   // [N]
 };
+
+// "Kan du ta ett kort på oss?" – turistparet vid fyren (free roam; feature 110, DESIGN §10.51;
+// game/touristPhoto.js). Once asnan is done (`from`: the mission index after it), by day and with no
+// mission running (`missions.state === 'idle'`), a sunburnt Swedish couple waits at one of three `spots`
+// (in turn: the lighthouse's plaza, the dunes' boardwalk, the gate of LA MEDINA; the next one saved in
+// `records.kort.next`): the man waves within `waveR` m, the woman asks `ask` when Stig comes within
+// `askR` m (again after `askGap` s). The couple stands at the spot's landmark `lm`, `apart` m between
+// them, facing the way the picture is to be taken. Stig on foot within `r` m with no dialogue, carry,
+// pursuit, bust, PANIK or other free-roam hold: `prompt`. E: the man hands him the camera (`hand`, its
+// swap `giveAt` s in), and `handSecs` s in the screen is its viewfinder (`inDialog`): the eye `eye` m over
+// his feet and `ahead` m before his face, a 3:2 frame (`lens`: `long`° along its long side; `land` and
+// `hog` its share of the screen's height lying and standing, at most `maxW` of its width), the mouse
+// aims it (`turn` rad a pixel, the pitch within `pitch`), W/A/S/D walk him at `walk` m/s (no further
+// than `leash` m from the spot), the right mouse button or V turns the camera on end (högkant) and back,
+// Space or the left button snaps after Stig's `omelett` (`sayAt` s), E or Q gives it back unused. The
+// frame's live reading (`read`): the couple (both heads in the frame, and each taller than `minDeg`°
+// from the feet to the top of the head at the eye) and the spot's `subject` (every one of its `pts` in
+// the frame; one of them or of its `base` is `part`; block-local [x, y, z], y absolute). A snap freezes
+// the picture `stillSecs` s with its `stamp`; with the couple out of it (`miss`) the woman asks again and
+// the view goes on, otherwise the camera comes down, the couple walks over (`fetch`: `speed` m/s, for at
+// most `secs` s, then a black fade puts them before him), takes it back and pays (`pay` by the result,
+// `lines` its line, the toast `tip`), and after `thanksSecs` s walks off along the spot's `exit` path
+// (`leaveWalk` m/s) while the next couple waits at the next spot (`next`). Invented (§1.6): the couple,
+// the viewfinder and the tips; "Säg… omelett." is the film's (research-plot.md:300), relocated to Stig.
+export const KORT = {
+  from: 8, seed: 11000, r: 2.6, apart: 0.95, askR: 9, askGap: 14, waveR: 12, showR: 4, popR: 70,
+  eye: 2.2, ahead: 0.3, walk: 2.0, leash: 48, turn: 0.0022, pitch: [-0.9, 1.35], pitch0: -0.04, minDeg: 5.5,
+  lens: { long: 76, ratio: 1.5, land: 0.72, hog: 0.82, maxW: 0.92 },
+  handSecs: 1.4, giveAt: 0.55, sayAt: 0.8, stillSecs: 2.0, lineSecs: 2.6, thanksSecs: 2.8, leaveWalk: 1.4,
+  fetch: { speed: 3.0, secs: 4.0, near: 1.3, fadeSecs: 0.65 },
+  pay: { bra: 100, kapad: 10, liten: 10 },
+  spots: [
+    { id: 'fyren', lm: 'kortFyren', b: [0, 6], where: 'vid fyren', subject: 'Fyren', part: 'bara foten',
+      pts: [[0, 56.3, -8]], base: [[0, 6.5, -4.8], [0, 18, -5.2]], exit: [[8, 13], [26, 16.5], [36, 16.5]],
+      ask: 'Ursäkta… kan du ta ett kort på oss? Fyren ska vara med!' },                   // [N]
+    { id: 'dyner', lm: 'kortDyner', b: [0, 4], where: 'vid dynerna', subject: 'Dynerna', part: 'bara en dyn',
+      pts: [[-16.5, 2.75, -17], [16.5, 2.75, -17.5]], base: [], exit: [[0, -12], [0, -31]],
+      ask: 'Ursäkta… kan du ta ett kort på oss? Båda dynerna ska vara med!' },            // [N]
+    { id: 'medina', lm: 'kortMedina', b: [1, 2], where: 'vid porten till LA MEDINA', subject: 'Porten', part: 'halva porten',
+      pts: [[-8, 10.75, 11.5], [8, 10.75, 11.5]], base: [[0, 7.43, 12.9]], exit: [[0, 8], [0, -3]],
+      ask: 'Ursäkta… kan du ta ett kort på oss? Hela porten ska vara med!' },             // [N]
+  ],
+  // The couples' looks: the first as the idea's picture (an orange flowered shirt, a turquoise dotted
+  // dress), the later ones drawn from these.
+  first: { shirt: 0xf07a1e, print: [0xffd23f, 0x3f7a3a, 0xffffff], dress: 0x2fb8a8 },
+  shirts: [0xf07a1e, 0x2fb8a8, 0x6ab0e8, 0xd8321e, 0xf08ab0, 0xf7d23a, 0x3f9a5a],
+  prints: [[0xffd23f, 0x3f7a3a, 0xffffff], [0xffffff, 0xf07a1e, 0x2fb8a8], [0xf7d23a, 0xd8321e, 0x3f7a3a], [0xf08ab0, 0xffffff, 0x2f6ad8]],
+  dresses: [0x2fb8a8, 0xf7d23a, 0xf08ab0, 0xf07a1e, 0xa88ad0, 0x6ab0e8, 0xd8321e],
+  skin: [0xf0937a, 0xf2a890],                                                            // sunburnt: his, hers
+  prompt: '<b>E</b> Ta ett kort',                                                        // [N]
+  hand: 'Bara att knäppa. Den har motor!',                                               // [N] the man (Ole's camera talk, "japansk, liten, motor…", research-plot.md:255)
+  omelett: 'Säg… omelett.',                                                              // [F*] the gift hunt's "Säg omelett." (research-plot.md:300), relocated to Stig
+  miss: 'Men… vi kom ju inte med!',                                                      // [N] the woman
+  lines: {
+    bra: ['hon', 'Å, vad fint det blir i albumet!'],                                     // [N]
+    kapad: ['hon', 'Jaa… tack ska du ha.'],                                              // [N]
+    liten: ['han', 'Jaha… vi syns väl. Någonstans där nere.'],                           // [N]
+    abort: ['han', 'Ingen bild? Nåja.'],                                                 // [N]
+  },
+  who: { stig: 'Stig-Helmer', han: 'Han', hon: 'Hon' },
+  keys: '<b>MUS</b> Sikta · <b>W/S</b> Fram/bak · <b>HÖGERKLICK</b>/<b>V</b> {vrid} · <b>SPACE</b> Knäpp · <b>E</b> Ge tillbaka',   // [N]
+  vrid: { hog: 'Högkant', land: 'Liggande' },                                            // [N] · [N]
+  read: {
+    par: { ok: 'Paret ✓', kapat: 'Paret: kapat', none: 'Paret: saknas', liten: 'Paret: pyttesmått' },   // [N]
+    sub: { ok: '{s} ✓', part: '{s}: {p}', none: '{s}: saknas' },                         // [N]
+  },
+  stamp: { bra: 'Bra kort!', kapad: '{p}!', liten: 'Pyttesmått par!', miss: 'Paret kom inte med!' },   // [N]
+  tip: '<span>Dricks från turistparet: {n} pta</span>',                                  // [N] (one flex item in the toast)
+  next: '<span>Ett nytt par vill ha ett kort {where}.</span>',                           // [N]
+};

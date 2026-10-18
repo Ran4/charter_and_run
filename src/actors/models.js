@@ -712,6 +712,20 @@ const PROP_GEO = {
   poleR: skiPole, poleL: skiPole,
   metspo: fishingRod,   // Stig's rod at the pier's end (anim.fish, game/fishing.js)
   kikare: binoculars,   // the lifeguard's binoculars on the tower (anim.kikare, game/binoculars.js)
+  // The tourist couple's camera (anim.foto, game/touristPhoto.js, §10.51): a black-and-chrome 35 mm
+  // compact, the lens along +z, a flash cube on top at the left; the origin in the body's middle. Its
+  // strap (`fotorem`), only while it hangs on his belly: two bands from its top corners up to his neck.
+  fotokamera(g) {
+    g.box(0x2a2a30, 0, 0, 0, 0.2, 0.115, 0.075);
+    g.box(0xc8ccd2, 0, 0.04, 0, 0.2, 0.035, 0.077);
+    g.cyl(0x1d1d22, 0.02, -0.01, 0.055, 0.042, 0.045, 14, Math.PI / 2);
+    g.cyl(0x6a8ab8, 0.02, -0.01, 0.079, 0.03, 0.006, 14, Math.PI / 2);
+    g.box(0xf4f4f0, -0.065, 0.083, 0, 0.042, 0.042, 0.042);
+    g.box(0xc8ccd2, 0.07, 0.065, 0.005, 0.026, 0.016, 0.026);
+  },
+  fotorem(g) {
+    for (const sx of [-1, 1]) g.box(0x3a2a1e, sx * 0.13, 0.25, -0.03, 0.022, 0.44, 0.012, 0, 0.08, sx * 0.2);
+  },
 };
 function rollerski(g) {
   g.box(0xd8321e, 0, -0.025, 0.02, 0.075, 0.03, 0.74);
@@ -1089,7 +1103,7 @@ function heldPose(m, st, t, place = false) {
   const h = m.def.held;
   if (!h || !PROP_GEO[h]) return;
   const [R, L] = m.arms;
-  const busy = st.wings || st.cupUp || st.cupHeld || st.push || st.rub || st.hold || st.flail || st.oath || st.dance || st.laugh || st.mirror || st.film || st.camShow || st.giraffe || st.butterKnife || st.ticket || st.carryOver || st.shoeOff || st.calc || st.groda || st.placate || st.tap || st.scratch || st.point || st.cheer || st.wave || st.fish || st.thumb || st.ride || st.kikare || st.sort || st.volley || st.kick > 0;
+  const busy = st.wings || st.cupUp || st.cupHeld || st.push || st.rub || st.hold || st.flail || st.oath || st.dance || st.laugh || st.mirror || st.film || st.camShow || st.giraffe || st.butterKnife || st.ticket || st.carryOver || st.shoeOff || st.calc || st.groda || st.placate || st.tap || st.scratch || st.point || st.cheer || st.wave || st.fish || st.thumb || st.ride || st.kikare || st.sort || st.volley || st.foto || st.kick > 0;
   const pose = !place && !busy;
   const moving = st.speed > 0.3;
   switch (h) {
@@ -1468,6 +1482,27 @@ function poseFlags(m, st, t) {
     R.rotation.set(up ? -2.55 : -1.25, 0, up ? 0.3 : 0.45); L.rotation.set(up ? -2.55 : -1.25, 0, up ? -0.3 : -0.45);
     m.neck.rotation.x = up ? 0.0 : -0.08;
     between(m, prop(m, 'kikare'), 0, up ? 0.04 : 0.02, up ? -0.02 : 0.02);
+  }
+  if (st.foto) {
+    // The tourist couple's camera (game/touristPhoto.js, §10.51): 'eye' up at his eye in both hands (Stig
+    // taking their picture), 'give' held out in his right hand (handed over or back), 'belly' hanging
+    // on its strap on the man's belly, his hands free (the left one may wave).
+    const p = prop(m, 'fotokamera');
+    if (st.foto === 'eye') {
+      R.rotation.set(-1.95, 0, 0.58); L.rotation.set(-1.85, 0, -0.64);
+      m.neck.rotation.x = 0.06;
+      between(m, p, 0, 0.0, -0.05);
+    } else if (st.foto === 'give') {
+      R.rotation.set(-1.3, 0, 0.12);
+      inHand(m, p, 0, 0, 0.02, 0.05);
+    } else {
+      const z = m.torsoD * (m.def.belly ? 0.68 : 0.5) + 0.045 * m.s;
+      p.position.set(0, m.torsoH * 0.32, z);
+      p.rotation.set(0, 0, 0);
+      const strap = prop(m, 'fotorem');
+      strap.position.set(0, m.torsoH * 0.32, z);
+      strap.rotation.set(0, 0, 0);
+    }
   }
   if (st.thumb) {
     // Hitch-hiking at the kerb (game/hitch.js, §10.47): the left arm out towards the traffic coming

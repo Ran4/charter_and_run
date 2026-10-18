@@ -66,6 +66,7 @@ import { Hitch } from './game/hitch.js';
 import { Binoculars } from './game/binoculars.js';
 import { Packhus } from './game/packhus.js';
 import { Volley } from './game/volley.js';
+import { TouristPhoto } from './game/touristPhoto.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
 import { LEVELS, ISLAND_PALETTES } from './level.js';
@@ -247,6 +248,7 @@ class Game {
     this.kikare = new Binoculars(this);   // free roam: the lifeguard's binoculars on the beach's tower, eight things to spot (§10.48)
     this.packhus = new Packhus(this);     // free roam: the foreman at the packing shed, a shift at the tomato sorting belt (§10.49)
     this.volley = new Volley(this);       // the beach volleyball court's live ball; free roam: the match against Berra and Robban (§10.50)
+    this.kort = new TouristPhoto(this);   // free roam: the tourist couple's picture at the lighthouse, the dunes and LA MEDINA (§10.51)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -685,6 +687,7 @@ class Game {
     if (this.kikare.busy) this.kikare.end('down');   // the binoculars down (§10.48)
     this.packhus.end('gone');                        // off the packing shed's belt (§10.49)
     if (this.volley.mode) this.volley.end('warp');   // off the volleyball court: the match off (§10.50)
+    if (this.kort.busy) this.kort.end('warp');       // the tourist couple's camera down (§10.51)
     if (this.playerCar) this.playerCar.place(x, z, yaw);
     else this.player.teleport(x, z, yaw);
     this.cam.snapNext = true;
@@ -834,6 +837,7 @@ class Game {
     out.push(...this.mic.extras);     // the tourists come to hear Stig at the SunTrip stage (§10.30)
     out.push(...this.bell.extras);    // the departing guests queueing at Flamenco's reception (§10.37)
     out.push(...this.packhus.extras); // the foreman on the packing shed's yard (§10.49)
+    out.push(...this.kort.extras);    // the tourist couple who want their picture taken (§10.51)
     return out;
   }
 
@@ -1538,6 +1542,7 @@ class Game {
     else if (input.padPressed('pause')) this.pause(false);   // pad Start toggles the pause card
     renderer.render(scene, camera);
     if (this.film?.grabNow) this.film.grab();   // Herr Storch's still, in this frame's buffer (§10.11)
+    if (this.kort?.grabNow) this.kort.grab();   // the tourist couple's picture, the same way (§10.51)
     input.endFrame();
     this.frame++;
     window.__frame = this.frame;
@@ -1615,6 +1620,7 @@ class Game {
     this.kikare.update(dt);
     this.packhus.update(dt);
     this.volley.update(dt);
+    this.kort.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);
@@ -1774,7 +1780,11 @@ class Game {
       c.park = false;
     } else if (p.state === 'normal') {
       // In the pool fest's ring he stands in his place (a step out leaves it: fest.update).
-      if (frozen || this.holding || p.anim.wings || this.fest.joined) { p.wishX = p.wishZ = 0; p.anim.sprint = false; }
+      if (frozen || this.holding || p.anim.wings || this.fest.joined) {
+        // In the tourist couple's viewfinder W/A/S/D walk him (§10.51).
+        const w = this.kort.wish();
+        p.wishX = w ? w.x : 0; p.wishZ = w ? w.z : 0; p.anim.sprint = false;
+      }
       else {
         const mx = input.moveX(), my = input.moveY();
         const fx = Math.sin(this.cam.yaw), fz = Math.cos(this.cam.yaw);
@@ -1828,6 +1838,7 @@ class Game {
     this.bell.step(h);    // the queue at Flamenco's reception (§10.37)
     this.packhus.step(h); // the foreman on the packing shed's yard (§10.49)
     this.volley.step(h);  // the volleyball: Stig's kick and header, the others' hits, the ball (§10.50)
+    this.kort.step(h);    // the tourist couple (§10.51)
     this.carsVsPeople();
   }
 
@@ -1838,9 +1849,9 @@ class Game {
     // A fruit stall is the car's only (`carOnly`, §10.19).
     for (const prop of propsNear(x, z, r)) { if (prop.def.carOnly) continue; const b = breakProp(prop, dx * 8, dz * 8, this); if (b && !broke?.def.explode) broke = b; }
     // Pedestrians, the grisfest's band and tourists (§10.18), bathers off their loungers (§10.22), the
-    // tourists at the SunTrip stage (§10.30), the queue at Flamenco's reception (§10.37) and the foreman
-    // on the packing shed's yard (§10.49).
-    const people = (this.levelDef.sim.peds ? this.peds.map((ped) => ped.char) : []).concat(this.party.extras, this.bathers.loose, this.mic.extras, this.bell.extras, this.packhus.extras);
+    // tourists at the SunTrip stage (§10.30), the queue at Flamenco's reception (§10.37), the foreman
+    // on the packing shed's yard (§10.49) and the tourist couple (§10.51).
+    const people = (this.levelDef.sim.peds ? this.peds.map((ped) => ped.char) : []).concat(this.party.extras, this.bathers.loose, this.mic.extras, this.bell.extras, this.packhus.extras, this.kort.extras);
     for (const c of people) {
       if (c.state !== 'normal' || Math.abs(c.y - y) > 1.6 || dist(c.x, c.z, x, z) > r + 0.4) continue;
       c.fling(dx * 7 + (c.x - x) * 2, 5, dz * 7 + (c.z - z) * 2);

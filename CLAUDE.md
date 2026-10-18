@@ -206,7 +206,15 @@ opens with a summary of the rounds and the timer changes.
     reasons on the board STIG & OLE n – m BERRA & ROBBAN, the thirst lines, first to five, the walk off,
     "E Revansch!", Q, off the court, a mission start; an autopilot in Stig's place plays a match out; no
     prompt while Ole or Berra has a mission to give; the ball kicked and knocked about in free roam and
-    back once Stig is away, DESIGN §10.50)
+    back once Stig is away, DESIGN §10.50), `kort kortshots` ("Kan du ta ett kort på oss?", the sunburnt
+    tourist couple after asnan by day between missions, at the lighthouse's plaza, the dunes' boardwalk
+    and the gate of LA MEDINA in turn: her ask, his wave, "E Ta ett kort"; the hand-over, the viewfinder
+    (the camera's `scope`, a 3:2 frame holding a 76° lens, Stig unseen), the mouse, W/A/S/D and the leash,
+    V or the right button on end; the reading (both heads in, not a speck under 5.5°, the landmark whole);
+    at the compass rose only on end takes both the couple and the lantern; Space's "Säg… omelett.", the
+    frozen picture and its stamp, the fetch (a fade if far), the tip (100 or 10 pta), `records.kort`, the
+    walk off and the next spot; a miss asked again, a speck, given back unused, a knock, no prompt in a
+    car, a pursuit or at night, a mission start mid-view; every view lying and on end, DESIGN §10.51)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)
