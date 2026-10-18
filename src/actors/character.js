@@ -21,13 +21,17 @@
 // (into the bucket before him), `sortK` the move's 0..1 (game/packhus.js).
 // `foto`: the tourist couple's camera, 'eye' up at his eye, 'give' held out, 'belly' on its strap on his
 // belly (game/touristPhoto.js).
+// `whisky`: an unlabelled whisky bottle in the left hand, true at his side, 'out' held out before him,
+// 'low' before the chest (game/sisters.js).
+// `perchAt(x, y, z, yaw)`: standing ('normal') where no solid holds him (the sisters on the balcony
+// above room 105, game/sisters.js): no physics, no fling, until a teleport puts him back on the ground.
 
 import { buildCharacter, animateCharacter } from './models.js';
 import { queryBlocks, circleVsBlock, groundAt, groundInfo, topAt, RAMP } from '../world/collision.js';
 import { dampAngle, yawTo } from '../util.js';
 
 export const STEP = 0.45;
-export const ANIM_FLAGS = ['wings', 'cupUp', 'cupHeld', 'push', 'planeSeat', 'hold', 'flail', 'oath', 'dance', 'laugh', 'slump', 'shoeOff', 'mirror', 'film', 'camShow', 'giraffe', 'butterKnife', 'carryOver', 'glide', 'swan', 'calc', 'ski', 'groda', 'ticket', 'leap', 'bomb', 'placate', 'rub', 'eyesShut', 'tap', 'scratch', 'point', 'fish', 'thumb', 'ride', 'kikare', 'sort', 'volley', 'foto'];
+export const ANIM_FLAGS = ['wings', 'cupUp', 'cupHeld', 'push', 'planeSeat', 'hold', 'flail', 'oath', 'dance', 'laugh', 'slump', 'shoeOff', 'mirror', 'film', 'camShow', 'giraffe', 'butterKnife', 'carryOver', 'glide', 'swan', 'calc', 'ski', 'groda', 'ticket', 'leap', 'bomb', 'placate', 'rub', 'eyesShut', 'tap', 'scratch', 'point', 'fish', 'thumb', 'ride', 'kikare', 'sort', 'volley', 'foto', 'whisky'];
 export const GRAV = 24;
 const _blocks = [], _hit = {};
 
@@ -57,6 +61,7 @@ export class Character {
     this.floats = def.kind === 'wizard' || def.kind === 'ghost';
     this.solid = true;
     this.wade = 0;
+    this.perched = false;
     this.sync(0);
   }
 
@@ -112,8 +117,20 @@ export class Character {
     this.seatPose = null;
     this.teleport(x, z, yaw);
   }
+  // Standing at (x, y, z) with nothing solid under him (a balcony is only a look): placed by hand,
+  // never stepped or flung until teleport (placeNpc, placeNpcs, standAt) puts him on the ground.
+  perchAt(x, y, z, yaw = this.yaw) {
+    this.state = 'normal';
+    this.perched = true;
+    this.x = x; this.y = y; this.z = z; this.yaw = yaw;
+    this.vx = this.vz = this.vy = 0;
+    this.wishX = this.wishZ = 0;
+    this.onGround = true;
+    this.sync(0);
+  }
 
   teleport(x, z, yaw = this.yaw) {
+    this.perched = false;
     this.x = x; this.z = z; this.yaw = yaw;
     this.y = groundAt(x, z, 0.2, 0.6);
     this.vx = this.vz = this.vy = 0;
@@ -131,7 +148,7 @@ export class Character {
   // the lean he had (a sunbather off his lounger, game/bathers.js); otherwise the tumble about the
   // world's X axis every flung body has.
   fling(vx, vy, vz, flip = 0) {
-    if (this.state === 'seated' || this.state === 'hidden' || this.invulnerable) return false;
+    if (this.state === 'seated' || this.state === 'hidden' || this.invulnerable || this.perched) return false;
     const lean = this.state === 'lying' ? this.liePose.lean : 0;
     this.state = 'flung';
     this.liePose = null;
@@ -170,6 +187,7 @@ export class Character {
 
   step(dt, game) {
     if (this.state === 'seated' || this.state === 'hidden' || this.state === 'lying') return;
+    if (this.perched && this.state === 'normal') { this.vx = this.vz = this.vy = 0; return; }
     if (this.state === 'down') {
       this.timer -= dt;
       if (this.tumbleT != null) {

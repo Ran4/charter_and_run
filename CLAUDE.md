@@ -234,7 +234,14 @@ opens with a summary of the rounds and the timer changes.
     its tail, his shouts and Stig's answers, his give-up and walk home, Stig out near him and "¡Mi tractor!
     ¡Por fin!"; the furrows' jolts and "Jag har lite anlag för åksjuka.", tomatoes off at a knock, the
     honking queue on the road and Stig's sorry, the fetch home unseen, a wreck, the mission lock and home
-    at a mission start; the shots, DESIGN §10.54)
+    at a mission start; the shots, DESIGN §10.54), `systrar
+    systrarshots` (Systrarnas balkong, at index 11 between fataga and the grisfest: Stig walking onto room
+    105's patio by day brings Siv and Majsan up on the balcony above it (perched by hand, no solid) with the
+    cut and the ask, "Giraffen! Fixa en whisky!"; the bottle at SUPERMERCADO or BAR PISCINA (`game.pay`), in
+    his left hand, broken by a fall or R; "E Skicka upp whiskyn": the basket on the knotted towel, the
+    delivery's lines; Siv's reminder, Majsan's waves, the parking line by the west gable (no neighbour's);
+    a mission start puts them back at the pool; the pool's features at index 11 untouched until then;
+    every scene as seen, DESIGN §10.55)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

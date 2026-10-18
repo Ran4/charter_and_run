@@ -33,6 +33,9 @@ export const ISLAND_LANDMARKS = {
   // spot before the counter's north end, facing it (3.56 m from flamencoBar, out of a giver's 3.4 m).
   camarero: { b: [3, 3], at: [19.1, 9.4], yaw: -PI / 2 },
   poolbarKaffe: { b: [3, 3], at: [17.05, 8.6], yaw: PI / 2 },
+  // Systrarnas balkong (free roam, §10.55): the whisky's E spot before the counter's north end face,
+  // facing it (the bartender's aisle beside it; 1.7 m from poolbarKaffe, out of each other's reach).
+  whiskyBar: { b: [3, 3], at: [18.25, 7.35], yaw: 0 },
   // Badgäster på solstolarna (free roam, §10.22): the two pool-deck sun loungers 7–8 m from BAR
   // PISCINA (their `solstol` props, hotels.js flamencoPool; yaw = the prop's facing, the backrest
   // end), where Berra and Robban lie and sleep in the sun after buss17. Not standing spots.
@@ -73,6 +76,13 @@ export const ISLAND_LANDMARKS = {
   // (hotels.js stigOleRoom, its front at x −20.15), facing it: the second hideout's E spot.
   rum107Garderob: { b: [3, 3], at: [-19.6, -15.6], yaw: -PI / 2 },
   gagKamera: { b: [3, 3], at: [-8.3, -11.2], yaw: -PI / 2 },   // facing Ole's camera bag on the patio wall's cap (the gag, §10.32)
+  // Systrarnas balkong (free roam, §10.55): the middle of the sisters' places on the first balcony
+  // above room 105 (bay x [-26, -21], hotels.js balconies: its floor's top y 3.95, the railing's inner
+  // face at z -12.77), 0.35 m behind the railing, facing the patio (not a standing spot for `teleport`:
+  // the balcony is no solid); and Stig's spot on 105's patio under it, south of the balcony row's
+  // camera ceiling (z -12.65), facing up to it: the ask's and the basket's E spot.
+  balkong105: { b: [3, 3], at: [-23.5, -13.12], yaw: 0, y: 3.95 },
+  balkongKorg: { b: [3, 3], at: [-22.9, -11.6], yaw: PI },
   // (3,2) Hotel SunTrip
   suntrip: { b: [3, 2], at: [-14, 24], yaw: PI },     // faces the office porch (C1)
   // Bränsletillägg tillkommer (free roam, §10.23): Stig's spot in front of the middle of SunTrip-
@@ -105,6 +115,9 @@ export const ISLAND_LANDMARKS = {
   // (4,2) Centro Nórdico
   cita: { b: [4, 2], at: [0, 22], yaw: PI },
   supermercado: { b: [4, 2], at: [-18, 18], yaw: PI },
+  // Systrarnas balkong (free roam, §10.55): the whisky's E spot before SUPERMERCADO's door (centre.js,
+  // the shop face at z 12, its door at x -18), under the awning, facing it.
+  whiskySuper: { b: [4, 2], at: [-18, 13.35], yaw: PI },
   ferreteria: { b: [4, 2], at: [18, 18], yaw: PI },
   telefon: { b: [4, 2], at: [0, 8], yaw: PI },
   // Hytt två! (free roam, §10.43): the car park's three spots for a car called from booth 2, in the

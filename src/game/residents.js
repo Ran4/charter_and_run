@@ -261,6 +261,8 @@ export class Residents {
     if (car || l.car.dead || g.time - l.t > 3) { this.left = null; return; }
     if (l.car.speed >= c.park.still) return;
     this.left = null;
+    // Below the sisters on the balcony above 105 the line is Majsan's own (§10.55).
+    if (g.sisters?.parks(l.car)) return;
     const wheels = g.lapp?.wheelsOn(l.car).n ?? 0;
     if (g.time - this.parkT < c.park.every || wheels < c.park.wheels) return;
     const ch = this.nearest(l.car.x, l.car.z, c.park.r, (r) => r.role === 'sv') || this.nearest(l.car.x, l.car.z, c.park.r, (r) => r.role === 'mirror');

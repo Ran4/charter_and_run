@@ -44,7 +44,7 @@ Samma tangenter i båda nivåerna; nivån bestämmer vad de gör.
 | Shift | spring | | skynda – men det ökar rädslan |
 | Space | hoppa, i luften igen för dubbelhopp | handbroms (sladd!) | **håll i dig**: ta tag i närmaste stolsrygg vid turbulens |
 | J / klick | sparka, i luften: stampa (efter julafton: **håll in i luften** för att glidflyga) | | **håll in**: "Jag kan flyga, jag är inte rädd" – sänker FLYGRÄDSLA |
-| E | prata (med uppdragsgivaren, och mellan uppdragen med gänget), kliv in, sno en bil, kvarta en stund i Stigs säng i rum 107, titta i herr Storchs kamera, heja på rullskidåkaren, dansa med i poolen, smörja in Majsans rygg (**håll in** och släpp i det gröna), byta om i garderoben i rum 107, söka skydd i kyrkan, ringa efter en bil från hytt 2, meta från piren (och **dra upp** när flötet dyker), lifta på landsvägen (på flaket: hoppa av), ta livräddarens kikare (och sänka den igen), ta ett skift vid packhusets sorteringsband, spela strandvolley (och ta revansch), ta ett kort åt ett turistpar (och ge tillbaka kameran), vänta på guaguan vid en hållplats och kliva på (i bussen: kliva av vid vald hållplats), låna bondens traktor vid tomatfälten | kliv ur (i fart: rulla ur) | prata, **sätt dig / res dig**, lås in dig på toaletten, anropsknappen, serveringsvagnen |
+| E | prata (med uppdragsgivaren, och mellan uppdragen med gänget), kliv in, sno en bil, kvarta en stund i Stigs säng i rum 107, titta i herr Storchs kamera, heja på rullskidåkaren, dansa med i poolen, smörja in Majsans rygg (**håll in** och släpp i det gröna), byta om i garderoben i rum 107, söka skydd i kyrkan, ringa efter en bil från hytt 2, meta från piren (och **dra upp** när flötet dyker), lifta på landsvägen (på flaket: hoppa av), ta livräddarens kikare (och sänka den igen), ta ett skift vid packhusets sorteringsband, spela strandvolley (och ta revansch), ta ett kort åt ett turistpar (och ge tillbaka kameran), vänta på guaguan vid en hållplats och kliva på (i bussen: kliva av vid vald hållplats), låna bondens traktor vid tomatfälten, köpa whisky åt systrarna och skicka upp den till balkongen | kliv ur (i fart: rulla ur) | prata, **sätt dig / res dig**, lås in dig på toaletten, anropsknappen, serveringsvagnen |
 | H | | tuta (utanför uppdragen hör folk den; i den lånade Guardia-jeepen: sirenen) | |
 | B | | titta bakåt | |
 | M / Tab | stor karta | stor karta | plan över gaten/kabinen |
@@ -382,6 +382,17 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   har lite anlag för åksjuka."; ute på vägarna samlas en kö av tutande bilar bakom den ("Förlåt! Den går
   inte fortare."). En traktor som lämnats någonstans har bonden hämtat hem när ingen ser. Traktorn går
   bara att låna mellan uppdragen: "Traktorn går bara i 18 km/h – ta en riktig bil."
+- **Systrarnas balkong** (mellan Fataga och grisfesten): gå in på uteplatsen framför rum 105 på dagen,
+  så klipper bilden upp till Siv och Majsan på balkongen ovanför. "Vi är väl inte på nåt jäkla
+  vernissage?" säger Siv med glaset i handen, och sedan: "Giraffen! Fixa en whisky!" Majsan vinkar. Köp
+  en flaska (utan etikett) på supermercado i Centro Nórdico för 150 pesetas eller i poolbaren för 250
+  (tryck **E** vid dörren eller vid bardiskens norra ände; har Stig inte råd betalar Ole). Stig bär den i
+  vänster hand, och ramlar han eller trycker du **R** går den sönder. Under balkongen trycker du **E**
+  ("Skicka upp whiskyn"): korgen hissas ner i ett hopknutet badlakan, flaskan åker upp, och Siv tackar:
+  "En stor whisky och Sivan Åman är i form." – "Så att du vågar stöta på giraffen." – "Varsågoda…"
+  Inget pris, men Majsan vinkar varje gång Stig går förbi tills grisfesten börjar. Ställer han en bil på
+  gatan vid hotellets västra gavel säger Majsan uppifrån "Här nere parkerar de hursomhelst.", och Siv
+  svarar "Spänn av, Majsan. Du är ledig."
 - **Små grodorna i poolen** (efter slutet): julfesten är inte riktigt över. Varje gång du kommer in
   på Flamencos pooldäck (mellan nio på morgonen och elva på kvällen) vadar SunTrip-gänget ut i den
   grunda änden och ställer sig i ring runt Lasse i tomteluva. Affe spelar Små grodorna på dragspelet,
@@ -656,6 +667,10 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
 - traktorn med släpkärran vid tomatfälten, bonden som springer efter, tutkön och skumpet över fårorna (i
   filmen finns ingen traktor, och "Jag har lite anlag för åksjuka." sägs på bussen; att det är Stig-Helmer
   som säger det är vår tolkning)
+- whiskyärendet åt systrarna: Sivs "Giraffen! Fixa en whisky!", flaskan från supermercado eller
+  poolbaren, korgen i badlakanet, Stigs "Varsågoda…", Sivs påminnelse och Majsans vinkningar (i filmen
+  är Stig-Helmer inte med i balkongscenen: "Vi är väl inte på nåt jäkla vernissage?", "Så att du vågar
+  stöta på giraffen." och Majsans parkeringsrad hör till den)
 - poolfesten efter slutet: ringen runt Lasse, portierns promenad, att Stig hoppar med och
   takträknaren (i filmen dansar de andra Små grodorna i poolen på julfesten medan Stig-Helmer och Ole
   öppnar knäckebrödet, och Stig-Helmer dansar aldrig)
@@ -873,6 +888,7 @@ src/game/volley.js              Strandvolley in free roam: the court's live ball
 src/game/touristPhoto.js        "Kan du ta ett kort på oss?" in free roam: the tourist couples at the lighthouse, the dunes and LA MEDINA, their camera's viewfinder (the scope, on end), the reading, the snap, the tips
 src/game/guagua.js              Guaguan in free roam: the 13 PARADA GUAGUA stops, the wait, the green guagua that stops at the bench, the seat beside the driver, the film's football talk, the stop chosen with W/S, the fade off there
 src/game/traktor.js             Traktorn med släpkärran in free roam: the farmer's tractor at the tomato fields (a toy: never a mission's), the farmer running after it, the furrows' jolts and the åksjuka, the honking queue, the fetch home
+src/game/sisters.js             Systrarnas balkong in free roam before the grisfest: Siv and Majsan on the balcony above 105, the ask, the whisky's shops, the basket on the towel, the waves, the parking line
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
@@ -883,7 +899,8 @@ tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, 
                                 stunthopp, prata, takhopp, mikrofon, faglar, gags, strandkyssen,
                                 guardiajeep, fyren, klader, ringklocka, kyrkfrid, gatlopp, skidor,
                                 golfbil, battur, balkong, hytt, kaffe, meta, marknadstak, lifta,
-                                kikare, packhus, volley, kort, guagua, traktor, calibrate, calibflight)
+                                kikare, packhus, volley, kort, guagua, traktor, systrar, calibrate,
+                                calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
 tools/pool.mjs                  re-derives every random stage's timer from the ledger
@@ -935,6 +952,7 @@ node tools/shot.mjs volley volleyfree volleyshots   # beach volleyball: the prom
 node tools/shot.mjs kort kortshots       # the tourist couples: the ask, the viewfinder, on end at the compass rose, the snap and the tip, the dunes and LA MEDINA, a miss, a speck, the locks; every view
 node tools/shot.mjs guagua guaguaKant guaguaLinje  # the guagua: the wait, the stop, the step in and the fare, the football talk, W/S, the fade off; Q, walking off, a car on the stop, held up, the locks, a mission start; every stop
 node tools/shot.mjs traktor traktorshots # the tractor: E, 18 km/h, the farmer's chase and give-up, the rows' jolts and the åksjuka, the honking queue, the fetch home, the mission lock; the shots
+node tools/shot.mjs systrar systrarshots # the sisters' balcony: the ask on 105's patio, the two shops, the broken bottle, the basket, the delivery, the waves, the parking line, a mission start; every scene as seen
 node tools/shot.mjs grodorna grodtakt    # the pool fest after the end: the ring, the porter, Stig in the ring, eight on the beat
 node tools/shot.mjs artig                # Stig says sorry: kicks, run over, a pump, bins, carjackings and the driver's "Nej."
 node tools/shot.mjs grisar               # the grisbil's pigs: the falls, the catch on foot and by creeping, Lasse, the pen

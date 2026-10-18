@@ -70,6 +70,7 @@ import { Packhus } from './game/packhus.js';
 import { Volley } from './game/volley.js';
 import { TouristPhoto } from './game/touristPhoto.js';
 import { Guagua } from './game/guagua.js';
+import { Sisters } from './game/sisters.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
 import { LEVELS, ISLAND_PALETTES } from './level.js';
@@ -255,6 +256,7 @@ class Game {
     this.kort = new TouristPhoto(this);   // free roam: the tourist couple's picture at the lighthouse, the dunes and LA MEDINA (§10.51)
     this.guagua = new Guagua(this);       // free roam: the guagua from the PARADA stops, the football talk on the way (§10.53)
     this.traktor = new Traktor(this);     // free roam: the farmer's tractor at the tomato fields, the farmer running after it (§10.54)
+    this.sisters = new Sisters(this);     // free roam before the grisfest: Siv and Majsan on the balcony above 105, the whisky errand (§10.55)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -1455,8 +1457,9 @@ class Game {
     const top = this.bestInteractable((i) => !i.whileSeated && (i.priority || 0) >= 100 && (!skis || i.skis));
     if (top) return { type: 'it', it: top };
     // Not with Berra on his shoulders (§10.6): the carry would follow him into the mission. A lost
-    // suitcase on his head (§10.52) goes back to its spot at the mission's start instead.
-    if (ms.state === 'idle' && ms.current && ms.current.level === this.level && (!this.carrying || this.carrying.bag)) {
+    // suitcase on his head (§10.52) goes back to its spot at the mission's start instead, and the
+    // sisters' whisky (§10.55) is gone.
+    if (ms.state === 'idle' && ms.current && ms.current.level === this.level && (!this.carrying || this.carrying.bag || this.carrying.whisky)) {
       const g = this.npcs[ms.current.giver];
       if (g && g.state !== 'hidden' && dist(g.x, g.z, p.x, p.z) < 3.4 && Math.abs(g.y - p.y) < 2) return { type: 'talk', who: g };
     }
@@ -1633,6 +1636,7 @@ class Game {
     this.kort.update(dt);
     this.guagua.update(dt);
     this.traktor.update(dt);
+    this.sisters.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);
@@ -1877,7 +1881,8 @@ class Game {
     }
     for (const k in this.npcs) {
       const n = this.npcs[k];
-      if (n.state !== 'normal' || dist(n.x, n.z, x, z) > r + 0.6) continue;
+      // Not the sisters up on the balcony above 105 (§10.55).
+      if (n.state !== 'normal' || n.perched || dist(n.x, n.z, x, z) > r + 0.6) continue;
       this.say(n, this.bark(n, 'kicked'), 1.4);
       bowled = true;
     }
@@ -1952,14 +1957,15 @@ class Game {
   // souvenir seller swearing at a smashed fruit stall (§10.19), the crowd at the SunTrip stage
   // (§10.30), Herr Storch filming the stork (§10.31), someone in a gag's scene (§10.32), Siv or
   // Majsan on the sand by Stig's towel (§10.33), the porter ringing for the site manager (§10.37),
-  // José and his mother walking back to his place after a street race (§10.38), or the bartender,
-  // Berra or Fru Storch in a scene at the pool bar or with its cup (§10.44), or Ole, Berra and Robban in a
-  // volleyball match or Berra and Robban walking off from it (§10.50).
+  // José and his mother walking back to his place after a street race (§10.38), the bartender,
+  // Berra or Fru Storch in a scene at the pool bar or with its cup (§10.44), Ole, Berra and Robban in a
+  // volleyball match or Berra and Robban walking off from it (§10.50), or Siv and Majsan up on the balcony
+  // above 105 (§10.55).
   // syncAll gives such an NPC no wave, turn or chatter, and the gang's talk leaves them be (§10.28).
   npcPosed(k) {
     return !!this.missions.idlePose(k) || this.berraJob.posed(k) || this.judges.posed(k) || this.film.posed(k) || this.eslov.posed(k) || this.fest.posed(k) || this.lapp.posed(k) || this.party.posed(k)
       || this.stands.posed(k) || !!this.mic?.posed(k) || this.birds.posed(k) || !!this.gags?.posed(k) || !!this.dream?.posed(k) || !!this.bell?.posed(k)
-      || !!this.gatlopp?.posed(k) || !!this.bar?.posed(k) || !!this.volley?.posed(k);
+      || !!this.gatlopp?.posed(k) || !!this.bar?.posed(k) || !!this.volley?.posed(k) || !!this.sisters?.posed(k);
   }
 
   syncAll(dt, title) {
@@ -1997,7 +2003,8 @@ class Game {
       // giver does. An answer to the horn waves from further off (§10.9); the rollerskier waves his
       // pole while he skis (§10.12).
       const posed = this.npcPosed(k);
-      n.anim.wave = (((giver || this.berraJob.waving(k)) && near < 9 || this.honk.waving(k)) && !posed || this.eslov.waving(k)) && !this.inDialog && n.state === 'normal';
+      // Majsan on the balcony above 105 waves in the sisters' own scenes too (§10.55).
+      n.anim.wave = (((((giver || this.berraJob.waving(k)) && near < 9 || this.honk.waving(k)) && !posed || this.eslov.waving(k)) && !this.inDialog) || this.sisters.waving(k)) && n.state === 'normal';
       if (n.state === 'normal' && !posed && near < 10 && !this.inDialog) n.yaw += Math.atan2(Math.sin(yawTo(this.player.x - n.x, this.player.z - n.z) - n.yaw), Math.cos(yawTo(this.player.x - n.x, this.player.z - n.z) - n.yaw)) * Math.min(1, dt * 3);
       // Free play only: not in the gap before an outro (bubbles stacked over its first line).
       const lines = (this.level === 'island' && this.chatterOverrides[k]) || chatter[k];
@@ -2082,7 +2089,7 @@ class Game {
       const g = this.npcs[ms.current.giver];
       if (g) out.push({ type: 'mission', x: g.x, z: g.z, edge: true });
     }
-    const t = ms.target() || this.berraJob.target() || this.eslov.target() || this.skis.target() || this.pigs.target() || this.gatlopp.target() || this.bags.target();
+    const t = ms.target() || this.berraJob.target() || this.eslov.target() || this.skis.target() || this.pigs.target() || this.gatlopp.target() || this.bags.target() || this.sisters.target();
     if (t && !t.follow) out.push({ type: 'objective', x: t.x, z: t.z, edge: true });
     if (t && t.follow) out.push({ type: ms.stage?.car?.isTarget ? 'enemy' : 'friend', x: t.x, z: t.z, edge: true });
     out.push(...ms.markers());
@@ -2152,8 +2159,9 @@ class Game {
       if (dist(g.x, g.z, f.x, f.z) > 25) target = { x: g.x, z: g.z };
     } else this.bang.show(false);
     // Or the free-roam Berra job's (§10.6), Eslövloppet's (§10.12), Eslövrundan's (§10.39), the grisbil's
-    // pigs' (§10.15), José's street race's (§10.38), a lost suitcase's (the lost and found, §10.52).
-    const t = ms.target() || this.berraJob.target() || this.eslov.target() || this.skis.target() || this.pigs.target() || this.gatlopp.target() || this.bags.target();
+    // pigs' (§10.15), José's street race's (§10.38), a lost suitcase's (the lost and found, §10.52), the
+    // sisters' whisky's (a shop, the balcony above 105, §10.55).
+    const t = ms.target() || this.berraJob.target() || this.eslov.target() || this.skis.target() || this.pigs.target() || this.gatlopp.target() || this.bags.target() || this.sisters.target();
     if (t) {
       target = t;
       const y = t.follow ? groundAt(t.x, t.z, 0.2, 0.6) + 2.5 : groundAt(t.x, t.z, 0.2, 0.6);
@@ -2184,9 +2192,11 @@ class Game {
     // shop's wet-paint card (§7.2), the church's while Guardia Civil waits outside (§7.2), the Berra
     // job's (§10.6), Eslövloppet's (§10.12), Eslövrundan's (§10.39), the grisbil's pigs' (§10.15), a G17 toaster's scale
     // (§10.24), José's street race's (§10.38), a hitch's (§10.47), a shift at the packing shed's belt
-    // (§10.49), a lost suitcase on his head (§10.52) or the guagua's (§10.53), if any.
+    // (§10.49), a lost suitcase on his head (§10.52), the guagua's (§10.53) or the sisters' whisky errand's
+    // (§10.55), if any.
     hud.setObjective(this.missions.objective() || this.solkram.objective() || this.shame.paint.objective() || this.shame.church.objective() || this.berraJob.objective() || this.eslov.objective() || this.skis.objective()
-      || this.pigs.objective() || this.toasters.objective() || this.gatlopp.objective() || this.hitch.objective() || this.packhus.objective() || this.bags.objective() || this.guagua.objective());
+      || this.pigs.objective() || this.toasters.objective() || this.gatlopp.objective() || this.hitch.objective() || this.packhus.objective() || this.bags.objective() || this.guagua.objective()
+      || this.sisters.objective());
     hud.setSpeedo(this.playerCar);
     if (this.missions.state !== 'failed') {
       let prompt = '';

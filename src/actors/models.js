@@ -711,6 +711,7 @@ const PROP_GEO = {
   // A pole: the grip at the origin, the shaft down -y to the hard tip `POLE_LEN` below it.
   poleR: skiPole, poleL: skiPole,
   metspo: fishingRod,   // Stig's rod at the pier's end (anim.fish, game/fishing.js)
+  whisky: whiskyBottle, // the sisters' whisky (anim.whisky, game/sisters.js)
   kikare: binoculars,   // the lifeguard's binoculars on the tower (anim.kikare, game/binoculars.js)
   // The tourist couple's camera (anim.foto, game/touristPhoto.js, §10.51): a black-and-chrome 35 mm
   // compact, the lens along +z, a flash cube on top at the left; the origin in the body's middle. Its
@@ -755,6 +756,15 @@ export function fishingRod(g) {
   g.cyl(0xd8b868, 0, 1.6, 0, 0.0075, 1.0, 6);
   for (const y of [0.75, 1.35, 1.85]) g.sphere(0xd8dce0, 0, y, 0.022, 0.018, 0.018, 0.018);
   g.sphere(0xd8dce0, 0, ROD_LEN, 0, 0.02, 0.02, 0.02);
+}
+// The sisters' whisky (Systrarnas balkong, game/sisters.js, §10.55): an amber bottle with no label or
+// mark (§1.5, the trolley's whisky's colour, world/cabin.js), a dark cap; the origin in the body's
+// middle, where a hand holds it. Also the bottle in the basket on the knotted towel.
+export function whiskyBottle(g) {
+  g.cyl(0xb8741e, 0, 0, 0, 0.045, 0.19, 10);
+  g.sphere(0xb8741e, 0, 0.095, 0, 0.045, 0.03, 0.045);
+  g.cyl(0xb8741e, 0, 0.14, 0, 0.017, 0.07, 8);
+  g.cyl(0x5a1e14, 0, 0.185, 0, 0.02, 0.03, 8);
 }
 // The lifeguard's binoculars (Livräddarens kikare, game/binoculars.js, §10.48): two black barrels along
 // +z (the objectives forward, a glint of blue glass in each), the eyecups at the back, the bridge and
@@ -1103,7 +1113,7 @@ function heldPose(m, st, t, place = false) {
   const h = m.def.held;
   if (!h || !PROP_GEO[h]) return;
   const [R, L] = m.arms;
-  const busy = st.wings || st.cupUp || st.cupHeld || st.push || st.rub || st.hold || st.flail || st.oath || st.dance || st.laugh || st.mirror || st.film || st.camShow || st.giraffe || st.butterKnife || st.ticket || st.carryOver || st.shoeOff || st.calc || st.groda || st.placate || st.tap || st.scratch || st.point || st.cheer || st.wave || st.fish || st.thumb || st.ride || st.kikare || st.sort || st.volley || st.foto || st.kick > 0;
+  const busy = st.wings || st.cupUp || st.cupHeld || st.push || st.rub || st.hold || st.flail || st.oath || st.dance || st.laugh || st.mirror || st.film || st.camShow || st.giraffe || st.butterKnife || st.ticket || st.carryOver || st.shoeOff || st.calc || st.groda || st.placate || st.tap || st.scratch || st.point || st.cheer || st.wave || st.fish || st.thumb || st.ride || st.kikare || st.sort || st.volley || st.foto || st.whisky || st.kick > 0;
   const pose = !place && !busy;
   const moving = st.speed > 0.3;
   switch (h) {
@@ -1258,6 +1268,13 @@ function poseFlags(m, st, t) {
     R.rotation.set(up ? -2.75 : low ? -1.05 : -1.65, 0, up ? -0.08 : 0.12);
     if (st.cupUp && !st.seated) m.neck.rotation.x = -0.3;   // and he looks up to it
     inHand(m, prop(m, 'cup'), 0, 0, 0.01, 0);
+  }
+  if (st.whisky) {
+    // The sisters' whisky (game/sisters.js) in the left hand, the cup's other hand: at his side
+    // (true), held out before him into the basket ('out'), or before the chest ('low', Siv's).
+    const out = st.whisky === 'out', low = st.whisky === 'low';
+    if (!st.wave) L.rotation.set(out ? -1.4 : low ? -1.05 : -0.22, 0, out ? -0.02 : low ? -0.14 : 0.16);
+    inHand(m, prop(m, 'whisky'), 1, 0, 0.02, 0);
   }
   if (st.oath) {
     R.rotation.set(-0.15, 0, -2.85);

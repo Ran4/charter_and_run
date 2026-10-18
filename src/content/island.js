@@ -31,7 +31,8 @@
 // and the beach volleyball match against Berra and Robban on the court by the pedal-boat rental (§10.50),
 // and the guagua from the town's PARADA GUAGUA stops, the ride beside its driver and his lines (§10.53),
 // and the farmer's tractor by the tomato fields' tool hut that Stig borrows, the farmer running after it,
-// the honking queue behind it and the furrows' jolts (§10.54).
+// the honking queue behind it and the furrows' jolts (§10.54), and
+// the sisters' whisky errand from their balcony above room 105, the basket on the towel and the waves (§10.55).
 
 export const HOMES_ISLAND = {
   ole: ['flamenco', 2.0, 1.0, 0],     // yaw 0: under the pergola, facing the pool (flamenco faces π)
@@ -2838,4 +2839,66 @@ export const TRAKTORN = {
   // the bodega's: §10.54).
   farmer: { kind: 'adult', name: 'Bonden', scale: 0.97, wide: 1.1, belly: true, skin: 0xb8865a, hair: 'short', hairC: 0x9a9a9a, brows: 0x7a7a7a, nose: 'big',
     mustache: 0xa8a8a8, stache: 'walrus', shirt: 0x6a8ab0, longSleeves: false, vest: 0x4a3a2a, pants: 0x5a4632, shoes: 0x3a2a1a, hat: 'sunhat', hatC: 0xd8b868, voice: 190, local: true },
+};
+
+// Systrarnas balkong (free roam; feature 117, DESIGN §10.55; game/sisters.js). Between fataga and the
+// grisfest (`index`: missions.index 11, idle), by day, Stig on foot coming onto room 105's patio
+// (`zone`: [x0, x1], [z0, z1]) with Siv and Majsan free at the pool: they stand on the balcony above it
+// (`spots`: [left, forward] from the landmark `at`, at its y), Stig on `stand` facing them, and the
+// camera cuts to `shot` (`eye` → `look`: [left, forward] from `at` and an absolute y) for `ask`. Then the
+// card `title` · `buyText` and the beacon at the nearer of `shops`: E there (`r`, `buyPrompt` with its
+// `price`; `game.pay`, so Ole pays when the purse is short; the bar's only with its bartender `who` within
+// `homeR` m of `home`) buys the bottle, and the shop's `lines` ([at, who, text], who 'shop': a voice over
+// the door `door` m in front of the spot). He carries it in his left hand, the card `bringText` and the
+// beacon at `stand`; a fall, a knock or R breaks it (`broken`). E at `stand` (`korgR`, `korgPrompt`): the
+// cut to `korgShot` (from the side: Stig, the towel and the balcony), the basket on the knotted towel
+// (`hangOut` m out from the sisters' line) down from the railing in `lowerSecs` to `basketY`, his bottle
+// in it `putAt` s later, `holdAt` s on up again in `raiseSecs`, into Siv's hand, and `deliver` in `shot`. Coming by in front of the balcony within `waveR` m (again once he has been
+// `awayR` m off): before the delivery Siv's `remind` (at most every `remindEvery` s; Majsan waves when he
+// brings it), after it Majsan's wave (`waveSecs`); within `turnR` m in front they turn to him, at most
+// `turnMax` rad off the façade. A car he left within `park.secs` s, standing (under `park.still` m/s) in
+// `park.zone` (the street and the service drive by the hotel's west gable): Majsan's `park.line` and
+// Siv's `park.reply` `park.replyAt` s later, at most every `park.every` s. Invented (§1.6): the errand,
+// the basket on the towel, the shops' whisky, the waves and the reminder; the balcony's lines are the
+// film's scene 7.3 (research-plot.md:256), Siv's thanks her own whisky line (research-characters.md:245).
+export const SYSTRARNA = {
+  index: 11, at: 'balkong105', stand: 'balkongKorg',
+  zone: [[-26.3, -21.1], [-13.9, -8.7]],
+  spots: { siv: [-0.6, 0], majsan: [0.6, 0] },
+  shot: { eye: [2.0, 6.5, 2.4], look: [0, 0, 4.7] }, korgShot: { eye: [6.0, 6.5, 2.2], look: [0.2, 0.6, 3.5] },
+  ask: [
+    ['siv', 'Vi är väl inte på nåt jäkla vernissage?', { anim: { who: 'siv', flag: 'cupUp', secs: 2.6 } }],   // [F] Siv on the balcony, wanting whisky (research-plot.md:256)
+    ['siv', 'Giraffen! Fixa en whisky!'],                                          // [N]
+    ['stig', 'Jaha… Visst.'],                                                      // [N]
+  ],
+  shops: [
+    { id: 'super', lm: 'whiskySuper', r: 1.4, price: 150, door: 1.3, lines: [
+      [0.2, 'shop', '¡Gracias, señor!'],                                           // [N] from inside SUPERMERCADO
+      [1.3, 'stig', 'Den är inte till mig.'],                                      // [F*] the Christmas parcel at Arlanda's customs (research-flight.md:207), relocated
+    ] },
+    { id: 'bar', lm: 'whiskyBar', r: 1.0, price: 250, who: 'camarero', home: 'camarero', homeR: 6, lines: [
+      [0, 'camarero', '¡Un whisky! ¡Muy bien, señor!'],                            // [N]
+      [1.3, 'stig', 'Den är inte till mig.'],                                      // [F*] the same (research-flight.md:207), relocated
+    ] },
+  ],
+  buyPrompt: '<b>E</b> Köp en flaska whisky ({n} pta)',                           // [N]
+  title: 'Whisky till systrarna',                                                  // [N]
+  buyText: 'Köp en flaska på supermercado eller i poolbaren.',                     // [N]
+  bringText: 'Ta den till balkongen ovanför 105.',                                 // [N]
+  broken: 'Flaskan gick sönder.',                                                  // [N] toast
+  korgR: 1.5,
+  korgPrompt: '<b>E</b> Skicka upp whiskyn',                                       // [N]
+  hangOut: 0.72, lowerSecs: 2.2, basketY: 1.05, putAt: 0.6, holdAt: 0.35, raiseSecs: 2.0,
+  deliver: [
+    ['siv', 'En stor whisky och Sivan Åman är i form.'],                           // [F*] Siv's own line (research-characters.md:245), relocated to the balcony
+    ['siv', 'Så att du vågar stöta på giraffen.', { anim: { who: 'majsan', flag: 'laugh', secs: 1.8 } }],   // [F*](t) the balcony's (research-plot.md:256; the speaker interpreted), to Majsan
+    ['stig', 'Varsågoda…'],                                                        // [N]
+  ],
+  remind: 'Giraffen! Whiskyn!',                                                    // [N] Siv
+  waveR: 18, awayR: 26, waveSecs: 2.4, remindEvery: 25, turnR: 30, turnMax: 0.8,
+  park: {
+    zone: [[-46, -26.3], [-33, -3]], secs: 3, still: 0.6, every: 30, replyAt: 2.4,
+    line: 'Här nere parkerar de hursomhelst.',                                     // [F] Majsan on the balcony (research-plot.md:256; research-characters.md:211)
+    reply: 'Spänn av, Majsan. Du är ledig.',                                       // [F](t) the answer there (research-characters.md:212; the speaker interpreted: Siv)
+  },
 };
