@@ -28,7 +28,8 @@
 // hitch-hiking on the country roads, standing in the farmer's grisbil bed into town (§10.47), and the
 // lifeguard's binoculars on the beach's tower, the eight things to spot and their list (§10.48), and the
 // shift at the packing shed's tomato sorting belt, its foreman and workers and Siv's line after it (§10.49),
-// and the beach volleyball match against Berra and Robban on the court by the pedal-boat rental (§10.50).
+// and the beach volleyball match against Berra and Robban on the court by the pedal-boat rental (§10.50),
+// and the guagua from the town's PARADA GUAGUA stops, the ride beside its driver and his lines (§10.53).
 
 export const HOMES_ISLAND = {
   ole: ['flamenco', 2.0, 1.0, 0],     // yaw 0: under the pergola, facing the pool (flamenco faces π)
@@ -2709,4 +2710,77 @@ export const KORT = {
   stamp: { bra: 'Bra kort!', kapad: '{p}!', liten: 'Pyttesmått par!', miss: 'Paret kom inte med!' },   // [N]
   tip: '<span>Dricks från turistparet: {n} pta</span>',                                  // [N] (one flex item in the toast)
   next: '<span>Ett nytt par vill ha ett kort {where}.</span>',                           // [N]
+};
+
+// Guaguan – åk buss och snacka fotboll (free roam; feature 112, DESIGN §10.53; game/guagua.js). At each of
+// the 13 PARADA GUAGUA stops (world/town.js `busStops`; `names` keyed 'i,j,side', the loop `order`), on
+// the island with no mission running, Stig on foot within `r` m of the place he waits (`wait`: [along
+// the bus's way, out towards the road] m from the bench) with no dialogue, carry, pursuit, bust or PANIK
+// or other free-roam hold: `prompt`. E stands him there looking up the road and cuts to `shot` (`eye` and
+// `look` [along, out, height] from the bench at its ground: on the sidewalk behind him, looking the bus's
+// way) with the card `title` · `waitText` and `waitKeys` (Q stops waiting); a green guagua sets off
+// `spawn` m (the first free of them, a car 9 m off taking the next) behind its stop on the near lane,
+// behind the camera, at `spawnV` m/s, locked and never wrecked, `driver`'s bust at the wheel, two
+// `riders` at the windows and, on the film's ride, Ole's bust at `oleSlot` unless the real Ole is within
+// `oleR` m of the stop or the ride's first `oleRoute` m. An `AIDriver` drives it straight on at `cruise`
+// m/s; from `approach` m before its stop it brakes at `brake` m/s² (at least `creep`) and stops with
+// its door (`door` m ahead of its middle) beside the bench; held up still `heldSecs` s within `heldR` m
+// of its spot, it opens the door there. None there within `waitMax` s: `never`. Its stop taken by a
+// standing car: `blocked`, no wait. Stopped: the chase camera behind Stig turned `doorCam` rad off the
+// bus's way, the driver's `hello`, and `boardPrompt` at the door within `boardR` m; he walks off `leaveR`
+// m (or 6 m further than he stood from it) or waits `doorWait` s: the driver's `bye` and the bus drives on. E: in through the door (`boardSecs`),
+// the passenger seat beside the driver, `fare` pesetas (`game.pay`: Ole pays when short) with the
+// driver's `fareLine`; `departAt` s on the bus drives off straight on (left at the town's edge, right
+// only at its corners), the chase camera on the bus. The ride's lines: the film's (`film`) until a ride
+// has heard them all through (`records.guagua`, the rides done), then `rides` in turn; `[at, who, text]`
+// with who 'ole' (the bust; without it the driver's `oleAlt`), 'chofer' or 'stig'. W/S choose the stop
+// (`rideText`, `rideKeys`; the next in `order` first), E gets off there at once; at the ride's `end` s
+// the picture fades out (`fadeSecs`), Stig stands at that stop's `wait` facing the bus's way with the
+// bus at its stop (or `backOff` m short of a car there), the picture fades in after `holdSecs`, the driver's `byeLine`
+// `byeAt` s on, Stig's `thanks` at `thanksAt`, and at `goAt` the bus drives off and is taken away
+// `awayR` m from the camera and out of its view (or `awayFar` m off). Invented (§1.6): the ride, the
+// stops' button, the driver's lines and the fare; the football talk is the transfer bus's in the film
+// (research-plot.md:244), moved. Hammarby, Bajen and Las Palmas only in those lines (§1.5).
+export const GUAGUA = {
+  r: 2.6, boardR: 3.0, wait: [0.6, 1.8], door: 3.95,
+  shot: { eye: [-11, 1.6, 1.9], look: [1.5, 1.4, 1.25] }, doorCam: 0.25,
+  spawn: [48, 56, 40, 64, 34], spawnV: 10, edge: 3,
+  cruise: 11, approach: 40, brake: 3.0, creep: 1.5, heldR: 32, heldSecs: 4, waitMax: 25,
+  doorWait: 20, leaveR: 14, boardSecs: 0.55, departAt: 0.5, fare: 10,
+  driver: { kind: 'adult', scale: 1, name: 'Chauffören', skin: 0xc99a6e, hair: 'short', hairC: 0x1d1426, brows: 0x1d1426, nose: 'small',
+    mustache: 0x1d1426, stache: 'thick', shirt: 0xd8e4f0, collar: true, pants: 0x3a4a6a, shoes: 0x2a2a2a, hat: 'cap', hatC: 0x2f8a4a, local: true },
+  riders: ['window3', 'window6'], oleSlot: 'window2', oleR: 70, oleRoute: 140,
+  backOff: [0, 8, 16], fadeSecs: 0.8, holdSecs: 0.4, byeAt: 0.5, thanksAt: 1.6, goAt: 2.4, awayR: 60, awayFar: 160,
+  film: { end: 12, lines: [
+    [1.2, 'ole', 'Las Palmas! Bra fotballag… Øverste divisjon!'],           // [F*](t) Ole's football talk with the driver in the transfer bus (research-plot.md:244; design-A-film.md:767's bokmål), moved to the guagua
+    [4.6, 'stig', 'Hammarby är också ett bra lag.'],                        // [F*](t) the same exchange (research-plot.md:244; the speaker interpreted), moved
+    [8.0, 'chofer', 'Bajen… Hammarby… Bajen…'],                             // [F*](t) the same exchange (research-plot.md:244; the speaker interpreted: the driver), moved
+  ] },
+  oleAlt: '¡Las Palmas! Bra fotbollslag… Högsta divisionen!',               // [F*](t) the same line (research-plot.md:244) in the driver's mouth when Ole is in sight, moved
+  rides: [
+    { end: 10, lines: [[1.4, 'chofer', 'Guaguan går när den går, señor. Mañana också.'], [5.2, 'stig', 'Jättefint.']] },          // [N] · [N]
+    { end: 10, lines: [[1.4, 'chofer', '¡Ojo! Turister på gatan. Alltid turister på gatan.'], [5.4, 'stig', 'Förlåt.']] },        // [N] · [N]
+    { end: 10, lines: [[1.4, 'chofer', 'Svenskarna sitter alltid längst fram. ¿Por qué?'], [5.2, 'stig', 'Jag har lite anlag för åksjuka.']] },   // [N] · [F*](t) Stig's line from the bus (research-plot.md:248), relocated
+    { end: 10, lines: [[1.4, 'chofer', 'Sol i dag, señor. Sol i morgon. Sol i hela december.'], [5.6, 'stig', 'Det är kombinationen av sol och…']] },   // [N] · [F*] his line from the bark table (GETUP), relocated
+  ],
+  names: {
+    '2,3,2': 'Plaza', '2,4,0': 'Casa Lola', '3,5,2': 'Avenida del Mar', '3,6,0': 'Playa', '6,6,1': 'Playa del Este',
+    '6,5,3': 'Puerto', '5,4,1': 'Sol de Invierno', '5,3,3': 'Gasolina', '4,2,1': 'Centro Nórdico', '4,1,3': 'Templo Ecuménico',
+    '1,1,2': 'Calle Norte', '1,2,0': 'La Medina', '1,6,3': 'El Faro',
+  },   // [N] the stops' names (the island's own: no real place or business, §1.5)
+  order: ['2,3,2', '2,4,0', '3,5,2', '3,6,0', '6,6,1', '6,5,3', '5,4,1', '5,3,3', '4,2,1', '4,1,3', '1,1,2', '1,2,0', '1,6,3'],
+  prompt: '<b>E</b> Vänta på guaguan',                                      // [N]
+  boardPrompt: '<b>E</b> Kliv på guaguan',                                  // [N]
+  title: 'Guaguan',                                                         // [N]
+  waitText: 'Vänta vid hållplatsen.',                                       // [N]
+  waitKeys: '<b>Q</b> Sluta vänta',                                         // [N]
+  rideText: 'Nästa hållplats: {name}',                                      // [N]
+  rideKeys: '<b>W</b>/<b>S</b> Välj hållplats · <b>E</b> Kliv av där',      // [N]
+  blocked: 'Det står en bil på hållplatsen.',                               // [N] toast
+  never: 'Guaguan kom aldrig.',                                             // [N] toast
+  hello: '¡Buenas! Ska señor med?',                                         // [N] the driver
+  fareLine: 'Diez pesetas, señor.',                                         // [N] the driver
+  bye: '¡Vámonos!',                                                         // [N] the driver, leaving without him
+  byeLine: '¡Hasta luego, señor!',                                          // [N] the driver
+  thanks: 'Tack så mycket!',                                                // [N] Stig (HYTT_TVA's)
 };

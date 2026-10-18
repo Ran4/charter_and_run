@@ -1,7 +1,6 @@
 # Gör dessa grejer (flytta filen till features/implemented/ och uppdatera den när du är klar, och
 # flytta den överst till "färdiga features"-sektionen nedan)
 # markörer: ⟨par N⟩ = de två raderna med samma N körs samtidigt (var sin worktree/gren, sedan rebase på main och push), ⟨solo⟩ = körs ensam; ta grupperna uppifrån och ned
-- features/guaguan_fotbollssnack.md – 112. Guaguan – åk buss och snacka fotboll [M] ⟨par 14⟩
 - features/systrarnas_balkong_whisky.md – 117. Systrarnas balkong – ”Vi är väl inte på nåt jäkla vernissage?” [M] ⟨par 15⟩
 - features/traktorn.md – 121. Traktorn med släpkärran [M] ⟨par 15⟩
 - features/kranen_pa_bygget.md – 118. Åk med byggkranen [L] ⟨solo⟩
@@ -21,6 +20,7 @@
 - features/butaneron.md – 143. Butaneron och gasolbilen [M] ⟨solo⟩
 
 # Färdiga features (lägg till [färdig: yyyy-mm-dd hh:mm] i slutet)
+- features/implemented/guaguan_fotbollssnack.md – 112. Guaguan – åk buss och snacka fotboll [M] [färdig: 2026-10-18 04:35]
 - features/implemented/hittelon_pa_hittegods.md – 116. Hittelön – de borttappade väskorna [M] [färdig: 2026-10-18 04:16]
 - features/implemented/ta_ett_kort_pa_oss.md – 110. ”Kan du ta ett kort på oss?” – turistparet vid fyren [M] [färdig: 2026-10-18 03:20]
 - features/implemented/strandvolley.md – 111. Strandvolley mot Berra och Robban [M] [färdig: 2026-10-18 02:15]

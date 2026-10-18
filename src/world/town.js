@@ -73,6 +73,11 @@ export const ROOF_JUMP = { lots: { '4,4,0,1': 'atl', '4,4,0,2': 'sol' }, roofs: 
 // keeps its apron and its broom behind it) and a little off the unit's middle (clear of the fins and
 // the potted plant). Filled by slabLot with no random draws of its own: the world builds as before.
 export const balconyLots = [];
+// Guaguan (feature 112, DESIGN §10.53): the 13 PARADA GUAGUA stops as busStop builds them, for
+// game/guagua.js: { key: 'i,j,side', i, j, side, x, z, yaw } (sideSpot's spot: the bench's middle 2.95
+// m in from the kerb, yaw facing the road). Filled with no random draws of its own: the world builds
+// as before.
+export const busStops = [];
 // Lit after dark (§13.3): the street lamps' lantern panes and star centres go into one unlit mesh
 // that draws only while the sky is dark, as the hotels' lit windows do. The block builders run
 // inside buildTown and may add their own night lights here (world coordinates); buildTown makes
@@ -794,7 +799,7 @@ function streetFurniture(i, j, S) {
       }
       if (rural) { if (h < 2) placeProp('papelera', ...xz(sideSpot(i, j, side, 4, 3.0))); continue; }
       const bs = sideSpot(i, j, side, 10, 2.95);
-      if ((i * 5 + j * 3 + side * 7) % 11 === 0 && !inSight(bs.x, bs.z, 3)) busStop(S, bs);
+      if ((i * 5 + j * 3 + side * 7) % 11 === 0 && !inSight(bs.x, bs.z, 3)) { busStop(S, bs); busStops.push({ key: `${i},${j},${side}`, i, j, side, ...bs }); }
       const f = sideSpot(i, j, side, 3, 3.0), t = FURNITURE[h];
       placeProp(t, f.x, f.z, f.yaw);
       if (h % 3 === 0) { const q = sideSpot(i, j, side, 26, 3.0); placeProp('papelera', q.x, q.z, q.yaw); }
