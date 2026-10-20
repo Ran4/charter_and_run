@@ -17,6 +17,9 @@ import { fx as FX } from '../game/fx.js';
 // lugs), seat ({ y, x, z, px, pz }: seatY and the driver's and the passenger's spots, car-local), open
 // (no roof over the seats: nobody is shrunk), height (the top people stand on and cars meet), wb (the
 // steering's wheelbase, default len × 0.62), diesel (a low putt for the engine).
+// For the pedal boat (feature 120, §10.57): boat (it skips the 'bound' walls in collideStatic; the sea
+// that holds it is game/trampbat.js's, and main.js gives it no engine, skid or horn), coast (the drag
+// in m/s² with no pedal down, default 2.2: a boat glides on), horn 'none' (no horn at all).
 // Car fields set by game code: noEnter (never offered to the player), noExplode (damage -> dead +
 // steam, no fire; also from the spec), isPursuer, riders[] (decorative busts), locked. Physics
 // numbers are Bigmouth's except the ones §6.6 lists.
@@ -49,6 +52,12 @@ export const CAR_TYPES = {
     seat: { y: 1.0, x: 0, z: 0.5, px: -0.36, pz: -0.95 },
     wheels: [{ z: 2.5, r: 0.34, x: 0.62, w: 0.26, front: true, rim: 0xf2c12e }, { z: 0.7, r: 0.64, x: 0.72, w: 0.56, rim: 0xf2c12e, lugs: true }, { z: -2.1, r: 0.34, x: 0.84, w: 0.28 }],
     build: buildTraktor },
+  // The pedal boat from the PATINES rental on the beach (feature 120, §10.57): ×1.2 for the player, 7 km/h.
+  // Low grip, so it glides out in the turns; only ever on the sea (game/trampbat.js).
+  trampbat: { name: 'Trampbåt', len: 3.3, wid: 2.1, bodyH: 0.6, cabinH: 0, wheelR: 0.32, maxSpeed: 1.65, accel: 1.4, grip: 2.4, steer: 0.7, mass: 260, hp: 400,
+    color: 0x1e9aa0, toy: true, boat: true, governed: true, open: true, noWheels: true, noExplode: true, horn: 'none', coast: 0.45, height: 1.0, wb: 2.0,
+    seat: { y: 0.93, x: 0.36, z: 0.2, px: -0.36, pz: 0.2 },
+    build: buildTrampbat },
 };
 export function registerCarType(key, spec) { CAR_TYPES[key] = spec; }
 
@@ -588,6 +597,43 @@ function buildTraktor(s, color) {
   return { geo: g.build(), glass: null };
 }
 
+// The pedal boat (feature 120, §10.57), the beach's pedalBoat (coast.js) as a car: two pontoons in its
+// colour with a darker band at the waterline, cross beams, a white deck, a blue bench for two with its
+// back, two pairs of pedals in the footwell before it, the paddle-wheel housing at the stern and a white
+// rail round the bow. Its waterline is 0.02 over the base (the boat rides at CURB 0.15, the sea lies at
+// 0.17). The paddle wheel under the housing is an extra (userData.paddle) game/trampbat.js turns.
+const TRAMP = { deck: 0xf4efe6, seat: 0x2f5a8a, rail: 0xf4f4f0, crank: 0x8a8f99, pedal: 0x2a2a30 };
+function buildTrampbat(s, color) {
+  const g = new GeoBuilder(), WL = 0.02, dark = shade(color, 0.74);
+  for (const sx of [-1, 1]) {
+    g.sphere(color, sx * 0.75, WL + 0.25, 0, 0.62, 0.7, 3.2, 0, 0, 0, 14);
+    g.sphere(dark, sx * 0.75, WL + 0.06, 0, 0.66, 0.2, 3.1, 0, 0, 0, 14);
+  }
+  for (const z of [-1.05, 1.2]) g.box(TRIM, 0, WL + 0.5, z, 1.62, 0.08, 0.14);
+  g.box(TRAMP.deck, 0, WL + 0.55, 0.1, 1.8, 0.12, 2.1);
+  // The bench (its cushion's top is the seat.y, 0.93) and its back leaning back.
+  g.boxB(TRAMP.seat, 0, WL + 0.61, 0.2, 1.44, 0.3, 0.52);
+  g.box(TRAMP.seat, 0, WL + 1.12, -0.12, 1.44, 0.6, 0.12, 0, -0.3);
+  // The pedals: a crank housing across the footwell, a pair of pedals for each seat.
+  g.box(TRAMP.crank, 0, WL + 0.74, 0.98, 1.3, 0.1, 0.12);
+  for (const sx of [-1, 1]) for (const k of [-1, 1]) g.box(TRAMP.pedal, sx * 0.36 + k * 0.1, WL + 0.74 + k * 0.08, 0.98 + k * 0.05, 0.08, 0.04, 0.14);
+  // The paddle-wheel housing at the stern, a lighter lid; the bow rail on four posts.
+  g.boxB(color, 0, WL + 0.5, -1.0, 1.0, 0.46, 0.62);
+  g.box(shade(color, 1.12), 0, WL + 0.98, -1.0, 1.04, 0.05, 0.66);
+  g.box(TRAMP.rail, 0, WL + 0.98, 1.36, 1.5, 0.05, 0.05);
+  for (const sx of [-1, 1]) {
+    g.box(TRAMP.rail, sx * 0.75, WL + 0.98, 1.08, 0.05, 0.05, 0.56);
+    for (const z of [0.82, 1.34]) g.box(TRAMP.rail, sx * 0.75, WL + 0.79, z, 0.04, 0.38, 0.04);
+  }
+  const w = new GeoBuilder();
+  w.cyl(TRAMP.crank, 0, 0, 0, 0.06, 0.74, 8, 0, 0, Math.PI / 2);
+  for (let k = 0; k < 6; k++) { const a = (k / 6) * Math.PI * 2; w.box(TRAMP.rail, 0, Math.cos(a) * 0.19, Math.sin(a) * 0.19, 0.66, 0.26, 0.04, 0, -a); }
+  const wheel = toonMesh(w.build(), { outline: 0.02 });
+  wheel.position.set(0, WL + 0.26, -1.0);
+  wheel.userData.paddle = true;
+  return { geo: g.build(), glass: null, extras: [wheel] };
+}
+
 function buildCarModel(s, color) {
   if (s.build) return s.build(s, color);
   const g = new GeoBuilder(), glass = new GeoBuilder(), extras = [];
@@ -754,7 +800,7 @@ export class Car {
           if (vf > 0.5) { vf = Math.max(0, vf - 24 * boost * brk * dt); if (vf > 8) this.skidAmt = Math.max(this.skidAmt, 0.6 * brk); }
           else vf = Math.max(vf - accel * 0.6 * brk * dt, -maxSpeed * 0.35);
         }
-        if (!thr && !brk) vf -= Math.sign(vf) * Math.min(Math.abs(vf), 2.2 * dt);
+        if (!thr && !brk) vf -= Math.sign(vf) * Math.min(Math.abs(vf), (s.coast ?? 2.2) * dt);
         if (c.handbrake) vf -= Math.sign(vf) * Math.min(Math.abs(vf), 5 * dt);
       } else {
         vf -= Math.sign(vf) * Math.min(Math.abs(vf), (this.dead ? 6 : 9) * dt);
@@ -836,6 +882,8 @@ export class Car {
     const o = this.obb, r = this.radius;
     const list = queryBlocks(this.x - r, this.z - r, this.x + r, this.z + r, _blocks);
     for (const b of list) {
+      // The pedal boat goes past the sea's bound wall (§10.57: the sea that holds it is trampbat.js's).
+      if (b.kind === 'bound' && this.spec.boat) continue;
       const top = b.shape === RAMP ? topAt(b, this.x, this.z) : b.top;
       if (top <= this.y + 0.6) continue;
       // A prop (its block's `ref`; a fruit stall's kind is 'stall'): broken above its minSpeed unless

@@ -54,6 +54,15 @@ export function placeCoin(x, y, z, tag = null, minY = -Infinity) {
   return c;
 }
 
+// A placed coin taken away untouched (the raft's stash once the pedal boat is back, §10.57).
+export function removeCoin(c) {
+  const i = coins.indexOf(c);
+  if (i < 0 || !c.active) return;
+  c.active = false;
+  coinMesh.setMatrixAt(i, _zero);
+  coinMesh.instanceMatrix.needsUpdate = true;
+}
+
 export function burstCoins(x, y, z, n, vx = 0, vz = 0) {
   for (let k = 0; k < n; k++) {
     const c = freeCoin();

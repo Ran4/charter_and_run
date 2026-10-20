@@ -247,7 +247,15 @@ opens with a summary of the rounds and the timer changes.
     his arms out and the mantra high up, the slab's four coins (`minY`, not from the 2nd floor) and
     Angerud's pitch as a toast at its north edge, the thud of a fall of 5 m or more (not a glide or a
     stomp), the pallet home and held in a pursuit, Stig put down at `kranFot` out of free roam; the shots,
-    DESIGN §10.56)
+    DESIGN §10.56), `trampbat trampbatshots` (Hyr en trampbåt, E at the PATINES · TRAMPBÅTAR sign on the
+    beach between missions with the SKANDAL meter down: 200 pta (Ole when short), the fade, the pedal boat at
+    the water's edge with Ole's double beside Stig and the samba; 7 km/h, the glide, no engine, horn or skid;
+    out past the bound wall into its own water (z 352, x ±250, the raft, the buoys and the anchored boats walls
+    for it), the chase eye never pulled in; past the buoy line the Rio exchange with Ole's wave, further out
+    the statistics; the raft's eight coins (out only during a ride) and Ole's lines; E ashore only at the
+    water's edge (else the toast), Ole pedalling it back and gone out of view; R at the rental; a forced exit
+    at sea a splash, a pursuit, a warp and a mission start ending the ride on the sand; the minimap's sea; the
+    shots, DESIGN §10.57)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

@@ -139,7 +139,9 @@ export class CamRig {
     // room (his back to a wall) the eye climbs on the ARM instead; past CAP it moves in over his
     // head at that angle and looks further ahead (as the cabin clamp below). Never inside the wall:
     // the old 1.6 m floor put it there (a one-colour frame at 2–9 % of the spots in a block).
-    const pull = !(pf && pf.noPull && !focus.car);
+    // Nor out at sea in the pedal boat (focus.noPull, §10.57): its only tall solid there is the bound wall
+    // it goes past, which pulled the eye in to the boat and pushed it out of the wall.
+    const pull = !(pf && pf.noPull && !focus.car) && !focus.noPull;
     if (pull) {
       const cp = Math.cos(pitch), sp = Math.sin(pitch);
       const tx = px - fx * cp * d, tz = pz - fz * cp * d, ty = py + sp * d;

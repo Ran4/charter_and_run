@@ -155,7 +155,9 @@ export const hud = {
     }
     x.setLineDash([]);
     const E = HALF + 16;
-    this.townMap = { canvas: cv, scale: MAP_SCALE, x0: -MAP_EXT, z0: -MAP_EXT, zoom: 1.25, crop: { x0: -E, z0: -E, x1: E, z1: E }, north: 'N', bg: '#d9bf86' };
+    // `sea`: south of z the minimap is the sea's blue past the canvas's edge too (the pedal boat goes out
+    // past MAP_EXT, §10.57).
+    this.townMap = { canvas: cv, scale: MAP_SCALE, x0: -MAP_EXT, z0: -MAP_EXT, zoom: 1.25, crop: { x0: -E, z0: -E, x1: E, z1: E }, north: 'N', bg: '#d9bf86', sea: { z: HALF + RHW + 9, color: '#1c7fb8' } };
     if (!this.src) this.src = this.townMap;
     return this.townMap;
   },
@@ -749,6 +751,11 @@ export const hud = {
     c.translate(R, R);
     c.rotate(camYaw + Math.PI);
     c.scale(zoom / src.scale, zoom / src.scale);
+    if (src.sea) {
+      const B = 4000 * src.scale;
+      c.fillStyle = src.sea.color;
+      c.fillRect(-B, (src.sea.z - pz) * src.scale, 2 * B, B);
+    }
     c.drawImage(src.canvas, -(px - src.x0) * src.scale, -(pz - src.z0) * src.scale);
     c.restore();
     c.save();
@@ -828,8 +835,9 @@ export const hud = {
       const [x, y] = toC(m.x, m.z);
       c.save(); c.translate(x, y); drawMarker(c, m, false, 1.3); c.restore();
     }
-    const p = game.focus();
-    const [x, y] = toC(p.x, p.z);
+    // The player's arrow stays at the crop's edge when he is past it (out at sea in the pedal boat, §10.57).
+    const p = game.focus(), m = 3;
+    const [x, y] = toC(Math.max(cr.x0 + m, Math.min(cr.x1 - m, p.x)), Math.max(cr.z0 + m, Math.min(cr.z1 - m, p.z)));
     c.save(); c.translate(x, y); c.rotate(-p.yaw + (flip ? 0 : Math.PI));
     c.fillStyle = '#fff'; c.strokeStyle = '#1d1426'; c.lineWidth = 2;
     c.beginPath(); c.moveTo(0, -10); c.lineTo(8, 8); c.lineTo(0, 3); c.lineTo(-8, 8); c.closePath(); c.fill(); c.stroke();

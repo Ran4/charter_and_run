@@ -2937,3 +2937,63 @@ export const KRANEN = {
   thud: { drop: 5, secs: 1.5, shake: 0.45, lineAt: 0.3, line: 'Jag är inte rädd.' },   // [F*] the mantra's second half (research-characters.md:115), as he gets up
   putDown: 'kranFot',
 };
+
+// Hyr en trampbåt (free roam; feature 120, DESIGN §10.57; game/trampbat.js). E at the PATINES · TRAMPBÅTAR
+// sign on the beach (landmark `lm`, within `r` m; the sign is double-sided) on the island with no mission
+// running, on foot, the SKANDAL meter down: `prompt` with its `price` (`game.pay`: Ole pays when the purse
+// is short), a `fadeSecs` s black fade and after `holdSecs` s more Stig sits at the pedals of a pedal boat
+// (the car type `trampbat`, `color`) at the water's edge (landmark `launch`), Ole's double beside him,
+// and the samba (`tune`) plays. The boat keeps to its own water, its middle in `sea` (x0..x1, z0..z1: from
+// the water's edge out past the bound wall); `start` is said at once. Out past the buoy line (`rio.z`) the
+// Rio exchange (`rio.lines`, [at, who, text], Ole waving `rio.wave` s), further out (`shark.z`) Ole's
+// statistics (`shark.lines`), each once a ride and never over the other. Within `raft.r` m of the raft
+// (`raft.at`) with its coins there `raft.line`; its `raft.coins` coins lie in a ring of `raft.ring` m at
+// `raft.y`, and the last one taken gives `raft.done`. E with the boat's middle within `shoreZ` (at the
+// water's edge; the hint `landPrompt`) steps him out onto the sand at `landZ`, `land` is said, and Ole
+// pedals the boat back to `launch` (gone once he and it are out of view, `back.popR`, `back.minSecs` s on
+// at the least); further out E gives the toast `farOut`. R puts the boat back at `launch` (`reset`). A
+// pursuit, a mission start, the other level or a warp ends the ride: Stig on the sand, the boat and Ole
+// gone. Stig ever on foot in the water past the bound wall: a splash, `wet` and back on the sand. Invented
+// (§1.6): the rental's boats, the ride and the raft's coins; the Rio exchange and the statistics are the
+// film's (Ole's lines in our bokmål).
+export const TRAMPBAT = {
+  lm: 'trampbat', r: 3.4, price: 200, launch: 'trampbatVatten', color: 0x1e9aa0, tune: 'samba',
+  prompt: '<b>E</b> Hyr trampbåt – {n} pta',                                         // [N]
+  fadeSecs: 0.6, holdSecs: 0.4,
+  sea: { x0: -250, x1: 250, z0: 301.8, z1: 352 },
+  shoreZ: 303, landZ: 299.5,
+  start: [
+    [0.5, 'ole', 'Trå, Stig-Helmer! Trå!'],                                          // [N]
+    [2.4, 'stig', 'Jag trampar, jag trampar…'],                                      // [N]
+  ],
+  rio: {
+    z: 318, wave: 3.2,
+    lines: [
+      [0, 'ole', 'Tenk å sitte her i desember. Det er som i Rio.'],                  // [F*](t) the welcome meeting (research-plot.md:268, the speaker interpreted), on the pedal boat
+      [3.0, 'stig', 'Har du varit i Rio?'],                                          // [F*](t)
+      [5.0, 'ole', 'Nei, men jeg skal reise dit.'],                                  // [F*](t)
+    ],
+  },
+  shark: {
+    z: 336,
+    lines: [
+      [0, 'ole', 'Farlige saker. Der dør det mellom to og tre mennesker hver dag. Understrømmer, solstikk og haier.'],   // [F*] his answer to the beach (research-plot.md:281, research-characters.md:186), as in CHATTER.ole
+      [5.6, 'stig', 'Vi kanske ska trampa tillbaka nu.'],                            // [N]
+    ],
+  },
+  raft: {
+    at: [-10, 324], r: 8, coins: 8, ring: 1.25, y: 0.95,
+    line: ['ole', 'Se der! Noen har glemt pengene sine på flåten.'],                 // [N]
+    done: ['ole', 'Åtte mynter. Da gikk turen i null!'],                             // [N] 8 × 25 pta, the rental's 200
+  },
+  landPrompt: '<b>E</b> Kliv i land',                                                // [N]
+  farOut: 'Trampa in till stranden för att kliva i land.',                           // [N] toast
+  land: [
+    [0, 'stig', 'Tack för turen.'],                                                  // [N]
+    [1.4, 'ole', 'Jeg trår den tilbake til utleien, jeg.'],                          // [N]
+  ],
+  reset: 'Trampbåten tillbaka vid uthyrningen.',                                     // [N] toast
+  wet: 'Usch, vad blött.',                                                           // [N] Stig, back on the sand
+  back: { popR: 45, minSecs: 3, near: 1.6 },
+  wobble: { roll: 0.035, pitch: 0.018, bob: 0.022 }, wakeEvery: 0.11,
+};

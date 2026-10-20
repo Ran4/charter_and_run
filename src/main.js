@@ -55,6 +55,7 @@ import { BeachDream } from './game/beachDream.js';
 import { GuardiaJeep } from './game/guardiaJeep.js';
 import { GolfCarts } from './game/golfCart.js';
 import { Traktor } from './game/traktor.js';
+import { Trampbat } from './game/trampbat.js';
 import { BoatTrip } from './game/boatTrip.js';
 import { Residents } from './game/residents.js';
 import { PoolBar } from './game/poolBar.js';
@@ -259,6 +260,7 @@ class Game {
     this.traktor = new Traktor(this);     // free roam: the farmer's tractor at the tomato fields, the farmer running after it (§10.54)
     this.sisters = new Sisters(this);     // free roam before the grisfest: Siv and Majsan on the balcony above 105, the whisky errand (§10.55)
     this.crane = new Crane(this);         // the building site's crane and its pallet; free roam: Stig rides it to the 3rd floor (§10.56)
+    this.trampbat = new Trampbat(this);   // the raft's coins; free roam: a pedal boat from the beach's rental, out past the bound wall with Ole (§10.57)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -697,6 +699,7 @@ class Game {
     if (this.volley.mode) this.volley.end('warp');   // off the volleyball court: the match off (§10.50)
     if (this.kort.busy) this.kort.end('warp');       // the tourist couple's camera down (§10.51)
     this.guagua.reset('warp');                       // off the guagua, the bus gone (§10.53)
+    if (this.trampbat.boat) this.trampbat.end('warp');   // out of the pedal boat onto the sand, the boat gone (§10.57)
     if (this.playerCar) this.playerCar.place(x, z, yaw);
     else this.player.teleport(x, z, yaw);
     this.cam.snapNext = true;
@@ -1166,7 +1169,7 @@ class Game {
     hud.setCoins(this.coins);
     hud.bumpCoins();
     audio.coin();
-    if (c.tag) this.awnings.onCoin(c);   // the donkey stand's roof (§10.46)
+    if (c.tag) { this.awnings.onCoin(c); this.trampbat.onCoin(c); }   // the donkey stand's roof (§10.46), the raft (§10.57)
   }
   addCoins(n) { this.coins = Math.max(0, this.coins + n); hud.setCoins(this.coins); hud.bumpCoins(); }
   // No soft locks: if the purse is short, Ole pays (nothing is deducted).
@@ -1646,6 +1649,7 @@ class Game {
     this.traktor.update(dt);
     this.sisters.update(dt);
     this.crane.update(dt);
+    this.trampbat.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);
@@ -1663,7 +1667,8 @@ class Game {
     this.cam.openFloor = this.level === 'flight' && this.cabin.phase === 'gate' && flx > 14 && !(flx > 34.5 && f.z < 10.5);
     // Standing in a hitch truck's bed (§10.47) or seated in the guagua (§10.53) the chase camera rides
     // behind the truck or the bus.
-    this.cam.update(dt, { ...this.guagua.camFocus(this.hitch.camFocus(f)), autoTurn: false, lookBack: input.down('lookBack') }, this.inDialog ? null : input.look(), this.cars);
+    // In the pedal boat out at sea the chase eye is never pulled in (§10.57: the bound wall behind him).
+    this.cam.update(dt, { ...this.trampbat.camFocus(this.guagua.camFocus(this.hitch.camFocus(f))), autoTurn: false, lookBack: input.down('lookBack') }, this.inDialog ? null : input.look(), this.cars);
     // Debug overview. The flight level's fog ends at 300 m (gate), so the camera comes in to ~85 m.
     if (this.aerial) { const k = this.level === 'flight' ? 0.17 : 1; camera.position.set(f.x, 420 * k, f.z + 260 * k); camera.lookAt(f.x, 0, f.z); camera.fov = 50; camera.updateProjectionMatrix(); }
     followSun(f.x, f.z);
@@ -1698,9 +1703,10 @@ class Game {
     }
     if (this.playerCar) {
       // The horn as an event in free roam (§10.9); updateAudio plays it everywhere. In the borrowed
-      // Guardia jeep H is its siren instead (§10.34).
-      if (input.pressed('horn') && !this.jeep.hasSiren(this.playerCar)) this.honk.press();
-      if (input.pressed('interact')) this.exitCar();
+      // Guardia jeep H is its siren instead (§10.34); the pedal boat has none (§10.57).
+      if (input.pressed('horn') && !this.jeep.hasSiren(this.playerCar) && this.playerCar.spec.horn !== 'none') this.honk.press();
+      // In the pedal boat E steps ashore only at the water's edge (§10.57).
+      if (input.pressed('interact') && !this.trampbat.leave()) this.exitCar();
       return;
     }
     if (this.frozenT > 0 || this.shame.panicT > 0) return;
@@ -1753,6 +1759,8 @@ class Game {
       hud.toast(S.resetFlight);
       return true;
     }
+    // In the pedal boat: back at the rental's water's edge, not on a road (§10.57).
+    if (this.trampbat.mine()) return this.trampbat.reset();
     const f = this.focus();
     const i = Math.round((f.x + HALF) / P), j = Math.round((f.z + HALF) / P);
     const rx = clamp(i, 0, N) * P - HALF, rz = clamp(j, 0, N) * P - HALF;
@@ -1840,6 +1848,7 @@ class Game {
     for (const c of this.cars) if (c.ai && (simTraffic || !c.traffic)) c.ai.update(h, this);
     for (const c of this.cars) if (simTraffic || !c.traffic) c.step(h, this);
     this.golf.step(h);   // a golf cart in a bunker or the pond (§10.40)
+    this.trampbat.step(h); // the pedal boat on the sea's level, in its water (§10.57)
     this.crane.step(h);  // the crane's pallet moves before anyone stands on it (§10.56)
     const cars = this.cars;
     for (let i = 0; i < cars.length; i++) for (let j = i + 1; j < cars.length; j++) collideCars(cars[i], cars[j], this);
@@ -2228,7 +2237,8 @@ class Game {
       // Fishing at the pier's end (§10.45): the wait's hint and the dive's "E Dra upp!".
       // Or the keys in a hitch truck's bed (§10.47), at the packing shed's belt (§10.49), in a volleyball
       // match (§10.50) or waiting for and in the guagua (§10.53).
-      const fh = this.fiske.hint() ?? this.hitch.hint() ?? this.packhus.hint() ?? this.volley.hint() ?? this.guagua.hint();
+      // In the pedal boat at the water's edge, "E Kliv i land" (§10.57).
+      const fh = this.fiske.hint() ?? this.hitch.hint() ?? this.packhus.hint() ?? this.volley.hint() ?? this.guagua.hint() ?? this.trampbat.hint();
       if (fh != null) prompt = fh;
       hud.setPrompt(prompt);
     }
@@ -2243,12 +2253,15 @@ class Game {
   updateAudio(dt) {
     const c = this.playerCar;
     if (c && !c.dead) {
-      audio.engine(true, c.revs, c.ctrl.throttle, !!c.spec.electric, !!c.spec.diesel);
-      audio.skid(c.air ? 0 : c.skidAmt);
+      // The pedal boat (§10.57) has no engine and leaves no skid.
+      const boat = !!c.spec.boat;
+      if (boat) audio.engine(false, 0, 0);
+      else audio.engine(true, c.revs, c.ctrl.throttle, !!c.spec.electric, !!c.spec.diesel);
+      audio.skid(c.air || boat ? 0 : c.skidAmt);
       // The grisbil grunts instead (honk.update, §10.9), a golf cart pips (golf.update, §10.40); the
       // borrowed Guardia jeep's H is its siren (§10.34).
       audio.horn(input.down('horn') && !c.spec.pigs && !c.spec.horn && !this.jeep.hasSiren(c));
-      if (c.skidAmt > 0.3 && !c.air) {
+      if (c.skidAmt > 0.3 && !c.air && !boat) {
         this.skidT = (this.skidT || 0) - 1;
         if (this.skidT <= 0) {
           this.skidT = 2;

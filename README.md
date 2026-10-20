@@ -44,7 +44,7 @@ Samma tangenter i båda nivåerna; nivån bestämmer vad de gör.
 | Shift | spring | | skynda – men det ökar rädslan |
 | Space | hoppa, i luften igen för dubbelhopp | handbroms (sladd!) | **håll i dig**: ta tag i närmaste stolsrygg vid turbulens |
 | J / klick | sparka, i luften: stampa (efter julafton: **håll in i luften** för att glidflyga) | | **håll in**: "Jag kan flyga, jag är inte rädd" – sänker FLYGRÄDSLA |
-| E | prata (med uppdragsgivaren, och mellan uppdragen med gänget), kliv in, sno en bil, kvarta en stund i Stigs säng i rum 107, titta i herr Storchs kamera, heja på rullskidåkaren, dansa med i poolen, smörja in Majsans rygg (**håll in** och släpp i det gröna), byta om i garderoben i rum 107, söka skydd i kyrkan, ringa efter en bil från hytt 2, meta från piren (och **dra upp** när flötet dyker), lifta på landsvägen (på flaket: hoppa av), ta livräddarens kikare (och sänka den igen), ta ett skift vid packhusets sorteringsband, spela strandvolley (och ta revansch), ta ett kort åt ett turistpar (och ge tillbaka kameran), vänta på guaguan vid en hållplats och kliva på (i bussen: kliva av vid vald hållplats), låna bondens traktor vid tomatfälten, köpa whisky åt systrarna och skicka upp den till balkongen | kliv ur (i fart: rulla ur) | prata, **sätt dig / res dig**, lås in dig på toaletten, anropsknappen, serveringsvagnen |
+| E | prata (med uppdragsgivaren, och mellan uppdragen med gänget), kliv in, sno en bil, kvarta en stund i Stigs säng i rum 107, titta i herr Storchs kamera, heja på rullskidåkaren, dansa med i poolen, smörja in Majsans rygg (**håll in** och släpp i det gröna), byta om i garderoben i rum 107, söka skydd i kyrkan, ringa efter en bil från hytt 2, meta från piren (och **dra upp** när flötet dyker), lifta på landsvägen (på flaket: hoppa av), ta livräddarens kikare (och sänka den igen), ta ett skift vid packhusets sorteringsband, spela strandvolley (och ta revansch), ta ett kort åt ett turistpar (och ge tillbaka kameran), vänta på guaguan vid en hållplats och kliva på (i bussen: kliva av vid vald hållplats), låna bondens traktor vid tomatfälten, köpa whisky åt systrarna och skicka upp den till balkongen, hyra en trampbåt vid skylten på stranden | kliv ur (i fart: rulla ur; i trampbåten: kliv i land, bara vid strandkanten) | prata, **sätt dig / res dig**, lås in dig på toaletten, anropsknappen, serveringsvagnen |
 | H | | tuta (utanför uppdragen hör folk den; i den lånade Guardia-jeepen: sirenen) | |
 | B | | titta bakåt | |
 | M / Tab | stor karta | stor karta | plan över gaten/kabinen |
@@ -404,6 +404,19 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   våningen. Ramlar Stig hela vägen ner landar han platt på magen med en duns, reser sig och säger "Jag
   är inte rädd." Väntar Stig vid pallens plats på gården skyndar kranföraren på. Under en SKANDAL-jakt
   står pallen kvar på marken, och under ett uppdrag går det inte att åka med.
+- **Hyr en trampbåt** (mellan uppdragen): vid trampbåtsuthyrningen på stranden (kvarteret öster om
+  livräddartornet) står skylten PATINES · TRAMPBÅTAR · 200 PTA/H. Tryck **E** där ("Hyr trampbåt – 200
+  pta"): Stig betalar 200 pesetas (har han inte råd betalar Ole), och efter en kort övertoning sitter han
+  i en turkos trampbåt i strandkanten med Ole bredvid sig medan samban spelar. "Trå, Stig-Helmer! Trå!"
+  Båten går i 7 km/h, glider vidare när man slutar trampa, vinglar på vågorna och glider ut i svängarna.
+  Den är det enda sättet att komma ut på havet, förbi bojlinan, bort till flotten och runt trampbåtarna
+  som ligger för ankar, och därifrån ser man hela stranden och stan. Förbi bojlinan säger Ole "Tenk å
+  sitte her i desember. Det er som i Rio." och vinkar – "Har du varit i Rio?" – "Nei, men jeg skal reise
+  dit." Längre ut kommer hans statistik ("Understrømmer, solstikk og haier."), och Stig tycker att de
+  kanske ska trampa tillbaka. På flotten ligger åtta mynt, precis vad turen kostade: "Da gikk turen i null!".
+  Kliva i land (**E**) går bara i strandkanten; då trampar Ole tillbaka båten till uthyrningen. **R** i
+  båten ställer den vid uthyrningen igen. Uthyrningen är stängd under uppdrag och så länge SKANDAL-mätaren
+  är uppe.
 - **Små grodorna i poolen** (efter slutet): julfesten är inte riktigt över. Varje gång du kommer in
   på Flamencos pooldäck (mellan nio på morgonen och elva på kvällen) vadar SunTrip-gänget ut i den
   grunda änden och ställer sig i ring runt Lasse i tomteluva. Affe spelar Små grodorna på dragspelet,
@@ -686,6 +699,10 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
   säljrad som en ruta och dunsen när Stig ramlar ner (i filmen finns ingen kran: mantrat hör till
   Levanders klinik och flyget, och "högsta svenska standard och bra läge" säger Angerud till Levander
   om bungalowen)
+- trampbåtsuthyrningen på stranden och skylten som tar 200 pesetas, turen ut förbi bojlinan med Ole,
+  mynten på flotten och att Ole trampar tillbaka båten (anteckningarna nämner trampbåtar på stranden
+  bara som osäkert, och någon uthyrning syns inte i filmen; Oles Rio-replik och hans statistik är
+  filmens, flyttade, och filmen slutar med de fyra i en båt utanför Copacabana)
 - poolfesten efter slutet: ringen runt Lasse, portierns promenad, att Stig hoppar med och
   takträknaren (i filmen dansar de andra Små grodorna i poolen på julfesten medan Stig-Helmer och Ole
   öppnar knäckebrödet, och Stig-Helmer dansar aldrig)
@@ -905,6 +922,7 @@ src/game/guagua.js              Guaguan in free roam: the 13 PARADA GUAGUA stops
 src/game/traktor.js             Traktorn med släpkärran in free roam: the farmer's tractor at the tomato fields (a toy: never a mission's), the farmer running after it, the furrows' jolts and the åksjuka, the honking queue, the fetch home
 src/game/sisters.js             Systrarnas balkong in free roam before the grisfest: Siv and Majsan on the balcony above 105, the ask, the whisky's shops, the basket on the towel, the waves, the parking line
 src/game/crane.js               Åk med byggkranen: the bygge's tower crane carrying its pallet to the 3rd floor and back, its dangle; in free roam the pallet a floor Stig rides, the mantra, the coins and the view up there, the thud of a fall
+src/game/trampbat.js            Hyr en trampbåt in free roam: the beach rental's pedal boat (a toy made for the ride), Ole's double beside Stig, its own water past the bound wall, the Rio exchange and the statistics, the raft's coins, ashore at the water's edge only, Ole pedalling it back, R, the ride's end
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
@@ -916,7 +934,7 @@ tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, 
                                 guardiajeep, fyren, klader, ringklocka, kyrkfrid, gatlopp, skidor,
                                 golfbil, battur, balkong, hytt, kaffe, meta, marknadstak, lifta,
                                 kikare, packhus, volley, kort, guagua, traktor, systrar, kran,
-                                calibrate, calibflight)
+                                trampbat, calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
 tools/pool.mjs                  re-derives every random stage's timer from the ledger
@@ -970,6 +988,7 @@ node tools/shot.mjs guagua guaguaKant guaguaLinje  # the guagua: the wait, the s
 node tools/shot.mjs traktor traktorshots # the tractor: E, 18 km/h, the farmer's chase and give-up, the rows' jolts and the åksjuka, the honking queue, the fetch home, the mission lock; the shots
 node tools/shot.mjs systrar systrarshots # the sisters' balcony: the ask on 105's patio, the two shops, the broken bottle, the basket, the delivery, the waves, the parking line, a mission start; every scene as seen
 node tools/shot.mjs kran kranshots       # the crane: onto the pallet, the ride and the mantra, the dangle and a hop, the slab's coins and the toast, the thuds and the glide, a pursuit, a mission; the shots
+node tools/shot.mjs trampbat trampbatshots # the pedal boat: the sign's E, Ole pays, 7 km/h and the glide, past the bound wall, the Rio exchange and the statistics, its water, the raft's coins, E ashore, Ole pedalling back, R, a splash, a pursuit, a warp, a mission; the shots
 node tools/shot.mjs grodorna grodtakt    # the pool fest after the end: the ring, the porter, Stig in the ring, eight on the beat
 node tools/shot.mjs artig                # Stig says sorry: kicks, run over, a pump, bins, carjackings and the driver's "Nej."
 node tools/shot.mjs grisar               # the grisbil's pigs: the falls, the catch on foot and by creeping, Lasse, the pen

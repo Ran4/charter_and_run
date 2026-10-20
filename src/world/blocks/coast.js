@@ -1050,12 +1050,21 @@ function playaMain(f) {
   pedalBoat(f, 12.5, 26.5, PI + 0.2, TEAL);
   f.solid(9, 26, 2.4, 3.4, CURB + 0.9, 'boat');
   f.solid(12.5, 26.5, 2.4, 3.4, CURB + 0.9, 'boat');
-  // Out at sea (beyond the bound wall at z 314 = local 74): a raft and a buoy line.
+  // Out at sea (beyond the bound wall at z 314 = local 74): a raft and a buoy line. Only the rented
+  // pedal boat gets out there (§10.57): the raft, each buoy and the anchored boat are low walls for it.
   f.box(0xd8c8a0, -10, 0.15, 84, 4, 0.3, 4);
   f.box(0x8a6a44, -10, 0.45, 84, 4.1, 0.06, 4.1);
   f.cyl(0xc0c4c8, -11.6, 1.0, 85.6, 0.05, 1.2, 6);
-  for (let x = -30; x <= 30; x += 4) f.sphere(x % 8 ? RED : 0xf4f4f0, x, 0.25, 78, 0.5);
+  f.solid(-10, 84, 4.1, 4.1, 0.9, 'raft');
+  for (let x = -30; x <= 30; x += 4) { f.sphere(x % 8 ? RED : 0xf4f4f0, x, 0.25, 78, 0.5); f.circ(x, 78, 0.4, 0.9, 'buoy'); }
   pedalBoat(f, 6, 88, 0.6, SUNY, 0.17);
+  anchoredBoat(f, 6, 88, 0.6);
+}
+
+// The colliders of a pedal boat anchored out at sea, for the rented one (§10.57): two discs along its
+// length (pedalBoat's forward axis is (sin yaw, cos yaw)).
+function anchoredBoat(f, lx, lz, yaw) {
+  for (const k of [-0.8, 0.8]) f.circ(lx + Math.sin(yaw) * k, lz + Math.cos(yaw) * k, 1.1, 0.9, 'boat');
 }
 
 // (4,6): pedal-boat rental on the sand, beach volleyball (the net's middle is the landmark `volley`), pedal
@@ -1073,6 +1082,8 @@ function playaBoats(f) {
   // No ball here: the court's ball is a live one (game/volley.js, §10.50).
   pedalBoat(f, -8, 82, 0.4, TEAL, 0.17);
   pedalBoat(f, 4, 80, -0.3, SUNY, 0.17);
+  anchoredBoat(f, -8, 82, 0.4);
+  anchoredBoat(f, 4, 80, -0.3);
 }
 
 // (2,6): windbreaks, a sandcastle, the beach-ball corner.

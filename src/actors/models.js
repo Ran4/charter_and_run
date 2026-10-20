@@ -996,8 +996,14 @@ export function animateCharacter(m, st, dt) {
     // Plane seats: legs angled down to the floor (single-segment legs have no knees); car seats: out
     // into the footwell.
     for (const l of legs) l.rotation.set(st.planeSeat ? -1.18 : -1.45, 0, 0);
+    // Pedalling the pedal boat (game/trampbat.js, §10.57): `pedal` (0..1, how hard) works the legs in turn.
+    if (st.pedal) { const p = Math.sin(t * 7) * 0.2 * st.pedal; legs[0].rotation.x += p; legs[1].rotation.x -= p; }
     arms[0].rotation.set(-1.15 + Math.sin(t * 3) * 0.04, 0, 0.18);
     arms[1].rotation.set(-1.15 - Math.sin(t * 3) * 0.04, 0, -0.18);
+    // A wave from a car seat, as the standing one (a plane seat's armrests win in poseFlags); 'R' with the
+    // right arm (Ole on the pedal boat's right seat waves past Stig's head, not behind it: §10.57).
+    if (st.wave === 'R') arms[0].rotation.set(-0.3, 0, -2.6 - Math.sin(t * 9) * 0.35);
+    else if (st.wave) arms[1].rotation.set(-0.3, 0, 2.6 + Math.sin(t * 9) * 0.35);
   } else if (st.lie) {
     // On a sun lounger (Character.lieAt): the root leans back `lean` on the backrest (flat on the
     // sand: −π/2), the legs lie straight along the bed, toes up; the arms at his sides, the hands on

@@ -220,6 +220,17 @@ addBust, seatWorld). No `calibrate` run was made for it (as for features 74 and 
 chase plays in is unchanged). `story` and `fullstory` passed on the feature's tree. Every pool below
 stands and no timer changed.
 
+**Feature 120 (Hyr en trampbåt, 2026-10-21) touches no pool.** Its new colliders lie past the sea's bound
+wall (the raft, the 16 buoys and the three anchored pedal boats, z 317.6–329.8, top 0.9; DESIGN §10.57),
+where nothing but the rented pedal boat ever gets, and draw no random number, so the world builds as
+before. The pedal boat (the new car type `trampbat`) exists only while rented between missions: it is in
+no `parkedCars` or traffic and is removed at a mission start, so every other car keeps its id and its
+place in `game.cars` in a story or calibration run. The car.js changes leave every other car as it was
+(`coast` defaults to the old 2.2; the 'bound' walls are skipped only for a `boat`), the camera's no
+pull-in is the boat's only, and the raft's coins are out only during a ride. No mission stage, route or
+pooled stage plays on the beach's water's edge or at sea. No `calibrate` run was made for it. `story` and
+`fullstory` passed on the feature's tree. Every pool below stands and no timer changed.
+
 ## `friskotekBalls` · §8.7 s1 · six fleeing beach balls · on foot: timer = ceil(1.25 × (p75 + 6 × 0.5))
 
 Phase 3 r2 island-staging placed everyone for the intro's group shot (Stig, Lasse, the sisters, the

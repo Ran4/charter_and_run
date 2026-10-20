@@ -249,6 +249,11 @@ export const ISLAND_LANDMARKS = {
   // Strandvolley (free roam, §10.50): the middle of the beach volleyball court's net on the sand, facing
   // the sea (Stig's half behind it, Berra's and Robban's ahead). Not a standing spot (under the net).
   volley: { b: [4, 6], at: [-16, 4], yaw: 0 },
+  // Hyr en trampbåt (free roam, §10.57): the middle of the double-sided PATINES · TRAMPBÅTAR sign on its
+  // posts (E within 3.4 m of it, from either side), and the rented boat's spot at the water's edge south
+  // of the rental across the beach road, facing the sea (its middle 1.8 m out: the bow on the foam line).
+  trampbat: { b: [4, 6], at: [18, 15], yaw: 0 },
+  trampbatVatten: { world: [96, 301.8], yaw: 0 },
   fena_hav: { world: [0, 304], yaw: 0, y: 0.35 },
   hamn: { b: [5, 6], at: [0, 0], yaw: PI },
   fena_hamn: { b: [5, 6], at: [-8, 10], yaw: 0, y: 0.35 },
