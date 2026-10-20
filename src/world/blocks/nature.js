@@ -11,7 +11,8 @@
 //   golf     (4,0)              fairway, bunkers, pond (fena_golf), green 18, clubhouse
 //   bungalow (5,0)              Angerud's show bungalow on red rock: plot wall, pool (fena_bungalow)
 //   bygge    (5,1)              half-built hotel frame, ramps up to the 2nd-floor slab (pryl_klocka),
-//                               tower crane, hoarding PRÓXIMAMENTE · HOTEL NUEVA ESTOCOLMO II
+//                               tower crane (its moving parts `CRANE`, game/crane.js: the pallet up to
+//                               the 3rd floor), hoarding PRÓXIMAMENTE · HOTEL NUEVA ESTOCOLMO II
 //   dyner    (0,4) (0,5)        Maspalomas dunes (hip-ended sand ridges you can drive over), palm
 //                               grove, the lagoon (La Charca: walkable shallow water)
 // Signs are world text (Spanish/Swedish); the invented ones are marked [N] in comments, film text
@@ -926,6 +927,21 @@ function bungalowTomt(f, W, ctx) {
 // bygge (5,1): a half-built hotel. Ramp up to the 1st-floor slab (top 3.55), ramp on to the
 // partial 2nd-floor slab (top 6.95, pryl_klocka at (6, -6) y 7.6). Crane, hoarding, site clutter.
 
+// The tower crane's moving parts and spots (Åk med byggkranen, feature 118, DESIGN §10.56), in world
+// coordinates: game/crane.js slews `top`, runs `trolley` along the jib, pays out `cable` and hangs
+// `load` (the brick pallet) and `sling` (its hook block and four-leg chain sling) from it.
+// { mast: { x, z, y (the slewing top's base) }, jibY (the jib's underside: the trolley's top), hookY
+// (the cable's top, in the trolley's sheaves), reach (the trolley's range [min, max]), p0 (the
+// pallet's rest on the yard east of the frame, on a patch of trodden earth: x, z, y = its underside),
+// p1 (on the 3rd floor's slab), slab { minX, maxX, minZ, maxZ, top, block }, coins [[x, z]] (on the
+// slab), meshes { top, trolley, cable, load, sling } | null (no scene) }. Filled by `bygge`.
+export const CRANE = { mast: null, meshes: null, coins: [] };
+// The pallet in its own frame (origin under its middle, on its underside, its sides along x and z): its
+// half sizes, the deck's top, the layer of bricks over the deck (`bricks` high, `bw` × `bd` half sizes)
+// whose top is the floor Stig stands on (`top`, 0.42: a step up from the ground), and the sling's hook
+// over the middle.
+export const PALLET = { hw: 1.1, hd: 0.8, deck: 0.18, bricks: 0.24, bw: 1.0, bd: 0.7, top: 0.42, hook: 3.2 };
+
 function bygge(f, W, ctx) {
   const { rnd } = ctx;
   f.flat(0xb08a5a, 0, 0, W - 2, W - 2, CURB + 0.01);
@@ -992,9 +1008,11 @@ function bygge(f, W, ctx) {
   for (const [px, pz, w, d] of [[14.5, -8, 2.6, 0.3], [20, -8, 3, 0.3], [12, -16.5, 0.3, 2.6], [12, -11, 0.3, 2.4]]) f.box(0xb85a3a, px, S2, pz, w, 3.05, d);
   for (const x of [12, 17, 22]) for (const z of [-18, -13, -8]) if (x !== 17 || z !== -13) f.box(CONC_D, x, S2, z, 0.5, 3.1, 0.5);
   f.box(CONC, 17, S3 - 0.35, -13, 10.4, 0.35, 10.4);
-  f.solid(17, -13, 10, 10, S3, 'building');
+  const slab = f.solid(17, -13, 10, 10, S3, 'building');
+  // The 4th floor's corner columns stand on it: solid since the crane's pallet brings Stig up (§10.56).
   for (const [x, z] of [[12, -18], [22, -18], [22, -8], [12, -8]]) {
     f.box(CONC_D, x, S3, z, 0.45, 2.4, 0.45);
+    f.circ(x, z, 0.3, S3 + 2.4, 'post');
     for (const o of [-0.12, 0.12]) f.cyl(0x6a3a2a, x + o, S3 + 2.9, z + o, 0.03, 1.0, 4);
   }
   f.box(CONC_D, 17, S3 + 2.2, -18, 10.4, 0.4, 0.4);
@@ -1002,7 +1020,8 @@ function bygge(f, W, ctx) {
   f.box(0xd8d0c0, 8, S2, -15.5, 2.4, 0.6, 1.6); f.solid(8, -15.5, 2.4, 1.6, S2 + 0.6, 'bags');
   f.box(0x2f6aa8, 4.5, S2 + 0.35, -11, 1.2, 0.35, 0.7); f.cyl(0x222222, 5.2, S2 + 0.2, -11, 0.2, 0.12, 8, PI / 2);
   for (let x = 4; x <= 20; x += 4) f.cyl(0x6a3a2a, x, S2 + 0.5, -3.4, 0.03, 1.0, 4);
-  // Tower crane (north-east corner) with a slowly slewing jib. Lattice mast: corner posts + braces.
+  // Tower crane (north-east corner). Lattice mast: corner posts + braces. The slewing top, the trolley,
+  // the cable and the pallet are meshes of their own that game/crane.js moves (feature 118, §10.56).
   const cx = 26, cz = -24, CH = 28;
   for (const sx of [-0.7, 0.7]) for (const sz of [-0.7, 0.7]) f.box(YELLOW, cx + sx, CURB, cz + sz, 0.22, CH, 0.22);
   for (let k = 0; k < 14; k++) {
@@ -1014,15 +1033,59 @@ function bygge(f, W, ctx) {
   }
   f.box(STEEL, cx, CURB, cz, 3.2, 1.2, 3.2);
   f.solid(cx, cz, 3.2, 3.2, 99, 'crane');
+  // The slewing top in its own frame: the jib along −x, the counter-jib along +x (rotation.y = the
+  // jib's heading + π/2). The trolley runs under the jib's underside (CURB + CH + 1.7).
   const jib = new GeoBuilder();
   jib.box(0x3a3f4a, 0, 1.0, 0, 2.2, 2.0, 2.2);
   jib.box(YELLOW, -12, 2.2, 0, 30, 1.0, 1.0);
   jib.box(YELLOW, 6, 2.2, 0, 10, 0.9, 1.0);
   jib.box(CONC_D, 9.5, 1.3, 0, 2.4, 1.6, 1.6);
   jib.cone(YELLOW, 0, 4.4, 0, 0.6, 3.2, 4);
-  jib.box(0x2a2a2a, -18, -4.5, 0, 0.05, 12.4, 0.05);
-  jib.box(WOOD, -18, -10.8, 0, 1.6, 0.2, 1.2); jib.box(0xb85a3a, -18, -10.4, 0, 1.4, 0.6, 1.0);
-  spinner(f, jib, f.wx(cx, cz), CURB + CH, f.wz(cx, cz), 'y', 0.05);
+  // Where the crane sets the pallet down in the yard east of the frame (P0): trodden earth, a few
+  // bricks dropped round it.
+  const p0x = 27, p0z = -6.5;
+  f.flat(0x9a7650, p0x, p0z, 3.4, 2.8, CURB + 0.016);
+  for (const [x, z, a] of [[25.3, -4.9, 0.3], [28.9, -8.1, -0.5], [28.6, -4.6, 1.2]]) f.box(0xb85a3a, x, CURB, z, 0.24, 0.07, 0.12, a);
+  Object.assign(CRANE, {
+    mast: { x: f.wx(cx, cz), z: f.wz(cx, cz), y: CURB + CH }, jibY: CURB + CH + 1.7, hookY: CURB + CH + 1.3, reach: [5, 26],
+    p0: { x: f.wx(p0x, p0z), z: f.wz(p0x, p0z), y: CURB },
+    p1: { x: f.wx(17, -13), z: f.wz(17, -13), y: S3 },
+    slab: { minX: f.wx(12, 0), maxX: f.wx(22, 0), minZ: f.wz(0, -18), maxZ: f.wz(0, -8), top: S3, block: slab },
+    // A row of four coins along the slab's north edge, where the view over Angerud's plot is (4 m and
+    // more from the pallet's spot, out of the arrival's reach; the island's 260 fixed coins allow four).
+    coins: [[13.6, -16.9], [15.9, -16.9], [18.2, -16.9], [20.5, -16.9]]
+      .map(([x, z]) => [f.wx(x, z), f.wz(x, z)]),
+  });
+  if (f.scene) {
+    const top = toonMesh(jib.build(), { outline: 0.03 });
+    const tr = new GeoBuilder();
+    tr.box(0x3a3f4a, 0, -0.18, 0, 1.0, 0.36, 1.3);
+    for (const s of [-1, 1]) tr.cyl(0x2a2a2a, s * 0.25, -0.45, 0, 0.16, 0.08, 10, PI / 2);
+    const trolley = toonMesh(tr.build(), { outline: 0.02 });
+    const cb = new GeoBuilder();
+    cb.box(0x2a2a2a, 0, 0.5, 0, 0.05, 1, 0.05);   // a unit cable standing on its foot, scaled to length
+    const cable = toonMesh(cb.build(), { outline: 0.015, cast: false });
+    // The pallet (runners, deck, two courses of bricks); the hook block and the four-leg chain sling.
+    const P = PALLET, ld = new GeoBuilder();
+    for (const z of [-0.62, 0, 0.62]) ld.boxB(WOOD_D, 0, 0, z, 2 * P.hw, 0.08, 0.16);
+    ld.boxB(WOOD, 0, 0.08, 0, 2 * P.hw, P.deck - 0.08, 2 * P.hd);
+    ld.boxB(0xb85a3a, 0, P.deck, 0, 2 * P.bw, P.bricks, 2 * P.bd);
+    ld.box(0x9a4a30, 0, P.deck + P.bricks / 2, 0, 2 * P.bw + 0.02, 0.025, 2 * P.bd + 0.02);
+    for (const x of [-0.5, 0, 0.5]) ld.box(0x9a4a30, x, P.top - 0.004, 0, 0.025, 0.01, 2 * P.bd);
+    const load = toonMesh(ld.build(), { outline: 0.02 });
+    // The sling on its own (game/crane.js hides it with the camera's eye inside it).
+    const sl = new GeoBuilder();
+    sl.box(0x3a3f4a, 0, P.hook + 0.42, 0, 0.42, 0.5, 0.3);
+    sl.box(YELLOW, 0, P.hook + 0.7, 0, 0.46, 0.08, 0.34);
+    sl.box(0x2a2a2a, 0, P.hook + 0.06, 0, 0.1, 0.24, 0.1);
+    for (const [ex, ez] of [[-1.05, -0.76], [-1.05, 0.76], [1.05, -0.76], [1.05, 0.76]]) {
+      const dy = P.hook - P.deck, len = Math.hypot(ex, dy, ez);
+      sl.box(0x4a4a4a, ex / 2, P.deck + dy / 2, ez / 2, 0.035, len, 0.035, Math.atan2(-ex, -ez), Math.acos(dy / len));
+    }
+    const sling = toonMesh(sl.build(), { outline: 0.02 });
+    for (const m of [top, trolley, cable, load, sling]) f.scene.add(m);
+    CRANE.meshes = { top, trolley, cable, load, sling };
+  }
   // Hoarding along the south edge with the gate x [-8, 8] and the big billboard.
   for (const [x0, x1] of [[-30.6, -8.4], [8.4, 30.6]]) {
     const w = x1 - x0, x = (x0 + x1) / 2;

@@ -71,6 +71,7 @@ import { Volley } from './game/volley.js';
 import { TouristPhoto } from './game/touristPhoto.js';
 import { Guagua } from './game/guagua.js';
 import { Sisters } from './game/sisters.js';
+import { Crane } from './game/crane.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
 import { LEVELS, ISLAND_PALETTES } from './level.js';
@@ -257,6 +258,7 @@ class Game {
     this.guagua = new Guagua(this);       // free roam: the guagua from the PARADA stops, the football talk on the way (§10.53)
     this.traktor = new Traktor(this);     // free roam: the farmer's tractor at the tomato fields, the farmer running after it (§10.54)
     this.sisters = new Sisters(this);     // free roam before the grisfest: Siv and Majsan on the balcony above 105, the whisky errand (§10.55)
+    this.crane = new Crane(this);         // the building site's crane and its pallet; free roam: Stig rides it to the 3rd floor (§10.56)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -835,6 +837,10 @@ class Game {
     return best;
   }
 
+  // A moving floor that is no car, for Character.step: the crane's pallet under Stig between missions
+  // (§10.56), as carRoofAt's { top, car } (`car`: what he rides), or null.
+  platformAt(ch, x, z, ytop) { return this.crane ? this.crane.platformAt(ch, x, z, ytop) : null; }
+
   allChars() {
     const out = [];
     if (!this.playerCar) out.push(this.player);
@@ -1123,13 +1129,15 @@ class Game {
     let wet = dove || roofDove || judged;
     this.film.onLand(y, this.stomping);
     if (!wet && !ch.standingOn && waterAt(ch.x, ch.z, y)) { this.waterSplash(ch.x, ch.z, v, this.stomping); wet = true; }
+    // A long fall off the crane's pallet or the 3rd floor: on his belly with a thump (§10.56).
+    const thud = !wet && this.crane.onLand(v, y);
     if (this.stomping) {
       this.stomping = false;
       audio.crash(0.4);
       this.cam.shake = Math.max(this.cam.shake, 0.6);
       if (!wet) fx.dust(ch.x, ch.z, 12, ch.y + 0.2);
       this.areaHit(ch.x, ch.z, ch.y, 2.6, 0, 0, true);
-    } else if (!wet) fx.dust(ch.x, ch.z, 3, ch.y + 0.1);
+    } else if (!wet && !thud) fx.dust(ch.x, ch.z, 3, ch.y + 0.1);
   }
   // Water thrown up where he lands hard (v m/s, over 6) in a pool or a pond, for the dust: the drops
   // and the sound grow with v (about 22 off the 10 m tower), and a stomp's is a cannonball, a column
@@ -1637,6 +1645,7 @@ class Game {
     this.guagua.update(dt);
     this.traktor.update(dt);
     this.sisters.update(dt);
+    this.crane.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);
@@ -1831,6 +1840,7 @@ class Game {
     for (const c of this.cars) if (c.ai && (simTraffic || !c.traffic)) c.ai.update(h, this);
     for (const c of this.cars) if (simTraffic || !c.traffic) c.step(h, this);
     this.golf.step(h);   // a golf cart in a bunker or the pond (§10.40)
+    this.crane.step(h);  // the crane's pallet moves before anyone stands on it (§10.56)
     const cars = this.cars;
     for (let i = 0; i < cars.length; i++) for (let j = i + 1; j < cars.length; j++) collideCars(cars[i], cars[j], this);
     // People. The glide (§10.7) steers and eases his fall around his step, and so do the borrowed

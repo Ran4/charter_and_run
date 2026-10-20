@@ -236,7 +236,10 @@ export class Character {
     let gh = groundAt(this.x, this.z, this.y, STEP);
     let gb = groundInfo.block;
     if (game) {
-      const roof = game.carRoofAt(this.x, this.z, this.y + STEP);
+      let roof = game.carRoofAt(this.x, this.z, this.y + STEP);
+      // A moving floor that is no car (the crane's pallet, §10.56) rides the same way.
+      const lift = game.platformAt?.(this, this.x, this.z, this.y + STEP);
+      if (lift && (!roof || lift.top > roof.top)) roof = lift;
       if (roof && roof.top > gh) { gh = roof.top; gb = null; this.standingOn = roof.car; } else this.standingOn = null;
     }
     if (this.y <= gh) {
@@ -254,8 +257,9 @@ export class Character {
     } else {
       this.onGround = false;
     }
-    if (this.standingOn && this.onGround) {
-      // Ride along on car roofs.
+    if (this.standingOn && (this.onGround || this.standingOn.carries)) {
+      // Ride along on car roofs; a `carries` floor (the crane's pallet) also in the air over it, so a
+      // hop on it comes down on it.
       this.x += this.standingOn.vx * dt; this.z += this.standingOn.vz * dt;
     }
     if (this.faceWish && Math.hypot(this.wishX, this.wishZ) > 0.5) this.yaw = dampAngle(this.yaw, yawTo(this.wishX, this.wishZ), 12, dt);

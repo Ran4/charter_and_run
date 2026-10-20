@@ -241,7 +241,13 @@ opens with a summary of the rounds and the timer changes.
     his left hand, broken by a fall or R; "E Skicka upp whiskyn": the basket on the knotted towel, the
     delivery's lines; Siv's reminder, Majsan's waves, the parking line by the west gable (no neighbour's);
     a mission start puts them back at the pool; the pool's features at index 11 untouched until then;
-    every scene as seen, DESIGN §10.55)
+    every scene as seen, DESIGN §10.55), `kran kranshots` (Åk med byggkranen, the bygge's tower crane
+    carrying its brick pallet from the yard east of the frame to the 3rd floor's slab and back, about 55 s
+    a cycle: between missions the pallet a floor that carries Stig (in the air over it too, `platformAt`),
+    his arms out and the mantra high up, the slab's four coins (`minY`, not from the 2nd floor) and
+    Angerud's pitch as a toast at its north edge, the thud of a fall of 5 m or more (not a glide or a
+    stomp), the pallet home and held in a pursuit, Stig put down at `kranFot` out of free roam; the shots,
+    DESIGN §10.56)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

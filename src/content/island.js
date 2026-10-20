@@ -32,7 +32,9 @@
 // and the guagua from the town's PARADA GUAGUA stops, the ride beside its driver and his lines (§10.53),
 // and the farmer's tractor by the tomato fields' tool hut that Stig borrows, the farmer running after it,
 // the honking queue behind it and the furrows' jolts (§10.54), and
-// the sisters' whisky errand from their balcony above room 105, the basket on the towel and the waves (§10.55).
+// the sisters' whisky errand from their balcony above room 105, the basket on the towel and the waves (§10.55),
+// and the building site's crane cycling its brick pallet to the 3rd floor, Stig riding it with the mantra,
+// the coins and the view up there and the thud of a fall off it (§10.56).
 
 export const HOMES_ISLAND = {
   ole: ['flamenco', 2.0, 1.0, 0],     // yaw 0: under the pergola, facing the pool (flamenco faces π)
@@ -2901,4 +2903,37 @@ export const SYSTRARNA = {
     line: 'Här nere parkerar de hursomhelst.',                                     // [F] Majsan on the balcony (research-plot.md:256; research-characters.md:211)
     reply: 'Spänn av, Majsan. Du är ledig.',                                       // [F](t) the answer there (research-characters.md:212; the speaker interpreted: Siv)
   },
+};
+
+// Åk med byggkranen (free roam; feature 118, DESIGN §10.56; game/crane.js, the crane's parts and spots in
+// world/blocks/nature.js `CRANE`). The tower crane on the building site runs one cycle, in game seconds:
+// the brick pallet `rest0` s on its sleepers in the yard east of the frame (P0), up to `cruise` (its
+// underside, m), the jib slewed over the frame (the trolley in to the slab's spot), down onto the 3rd
+// floor's slab (P1), `rest1` s there (cut to `rest1Short` once Stig waits on foot within `waitR` m of the
+// sleepers), up, back and down to the sleepers. A move eases in and out (a half cosine) over the longest
+// of its axes' times at `hoist.up` / `hoist.down` m/s (the ride's hoists; `hoist.home` for the empty ones
+// back to the sleepers), `slew.w` rad/s and `slew.trolley` m/s at their peaks. The pallet hangs on a
+// pendulum from the hook: the hook's acceleration × `sway.k` pushes it, `sway.zeta` damps it (in the last
+// `sway.steadyH` m down `sway.steadyZeta`: the slinger steadies it), at most `sway.max` m off. Between
+// missions on the island (not on the rollerskis) the pallet is a floor that carries Stig, in the air over
+// it too; riding it `mantra.above` m or more over the ground below, moving, his arms go out and he says the
+// mantra (S.mantraLine [F*]: the exercise at Levander's clinic, relocated) at once and every
+// `mantra.every` s. On the slab its `coins` (4 along its north edge, at its top + `coinY`, taken only from
+// `coinMinY` m under it or higher) and, within `view.edge` m of its north edge (Angerud's show bungalow across the road),
+// `view.line` as a toast once a visit. A fall of `thud.drop` m or more off the pallet or the slab, not a
+// glide or a stomp, lands as a thud: on his belly `thud.secs` s, the camera shaken, then up with
+// `thud.line`. In a SKANDAL pursuit the crane takes the pallet home to the sleepers and holds it there;
+// in a mission the pallet is no floor, and Stig up on it or the slab is put down at `putDown`. Invented
+// (§1.6): the crane's cycle, the ride, the coins up there and the thud; the film has no crane.
+export const KRANEN = {
+  rest0: 7, rest1: 6, rest1Short: 1.5, waitR: 9,
+  cruise: 17.6,
+  hoist: { up: 2.8, down: 1.6, home: 3.0 },
+  slew: { w: 0.2, trolley: 1.2 },
+  sway: { k: 0.35, zeta: 0.25, steadyH: 2.5, steadyZeta: 1.4, max: 0.8 },
+  mantra: { above: 3, every: 3.6, secs: 2.4 },
+  coinY: 0.75, coinMinY: 0.25,
+  view: { edge: 3, line: 'Högsta svenska standard och bra läge.' },   // [F*](t) Angerud's pitch to Levander (research-plot.md:108), relocated to a toast over his plot
+  thud: { drop: 5, secs: 1.5, shake: 0.45, lineAt: 0.3, line: 'Jag är inte rädd.' },   // [F*] the mantra's second half (research-characters.md:115), as he gets up
+  putDown: 'kranFot',
 };

@@ -393,6 +393,17 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   Inget pris, men Majsan vinkar varje gång Stig går förbi tills grisfesten börjar. Ställer han en bil på
   gatan vid hotellets västra gavel säger Majsan uppifrån "Här nere parkerar de hursomhelst.", och Siv
   svarar "Spänn av, Majsan. Du är ledig."
+- **Åk med byggkranen** (mellan uppdragen): byggkranen på bygget norr om stan (kvarteret mellan
+  lägenheterna och drömplanet) går i en cykel på knappt en minut. Kroken ställer ner tegelpallen på
+  gården öster om det halvfärdiga hotellet, väntar en stund, lyfter den nästan 18 meter, svänger in över
+  bygget och ställer ner den på tredje våningen, dit man annars inte kommer. Kliv upp på pallen när den
+  står nere (eller hoppa på när den lyfter) så åker Stig med. Högt uppe sträcker han ut armarna och
+  mumlar "Jag kan flyga, jag är inte rädd." medan pallen dinglar. Uppe på tredje våningen ligger fyra
+  mynt längs norra kanten, och därifrån ser man rakt ner på Angeruds visningsbungalow: "Högsta svenska
+  standard och bra läge." Ner kommer man med pallen nästa varv eller genom att hoppa ner till andra
+  våningen. Ramlar Stig hela vägen ner landar han platt på magen med en duns, reser sig och säger "Jag
+  är inte rädd." Väntar Stig vid pallens plats på gården skyndar kranföraren på. Under en SKANDAL-jakt
+  står pallen kvar på marken, och under ett uppdrag går det inte att åka med.
 - **Små grodorna i poolen** (efter slutet): julfesten är inte riktigt över. Varje gång du kommer in
   på Flamencos pooldäck (mellan nio på morgonen och elva på kvällen) vadar SunTrip-gänget ut i den
   grunda änden och ställer sig i ring runt Lasse i tomteluva. Affe spelar Små grodorna på dragspelet,
@@ -671,6 +682,10 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
   poolbaren, korgen i badlakanet, Stigs "Varsågoda…", Sivs påminnelse och Majsans vinkningar (i filmen
   är Stig-Helmer inte med i balkongscenen: "Vi är väl inte på nåt jäkla vernissage?", "Så att du vågar
   stöta på giraffen." och Majsans parkeringsrad hör till den)
+- byggkranens tegelpall som går upp till tredje våningen, åkturen med mantrat, mynten där uppe, Angeruds
+  säljrad som en ruta och dunsen när Stig ramlar ner (i filmen finns ingen kran: mantrat hör till
+  Levanders klinik och flyget, och "högsta svenska standard och bra läge" säger Angerud till Levander
+  om bungalowen)
 - poolfesten efter slutet: ringen runt Lasse, portierns promenad, att Stig hoppar med och
   takträknaren (i filmen dansar de andra Små grodorna i poolen på julfesten medan Stig-Helmer och Ole
   öppnar knäckebrödet, och Stig-Helmer dansar aldrig)
@@ -889,6 +904,7 @@ src/game/touristPhoto.js        "Kan du ta ett kort på oss?" in free roam: the 
 src/game/guagua.js              Guaguan in free roam: the 13 PARADA GUAGUA stops, the wait, the green guagua that stops at the bench, the seat beside the driver, the film's football talk, the stop chosen with W/S, the fade off there
 src/game/traktor.js             Traktorn med släpkärran in free roam: the farmer's tractor at the tomato fields (a toy: never a mission's), the farmer running after it, the furrows' jolts and the åksjuka, the honking queue, the fetch home
 src/game/sisters.js             Systrarnas balkong in free roam before the grisfest: Siv and Majsan on the balcony above 105, the ask, the whisky's shops, the basket on the towel, the waves, the parking line
+src/game/crane.js               Åk med byggkranen: the bygge's tower crane carrying its pallet to the 3rd floor and back, its dangle; in free roam the pallet a floor Stig rides, the mantra, the coins and the view up there, the thud of a fall
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
 tools/shot.mjs, tools/lib.mjs   headless test driver and the T API (timer statistics `pct`, `timerRange`)
@@ -899,8 +915,8 @@ tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, 
                                 stunthopp, prata, takhopp, mikrofon, faglar, gags, strandkyssen,
                                 guardiajeep, fyren, klader, ringklocka, kyrkfrid, gatlopp, skidor,
                                 golfbil, battur, balkong, hytt, kaffe, meta, marknadstak, lifta,
-                                kikare, packhus, volley, kort, guagua, traktor, systrar, calibrate,
-                                calibflight)
+                                kikare, packhus, volley, kort, guagua, traktor, systrar, kran,
+                                calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
 tools/pool.mjs                  re-derives every random stage's timer from the ledger
@@ -953,6 +969,7 @@ node tools/shot.mjs kort kortshots       # the tourist couples: the ask, the vie
 node tools/shot.mjs guagua guaguaKant guaguaLinje  # the guagua: the wait, the stop, the step in and the fare, the football talk, W/S, the fade off; Q, walking off, a car on the stop, held up, the locks, a mission start; every stop
 node tools/shot.mjs traktor traktorshots # the tractor: E, 18 km/h, the farmer's chase and give-up, the rows' jolts and the åksjuka, the honking queue, the fetch home, the mission lock; the shots
 node tools/shot.mjs systrar systrarshots # the sisters' balcony: the ask on 105's patio, the two shops, the broken bottle, the basket, the delivery, the waves, the parking line, a mission start; every scene as seen
+node tools/shot.mjs kran kranshots       # the crane: onto the pallet, the ride and the mantra, the dangle and a hop, the slab's coins and the toast, the thuds and the glide, a pursuit, a mission; the shots
 node tools/shot.mjs grodorna grodtakt    # the pool fest after the end: the ring, the porter, Stig in the ring, eight on the beat
 node tools/shot.mjs artig                # Stig says sorry: kicks, run over, a pump, bins, carjackings and the driver's "Nej."
 node tools/shot.mjs grisar               # the grisbil's pigs: the falls, the catch on foot and by creeping, Lasse, the pen

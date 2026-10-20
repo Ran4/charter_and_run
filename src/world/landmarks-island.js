@@ -202,6 +202,10 @@ export const ISLAND_LANDMARKS = {
   // the yellow ramp's crest.
   stunt_planka: { b: [5, 1], at: [22, -1.4], yaw: PI / 2, y: 4.45 },
   stunt_gula: { b: [5, 1], at: [-16, 4], yaw: PI, y: 1.95 },
+  // Åk med byggkranen (feature 118, §10.56): on the ground beside the crane pallet's sleepers (nature.js
+  // `CRANE.p0`, local (27, −6.5)), facing them; where a mission start puts down a Stig up on the pallet or
+  // the 3rd floor.
+  kranFot: { b: [5, 1], at: [24.6, -11], yaw: 0.49 },
   // (4,4) Hoppet mellan hotelltaken (feature 41, §10.29): the seven-storey pair in the north row
   // (town.js roofWalk; ATLÁNTICO lot-local x = world x − 80, SOL DE INVIERNO x − 100.667, both z − 49).
   // The lobbies' E spots face their doors (the stairs down put him there turned round); the roof
