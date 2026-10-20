@@ -2,15 +2,15 @@
 # flytta den överst till "färdiga features"-sektionen nedan)
 # markörer: ⟨par N⟩ = de två raderna med samma N körs samtidigt (var sin worktree/gren, sedan rebase på main och push), ⟨solo⟩ = körs ensam; ta grupperna uppifrån och ned
 - features/roster.md – Röster – ett fullt röstsatt spel (ElevenLabs, som Saab- och Seinfeld-spelen; svara på de öppna frågorna i §13 först) [L] ⟨solo⟩
-
-# Vänta med dessa tills spelaren säger till
-# markörer som ovan: ⟨par N⟩ = de två raderna med samma N körs samtidigt, ⟨solo⟩ = körs ensam; här från par 6 och uppåt så att taggarna är unika när rader köas en och en
 - features/takterrassen_pa_la_medina.md – 122. Takterrassen på La Medina vaknar [M] ⟨par 16⟩
 - features/utflykt_med_lasse.md – 124. Utflykt med Lasse – åk med SunTrip-bussen till Fataga [L] ⟨par 16⟩
 - features/glass_till_majsan.md – 126. Glass till Majsan innan den smälter [M] ⟨par 17⟩
 - features/ljudlandskap_per_kvarter.md – 131. Ljudlandskap per kvarter [M] ⟨par 17⟩
 - features/helan_gar_festen.md – 134. Helan går från balkongen [M] ⟨par 18⟩
 - features/torgliv_siesta_och_paseo.md – 135. Liv på torget – siesta och paseo [L] ⟨par 18⟩
+
+# Vänta med dessa tills spelaren säger till
+# markörer som ovan: ⟨par N⟩ = de två raderna med samma N körs samtidigt, ⟨solo⟩ = körs ensam; här från par 6 och uppåt så att taggarna är unika när rader köas en och en
 - features/bungalowen_ar_sald.md – 138. Bungalowen är såld [S] ⟨par 19⟩
 - features/kvarteren_tands.md – 140. Kvarteren tänds – adventsstjärnor och tända fönster [S] ⟨par 19⟩
 - features/butaneron.md – 143. Butaneron och gasolbilen [M] ⟨solo⟩
