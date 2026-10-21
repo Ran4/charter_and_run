@@ -3365,3 +3365,60 @@ export const TORG = {
     19: 'Paseo – kvällspromenaden runt plazans fontän.',                   // [N] toast
   },
 };
+
+// Helan går från balkongen (free roam; feature 134, DESIGN §10.63; game/helanGar.js, the song in audio.js's
+// `fest` layer). From `fromIndex` (after buss17: "Den kvällen hörs 'Helan går' på avstånd",
+// research-plot.md:276) a party sings Helan går on a balcony of the apartment slabs every evening, `hours`
+// [h, h) of the island's clock (§10.10, across midnight; the held test clock's 15:00 is none), on the island
+// with no mission running. Each evening a new balcony (`floors`, a unit with no resident, awning or potted
+// plant), never in the block (bi, bj) of the evening before, drawn from `seed`. On it Affe with his
+// accordion, Gabbe with his congas and two Swedish guests (`guests`: [woman]), placed by hand (`cast`: [k
+// along the unit × its width from its middle, `back` m behind the residents' line, `turn` rad off the
+// street]); the real Affe and Gabbe are hidden meanwhile (taken, and given back, out of view; `seenR` m, or
+// within `cutSecs` s of a cut). A garland of `bulbs` (`colors`) under the balcony above. The song is heard
+// only: its level 1 within `near` m (horizontal), `near` / d beyond, faded out from `fadeFrom` to `far` m,
+// from its side of the camera (`pan`, full from 2 × `near` m), muffled with distance (a low-pass from
+// `lp[0]` Hz at `near` to `lp[1]` at `far`, even in pitch), × the soundscape's mix (§10.60); the island tune
+// ducked to 1 − `duck` × its level² (down only near it). A round of the melody (8 bars at 104 bpm) and
+// `restBars` of oom-pah between rounds. With the music off (or muted) a dot on the minimap (`dot`) shows
+// where it is. Stig under it (on foot, within `callR` m, in front of the balcony or `back` m under it, no
+// dialogue): the first time an evening `first` ([at s, who, text]: 'a', 'b' the guests, 'stig', 'affe');
+// later the same evening, `awayR` m off and back, `again`. At `dropAt` s after an exchange guest b drops a
+// napkin with `pay` pta until he has had it that evening (not when he is over `callR` + 4 m off by then): it
+// flutters down in `fall` s to `land` m before him; walked over within `pickR` m it is his (`toast`); it
+// lies `rest` s. At a round's start with Stig within `singR` m a guest sings `sung` (§1.5: the song's one
+// line); at its end `skal` from guest a; in the first pause with Stig within `singR` m Affe's `sigh`, once an
+// evening. Lines at most every `every` s, and an exchange not within `after` s of a neighbour's line on the
+// balconies (§10.42; ours hold theirs as their own do). Invented [N] (§1.6): the party, its balcony, the
+// napkin and the guests' lines; the film only hears the song that evening. Stig's lines echo the
+// grisfest's (research-plot.md:346).
+export const HELAN = {
+  fromIndex: 6, hours: [20, 2], seed: 13400, floors: [1, 2],
+  musicians: ['affe', 'gabbe'], guests: [true, false],
+  cast: [
+    { who: 'a', k: -0.33, back: 0.0, turn: 0.25 },        // the toast, a cup in her hand
+    { who: 'b', k: -0.11, back: 0.05, turn: 0.1 },        // the napkin
+    { who: 'gabbe', k: 0.12, back: 0.3, turn: -0.12 },    // his congas stand clear of the railing
+    { who: 'affe', k: 0.34, back: 0.08, turn: -0.3 },
+  ],
+  bulbs: 13, colors: [0xff4a3a, 0xffd23f, 0x3ad86a, 0x3a8cff, 0xff9a2a, 0xfff6d8],
+  seenR: 60, cutSecs: 1.2,
+  near: 14, fadeFrom: 110, far: 150, pan: 0.7, lp: [6500, 1100], duck: 0.8,
+  restBars: 3,
+  dot: true,
+  callR: 12, back: 3, awayR: 30, singR: 30, every: 1.2, after: 2.5,
+  first: [
+    [0, 'a', 'Skål, grannen! Kom upp!'],                                          // [N]
+    [2.4, 'stig', 'Det känns fånigt att gå upp…'],                                // [F*] the grisfest's "Nej, det känns fånigt att bjuda upp." (research-plot.md:346)
+    [4.8, 'b', 'Här, grannen – till en sangria!'],                                // [N]
+  ],
+  again: [
+    [0, 'b', 'Kom upp, grannen! Det finns sangria!'],                             // [N]
+    [2.4, 'stig', 'Jag är skraj att de ska…'],                                    // [F*] the grisfest's "Jag är skraj att de ska nobba." (research-plot.md:346), left unfinished
+  ],
+  sung: '♪ Helan går, sjung hopp faderallan lallan lej… ♪',                       // [N] the traditional song's first line (§1.5: one sung line)
+  skal: 'Skål!',                                                                 // [N]
+  sigh: 'Jag har haft två grisfester i veckan.',                                 // [F*](t) Affe's in the bus (research-plot.md:231), between two rounds
+  dropAt: 5.2, fall: 2.6, land: 0.9, pickR: 1.4, rest: 40, pay: 50,
+  toast: 'En servett med {n} pta – till en sangria.',                           // [N]
+};

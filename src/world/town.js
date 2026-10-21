@@ -69,10 +69,12 @@ export const ROOF_JUMP = { lots: { '4,4,0,1': 'atl', '4,4,0,2': 'sol' }, roofs: 
 // Balkongerna lever (feature 77, DESIGN §10.42): every apartment-hotel slab's balcony rows, for the
 // residents game/residents.js puts on them. One entry a slab: { id (the residential lot, as
 // ROOF_JUMP's), x, z (the middle of its balcony line), yaw (facing the street), w, floors, spots:
-// [{ x, y, z, fl, u }] } in world coordinates, a spot per balcony unit and floor: on the floor's top,
-// 0.95 m in from the balcony's front edge (0.35 m behind the railing, so a body turned to the street
-// keeps its apron and its broom behind it) and a little off the unit's middle (clear of the fins and
-// the potted plant). Filled by slabLot with no random draws of its own: the world builds as before.
+// [{ x, y, z, fl, u, awning, plant }] } in world coordinates, a spot per balcony unit and floor: on the
+// floor's top, 0.95 m in from the balcony's front edge (0.35 m behind the railing, so a body turned to
+// the street keeps its apron and its broom behind it) and a little off the unit's middle (clear of the
+// fins and the potted plant); `awning` and `plant`: the unit has one. `ax, az` (the row's direction:
+// lot-local +x) and `uw` (a unit's width) place the balcony party of Helan går (feature 134, §10.63).
+// Filled by slabLot with no random draws of its own: the world builds as before.
 export const balconyLots = [];
 // Guaguan (feature 112, DESIGN §10.53): the 13 PARADA GUAGUA stops as busStop builds them, for
 // game/guagua.js: { key: 'i,j,side', i, j, side, x, z, yaw } (sideSpot's spot: the bench's middle 2.95
@@ -443,10 +445,13 @@ function slabLot(f, LW, LD, r, id) {
   f.flat(0xe6dac4, 0, front / 2, w + 2, front - 0.3, CURB + 0.03);
   // Balcony floors.
   const units = Math.max(3, Math.round(w / 3.8)), uw = w / units;
-  const lot = { id, x: f.wx(0, front - 0.95), z: f.wz(0, front - 0.95), yaw: f.yaw + Math.PI, w, floors, spots: [] };
+  // `ax, az`: the world direction of lot-local +x (along the balcony row), `uw` a unit's width (the
+  // balcony party's garland and places, §10.63).
+  const lot = { id, x: f.wx(0, front - 0.95), z: f.wz(0, front - 0.95), yaw: f.yaw + Math.PI, w, floors, spots: [],
+    ax: f.wx(1, 0) - f.wx(0, 0), az: f.wz(1, 0) - f.wz(0, 0), uw };
   balconyLots.push(lot);
   for (let fl = 1; fl < floors; fl++) {
-    const y = CURB + fl * fh;
+    const y = CURB + fl * fh, row = lot.spots.length;
     for (let u = 0; u < units; u++) {
       const sx = -w / 2 + (u + 0.64) * uw;
       lot.spots.push({ x: f.wx(sx, front - 0.95), y: y + 0.02, z: f.wz(sx, front - 0.95), fl, u });
@@ -456,10 +461,11 @@ function slabLot(f, LW, LD, r, id) {
     f.box(rail, 0, y + 0.02, front - 1.36, w + 0.3, 0.92, 0.12);
     if (rail !== C.white2) f.box(C.white2, 0, y + 0.94, front - 1.36, w + 0.34, 0.08, 0.16);
     for (let u = 0; u < units; u++) {
-      const ux = -w / 2 + (u + 0.5) * uw;
-      if (r() < 0.32) f.boxC(pick(AWNINGS, r), ux, y + fh - 0.45, front - 0.62, uw - 0.5, 0.07, 1.35, 0, -0.32);
+      const ux = -w / 2 + (u + 0.5) * uw, spot = lot.spots[row + u];
+      // The unit's awning and potted plant are noted on its spot (the same draws as before).
+      if ((spot.awning = r() < 0.32)) f.boxC(pick(AWNINGS, r), ux, y + fh - 0.45, front - 0.62, uw - 0.5, 0.07, 1.35, 0, -0.32);
       if (r() < 0.35) f.boxC(pick(TOWELS, r), ux + R(-0.6, 0.6, r), y + 0.62, front - 1.44, 0.62, 0.78, 0.04);
-      if (r() < 0.12) f.boxC(0x2f8a4a, ux - uw / 3, y + 0.4, front - 1.0, 0.5, 0.5, 0.5);   // potted plant
+      if ((spot.plant = r() < 0.12)) f.boxC(0x2f8a4a, ux - uw / 3, y + 0.4, front - 1.0, 0.5, 0.5, 0.5);   // potted plant
       if (r() < 0.07) adventStar(f, ux + uw / 4, y + 1.75, front - 0.12, r);                  // Swedes abroad
     }
   }

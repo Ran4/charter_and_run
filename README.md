@@ -476,6 +476,17 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   efter Stig. Efter julafton håller souvenirförsäljaren upp en plastgiraff mot Stig, och Stig plockar
   fram sin egen: "Tack, jag har redan en." Alla går att knuffa omkull eller köra på (den som sitter
   ramlar av och sätter sig igen). Ett uppdrag som börjar tar bort allihop.
+- **Helan går från balkongen** (mellan uppdragen, på kvällen, efter buss 17): mellan åtta på kvällen och
+  två på natten hörs "Helan går" mellan lägenhetshusen. Någonstans på en balkong, en ny varje kväll och i
+  ett annat kvarter än kvällen innan, spelar Affe dragspel och Gabbe congas under en ljusslinga medan två
+  svenska gäster sjunger med. Det finns ingen pil och ingen markör: sången blir starkare ju närmare du
+  kommer, hörs från det håll festen ligger och blir dovare på avstånd, och öns låt tonas ner när du är
+  nära. Ställ dig under balkongen så ropar gästerna "Skål, grannen! Kom upp!", Stig vågar inte riktigt
+  ("Det känns fånigt att gå upp…"), och första gången på kvällen kastar en gäst ner en servett med 50
+  pesetas ("Här, grannen – till en sangria!"). När en runda börjar sjunger de första raden, när den tar
+  slut skålar de, och Affe suckar en gång att han haft två grisfester i veckan. Har du stängt av
+  musiken visar en prick på minikartan var festen är. Medan festen pågår är Affe och Gabbe inte vid
+  scenen, och ett uppdrag som börjar avslutar den (nästa morgon är de på plats igen).
 - **Små grodorna i poolen** (efter slutet): julfesten är inte riktigt över. Varje gång du kommer in
   på Flamencos pooldäck (mellan nio på morgonen och elva på kvällen) vadar SunTrip-gänget ut i den
   grunda änden och ställer sig i ring runt Lasse i tomteluva. Affe spelar Små grodorna på dragspelet,
@@ -776,6 +787,9 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
   byklockan i Fataga, Templo Ecuménicos klockor, sorlet vid La Medina och Tonga Tongas bas genom väggen,
   och Affes dragspelsstämma och Gabbes congas på scenen (i filmen spelar Affe dragspel och Gabbe congas;
   deras stämmor och Affes solon är egna, och hamnen finns inte i filmen)
+- balkongfesten med Helan går: balkongen, ljusslingan, gästerna och deras repliker och servetten med
+  pesetas (i filmen hörs "Helan går" bara på avstånd kvällen efter att systrarna skrattat åt Stigs namn;
+  Stigs repliker under balkongen ekar hans blyghet på grisfesten)
 - poolfesten efter slutet: ringen runt Lasse, portierns promenad, att Stig hoppar med och
   takträknaren (i filmen dansar de andra Små grodorna i poolen på julfesten medan Stig-Helmer och Ole
   öppnar knäckebrödet, och Stig-Helmer dansar aldrig)
@@ -1000,6 +1014,7 @@ src/game/utflykt.js             Utflykt med Lasse in free roam after fataga: the
 src/game/soundscape.js          Ljudlandskap per kvarter in free roam: each part of the island's sound under the tune (the surf, the marina, Fataga's fold, Templo Ecuménico, the SunTrip stage's band on the tune's own bars, La Medina and Tonga Tonga's bass), faded by where Stig is, from its side of the camera (the voices in audio.js)
 src/game/torgliv.js             Liv på torget in free roam: the centre's vendors, sitters, church locals and paseo by the clock's hours, the market's covers and the siesta's dozers, the calls, "Suecos…", the greetings, the souvenir seller's giraffe, the knocks, the bells at 13, 17 and 19
 src/game/glass.js               Glass till Majsan in free roam: the HELADOS kiosk's ice cream, its melt and drips, the drop, the handover to Majsan by distance, her eating it, the share toast and `records.glass`
+src/game/helanGar.js            Helan går från balkongen in free roam: each evening a balcony party (Affe, Gabbe, two guests, a garland) found by ear, the real musicians hidden meanwhile, the song's level, side and muffle by distance, the exchange under it and the napkin, the minimap's dot with the music off (the song in audio.js)
 src/game/terraza.js             Takterrassen på La Medina in free roam: the roof terrace's guests and bartender, the brochure line and his greetings, the tanks' coins during a visit, "¡Olé!" at a splash in the roof pool, the dozing pair's loungers, Stig's nap on his lounger and the sunburn with its "Aj!"
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
@@ -1072,6 +1087,7 @@ node tools/shot.mjs ljud ljudklipp       # the soundscape: every zone's layer an
 node tools/shot.mjs terraza terrazashots # La Medina's roof terrace: up the stairs, the guests, the bartender's greetings, the brochure, the tanks' coins, the board's hop into the roof pool and "¡Olé!", the nap and the burn, "Aj!", the morning, a mission start, the night; the shots
 node tools/shot.mjs glass glasskal      # the ice cream for Majsan: the kiosk's E by day, the melt and the drips, in a car, the bare cone, the handovers (no E), the share toast and the record, R, a mission start; glasskal measures the 31 s with calibrate's walker
 node tools/shot.mjs torg torgshots      # the centre's people: the siesta's covers and dozers, the open market's vendors and calls, kicks and cars, the bells at 13, the giraffe, the plaza's sitters, the paseo, the church's greetings, the night, a mission start
+node tools/shot.mjs helan helanshots helanklipp  # the balcony party in the evening: the balcony, the real Affe and Gabbe hidden, the song by distance and side, the exchange and the napkin, the sung line, Skål! and the sigh, the music off and the dot, a car, a mission start, the next evening, the hours over; the shots; WAV clips in OUT
 node tools/shot.mjs grodorna grodtakt    # the pool fest after the end: the ring, the porter, Stig in the ring, eight on the beat
 node tools/shot.mjs artig                # Stig says sorry: kicks, run over, a pump, bins, carjackings and the driver's "Nej."
 node tools/shot.mjs grisar               # the grisbil's pigs: the falls, the catch on foot and by creeping, Lasse, the pen

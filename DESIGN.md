@@ -410,7 +410,11 @@ STÄNGT boards, two vendors dozing on crates), the paseo round the fountain at s
 church's bells at 13, 17 and 19 with their toasts, and the souvenir seller's plastic giraffe answered by
 Stig's own, "Tack, jag har redan en." (free roam, §10.62; the street life is the setting notes' "kanariska
 servitörer, försäljare och taxichaufförer", research-setting.md:322; the giraffe is the film's, Majsan's
-Christmas present and the sisters' name for him, research-plot.md:371 and :180).
+Christmas present and the sisters' name for him, research-plot.md:371 and :180);
+a party singing Helan går on a new apartment balcony every evening, found by ear, with Affe's accordion and
+Gabbe's congas under a garland of bulbs, the guests calling Stig up ("Skål, grannen! Kom upp!"), the napkin
+with pesetas and the guests' sung line (free roam, §10.63; in the film the song is only heard "på avstånd"
+that evening, research-plot.md:276, and nobody is seen singing it).
 The film's flight has **no turbulence** and **no in-flight toilet scene**: both toilet scenes are
 at Arlanda (we keep them there). The plane's toilets are only an invented hideout.
 
@@ -1537,7 +1541,9 @@ Copacabana beach with palms, a small orchestra of busts (five on the wheelhouse 
   54.85, 0), `takUtsikt` (80.0, 65.9, 0, 21.09) (world coordinates; the stairs' E spots and the view,
   §10.29). Every slab's balcony rows are exported as `balconyLots` (feature 77, §10.42: one entry a
   slab, 52 in all, with a standing spot a balcony unit and floor, 963 spots), again with no random draw,
-  for the residents game/residents.js puts on them between missions.
+  for the residents game/residents.js puts on them between missions; each spot notes whether its unit
+  has an awning (`awning`) or a potted plant (`plant`), and each lot its row's direction (`ax`, `az`:
+  lot-local +x) and a unit's width (`uw`), for the balcony party of feature 134 (§10.63).
 - Ped loops: `addPedLoops()` unchanged (one loop per block).
 
 ### 6.6 Vehicles (`CAR_TYPES`, car.js; WP-E). Physics numbers unchanged unless listed.
@@ -9254,6 +9260,128 @@ försäljare och taxichaufförer" (research-setting.md:322), not from a scene.
   hours were changed to the vendors' (it said 9–14). Stig's plastic giraffe comes out of nowhere at the
   stand while the one from julafton stays on his bed in room 107.
 
+### 10.63 Helan går från balkongen (free roam; feature 134, 2026-10-21)
+
+`game/helanGar.js` (`HelanGar`, owned by Game as `helan`), config `HELAN` in content/island.js, the song in
+audio.js (the "Helan går från balkongen" section: the soundscape channel's layer `fest` with its own
+low-pass, `festStart`, `ambFest`, `festLowpass`, `festPos`, the test hook `festState`; `singer`, `festBar`,
+`festTick`), the balcony units' `awning` and `plant` and the lots' `ax`, `az`, `uw` in town.js
+`balconyLots`, the minimap's `fest` marker in hud.js, and hooks in main.js (the constructor after the ice
+cream, `helan.update` after `glass.update`, `helan.sound()` in `updateAudio` after `ljud.update` with the
+tune ducked to the lower of the two ducks, `helan.markers()` in `mapMarkers`). In the evening "Helan går"
+is heard between the apartment slabs: a party on a balcony, a new one every evening, with Affe on his
+accordion, Gabbe on his congas and two Swedish guests singing under a garland of coloured bulbs. There is
+no arrow and no marker: Stig finds it by ear. Under it the guests call him up and he does not dare. The
+film only hears the song that evening ("Den kvällen hörs 'Helan går' på avstånd", research-plot.md:276),
+so the party, its balcony, the napkin and the guests' lines are ours [N] (§1.6); the musicians are the
+film's (Affe's accordion and Gabbe's congas at the welcome meeting, research-plot.md:260), and Stig's
+lines echo his shyness at the grisfest (research-plot.md:346).
+
+- **Live**: on the island with `missions.state === 'idle'`, from `fromIndex` 6 (after buss17: the
+  evening after the sisters laughed at his name), not while the grisfest's Thursday evening is on
+  (`party.on`, §10.18), with pedestrians (never the flight level); the party itself only in `hours`
+  [20, 2) of the island's clock (§10.10, across midnight: 60 s of play from eight to nine, then 30 s an
+  hour; a nap can wake him at 20 or 23). **In test mode the clock holds at 15:00**, so `story`,
+  `fullstory`, `calibrate` and every scenario that does not set the clock see none of it. Not live
+  (`reset()`): the party, its lines, the napkin and the song off at once; the real Affe and Gabbe go back
+  (below). So no mission, stage, timer, fixture or calibration pool sees any of it; nothing is saved.
+- **Tonight's balcony**: each time the clock enters the hours a new evening picks one (`newEvening`), drawn
+  from its own `seed` (13400, plus the session's time outside test mode; never Math.random's or the
+  world's): first a block (bi, bj) other than the evening before's, then one of its candidates. A
+  candidate is a balcony unit of `balconyLots` (§10.42) on the 1st or 2nd floor (`floors`) with no
+  resident (§10.42's draw), no awning and no potted plant: 216 units in 51 slabs and 13 blocks. The
+  balcony's frame (`at(k, out, h)`): the unit's middle on the residents' line (0.14 of a unit in from the
+  residents' spot), `k` × the unit's width along the row, `out` m towards the street, `h` m over its floor.
+- **The party** (bodies placed by hand with `perchAt`: the balcony is only a look, no solid; never
+  stepped, not in `allChars`, so no car hit, kick or fling): Affe (his accordion, pumping) and Gabbe (his
+  congas, drumming) as doubles of their current looks, and two Swedish guests (seeded `randomPed`
+  tourists, no hat or held item: a woman with a paper cup before her chest, a man), `cast` along the unit:
+  guest a at k −0.33, guest b at −0.11, Gabbe at 0.12 (0.3 m back, his congas clear of the railing),
+  Affe at 0.34, each turned a little to the middle. The garland (`buildGarland`, one unlit mesh in
+  `MAT.mouth`, rebuilt each evening): a dark wire from fin to fin 0.22 m in from the railing, 2.5 m over
+  the floor and sagging 0.32 m, with `bulbs` 13 bulbs in `colors` (red, yellow, green, blue, orange,
+  warm white), and a warm glow (0xffd68a) on the balcony door behind them. While Stig is in front within
+  30 m the guests turn to him (at most 0.8 rad off the street); during the melody they sing (`talk`).
+- **The real Affe and Gabbe**: when the evening's party is due, each is taken (`hold`: `hideNpc`, `spot` =
+  `'helanGar'`, so placeNpcs leaves them be) once free (shown, standing, in no car, seat or walk, not
+  `busy` or perched, not posed: `npcPosed`, `honk.free`) and out of view, and the party comes up once both
+  are held and the balcony is out of view: beyond `seenR` 60 m of the camera, outside its frustum or within
+  `cutSecs` 1.2 s of a cut (the residents' rule, §10.42). While Affe stands in view at the stage at eight
+  he is not taken and there is no party. The stage's band (§10.60) is silent while they are hidden, the pool
+  fest's ring after the end (§10.13) forms without them, and while the ring holds them the party waits. At
+  the hours' end the party goes once its balcony is out of view, and each musician comes back once his place
+  is: the waiting mission's (its giver or an extra: at index 6 the friskotek's, Affe at [friskotek, −4,
+  −6] and Gabbe at [friskotek, 4, −6]) or his home. At a mission start they are put at the mission's place behind the morning cut's black (`DAY.fadeSecs`
+  0.7 s after `day.busy`; §10.10), so the friskotek's intro has them there; a forced placement by anyone
+  else ends the party.
+- **The song** (audio.js; no loop of the music scheduler's: its own clock at TRAD.helanGar's 104 bpm, so it
+  never follows the tune's key or tempo): a cycle of the melody's 8 bars and `restBars` 3 bars of oom-pah,
+  from the party's beat 0 (`festStart` at its start), so it is wherever the party has got to when Stig
+  comes into earshot (`festPos()` the bar by the audio clock, also with the music off; with no running
+  audio the module's own clock). Every bar Affe's left hand (`bassNote` on the root on 1 and the fifth on 3,
+  0.3 and 0.26; `accChord` of the root an octave up and the chord on 2 and 4, 0.024) and Gabbe's congas in
+  eighths `THSTTTOO` (as at the stage, §10.60); in the melody's bars Affe's accordion has the tune (0.06)
+  and three guests sing it (`singer`: a sawtooth with a late 5–6 Hz vibrato through an "a"'s formants at
+  730 and 1090 Hz; two in unison 0.4 % sharp and 0.6 % flat, one an octave down, each up to 20 ms off the
+  beat); the pause's first beat is "Skål!": three shouts, a burst of clapping and four glasses. Every note
+  on a sixteenth (`festState().log.offGrid`). Scheduled 0.6 s ahead every 200 ms while `ambFest(true)`
+  and the music is on; a bar already under way is let go. Never a film's song (§1.5): the melody is the
+  traditional one already in TRAD.
+- **Heard by ear** (`sound()`, main.updateAudio after the soundscape): the layer `fest` of the soundscape's
+  channel (§10.60; `AMB_MIX.fest` 1.6) at level 1 within `near` 14 m of the balcony (on the ground), near /
+  d beyond, faded out from `fadeFrom` 110 to `far` 150 m, × the soundscape's `mix` (0 not live, under a
+  dialogue box or a cut; × 0.55 in a car; × 0.5 in a pursuit), 0 with the music off. Its side of the camera
+  as the soundscape's layers (`pan` 0.7 × the dot with the camera's right, full from 2 × `near` m), and
+  muffled with distance: the layer's low-pass from `lp` 6500 Hz at `near` to 1100 Hz at `far`, even in
+  pitch (3560 Hz at 60 m). The island tune is ducked to 1 − `duck` 0.8 × its level², in steps of 0.05: 0.2
+  under it, 0.9 at 40 m (sol and the samba clash with it in key and tempo, so only near it). Measured
+  (`helanklipp`): master's RMS about 0.019 under it, 0.017 at 40 m and 0.020 at 100 m (the plain tune
+  about 0.018): no dip on the way; at 40 m the party is about 9.5 dB under the tune.
+- **The music off** (the pause card's Musik: av) **or muted**: no song, and `markers()` gives the minimap a
+  `fest` dot at the balcony (`edge`: on the rim when far; a dark disc with five coloured bulbs, hud.js),
+  so the garland and the dot are the clue.
+- **Under the balcony** (on foot, standing, within `callR` 12 m on the ground, in front of its line or up
+  to `back` 3 m under it, no dialogue box, cut or `inDialog`, not within `every` 1.2 s of our last line
+  nor `after` 2.5 s of a neighbour's, §10.42): the first time an evening `first` ([at s, who, text]):
+  [0] guest a "Skål, grannen! Kom upp!" [N] (her cup up and a wave, 2.2 s) · [2.4] Stig "Det känns fånigt
+  att gå upp…" [F*] (the grisfest's "Nej, det känns fånigt att bjuda upp.") · [4.8] guest b "Här, grannen –
+  till en sangria!" [N], and at `dropAt` 5.2 s he points and drops a napkin (after every exchange until
+  Stig has had it that evening, and not when he is more than `callR` + 4 m off by then); later that
+  evening, once Stig has been `awayR` 30 m off, `again`: [0] guest b "Kom upp, grannen! Det finns sangria!" [N] · [2.4] Stig
+  "Jag är skraj att de ska…" [F*] (the grisfest's "Jag är skraj att de ska nobba.", left unfinished). Stig's
+  line is dropped if he has driven off or gone `singR` m away. Our lines set the residents' `lineT`, so the
+  neighbours' calls wait as after one of their own (§10.42: 10 s).
+- **The napkin**: a folded paper napkin over three coins (1.7 × life size, so it reads), from guest b's hand
+  over the railing (0.62 m out, 1.45 m up) fluttering down in `fall` 2.6 s (an ease-out outwards, a sway
+  of 0.35 m across its path, spinning and tilting) to `land` 0.9 m before Stig on the way to the balcony.
+  Walked over (on foot within `pickR` 1.4 m, in a car 2.2 m) it is his: `game.addCoins(pay)` 50, the coin
+  sound, a sparkle and the toast "En servett med 50 pta – till en sangria." [N]. Unpicked it lies `rest`
+  40 s and goes out of view. Once an evening (dropped, it is not dropped again that evening); never in a
+  mission.
+- **The song's lines** (with Stig within `singR` 30 m, outside a dialogue): at a round's start a guest (a,
+  or b while a speaks) sings "♪ Helan går, sjung hopp faderallan lallan lej… ♪" [N] (the traditional
+  song's first line, §1.5's one line), 3.4 s; at its end guest a's "Skål!" [N] with her cup up and guest b
+  cheering; in the first pause of an evening with him near Affe's "Jag har haft två grisfester i veckan."
+  [F*](t) (his line in the bus, research-plot.md:231) 2.2 s after "Skål!".
+- **Beside the other features**: the stage's band, the pool fest's ring and the gang's talk see the real
+  ones hidden; Siv's and Majsan's balcony (§10.55) is Flamenco's, not a slab's; no resident stands on the
+  party's unit. The grisfest's own Thursday evening (§10.18) has its own band and no balcony party.
+- **Tests**: `helan.on`, `evening`, `spot` ({ lot, spot, block, x, y, z, ax, az, ox, oz, yaw, uw }),
+  `held`, `bodies` ({ a, b, affe, gabbe }), `garland`, `napkin`, `d`, `level`, `side`, `out`, `hz`,
+  `musicDuck`, `counts` ({ evening, begin, end, first, again, sung, skal, sigh, drop, pick, hold, release }),
+  `said`, `last` ({ kind: 'evening' | 'begin' | 'end' (why) | 'first' | 'again' | 'drop' | 'pick' |
+  'release' (key, at), t, … }), `candidates()`, `at(k, out, h)`, `markers()`; audio `festState()` ({ on,
+  t0, rest, hz, log { bars, rounds, notes, offGrid, sung, skal, bar } }), `festPos()`. Scenarios `helan`,
+  `helanshots`, `helanklipp` (§16.4).
+- **Not done / changed** (deviations from the idea): a new balcony every evening, but drawn per session
+  (the clock and the evenings are not saved); the 1st or 2nd floor, not only the second; there is no
+  sung line beyond the first, and the guests "sing" as formant voices under the accordion. The idea's
+  "andra kväll i ett annat kvarter" is a different block (bi, bj). The soundscape's layer is shared as the
+  idea asked (§10.60 itself still has no "Helan går"), with a low-pass of its own for the distance. Stig
+  never goes up (there is no way up); the napkin is the only reward, once an evening. The real musicians
+  are hidden while the party is on, so the stage is silent from eight; the idea's Siv-and-Majsan evening
+  on their balcony was left out (§10.55 is by day).
+
 ## 11. HUD / UI strings (Swedish; `src/strings.js` owned by WP-H, created by Phase 0)
 
 `strings.js` exports `S` (flat object) and `fmt(key, vars)`. Engine code uses `S.key` only.
@@ -9575,7 +9703,7 @@ touched only on a change, the still apart from the rest); `hud.setKort(null)` hi
 **Public-domain traditional cues only** (`audio.trad(name)`, one-shot accordion/square melody over
 a ducked music bus): `smaGrodorna` (julafton pool dance; and round after round in the pool fest
 after the end, §10.13), `hejTomtegubbar` (julafton toast), `helanGar` (faint, end of the buss17
-outro). `trad(name, { vol, duck })` returns the length in s (0 with no context, muted or the music
+outro; and the balcony party's song in free roam, §10.63, on its own clock, never through `trad`). `trad(name, { vol, duck })` returns the length in s (0 with no context, muted or the music
 off); `duck` is the music bus's level under it (default 0.3; the pool fest ducks less for a faint far
 round); `audio.tradAt` is the audio-clock time of the cue's beat 0 and `audio.clock()` the audio
 clock (null while the context is not running); `tradInfo(name)` gives `{ bpm, beats }` (feature 8). **Never** "Freight Train", "Feliz", Kostervalsen or any
@@ -9604,6 +9732,12 @@ Scheduler fixes (Phase 0): catch-up guard `if (next < ctx.currentTime) next = ct
   scheduled by the music scheduler with each bar of the tune (`ambBar`), so they stop with the music.
   Silenced by `pauseLoops()`; between the zones, in a mission, under a dialogue or a cut and in the flight
   level every layer is at 0. The island tune is ducked to 0.75–1 by the band (`duckMusic`).
+- **Helan går från balkongen** (feature 134, §10.63): the soundscape channel's seventh layer `fest` (with a
+  low-pass of its own, `festLowpass`, for the distance), set by `game.helan` through `ambLayer`; its song
+  (Helan går, TRAD.helanGar's notes and chords, in a loop of 8 bars and 3 of oom-pah, with formant
+  voices, `singer`) runs on a clock of its own at 104 bpm (`festStart`, `ambFest`, `festPos`), not the
+  music scheduler's, and only with the music on. The island tune is ducked to 1 − 0.8 × its level²
+  (`duckMusic` takes the lower of the stage's and the party's).
 
 ### 12.3 Sound effects (Phase 0 placeholders with these names; WP-H polishes)
 
@@ -9734,7 +9868,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/strings.js` | new | **H** | `S`, `fmt()` (§11) |
 | `src/content/index.js` | new | none | merges `HOMES`, `MAP_LABELS`, `LEVEL_OUTFITS`, re-exports all content |
 | `src/content/flight.js` | new | **F** | `HOMES_GATE`, `HOMES_FLIGHT`, `MAP_LABELS_FLIGHT`, `CHATTER_FLIGHT`, `OLE_STATS`, `LEVEL_OUTFITS_GATE`, `LEVEL_OUTFITS_FLIGHT` |
-| `src/content/island.js` | new | **G** | `HOMES_ISLAND`, `MAP_LABELS_ISLAND`, `CHATTER`, `OUCH`, `GETUP`, `CARJACK`, `NPC_KICKED` (+ the `_OLE` / `_LOCAL` tables, `LOCAL_CAST`, `BARKS`: Phase 3 r2, §14.10; `STIG_SORRY`: feature 11, §10.14; `PIG_TRUCK`: feature 15, §10.15; `BAGGAGE_BELT`: feature 25, §10.16; `LAPPLISA`: feature 20, §10.17; `GRISFEST_FREE`: feature 21, §10.18; `FRUKTSTAND`: feature 28, §10.19; `TOWER`: feature 24, §10.20; `DOGS`: feature 31, §10.21; `BATHERS`: feature 32, §10.22; `RUM107`: feature 38, §10.25; `SOLKRAM`: feature 35, §10.26; `STUNTHOPP`: feature 40, §10.27; `TALK_ISLAND`: feature 39, §10.28; `TAKHOPP`: feature 41, §10.29; `MIKROFON`: feature 44, §10.30; `BIRDS`: feature 43, §10.31; `GAGS`: feature 47, §10.32; `STRANDKYSSEN`: feature 57, §10.33; `FYREN`: feature 52, §10.35; `RINGKLOCKA`: feature 59, §10.37; `BALKONG`: feature 77, §10.42; `HYTT_TVA`: feature 80, §10.43; `KAFFE`: feature 84, §10.44; `FISKE`: feature 107, §10.45; `MARKNADSTAK`: feature 92, §10.46; `LIFTA`: feature 106, §10.47; `KIKARE`: feature 108, §10.48; `LOPANDE_BAND`: feature 109, §10.49; `KORT`: feature 110, §10.51; `GUAGUA`: feature 112, §10.53; `TRAKTORN`: feature 121, §10.54; `SYSTRARNA`: feature 117, §10.55; `KRANEN`: feature 118, §10.56; `TERRAZA`: feature 122, §10.59; `LJUD`: feature 131, §10.60; `GLASS`: feature 126, §10.61), `COLLECTIBLES`, `UNLOCKS`, `NAMED_CARS`, `LEVEL_OUTFITS_ISLAND` |
+| `src/content/island.js` | new | **G** | `HOMES_ISLAND`, `MAP_LABELS_ISLAND`, `CHATTER`, `OUCH`, `GETUP`, `CARJACK`, `NPC_KICKED` (+ the `_OLE` / `_LOCAL` tables, `LOCAL_CAST`, `BARKS`: Phase 3 r2, §14.10; `STIG_SORRY`: feature 11, §10.14; `PIG_TRUCK`: feature 15, §10.15; `BAGGAGE_BELT`: feature 25, §10.16; `LAPPLISA`: feature 20, §10.17; `GRISFEST_FREE`: feature 21, §10.18; `FRUKTSTAND`: feature 28, §10.19; `TOWER`: feature 24, §10.20; `DOGS`: feature 31, §10.21; `BATHERS`: feature 32, §10.22; `RUM107`: feature 38, §10.25; `SOLKRAM`: feature 35, §10.26; `STUNTHOPP`: feature 40, §10.27; `TALK_ISLAND`: feature 39, §10.28; `TAKHOPP`: feature 41, §10.29; `MIKROFON`: feature 44, §10.30; `BIRDS`: feature 43, §10.31; `GAGS`: feature 47, §10.32; `STRANDKYSSEN`: feature 57, §10.33; `FYREN`: feature 52, §10.35; `RINGKLOCKA`: feature 59, §10.37; `BALKONG`: feature 77, §10.42; `HYTT_TVA`: feature 80, §10.43; `KAFFE`: feature 84, §10.44; `FISKE`: feature 107, §10.45; `MARKNADSTAK`: feature 92, §10.46; `LIFTA`: feature 106, §10.47; `KIKARE`: feature 108, §10.48; `LOPANDE_BAND`: feature 109, §10.49; `KORT`: feature 110, §10.51; `GUAGUA`: feature 112, §10.53; `TRAKTORN`: feature 121, §10.54; `SYSTRARNA`: feature 117, §10.55; `KRANEN`: feature 118, §10.56; `TERRAZA`: feature 122, §10.59; `LJUD`: feature 131, §10.60; `GLASS`: feature 126, §10.61; `HELAN`: feature 134, §10.63), `COLLECTIBLES`, `UNLOCKS`, `NAMED_CARS`, `LEVEL_OUTFITS_ISLAND` |
 | `src/game/missions/index.js` | new | none | `MISSIONS = [...FLIGHT_MISSIONS, ...ISLAND_MISSIONS]`, `MissionRunner` re-export |
 | `src/game/missions/runner.js` | new (from missions.js) | none | `MissionRunner` (§9.4) |
 | `src/game/missions/kinds/core.js` | new | **none** (frozen after Phase 0) | getInCar goto pickup dropoff follow rabbits race destroy grab scene |
@@ -9794,6 +9928,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/soundscape.js` | new (feature 131, 2026-10-21) | — | `Soundscape` (`game.ljud`): Ljudlandskap per kvarter in free roam: each zone's level from where Stig is (the surf to the foam line, the marina, Fataga's fold, Templo Ecuménico, the SunTrip stage, La Medina), its side of the camera, the mix (not live, a dialogue box, a cut: 0; a car × 0.55; a pursuit × 0.5), the stage's band with Affe and Gabbe there and Tonga Tonga's bass by the clock, the one-shots while a layer is heard, the island tune's duck at the stage (§10.60) |
 | `src/game/glass.js` | new (feature 126, 2026-10-21) | — | `Glass` (`game.glass`): Glass till Majsan innan den smälter in free roam: the HELADOS kiosk's ice cream (E, 25 pta, by day), the melt over `meltSecs` with the drips on the ground, the plop and the bare cone, the drop at a fall or R, the card and the guide at Majsan, the handover by distance (the two in-time sets, the bare cone's, the share toast and `records.glass`), her eating it, `wants` for the pool fest's ring, all off at a mission start (§10.61) |
 | `src/game/torgliv.js` | new (feature 135, 2026-10-21) | — | `Torgliv` (`game.torg`): Liv på torget – siesta och paseo in free roam: the centre's places (nine vendors, the plaza's benches and rim, the church square's benches and pair, eight paseo walkers), their bodies popped in and out of view by the clock's hours, the market's 27 cloth covers with their boards rolled down at the siesta and at night, the dozers' crates, the calls, "Suecos…", the greetings, the souvenir seller's giraffe and Stig's, the knocks (`kick`, `carsVsSeated`, `onPropBroken`), the bells and toasts at 13, 17 and 19 (§10.62) |
+| `src/game/helanGar.js` | new (feature 134, 2026-10-21) | — | `HelanGar` (`game.helan`): Helan går från balkongen in free roam: each evening (20–02 on the island's clock, from index 6) a balcony of the slabs (`balconyLots`, a unit with no resident, awning or plant, another block than the evening before), Affe, Gabbe and two guests perched on it under a garland, the real Affe and Gabbe hidden meanwhile (taken and given back out of view, at a mission start at its place behind the black), the song's level, side and low-pass by distance in the soundscape's layer `fest` and the tune's duck, the exchange under it with the napkin of 50 pta, the sung line, "Skål!" and Affe's sigh, the minimap's dot with the music off (§10.63) |
 | `src/game/terraza.js` | new (feature 122, 2026-10-21) | — | `Terraza` (`game.terraza`): Takterrassen på La Medina vaknar in free roam: the roof terrace's guests at the tables and the bartender behind the counter (by the clock's hours, popped out of view), the stairs' visit (`isUp`) and the tanks' coins out only then, the brochure line, the bartender's greeting, burn line and "¡Olé!" at a splash in the roof pool (`onLand`), the loungers' roles for game/bathers.js (`role`), the nap on Stig's lounger (E, the black, the clock on, the burn), the burn as a layer over his outfit (`dress`, until the next morning) and "Aj!" at a bump (`onTouch`), all off at a mission start (§10.59) |
 | `src/game/streetRace.js` | new (feature 69, 2026-10-17) | — | `StreetRace` (`game.gatlopp`): Gatlopp mot pizza-racern in free roam after Gamla kläder: José's "!" and challenge, the grid in the hire car behind a fade, the three courses run on the mission kind `race` outside the runner, the start and finish banners, the result, the prize and `records.gatlopp`, José's drive back and the walk to his place with his mother, the bet at the chalkboard by Berra and Robban, the sisters' six, the reset at a mission start (§10.38) |
 | `src/game/church.js` | new (feature 60, 2026-10-17) | — | `Church` (`shame.church`): Kyrkfrid i Templo Ecuménico in free roam: the church door's interactable and its open doorway mesh, the walk in and the slam, the plaza shot and the card, the waiting Land Rovers with their lamps, the meter in the wait, the officer's walk to the sign and his lines and scratch, the give-up, the peek and the step out, Stig's line and the banner, the officer into his Land Rover, the interruptions and the map marker (§7.2) |
@@ -9804,19 +9939,19 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/mic.js` | new (feature 44, 2026-10-17) | — | `Mic` (`game.mic`): Mikrofonen på scenen in free roam: the mic's interactable and the turn of Lasse's announcements, the chime, Stig's facing and the camera's ease, the lines one after another, the terrace's guests and their spit, the crowd (tourists and the free gang: the ways in and out, the places, the cheer, the question time), Ole's answer to the time, the slump, the shark warning through `bathers.scare`, the reset (§10.30) |
 | `src/game/bathers.js` | new (feature 32, 2026-10-17) | — | `Bathers` (`game.bathers`): Badgäster på solstolarna in free roam: tourists on the sun loungers nearest him by day, their burn (pale, pink, lobster red), the fly-off from a kicked or smashed lounger, a newcomer on a lounger back; Berra and Robban fried and asleep on two Flamenco loungers between buss17 and the bodega, their snores and the wake (§10.22); `scare` for the shark warning (feature 44, §10.30); a lounger's `role` from `game.terraza.role` (La Medina's roof: 'asleep' always taken and dozing, 'kept' never) and `lieOn` exported (feature 122, §10.59) |
 | `src/game/suntripShop.js` | new (feature 34, 2026-10-17) | — | `SuntripShop` (`game.shop`): Bränsletillägg tillkommer in free roam: SunTrip-butiken's counter shown and its solids live between missions, the travel agent, the wares' and the bag's interactables, the receipts, the Trapp Trull account's instalments, "Paketet!", Ole's line; his bought look as a layer over his outfit (`dress`), saved (§10.23) |
-| `src/game/hud.js` | edit | **H** | map sources, meter, strings, legend, ring, blips, zone bar, markers; `renderPortrait` restores the model transform (§14.8); `dream`, `dreamWash`, `dreamFlash` (feature 57, §10.33); `menu` (feature 80, §10.43); `setKaffe`, the coffee box (feature 84, §10.44); `setFangst`, the FÅNGST card (feature 107, §10.45); `setKikare`, `kikareRing`, the binoculars' overlay (feature 108, §10.48); `setVolley`, the volleyball board (feature 111, §10.50); `setKort`, the tourist couple's viewfinder (feature 110, §10.51); the town map's `sea` band past its canvas and the big map's player arrow kept at its crop's edge (feature 120, §10.57); `letterboxed` (feature 131, §10.60) |
+| `src/game/hud.js` | edit | **H** | map sources, meter, strings, legend, ring, blips, zone bar, markers; `renderPortrait` restores the model transform (§14.8); `dream`, `dreamWash`, `dreamFlash` (feature 57, §10.33); `menu` (feature 80, §10.43); `setKaffe`, the coffee box (feature 84, §10.44); `setFangst`, the FÅNGST card (feature 107, §10.45); `setKikare`, `kikareRing`, the binoculars' overlay (feature 108, §10.48); `setVolley`, the volleyball board (feature 111, §10.50); `setKort`, the tourist couple's viewfinder (feature 110, §10.51); the town map's `sea` band past its canvas and the big map's player arrow kept at its crop's edge (feature 120, §10.57); `letterboxed` (feature 131, §10.60); the minimap's `fest` marker (feature 134, §10.63) |
 | `src/game/camera.js` | edit | **A1** | profile, frameOne, cutTo, `clampZ`; `scope`, the binoculars' eye (feature 108, §10.48), also the tourist couple's camera's (feature 110, §10.51); `focus.noPull`, no pull-in (the pedal boat at sea, feature 120, §10.57) |
 | `src/game/fx.js` | edit | **A1** | `snow`, `steam`, `meterPuff` (rename of `shame`); `splash`'s `up` (feature 24, §10.20); `splash`'s `y` (feature 122, §10.59: the roof pool) |
 | `src/game/markers.js` | unchanged | none | |
 | `src/gfx.js` | edit | none | `setSkyPalette`, `setCloudsVisible`, `setShadows`, `MAT.sky`, `MAT.water` sea colour |
-| `src/audio.js` | edit | **H** | §12 API; `splash(k)`'s size (feature 24, §10.20); `woof`, `whistle` (feature 31, §10.21); `toasterDown`, `pop` (feature 33, §10.24); `squirt`, `splat` (feature 35, §10.26); `stamp`, `stampFail` (feature 40, §10.27); `flap`, `gull` (feature 43, §10.31); `shutter` (feature 47, §10.32); `phone` (feature 59, §10.37); `engine`'s `diesel` (feature 121, §10.54); the soundscape's channel `ambient`, its layers, beds and one-shots (`ambLayer`, `ambBand`, `ambClub`, `audio.amb`), the stage's band per bar of the tune (`ambBar`), `baa(p)`, `gull`'s `delay`, `conga`'s `dest`, `pauseLoops`/`resumeLoops` with the channel, the test hooks `ambState`, `ambNodes`, `jumpBar` (feature 131, §10.60); `bells(rounds, vol)` and `bellLog` (feature 135, §10.62) |
+| `src/audio.js` | edit | **H** | §12 API; `splash(k)`'s size (feature 24, §10.20); `woof`, `whistle` (feature 31, §10.21); `toasterDown`, `pop` (feature 33, §10.24); `squirt`, `splat` (feature 35, §10.26); `stamp`, `stampFail` (feature 40, §10.27); `flap`, `gull` (feature 43, §10.31); `shutter` (feature 47, §10.32); `phone` (feature 59, §10.37); `engine`'s `diesel` (feature 121, §10.54); the soundscape's channel `ambient`, its layers, beds and one-shots (`ambLayer`, `ambBand`, `ambClub`, `audio.amb`), the stage's band per bar of the tune (`ambBar`), `baa(p)`, `gull`'s `delay`, `conga`'s `dest`, `pauseLoops`/`resumeLoops` with the channel, the test hooks `ambState`, `ambNodes`, `jumpBar` (feature 131, §10.60); `bells(rounds, vol)` and `bellLog` (feature 135, §10.62); the channel's layer `fest` with its low-pass and the balcony party's Helan går on its own clock (`festStart`, `ambFest`, `festLowpass`, `festPos`, `festState`; feature 134, §10.63) |
 | `src/input.js` | edit | none | pad Start → `pause`; the menu's `menuUp`, `menuDown`, `hangUp` (feature 80, §10.43); the belt's `sortRed`, `sortRotten`, `sortGreen` (A/S/D, ←/↓/→, the pad's d-pad; feature 109, §10.49); the viewfinder's `snap` (Space, the left button, the pad's A) and `turnCam` (the right button, V, the pad's LB; feature 110, §10.51) |
 | `src/util.js` | unchanged | none | |
 | `src/world/frame.js` | new (from town.js) | none | `Frame` (`prop(…, opts)` passes `opts` to `placeProp`: feature 28) |
 | `src/world/registry.js` | new | none | `worldHooks` |
 | `src/world/layout.js` | edit | **B** | `MAP`, `BLOCK_MAP_COLORS`, `laneSpot` (Phase 0); `sidewalkAt` (feature 20, §10.17) |
 | `src/world/landmarks-island.js` | new | none (Phase 2 applies reported changes) | canonical island landmark table (`traktorBod`: feature 121, §10.54; `kranFot`: feature 118, §10.56; `trampbat`, `trampbatVatten`: feature 120, §10.57; `terrazaTrappa`, `terrazaBar`, `terrazaPool`, `terrazaSol1`–`3`: feature 122, §10.59) |
-| `src/world/town.js` | edit | **B** | streets, outskirts, residential, dispatch via `BLOCK_BUILDERS`; `dogLots` (feature 31, §10.21); `frameRamps[].deck` (feature 40, §10.27); `slabLot`'s lot id, `ROOF_JUMP`, `roofWalk`, `roofJumpFinish` (feature 41, §10.29); `balconyLots` (feature 77, §10.42); `busStops` (feature 112, §10.53); `medinaFinish()` after every block (feature 122, §10.59) |
+| `src/world/town.js` | edit | **B** | streets, outskirts, residential, dispatch via `BLOCK_BUILDERS`; `dogLots` (feature 31, §10.21); `frameRamps[].deck` (feature 40, §10.27); `slabLot`'s lot id, `ROOF_JUMP`, `roofWalk`, `roofJumpFinish` (feature 41, §10.29); `balconyLots` (feature 77, §10.42; the units' `awning`, `plant` and the lots' `ax`, `az`, `uw`: feature 134, §10.63); `busStops` (feature 112, §10.53); `medinaFinish()` after every block (feature 122, §10.59) |
 | `src/world/props.js` | edit | **B** | `TYPES` (§6.8), flags, `reviveProps`, `propsOfType`; the `frutas` stall, its flags, the debris palette, `spawnShreds` and the signs (feature 28, §10.19); `spawnDebris`' `floor`, a prop over 2 m up keeping its debris there (feature 122, §10.59) |
 | `src/world/collision.js` | edit | none | `segmentBlocked` nearest hit |
 | `src/world/blocks/index.js` | new | none | `BLOCK_BUILDERS` merge |
@@ -9874,6 +10009,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `tools/scenarios/terraza.mjs` | new (feature 122) | — | terraza, terrazashots |
 | `tools/scenarios/ljud.mjs` | new (feature 131) | — | ljud, ljudklipp |
 | `tools/scenarios/glass.mjs` | new (feature 126) | — | glass, glasskal |
+| `tools/scenarios/helan.mjs` | new (feature 134) | — | helan, helanshots, helanklipp |
 | `tools/story/flight.mjs` | new | **F** | `M_FLIGHT` (M[0..4]) |
 | `tools/story/island.mjs` | new | **G** | `M_ISLAND` (M[5..12]) |
 
@@ -9906,9 +10042,9 @@ tourist couple's viewfinder the frozen branch takes Stig's walk from `kort.wish(
 traffic/peds skipped when `!levelDef.sim.*`) → `syncAll` (also
 writes `ch.x/y/z` from `car.seatWorld(ch.seatSide)` for every car-seated character, player
 included, so framing, bubbles and distance checks see where they really are) → `missions.update` →
-`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `tower.update` (feature 24) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `skis.update` (feature 71) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `stands.update` (feature 28) → `dogs.update` (feature 31) → `bathers.update` (feature 32) → `shop.update` (feature 34) → `toasters.update` (feature 33) → `bags.update` (feature 116) → `room107.update` (feature 38) → `solkram.update` (feature 35) → `stunts.update` (feature 40) → `chat.update` (feature 39) → `roofs.update` (feature 41) → `mic.update` (feature 44) → `birds.update` (feature 43) → `dream.update` (feature 57) → `jeep.update` (feature 51) → `fyren.update` (feature 52) → `bell.update` (feature 59) → `gatlopp.update` (feature 69) → `golf.update` (feature 74) → `battur.update` (feature 76) → `residents.update` (feature 77) → `hytt.update` (feature 80) → `bar.update` (feature 84) → `fiske.update` (feature 107) → `awnings.update` (feature 92) → `hitch.update` (feature 106) → `kikare.update` (feature 108) → `packhus.update` (feature 109) → `volley.update` (feature 111) → `kort.update` (feature 110) → `guagua.update` (feature 112) → `utflykt.update` (feature 124) → `traktor.update` (feature 121; after `syncAll`, so its jolts go on top of the car's synced tilt) → `sisters.update` (feature 117) → `crane.update` (feature 118) → `trampbat.update` (feature 120) → `terraza.update` (feature 122) → `glass.update` (feature 126) → `torg.update` (feature 135) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
+`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `tower.update` (feature 24) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `skis.update` (feature 71) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `stands.update` (feature 28) → `dogs.update` (feature 31) → `bathers.update` (feature 32) → `shop.update` (feature 34) → `toasters.update` (feature 33) → `bags.update` (feature 116) → `room107.update` (feature 38) → `solkram.update` (feature 35) → `stunts.update` (feature 40) → `chat.update` (feature 39) → `roofs.update` (feature 41) → `mic.update` (feature 44) → `birds.update` (feature 43) → `dream.update` (feature 57) → `jeep.update` (feature 51) → `fyren.update` (feature 52) → `bell.update` (feature 59) → `gatlopp.update` (feature 69) → `golf.update` (feature 74) → `battur.update` (feature 76) → `residents.update` (feature 77) → `hytt.update` (feature 80) → `bar.update` (feature 84) → `fiske.update` (feature 107) → `awnings.update` (feature 92) → `hitch.update` (feature 106) → `kikare.update` (feature 108) → `packhus.update` (feature 109) → `volley.update` (feature 111) → `kort.update` (feature 110) → `guagua.update` (feature 112) → `utflykt.update` (feature 124) → `traktor.update` (feature 121; after `syncAll`, so its jolts go on top of the car's synced tilt) → `sisters.update` (feature 117) → `crane.update` (feature 118) → `trampbat.update` (feature 120) → `terraza.update` (feature 122) → `glass.update` (feature 126) → `torg.update` (feature 135) → `helan.update` (feature 134) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
 pickups/collectibles → props → `fx.tick` → `tickTown` → markers → camera → sun/sky → HUD → audio (its
-`ljud.update`, feature 131, after the camera so the soundscape's sides follow it) →
+`ljud.update`, feature 131, after the camera so the soundscape's sides follow it, then `helan.sound()`, feature 134) →
 traffic recycling (island) → autosave. `loop` then renders, and when `film.grabNow` is set calls
 `film.grab()` in the same task (Herr Storch's still from the frame's buffer, feature 6, §10.11), and when
 `kort.grabNow` is set `kort.grab()` (the tourist couple's picture, the frame's part of the buffer, feature
@@ -10133,6 +10269,10 @@ game.torg;         // Torgliv (feature 135, §10.62): the centre's vendors, sitt
                    // areaHit), covers, gir, lineT, first, counts, last, log, live, talk, open(h), siesta(h),
                    // paseo(h), mode(r, h), posed(key) (npcPosed, honk.free), kick(x, z, y, r, dx, dz) (areaHit),
                    // onPropBroken(p, vx, vz), step(h) (fixedStep), update(dt), reset(), snapshot(), cfg (TORG)
+game.helan;        // HelanGar (feature 134, §10.63): the balcony party's Helan går in the evening; on, evening,
+                   // spot, held, bodies, garland, napkin, d, level, side, out, hz, musicDuck (updateAudio's
+                   // duckMusic), counts, said, last, live, candidates(), at(k, out, h), free(key), markers()
+                   // (mapMarkers), update(dt), sound() (updateAudio), reset(why), cfg (HELAN)
 game.waterSplash(x, z, v, bomb = false, y = CURB)     // a hard landing's splash from the water's floor y (feature 122)
 game.platformAt(ch, x, z, ytop) -> { top, car } | null   // a moving floor that is no car, for Character.step
                    // (feature 118): the crane's pallet under the player between missions
@@ -11226,6 +11366,11 @@ shame.chase(car) (feature 60): a Land Rover's chase AI with the catch-up band (s
 //   torg.extras, areaHit calls torg.kick(x, z, y, r, dx, dz) after them (a sitter knocked: its bowled),
 //   onPropBroken calls torg.onPropBroken(p, vx, vz); npcPosed and honk.free ask torg.posed(key)
 // audio.js: bells(rounds, vol), bellLog (feature 135)
+// helanGar.js (feature 134, §10.63): game.helan = new HelanGar(game) after the ice cream; update(dt) after
+//   glass.update (the evening, the real musicians, the party, its lines and the napkin; not live: reset());
+//   updateAudio calls helan.sound() after ljud.update (the layer `fest`, its low-pass, the song on or off)
+//   and duckMusic takes the lower of ljud.musicDuck and helan.musicDuck outside a pursuit; mapMarkers adds
+//   helan.markers() (the `fest` dot with the music off or muted); its lines set residents.lineT
 // hud.js: setKort({ fw, fh, hog, keys, par, sub, line, who, still, stamp } | null) (#kort, the viewfinder)
 // input.js: snap (Space, Mouse0, pad 0), turnCam (Mouse2, KeyV, pad 4)
 // traktor.js (feature 121, §10.54): game.traktor = new Traktor(game) after the guagua (the farmer's
@@ -11924,6 +12069,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `ljud`, `ljudklipp` [feature 131] | Ljudlandskap per kvarter (§10.60). `ljud`, at index 9 between missions: the audio context runs; at Flamenco's pool deck every zone 0 and the channel silent; on the beach 8 m from the foam line the surf's level 1 and alone, its layer's gain 1 and its bed sounding, a wave within 9 s; 60 m up the beach the surf at 0.15–0.5 heard from the sea's side (|side| > 0.5, the sign of the camera's right towards +z) and from the other side turned round; on the quay the marina's 1 and the surf at 0.2–0.6, nothing else, gulls, a creak and lapping within 6 s; at Fataga's fold its layer alone, the wind sounding, a sheep's bell; every one-shot kind forced in its layer (its beds muted, the others held off) with its own peak RMS over 0.004 (logged: the mix); at Templo Ecuménico its layer and a peal; 8 m before the stage the stage's layer over 0.9 and the band on: on sol's bars (beat 60/116 s, at least two bars, every note on a sixteenth), sounding (RMS over 0.01), the tune ducked to 0.8 or less, no solo in sol's first bars and Affe's solo once the music jumps to bar 24; with the samba the band on its bars (beat 0.6 s); in skandal no new bars; at 23:12 no band, the stage's layer 0 and no duck; Affe hidden no band, back after `placeNpcs`; at La Medina its layer alone, its murmur sounding, chatter, no club by day, after 22:30 Tonga Tonga's kicks on the tune's bars; in a car the mix 0.55 (the surf's out 0.4–0.6), in a pursuit 0.5; under a dialogue box 0 and back after it; under the letterbox 0; a mission (begin) every layer out (the surf's gain under 0.02 after 2 s), after its abort back; `enabled` false out; `pauseLoops` the channel under 0.01, `resumeLoops` back to 0.3; after the end (bodega's unlock) no band at the stage; the flight level (`&mission=2`) nothing. `ljudklipp` (at ts 1): the game's master output and the soundscape's channel alone recorded together for `LJUD_SECS` (12) s each as WAVs in OUT at the deck, the beach, the quay, the fold, the church (a peal), the stage and La Medina at 22:30, for listening |
 | `glass`, `glasskal` [feature 126] | Glass till Majsan innan den smälter (§10.61). `glass`, at index 10 (fataga waiting, Majsan its giver at the pool): at the HELADOS kiosk's spot the prompt "Köp en glass (25 pta)" by day, none at night or with Majsan hidden; E with 100 pta: 75 left, the window's "¡Un helado de fresa! ¡Gracias, señor!" and Stig's "Den är till en… bekant.", the cone with both scoops in his left hand (`carrying.glass`, `anim.glass`), the card "Glass till Majsan" with no timer, the guide at Majsan, no second sale; sprinting on the beach the melt at 1/31 per s of game time and pink spots behind him; "Den smälter ju!" at half with the top scoop gone; in a car hidden and melting on, back in his hand on foot; all gone the toast "Glassen smälte. Bara struten kvar.", "Typiskt.", the bare cone and the card's "Bara struten kvar."; walking up to Majsan (a real key press) the bare cone's handover with no E and no giver's talk, its two lines in order, the cone in her hand, no share toast or record; a fresh one at 80 %: no talk with her 2.8 m off, then the first set's three lines in order, "Glassen kom fram – n % kvar. Nytt rekord!" and `records.glass` = n, her eating it down, her hand empty after 10 s and her giver's talk back; the second set the next time, no record below it; R drops it ("Stig tappade glassen.", the splat where he stood, not on the road); a mission start takes the ice cream, the drips, the card and the guide at once; after the end (index 13, julafton's unlock) the pool fest's ring forms without Majsan as he comes onto the deck with her ice cream, and the handover plays there. Shots `glass_kiosk`, `glass_kopt`, `glass_droppar`, `glass_halv`, `glass_struten`, `glass_tanken`, `glass_gullig`, `glass_ater`. `glasskal`: calibrate's walker from the kiosk's spot (after E) to Majsan at home at index 8 (`GLASS_RUNS`, default 3), every run there with ice cream left, and ceil(1.25 × (median + 0.5)) = `GLASS.meltSecs` (31; the `CAL glassMajsan` line) |
 | `torg`, `torgshots` [feature 135] | Liv på torget – siesta och paseo (§10.62). `torg`, at index 9 between missions with the clock held at 15:00 (the siesta): the places (nine vendors, six plaza seats with every bench seat on its `bank`, three church seats, the pair, eight walkers) and 27 covers (the five fruit stalls among them, none on stall K or the souvenir stand); at the siesta every cover down with SIESTA, the two dozers seated and slumped on their crates (cushion 0.60), no vendor standing, the souvenir seller out; at 10:00 (a cut) the covers rolled up and nine vendors at their spots; Stig on foot 3 m before the churros vendor: his call (his own or a generic one) as a bubble, the next vendor within the gap silent, after it a call again; a kick bowls a vendor over (SKANDAL over 5) and he walks back to his spot; his car at 9 m/s knocks one over; the clock run from 12:96 past 13:00: one peal (`audio.bellLog`), the siesta toast, the covers rolling down one after another, the vendors gone unseen and the two dozers on their crates; the giraffe: nothing before julafton, then (`unlocked` 'bodega', a new visit) the seller's giraffe up and posed, Stig's own 1.3–2.0 s after his line, both down, not again that visit; the plaza at 15:00: six seated; a kick knocks a rim sitter off (SKANDAL over 5), he sits down on the rim again (0.58); a kick at an east-bench sitter smashes the bench and throws both off ('bench', no SKANDAL of theirs) and they are put away unseen; his car into the west bench's sitter knocks him off, the bench standing; the paseo at 19:30: eight walkers on their radii (6.0–7.6 m), going round; "Suecos…" from a sitter; the church at 11:00 three seated and the pair, "¡Buenos días!", at 14:00 "¡Buenas tardes!"; at 02:00 the covers down with CERRADO · STÄNGT and nobody; a mission start (ropavieja) takes every body, cover and crate away at once and nothing shows in the mission. `torgshots`: the market at the siesta from the south, a dozer, row A2's covers from the lane, the giraffe exchange, the open market and the churros vendor, the plaza's sitters, a bench and the rim, the paseo at sunset (twice), the church square, the night market |
+| `helan`, `helanshots`, `helanklipp` [feature 134] | Helan går från balkongen (§10.63). `helan`, at index 6 (friskotek waiting, Affe and Gabbe its extras): by day (15:00) no party, no evening and no song; the candidates over 50 balcony units in 8 or more blocks, every one on the 1st or 2nd floor with no resident, awning or potted plant; at 20:30 with Stig 6 m from the real Affe and looking at him (past the warp's cut) the evening's balcony picked but Affe not taken and no party; on the beach facing the sea the party up: the real Affe and Gabbe hidden (`spot` 'helanGar'), the four doubles shown, perched exactly on the balcony's floor, Affe's accordion, Gabbe's congas, guest a's cup 'low', the garland shown; 200 m off level 0 and no duck; 60 m out in front, turned to either side of the street, the level 14/60 (±0.02), heard from the balcony's side (|side| over 0.4, the sign of the camera's right towards it) and from the other side turned round, the low-pass under 4000 Hz; at 40 m the level 14/40 and the tune ducked no lower than 0.85; 8 m out level 1, out 1, the tune ducked to 0.2, the low-pass over 6000 Hz, the song scheduled (at least two bars, every note on a sixteenth), the layer's RMS over 0.005, 104 bpm; the first exchange in order ("Skål, grannen! Kom upp!", "Det känns fånigt att gå upp…", "Här, grannen – till en sangria!"), one napkin, picked, 50 pta and the toast "En servett med 50 pta – till en sangria."; 42 m off and back the second ("Kom upp, grannen! Det finns sangria!" before "Jag är skraj att de ska…"), no second napkin; the song restarted at its beat 0: the sung line, then "Skål!" before Affe's "Jag har haft två grisfester i veckan.", a round and a Skål! in its log; the music off: out 0, the loop off, one `fest` marker at the balcony, no duck; on again: out 1, no marker; in a car out = 0.55 × the level; a mission start (Lasse's talk): no party, nothing held, the garland hidden, out 0, the clock at nine, Affe and Gabbe shown at the friskotek's places (within 0.6 m of [friskotek, ∓4, −6]) and ours no more; after the abort no party by day; the next evening (20:30) the party in another block; at 02:30 with the balcony in view still on, turned away gone, the garland hidden, the real ones back and shown; at index 5 (buss17 waiting) at 21:00 none. `helanshots`: `helan_gatan`, `helan_gatan2` (the street under the balcony, the call and his answer), `helan_balkong` (close, the napkin's line), `helan_servett` (the napkin falling, from beside his head), `helan_servett2`, `helan_avstand` (the garland from across the street), `helan_karta` (the minimap's dot with the music off), `helan_kvall2` (the second evening's balcony). `helanklipp` (index 7, at ts 1): master and the soundscape's channel recorded together for `HELAN_SECS` (12) s each as WAVs in OUT under the balcony, 40 m and 100 m off, for listening |
 | `systrar`, `systrarshots` [feature 117] | Systrarnas balkong (§10.55). `systrar`: at index 10 and 12 walking onto 105's patio does nothing; at index 11 the sisters at the pool, free, and the sun cream's prompt by Majsan; by night walking in does nothing; by day (a real key press, the dialogue held) the ask: held, the cut, both sisters perched on their spots at the balcony's y, busy, spot `balkong105`, posed (no horn answer, no talk), Siv's glass, Majsan waving, the sun cream and the judges refused; the ask's lines in order, then the card and the beacon at the pool bar (the nearer shop); still up 1.5 s later, one ask; a kick under the balcony: no bark from up there; away and back in front: Siv's reminder, once an approach; at the bar's spot "E Köp en flaska whisky (250 pta)", at the coffee's spot the coffee's E; E (a real key): 250 pta, `carrying.whisky`, the bottle in his left hand, the bartender's line and Stig's, the card and the beacon at the balcony, no second bottle; a fling breaks it (the toast, back to buying); the supermercado with an empty purse: Ole pays, the voice from the door and Stig's line; in a car the bottle kept out of sight, on foot in his hand again; a car left south of the zone: no line; under the balcony "E Skicka upp whiskyn", E: held, the cut, the basket on its way down with Majsan leaning over, the bottle in it at `basketY`, up, the bottle in Siv's hand, the delivery's lines in order, done (no card or beacon), Majsan waving, and again on the next pass; a car left by the west gable: Majsan's line and Siv's answer, no neighbour's; the grisfest's talk with a bottle in hand, its start: the errand over, the bottle gone, both sisters home on the ground and not posed, nobody on the balcony in the running mission. `systrarshots`: the patio before, the ask's three lines, the card, the bar with its prompt and after buying, the bottle in his hand close and from the side, the supermercado, under the balcony, the basket down (two) and up, the delivery's three lines, after, Siv with her glass and the bottle close, the wave from the deck, the balcony from the street |
 | `rum107`, `troferum` [feature 38] | Rum 107 fylls med resans minnen (§10.25). `rum107`, at index 9 (free roam): the room bare on a fresh save (7 gadget, 7 fin and 3 julafton meshes built, none shown); E at the shelf with nothing found: "Inget att kontrollera.", he faces it, the card `Oles prylar 0/7 · Hajfenor 0/7`, Ole's "Hylla er tom…"; four gadgets and three fins collected (`collect`) show at once, each gadget in its own place 0.5 m apart standing on the shelf's 2.75; no prompt for `gap` s, then "Kontrollerad av G17.", 4/7 · 3/7 and "Fire av sju! Snart er hylla full."; before the unlocks the nap answers at the giraffe's spot and the boombox plays no samba (feature 67: "Bergsprängaren"); all seven: the samba unlock, "Spela samba" sets and saves the samba with Ole's "Ja, det er fint! Samba!", "Stäng av sambaen" while it plays (feature 67), "Spela samba" back with the sol tune; after `unlock('bodega')` the suitcase, the giraffe and the pack; E at the giraffe: held, the bed's hidden, "Precis en sån…", the prompt "Ställ tillbaka giraffen", back after `holdSecs`, at once 3 m off and with E; the nap beside his bed; a full shelf's "Alle sju! Nå er hylla full."; a reload dresses the room; at index 12 a mission start leaves none usable and the giraffe back; the flight level inert. `troferum`, at index 13: the room from the patio (`rum107Cam` at 5.5 and 7.5 m, buss17's and julafton's cuts) bare, mid-trip and after julafton, close shots of the shelf, the pile and the beds, Stig at the shelf, Stig with the giraffe, and the nap with the giraffe by his head |
 | `solkram` [feature 35] | Smörj in Majsans rygg (§10.26). At index 10 (fataga waiting, Majsan its giver at the pool) the talk and no SOLKRÄM; at index 11 beside Majsan "Smörj in ryggen", none at 22:00 or with Siv 5 m off her spot; E: the film's pair in a dialogue (and the marker `solkramFilm`), then her back turned (yaw π/2), Stig 0.97 m behind her facing her with `rub` 1 and his hands 0–0.2 m over her shoulder pivots and 0.03–0.2 m behind her middle, both sisters `busy`, the bottle, no prompt, the card (SOLKRÄM, `Håll E · släpp i det gröna`, `Majsans rygg`, the field `w0` wide with its middle in `at`, the marker) with no letterbox; E held (a real key) 0.6 s: the fill at 1/`secs` a second (0.6–1.3 ×), `rub` 2, `Håll… håll…`; let go in the stripe: 7, a record, Siv's `7` card, `SOLKRÄM 7 P` / `NYTT REKORD!`, `records.solkram` 7 in the save, then her three lines in order and at the end the camera, the sisters and the pose back, no bottle, `sjuPoang` (Siv's chatter, the toast, both markers saved); again: one of `again`, the field × `shrink`, 6 with "Sex, tycker jag." and the record kept (`REKORD 7 P`); the field's edge: 5 and "Giraffen, då? Fem."; short of it: early, no card, `FÖR LITE!`, "Var det allt?"; held to the end: over at 1, Siv's `–1` and laugh, Stig flailing 1.42 m behind her, the cream running, the shot from behind, three drops at 1.1 s, back to the front shot for Siv, the lines, the flail and the cream gone; no hold: "Jaha. Då får jag väl göra det själv."; six tries; a mission start with Siv's card up: the card down and the intro's cinematic kept; a reload: the record 7, `sjuPoang`, Siv's chatter and no film pair again; at index 13 after `unlock('bodega')` at 15:00 the pool fest's ring has Majsan (none), at 08:00 she is home and it is there; the flight level inert. Shots `solkram_0_prompt`, `_1_ready`, `_1b_hold`, `_2_sju`, `_3_after`, `_4_over`, `_5_minus` |
@@ -14594,3 +14740,23 @@ the fixer's group.
   away at once; no mission, stage, timer, fixture or calibration pool changed (test mode's 15:00 is the
   siesta, and since nothing of it shows in a mission the stories' scenes are as before). Scenarios
   `torg`, `torgshots` (§16.4).
+- Feature 134, "Helan går från balkongen" (`features/implemented/helan_gar_festen.md`, 2026-10-21): in the
+  evening a party sings Helan går on a new balcony of the apartment slabs every evening, found by ear (§10.63;
+  new `src/game/helanGar.js` (`game.helan`), `HELAN` in content/island.js; audio.js the soundscape channel's
+  seventh layer `fest` with a low-pass of its own and the song on a clock of its own at 104 bpm (`festStart`,
+  `ambFest`, `festLowpass`, `festPos`, `festState`, `singer`); town.js `balconyLots`' `awning`, `plant`, `ax`,
+  `az`, `uw` (no new draws); hud.js the minimap's `fest` dot; main.js (constructor, update, `updateAudio`:
+  `helan.sound()` and the lower duck, `mapMarkers`); §1.6, §6.3, §12.1, §12.2, §14.1–14.3, §16.4). From
+  index 6 (after buss17), 20:00–02:00 on the island's clock: Affe with his accordion, Gabbe with his congas
+  and two Swedish guests perched on a 1st- or 2nd-floor balcony with no resident under a garland of coloured
+  bulbs, another block than the evening before; the real Affe and Gabbe hidden meanwhile (taken and given
+  back out of view, at a mission start at the waiting mission's place behind the morning cut's black). The
+  song, Helan går with oom-pah, congas, the accordion's tune and three formant voices, is heard only: near /
+  d from 14 m, out at 150 m, from its side of the camera, muffled with distance, the island tune ducked only
+  near it; with the music off a dot on the minimap. Under the balcony "Skål, grannen! Kom upp!" [N], Stig's
+  "Det känns fånigt att gå upp…" [F*] and "Här, grannen – till en sangria!" [N] with a napkin of 50 pta, once
+  an evening; later "Kom upp, grannen! Det finns sangria!" [N] / "Jag är skraj att de ska…" [F*]; the sung
+  line at a round's start, "Skål!" at its end and Affe's "Jag har haft två grisfester i veckan." [F*](t) once
+  an evening. The neighbours' calls wait while the party talks. The clock is held at 15:00 in test mode, so
+  no mission, stage, timer, fixture or calibration pool changed; nothing is saved. Scenarios `helan`,
+  `helanshots`, `helanklipp` (§16.4).

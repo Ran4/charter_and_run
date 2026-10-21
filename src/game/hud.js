@@ -970,6 +970,13 @@ function drawMarker(c, m, clamped, scale = 1) {
   } else if (m.type === 'item') {
     c.fillStyle = '#ffffff'; c.strokeStyle = '#1d1426'; c.lineWidth = 2;
     c.beginPath(); c.arc(0, 0, 5, 0, Math.PI * 2); c.fill(); c.stroke();
+  } else if (m.type === 'fest') {   // the balcony party with the music off (§10.63): a dark dot, its garland's bulbs round it
+    c.fillStyle = '#1d1426'; c.strokeStyle = '#fff8e6'; c.lineWidth = 2;
+    c.beginPath(); c.arc(0, 0, 7.5, 0, Math.PI * 2); c.fill(); c.stroke();
+    ['#ff4a3a', '#ffd23f', '#3ad86a', '#3a8cff', '#ff9a2a'].forEach((col, i) => {
+      const a = Math.PI * (1.1 + i * 0.2);
+      c.fillStyle = col; c.beginPath(); c.arc(Math.cos(a) * 4.2, -Math.sin(a) * 4.2 - 0.5, 2, 0, Math.PI * 2); c.fill();
+    });
   }
 }
 

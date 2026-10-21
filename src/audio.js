@@ -11,7 +11,9 @@
 //           island soundscape: a layer's voices -> its gain -> its panner -> ambient -> master
 //   Cabin drone: its own channel (drone(level, bright)), never touched by the car-engine code.
 //   Soundscape (feature 131, §10.60): the `ambient` channel straight into master, so the fear
-//   low-pass, tradDuck and duckMusic leave it alone; game/soundscape.js sets its layers.
+//   low-pass, tradDuck and duckMusic leave it alone; game/soundscape.js sets its layers. Its layer
+//   `fest` (feature 134, §10.63: gain -> a low-pass -> panner) carries the balcony party's Helan går,
+//   on a clock of its own; game/helanGar.js sets it.
 
 let ctx, master, sfx, musicBus, tradDuck, musicFilter, tradBus, noiseBuf;
 let eng, skid, hornNodes, music, drone, siren;
@@ -839,10 +841,12 @@ registerTune('placeholder', {
 // that bar's own clock and chords; and while Tonga Tonga is open (`ambClub`) a muffled kick on every
 // beat of the tune comes through La Medina's wall. Own random draws (`arnd`), never Math.random's.
 const AMB_GAIN = 0.3;
-export const AMB_LAYERS = ['waves', 'hamn', 'fold', 'kyrka', 'scen', 'bar'];
+// `fest`: the balcony party's Helan går (feature 134, §10.63; the layer's own low-pass muffles it with
+// distance), set by game/helanGar.js.
+export const AMB_LAYERS = ['waves', 'hamn', 'fold', 'kyrka', 'scen', 'bar', 'fest'];
 // Each layer's gain at level 1: the mix, so that each sits under the tune (about 7–12 dB at the surf
-// and the stage) and none is lost under it.
-const AMB_MIX = { waves: 1, hamn: 1.4, fold: 1.6, kyrka: 1.2, scen: 0.8, bar: 1.8 };
+// and the stage) and none is lost under it. The party is the scene where it is: over the ducked tune.
+const AMB_MIX = { waves: 1, hamn: 1.4, fold: 1.6, kyrka: 1.2, scen: 0.8, bar: 1.8, fest: 1.6 };
 const arnd = (() => { let a = 131; return () => { a = (a + 0x6d2b79f5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; })();
 
 function buildAmbient() {
@@ -857,7 +861,12 @@ function buildAmbient() {
   for (const k of AMB_LAYERS) {
     const lg = ctx.createGain(), pan = ctx.createStereoPanner();
     lg.gain.value = 0;
-    lg.connect(pan).connect(g);
+    if (k === 'fest') {
+      amb.festLp = ctx.createBiquadFilter();
+      amb.festLp.type = 'lowpass'; amb.festLp.frequency.value = 6500; amb.festLp.Q.value = 0.5;
+      lg.connect(amb.festLp).connect(pan);
+    } else lg.connect(pan);
+    pan.connect(g);
     amb.layers[k] = { g: lg, pan, level: 0, side: 0 };
   }
   // A looped noise bed: a filter, a low-pass taking the hiss off (`top` Hz) and its gain.
@@ -1095,6 +1104,121 @@ audio.amb = {
     amb.beds.murmur2.g.gain.setTargetAtTime(0.025 + 0.045 * arnd(), t, 0.12);
   },
 };
+
+// ---- Helan går från balkongen: the balcony party's song (free roam; feature 134, DESIGN §10.63) ---
+// The soundscape channel's `fest` layer and a loop on a clock of its own, not the music scheduler's: the
+// party sings TRAD.helanGar at its own 104 bpm whatever the island tune is (game/helanGar.js ducks the
+// tune near it instead). A cycle is the melody's 8 bars and `rest` bars of oom-pah; `festStart()` sets the
+// party's beat 0 at its start, so the song is wherever the party has got to when Stig comes into earshot
+// and `festPos()` tells the game which bar sounds now. Affe's accordion has the melody and his left hand
+// the oom-pah (the root on 1, the fifth on 3, the chord on 2 and 4), Gabbe plays `THSTTTOO` in eighths
+// (as on the stage, §10.60), and three guests sing along a little apart from each other (a sawtooth
+// through the two formants of an "a", in unison and an octave down); the end of a round is a cheer and
+// glasses. Scheduled 0.6 s ahead every 200 ms while `ambFest(true)` and the music is on.
+let fest = null;   // { t0, on, next, rest, log }
+// One guest singing: a sawtooth with a late vibrato through an "a" vowel's two formants.
+function singer(f, t, d, v, dest) {
+  const o = ctx.createOscillator(), vib = ctx.createOscillator(), vg = ctx.createGain(), g = ctx.createGain();
+  const f1 = ctx.createBiquadFilter(), f2 = ctx.createBiquadFilter(), g2 = ctx.createGain();
+  o.type = 'sawtooth'; o.frequency.value = f;
+  vib.frequency.value = 5 + arnd(); vg.gain.setValueAtTime(0, t); vg.gain.linearRampToValueAtTime(f * 0.012, t + Math.min(0.3, d));
+  vib.connect(vg).connect(o.frequency);
+  f1.type = 'bandpass'; f1.frequency.value = 730; f1.Q.value = 4;
+  f2.type = 'bandpass'; f2.frequency.value = 1090; f2.Q.value = 6; g2.gain.value = 0.6;
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(v, t + 0.06);
+  g.gain.setValueAtTime(v, t + Math.max(0.07, d - 0.08));
+  g.gain.exponentialRampToValueAtTime(0.0001, t + d + 0.06);
+  o.connect(f1).connect(g); o.connect(f2).connect(g2).connect(g); g.connect(dest);
+  o.start(t); o.stop(t + d + 0.1); vib.start(t); vib.stop(t + d + 0.1);
+}
+// Bar `n` of the party's song (counted from its beat 0) at audio time `t0`.
+function festBar(n, t0, beat) {
+  const m = TRAD.helanGar, dest = amb.layers.fest.g, L = fest.log, cyc = 8 + fest.rest;
+  const k = n % cyc, ch = m.chords[k < 8 ? k : 7], root = ch[0];
+  const at = (b) => { L.notes++; if (Math.abs(b * 4 - Math.round(b * 4)) > 1e-6) L.offGrid++; return t0 + b * beat; };
+  bassNote(mtof(root), at(0), beat * 0.8, 0.3, dest);
+  bassNote(mtof(root + 7), at(2), beat * 0.8, 0.26, dest);
+  for (const b of [1, 3]) accChord([root + 12, ...ch.slice(1)].map(mtof), at(b), beat * 0.4, 0.024, dest);
+  for (let q = 0; q < 8; q++) {
+    const c = 'THSTTTOO'[q], t = at(q * 0.5);
+    if (c === 'O') conga(t, false, 0.22, dest);
+    else if (c === 'H') conga(t, true, 0.18, dest);
+    else if (c === 'S') slapVoice(t, 0.16, dest);
+    else conga(t, false, 0.05, dest);
+  }
+  if (k < 8) {
+    for (const [b, note, d] of m.notes) {
+      if (b < k * 4 || b >= k * 4 + 4 || note <= 0) continue;
+      const t = at(b - k * 4), len = d * beat * 0.92;
+      accordion(mtof(note), t, len, 0.06, dest);
+      // The guests: two in unison a few cents apart, one an octave down, each a little late or early.
+      singer(mtof(note) * 1.004, t + 0.012 * arnd(), len, 0.05, dest);
+      singer(mtof(note) * 0.994, t + 0.02 * arnd(), len, 0.045, dest);
+      singer(mtof(note - 12), t + 0.016 * arnd(), len, 0.055, dest);
+      L.sung++;
+    }
+    if (k === 0) L.rounds++;
+  } else if (k === 8) {
+    // Skål!: the guests' shout, clapping and glasses on the pause's first beat.
+    const t = at(0), d0 = Math.max(0, t - ctx.currentTime);
+    via('fest', () => {
+      for (let j = 0; j < 3; j++) audio.noise(0.32 + 0.08 * arnd(), 0.22, 560 + 260 * arnd(), 'bandpass', d0 + 0.03 * j, 3);
+      for (let j = 0; j < 40; j++) {
+        const d = Math.pow(arnd(), 0.8) * 1.4, swell = Math.min(1, d / 0.3) * (1 - 0.6 * (d / 1.4));
+        audio.noise(0.035 + 0.03 * arnd(), (0.04 + 0.05 * arnd()) * swell + 0.004, 1400 + 1600 * arnd(), 'bandpass', d0 + 0.35 + d, 1.4);
+      }
+    }, 0.9);
+    for (let j = 0; j < 4; j++) partials(GLASS, (2600 + 1500 * arnd()) * (1 + 0.03 * j), t + 0.15 + j * 0.11 + 0.05 * arnd(), 0.3, 0.03, dest);
+    L.skal++;
+  }
+  L.bars++;
+  L.bar = n;
+}
+function festTick() {
+  if (!ctx || !amb || !fest?.on || fest.t0 == null || amb.paused || !audio.musicOn) return;
+  const beat = 60 / TRAD.helanGar.bpm, bar = beat * 4, now = ctx.currentTime;
+  // From the next bar to start (the bar under way is let go; a just-due one plays a few ms late).
+  if (fest.next == null || fest.t0 + fest.next * bar < now - 0.02) fest.next = Math.max(0, Math.ceil((now - 0.02 - fest.t0) / bar));
+  while (fest.t0 + fest.next * bar < now + 0.6) { festBar(fest.next, fest.t0 + fest.next * bar, beat); fest.next++; }
+}
+
+Object.assign(audio, {
+  // The party's beat 0 now (its start; `rest` bars of oom-pah between two rounds of the melody).
+  festStart(rest = 3) {
+    if (!ctx || !amb) return;
+    fest ??= { on: false, iv: setInterval(festTick, 200), log: { bars: 0, rounds: 0, notes: 0, offGrid: 0, sung: 0, skal: 0, bar: -1 } };
+    fest.t0 = ctx.currentTime + 0.3;   // past the next tick (every 0.2 s): its first bar is scheduled
+    fest.next = null;
+    fest.rest = rest;
+  },
+  // The song scheduled (while the party is heard) or not; the `fest` layer itself is set by ambLayer.
+  ambFest(on) {
+    if (!fest) return;
+    on = !!on;
+    if (on && !fest.on) fest.next = null;   // on again: from the bar the party has got to
+    fest.on = on;
+  },
+  // The `fest` layer's low-pass (Hz; scheduled on a change of 50 Hz).
+  festLowpass(hz) {
+    if (!amb) return;
+    const v = Math.round(hz / 50) * 50;
+    if (v === amb.festHz) return;
+    amb.festHz = v;
+    amb.festLp.frequency.setTargetAtTime(v, ctx.currentTime, 0.3);
+  },
+  // Where the party's song is by the audio clock (also with the music off, while the context runs):
+  // { bars (since beat 0), cycle, k (its bar in the cycle: 0–7 the melody), beat (s) }, else null.
+  festPos() {
+    if (!ctx || ctx.state !== 'running' || fest?.t0 == null) return null;
+    const beat = 60 / TRAD.helanGar.bpm, bars = (ctx.currentTime - fest.t0) / (beat * 4);
+    if (bars < 0) return null;
+    const cyc = 8 + fest.rest, n = Math.floor(bars);
+    return { bars, cycle: Math.floor(n / cyc), k: n % cyc, beat };
+  },
+  // Test hook (tools/scenarios/helan.mjs): the loop's state and log.
+  festState() { return fest && { on: fest.on, t0: fest.t0, rest: fest.rest, hz: amb.festHz ?? 6500, log: { ...fest.log } }; },
+});
 
 // ---- public-domain traditional melodies (§1.5, §12.1) ----------------------------------------
 // notes: [beat, midi, beats] (midi -1 = rest); chords: [bass, ...chord] per `beatsPerChord` beats.

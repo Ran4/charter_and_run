@@ -77,6 +77,7 @@ import { Utflykt } from './game/utflykt.js';
 import { Sisters } from './game/sisters.js';
 import { Glass } from './game/glass.js';
 import { Torgliv } from './game/torgliv.js';
+import { HelanGar } from './game/helanGar.js';
 import { Crane } from './game/crane.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
@@ -271,6 +272,7 @@ class Game {
     this.ljud = new Soundscape(this);     // free roam: the island's soundscape, a layer per part of the island under the tune, the stage's band (§10.60)
     this.glass = new Glass(this);         // free roam: an ice cream from the beach's HELADOS kiosk for Majsan, melting on the way (§10.61)
     this.torg = new Torgliv(this);        // free roam: the centre's people, the market's siesta, the plaza's paseo, the bells (§10.62)
+    this.helan = new HelanGar(this);      // free roam: Helan går from a balcony party every evening, found by ear (§10.63)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -1675,6 +1677,7 @@ class Game {
     this.terraza.update(dt);
     this.glass.update(dt);
     this.torg.update(dt);
+    this.helan.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);
@@ -2156,6 +2159,7 @@ class Game {
     out.push(...this.skis.markers());
     out.push(...this.pigs.markers());
     out.push(...this.gatlopp.markers());
+    out.push(...this.helan.markers());   // the balcony party with the music off (§10.63)
     const o = this.shame.officer;
     if (o && o.state !== 'hidden' && this.shame.pursuit) out.push({ type: 'enemy', x: o.x, z: o.z, edge: true });
     if (!all) {
@@ -2338,9 +2342,10 @@ class Game {
     } else if (this.lowpassOn !== false) { audio.setMusicLowpass(null); this.heartT = 0; }
     this.lowpassOn = sh.mode === 'panic' && sh.v >= (sh.cfg.hot ?? 70);
     // The island's soundscape (§10.60): its layers from where he is; the tune a little down while the
-    // stage's band plays.
+    // stage's band plays, and well down near the balcony party's Helan går (§10.63).
     this.ljud.update(dt);
-    audio.duckMusic(sh.pursuit ? 0.5 : this.ljud.musicDuck);
+    this.helan.sound();
+    audio.duckMusic(sh.pursuit ? 0.5 : Math.min(this.ljud.musicDuck, this.helan.musicDuck));
     // The siren (§7.2, §10.34): a pursuit's (shame.js turns it on and off and sets its loudness by the
     // nearest pursuer), or the borrowed Guardia jeep's while H is held, at full loudness.
     audio.siren((sh.pursuit && !!sh.cfg.siren) || this.jeep.sirenOn);

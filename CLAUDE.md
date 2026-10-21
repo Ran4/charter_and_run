@@ -295,7 +295,15 @@ opens with a summary of the rounds and the timer changes.
     "¡Buenos días!", the paseo round the fountain at 19–21.5 with "Suecos…", the souvenir seller's giraffe
     after julafton and Stig's own, the bells and toasts at 13, 17 and 19 when the clock runs, kicks and cars
     (a sitter knocked off sits down again, a smashed bench throws its sitters off), a mission start taking it
-    all away; bodies come and go unseen; DESIGN §10.62)
+    all away; bodies come and go unseen; DESIGN §10.62), `helan helanshots
+    helanklipp` (Helan går från balkongen, from index 6 in the evening (20–02 on the island's clock; the
+    held test clock's 15:00 has none, so a test sets `day.set(20.5)`): a new 1st- or 2nd-floor slab balcony
+    each evening in another block, Affe, Gabbe and two guests perched there under a garland, the real Affe
+    and Gabbe hidden meanwhile (taken and given back out of view; at a mission start at its place behind the
+    black); the song in the soundscape's layer `fest` on its own 104 bpm clock, near / d from 14 m, out at
+    150 m, from its side, muffled with distance, the tune ducked only near it; the exchange under it and the
+    napkin of 50 pta once an evening, the sung line, "Skål!" and Affe's sigh; the minimap's dot with the
+    music off; `helanklipp` records WAVs in OUT; DESIGN §10.63)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

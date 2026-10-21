@@ -243,6 +243,16 @@ and the rest of the world build as before. The ice cream (a carry, `carrying.gla
 ("Glass till Majsan"); it is not a pool. `story` and `fullstory` passed on the feature's tree. Every pool
 below stands and no timer changed.
 
+**Feature 134 (Helan går från balkongen, 2026-10-21) touches no pool.** It notes each slab balcony unit's
+awning and potted plant on its `balconyLots` spot and each lot's row direction and unit width (DESIGN
+§10.63), from the same draws in the same order, so the world builds as before. Its party (bodies placed by
+hand, no collider, not in `allChars`, its own seed) and the real Affe and Gabbe hidden meanwhile exist only
+with `missions.state === 'idle'`, from index 6 and from 20:00 to 02:00 on the island's clock, which test mode
+holds at 15:00: `story`, `fullstory` and `calibrate` never see an evening. A mission start ends it and puts
+Affe and Gabbe at the waiting mission's place (friskotek's extras) behind the morning cut. The song is sound
+only, and the tune's duck changes no timing. `story` and `fullstory` passed on the feature's tree. Every
+pool below stands and no timer changed.
+
 ## `friskotekBalls` · §8.7 s1 · six fleeing beach balls · on foot: timer = ceil(1.25 × (p75 + 6 × 0.5))
 
 Phase 3 r2 island-staging placed everyone for the intro's group shot (Stig, Lasse, the sisters, the
