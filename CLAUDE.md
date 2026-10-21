@@ -39,7 +39,7 @@ opens with a summary of the rounds and the timer changes.
   - cast: `castsheet cars heads` · meter/UI: `ui skandal carbust snackrutor` (`carbust`: SKANDAL's gain
     and delay and the in-car bust rules, DESIGN §7.2; `snackrutor`: the longest line in the dialogue
     box, the radio toast and a bubble, at any `W`/`H`, §14.8) · `perf` (fails below 45 fps; its
-    island views include the main beach with its bathers)
+    island views include the main beach with its bathers and La Medina's roof terrace)
   - free roam: `pintura dalasheet` (the paint shop at Gasolina, DESIGN §7.2), `berra` (Bärra hem
     Berra after the grisfest, DESIGN §10.6), `glide` (Jag kan flyga, the glide after julafton,
     DESIGN §10.7), `simhopp` (Siv och Majsan sätter poäng, the diving judges at Flamenco's pool,
@@ -263,7 +263,14 @@ opens with a summary of the rounds and the timer changes.
     two minutes' card, back on at the door, the missed bus ("Bussen har redan gått!"), home off by himself and
     `records.utflykt`; the bus on without him at Gando, through Fataga aboard, the queue behind the parked bus
     waiting, a warp and a mission start mid-ride, a car on the bus's spot, no trip from the wheel or in a
-    pursuit; `utflyktKvar` moves the bus near a stop with `utflykt.jump`, DESIGN §10.58)
+    pursuit; `utflyktKvar` moves the bus near a stop with `utflykt.jump`, DESIGN §10.58),
+    `terraza terrazashots` (Takterrassen på La Medina vaknar, up the courtyard stairs between missions: six guests at the roof tables and the bartender behind the new counter before TERRAZA · BAR (10–23,
+    popped out of view), the brochure line on the first time up, his greeting once a visit and "¡Olé!" at a
+    splash, the tanks' four coins out only during a visit (minY 7.6), the roof pool lengthened with a `water`
+    floor at 6.02 and Flamenco's board (a hop lands in it from 11.7 m), the two old loungers' dozing bathers
+    (`role` 'asleep') and Stig's (`kept`, placed last); E there by day: "Bara en liten stund.", the black, the
+    clock 1.5 h on, red, "Aj!" and the toast; the burn as a layer over his outfit till the next morning, "Aj!" at
+    a bump or a car's knock; a mission start heals him and clears the roof; the shots, DESIGN §10.59)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

@@ -7,7 +7,7 @@ import { input } from './input.js';
 import { audio } from './audio.js';
 import { buildTown, parkedCars, tickTown } from './world/town.js';
 import { finalizeProps, tickProps, breakProp, propsNear, props as allProps } from './world/props.js';
-import { lm, landmarks, routeAim, N, P, HALF, LANE, nodeX, nodeZ, neighbors, blockInterior } from './world/layout.js';
+import { lm, landmarks, routeAim, N, P, HALF, LANE, CURB, nodeX, nodeZ, neighbors, blockInterior } from './world/layout.js';
 import { groundAt, queryBlocks, contains, circleVsObb, circleVsBlock, topAt, waterAt } from './world/collision.js';
 import { worldHooks } from './world/registry.js';
 import { buildCabin, CABIN_X } from './world/cabin.js';
@@ -56,6 +56,7 @@ import { GuardiaJeep } from './game/guardiaJeep.js';
 import { GolfCarts } from './game/golfCart.js';
 import { Traktor } from './game/traktor.js';
 import { Trampbat } from './game/trampbat.js';
+import { Terraza } from './game/terraza.js';
 import { BoatTrip } from './game/boatTrip.js';
 import { Residents } from './game/residents.js';
 import { PoolBar } from './game/poolBar.js';
@@ -263,6 +264,7 @@ class Game {
     this.sisters = new Sisters(this);     // free roam before the grisfest: Siv and Majsan on the balcony above 105, the whisky errand (§10.55)
     this.crane = new Crane(this);         // the building site's crane and its pallet; free roam: Stig rides it to the 3rd floor (§10.56)
     this.trampbat = new Trampbat(this);   // the raft's coins; free roam: a pedal boat from the beach's rental, out past the bound wall with Ole (§10.57)
+    this.terraza = new Terraza(this);     // free roam: La Medina's roof terrace, its guests and bartender, the roof pool's board, the nap and the sunburn (§10.59)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -703,6 +705,7 @@ class Game {
     this.guagua.reset('warp');                       // off the guagua, the bus gone (§10.53)
     this.utflykt.reset('warp');                      // off the excursion bus, the bus gone (§10.58)
     if (this.trampbat.boat) this.trampbat.end('warp');   // out of the pedal boat onto the sand, the boat gone (§10.57)
+    this.terraza.end('warp');                        // off the roof terrace's lounger, the nap off (§10.59)
     if (this.playerCar) this.playerCar.place(x, z, yaw);
     else this.player.teleport(x, z, yaw);
     this.cam.snapNext = true;
@@ -1001,9 +1004,12 @@ class Game {
   }
   // In free roam on the island what he bought at SunTrip-butiken is a layer over it (§10.23,
   // `shop.dress`; never over `rio`).
+  // The roof terrace's sunburn is a layer over both (§10.59, `terraza.dress`).
   setPlayerOutfit(name, { persist = true } = {}) {
     const p = this.player;
-    p.setDef(this.shop ? this.shop.dress(outfitDef(PLAYER_KEY, name), name) : outfitDef(PLAYER_KEY, name));
+    let def = this.shop ? this.shop.dress(outfitDef(PLAYER_KEY, name), name) : outfitDef(PLAYER_KEY, name);
+    if (this.terraza) def = this.terraza.dress(def);
+    p.setDef(def);
     p.outfit = name ?? null;
     if (persist && this.level === 'island') this.islandOutfit = name;
     if (this.portraitsReady) hud.portraits[PLAYER_KEY] = renderPortrait(renderer, p.model);
@@ -1036,7 +1042,7 @@ class Game {
   // A taken sun lounger throws its bather off (§10.22): no SKANDAL beyond the lounger's own.
   onPropBroken(p, vx, vz) {
     audio.smash();
-    if (p.def.coins) burstCoins(p.x, 0.4, p.z, p.def.coins, vx, vz);
+    if (p.def.coins) burstCoins(p.x, (p.baseY > 2 ? p.baseY : CURB) + 0.25, p.z, p.def.coins, vx, vz);   // up on a roof's floor (La Medina's terrace, §10.59)
     this.shame.add(p.def.shame * (this.playerCar ? 1.2 : 0.7));
     this.bathers.onPropBroken(p, vx, vz);
     this.residents.onPropBroken(p);   // a señora at siesta (§10.42)
@@ -1097,7 +1103,7 @@ class Game {
     const byPlayer = car === this.playerCar;
     audio.ouch();
     audio.thud();
-    if (ch === this.player) { hud.flashColor('rgba(255,80,60,0.35)'); return; }
+    if (ch === this.player) { hud.flashColor('rgba(255,80,60,0.35)'); this.terraza.onTouch('car'); return; }   // sunburnt: "Aj!" (§10.59)
     if (byPlayer) { this.shame.add(ch.key ? 14 : 18); this.sorry.offence('hit'); }
     if (Math.random() < 0.8) this.say(ch, this.bark(ch, 'ouch'), 1.6);
   }
@@ -1134,7 +1140,8 @@ class Game {
     const dove = this.tower.onLand(v, y), roofDove = this.roofs.onLand(v, y), judged = this.judges.onLand(y);
     let wet = dove || roofDove || judged;
     this.film.onLand(y, this.stomping);
-    if (!wet && !ch.standingOn && waterAt(ch.x, ch.z, y)) { this.waterSplash(ch.x, ch.z, v, this.stomping); wet = true; }
+    if (!wet && !ch.standingOn && waterAt(ch.x, ch.z, y)) { this.waterSplash(ch.x, ch.z, v, this.stomping, y); wet = true; }
+    this.terraza.onLand(v, y, wet);   // the roof pool on La Medina: the bartender's "¡Olé!" (§10.59)
     // A long fall off the crane's pallet or the 3rd floor: on his belly with a thump (§10.56).
     const thud = !wet && this.crane.onLand(v, y);
     if (this.stomping) {
@@ -1149,11 +1156,12 @@ class Game {
   // and the sound grow with v (about 22 off the 10 m tower), and a stomp's is a cannonball, a column
   // of water and a boom with the camera shaken (§10.20). Built once for every hard landing in water;
   // the judged hops and the glide keep their own.
-  waterSplash(x, z, v, bomb = false) {
+  // y: the water's floor (CURB; La Medina's roof pool 6.02, §10.59).
+  waterSplash(x, z, v, bomb = false, y = CURB) {
     const k = clamp((v - 6) / 16, 0, 1);
-    fx.splash(x, z, Math.round(16 + 34 * k), 3 + 3.5 * k, 4 + k);
+    fx.splash(x, z, Math.round(16 + 34 * k), 3 + 3.5 * k, 4 + k, y + 0.15);
     if (bomb) {
-      fx.splash(x, z, Math.round(30 + 50 * k), 1.4 + k, 7 + 3 * k);
+      fx.splash(x, z, Math.round(30 + 50 * k), 1.4 + k, 7 + 3 * k, y + 0.15);
       this.cam.shake = Math.max(this.cam.shake, 0.6 + 0.8 * k);
     }
     audio.splash(bomb ? 1 + k : k);
@@ -1172,7 +1180,7 @@ class Game {
     hud.setCoins(this.coins);
     hud.bumpCoins();
     audio.coin();
-    if (c.tag) { this.awnings.onCoin(c); this.trampbat.onCoin(c); }   // the donkey stand's roof (§10.46), the raft (§10.57)
+    if (c.tag) { this.awnings.onCoin(c); this.trampbat.onCoin(c); this.terraza.onCoin(c); }   // the donkey stand's roof (§10.46), the raft (§10.57), La Medina's water tanks (§10.59)
   }
   addCoins(n) { this.coins = Math.max(0, this.coins + n); hud.setCoins(this.coins); hud.bumpCoins(); }
   // No soft locks: if the purse is short, Ole pays (nothing is deducted).
@@ -1654,6 +1662,7 @@ class Game {
     this.sisters.update(dt);
     this.crane.update(dt);
     this.trampbat.update(dt);
+    this.terraza.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);
@@ -1958,9 +1967,11 @@ class Game {
         }
       }
     }
-    // Keep the player from walking through people.
+    // Keep the player from walking through people. Sunburnt from the roof terrace, a bump (the two
+    // coming together at over 1 m/s, so not a ring standing shoulder to shoulder) is "Aj!" (§10.59).
     if (!this.playerCar) {
       const p = this.player;
+      let bumped = false;
       for (const ch of chars) {
         if (ch === p || ch.state !== 'normal') continue;
         const dx = p.x - ch.x, dz = p.z - ch.z, d = Math.hypot(dx, dz), R = p.r + ch.r;
@@ -1968,8 +1979,10 @@ class Game {
           const push = (R - d) / 2;
           p.x += (dx / d) * push; p.z += (dz / d) * push;
           ch.x -= (dx / d) * push; ch.z -= (dz / d) * push;
+          if (Math.hypot(p.vx - ch.vx, p.vz - ch.vz) > 1) bumped = true;
         }
       }
+      if (bumped && p.state === 'normal') this.terraza.onTouch('bump');
     }
   }
 

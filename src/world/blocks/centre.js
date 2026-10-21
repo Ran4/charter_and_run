@@ -16,6 +16,7 @@ import { THREE, GeoBuilder, toonMesh, PRIM, mat, makeWedge } from '../../gfx.js'
 import { CURB } from '../layout.js';
 import { ramp } from '../collision.js';
 import { Frame } from '../frame.js';
+import { placeProp } from '../props.js';
 
 const PI = Math.PI, HP = PI / 2;
 
@@ -34,6 +35,20 @@ const TOWELS = [0xd8321e, 0x2f8ad8, 0xf7c31b, 0x2fa07a, 0xf07a1e, 0xffffff, 0xc2
 // A and A2 (`pad`), the coin trail over the awnings (`coins`, [[x, y, z]] world, placed for good) and
 // the four coins on the donkey stand's own roof (`roofCoins`, placed only after asnan).
 export const MARKET = { roof: null, pad: null, coins: [], roofCoins: [] };
+
+// Takterrassen på La Medina (game/terraza.js, §10.59), filled by the kasbah builder: the four roof tables'
+// chairs ([{ x, y, z, yaw }] world, in table order), the bartender's place behind the counter (`bar`), the
+// wings' outer box and the roof's floor (`roof`: x0, z0, x1, z1 world, y), the roof pool's water floor
+// (`pool`) and the board's bounce pad (`board`), the water tanks' coins (`coins`, [[x, y, z]] world, taken
+// only from `coinMinY` up) and the placements left for medinaFinish (`late`).
+export const MEDINA = { chairs: [], bar: null, roof: null, pool: null, board: null, coins: [], coinMinY: 0, late: [] };
+
+// After every block (town.js): Stig's sun lounger on the roof terrace, placed last so that the loungers
+// before it keep their order (game/bathers.js draws each one's bather by its index).
+export function medinaFinish() {
+  for (const [type, x, z, yaw, baseY] of MEDINA.late) placeProp(type, x, z, yaw, baseY);
+  MEDINA.late.length = 0;
+}
 
 // ---------------------------------------------------------------------------------------------
 // Per-block state: the unlit "glow" builder and the block's seeded RNG (deterministic layout).
@@ -134,13 +149,13 @@ function standSign(f, text, x, z, y, w, h, ly = 0, o = {}) {
 
 // Striped canvas awning sloping out from a face (top edge at height y, `depth` out from the wall).
 function awning(fr, u, w, y, depth, cols, o = {}) {
-  const tilt = o.tilt ?? 0.32, n = Math.max(2, Math.round(w / 0.55)), sw = w / n;
+  const tilt = o.tilt ?? 0.32, vh = o.valance ?? 0.32, n = Math.max(2, Math.round(w / 0.55)), sw = w / n;
   const cy = y - Math.sin(tilt) * depth / 2, cz = Math.cos(tilt) * depth / 2;
   const fy = y - Math.sin(tilt) * depth, fz = Math.cos(tilt) * depth;
   for (let k = 0; k < n; k++) {
     const c = cols[k % cols.length], uu = u - w / 2 + (k + 0.5) * sw;
     fr.boxC(c, uu, cy, cz, sw, 0.07, depth, 0, tilt);
-    fr.boxC(c, uu, fy - 0.16, fz, sw, 0.32, 0.05);
+    fr.boxC(c, uu, fy - vh / 2, fz, sw, vh, 0.05);
   }
   for (const s of [-1, 1]) fr.boxC(STEEL, u + s * (w / 2 - 0.05), cy - 0.06, cz, 0.05, 0.05, depth, 0, tilt);
 }
@@ -298,8 +313,10 @@ function lantern(f, x, z, h = 4.2, ly = 0) {
 }
 
 // Café table with chairs (and an optional parasol), standing on y0.
+// Returns its chairs: { x, y (the seat's top), z (world), yaw (facing the table) } (the roof terrace's
+// guests sit on them, game/terraza.js).
 function cafeTable(f, x, z, o = {}) {
-  const y0 = o.y ?? CURB, n = o.chairs ?? 3, rot = o.rot ?? RND() * 6;
+  const y0 = o.y ?? CURB, n = o.chairs ?? 3, rot = o.rot ?? RND() * 6, chairs = [];
   f.cyl(DARK, x, y0 + 0.37, z, 0.05, 0.74, 6);
   f.cyl(o.cloth ?? WHITE2, x, y0 + 0.76, z, 0.52, 0.05, 14);
   if (o.check) for (let i = -1; i <= 1; i++) for (let j = -1; j <= 1; j++) if ((i + j) % 2 === 0) f.box(RED, x + i * 0.24, y0 + 0.785, z + j * 0.24, 0.24, 0.01, 0.24, 0, f.F);
@@ -308,6 +325,7 @@ function cafeTable(f, x, z, o = {}) {
     f.box(o.chairC ?? WOOD, cx, y0 + 0.42, cz, 0.42, 0.06, 0.42, -a);
     f.box(o.chairC ?? WOOD, cx + Math.cos(a) * 0.2, y0 + 0.45, cz + Math.sin(a) * 0.2, 0.05, 0.5, 0.42, -a);
     for (const [dx, dz] of [[-0.17, -0.17], [0.17, 0.17], [-0.17, 0.17], [0.17, -0.17]]) f.box(DARK, cx + dx, y0, cz + dz, 0.04, 0.42, 0.04, 0, f.F);
+    chairs.push({ x: f.wx(cx, cz), y: y0 + 0.48, z: f.wz(cx, cz), yaw: f.yaw + Math.atan2(-Math.cos(a), -Math.sin(a)) });
   }
   if (o.parasol) {
     f.cyl(STEEL, x, y0 + 1.3, z, 0.04, 2.6, 6);
@@ -316,6 +334,7 @@ function cafeTable(f, x, z, o = {}) {
     f.ceiling(x, z, 2.9, 2.9, y0 + 2.34, y0 + 3.0);   // the chase camera stays under the canopy
   }
   f.circ(x, z, 0.56, y0 + 0.8, 'table');
+  return chairs;
 }
 
 // A sagging wire from a to b ([x, y, z] block coords) with coloured bulbs (cols = null: none).
@@ -700,21 +719,63 @@ function kasbah(f) {
   f.prop('papelera', 8.6, 14.4);
   f.prop('correos', -30.2, 20);
 
-  // Roof terrace: a small bar kiosk, tables, the plunge pool by the pen, water tanks.
+  // Roof terrace: a small bar kiosk with its counter, tables, the roof pool by the pen with its board,
+  // three sun loungers, water tanks (Takterrassen på La Medina, game/terraza.js, §10.59).
   rbox(f, WHITE, -25, -24, -19, -18, TOP, 2.6);
   rbox(f, TERRA, -25.4, -24.4, -18.6, -17.6, TOP + 2.6, 0.22);
   const kf = face(f, 'E', -19, -21);
   shopGlass(kf, 0, 5, { h: 2.3, doorAt: 1.4, frame: BLUE, y0: TOP });
-  awning(kf, 0, 5.6, TOP + 2.4, 1.6, [0x1e9aa0, WHITE2]);
+  // Up under the cap and shallow, so the bartender behind the counter is seen under it (§10.59).
+  awning(kf, 0, 5.6, TOP + 2.55, 1.1, [0x1e9aa0, WHITE2], { tilt: 0.1, valance: 0.18 });
   kf.sign('TERRAZA · BAR', 0, TOP + 2.95, 0.3, 3.2, 0.45, 0, { bg: '#fff8e6', fg: '#c0623a', border: '#1d1426', scale: 0.7 }); // [N]
   rsolid(f, -25, -24, -19, -18);
-  for (const [x, z, c] of [[-14, -20, RED], [-12.5, -13.5, SUN], [-20.5, -11.5, BLUE], [-23, -5, GREEN]]) cafeTable(f, x, z, { y: TOP, parasol: c });
-  rflat(f, SEA, 9.4, -8.2, 13.6, -3.6, TOP + 0.07);
-  for (const [a, b, c, d] of [[9.1, -8.5, 13.9, -8.2], [9.1, -3.6, 13.9, -3.3], [9.1, -8.2, 9.4, -3.6], [13.6, -8.2, 13.9, -3.6]]) rbox(f, WHITE2, a, b, c, d, TOP, 0.16);
+  // The counter before the kiosk's glass, under the awning, closed at both ends: the bartender's aisle
+  // behind it is walled up to the awning (he stands there by hand); its top is a floor at 1.07 m.
+  rbox(f, WHITE2, -18.2, -23.2, -17.7, -18.8, TOP, 1.0);
+  rbox(f, 0x1e9aa0, -17.72, -23.2, -17.66, -18.8, TOP + 0.3, 0.34);
+  rbox(f, WHITE2, -19, -23.4, -17.7, -23.2, TOP, 1.0);
+  rbox(f, WHITE2, -19, -18.8, -17.7, -18.6, TOP, 1.0);
+  rbox(f, TERRA, -19, -23.45, -17.6, -18.55, TOP + 1.0, 0.07);
+  for (const [z, c, h] of [[-22.4, 0xd8f0ff, 0.14], [-22.0, 0xd8f0ff, 0.14], [-20.3, 0xf7c31b, 0.18], [-19.5, 0x2f8a4a, 0.3]]) f.cyl(c, -17.95, TOP + 1.07 + h / 2, z, 0.05, h, 8);
+  rsolid(f, -18.2, -23.4, -17.6, -18.6, TOP + 1.07, 'counter');
+  rsolid(f, -19, -23.4, -18.2, -18.6, TOP + 2.5, 'counter');
+  MEDINA.bar = { x: f.wx(-18.6, -21), y: TOP, z: f.wz(-18.6, -21), yaw: f.yaw + HP };
+  MEDINA.roof = { x0: f.wx(-29, -29), z0: f.wz(-29, -29), x1: f.wx(29, 11), z1: f.wz(29, 11), y: TOP };
+  MEDINA.chairs.length = 0;
+  for (const [x, z, c] of [[-14, -20, RED], [-12.5, -13.5, SUN], [-20.5, -11.5, BLUE], [-23, -5, GREEN]]) MEDINA.chairs.push(...cafeTable(f, x, z, { y: TOP, parasol: c }));
+  // The roof pool (x [9.4, 13.6], z [−8.2, 4.2]; lengthened to the south for the board): flat water, a
+  // darker band inside the coping for its wall, glints, a `water` floor just under the surface (blue on
+  // the minimap; landing in it splashes, main.onLand) and the coping a step.
+  const PX0 = 9.4, PX1 = 13.6, PZ0 = -8.2, PZ1 = 4.2, PW = TOP + 0.07;
+  rflat(f, SEA, PX0, PZ0, PX1, PZ1, PW);
+  for (const [a, b, c, d] of [[PX0, PZ0, PX1, PZ0 + 0.35], [PX0, PZ1 - 0.35, PX1, PZ1], [PX0, PZ0 + 0.35, PX0 + 0.35, PZ1 - 0.35], [PX1 - 0.35, PZ0 + 0.35, PX1, PZ1 - 0.35]]) rflat(f, 0x16679c, a, b, c, d, PW + 0.01);
+  for (const [x, z, w, ly] of [[10.6, -5.9, 0.9, 0.2], [12.3, -3.4, 0.6, -0.25], [10.9, -0.8, 1.0, 0.1], [12.6, 1.4, 0.7, -0.15], [10.4, 3.1, 0.8, 0.2], [11.2, -7.1, 0.5, 0.3]]) f.flat(0x9fdcf2, x, z, w, 0.1, PW + 0.02, ly);   // fixed: the block's draws stay as they were
+  for (const [a, b, c, d] of [[PX0 - 0.3, PZ0 - 0.3, PX1 + 0.3, PZ0], [PX0 - 0.3, PZ1, PX1 + 0.3, PZ1 + 0.3], [PX0 - 0.3, PZ0, PX0, PZ1], [PX1, PZ0, PX1 + 0.3, PZ1]]) {
+    rbox(f, WHITE2, a, b, c, d, TOP, 0.16);
+    rsolid(f, a, b, c, d, TOP + 0.16, 'step');
+  }
+  const pool = rsolid(f, PX0, PZ0, PX1, PZ1, TOP + 0.02, 'water');
+  pool.pool = true;
+  MEDINA.pool = pool;
+  // The board at the pool's north end, pointing south down it: Flamenco's (hotels.js) on the roof, a step
+  // (a jump up) and a bounce pad that throws him up and on into the water.
+  f.box(0xe8e4da, 11.5, TOP, -9.95, 1.1, 0.55, 1.1);
+  f.solid(11.5, -9.95, 1.1, 1.1, TOP + 0.55, 'step');
+  f.box(STEEL, 11.5, TOP, -8.8, 0.5, 0.72, 0.18);
+  f.box(WHITE2, 11.5, TOP + 0.72, -8.3, 0.62, 0.1, 3.6);
+  f.box(0x1e9aa0, 11.5, TOP + 0.82, -8.3, 0.5, 0.02, 3.4);
+  MEDINA.board = f.solid(11.5, -8.3, 0.62, 3.6, TOP + 0.82, 'bounce');
   f.prop('solstol', 16.0, -7.0, HP, TOP);
   f.prop('solstol', 16.0, -4.4, HP, TOP);
+  MEDINA.late.push(['solstol', f.wx(16.0, -1.8), f.wz(16.0, -1.8), f.yaw + HP, TOP]);   // Stig's (medinaFinish)
   f.prop('parasoll', 17.6, -5.7, 0, TOP);
-  for (const x of [-3, 2.5]) { f.cyl(WHITE2, x, TOP + 0.85, -25.5, 0.85, 1.7, 12); f.circ(x, -25.5, 0.85, TOP + 1.7, 'solid'); }
+  // The water tanks, a couple of coins on each (out only while Stig is up here, game/terraza.js).
+  MEDINA.coins.length = 0;
+  MEDINA.coinMinY = TOP + 1.6;
+  for (const x of [-3, 2.5]) {
+    f.cyl(WHITE2, x, TOP + 0.85, -25.5, 0.85, 1.7, 12); f.circ(x, -25.5, 0.85, TOP + 1.7, 'solid');
+    for (const d of [-0.3, 0.3]) MEDINA.coins.push([f.wx(x + d, -25.5), TOP + 2.45, f.wz(x + d, -25.5)]);
+  }
   rooftop(f, 16, -27, 27, -12, TOP, 5, true);
   rooftop(f, -27, -2, -10, 9, TOP, 3, true);
   for (const r of [WW, EW, NW]) {

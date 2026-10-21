@@ -112,6 +112,17 @@ export const ISLAND_LANDMARKS = {
   // facing west with the traffic on that side (the palm 5 m ahead of its nose, the post box behind).
   angerudBil: { b: [1, 2], at: [-7, 32.75], yaw: -PI / 2 },
   gagViking: { b: [1, 2], at: [-14.75, 12.1], yaw: PI },        // under the lamp beside Viking Bar's door, facing it (the gag, §10.32)
+  // Takterrassen på La Medina (free roam, §10.59), on the roof terrace (its floor at 6.0; not standing
+  // spots for `teleport`): the stairs' top (facing the terrace), the bartender's place behind the counter
+  // before TERRAZA · BAR (facing the tables), the roof pool's middle (its water at 6.02) and the three sun
+  // loungers by it (their props: `terrazaSol1` and `2` a dozing bather's, `terrazaSol3` Stig's, facing the
+  // lounger's way).
+  terrazaTrappa: { b: [1, 2], at: [-8.2, -7.8], yaw: -PI / 2, y: 6.0 },
+  terrazaBar: { b: [1, 2], at: [-18.6, -21], yaw: PI / 2, y: 6.0 },
+  terrazaPool: { b: [1, 2], at: [11.5, -2], yaw: 0, y: 6.02 },
+  terrazaSol1: { b: [1, 2], at: [16, -7], yaw: PI / 2, y: 6.0 },
+  terrazaSol2: { b: [1, 2], at: [16, -4.4], yaw: PI / 2, y: 6.0 },
+  terrazaSol3: { b: [1, 2], at: [16, -1.8], yaw: PI / 2, y: 6.0 },
   // (4,2) Centro Nórdico
   cita: { b: [4, 2], at: [0, 22], yaw: PI },
   supermercado: { b: [4, 2], at: [-18, 18], yaw: PI },

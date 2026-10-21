@@ -152,7 +152,7 @@ export class Glide {
     const b = p.standingOn ? null : waterAt(p.x, p.z, p.y), water = !!b, pool = !!b?.pool;
     this.stop(true);
     Object.assign(this.last, { water, pool });
-    if (water) { fx.splash(p.x, p.z, 28, 4.5); audio.splash(); }
+    if (water) { fx.splash(p.x, p.z, 28, 4.5, 4, p.y + 0.15); audio.splash(); }   // from the water's floor (La Medina's roof pool too, §10.59)
     else { fx.dust(p.x, p.z, 9, p.y + 0.2); audio.thud(); }
     if (p.tumble(c.tumble.secs, c.tumble.roll)) this.tumbling = true;
     if (pool && !g.unlocked.has(c.onceKey) && !g.tower.radioSaid) {

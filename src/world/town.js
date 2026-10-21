@@ -19,6 +19,7 @@ import { Frame, parkedCars, setFrameScene } from './frame.js';
 import { registerIslandLandmarks } from './landmarks-island.js';
 import { BLOCK_BUILDERS } from './blocks/index.js';
 import { duneGeo, DUNE_WIND, DUNE_LEE } from './blocks/nature.js';
+import { medinaFinish } from './blocks/centre.js';
 import { mulberry32, pick } from '../util.js';
 
 export { parkedCars };
@@ -1081,6 +1082,7 @@ export function buildTown(sc) {
     add(S, F);
   }
   roofJumpFinish();
+  medinaFinish();   // Stig's lounger on La Medina's roof, after every block's (§10.59)
   flushSigns();
   nightLights();
   addPedLoops();

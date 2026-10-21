@@ -84,6 +84,11 @@ export const SCENARIOS = {
     await T.sleep(800);
     out.push(await measure(T, 'island high'));
     await T.ev(() => __game.cam.release());
+    // La Medina's roof terrace (§10.59): from the stairs' top over the tables, the bar and the pool, with
+    // its guests, the bartender and the dozing bathers.
+    await T.ev(() => { const g = __game, p = g.player; if (g.playerCar) g.exitCar(true); const l = __lm('terrazaTrappa'); g.debugWarp(l.x, l.z, l.yaw - 0.3); p.y = l.y; p.onGround = true; g.cam.yaw = l.yaw - 0.3; g.cam.snapNext = true; });
+    await T.sleep(1200);
+    out.push(await measure(T, 'island terraza (' + (await T.ev(() => __game.terraza.guests.filter((d) => d.on).length + (__game.terraza.bartender ? 1 : 0))) + ' on the roof)'));
     // Up Faro de Maspalomas (§10.35): the whole town from the gallery at the sunset, and the exercise
     // under the lit lantern and its beam at night.
     await T.ev(() => { const g = __game; if (g.playerCar) g.exitCar(true); const l = __lm('fyrDorr'); g.debugWarp(l.x, l.z, l.yaw); g.fyren.stairs(true); });

@@ -437,7 +437,7 @@ export function finalizeProps(scene) {
   for (let k = 0; k < DEBRIS; k++) {
     debris.setMatrixAt(k, _zero);
     debris.setColorAt(k, new THREE.Color(0xffffff));
-    debrisState.push({ t: 0, x: 0, y: 0, z: 0, vx: 0, vy: 0, vz: 0, s: 0.2, rx: 0, ry: 0, wx: 0, wy: 0 });
+    debrisState.push({ t: 0, x: 0, y: 0, z: 0, vx: 0, vy: 0, vz: 0, s: 0.2, rx: 0, ry: 0, wx: 0, wy: 0, floor: CURB });
   }
   scene.add(debris);
   if (Object.keys(counts).some((t) => TYPES[t].shreds)) {
@@ -468,14 +468,16 @@ function setMatrix(p, show) {
 let debrisNext = 0;
 const _c = new THREE.Color();
 // color: one colour, or a list the chunks take in turn (the fruit stalls' tomatoes, bananas...).
-// spread: the width of the square they start in.
-export function spawnDebris(x, y, z, color, n, vx = 0, vz = 0, power = 1, spread = 0.6) {
+// spread: the width of the square they start in; floor: where they come to rest (a prop's own floor,
+// La Medina's roof terrace's 6.0 too, §10.59).
+export function spawnDebris(x, y, z, color, n, vx = 0, vz = 0, power = 1, spread = 0.6, floor = CURB) {
   const list = Array.isArray(color) ? color : null;
   if (!list) _c.set(color);
   for (let k = 0; k < n; k++) {
     const i = debrisNext++ % DEBRIS;
     const d = debrisState[i];
     d.t = 1.6 + Math.random() * 0.8;
+    d.floor = floor;
     d.x = x + (Math.random() - 0.5) * spread; d.y = y + Math.random() * 0.6; d.z = z + (Math.random() - 0.5) * spread;
     d.vx = vx * 0.6 + (Math.random() - 0.5) * 7 * power;
     d.vz = vz * 0.6 + (Math.random() - 0.5) * 7 * power;
@@ -515,7 +517,9 @@ export function breakProp(p, vx = 0, vz = 0, game = null) {
   p.block.dead = true;
   p.respawn = 75 + Math.random() * 40;
   setMatrix(p, false);
-  spawnDebris(p.x, y0 + (def.debrisY ?? 0.25), p.z, def.color, def.debris ?? 7, vx, vz, 1, def.spread ?? 0.6);
+  // A prop up on a roof (La Medina's terrace, §10.59) keeps its debris up there; one on a table top (the
+  // grisfest's plates) throws it to the ground.
+  spawnDebris(p.x, y0 + (def.debrisY ?? 0.25), p.z, def.color, def.debris ?? 7, vx, vz, 1, def.spread ?? 0.6, y0 > 2 ? y0 : CURB);
   if (def.shreds) spawnShreds(p.x, y0 + def.top - CURB, p.z, p.yaw, (def.w ?? 2 * def.r) / 2, (def.d ?? 2 * def.r) / 2, def.shreds, vx, vz);
   if (game) game.onPropBroken(p, vx, vz);
   return p;
@@ -539,7 +543,7 @@ export function tickProps(dt, px, pz) {
     d.t -= dt;
     d.vy -= 22 * dt;
     d.x += d.vx * dt; d.y += d.vy * dt; d.z += d.vz * dt;
-    if (d.y < 0.15 + d.s / 2) { d.y = 0.15 + d.s / 2; d.vy = Math.abs(d.vy) * 0.35; d.vx *= 0.6; d.vz *= 0.6; d.wx *= 0.6; d.wy *= 0.6; }
+    if (d.y < d.floor + d.s / 2) { d.y = d.floor + d.s / 2; d.vy = Math.abs(d.vy) * 0.35; d.vx *= 0.6; d.vz *= 0.6; d.wx *= 0.6; d.wy *= 0.6; }
     d.rx += d.wx * dt; d.ry += d.wy * dt;
     const s = d.t <= 0 ? 0 : d.s * Math.min(1, d.t * 2);
     _m.copy(mat(d.x, d.y, d.z, d.rx, d.ry, 0, s, s, s));

@@ -3095,3 +3095,69 @@ export const TRAMPBAT = {
   back: { popR: 45, minSecs: 3, near: 1.6 },
   wobble: { roll: 0.035, pitch: 0.018, bob: 0.022 }, wakeEvery: 0.11,
 };
+
+// Takterrassen på La Medina vaknar (free roam; feature 122, DESIGN §10.59; game/terraza.js). The roof
+// terrace up La Medina's courtyard stairs (world/blocks/centre.js MEDINA) between missions, only on the
+// island with no mission running: from `hours[0]` to `hours[1]` (the island's clock, §10.10) `guests`
+// sit at the four roof tables ([table, chair] of MEDINA.chairs, three chairs a table; tourists drawn from
+// `seed`, those in `cups` with a glass) and the bartender (`barman.look`) stands behind the counter before
+// TERRAZA · BAR; each body only while Stig is within `r` m, put there or taken away only out of the
+// camera's view, past `popR` m from it or within `cutSecs` s of a cut. The two old sun loungers by the
+// roof pool always have a dozing bather (game/bathers.js `role` 'asleep'), the third is Stig's ('kept').
+// Stig "up" (inside the block's wings, `upY` m up or more: the stairs' top third and the roof) puts the
+// water tanks' coins out (MEDINA.coins, from MEDINA.coinMinY up; the spots taken this session not again)
+// and takes them in when he goes. Up there: the session's first time, with Stig within `brochure.r` m of
+// guest `brochure.who[0]`, the brochure line and `brochure.reply` from `who[1]` `brochure.gap` s later;
+// within `barman.greetR` m of the bartender the next of his `greet` lines once a visit (`burnt` instead,
+// once a burn); a splash in the roof pool within `barman.oleR` m of him his `ole`, at most every
+// `oleEvery` s. E at Stig's lounger (`nap`, by day, `prompt` within `r` m): he lies down with `line`,
+// dozes off at `doze` s with `zzz`, the screen goes black at `dark` s, the clock spins on `hours` h (the
+// HUD clock spun as the nap's, DAY.spinSecs) with the `banner` and the burn is on; back after `hold` s,
+// `zzz` again after `zzzAt` s, his head up with `wake` at `wakeAt` s, on his feet before the lounger
+// (`stand` m off its foot, facing back down it) with `ouch` at `upAt` s and the `toast`, free roam at
+// `endAt` s; the camera cut from `cam` to `look` ([m along the lounger's facing, m to its right, m over its
+// floor]). The burn (`burn.skin` over his outfit's skin, free roam only) lasts until the next morning (a
+// night gone by) or a mission start; while burnt, someone bumping into him, he into someone or a car
+// knocking him says `burn.aj` (`ajSecs`, at most every `ajEvery` s). Invented (§1.6): the terrace's
+// guests, the bartender and his lines, the board, the tank coins and the nap; "Aj!" and the brochure line
+// are the film's, relocated.
+export const TERRAZA = {
+  hours: [10, 23], r: 45, popR: 26, cutSecs: 1.2, upY: 4.5, seed: 12201,
+  guests: [[0, 0], [0, 1], [1, 0], [1, 2], [2, 1], [3, 0]],
+  cups: [0, 2, 4, 5],
+  brochure: {
+    who: [2, 3], r: 13, gap: 2.6, secs: 3.0,
+    line: 'Balkong med havsutsikt och kvällssol.',                                     // [F*](t) the brochure's promise (research-plot.md:253), read out by a guest on the roof
+    reply: 'Här uppe stämmer det ju.',                                                 // [N]
+  },
+  barman: {
+    look: { name: 'Bartendern på terrassen', kind: 'adult', scale: 1, wide: 0.95, skin: 0xc99a6e, hair: 'curly', hairC: 0x1d1426, brows: 0x1d1426,
+      nose: 'big', mustache: 0x1d1426, stache: 'thin', shirt: 0xf4f4f0, collar: true, vest: 0x1e9aa0, pants: 0x1d1426, shoes: 0x2a2a2a, voice: 230, local: true },
+    greetR: 6, oleR: 50, oleEvery: 5, secs: 2.4,
+    greet: [
+      '¡Hola, señor! Välkommen upp på terrazan.',                                      // [N]
+      '¿Una cerveza, señor? Muy fría.',                                                // [N]
+      'Här uppe är el sol starkare, señor. ¡Cuidado!',                                 // [N]
+      '¡Bienvenido otra vez, señor!',                                                  // [N]
+    ],
+    burnt: '¡Ay, señor! Ni är röd som un tomate.',                                     // [N]
+    ole: '¡Olé!',                                                                      // [N] at Stig's splash in the roof pool
+  },
+  nap: {
+    lm: 'terrazaSol3', r: 1.7, hours: 1.5, fadeSecs: 0.7,
+    prompt: '<b>E</b> Lägg dig en liten stund',                                        // [N]
+    line: 'Bara en liten stund.',                                                      // [N] Stig, lying down
+    zzz: 'Zzz…',                                                                       // [N]
+    banner: 'Zzz…',                                                                    // [N]
+    wake: 'Oj… Det blev visst en lång stund.',                                         // [N]
+    ouch: 'Aj!',                                                                       // [F*](t) Stig sunburnt, "Aj!" when touched (research-plot.md:296), relocated: getting up
+    toast: 'Stig somnade i solen. Röd som en kokt kräfta – det svider till i morgon.', // [N]
+    doze: 2.4, dark: 3.8, hold: 0.5, zzzAt: 0.4, wakeAt: 1.6, upAt: 2.6, endAt: 1.6,
+    pose: { arms: 'belly', tilt: 0.15 }, stand: 1.7,
+    cam: [-2.6, 2.9, 1.9], look: [0.4, 0, 0.55],
+  },
+  burn: {
+    skin: 0xf0705a, ajEvery: 1.6, ajSecs: 1.0,
+    aj: 'Aj!',                                                                         // [F*](t) Stig sunburnt, "Aj!" when touched (research-plot.md:296), relocated to free roam
+  },
+};

@@ -34,7 +34,8 @@ const SEAT_Y = 0.395, BACK_U = 0.636, BACK_Y = 0.596, LEAN = -0.75, BACK_NU = Ma
 
 // Where a body lies on lounger p: the hips just over the seat (the legs on it) and as far back as the
 // back of the torso reaches the backrest's face; facing down the bed, leaning back on the backrest.
-function lieOn(ch, p, look) {
+// Stig lies on his own roof lounger the same way (game/terraza.js, §10.59).
+export function lieOn(ch, p, look) {
   const m = ch.model, hy = SEAT_Y + 0.08 * m.s;
   const u = BACK_U + (m.torsoD / 2 + 0.01 - (hy - BACK_Y) * BACK_NY) / BACK_NU;
   return { x: p.x + Math.sin(p.yaw) * u, y: p.baseY + hy, z: p.z + Math.cos(p.yaw) * u, yaw: p.yaw + Math.PI, lean: LEAN, arms: look.arms, tilt: look.tilt, lift: 0 };
@@ -84,7 +85,9 @@ export class Bathers {
   // The loungers
 
   build() {
-    const recs = propsOfType('solstol').map((p, i) => ({ p, i, n: 0, day: -1, occ: false, seed: 0, since: 0, look: null, alive: p.alive, ch: null }));
+    // `role`: La Medina's roof loungers (game/terraza.js, §10.59): 'asleep' always taken by a dozing
+    // bather, 'kept' never (Stig's); null: drawn.
+    const recs = propsOfType('solstol').map((p, i) => ({ p, i, n: 0, day: -1, occ: false, seed: 0, since: 0, look: null, alive: p.alive, ch: null, role: this.g.terraza?.role(p) ?? null }));
     for (const r of recs) this.byProp.set(r.p, r);
     return recs;
   }
@@ -93,7 +96,8 @@ export class Bathers {
   roll(r, fresh = false) {
     const c = this.cfg, rnd = mulberry32(c.seed + r.i * 7919 + this.dayN * 104729 + r.n * 613);
     r.day = this.dayN;
-    r.occ = fresh || rnd() < c.share;
+    const drawn = fresh || rnd() < c.share;   // drawn for every lounger, so the draws after it stay
+    r.occ = r.role === 'kept' ? false : r.role === 'asleep' ? true : drawn;
     r.seed = (rnd() * 2 ** 31) | 0;
     r.since = this.g.time - rnd() * (fresh ? 0 : this.dayN === 0 ? c.burn[1] + 120 : 60);
     r.look = { arms: rnd() < 0.5 ? 'belly' : 'side', tilt: (rnd() - 0.5) * 0.5 };
@@ -148,6 +152,7 @@ export class Bathers {
   lay(ch, r) {
     ch.bather.rec = r;
     r.ch = ch;
+    ch.anim.slump = r.role === 'asleep';   // dozing, the mouth open
     ch.lieAt(lieOn(ch, r.p, r.look));
     if (!this.lying.includes(ch)) this.lying.push(ch);
   }
@@ -157,7 +162,7 @@ export class Bathers {
     if (r && r.ch === ch) r.ch = null;
     ch.bather.rec = null;
     ch.bather.flee = null;
-    ch.anim.flail = false;
+    ch.anim.flail = ch.anim.slump = false;
     this.g.unsay(ch);
     ch.state = 'hidden';
     ch.liePose = null;
@@ -186,6 +191,7 @@ export class Bathers {
     ch.bather.standT = 0;
     this.lying.splice(this.lying.indexOf(ch), 1);
     this.loose.push(ch);
+    ch.anim.slump = false;
     audio.ouch();
     g.say(ch, g.bark(ch, 'ouch'), 1.8);
   }
@@ -218,6 +224,7 @@ export class Bathers {
       ch.liePose = null;
       ch.standAt(rec.p.x + ux * 0.9, rec.p.z + uz * 0.9, yawTo(ux, uz));
       ch.anim.flail = true;
+      ch.anim.slump = false;
       out.push(ch);
     }
     return out;
