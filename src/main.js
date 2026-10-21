@@ -76,6 +76,7 @@ import { Guagua } from './game/guagua.js';
 import { Utflykt } from './game/utflykt.js';
 import { Sisters } from './game/sisters.js';
 import { Glass } from './game/glass.js';
+import { Torgliv } from './game/torgliv.js';
 import { Crane } from './game/crane.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
@@ -269,6 +270,7 @@ class Game {
     this.terraza = new Terraza(this);     // free roam: La Medina's roof terrace, its guests and bartender, the roof pool's board, the nap and the sunburn (§10.59)
     this.ljud = new Soundscape(this);     // free roam: the island's soundscape, a layer per part of the island under the tune, the stage's band (§10.60)
     this.glass = new Glass(this);         // free roam: an ice cream from the beach's HELADOS kiosk for Majsan, melting on the way (§10.61)
+    this.torg = new Torgliv(this);        // free roam: the centre's people, the market's siesta, the plaza's paseo, the bells (§10.62)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -866,6 +868,7 @@ class Game {
     out.push(...this.packhus.extras); // the foreman on the packing shed's yard (§10.49)
     out.push(...this.kort.extras);    // the tourist couple who want their picture taken (§10.51)
     out.push(...this.traktor.extras); // the farmer out of his hut after his tractor (§10.54)
+    out.push(...this.torg.extras);    // the centre's vendors, sitters and paseo walkers (§10.62; the seated skipped by state)
     return out;
   }
 
@@ -1050,6 +1053,7 @@ class Game {
     this.shame.add(p.def.shame * (this.playerCar ? 1.2 : 0.7));
     this.bathers.onPropBroken(p, vx, vz);
     this.residents.onPropBroken(p);   // a señora at siesta (§10.42)
+    this.torg.onPropBroken(p, vx, vz);   // a bench's sitters thrown off (§10.62)
     if (p.def.splash) for (let k = 0; k < 6; k++) fx.splash(p.x, p.z);
     if (p.def.explode === 'big') fx.explosion(p.x, 0.5, p.z);
     else if (p.def.explode === 'small') { fx.sparks(p.x, 0.6, p.z, 10); fx.smoke(p.x, 0.6, p.z, true); }
@@ -1670,6 +1674,7 @@ class Game {
     this.trampbat.update(dt);
     this.terraza.update(dt);
     this.glass.update(dt);
+    this.torg.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);
@@ -1897,6 +1902,7 @@ class Game {
     this.volley.step(h);  // the volleyball: Stig's kick and header, the others' hits, the ball (§10.50)
     this.kort.step(h);    // the tourist couple (§10.51)
     this.traktor.step(h); // the farmer running after his tractor (§10.54)
+    this.torg.step(h);    // the centre's vendors, sitters and paseo (§10.62)
     this.carsVsPeople();
   }
 
@@ -1908,8 +1914,9 @@ class Game {
     for (const prop of propsNear(x, z, r)) { if (prop.def.carOnly) continue; const b = breakProp(prop, dx * 8, dz * 8, this); if (b && !broke?.def.explode) broke = b; }
     // Pedestrians, the grisfest's band and tourists (§10.18), bathers off their loungers (§10.22), the
     // tourists at the SunTrip stage (§10.30), the queue at Flamenco's reception (§10.37), the foreman
-    // on the packing shed's yard (§10.49) and the tourist couple (§10.51).
-    const people = (this.levelDef.sim.peds ? this.peds.map((ped) => ped.char) : []).concat(this.party.extras, this.bathers.loose, this.mic.extras, this.bell.extras, this.packhus.extras, this.kort.extras);
+    // on the packing shed's yard (§10.49), the tourist couple (§10.51) and the centre's people standing or
+    // walking (§10.62; its sitters are knocked off their seats by `torg.kick` below).
+    const people = (this.levelDef.sim.peds ? this.peds.map((ped) => ped.char) : []).concat(this.party.extras, this.bathers.loose, this.mic.extras, this.bell.extras, this.packhus.extras, this.kort.extras, this.torg.extras);
     for (const c of people) {
       if (c.state !== 'normal' || Math.abs(c.y - y) > 1.6 || dist(c.x, c.z, x, z) > r + 0.4) continue;
       c.fling(dx * 7 + (c.x - x) * 2, 5, dz * 7 + (c.z - z) * 2);
@@ -1918,6 +1925,7 @@ class Game {
       this.say(c, this.bark(c, 'ouch'), 1.5);
       bowled = true;
     }
+    if (this.torg.kick(x, z, y, r, dx, dz)) bowled = true;
     for (const k in this.npcs) {
       const n = this.npcs[k];
       // Not the sisters up on the balcony above 105 (§10.55).
@@ -2003,12 +2011,14 @@ class Game {
   // José and his mother walking back to his place after a street race (§10.38), the bartender,
   // Berra or Fru Storch in a scene at the pool bar or with its cup (§10.44), Ole, Berra and Robban in a
   // volleyball match or Berra and Robban walking off from it (§10.50), or Siv and Majsan up on the balcony
-  // above 105 (§10.55), or Majsan taking the ice cream from Stig (§10.61).
+  // above 105 (§10.55), or Majsan taking the ice cream from Stig (§10.61), or the souvenir seller holding
+  // up his plastic giraffe to Stig (§10.62).
   // syncAll gives such an NPC no wave, turn or chatter, and the gang's talk leaves them be (§10.28).
   npcPosed(k) {
     return !!this.missions.idlePose(k) || this.berraJob.posed(k) || this.judges.posed(k) || this.film.posed(k) || this.eslov.posed(k) || this.fest.posed(k) || this.lapp.posed(k) || this.party.posed(k)
       || this.stands.posed(k) || !!this.mic?.posed(k) || this.birds.posed(k) || !!this.gags?.posed(k) || !!this.dream?.posed(k) || !!this.bell?.posed(k)
-      || !!this.gatlopp?.posed(k) || !!this.bar?.posed(k) || !!this.volley?.posed(k) || !!this.sisters?.posed(k) || !!this.glass?.posed(k);
+      || !!this.gatlopp?.posed(k) || !!this.bar?.posed(k) || !!this.volley?.posed(k) || !!this.sisters?.posed(k) || !!this.glass?.posed(k)
+      || !!this.torg?.posed(k);
   }
 
   syncAll(dt, title) {

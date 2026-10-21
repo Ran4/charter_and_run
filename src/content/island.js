@@ -3268,3 +3268,100 @@ export const GLASS = {
   text: 'Ge den till Majsan innan den smälter.',                                     // [N]
   textStrut: 'Bara struten kvar. Ge den till Majsan ändå.',                          // [N]
 };
+
+// Liv på torget – siesta och paseo (free roam; feature 135, DESIGN §10.62; game/torgliv.js). The centre
+// keeps people between missions: vendors at their stalls in the market (block `market.b`), old men and
+// women on the plaza's benches and the fountain's rim (`plaza.b`), and locals on Templo Ecuménico's square
+// (`kyrka.b`); spots in block-local metres ([lx, lz, yaw]; a seat on a bench is `bench` [lx, lz] of the
+// `bank` prop there and `u` m along it, `ry` its cushion over the prop's base; a rim seat the octagon's
+// side at `a` rad, `r` m out, facing out). Only on the island with no mission running
+// (`missions.state === 'idle'`); a mission start or the other level takes every body, cover and crate
+// away at once, so no mission, stage, timer or calibration pool sees any of it. A body shows within `r`
+// m of Stig (his car) when its hours hold, and comes or goes only unseen (out of the camera's view or
+// `popR` m from it) or `cutSecs` s after a cut (the first frame, or a jump of `jumpR` m); `budget` a
+// frame; past `out` m it goes. The day on the island's clock (§10.10; 15:00 in test mode, so tests see
+// the siesta): the market is open in `market.open` (the vendors stand at their stalls, call to Stig on
+// foot within `callR` m in front of them, at most one market line every `callGap` s, the session's first
+// always and later ones at `callChance`, once a visit (again `awayR` m off); a vendor's own call or the
+// generic ones (`calls`), half and half; they turn to him within `turnR` m, `turnMax` rad at most). At
+// `market.siesta` and at night every stall but stall K (its G17 toaster, §10.24) and the souvenir stand
+// gets its cloth cover (rolled down over `cover.rollSecs` s, `cover.stagger` s apart, `cover` the cloth
+// and every third stall's board: `siestaSign` at the siesta, `closedSign` otherwise); at the siesta the
+// two `dozes` vendors doze on a crate before their stall (`slump`), the rest are gone. The souvenir seller
+// (the cast's `souvenir`) is always open. After julafton (unlock `giraffe.unlock`) Stig on foot within
+// `giraffe.r` m in front of him, at his level, makes him hold up a plastic giraffe with `giraffe.line`,
+// and `stigAt` s later Stig holds up his own with `giraffe.stig`, both down at `downAt`; once a visit
+// (`giraffe.awayR`), at most every `giraffe.every` s. The benches and the rim are taken in `benchHours`;
+// the church's locals in `kyrkaHours` greet Stig within `greetR` m once a visit (`greet` by the hour:
+// [from, line]). In `paseoHours` the plaza's evening walk: `paseo.walkers` locals in pairs round the fountain on
+// `paseo.radii` m at `paseo.omega` rad/s (clockwise seen from above, north up; pulled back onto the radius
+// by `pull` per metre off it, straight back at `catchUp` m/s from `back` m off), and the bench sitters mutter
+// `suecos` after Stig on foot within `suecosR` m once a visit, at most every `suecosGap` s (first always,
+// later at `suecosChance`). The church peals (audio.bells: `bells.rounds` by the hour, `bells.vol` near its
+// bell slab at world `bells.at`, falling off over `bells.falloff` m) at the market's and the plaza's turns,
+// with the hour's toast while Stig is within `toastR` m of the market, the plaza or the church. Everyone
+// can be kicked over or run over like a pedestrian (the local barks, SKANDAL as theirs); a sitter is
+// knocked off his seat (a kick, a car, his bench smashed: no SKANDAL beyond the bench's), gets up and
+// sits down again; a car through a dozer's crate smashes it. Nothing is saved. Random looks from `seed`.
+// Invented (§1.6): the vendors, their calls, the siesta's covers and naps, the paseo, the bells' hours
+// and every line but "Hallå där!" (the souvenir seller's, research-plot.md:302); the giraffe is the film's
+// (Majsan's Christmas present, the sisters' name for Stig), the exchange at the stand ours.
+export const TORG = {
+  seed: 13500, r: 75, out: 88, popR: 45, cutSecs: 1.2, jumpR: 15, budget: 2,
+  market: { b: [2, 1], open: [[9, 13], [17, 20]], siesta: [13, 17] },
+  plaza: { b: [2, 3] }, kyrka: { b: [3, 1] },
+  benchHours: [8, 21.5], kyrkaHours: [8, 20.5], paseoHours: [19, 21.5],
+  callR: 5.5, callGap: 4, callChance: 0.65, awayR: 25, turnR: 7, turnMax: 1.1, walk: 1.3,
+  calls: ['Hallå där!' /* [F*] the souvenir seller's (research-plot.md:302), relocated to the whole market */,
+    '¡Hola, señor!' /* [N] */, '¡Muy bonito!' /* [N] */],
+  // The vendors before their stalls' counters (front + 0.55 m, at the end nearer the middle aisle).
+  vendors: [
+    { at: [-4.6, -22.95, 0], call: '¡Cerámica!' },                    // [N] row A, the CERÁMICA stall
+    { at: [4.6, -22.95, 0] },                                         // row A, spices
+    { at: [-4.6, -19.05, Math.PI] },                                  // row A2, pots
+    { at: [4.6, -19.05, Math.PI], call: '¡Sombreros!' },              // [N] row A2, SOMBREROS
+    { at: [16.6, 12.05, 0], call: '¡Churros!' },                      // [N] row C, CHURROS
+    { at: [-4.6, 12.05, 0] },                                         // row C, ESPECIAS
+    { at: [-16.6, 12.05, 0], dozes: true },                           // row C, BORDADOS
+    { at: [-22.6, -5.45, 0], dozes: true },                           // row B, MANTELES
+    { at: [22.6, -5.45, 0], call: '¡Cerámica!' },                     // [N] row B, pots
+  ],
+  // The stalls that get a cover: [lx, lz, face (+1: front to +z), depth]; the fruit stalls (props) are
+  // found by type. Stall K (−12, −8) and the souvenir stand stay open.
+  stalls: [
+    ...[-18.5, -12.5, -6.5, 6.5, 12.5, 18.5].map((x) => [x, -25.25, 1, 3.5]),
+    ...[-24.5, -18.5, -12.5, -6.5, 6.5, 18.5, 24.5].map((x) => [x, -16.75, -1, 3.5]),
+    ...[-24.5, -18.5, -12.5, -6.5, 12.5, 18.5, 24.5].map((x) => [x, 9.75, 1, 3.5]),
+    [-24.5, -8, 1, 4], [24.5, -8, 1, 4],
+  ],
+  cover: { w: 4.76, drop: 0.5, low: 0.25, out: 0.3, rollSecs: 0.9, stagger: 0.12, signEvery: 3,
+    cloth: [[0xe8dcc0, 0xd8321e], [0xe8dcc0, 0x2f5a9a], [0xe8dcc0, 0x3a7a3a]] },
+  siestaSign: 'SIESTA',                                               // [N] on a cover at the siesta
+  closedSign: 'CERRADO · STÄNGT',                                     // [N] on a cover otherwise
+  crate: { color: 0xb88a52, slat: 0x8a5a2a, w: 0.56, d: 0.42, h: 0.42 },
+  plazaSeats: [
+    { bench: [8.6, 0], u: -0.45 }, { bench: [8.6, 0], u: 0.45 }, { bench: [-8.6, 0], u: 0.45 }, { bench: [0, -8.6], u: -0.45 },
+    { rim: 4 }, { rim: 7 },
+  ],
+  kyrkaSeats: [{ bench: [-14, 7.5], u: 0.45 }, { bench: [14, 7.5], u: -0.45 }, { bench: [14, 7.5], u: 0.45 }],
+  kyrkaStand: [[10.8, 18.2], [11.7, 19.0]],
+  ry: 0.5, fwd: 0.06, rimR: 5.25, rimY: 0.58, crateY: 0.03, frontOut: 0.55,
+  paseo: { walkers: 8, radii: [6.4, 7.1], omega: 0.13, pull: 1.5, back: 3, catchUp: 1.4 },
+  suecos: 'Suecos…',                                                  // [N] the locals' getting up (GETUP_LOCAL), muttered after Stig at the paseo
+  suecosR: 4.5, suecosGap: 5, suecosChance: 0.7,
+  greetR: 5, greetGap: 6,
+  greet: [[0, '¡Buenos días!'], [13, '¡Buenas tardes!'], [20, '¡Buenas noches!']],   // [N] · [N] · [N]
+  giraffe: {
+    unlock: 'bodega', r: 4.5, awayR: 20, every: 45, dy: 0.6,
+    line: 'Hallå där! ¡Jirafa!',                                      // [N] ("Hallå där!" his [F*] chatter) the seller holding up a plastic giraffe
+    stig: 'Tack, jag har redan en.',                                  // [N] Stig holding up his own (Majsan's present, julafton)
+    stigAt: 1.6, downAt: 4.4, secs: 2.4,
+  },
+  bells: { at: [18, -170], falloff: 60, vol: 0.05, rounds: { 13: 4, 17: 2, 19: 4 } },
+  toastR: 130,
+  toasts: {
+    13: 'Kyrkklockorna slår ett. Siesta – marknaden stänger till fem.',   // [N] toast
+    17: 'Siestan är över. Marknaden öppnar igen.',                         // [N] toast
+    19: 'Paseo – kvällspromenaden runt plazans fontän.',                   // [N] toast
+  },
+};

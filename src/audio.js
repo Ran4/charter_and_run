@@ -315,6 +315,16 @@ export const audio = {
   beep() { for (let k = 0; k < 3; k++) this.tone(880, 0.14, 'square', 0.07, null, k * 0.2); },
   // Ole's calculator alarm (the nap in room 107, §10.10): a digital watch's PIP-PIP-PIP, twice.
   pip() { for (let k = 0; k < 6; k++) this.tone(2794, 0.06, 'square', 0.045, null, (k % 3) * 0.12 + (k >= 3 ? 0.55 : 0)); },
+  // Templo Ecuménico's bells at the town's turns (Liv på torget, §10.62): the soundscape's peal (G, E, C
+  // rung down, `rounds` times) on the sfx channel at `vol` (the caller's falloff), so the market and the
+  // plaza hear it too, not only the church's layer.
+  bells(rounds = 3, vol = 0.05) {
+    if (!ctx || vol <= 0.002) return;
+    const t = ctx.currentTime;
+    let d = 0;
+    for (let r = 0; r < rounds; r++) for (const f of [392, 330, 262]) { partials(BELL, f, t + d, 3.2, vol, sfx); d += 0.62; }
+    this.bellLog = (this.bellLog || 0) + 1;
+  },
   // The charter flight's landing applause: ~30 hand claps a second, swelling then thinning out.
   applause(secs = 2) {
     if (!ctx) return;

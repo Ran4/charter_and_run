@@ -3,7 +3,6 @@
 # markörer: ⟨par N⟩ = de två raderna med samma N körs samtidigt (var sin worktree/gren, sedan rebase på main och push), ⟨solo⟩ = körs ensam; ta grupperna uppifrån och ned
 - features/roster.md – Röster – ett fullt röstsatt spel (ElevenLabs, som Saab- och Seinfeld-spelen; svara på de öppna frågorna i §13 först) [L] ⟨solo⟩
 - features/helan_gar_festen.md – 134. Helan går från balkongen [M] ⟨par 18⟩
-- features/torgliv_siesta_och_paseo.md – 135. Liv på torget – siesta och paseo [L] ⟨par 18⟩
 
 # Vänta med dessa tills spelaren säger till
 # markörer som ovan: ⟨par N⟩ = de två raderna med samma N körs samtidigt, ⟨solo⟩ = körs ensam; här från par 6 och uppåt så att taggarna är unika när rader köas en och en
@@ -12,6 +11,7 @@
 - features/butaneron.md – 143. Butaneron och gasolbilen [M] ⟨solo⟩
 
 # Färdiga features (lägg till [färdig: yyyy-mm-dd hh:mm] i slutet)
+- features/implemented/torgliv_siesta_och_paseo.md – 135. Liv på torget – siesta och paseo [L] [färdig: 2026-10-21 04:26]
 - features/implemented/glass_till_majsan.md – 126. Glass till Majsan innan den smälter [M] [färdig: 2026-10-21 03:16]
 - features/implemented/ljudlandskap_per_kvarter.md – 131. Ljudlandskap per kvarter [M] [färdig: 2026-10-21 03:09]
 - features/implemented/takterrassen_pa_la_medina.md – 122. Takterrassen på La Medina vaknar [M] [färdig: 2026-10-21 02:09]

@@ -287,7 +287,15 @@ opens with a summary of the rounds and the timer changes.
     `records.glass`, her eating it; the bare cone's "Den var hel när jag köpte den…" / "Det är tanken som
     räknas, Stig."; the card and the guide at her, no countdown; after the end the pool fest's ring leaves
     her out while he brings her one; a mission start takes it all; `glasskal`
-    measures `meltSecs` with calibrate's walker (`GLASS_RUNS`), DESIGN §10.61)
+    measures `meltSecs` with calibrate's walker (`GLASS_RUNS`), DESIGN §10.61), `torg torgshots` (Liv på
+    torget – siesta och paseo, the centre's people between missions by the clock's hours: nine vendors
+    before the market's stalls 9–13 and 17–20 with their calls, at the siesta (13–17, so test mode's 15:00)
+    and at night the stalls' cloth covers (not stall K or the souvenir stand) with SIESTA / CERRADO · STÄNGT
+    and two vendors dozing on crates, the old on the plaza's benches and rim and the church square's,
+    "¡Buenos días!", the paseo round the fountain at 19–21.5 with "Suecos…", the souvenir seller's giraffe
+    after julafton and Stig's own, the bells and toasts at 13, 17 and 19 when the clock runs, kicks and cars
+    (a sitter knocked off sits down again, a smashed bench throws its sitters off), a mission start taking it
+    all away; bodies come and go unseen; DESIGN §10.62)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

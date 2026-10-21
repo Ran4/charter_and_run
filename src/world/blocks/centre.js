@@ -1239,7 +1239,8 @@ function marknad(f) {
   // The entrance board spans the path above the chase eye (3.85–4.95; Phase 3 r3: at 2.35–3.45 it
   // covered the player walking in from the south road).
   standSign(f, 'MERCADILLO · MARKNAD', -12.5, 29.6, 4.4, 6.2, 1.1, 0, { bg: '#d8321e', fg: '#fff8e6', border: '#f7c31b', scale: 0.62, backC: WOOD_D }); // [N]
-  standSign(f, 'LUNES A SÁBADO · 9–14', 12.5, 29.6, 1.6, 3.0, 0.6, 0, { bg: '#fff8e6', fg: '#1d1426', scale: 0.62 }); // [N]
+  // The opening hours the vendors keep between missions, the siesta between (Liv på torget, §10.62).
+  standSign(f, 'LUNES A SÁBADO\n9–13 · 17–20', 12.5, 29.6, 1.7, 3.0, 0.8, 0, { bg: '#fff8e6', fg: '#1d1426', scale: 0.62 }); // [N]
   for (const z of [20, 4, -12]) bunting(f, [-4.6, 4.6, z], [4.6, 4.6, z], 12, 0.5);
   f.car('van', -26.2, 23.0, PI, { color: 0xe8e0c8 });
   for (const [x, z] of [[-28.2, -20.6], [28.2, -20.6], [-28.6, 14.6], [28.4, 14.6], [-28.3, -12.4]]) f.prop('tomatlada', x, z, R(0, 1));
