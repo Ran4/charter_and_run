@@ -44,7 +44,7 @@ Samma tangenter i båda nivåerna; nivån bestämmer vad de gör.
 | Shift | spring | | skynda – men det ökar rädslan |
 | Space | hoppa, i luften igen för dubbelhopp | handbroms (sladd!) | **håll i dig**: ta tag i närmaste stolsrygg vid turbulens |
 | J / klick | sparka, i luften: stampa (efter julafton: **håll in i luften** för att glidflyga) | | **håll in**: "Jag kan flyga, jag är inte rädd" – sänker FLYGRÄDSLA |
-| E | prata (med uppdragsgivaren, och mellan uppdragen med gänget), kliv in, sno en bil, kvarta en stund i Stigs säng i rum 107, titta i herr Storchs kamera, heja på rullskidåkaren, dansa med i poolen, smörja in Majsans rygg (**håll in** och släpp i det gröna), byta om i garderoben i rum 107, söka skydd i kyrkan, ringa efter en bil från hytt 2, meta från piren (och **dra upp** när flötet dyker), lifta på landsvägen (på flaket: hoppa av), ta livräddarens kikare (och sänka den igen), ta ett skift vid packhusets sorteringsband, spela strandvolley (och ta revansch), ta ett kort åt ett turistpar (och ge tillbaka kameran), vänta på guaguan vid en hållplats och kliva på (i bussen: kliva av vid vald hållplats), låna bondens traktor vid tomatfälten, köpa whisky åt systrarna och skicka upp den till balkongen, hyra en trampbåt vid skylten på stranden, åka på utflykt till Fataga från SunTrip-kontoret (i bussen: kliva av vid en hållplats; i Fataga: kliva på igen vid dörren), lägga dig en liten stund i solstolen på La Medinas takterrass | kliv ur (i fart: rulla ur; i trampbåten: kliv i land, bara vid strandkanten) | prata, **sätt dig / res dig**, lås in dig på toaletten, anropsknappen, serveringsvagnen |
+| E | prata (med uppdragsgivaren, och mellan uppdragen med gänget), kliv in, sno en bil, kvarta en stund i Stigs säng i rum 107, titta i herr Storchs kamera, heja på rullskidåkaren, dansa med i poolen, smörja in Majsans rygg (**håll in** och släpp i det gröna), byta om i garderoben i rum 107, söka skydd i kyrkan, ringa efter en bil från hytt 2, meta från piren (och **dra upp** när flötet dyker), lifta på landsvägen (på flaket: hoppa av), ta livräddarens kikare (och sänka den igen), ta ett skift vid packhusets sorteringsband, spela strandvolley (och ta revansch), ta ett kort åt ett turistpar (och ge tillbaka kameran), vänta på guaguan vid en hållplats och kliva på (i bussen: kliva av vid vald hållplats), låna bondens traktor vid tomatfälten, köpa whisky åt systrarna och skicka upp den till balkongen, hyra en trampbåt vid skylten på stranden, åka på utflykt till Fataga från SunTrip-kontoret (i bussen: kliva av vid en hållplats; i Fataga: kliva på igen vid dörren), lägga dig en liten stund i solstolen på La Medinas takterrass, köpa en glass till Majsan i glasskiosken på stranden | kliv ur (i fart: rulla ur; i trampbåten: kliv i land, bara vid strandkanten) | prata, **sätt dig / res dig**, lås in dig på toaletten, anropsknappen, serveringsvagnen |
 | H | | tuta (utanför uppdragen hör folk den; i den lånade Guardia-jeepen: sirenen) | |
 | B | | titta bakåt | |
 | M / Tab | stor karta | stor karta | plan över gaten/kabinen |
@@ -455,6 +455,17 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   eller scenen innan du ser dem. På natten är måsarna och klockorna tysta, bandet spelar från tio på
   förmiddagen till elva på kvällen, och efter tio på kvällen dunkar Tonga Tongas bas genom La Medinas vägg.
   I bilen hörs ljuden svagare, och under uppdrag, dialoger och mellanscener är de tysta.
+- **Glass till Majsan** (mellan uppdragen, på dagen): glasskiosken HELADOS · GLASS på stranden säljer
+  glass. **E** vid disken ("Köp en glass (25 pta)"; har Stig inga pengar betalar Ole), "¡Un helado de
+  fresa! ¡Gracias, señor!" från luckan och Stigs "Den är till en… bekant.": en strut med en jordgubbs- och
+  en vaniljkula i handen, och den ska till Majsan. Glassen smälter hela vägen (i bilen också), först den
+  översta kulan och sedan den andra, och droppar rosa fläckar i sanden efter honom. Efter 31 sekunder
+  ramlar sista biten i marken ("Typiskt.") och han har bara struten kvar. Ramlar han, eller trycker
+  **R**, tappar han glassen. Gå fram till Majsan, så räcker han över den av sig själv: kommer han fram i
+  tid blir hon glad ("Till mig? Vad gullig du är, Stig-Helmer!" – "Det var så lite.") och äter upp den,
+  och en ruta säger hur mycket som var kvar (bästa resultatet sparas). Med bara struten säger han
+  generat "Den var hel när jag köpte den…", och Majsan svarar "Det är tanken som räknas, Stig."
+  Pilen och rutan överst visar vägen till henne, men ingen klocka. Ett uppdrag som börjar tar glassen.
 - **Små grodorna i poolen** (efter slutet): julfesten är inte riktigt över. Varje gång du kommer in
   på Flamencos pooldäck (mellan nio på morgonen och elva på kvällen) vadar SunTrip-gänget ut i den
   grunda änden och ställer sig i ring runt Lasse i tomteluva. Affe spelar Små grodorna på dragspelet,
@@ -977,6 +988,7 @@ src/game/crane.js               Åk med byggkranen: the bygge's tower crane carr
 src/game/trampbat.js            Hyr en trampbåt in free roam: the beach rental's pedal boat (a toy made for the ride), Ole's double beside Stig, its own water past the bound wall, the Rio exchange and the statistics, the raft's coins, ashore at the water's edge only, Ole pedalling it back, R, the ride's end
 src/game/utflykt.js             Utflykt med Lasse in free roam after fataga: the booking on the SunTrip office's sidewalk, the fade into SunTrip's bus beside Affe, the loop by Gando, Grisfesten and Fataga with Lasse on the radio, off at a stop, Fataga's two minutes and the missed bus, home
 src/game/soundscape.js          Ljudlandskap per kvarter in free roam: each part of the island's sound under the tune (the surf, the marina, Fataga's fold, Templo Ecuménico, the SunTrip stage's band on the tune's own bars, La Medina and Tonga Tonga's bass), faded by where Stig is, from its side of the camera (the voices in audio.js)
+src/game/glass.js               Glass till Majsan in free roam: the HELADOS kiosk's ice cream, its melt and drips, the drop, the handover to Majsan by distance, her eating it, the share toast and `records.glass`
 src/game/terraza.js             Takterrassen på La Medina in free roam: the roof terrace's guests and bartender, the brochure line and his greetings, the tanks' coins during a visit, "¡Olé!" at a splash in the roof pool, the dozing pair's loungers, Stig's nap on his lounger and the sunburn with its "Aj!"
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
@@ -989,7 +1001,7 @@ tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, 
                                 guardiajeep, fyren, klader, ringklocka, kyrkfrid, gatlopp, skidor,
                                 golfbil, battur, balkong, hytt, kaffe, meta, marknadstak, lifta,
                                 kikare, packhus, volley, kort, guagua, traktor, systrar, kran,
-                                trampbat, utflykt, terraza, ljud, calibrate, calibflight)
+                                trampbat, utflykt, terraza, ljud, glass, calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
 tools/pool.mjs                  re-derives every random stage's timer from the ledger
@@ -1046,6 +1058,7 @@ node tools/shot.mjs kran kranshots       # the crane: onto the pallet, the ride 
 node tools/shot.mjs trampbat trampbatshots # the pedal boat: the sign's E, Ole pays, 7 km/h and the glide, past the bound wall, the Rio exchange and the statistics, its water, the raft's coins, E ashore, Ole pedalling back, R, a splash, a pursuit, a warp, a mission; the shots
 node tools/shot.mjs ljud ljudklipp       # the soundscape: every zone's layer and its sounds, the band on the tune's bars, the sides, a car, a pursuit, a dialogue, a cut, a mission, the pause, the flight level; WAV clips in OUT to listen to
 node tools/shot.mjs terraza terrazashots # La Medina's roof terrace: up the stairs, the guests, the bartender's greetings, the brochure, the tanks' coins, the board's hop into the roof pool and "¡Olé!", the nap and the burn, "Aj!", the morning, a mission start, the night; the shots
+node tools/shot.mjs glass glasskal      # the ice cream for Majsan: the kiosk's E by day, the melt and the drips, in a car, the bare cone, the handovers (no E), the share toast and the record, R, a mission start; glasskal measures the 31 s with calibrate's walker
 node tools/shot.mjs grodorna grodtakt    # the pool fest after the end: the ring, the porter, Stig in the ring, eight on the beat
 node tools/shot.mjs artig                # Stig says sorry: kicks, run over, a pump, bins, carjackings and the driver's "Nej."
 node tools/shot.mjs grisar               # the grisbil's pigs: the falls, the catch on foot and by creeping, Lasse, the pen

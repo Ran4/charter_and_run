@@ -278,7 +278,16 @@ opens with a summary of the rounds and the timer changes.
     sides, every one-shot sounding in its layer, a car, a pursuit, a dialogue box, the letterbox, a mission,
     the pause, the flight level; `ljudklipp` records the game's output and the soundscape alone as WAVs in
     OUT at seven places for listening (`LJUD_SECS`), DESIGN §10.60; meter.mjs's `ui` switches it off while it
-    checks the tunes)
+    checks the tunes),
+    `glass glasskal` (Glass till Majsan innan den smälter, the HELADOS kiosk on the beach between missions by
+    day: "E Köp en glass (25 pta)" (Ole when short), the window's line and Stig's, the cone in his left hand
+    (`carrying.glass`); the melt over 31 s of game time (in a car too, hidden), the top scoop first, the pink
+    drips, "Den smälter ju!", the plop and the bare cone; a fall or R drops it; the handover by walking up to
+    Majsan (no E; her own talk waits while he has it): in time the two sets in turn, the share toast and
+    `records.glass`, her eating it; the bare cone's "Den var hel när jag köpte den…" / "Det är tanken som
+    räknas, Stig."; the card and the guide at her, no countdown; after the end the pool fest's ring leaves
+    her out while he brings her one; a mission start takes it all; `glasskal`
+    measures `meltSecs` with calibrate's walker (`GLASS_RUNS`), DESIGN §10.61)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

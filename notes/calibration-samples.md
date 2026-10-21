@@ -231,6 +231,18 @@ pull-in is the boat's only, and the raft's coins are out only during a ride. No 
 pooled stage plays on the beach's water's edge or at sea. No `calibrate` run was made for it. `story` and
 `fullstory` passed on the feature's tree. Every pool below stands and no timer changed.
 
+**Feature 126 (Glass till Majsan innan den smälter, 2026-10-21) touches no pool.** It moved the HELADOS
+kiosk terrace's middle café table and its straw umbrella on the main beach (block (3,6)) from block-local
+(−17, −10.5) to (−17, −5) (world (−17, 229.5) → (−17, 235); its `table` disc r 0.55, top 0.93; DESIGN
+§10.61), out of the chase eye's way behind Stig at the counter. No mission stage, route, spawn or pooled
+stage plays there: julafton's guests' drive reaches Herr Storch at `playa` (0, 250) down the boardwalk
+lane at x 0, 17 m east of both spots, the jeep flees and the autopilot drives on the road network, and the
+beach balls are friskotek's in block (3,2). The tables draw no random number, so the block's seeded draws
+and the rest of the world build as before. The ice cream (a carry, `carrying.glass`) exists only with
+`missions.state === 'idle'` and goes at a mission start. Its one measurement, the melt's 31 s, is below
+("Glass till Majsan"); it is not a pool. `story` and `fullstory` passed on the feature's tree. Every pool
+below stands and no timer changed.
+
 ## `friskotekBalls` · §8.7 s1 · six fleeing beach balls · on foot: timer = ceil(1.25 × (p75 + 6 × 0.5))
 
 Phase 3 r2 island-staging placed everyone for the intro's group shot (Stig, Lasse, the sisters, the
@@ -572,3 +584,20 @@ idea for the spot, the counter's north end) to the same arrival. Sample ids: `f8
 | f84-1 | 2026-10-17 | 1ff64cb + uncommitted: feature 84 (first full `kaffestorch`) | KAFFE_RUNS=3 (default) | 23.08 (242; 6.83), 23.00 (241; 6.98), 23.00 (241; 6.98) | median 23.00 → T_ref 23.50 → ceil(1.25 × 23.50) = 30 |
 | f84-2 | 2026-10-17 | 1ff64cb + uncommitted: feature 84, Stig's spot by Fru Storch moved and the hush added | KAFFE_RUNS=3 (default) | 23.00 (241; 7.00), 23.07 (242; 6.93), 23.00 (241; 6.98) | median 23.00 → T_ref 23.50 → 30 = the coffee's 30 s |
 | f84-3 | 2026-10-17 | 3d9349f (feature 84 rebased on 792c688, feature 80) | KAFFE_RUNS=3 (default) | 23.08, 23.00, 23.00 | median 23.00 → T_ref 23.50 → 30 |
+
+## Glass till Majsan · §10.61 · the ice cream from the HELADOS kiosk to Majsan (free roam, feature 126) · not a pool
+
+Not a stage and not a pool (this section's header has no stage key, so `tools/pool.mjs` does not read
+it): the ice cream's melt (`GLASS.meltSecs`) is set the way an on-foot stage's timer would be (DESIGN §8:
+T_ref = the run's median + 0.5 s per target, timer = ceil(1.25 × T_ref)). Scenario `glasskal` at index 8
+(bodega waiting; Majsan at home, `flamencoPool` −2, 0: world (−1, 18)): calibrate's walker
+(`installAutopilot` from the unchanged `calibrate.mjs`, `ap.walk` to a point 1.4 m short of Majsan on the
+line from Stig), sprinting at 8.8 m/s, from the moment the cone is in his hand at the kiosk's spot
+(`GLASS.at` (−17, 224.6), after E) until the handover starts (2.0 m from her). `left` = the melt's seconds
+left on arrival. Sample ids: `f126`.
+
+| sample | date | code | env | runs (s, run order; walked m; left s) | notes |
+|---|---|---|---|---|---|
+| f126-1 | 2026-10-21 | 5f7d63a + uncommitted: feature 126, a provisional `meltSecs` 39 | GLASS_RUNS=3 (default) | 23.92 (209; 15.02), 23.90 (209; 15.02), 23.90 (209; 15.02) | median 23.90 → T_ref 24.40 → ceil(1.25 × 24.40) = 31 (≠ 39: FAIL, the timer set to 31) |
+| f126-2 | 2026-10-21 | 5f7d63a + uncommitted: feature 126, `meltSecs` 31 | GLASS_RUNS=3 (default) | 23.92 (209; 7.01), 23.90 (209; 7.04), 23.90 (209; 7.04) | median 23.90 → T_ref 24.40 → 31 = `meltSecs` |
+| f126-3 | 2026-10-21 | 456d550 (feature 126 rebased on c3e08a2, feature 131) | GLASS_RUNS=3 (default) | 23.92 (209; 7.04), 23.90 (209; 7.01), 23.90 (209; 7.04) | median 23.90 → T_ref 24.40 → 31 = `meltSecs` |

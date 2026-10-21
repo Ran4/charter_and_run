@@ -727,7 +727,45 @@ const PROP_GEO = {
   fotorem(g) {
     for (const sx of [-1, 1]) g.box(0x3a2a1e, sx * 0.13, 0.25, -0.03, 0.022, 0.44, 0.012, 0, 0.08, sx * 0.2);
   },
+  glasstrut: iceCone,   // the HELADOS kiosk's ice cream (anim.glass, game/glass.js); its scoops: glassScoops
 };
+// Glass till Majsan (game/glass.js, §10.61): a wafer cone, its point down, a darker rim round its top
+// (GLASS_TOP); the origin where a hand holds it. The scoops are glassScoops' own meshes, so they can melt.
+const GLASS_TOP = 0.064;
+function iceCone(g) {
+  g.cone(0xd8a050, 0, -0.02, 0, 0.046, 0.15, 10, Math.PI);
+  g.cyl(0xb8823a, 0, 0.056, 0, 0.05, 0.016, 10);
+}
+// The two scoops on `p` (the cone's prop), as the giant one on the kiosk's roof (coast.js playaMain):
+// strawberry below, vanilla with a cherry on top. `k` (1..0) of the ice cream is left: the top scoop
+// melts first (its volume 2k − 1), then the strawberry (2k); each shrinks by its volume's cube root and
+// sits a little sunk into what is under it. Made the first time a cone is shown.
+const SCOOPS = [[0xf2a3bd, 0.108], [0xf6ecd2, 0.094, 0xc0392b]];
+function glassScoops(p, k) {
+  let s = p.userData.scoops;
+  if (!s) {
+    s = p.userData.scoops = SCOOPS.map(([c, d, cherry]) => {
+      const g = new CharBuilder();
+      g.sphere(c, 0, 0, 0, d, d * 0.9, d);
+      if (cherry) g.sphere(cherry, 0, d * 0.47, 0, 0.026);
+      const geo = g.build(), mesh = new THREE.Mesh(geo, MAT.toon);
+      mesh.castShadow = true;
+      const o = new THREE.Mesh(outlineGeometry(geo), outlineMat(0.014));
+      o.name = 'outline';
+      mesh.add(o);
+      p.add(mesh);
+      return { mesh, h: d * 0.45 };
+    });
+  }
+  let y = GLASS_TOP;
+  s.forEach((o, i) => {
+    const sc = Math.cbrt(Math.max(0, Math.min(1, 2 * k - i)));
+    o.mesh.visible = sc > 0.04;
+    o.mesh.scale.setScalar(Math.max(sc, 0.001));
+    o.mesh.position.y = y + o.h * sc * 0.7;
+    y = o.mesh.position.y + o.h * sc * 0.75;
+  });
+}
 function rollerski(g) {
   g.box(0xd8321e, 0, -0.025, 0.02, 0.075, 0.03, 0.74);
   g.box(0x1d1d22, 0, -0.004, 0.04, 0.09, 0.03, 0.17);
@@ -1119,7 +1157,7 @@ function heldPose(m, st, t, place = false) {
   const h = m.def.held;
   if (!h || !PROP_GEO[h]) return;
   const [R, L] = m.arms;
-  const busy = st.wings || st.cupUp || st.cupHeld || st.push || st.rub || st.hold || st.flail || st.oath || st.dance || st.laugh || st.mirror || st.film || st.camShow || st.giraffe || st.butterKnife || st.ticket || st.carryOver || st.shoeOff || st.calc || st.groda || st.placate || st.tap || st.scratch || st.point || st.cheer || st.wave || st.fish || st.thumb || st.ride || st.kikare || st.sort || st.volley || st.foto || st.whisky || st.kick > 0;
+  const busy = st.wings || st.cupUp || st.cupHeld || st.push || st.rub || st.hold || st.flail || st.oath || st.dance || st.laugh || st.mirror || st.film || st.camShow || st.giraffe || st.butterKnife || st.ticket || st.carryOver || st.shoeOff || st.calc || st.groda || st.placate || st.tap || st.scratch || st.point || st.cheer || st.wave || st.fish || st.thumb || st.ride || st.kikare || st.sort || st.volley || st.foto || st.whisky || st.glass || st.kick > 0;
   const pose = !place && !busy;
   const moving = st.speed > 0.3;
   switch (h) {
@@ -1558,6 +1596,19 @@ function poseFlags(m, st, t) {
       m.hips.rotation.x += 0.28;
       m.neck.rotation.x = -0.18;
     }
+  }
+  if (st.glass) {
+    // Glass till Majsan (game/glass.js, §10.61): the ice cream upright in a hand, `glassK` (1..0) of it
+    // left. Stig's in his left hand (the pool bar's cup has his right): held up before his chest (true)
+    // or out before him to her ('out'); 'eat', Majsan's, in her right hand before her chest and up to
+    // her mouth now and then.
+    const eat = st.glass === 'eat', out = st.glass === 'out', A = eat ? R : L, sg = eat ? 1 : -1;
+    const lick = eat ? Math.max(0, Math.sin(t * 1.7)) ** 4 : 0;
+    A.rotation.set(out ? -1.42 : -1.12 - lick * 0.62, 0, sg * (out ? 0.04 : 0.3 + lick * 0.22));
+    if (lick) m.neck.rotation.x += 0.1 * lick;
+    const p = prop(m, 'glasstrut');
+    inHand(m, p, eat ? 0 : 1, 0, 0.035, 0);
+    glassScoops(p, st.glassK ?? 1);
   }
 }
 

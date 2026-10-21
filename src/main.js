@@ -75,6 +75,7 @@ import { TouristPhoto } from './game/touristPhoto.js';
 import { Guagua } from './game/guagua.js';
 import { Utflykt } from './game/utflykt.js';
 import { Sisters } from './game/sisters.js';
+import { Glass } from './game/glass.js';
 import { Crane } from './game/crane.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
@@ -267,6 +268,7 @@ class Game {
     this.trampbat = new Trampbat(this);   // the raft's coins; free roam: a pedal boat from the beach's rental, out past the bound wall with Ole (§10.57)
     this.terraza = new Terraza(this);     // free roam: La Medina's roof terrace, its guests and bartender, the roof pool's board, the nap and the sunburn (§10.59)
     this.ljud = new Soundscape(this);     // free roam: the island's soundscape, a layer per part of the island under the tune, the stage's band (§10.60)
+    this.glass = new Glass(this);         // free roam: an ice cream from the beach's HELADOS kiosk for Majsan, melting on the way (§10.61)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -1482,8 +1484,10 @@ class Game {
     if (top) return { type: 'it', it: top };
     // Not with Berra on his shoulders (§10.6): the carry would follow him into the mission. A lost
     // suitcase on his head (§10.52) goes back to its spot at the mission's start instead, and the
-    // sisters' whisky (§10.55) is gone.
-    if (ms.state === 'idle' && ms.current && ms.current.level === this.level && (!this.carrying || this.carrying.bag || this.carrying.whisky)) {
+    // sisters' whisky (§10.55) and the ice cream (§10.61) are gone; the ice cream is Majsan's, so not
+    // her talk while he has it or hands it to her.
+    const glass = this.carrying?.glass && ms.current?.giver !== 'majsan';
+    if (ms.state === 'idle' && ms.current && ms.current.level === this.level && (!this.carrying || this.carrying.bag || this.carrying.whisky || glass) && !this.glass?.scene) {
       const g = this.npcs[ms.current.giver];
       if (g && g.state !== 'hidden' && dist(g.x, g.z, p.x, p.z) < 3.4 && Math.abs(g.y - p.y) < 2) return { type: 'talk', who: g };
     }
@@ -1665,6 +1669,7 @@ class Game {
     this.crane.update(dt);
     this.trampbat.update(dt);
     this.terraza.update(dt);
+    this.glass.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);
@@ -1998,12 +2003,12 @@ class Game {
   // José and his mother walking back to his place after a street race (§10.38), the bartender,
   // Berra or Fru Storch in a scene at the pool bar or with its cup (§10.44), Ole, Berra and Robban in a
   // volleyball match or Berra and Robban walking off from it (§10.50), or Siv and Majsan up on the balcony
-  // above 105 (§10.55).
+  // above 105 (§10.55), or Majsan taking the ice cream from Stig (§10.61).
   // syncAll gives such an NPC no wave, turn or chatter, and the gang's talk leaves them be (§10.28).
   npcPosed(k) {
     return !!this.missions.idlePose(k) || this.berraJob.posed(k) || this.judges.posed(k) || this.film.posed(k) || this.eslov.posed(k) || this.fest.posed(k) || this.lapp.posed(k) || this.party.posed(k)
       || this.stands.posed(k) || !!this.mic?.posed(k) || this.birds.posed(k) || !!this.gags?.posed(k) || !!this.dream?.posed(k) || !!this.bell?.posed(k)
-      || !!this.gatlopp?.posed(k) || !!this.bar?.posed(k) || !!this.volley?.posed(k) || !!this.sisters?.posed(k);
+      || !!this.gatlopp?.posed(k) || !!this.bar?.posed(k) || !!this.volley?.posed(k) || !!this.sisters?.posed(k) || !!this.glass?.posed(k);
   }
 
   syncAll(dt, title) {
@@ -2128,7 +2133,7 @@ class Game {
       const g = this.npcs[ms.current.giver];
       if (g) out.push({ type: 'mission', x: g.x, z: g.z, edge: true });
     }
-    const t = ms.target() || this.berraJob.target() || this.eslov.target() || this.skis.target() || this.pigs.target() || this.gatlopp.target() || this.bags.target() || this.sisters.target();
+    const t = ms.target() || this.berraJob.target() || this.eslov.target() || this.skis.target() || this.pigs.target() || this.gatlopp.target() || this.bags.target() || this.sisters.target() || this.glass.target();
     if (t && !t.follow) out.push({ type: 'objective', x: t.x, z: t.z, edge: true });
     if (t && t.follow) out.push({ type: ms.stage?.car?.isTarget ? 'enemy' : 'friend', x: t.x, z: t.z, edge: true });
     out.push(...ms.markers());
@@ -2199,8 +2204,8 @@ class Game {
     } else this.bang.show(false);
     // Or the free-roam Berra job's (§10.6), Eslövloppet's (§10.12), Eslövrundan's (§10.39), the grisbil's
     // pigs' (§10.15), José's street race's (§10.38), a lost suitcase's (the lost and found, §10.52), the
-    // sisters' whisky's (a shop, the balcony above 105, §10.55).
-    const t = ms.target() || this.berraJob.target() || this.eslov.target() || this.skis.target() || this.pigs.target() || this.gatlopp.target() || this.bags.target() || this.sisters.target();
+    // sisters' whisky's (a shop, the balcony above 105, §10.55), the ice cream's (Majsan, §10.61).
+    const t = ms.target() || this.berraJob.target() || this.eslov.target() || this.skis.target() || this.pigs.target() || this.gatlopp.target() || this.bags.target() || this.sisters.target() || this.glass.target();
     if (t) {
       target = t;
       const y = t.follow ? groundAt(t.x, t.z, 0.2, 0.6) + 2.5 : groundAt(t.x, t.z, 0.2, 0.6);
@@ -2231,11 +2236,11 @@ class Game {
     // shop's wet-paint card (§7.2), the church's while Guardia Civil waits outside (§7.2), the Berra
     // job's (§10.6), Eslövloppet's (§10.12), Eslövrundan's (§10.39), the grisbil's pigs' (§10.15), a G17 toaster's scale
     // (§10.24), José's street race's (§10.38), a hitch's (§10.47), a shift at the packing shed's belt
-    // (§10.49), a lost suitcase on his head (§10.52), the guagua's (§10.53), the excursion bus's (§10.58) or
-    // the sisters' whisky errand's (§10.55), if any.
+    // (§10.49), a lost suitcase on his head (§10.52), the guagua's (§10.53), the excursion bus's (§10.58),
+    // the sisters' whisky errand's (§10.55) or the ice cream for Majsan's (§10.61), if any.
     hud.setObjective(this.missions.objective() || this.solkram.objective() || this.shame.paint.objective() || this.shame.church.objective() || this.berraJob.objective() || this.eslov.objective() || this.skis.objective()
       || this.pigs.objective() || this.toasters.objective() || this.gatlopp.objective() || this.hitch.objective() || this.packhus.objective() || this.bags.objective() || this.guagua.objective()
-      || this.utflykt.objective() || this.sisters.objective());
+      || this.utflykt.objective() || this.sisters.objective() || this.glass.objective());
     hud.setSpeedo(this.playerCar);
     if (this.missions.state !== 'failed') {
       let prompt = '';

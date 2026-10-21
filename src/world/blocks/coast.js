@@ -1018,8 +1018,9 @@ function playaMain(f) {
   f.prop('glasskylt', kx - 3.4, kz + 3.0, 0.3);
   f.prop('glasskylt', kx + 3.4, kz + 3.0, -0.2);
   f.prop('julgran', kx + 4.2, kz - 1.2, 0);   // a plastic Christmas tree on the beach (§6.9)
-  // Terrace: café tables with fixed straw umbrellas.
-  for (const [x, z] of [[-24, -11], [-17, -10.5], [-10, -11.5]]) {
+  // Terrace: café tables with fixed straw umbrellas. The middle one stands back from the counter (feature
+  // 126, §10.61: at (−17, −10.5) the chase eye behind Stig buying an ice cream sat in or over its umbrella).
+  for (const [x, z] of [[-24, -11], [-17, -5], [-10, -11.5]]) {
     f.cyl(0x8a6a44, x, CURB + 1.2, z, 0.06, 2.4, 6);
     f.cone(0xd8b878, x, CURB + 2.55, z, 1.6, 0.7, 10);
     f.cyl(0xf4f4f0, x, CURB + 0.72, z, 0.5, 0.06, 12);

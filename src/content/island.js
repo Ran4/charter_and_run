@@ -3206,3 +3206,65 @@ export const LJUD = {
   band: { r: 6, hours: [10, 23] },
   club: [22, 4],
 };
+
+// Glass till Majsan innan den smälter (free roam; feature 126, DESIGN §10.61; game/glass.js). The HELADOS
+// · GLASS kiosk on the main beach (coast.js playaMain, block (3,6)) sells an ice cream between missions: on
+// the island with no mission running, by day (the clock's `dayHours`, §10.10), on foot within `r` m of `at`
+// (world [x, z, yaw]: before the counter, facing its window; kept here rather than in the landmark table,
+// whose sight lines move street furniture), nothing carried, no pursuit, and Majsan on the island (shown):
+// `prompt` with its `price` (`game.pay`: Ole pays when the purse is short). The window says `sold` (a
+// bubble at `window` [x, z, height], no body) and Stig `stig` `stigAt` s later; the cone with two scoops as
+// on the kiosk's roof (strawberry below, vanilla and a cherry on top) is in his left hand (`carrying.glass`).
+// It melts away in `meltSecs` s of game time wherever he is, in a car too (hidden there): the top scoop
+// first, then the strawberry, each shrinking by its volume. It drips: a drop off the cone every
+// `drip.every` s on foot and a pink spot (`drip.r`) on the ground under it for `drip.life` s, the last
+// `drip.fade` s shrinking. Half gone, Stig says `half`; all gone, the last of it plops to the ground
+// (`plopR`, the toast `meltToast`, Stig `melted`) and he holds the bare cone. A fall (flung, knocked down)
+// or R drops it all (`dropR`, the toast `dropToast`). Within `giveR` m of Majsan, on foot, both free, the
+// handover plays by itself, with no E (as the waiting fataga's giver her talk wins within 3.4 m): `give`
+// (in time; the sets in turn by the handovers made) or `strut` (the bare cone), [at, who, text] bubbles,
+// the cone in her hand at `handAt`, free roam again at `end`; in time the toast `left` with the share left
+// in % (`record` added when it beats `records.glass`, saved). She eats it (or holds the bare cone) for
+// `eatSecs` s. While he has it, the objective card `title` / `text` (`textStrut` for the bare cone) and the
+// guide arrow at Majsan; no countdown. A mission start or the other level ends all of it. `meltSecs` is
+// measured as an on-foot stage would be (DESIGN §8: ceil(1.25 × (median + 0.5 s)); scenario `glasskal`,
+// calibrate's walker from `at` to Majsan at home, notes/calibration-samples.md "Glass till Majsan").
+// Invented (§1.6): the kiosk's sale, the melt, the handover and every line; the film has no ice cream.
+export const GLASS = {
+  at: [-17, 224.6, Math.PI], r: 1.6, price: 25,
+  window: [-17, 223.5, 1.9],
+  prompt: '<b>E</b> Köp en glass ({n} pta)',                                         // [N]
+  sold: '¡Un helado de fresa! ¡Gracias, señor!',                                     // [N] from inside the kiosk
+  stig: 'Den är till en… bekant.',                                                   // [N]
+  soldAt: 0.2, stigAt: 1.6, lineSecs: 2.4,
+  meltSecs: 31,
+  drip: { every: 0.55, life: 9, fade: 2.5, r: [0.1, 0.17] },
+  plopR: 0.28, dropR: 0.4,
+  half: 'Den smälter ju!',                                                           // [N]
+  melted: 'Typiskt.',                                                                // [N] the last of it on the ground
+  meltToast: 'Glassen smälte. Bara struten kvar.',                                   // [N] toast
+  dropToast: 'Stig tappade glassen.',                                                // [N] toast
+  giveR: 2.0, leaveR: 4, hushR: 12, hushAfter: 3,
+  give: [
+    { handAt: 1.3, end: 5.4, lines: [
+      [0, 'stig', 'Jag köpte en glass… till dig.'],                                  // [N]
+      [1.5, 'majsan', 'Till mig? Vad gullig du är, Stig-Helmer!'],                   // [N]
+      [3.6, 'stig', 'Det var så lite.'],                                             // [N]
+    ] },
+    { handAt: 1.3, end: 5.4, lines: [
+      [0, 'stig', 'Jag råkade gå förbi glasskiosken.'],                              // [N]
+      [1.5, 'majsan', 'Igen? Du skämmer bort mig, Stig-Helmer.'],                    // [N]
+      [3.6, 'stig', 'Det är ju så varmt här nere.'],                                 // [N]
+    ] },
+  ],
+  strut: { handAt: 1.9, end: 5.0, lines: [
+    [0, 'stig', 'Den var hel när jag köpte den…'],                                   // [N]
+    [2.1, 'majsan', 'Det är tanken som räknas, Stig.'],                              // [N]
+  ] },
+  left: 'Glassen kom fram – {n} % kvar.',                                            // [N] toast
+  record: 'Nytt rekord!',                                                            // [N] toast, after `left`
+  eatSecs: 10,
+  title: 'Glass till Majsan',                                                        // [N]
+  text: 'Ge den till Majsan innan den smälter.',                                     // [N]
+  textStrut: 'Bara struten kvar. Ge den till Majsan ändå.',                          // [N]
+};

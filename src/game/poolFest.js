@@ -166,7 +166,8 @@ export class PoolFest {
   free(key) {
     const g = this.g, n = g.npc(key);
     return !!n && n.state === 'normal' && n.root.visible && !n.car && !n.seatId && (!n.busy || n.spot === MARK)
-      && !g.missions.idlePose(key) && !g.berraJob.posed(key) && !g.judges.posed(key) && !g.film.posed(key);
+      && !g.missions.idlePose(key) && !g.berraJob.posed(key) && !g.judges.posed(key) && !g.film.posed(key)
+      && !g.glass?.wants(key);   // Majsan while Stig brings her an ice cream (§10.61)
   }
   canClaim(key) {
     const n = this.g.npc(key), c = this.centre;
