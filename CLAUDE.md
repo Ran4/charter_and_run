@@ -270,7 +270,15 @@ opens with a summary of the rounds and the timer changes.
     floor at 6.02 and Flamenco's board (a hop lands in it from 11.7 m), the two old loungers' dozing bathers
     (`role` 'asleep') and Stig's (`kept`, placed last); E there by day: "Bara en liten stund.", the black, the
     clock 1.5 h on, red, "Aj!" and the toast; the burn as a layer over his outfit till the next morning, "Aj!" at
-    a bump or a car's knock; a mission start heals him and clears the roof; the shots, DESIGN §10.59)
+    a bump or a car's knock; a mission start heals him and clears the roof; the shots, DESIGN §10.59),
+    `ljud ljudklipp` (Ljudlandskap per kvarter, the island's soundscape under the tune between missions: the
+    surf, the marina, Fataga's fold, Templo Ecuménico's peal, the SunTrip stage's band on the tune's own bars
+    (sol and samba, every note on a sixteenth, Affe's solo in sol's bars 24–31, none past 23:00 or without
+    Affe and Gabbe there) and La Medina's murmur with Tonga Tonga's bass after ten; the zones' levels and
+    sides, every one-shot sounding in its layer, a car, a pursuit, a dialogue box, the letterbox, a mission,
+    the pause, the flight level; `ljudklipp` records the game's output and the soundscape alone as WAVs in
+    OUT at seven places for listening (`LJUD_SECS`), DESIGN §10.60; meter.mjs's `ui` switches it off while it
+    checks the tunes)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

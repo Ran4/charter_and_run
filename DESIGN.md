@@ -391,7 +391,13 @@ words, a dozing pair on the loungers, the roof pool's water and board, the tanks
 lounger ("Bara en liten stund.") and his sunburn till the next morning (free roam, §10.59; in the film
 Stig-Helmer is sunburnt and says "Aj!" when touched, research-plot.md:296, and the brochure promises
 "Balkong med havsutsikt och kvällssol.", research-plot.md:253; the centre's roof bars are the real one's,
-research-setting.md:104).
+research-setting.md:104);
+the island's soundscape under the tune: the surf along the beach, the marina's gulls, creaking boats,
+lapping water and halyards, the sheep's bells, a bleat, the wind and the village bell in Fataga, the bells
+of Templo Ecuménico, the murmur and glasses at La Medina and Tonga Tonga's bass through its wall at night,
+and Affe's accordion part and Gabbe's conga pattern (free roam, §10.60; the band itself is the film's: "Affe
+spelar dragspel och Gabbe congas.", research-plot.md:74; their parts and Affe's phrases are original, and
+the harbour is invented setting).
 The film's flight has **no turbulence** and **no in-flight toilet scene**: both toilet scenes are
 at Arlanda (we keep them there). The plane's toilets are only an invented hideout.
 
@@ -8863,6 +8869,122 @@ havsutsikt och kvällssol." (research-plot.md:253) is read out by a guest: both 
   his own line when touched; the brochure's sea view is read out by a guest, as no character reads it in
   the film's scene. Ole's pool pen stays where it was, by the pool.
 
+### 10.60 Ljudlandskap per kvarter (free roam; feature 131, 2026-10-21)
+
+`game/soundscape.js` (`Soundscape`, owned by Game as `ljud`), config `LJUD` in content/island.js, the
+channel, its layers, voices and the band in audio.js (the "Ljudlandskap per kvarter" section: `ambLayer`,
+`ambBand`, `ambClub`, `audio.amb.*`, `ambBar` called by the music scheduler; `baa(p)`, `gull(…, delay)`,
+`conga(…, dest)`; the test hooks `ambState`, `ambNodes`, `jumpBar`), `hud.letterboxed`, and in main.js the
+constructor (after the terrace) and `updateAudio` (`ljud.update(dt)`, the music ducked by `ljud.musicDuck`).
+Under the island's tune (sol, or the samba once chosen) each part of the island has a sound of its own
+that fades in as Stig comes near and out as he goes: you hear the marina or the stage before you see it.
+There is nothing to find or do; it is sound only. Invented (§1.6): every sound but the band, which is the
+film's ("Affe spelar dragspel och Gabbe congas.", research-plot.md:74) on the island's stage, with parts
+and phrases of our own. No line is spoken and nothing is written on screen.
+
+- **Live** (`live`): on the island with `missions.state === 'idle'`, not in the clock's nap or morning cut
+  (`day.busy`), `enabled` (tests). Every layer fades out (the mix 0) when not live and under a dialogue box
+  (`hud.dialogActive`) or a cut (`hud.letterboxed`, set by `hud.letterbox(on)`), so no mission, intro,
+  outro, scene or cut sounds any different (the faint "Helan går" at the end of buss17's outro, §12.1,
+  plays in the outro: no layer). A free-roam activity that only holds the input (`inDialog` without the box
+  or the bars: the fishing, the binoculars, the pedal boat) keeps them. In a car, the guagua or the
+  excursion bus the mix is × `car` 0.55 (the engine comes through; the pedal boat, `spec.boat`, has none: ×
+  1; standing in a hitch truck's bed × 1), in a pursuit × `pursuit` 0.5. Nothing is saved, nothing is
+  touched outside the audio (no actor, collider, coin, marker or HUD element; the soundscape's draws are
+  its own, `seed` 13100 in soundscape.js and audio.js's own `arnd`, never Math.random's or the world's), so
+  no mission, stage, timer, fixture or calibration pool sees it.
+- **The zones** (`zones`; the level 1 within `near` m, 0 past `far` m, smoothstep between, each frame from
+  `focus()`):
+
+  | layer | measured to | near | far | its sound |
+  |---|---|---|---|---|
+  | `waves` | the foam line z 300.6 (town.js ground; on the sea past it 0 m) | 25 | 80 | the surf: a bed of the sea further out and a wave every `every` |
+  | `hamn` | `hamn` (the marina's quay, (160, 240)) | 30 | 75 | gulls, a moored boat's creak, lapping, a halyard on a mast |
+  | `fold` | `fatagaFold` (Fataga's sheepfold) | 22 | 60 | the mountain wind, the sheep's bells, a bleat, the village church's bell |
+  | `kyrka` | `kyrka` (Templo Ecuménico) | 20 | 90 | its bells' peal |
+  | `scen` | `scen` (the SunTrip stage) | 14 | 45 | the band (only while it plays) |
+  | `bar` | `kasbah` (Centro La Medina) | 16 | 48 | the murmur at the tables, someone talking, a laugh, glasses; Tonga Tonga's bass at night |
+
+  On the quay the surf is heard too (about 0.29), before the stage the church's layer (about 0.48: a peal
+  carries); at Flamenco's pool deck, in the middle of the town and in the flight level nothing.
+- **The sides**: each layer's panner (`StereoPannerNode`) puts it on its side of the camera: `pan` 0.7 × the
+  dot of the way to it with the camera's right on the ground (`camera.getWorldDirection`), from 0 at `near`
+  m to full at 2 × `near` m (inside a zone it is all round him). The surf's way is south, to the sea.
+- **The channel** (audio.js): `ambient` (gain `AMB_GAIN` 0.3) straight into master, not through the music
+  bus, so the FLYGRÄDSLA low-pass, `tradDuck` and `duckMusic` leave it alone; per layer a gain (the level ×
+  `AMB_MIX` { waves 1, hamn 1.4, fold 1.6, kyrka 1.2, scen 0.8, bar 1.8 }: each one under the tune, none
+  lost under it) and its panner. `ambLayer(name, level, side)` schedules only on a change (levels in 1/50,
+  sides in 1/20; the gain glides with a time constant of 0.35 s, the side 0.25 s). `pauseLoops()` (the pause
+  card) takes the channel to 0 and `resumeLoops()` back to 0.3; mute (N) is master's. Measured on master
+  (`ljudklipp`, the tune's RMS about 0.018 over 12 s): the surf about 10 dB under the tune at the water's
+  edge, the stage's band about 9 dB under the ducked tune, the marina, Fataga and the church (with a peal)
+  16–18 dB under it on average (single sounds stand out), La Medina by night about 10 dB.
+- **The beds** (looped from init under their layer's gain, from a 7 s noise buffer of the channel's own so no
+  loop is heard repeating, each through its filter and a low-pass taking the hiss off): the sea (low-pass
+  380 Hz, top 1200, gain 0.32), the murmur (band-pass 520 Hz Q 0.9, top 1800, 0.14, and 1150 Hz Q 1.6, top
+  2200, 0.05; `stir` gives them a new level every 0.25–0.6 s), the wind (band-pass 320 Hz Q 0.5, top 700,
+  0.1, its centre swung ±110 Hz by a 0.07 Hz LFO).
+- **The one-shots** (`shots`: the kind in `audio.amb` → its layer, the pause `every` [s, s] till the next,
+  its `hours` of the island's clock (§10.10; the clock is held at 15:00 in test mode)). Each kind's pause
+  runs only while its layer is over `min` 0.04 (so nothing is scheduled in a zone nobody hears; the first
+  of each comes within `every[0]` × a draw), and each plays into its layer, so it fades with him:
+
+  | kind | layer | every (s) | hours | the sound |
+  |---|---|---|---|---|
+  | `wave(len)` | waves | 4.5–7.5 (`len` 5–7.5 s) | — | low-passed noise swelling over 42 % of `len` as its filter opens 260 → 1100–1700 Hz, then falling back to 360 Hz; from the crest the foam drawing back, a soft 3.4 kHz hiss |
+  | `gulls` | hamn | 3–9 | 6–21 | `gull` (×3), pitched 0.88–1.14; four times in ten a second gull answers 0.5–1.1 s later |
+  | `creak` | hamn | 3.5–9 | — | a sawtooth 20 ↔ 36 Hz (each cycle a tick) through a band-pass at 520–940 Hz Q 9, 0.45–0.95 s |
+  | `lap` | hamn | 1.2–3.2 | — | low-passed noise 0.32–0.52 s and a 1200 → 450 Hz sweep |
+  | `halyard` | hamn | 6–14 | — | two or three triangle tinks at 1.7–2.4 kHz with a partial at 2.71× |
+  | `tinkle` | fold | 4–10 | — | a sheep's bell: two to four strikes of sine partials (1, 2.76, 5.4, 8.93) at 0.9–1.5 kHz |
+  | `baa` | fold | 12–28 | — | `baa(p)` (×2.5), pitched 0.85–1.2 |
+  | `villageBell(n = 3)` | fold | 35–70 | 7–21 | Fataga's church bell, `n` strokes 1.3 s apart (church-bell partials on 660 Hz) |
+  | `peal(rounds = 3)` | kyrka | 25–45 | 8–21 | Templo Ecuménico's three bells, G 392, E 330, C 262 Hz rung down in turn every 0.62 s, three rounds (about 6 s); each a church bell: the hum 0.5×, the prime, the minor third 1.19×, the fifth 1.5×, the nominal 2× and two upper partials, 3.2 s |
+  | `chatter` | bar | 0.6–2.2 | — | someone talking: three to seven syllables of band-passed noise (Q 4) round 420–620 or 700–1000 Hz |
+  | `laugh` | bar | 9–22 | — | `laugh` (×5) |
+  | `clink` | bar | 2.5–7 | — | a glass, or two for a toast: sine partials (1, 1.58, 2.33) at 2.6–4.1 kHz |
+  | `stir` | bar | 0.25–0.6 | — | the murmur's two bands to a new level (0.08–0.18 and 0.025–0.07) |
+
+  No gulls at night; no bells at night either (the hours). By night the island is otherwise as by day.
+- **The band** (`band`; Affe's accordion and Gabbe's congas): while the stage's layer is up (over 0.005),
+  from `band.hours` [10, 23) and with Affe and Gabbe both on their feet and shown within `band.r` 6 m of
+  `scen` (not at the pool fest's ring or on the pool deck after the end, §10.13, nor hidden by anything),
+  `audio.ambBand(true)`. It is no loop of its own: the music scheduler hands each bar it schedules
+  (`ambBar(name, t0, bar, beat, beats)`, after the tune's own `bar`) to the band, which schedules its
+  parts into the stage's layer on that bar's clock and chords (`BAND` in audio.js), so it is always in time
+  and in key and stops at once with another tune (skandal in a pursuit, a mission's cue) or the music off.
+  - *sol* (116 bpm, Am–G–F–E): Affe's left hand, the oom-pah ("HUMPA-HUMPA"): the root an octave up on
+    beat 1 and the fifth on beat 3 (`accordion`, 0.05 / 0.045), the chord on 2 and 4 (`accChord`: the
+    accordion's detuned square pairs through one low-pass at 1700 Hz, 0.02); while sol's lead rests (bars
+    24–31 of 32) his own 8-bar phrase over its chords (`SOL_SOLO`, 0.06). Gabbe in eighths: `THSTTTOO`
+    (`T` a muffled touch, conga 0.06; `H` an open high tone 0.22; `S` a slap: a 1.9 kHz noise crack and a
+    420 Hz triangle, 0.2; `O` an open low tone 0.26): the slap on 2, two open tones on 4 and its "and"
+    ("BOM-BOM-PAH!").
+  - *samba* (100 bpm, Dm7–G7–Cmaj7–A7): the same left hand with the chord on every off-beat, his phrase in
+    bars 4–7 of 8 (where the flute rests, `SAMBA_SOLO`); Gabbe in sixteenths `T.SH..OOT.SH.HOO`.
+  - Every note on a sixteenth of the bar (`bandLog.offGrid` counts any that is not). Never a film's
+    melody (§1.5): the phrases are written over the tunes' chords. Measured (`ljudklipp`): the band's
+    onsets lie on the tune's sixteenth grid (median 3 ms, as the tune's own).
+  - While it plays the island tune is ducked to `1 − duck × the stage's level` (`duck` 0.25; in steps of
+    0.05; `musicDuck`, main.updateAudio's `duckMusic` outside a pursuit), so the band comes forward.
+- **Tonga Tonga** (`club` [22, 4): the clock's hours, across midnight): while La Medina's layer is up,
+  `audio.ambClub(true)`, and the scheduler's bar adds a muffled kick on every beat of the tune (a sine 80 →
+  45 Hz, 0.12, 0.22 s) into it: the club's bass through the wall, in time with whatever plays.
+- **Tests** (`ljud`): `levels`, `out`, `pans`, `right`, `mix`, `band`, `club`, `musicDuck`, `next`, `counts`,
+  `log` ({ kind, t }), `enabled`, `live`, `quiet`, `zone(cfg, x, z, rx, rz)`; audio `ambState()` ({ gain,
+  paused, band, club, layers { level, side, gain, rms }, bandLog { bars, solos, notes, offGrid, tune, t0,
+  beat, bar }, clubBars, rms, tune }), `ambNodes()` ({ ambient, master, beds }), `jumpBar(n)` (the next bar
+  is bar n of its tune). Scenarios `ljud`, `ljudklipp` (§16.4); meter.mjs's `ui` sets `enabled` false while
+  it checks that every tune sounds.
+- **Not done / changed** (deviations from the idea): the island has a clock now (§10.10), so the night
+  differs a little: no gulls or bells at night, the band from 10 to 23, and Tonga Tonga's bass from 22 to
+  4 (the idea's "disco from La Medina" kept to a muffled kick, no tune of its own); no crickets and no
+  "Helan går". "En aning samba från Tonga Tonga" by day was left out (the club is shut by day). The
+  harbour also has lapping water and a halyard on a mast; Fataga also has its wind. The band follows the
+  music: with the music off (the pause card's Musik: av) it is silent too. The church's bells are a peal
+  at random times, not the hours. The soundscape sounds under a free-roam activity that only holds the
+  input (the fishing at the pier keeps its gulls), not under its dialogues or cuts.
+
 ## 11. HUD / UI strings (Swedish; `src/strings.js` owned by WP-H, created by Phase 0)
 
 `strings.js` exports `S` (flat object) and `fmt(key, vars)`. Engine code uses `S.key` only.
@@ -9206,6 +9328,13 @@ Scheduler fixes (Phase 0): catch-up guard `if (next < ctx.currentTime) next = ct
 - Island: `sol`; pursuit → `skandal` + `siren(true)`; escape/bust/bribe → back to the tune before
   the pursuit if it was a mission's (`vals`, `jul`), else the level tune (§7.2).
 - **Every mission complete**: `audio.applause(2)` + `jingle('complete')` (the film's applause gag).
+- **Island soundscape** (feature 131, §10.60): the channel `ambient` (gain 0.3) straight into master, not
+  through the music bus, a gain and a stereo panner per layer (`waves`, `hamn`, `fold`, `kyrka`, `scen`,
+  `bar`), set by `game.ljud` through `audio.ambLayer(name, level, side)`; its beds loop from init, its
+  one-shots are `audio.amb.*`. The stage's band (`ambBand`) and Tonga Tonga's kick (`ambClub`) are
+  scheduled by the music scheduler with each bar of the tune (`ambBar`), so they stop with the music.
+  Silenced by `pauseLoops()`; between the zones, in a mission, under a dialogue or a cut and in the flight
+  level every layer is at 0. The island tune is ducked to 0.75–1 by the band (`duckMusic`).
 
 ### 12.3 Sound effects (Phase 0 placeholders with these names; WP-H polishes)
 
@@ -9225,12 +9354,13 @@ Scheduler fixes (Phase 0): catch-up guard `if (next < ctx.currentTime) next = ct
 | `laugh()` | crowd: 8 short formant-ish noise bursts |
 | `knock()`, `slap()`, `doorSlam()` | short filtered noise thumps |
 | `ambulance()` | distant two-tone 960/770 Hz sine fading in and out over 4 s |
-| `baa()` | tone slide 420 → 300 Hz with vibrato |
+| `baa(p = 1)` | tone slide 420 → 300 Hz with vibrato; `p` scales the pitch (Fataga's sheep, feature 131, §10.60) |
 | `oink()` | the grisbil's horn (feature 5, §10.9): two nasal grunts 0.22 s apart, each a 190 → 120 Hz sawtooth and a band-passed noise burst; `honk.update` plays it on H and every 0.75 s while H is held, and `updateAudio` keeps `horn` off in the grisbil |
 | `woof(size = 1, n = 2, vol = 1)` | a watchdog (feature 31, §10.21): `n` barks 0.23 s apart, each a sawtooth (300–350 Hz ÷ `size`) jumping up 1.2× and falling to 0.55× in 0.15 s through a band-pass at 950 Hz ÷ `size`, with a band-passed noise breath; `size` the dog's (the poodle's 0.72 yaps higher), `vol` 0..1 for the distance |
 | `whistle()` | a dog's owner whistling it home (feature 31, §10.21): a sine 1700 → 2400 Hz (0.14 s), then 2350 → 1500 Hz (0.36 s) |
 | `flap(n = 1, vol = 1)` | a flock lifting (feature 43, §10.31): 3 + 2n (at most 12) wing claps 0.05 s apart, band-passed noise bursts of 0.05 s at 0.8–1.6 kHz, fading, over a 500 → 1700 Hz noise sweep of 0.25–0.57 s; `vol` 0..1 for the distance; `birds` plays it for the take-offs of each 0.15 s |
-| `gull(vol = 1, low = 1)` | a gull's cry (feature 43, §10.31): two sawtooth glides through a band-pass at 1.9 kHz, 1150 → 1650 Hz (0.14 s) and, 0.17 s on, 1550 → 880 Hz (0.34 s); `low` scales every frequency, and under 0.6 adds a 0.4 s noise breath: the herons' croak at 0.32 |
+| `gull(vol = 1, low = 1)` | a gull's cry (feature 43, §10.31): two sawtooth glides through a band-pass at 1.9 kHz, 1150 → 1650 Hz (0.14 s) and, 0.17 s on, 1550 → 880 Hz (0.34 s); `low` scales every frequency, and under 0.6 adds a 0.4 s noise breath: the herons' croak at 0.32; `delay` s (feature 131: the marina's gulls answering, §10.60) |
+| `amb.wave(len)`, `amb.gulls()`, `amb.creak()`, `amb.lap()`, `amb.halyard()`, `amb.tinkle()`, `amb.baa()`, `amb.villageBell(n)`, `amb.peal(rounds)`, `amb.chatter()`, `amb.laugh()`, `amb.clink()`, `amb.stir()` | the island soundscape's one-shots, each into its layer (feature 131; recipes in §10.60) |
 | `thud()`, `crash()`, `coin()`, `pickup()` | existing |
 | `toasterDown()`, `pop()` | a G17 toaster (feature 33, §10.24): the lever going down (a band-passed noise clack and a 170 → 110 Hz square), the bread popping up (a short 2.6 kHz noise burst and a 380 → 900 Hz sine) |
 | `stamp()`, `stampFail()` | the stunt jumps' stamp (feature 40, §10.27): a rubber thump on paper (a 1.5 kHz noise slap, a 96 → 52 Hz sine, a low noise tail); UNDERKÄND adds a falling two-tone square buzz (196 → 98, 147 → 74 Hz) |
@@ -9334,7 +9464,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/strings.js` | new | **H** | `S`, `fmt()` (§11) |
 | `src/content/index.js` | new | none | merges `HOMES`, `MAP_LABELS`, `LEVEL_OUTFITS`, re-exports all content |
 | `src/content/flight.js` | new | **F** | `HOMES_GATE`, `HOMES_FLIGHT`, `MAP_LABELS_FLIGHT`, `CHATTER_FLIGHT`, `OLE_STATS`, `LEVEL_OUTFITS_GATE`, `LEVEL_OUTFITS_FLIGHT` |
-| `src/content/island.js` | new | **G** | `HOMES_ISLAND`, `MAP_LABELS_ISLAND`, `CHATTER`, `OUCH`, `GETUP`, `CARJACK`, `NPC_KICKED` (+ the `_OLE` / `_LOCAL` tables, `LOCAL_CAST`, `BARKS`: Phase 3 r2, §14.10; `STIG_SORRY`: feature 11, §10.14; `PIG_TRUCK`: feature 15, §10.15; `BAGGAGE_BELT`: feature 25, §10.16; `LAPPLISA`: feature 20, §10.17; `GRISFEST_FREE`: feature 21, §10.18; `FRUKTSTAND`: feature 28, §10.19; `TOWER`: feature 24, §10.20; `DOGS`: feature 31, §10.21; `BATHERS`: feature 32, §10.22; `RUM107`: feature 38, §10.25; `SOLKRAM`: feature 35, §10.26; `STUNTHOPP`: feature 40, §10.27; `TALK_ISLAND`: feature 39, §10.28; `TAKHOPP`: feature 41, §10.29; `MIKROFON`: feature 44, §10.30; `BIRDS`: feature 43, §10.31; `GAGS`: feature 47, §10.32; `STRANDKYSSEN`: feature 57, §10.33; `FYREN`: feature 52, §10.35; `RINGKLOCKA`: feature 59, §10.37; `BALKONG`: feature 77, §10.42; `HYTT_TVA`: feature 80, §10.43; `KAFFE`: feature 84, §10.44; `FISKE`: feature 107, §10.45; `MARKNADSTAK`: feature 92, §10.46; `LIFTA`: feature 106, §10.47; `KIKARE`: feature 108, §10.48; `LOPANDE_BAND`: feature 109, §10.49; `KORT`: feature 110, §10.51; `GUAGUA`: feature 112, §10.53; `TRAKTORN`: feature 121, §10.54; `SYSTRARNA`: feature 117, §10.55; `KRANEN`: feature 118, §10.56; `TERRAZA`: feature 122, §10.59), `COLLECTIBLES`, `UNLOCKS`, `NAMED_CARS`, `LEVEL_OUTFITS_ISLAND` |
+| `src/content/island.js` | new | **G** | `HOMES_ISLAND`, `MAP_LABELS_ISLAND`, `CHATTER`, `OUCH`, `GETUP`, `CARJACK`, `NPC_KICKED` (+ the `_OLE` / `_LOCAL` tables, `LOCAL_CAST`, `BARKS`: Phase 3 r2, §14.10; `STIG_SORRY`: feature 11, §10.14; `PIG_TRUCK`: feature 15, §10.15; `BAGGAGE_BELT`: feature 25, §10.16; `LAPPLISA`: feature 20, §10.17; `GRISFEST_FREE`: feature 21, §10.18; `FRUKTSTAND`: feature 28, §10.19; `TOWER`: feature 24, §10.20; `DOGS`: feature 31, §10.21; `BATHERS`: feature 32, §10.22; `RUM107`: feature 38, §10.25; `SOLKRAM`: feature 35, §10.26; `STUNTHOPP`: feature 40, §10.27; `TALK_ISLAND`: feature 39, §10.28; `TAKHOPP`: feature 41, §10.29; `MIKROFON`: feature 44, §10.30; `BIRDS`: feature 43, §10.31; `GAGS`: feature 47, §10.32; `STRANDKYSSEN`: feature 57, §10.33; `FYREN`: feature 52, §10.35; `RINGKLOCKA`: feature 59, §10.37; `BALKONG`: feature 77, §10.42; `HYTT_TVA`: feature 80, §10.43; `KAFFE`: feature 84, §10.44; `FISKE`: feature 107, §10.45; `MARKNADSTAK`: feature 92, §10.46; `LIFTA`: feature 106, §10.47; `KIKARE`: feature 108, §10.48; `LOPANDE_BAND`: feature 109, §10.49; `KORT`: feature 110, §10.51; `GUAGUA`: feature 112, §10.53; `TRAKTORN`: feature 121, §10.54; `SYSTRARNA`: feature 117, §10.55; `KRANEN`: feature 118, §10.56; `TERRAZA`: feature 122, §10.59; `LJUD`: feature 131, §10.60), `COLLECTIBLES`, `UNLOCKS`, `NAMED_CARS`, `LEVEL_OUTFITS_ISLAND` |
 | `src/game/missions/index.js` | new | none | `MISSIONS = [...FLIGHT_MISSIONS, ...ISLAND_MISSIONS]`, `MissionRunner` re-export |
 | `src/game/missions/runner.js` | new (from missions.js) | none | `MissionRunner` (§9.4) |
 | `src/game/missions/kinds/core.js` | new | **none** (frozen after Phase 0) | getInCar goto pickup dropoff follow rabbits race destroy grab scene |
@@ -9391,6 +9521,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/golfCart.js` | new (feature 74, 2026-10-17) | — | `GolfCarts` (`game.golf`): Golfbilen in free roam: `open()`/`refuse()` for main.enterCar and updateHud (a golf cart only between missions on the island), the pip-pip, the bunkers' and the pond's brake (`step`) with the sand, the splash and Stig's lines, a wreck back on its spot, both home at a mission start (§10.40); since feature 121 `isCart(car)`: `mine()` and the mission check take golf carts only |
 | `src/game/traktor.js` | new (feature 121, 2026-10-18) | — | `Traktor` (`game.traktor`): Traktorn med släpkärran in free roam: the tractor's prompt and refusal (with main.enterCar), the take and Stig's line, the farmer (shown at the hut's door, the chase that keeps `keep` behind the tail, the shouts and Stig's answers, the give-up, the way back to the tractor, the walk home and in), the jolts over the rows (`rowCell`, `TOMATO_ROWS`) and off the asphalt, Stig's åksjuka, the stack's puffs, the spill, the honking queue (`queueUp`) and Stig's sorry (`onHonk`), the fetch home, home at a mission start (§10.54) |
 | `src/game/trampbat.js` | new (feature 120, 2026-10-21) | — | `Trampbat` (`game.trampbat`): Hyr en trampbåt in free roam: the rental's E at the PATINES sign (shut in a mission and while the SKANDAL meter is up), the fade, the pedal boat made at the water's edge with Ole's double beside Stig, the samba, its water past the bound wall and its sea level (`step`), the rocking, the paddle wheel and the wake, the Rio exchange and the statistics, the raft's coins out only during a ride, E ashore only at the water's edge (else the toast), Ole pedalling it back out of view (`pilot`), R at the rental, the ride's end at a pursuit, a mission, a warp or the other level, the splash ashore, the camera's no pull-in (§10.57) |
+| `src/game/soundscape.js` | new (feature 131, 2026-10-21) | — | `Soundscape` (`game.ljud`): Ljudlandskap per kvarter in free roam: each zone's level from where Stig is (the surf to the foam line, the marina, Fataga's fold, Templo Ecuménico, the SunTrip stage, La Medina), its side of the camera, the mix (not live, a dialogue box, a cut: 0; a car × 0.55; a pursuit × 0.5), the stage's band with Affe and Gabbe there and Tonga Tonga's bass by the clock, the one-shots while a layer is heard, the island tune's duck at the stage (§10.60) |
 | `src/game/terraza.js` | new (feature 122, 2026-10-21) | — | `Terraza` (`game.terraza`): Takterrassen på La Medina vaknar in free roam: the roof terrace's guests at the tables and the bartender behind the counter (by the clock's hours, popped out of view), the stairs' visit (`isUp`) and the tanks' coins out only then, the brochure line, the bartender's greeting, burn line and "¡Olé!" at a splash in the roof pool (`onLand`), the loungers' roles for game/bathers.js (`role`), the nap on Stig's lounger (E, the black, the clock on, the burn), the burn as a layer over his outfit (`dress`, until the next morning) and "Aj!" at a bump (`onTouch`), all off at a mission start (§10.59) |
 | `src/game/streetRace.js` | new (feature 69, 2026-10-17) | — | `StreetRace` (`game.gatlopp`): Gatlopp mot pizza-racern in free roam after Gamla kläder: José's "!" and challenge, the grid in the hire car behind a fade, the three courses run on the mission kind `race` outside the runner, the start and finish banners, the result, the prize and `records.gatlopp`, José's drive back and the walk to his place with his mother, the bet at the chalkboard by Berra and Robban, the sisters' six, the reset at a mission start (§10.38) |
 | `src/game/church.js` | new (feature 60, 2026-10-17) | — | `Church` (`shame.church`): Kyrkfrid i Templo Ecuménico in free roam: the church door's interactable and its open doorway mesh, the walk in and the slam, the plaza shot and the card, the waiting Land Rovers with their lamps, the meter in the wait, the officer's walk to the sign and his lines and scratch, the give-up, the peek and the step out, Stig's line and the banner, the officer into his Land Rover, the interruptions and the map marker (§7.2) |
@@ -9401,12 +9532,12 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/mic.js` | new (feature 44, 2026-10-17) | — | `Mic` (`game.mic`): Mikrofonen på scenen in free roam: the mic's interactable and the turn of Lasse's announcements, the chime, Stig's facing and the camera's ease, the lines one after another, the terrace's guests and their spit, the crowd (tourists and the free gang: the ways in and out, the places, the cheer, the question time), Ole's answer to the time, the slump, the shark warning through `bathers.scare`, the reset (§10.30) |
 | `src/game/bathers.js` | new (feature 32, 2026-10-17) | — | `Bathers` (`game.bathers`): Badgäster på solstolarna in free roam: tourists on the sun loungers nearest him by day, their burn (pale, pink, lobster red), the fly-off from a kicked or smashed lounger, a newcomer on a lounger back; Berra and Robban fried and asleep on two Flamenco loungers between buss17 and the bodega, their snores and the wake (§10.22); `scare` for the shark warning (feature 44, §10.30); a lounger's `role` from `game.terraza.role` (La Medina's roof: 'asleep' always taken and dozing, 'kept' never) and `lieOn` exported (feature 122, §10.59) |
 | `src/game/suntripShop.js` | new (feature 34, 2026-10-17) | — | `SuntripShop` (`game.shop`): Bränsletillägg tillkommer in free roam: SunTrip-butiken's counter shown and its solids live between missions, the travel agent, the wares' and the bag's interactables, the receipts, the Trapp Trull account's instalments, "Paketet!", Ole's line; his bought look as a layer over his outfit (`dress`), saved (§10.23) |
-| `src/game/hud.js` | edit | **H** | map sources, meter, strings, legend, ring, blips, zone bar, markers; `renderPortrait` restores the model transform (§14.8); `dream`, `dreamWash`, `dreamFlash` (feature 57, §10.33); `menu` (feature 80, §10.43); `setKaffe`, the coffee box (feature 84, §10.44); `setFangst`, the FÅNGST card (feature 107, §10.45); `setKikare`, `kikareRing`, the binoculars' overlay (feature 108, §10.48); `setVolley`, the volleyball board (feature 111, §10.50); `setKort`, the tourist couple's viewfinder (feature 110, §10.51); the town map's `sea` band past its canvas and the big map's player arrow kept at its crop's edge (feature 120, §10.57) |
+| `src/game/hud.js` | edit | **H** | map sources, meter, strings, legend, ring, blips, zone bar, markers; `renderPortrait` restores the model transform (§14.8); `dream`, `dreamWash`, `dreamFlash` (feature 57, §10.33); `menu` (feature 80, §10.43); `setKaffe`, the coffee box (feature 84, §10.44); `setFangst`, the FÅNGST card (feature 107, §10.45); `setKikare`, `kikareRing`, the binoculars' overlay (feature 108, §10.48); `setVolley`, the volleyball board (feature 111, §10.50); `setKort`, the tourist couple's viewfinder (feature 110, §10.51); the town map's `sea` band past its canvas and the big map's player arrow kept at its crop's edge (feature 120, §10.57); `letterboxed` (feature 131, §10.60) |
 | `src/game/camera.js` | edit | **A1** | profile, frameOne, cutTo, `clampZ`; `scope`, the binoculars' eye (feature 108, §10.48), also the tourist couple's camera's (feature 110, §10.51); `focus.noPull`, no pull-in (the pedal boat at sea, feature 120, §10.57) |
 | `src/game/fx.js` | edit | **A1** | `snow`, `steam`, `meterPuff` (rename of `shame`); `splash`'s `up` (feature 24, §10.20); `splash`'s `y` (feature 122, §10.59: the roof pool) |
 | `src/game/markers.js` | unchanged | none | |
 | `src/gfx.js` | edit | none | `setSkyPalette`, `setCloudsVisible`, `setShadows`, `MAT.sky`, `MAT.water` sea colour |
-| `src/audio.js` | edit | **H** | §12 API; `splash(k)`'s size (feature 24, §10.20); `woof`, `whistle` (feature 31, §10.21); `toasterDown`, `pop` (feature 33, §10.24); `squirt`, `splat` (feature 35, §10.26); `stamp`, `stampFail` (feature 40, §10.27); `flap`, `gull` (feature 43, §10.31); `shutter` (feature 47, §10.32); `phone` (feature 59, §10.37); `engine`'s `diesel` (feature 121, §10.54) |
+| `src/audio.js` | edit | **H** | §12 API; `splash(k)`'s size (feature 24, §10.20); `woof`, `whistle` (feature 31, §10.21); `toasterDown`, `pop` (feature 33, §10.24); `squirt`, `splat` (feature 35, §10.26); `stamp`, `stampFail` (feature 40, §10.27); `flap`, `gull` (feature 43, §10.31); `shutter` (feature 47, §10.32); `phone` (feature 59, §10.37); `engine`'s `diesel` (feature 121, §10.54); the soundscape's channel `ambient`, its layers, beds and one-shots (`ambLayer`, `ambBand`, `ambClub`, `audio.amb`), the stage's band per bar of the tune (`ambBar`), `baa(p)`, `gull`'s `delay`, `conga`'s `dest`, `pauseLoops`/`resumeLoops` with the channel, the test hooks `ambState`, `ambNodes`, `jumpBar` (feature 131, §10.60) |
 | `src/input.js` | edit | none | pad Start → `pause`; the menu's `menuUp`, `menuDown`, `hangUp` (feature 80, §10.43); the belt's `sortRed`, `sortRotten`, `sortGreen` (A/S/D, ←/↓/→, the pad's d-pad; feature 109, §10.49); the viewfinder's `snap` (Space, the left button, the pad's A) and `turnCam` (the right button, V, the pad's LB; feature 110, §10.51) |
 | `src/util.js` | unchanged | none | |
 | `src/world/frame.js` | new (from town.js) | none | `Frame` (`prop(…, opts)` passes `opts` to `placeProp`: feature 28) |
@@ -9439,7 +9570,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `tools/scenarios/scenery.mjs` | new | **A2** | phases (one shot per flight phase from inside and outside) |
 | `tools/scenarios/island.mjs` | new | **B** | smash, foot |
 | `tools/scenarios/cast.mjs` | new | **E** | castsheet, cars |
-| `tools/scenarios/meter.mjs` | new | **H** | skandal, ui |
+| `tools/scenarios/meter.mjs` | new | **H** | skandal, ui (the soundscape off while `ui` checks the tunes: feature 131) |
 | `tools/scenarios/paintshop.mjs` | new (feature 1) | — | pintura, dalasheet |
 | `tools/scenarios/skjortbyte.mjs` | new (feature 36) | — | skjortbyte, garderob |
 | `tools/scenarios/berra.mjs` | new (feature 2) | — | berra |
@@ -9469,6 +9600,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `tools/scenarios/kran.mjs` | new (feature 118) | — | kran, kranshots |
 | `tools/scenarios/trampbat.mjs` | new (feature 120) | — | trampbat, trampbatshots |
 | `tools/scenarios/terraza.mjs` | new (feature 122) | — | terraza, terrazashots |
+| `tools/scenarios/ljud.mjs` | new (feature 131) | — | ljud, ljudklipp |
 | `tools/story/flight.mjs` | new | **F** | `M_FLIGHT` (M[0..4]) |
 | `tools/story/island.mjs` | new | **G** | `M_ISLAND` (M[5..12]) |
 
@@ -9502,7 +9634,8 @@ traffic/peds skipped when `!levelDef.sim.*`) → `syncAll` (also
 writes `ch.x/y/z` from `car.seatWorld(ch.seatSide)` for every car-seated character, player
 included, so framing, bubbles and distance checks see where they really are) → `missions.update` →
 `missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `tower.update` (feature 24) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `skis.update` (feature 71) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `stands.update` (feature 28) → `dogs.update` (feature 31) → `bathers.update` (feature 32) → `shop.update` (feature 34) → `toasters.update` (feature 33) → `bags.update` (feature 116) → `room107.update` (feature 38) → `solkram.update` (feature 35) → `stunts.update` (feature 40) → `chat.update` (feature 39) → `roofs.update` (feature 41) → `mic.update` (feature 44) → `birds.update` (feature 43) → `dream.update` (feature 57) → `jeep.update` (feature 51) → `fyren.update` (feature 52) → `bell.update` (feature 59) → `gatlopp.update` (feature 69) → `golf.update` (feature 74) → `battur.update` (feature 76) → `residents.update` (feature 77) → `hytt.update` (feature 80) → `bar.update` (feature 84) → `fiske.update` (feature 107) → `awnings.update` (feature 92) → `hitch.update` (feature 106) → `kikare.update` (feature 108) → `packhus.update` (feature 109) → `volley.update` (feature 111) → `kort.update` (feature 110) → `guagua.update` (feature 112) → `utflykt.update` (feature 124) → `traktor.update` (feature 121; after `syncAll`, so its jolts go on top of the car's synced tilt) → `sisters.update` (feature 117) → `crane.update` (feature 118) → `trampbat.update` (feature 120) → `terraza.update` (feature 122) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
-pickups/collectibles → props → `fx.tick` → `tickTown` → markers → camera → sun/sky → HUD → audio →
+pickups/collectibles → props → `fx.tick` → `tickTown` → markers → camera → sun/sky → HUD → audio (its
+`ljud.update`, feature 131, after the camera so the soundscape's sides follow it) →
 traffic recycling (island) → autosave. `loop` then renders, and when `film.grabNow` is set calls
 `film.grab()` in the same task (Herr Storch's still from the frame's buffer, feature 6, §10.11), and when
 `kort.grabNow` is set `kort.grab()` (the tourist couple's picture, the frame's part of the buffer, feature
@@ -9713,6 +9846,10 @@ game.terraza;      // Terraza (feature 122, §10.59): La Medina's roof terrace, 
                    // dress(def) (setPlayerOutfit), onLand(v, y, wet), onCoin(c), onTouch(why) (carsVsPeople,
                    // onCharHit), end(why) (debugWarp), reset(), update(dt), naps, splashes, oles, greets, ajs,
                    // last, log, cfg (TERRAZA)
+game.ljud;         // Soundscape (feature 131, §10.60): the island's soundscape, a layer per part of the island;
+                   // levels, out, pans, right, mix, band, club, musicDuck (updateAudio's duckMusic), next,
+                   // counts, log, enabled (tests), live, quiet, zone(cfg, x, z, rx, rz), update(dt)
+                   // (updateAudio), cfg (LJUD)
 game.waterSplash(x, z, v, bomb = false, y = CURB)     // a hard landing's splash from the water's floor y (feature 122)
 game.platformAt(ch, x, z, ytop) -> { top, car } | null   // a moving floor that is no car, for Character.step
                    // (feature 118): the crane's pallet under the player between missions
@@ -10781,6 +10918,10 @@ shame.chase(car) (feature 60): a Land Rover's chase AI with the catch-up band (s
 //   terraza.onTouch('bump') when it pushes the player and someone apart, onCharHit onTouch('car') for the
 //   player; debugWarp calls end('warp'); onPropBroken bursts a prop's coins from its floor when it stands
 //   over 2 m up
+// soundscape.js (feature 131, §10.60): game.ljud = new Soundscape(game) after the terrace; updateAudio calls
+//   ljud.update(dt) (the layers' levels and sides, the band, the club, the one-shots) before duckMusic, which
+//   takes ljud.musicDuck outside a pursuit
+// hud.js: letterboxed (set by letterbox(on); the soundscape is quiet under it)
 // hud.js: setKort({ fw, fh, hog, keys, par, sub, line, who, still, stamp } | null) (#kort, the viewfinder)
 // input.js: snap (Space, Mouse0, pad 0), turnCam (Mouse2, KeyV, pad 4)
 // traktor.js (feature 121, §10.54): game.traktor = new Traktor(game) after the guagua (the farmer's
@@ -11476,6 +11617,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `trampbat`, `trampbatshots` [feature 120] | Hyr en trampbåt (§10.57). `trampbat`, at index 9 between missions: the sign at (98, 255), the water's edge at (96, 301.8); the prompt `<b>E</b> Hyr trampbåt – 200 pta` from either side of the sign, none 4.2 m off, none and no rental with SKANDAL on the meter; with an empty purse Ole pays (the toast), at the water's edge facing the sea at y 0.15, Ole's double seated beside him (the real Ole where he was), both full size, the speedo "Trampbåt", the samba, the start lines; held W tops out at 1.9–2.0 m/s (the speedo 7), it glides on over 2.2 m in 2.5 s, no engine, horn, skid or honk event (H, W + A + Space); past the bound wall (z over 324.5) the Rio exchange in order with Ole waving, once a ride, then the statistics further out; at z 327 facing the sea the chase eye over 6.5 m behind it inside the wall's band; the minimap ahead at sea blue; never past z 352, x ±250 or onto the beach (301.8), "E Kliv i land" there; a buoy stops it; E at sea the toast and still in it; R back at the water's edge with the toast; the raft stops it, its eight coins (+200 pta), Ole's two raft lines; ashore at the water's edge on the sand at z 299.5 facing inland, the boat going back with Ole, the music back, "Tack för turen." and Ole's line, no prompt at the boat, Ole backing off the beach and pedalling east, gone once out of view (no pedal boat left in the cars); with 500 pta 200 go; a forced exit at sea: the splash, "Usch, vad blött.", on the sand; a pursuit: ashore (`ashore`, 'pursuit'); a warp: on foot at the deck, the boat gone; a mission start in the boat: ashore, the boat gone, no prompt at the sign in the mission, after it (Q) the rental again; after the end (index 13) in the boat with Ole too. `trampbatshots`: the rental with its sign and boats on the sand, the boat at the water's edge, Stig and Ole at sea from the side and the front, the view back over the beach and the town, the sunset with Ole's Rio line and his wave, the raft with its coins, the big map at sea (the arrow at the edge), Ole pedalling the boat back with Stig on the sand |
 | `utflykt`, `utflyktKvar`, `utflyktSpar` [feature 124] | Utflykt med Lasse (§10.58). `utflykt`: at index 10 no prompt on the office's sidewalk; at index 11 "E Åk på utflykt till Fataga – 50 pta" there; E: held, the cut, Lasse there with "Hä-pååre! …", 50 pta; after the fade SunTrip's bus at the office's stop on the eastbound lane (within 0.5 m), locked, `noEnter`, invulnerable, Affe's bust and five tourists, Stig its passenger (side −1, no `playerCar`), free, the card (UTFLYKT · Nästa hållplats: Gando), the chase camera 4–22 m from the bus; R does nothing; the whole loop driven: Gando within 1 m of its spot in the lane, over 10 m from bus 17's bay, a leg of 35–70 s, aboard with the card and "E Kliv av", the leg's lines (Affe's, Lasse's water line, Stig's two) and Lasse's Gando line; Grisfesten within 1 m with Lasse's 800-pesetas line and the tomato fields; Fataga within 1 m with Lasse's two lines, the tourist's "Stackars människor som lever så här." and the leg's two; E off onto the sidewalk at the door (y 0.15), the card "Tillbaka till bussen!" with 2:00, Lasse's two minutes; no door prompt in the village and the time running; at the door "E Kliv på bussen", back in his seat, "Alla med? Då kör vi!", on; home: off by himself on the sidewalk across from the office, no card, `records.utflykt` 1 (saved), the thanks, the leg home's line, the bus gone out of sight; no SKANDAL, no coin on the way. `utflyktKvar`: off at Gando, no card, the bus on without him with "Hej då, Olsson!"; through Fataga aboard with "Ingen som vill titta på dukar? …"; a debug warp mid-ride: off, the bus gone; off at Fataga (its wait shortened by the test) and not back: "Bussen har redan gått!" and Stig's line, no card; a car behind the parked bus waits over 6.5 m off it; a mission start mid-ride: off on his feet, the bus gone, no card; no prompt in the mission and `call()` refuses; after it the prompt again; no SKANDAL on a trip. `utflyktSpar`: a van on the bus's spot: the toast and no trip; no trip from the wheel; no prompt in a pursuit. Shots `utflykt_prompt`, `_kontoret`, `_ombord`, `_gando`, `_grisfesten`, `_fataga`, `_fataga_av`, `_dorren`, `_hem`, `_karta`, `utflykt_kvar_gando`, `_missad` |
 | `terraza`, `terrazashots` [feature 122] | Takterrassen på La Medina vaknar (§10.59). `terraza`, at index 9 between missions: the roof pool's water floor (x [9.4, 13.6], z [−8.2, 4.2] block-local, top 6.02, a pool, `waterAt` names it), the coping a step at 6.16, the board's step 6.55 and bounce pad 6.82, the counter's floor 7.07 and the aisle walled to 8.5, twelve chairs, the tanks' four coins at 8.45 (minY 7.6), the three roof loungers at 6.0 with their roles ('asleep', 'asleep', 'kept') and Stig's the last lounger placed; the island's fixed coins within 260 off the roof; up the courtyard stairs on foot (real W) to 6.0: up, the coins out, six guests seated at 6.48 (four with a glass), the bartender perched behind the counter (a local), two dozing bathers and none on Stig's lounger, the brochure line and its reply in order; down in the street the coins in; the bartender's first greeting at 6 m, not again that visit, the next one on the next, never "Momento."; no tank coin from the roof's floor with a jump, two from a tank's top (+50 pta), the stash in off the roof and only the two untaken back out; a walking hop off the board (from 2 m) over 11 m up and down in the pool at 6.02 with a splash and the bartender's "¡Olé!", a sprinting one (from 3 m) in the pool too, a stomp in the flight a cannonball in it (the camera shaken); walking in the pool no splash, a jump in it one; at 21:00 no nap prompt, at 15:00 `<b>E</b> Lägg dig en liten stund`; E: lying on the lounger in a scene with the letterbox, "Bara en liten stund.", eyes shut and dozing, the burn (0xf0705a) in the black, then on his feet 1.7 m off the lounger's foot facing back down it at 6.0, the clock 16:30, his four lines in order ("Bara en liten stund.", "Zzz…", "Oj… Det blev visst en lång stund.", "Aj!"), the toast; the suit on still red; the bartender's burn line; standing still against an NPC no "Aj!", walking into a pedestrian "Aj!", not again within 1.6 s, none in a dialogue, a car's knock "Aj!"; still burnt at 22:00, healed at 9:00, then no "Aj!"; a mission start burnt and up there: healed, nobody and no coins (fixed coins within 260), in the mission no prompt and nobody, after it (abort) all back; a mission start mid-nap ends it (on his feet, no burn); at 23:30 after a cut nobody up there, no dozing bathers. `terrazashots`: the stairs' top with the brochure line, the terrace from above, the bartender behind the counter, the hop high over the roof, the splash, the prompt, the nap (lying, dozing, waking red), Stig red before the lounger, the bartender at the burn, an "Aj!" in the street, the minimap from the roof |
+| `ljud`, `ljudklipp` [feature 131] | Ljudlandskap per kvarter (§10.60). `ljud`, at index 9 between missions: the audio context runs; at Flamenco's pool deck every zone 0 and the channel silent; on the beach 8 m from the foam line the surf's level 1 and alone, its layer's gain 1 and its bed sounding, a wave within 9 s; 60 m up the beach the surf at 0.15–0.5 heard from the sea's side (|side| > 0.5, the sign of the camera's right towards +z) and from the other side turned round; on the quay the marina's 1 and the surf at 0.2–0.6, nothing else, gulls, a creak and lapping within 6 s; at Fataga's fold its layer alone, the wind sounding, a sheep's bell; every one-shot kind forced in its layer (its beds muted, the others held off) with its own peak RMS over 0.004 (logged: the mix); at Templo Ecuménico its layer and a peal; 8 m before the stage the stage's layer over 0.9 and the band on: on sol's bars (beat 60/116 s, at least two bars, every note on a sixteenth), sounding (RMS over 0.01), the tune ducked to 0.8 or less, no solo in sol's first bars and Affe's solo once the music jumps to bar 24; with the samba the band on its bars (beat 0.6 s); in skandal no new bars; at 23:12 no band, the stage's layer 0 and no duck; Affe hidden no band, back after `placeNpcs`; at La Medina its layer alone, its murmur sounding, chatter, no club by day, after 22:30 Tonga Tonga's kicks on the tune's bars; in a car the mix 0.55 (the surf's out 0.4–0.6), in a pursuit 0.5; under a dialogue box 0 and back after it; under the letterbox 0; a mission (begin) every layer out (the surf's gain under 0.02 after 2 s), after its abort back; `enabled` false out; `pauseLoops` the channel under 0.01, `resumeLoops` back to 0.3; after the end (bodega's unlock) no band at the stage; the flight level (`&mission=2`) nothing. `ljudklipp` (at ts 1): the game's master output and the soundscape's channel alone recorded together for `LJUD_SECS` (12) s each as WAVs in OUT at the deck, the beach, the quay, the fold, the church (a peal), the stage and La Medina at 22:30, for listening |
 | `systrar`, `systrarshots` [feature 117] | Systrarnas balkong (§10.55). `systrar`: at index 10 and 12 walking onto 105's patio does nothing; at index 11 the sisters at the pool, free, and the sun cream's prompt by Majsan; by night walking in does nothing; by day (a real key press, the dialogue held) the ask: held, the cut, both sisters perched on their spots at the balcony's y, busy, spot `balkong105`, posed (no horn answer, no talk), Siv's glass, Majsan waving, the sun cream and the judges refused; the ask's lines in order, then the card and the beacon at the pool bar (the nearer shop); still up 1.5 s later, one ask; a kick under the balcony: no bark from up there; away and back in front: Siv's reminder, once an approach; at the bar's spot "E Köp en flaska whisky (250 pta)", at the coffee's spot the coffee's E; E (a real key): 250 pta, `carrying.whisky`, the bottle in his left hand, the bartender's line and Stig's, the card and the beacon at the balcony, no second bottle; a fling breaks it (the toast, back to buying); the supermercado with an empty purse: Ole pays, the voice from the door and Stig's line; in a car the bottle kept out of sight, on foot in his hand again; a car left south of the zone: no line; under the balcony "E Skicka upp whiskyn", E: held, the cut, the basket on its way down with Majsan leaning over, the bottle in it at `basketY`, up, the bottle in Siv's hand, the delivery's lines in order, done (no card or beacon), Majsan waving, and again on the next pass; a car left by the west gable: Majsan's line and Siv's answer, no neighbour's; the grisfest's talk with a bottle in hand, its start: the errand over, the bottle gone, both sisters home on the ground and not posed, nobody on the balcony in the running mission. `systrarshots`: the patio before, the ask's three lines, the card, the bar with its prompt and after buying, the bottle in his hand close and from the side, the supermercado, under the balcony, the basket down (two) and up, the delivery's three lines, after, Siv with her glass and the bottle close, the wave from the deck, the balcony from the street |
 | `rum107`, `troferum` [feature 38] | Rum 107 fylls med resans minnen (§10.25). `rum107`, at index 9 (free roam): the room bare on a fresh save (7 gadget, 7 fin and 3 julafton meshes built, none shown); E at the shelf with nothing found: "Inget att kontrollera.", he faces it, the card `Oles prylar 0/7 · Hajfenor 0/7`, Ole's "Hylla er tom…"; four gadgets and three fins collected (`collect`) show at once, each gadget in its own place 0.5 m apart standing on the shelf's 2.75; no prompt for `gap` s, then "Kontrollerad av G17.", 4/7 · 3/7 and "Fire av sju! Snart er hylla full."; before the unlocks the nap answers at the giraffe's spot and the boombox plays no samba (feature 67: "Bergsprängaren"); all seven: the samba unlock, "Spela samba" sets and saves the samba with Ole's "Ja, det er fint! Samba!", "Stäng av sambaen" while it plays (feature 67), "Spela samba" back with the sol tune; after `unlock('bodega')` the suitcase, the giraffe and the pack; E at the giraffe: held, the bed's hidden, "Precis en sån…", the prompt "Ställ tillbaka giraffen", back after `holdSecs`, at once 3 m off and with E; the nap beside his bed; a full shelf's "Alle sju! Nå er hylla full."; a reload dresses the room; at index 12 a mission start leaves none usable and the giraffe back; the flight level inert. `troferum`, at index 13: the room from the patio (`rum107Cam` at 5.5 and 7.5 m, buss17's and julafton's cuts) bare, mid-trip and after julafton, close shots of the shelf, the pile and the beds, Stig at the shelf, Stig with the giraffe, and the nap with the giraffe by his head |
 | `solkram` [feature 35] | Smörj in Majsans rygg (§10.26). At index 10 (fataga waiting, Majsan its giver at the pool) the talk and no SOLKRÄM; at index 11 beside Majsan "Smörj in ryggen", none at 22:00 or with Siv 5 m off her spot; E: the film's pair in a dialogue (and the marker `solkramFilm`), then her back turned (yaw π/2), Stig 0.97 m behind her facing her with `rub` 1 and his hands 0–0.2 m over her shoulder pivots and 0.03–0.2 m behind her middle, both sisters `busy`, the bottle, no prompt, the card (SOLKRÄM, `Håll E · släpp i det gröna`, `Majsans rygg`, the field `w0` wide with its middle in `at`, the marker) with no letterbox; E held (a real key) 0.6 s: the fill at 1/`secs` a second (0.6–1.3 ×), `rub` 2, `Håll… håll…`; let go in the stripe: 7, a record, Siv's `7` card, `SOLKRÄM 7 P` / `NYTT REKORD!`, `records.solkram` 7 in the save, then her three lines in order and at the end the camera, the sisters and the pose back, no bottle, `sjuPoang` (Siv's chatter, the toast, both markers saved); again: one of `again`, the field × `shrink`, 6 with "Sex, tycker jag." and the record kept (`REKORD 7 P`); the field's edge: 5 and "Giraffen, då? Fem."; short of it: early, no card, `FÖR LITE!`, "Var det allt?"; held to the end: over at 1, Siv's `–1` and laugh, Stig flailing 1.42 m behind her, the cream running, the shot from behind, three drops at 1.1 s, back to the front shot for Siv, the lines, the flail and the cream gone; no hold: "Jaha. Då får jag väl göra det själv."; six tries; a mission start with Siv's card up: the card down and the intro's cinematic kept; a reload: the record 7, `sjuPoang`, Siv's chatter and no film pair again; at index 13 after `unlock('bodega')` at 15:00 the pool fest's ring has Majsan (none), at 08:00 she is home and it is there; the flight level inert. Shots `solkram_0_prompt`, `_1_ready`, `_1b_hold`, `_2_sju`, `_3_after`, `_4_over`, `_5_minus` |
@@ -14088,3 +14230,21 @@ the fixer's group.
   every bump with someone or a car's knock is "Aj!". A mission start takes everyone and the coins away
   and heals him. No evening music. Nothing is saved, and nothing in a mission, stage, timer, fixture or
   calibration pool changed. Scenarios `terraza`, `terrazashots` (§16.4).
+- Feature 131, "Ljudlandskap per kvarter" (`features/implemented/ljudlandskap_per_kvarter.md`,
+  2026-10-21): the island's soundscape under the tune between missions (§10.60; new
+  `src/game/soundscape.js` (`game.ljud`), `LJUD` in content/island.js; audio.js the channel `ambient`
+  straight into master with a gain and a stereo panner per layer, its beds, the one-shots `audio.amb.*`,
+  the stage's band and Tonga Tonga's kick scheduled with each bar of the tune (`ambBar`), `baa(p)`,
+  `gull`'s `delay`, `conga`'s `dest`, `pauseLoops`/`resumeLoops` with the channel and the test hooks
+  `ambState`, `ambNodes`, `jumpBar`; hud.js `letterboxed`; main.js (constructor, `updateAudio`:
+  `ljud.update`, `duckMusic` by `ljud.musicDuck`); meter.mjs's `ui` switches the soundscape off while it
+  checks that every tune sounds; §1.6, §12.2, §12.3, §14.1–14.3, §16.4). Six layers, each faded by Stig's
+  distance and heard from its side of the camera: the surf along the beach (to the foam line), the marina's
+  gulls, creaks, lapping and a halyard, Fataga's wind, sheep's bells, a bleat and village bell, Templo
+  Ecuménico's peal, La Medina's murmur, chatter, laughs and glasses, and on the SunTrip stage Affe's
+  accordion and Gabbe's congas, played by the music scheduler with the island tune's own bars (sol or the
+  samba, an original solo while the tune's lead rests) while both stand there, the tune ducked a little;
+  after ten at night Tonga Tonga's bass through La Medina's wall. Out in a mission, under a dialogue box
+  or a cut and in the flight level, lowered in a car and a pursuit, silent on the pause card. No line,
+  nothing on screen, nothing saved; nothing in a mission, stage, timer, fixture or calibration pool
+  changed. Scenarios `ljud`, `ljudklipp` (§16.4).

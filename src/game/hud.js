@@ -32,6 +32,7 @@ const TAIL_H = 8;        // px: the drawn tail's length below the bubble's botto
 export const hud = {
   portraits: {},
   dialogActive: false,
+  letterboxed: false,
   src: null,
 
   init() {
@@ -484,7 +485,8 @@ export const hud = {
     e.classList.add('show');
   },
 
-  letterbox(on) { $('letterbox').classList.toggle('on', on); },
+  // `letterboxed`: the bars are on (a cut; the soundscape fades under it, §10.60).
+  letterbox(on) { this.letterboxed = !!on; $('letterbox').classList.toggle('on', on); },
 
   // Herr Storch's viewfinder (game/storchFilm.js, §10.11) over everything: o = { title, label, who,
   // line, live } or null. Without `live` the gate is black (the lens cap); with it the 3D view shows

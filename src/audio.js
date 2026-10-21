@@ -8,12 +8,17 @@
 //   Graph:  music voices -> musicBus (duckMusic) -> tradDuck (ducked under a trad cue)
 //             -> musicFilter (FLYGRÄDSLA low-pass) -> master
 //           trad voices -> tradBus -> master;  sfx -> sfx -> master;  cabin drone -> sfx
+//           island soundscape: a layer's voices -> its gain -> its panner -> ambient -> master
 //   Cabin drone: its own channel (drone(level, bright)), never touched by the car-engine code.
+//   Soundscape (feature 131, §10.60): the `ambient` channel straight into master, so the fear
+//   low-pass, tradDuck and duckMusic leave it alone; game/soundscape.js sets its layers.
 
 let ctx, master, sfx, musicBus, tradDuck, musicFilter, tradBus, noiseBuf;
 let eng, skid, hornNodes, music, drone, siren;
 let tuneName = 'muzak', pendingTune = null;
 let duckNow = 1, lowpassNow = null;
+let amb = null, into = null;   // the soundscape's channel; `into`: where tone/noise/sweep/baa/gull go (sfx)
+let barJump = null;             // test hook (jumpBar): the next bar's number
 
 const MUSIC_GAIN = 0.3;
 export const TUNES = {};
@@ -70,6 +75,7 @@ export const audio = {
     drone.g.connect(sfx);
     drone.s.start(); drone.o.start(); drone.w.start(); drone.lfo.start();
     if (this._drone) this.drone(...this._drone);
+    buildAmbient();
 
     // Engine: two detuned saws through a low-pass, pitched by revs.
     eng = { g: ctx.createGain(), f: ctx.createBiquadFilter(), o1: ctx.createOscillator(), o2: ctx.createOscillator() };
@@ -166,9 +172,17 @@ export const audio = {
     siren.level = lv;
     siren.g.gain.setTargetAtTime(lv, ctx.currentTime, 0.3);
   },
-  // Silence the looping channels (pause).
-  pauseLoops() { if (!ctx) return; drone.g.gain.setTargetAtTime(0, ctx.currentTime, 0.05); if (siren) siren.g.gain.setTargetAtTime(0, ctx.currentTime, 0.05); },
-  resumeLoops() { if (!ctx) return; if (this._drone) this.drone(...this._drone); if (siren) siren.g.gain.setTargetAtTime(siren.level, ctx.currentTime, 0.05); },
+  // Silence the looping channels (pause), the island's soundscape with them (§10.60).
+  pauseLoops() {
+    if (!ctx) return;
+    drone.g.gain.setTargetAtTime(0, ctx.currentTime, 0.05); if (siren) siren.g.gain.setTargetAtTime(0, ctx.currentTime, 0.05);
+    amb.paused = true; amb.g.gain.setTargetAtTime(0, ctx.currentTime, 0.05);
+  },
+  resumeLoops() {
+    if (!ctx) return;
+    if (this._drone) this.drone(...this._drone); if (siren) siren.g.gain.setTargetAtTime(siren.level, ctx.currentTime, 0.05);
+    amb.paused = false; amb.g.gain.setTargetAtTime(AMB_GAIN, ctx.currentTime, 0.05);
+  },
 
   // `electric` (the golf cart, §10.40): a quiet hum rising to a thin whine instead of the motor.
   // `diesel` (the tractor, §10.54): a low, dark putt-putt that hardly rises.
@@ -196,7 +210,7 @@ export const audio = {
     g.gain.setValueAtTime(0.0001, t);
     g.gain.exponentialRampToValueAtTime(vol, t + 0.01);
     g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-    o.connect(g).connect(sfx);
+    o.connect(g).connect(into || sfx);
     o.start(t); o.stop(t + dur + 0.05);
   },
   noise(dur, vol = 0.2, freq = 1000, type = 'lowpass', delay = 0, q = 1) {
@@ -207,7 +221,7 @@ export const audio = {
     f.type = type; f.frequency.value = freq; f.Q.value = q;
     g.gain.setValueAtTime(vol, t);
     g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-    s.connect(f).connect(g).connect(sfx);
+    s.connect(f).connect(g).connect(into || sfx);
     s.start(t, Math.random() * 1.5); s.stop(t + dur + 0.05);
   },
   // A noise burst whose filter sweeps from f0 to f1 (flush, splash).
@@ -220,7 +234,7 @@ export const audio = {
     f.frequency.setValueAtTime(f0, t); f.frequency.exponentialRampToValueAtTime(f1, t + dur);
     g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.08);
     g.gain.setValueAtTime(vol, t + dur * 0.6); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-    s.connect(f).connect(g).connect(sfx);
+    s.connect(f).connect(g).connect(into || sfx);
     s.start(t, Math.random() * 0.5); s.stop(t + dur + 0.05);
   },
 
@@ -360,15 +374,16 @@ export const audio = {
     o.connect(f).connect(g).connect(sfx);
     o.start(t); o.stop(t + 4.05);
   },
-  // A sheep: 420 -> 300 Hz with a bleating vibrato through a nasal band-pass.
-  baa() {
+  // A sheep: 420 -> 300 Hz with a bleating vibrato through a nasal band-pass; `p` scales the pitch
+  // (Fataga's sheep, §10.60).
+  baa(p = 1) {
     if (!ctx) return;
     const t = ctx.currentTime, o = ctx.createOscillator(), v = ctx.createOscillator(), vg = ctx.createGain(), f = ctx.createBiquadFilter(), g = ctx.createGain();
-    o.type = 'sawtooth'; o.frequency.setValueAtTime(420, t); o.frequency.exponentialRampToValueAtTime(300, t + 0.6);
-    v.frequency.value = 9; vg.gain.value = 18; v.connect(vg).connect(o.frequency);
+    o.type = 'sawtooth'; o.frequency.setValueAtTime(420 * p, t); o.frequency.exponentialRampToValueAtTime(300 * p, t + 0.6);
+    v.frequency.value = 9; vg.gain.value = 18 * p; v.connect(vg).connect(o.frequency);
     f.type = 'bandpass'; f.frequency.value = 1100; f.Q.value = 2.5;
     g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.09, t + 0.05); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.65);
-    o.connect(f).connect(g).connect(sfx);
+    o.connect(f).connect(g).connect(into || sfx);
     o.start(t); v.start(t); o.stop(t + 0.7); v.stop(t + 0.7);
   },
   // The grisbil's horn (P2): two nasal grunts.
@@ -403,19 +418,20 @@ export const audio = {
     this.sweep(0.25 + Math.min(n, 8) * 0.04, 0.05 * vol, 500, 1700, 'bandpass', 0.8);
   },
   // A gull's cry (§10.31): a nasal sawtooth gliding up, then a longer one down ("kie-ow"), through a
-  // band-pass; `low` under 1 lowers it into a heron's hoarse croak (with a breath of noise).
-  gull(vol = 1, low = 1) {
+  // band-pass; `low` under 1 lowers it into a heron's hoarse croak (with a breath of noise). `delay` s
+  // (the marina's gulls answering each other, §10.60).
+  gull(vol = 1, low = 1, delay = 0) {
     if (!ctx) return;
     for (const [d, f0, f1, len] of [[0, 1150, 1650, 0.14], [0.17, 1550, 880, 0.34]]) {
-      const t = ctx.currentTime + d, o = ctx.createOscillator(), f = ctx.createBiquadFilter(), g = ctx.createGain();
+      const t = ctx.currentTime + delay + d, o = ctx.createOscillator(), f = ctx.createBiquadFilter(), g = ctx.createGain();
       o.type = 'sawtooth';
       o.frequency.setValueAtTime(f0 * low, t); o.frequency.exponentialRampToValueAtTime(f1 * low, t + len);
       f.type = 'bandpass'; f.frequency.value = 1900 * low; f.Q.value = 1.6;
       g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.12 * vol, t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + len);
-      o.connect(f).connect(g).connect(sfx);
+      o.connect(f).connect(g).connect(into || sfx);
       o.start(t); o.stop(t + len + 0.05);
     }
-    if (low < 0.6) this.noise(0.4, 0.06 * vol, 700, 'bandpass', 0, 1.2);
+    if (low < 0.6) this.noise(0.4, 0.06 * vol, 700, 'bandpass', delay, 1.2);
   },
   helanGar() { this.trad('helanGar'); },
 
@@ -481,9 +497,11 @@ function startMusic() {
     if (next < ctx.currentTime) next = ctx.currentTime + 0.05;
     while (next < ctx.currentTime + 0.6) {
       if (pendingTune) { tuneName = pendingTune; pendingTune = null; bar = 0; }
+      if (barJump != null) { bar = barJump; barJump = null; }
       const tune = TUNES[tuneName] || TUNES.placeholder;
       const beat = 60 / tune.bpm;
       tune.bar(API, next, bar, beat);
+      if (amb) ambBar(tuneName, next, bar, beat, tune.beats || 4);
       next += beat * (tune.beats || 4);
       bar++;
     }
@@ -567,8 +585,8 @@ function pad(fs, t, d, v) {
   for (const f of fs) { osc('sine', f, t, d, g); osc('triangle', f * 1.003, t, d, g); }
 }
 // Conga (sine 220 -> 170 low, 330 -> 250 high).
-function conga(t, hi, v = 0.22) {
-  const o = ctx.createOscillator(), g = envGain(t, 0.004, v, 0.18, musicBus);
+function conga(t, hi, v = 0.22, dest = musicBus) {
+  const o = ctx.createOscillator(), g = envGain(t, 0.004, v, 0.18, dest);
   o.type = 'sine';
   o.frequency.setValueAtTime(hi ? 330 : 220, t); o.frequency.exponentialRampToValueAtTime(hi ? 250 : 170, t + 0.12);
   o.connect(g); o.start(t); o.stop(t + 0.22);
@@ -799,6 +817,274 @@ registerTune('placeholder', {
     if (bar % 2 === 0) stab(chord.slice(1).map((n) => mtof(n + 12)), t0 + beat * 1.66, 0.35, 0.05, musicBus, 'sine', 4000);
   },
 });
+
+// ---- Ljudlandskap per kvarter: the island's soundscape (free roam; feature 131, DESIGN §10.60) --
+// One channel `ambient` (gain AMB_GAIN) straight into master and, per layer, a gain (its level, set by
+// game/soundscape.js from where Stig is) and a stereo panner (the side it is heard from). The beds
+// loop under their layer's gain from init on: the sea further out (waves), the murmur at La Medina's
+// tables (bar) and Fataga's mountain air (fold). Everything else is a one-shot in `audio.amb`, played
+// into its layer while the layer is heard (soundscape.js times them). The SunTrip stage's band is no
+// loop of its own: while the stage is open (`ambBand`) the music scheduler hands every bar of `sol` or
+// `samba` to `ambBar`, which schedules Affe's accordion and Gabbe's congas into the stage's layer on
+// that bar's own clock and chords; and while Tonga Tonga is open (`ambClub`) a muffled kick on every
+// beat of the tune comes through La Medina's wall. Own random draws (`arnd`), never Math.random's.
+const AMB_GAIN = 0.3;
+export const AMB_LAYERS = ['waves', 'hamn', 'fold', 'kyrka', 'scen', 'bar'];
+// Each layer's gain at level 1: the mix, so that each sits under the tune (about 7–12 dB at the surf
+// and the stage) and none is lost under it.
+const AMB_MIX = { waves: 1, hamn: 1.4, fold: 1.6, kyrka: 1.2, scen: 0.8, bar: 1.8 };
+const arnd = (() => { let a = 131; return () => { a = (a + 0x6d2b79f5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; })();
+
+function buildAmbient() {
+  const g = ctx.createGain();
+  g.gain.value = AMB_GAIN;
+  g.connect(master);
+  // A noise buffer of its own, long enough that a bed's loop is never heard repeating.
+  const buf = ctx.createBuffer(1, ctx.sampleRate * 7, ctx.sampleRate), d = buf.getChannelData(0);
+  for (let i = 0; i < d.length; i++) d[i] = arnd() * 2 - 1;
+  amb = { g, buf, paused: false, band: false, club: false, layers: {}, beds: {}, clubBars: 0,
+    bandLog: { bars: 0, solos: 0, notes: 0, offGrid: 0, tune: null, t0: 0, beat: 0, bar: 0 } };
+  for (const k of AMB_LAYERS) {
+    const lg = ctx.createGain(), pan = ctx.createStereoPanner();
+    lg.gain.value = 0;
+    lg.connect(pan).connect(g);
+    amb.layers[k] = { g: lg, pan, level: 0, side: 0 };
+  }
+  // A looped noise bed: a filter, a low-pass taking the hiss off (`top` Hz) and its gain.
+  const bed = (layer, type, f, q, v, top) => {
+    const src = ctx.createBufferSource(), fl = ctx.createBiquadFilter(), lp = ctx.createBiquadFilter(), bg = ctx.createGain();
+    src.buffer = buf; src.loop = true;
+    fl.type = type; fl.frequency.value = f; fl.Q.value = q;
+    lp.type = 'lowpass'; lp.frequency.value = top; lp.Q.value = 0.5;
+    bg.gain.value = v;
+    src.connect(fl).connect(lp).connect(bg).connect(amb.layers[layer].g);
+    src.start(0, arnd() * 6.5);
+    return { f: fl, g: bg };
+  };
+  amb.beds.sea = bed('waves', 'lowpass', 380, 0.5, 0.32, 1200);
+  amb.beds.murmur = bed('bar', 'bandpass', 520, 0.9, 0.14, 1800);
+  amb.beds.murmur2 = bed('bar', 'bandpass', 1150, 1.6, 0.05, 2200);
+  amb.beds.wind = bed('fold', 'bandpass', 320, 0.5, 0.1, 700);
+  const lfo = ctx.createOscillator(), lg = ctx.createGain();
+  lfo.frequency.value = 0.07; lg.gain.value = 110;
+  lfo.connect(lg).connect(amb.beds.wind.f.frequency);
+  lfo.start();
+}
+// Play tone/noise/sweep/gull/baa/laugh into a layer instead of sfx, `k` times as loud.
+function via(layer, fn, k = 1) {
+  const prev = into;
+  if (k === 1) into = amb.layers[layer].g;
+  else { into = ctx.createGain(); into.gain.value = k; into.connect(amb.layers[layer].g); }
+  try { fn(); } finally { into = prev; }
+}
+
+// A church bell: the hum, the prime, the minor third, the fifth and the nominal, the upper partials
+// dying first.
+const BELL = [[0.5, 0.6, 1], [1, 1, 0.7], [1.19, 0.5, 0.55], [1.5, 0.3, 0.45], [2, 0.55, 0.4], [2.52, 0.18, 0.2], [3.01, 0.12, 0.15]];
+// A sheep's bell and a glass: [partial, level, decay] of sine partials, dying fast.
+const SHEEP_BELL = [[1, 1, 1], [2.76, 0.55, 0.6], [5.4, 0.3, 0.35], [8.93, 0.15, 0.2]];
+const GLASS = [[1, 1, 1], [1.58, 0.45, 0.7], [2.33, 0.25, 0.4]];
+function partials(parts, f, t, d, v, dest) { for (const [m, a, k] of parts) osc('sine', f * m, t, d * k, envGain(t, 0.003, v * a, d * k, dest)); }
+// A conga slap: a sharp band-passed crack over a short high tone.
+function slapVoice(t, v, dest) {
+  const src = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain();
+  src.buffer = amb.buf; f.type = 'bandpass'; f.frequency.value = 1900; f.Q.value = 1.1;
+  g.gain.setValueAtTime(v, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.07);
+  src.connect(f).connect(g).connect(dest);
+  src.start(t, arnd() * 6.5); src.stop(t + 0.09);
+  osc('triangle', 420, t, 0.06, envGain(t, 0.002, v * 0.5, 0.06, dest));
+}
+// An accordion chord: the detuned square pairs of `accordion` through one filter and one envelope.
+function accChord(fs, t, d, v, dest) { stab(fs.flatMap((f) => [f, f * 1.006]), t, d, v, dest, 'square', 1700, 0.02); }
+// Tonga Tonga's bass through La Medina's wall: a low thump, the high end gone.
+function clubKick(t, dest) {
+  const o = ctx.createOscillator(), g = envGain(t, 0.005, 0.12, 0.22, dest);
+  o.type = 'sine'; o.frequency.setValueAtTime(80, t); o.frequency.exponentialRampToValueAtTime(45, t + 0.15);
+  o.connect(g); o.start(t); o.stop(t + 0.26);
+}
+
+// The stage's band (§10.60). Affe: the left hand's oom-pah all through (the root on 1, the chord on 2,
+// the fifth on 3, the chord on 4; in the samba the chord on every off-beat), and his own 8-bar phrase
+// while the tune's lead rests (sol: bars 24–31 of 32; samba: 4–7 of 8). Gabbe: a conga pattern in
+// `grid` beats (`O` open low, `H` open high, `S` slap, `T` a muffled touch, `.` rest). The phrases are
+// original (never a film's melody, §1.5), written over the tunes' own chords.
+const SOL_SOLO = [
+  [[0, 69, 0.5], [0.5, 72, 0.5], [1, 76, 1], [2, 74, 0.5], [2.5, 72, 0.5], [3, 71, 0.5], [3.5, 72, 0.5]],
+  [[0, 74, 1.5], [1.5, 71, 0.5], [2, 67, 1], [3, 71, 1]],
+  [[0, 72, 0.5], [0.5, 69, 0.5], [1, 65, 1], [2, 69, 0.5], [2.5, 72, 0.5], [3, 77, 1]],
+  [[0, 76, 1.5], [1.5, 74, 0.5], [2, 71, 0.5], [2.5, 68, 0.5], [3, 64, 1]],
+  [[0, 81, 0.5], [0.5, 80, 0.5], [1, 81, 0.5], [1.5, 76, 0.5], [2, 72, 1], [3, 76, 1]],
+  [[0, 79, 0.5], [0.5, 77, 0.5], [1, 74, 1], [2, 71, 0.5], [2.5, 74, 0.5], [3, 79, 1]],
+  [[0, 77, 1], [1, 76, 0.5], [1.5, 74, 0.5], [2, 72, 0.5], [2.5, 71, 0.5], [3, 69, 1]],
+  [[0, 68, 1], [1, 71, 0.5], [1.5, 74, 0.5], [2, 76, 2]],
+];
+const SAMBA_SOLO = [
+  [[0, 69, 0.5], [0.5, 72, 0.5], [1, 77, 0.75], [1.75, 76, 0.75], [2.5, 74, 0.5], [3, 72, 1]],
+  [[0, 71, 0.75], [0.75, 74, 0.75], [1.5, 77, 0.5], [2, 79, 1], [3, 77, 0.5], [3.5, 74, 0.5]],
+  [[0, 76, 1.5], [1.5, 79, 0.5], [2, 83, 1], [3, 79, 1]],
+  [[0, 81, 0.75], [0.75, 79, 0.75], [1.5, 76, 0.5], [2, 73, 1], [3, 76, 1]],
+];
+const BAND = {
+  sol: { ch: SOL_CH, solo: (bar) => (bar % 32 >= 24 ? SOL_SOLO[bar % 8] : null), push: [1, 3], chordLen: 0.4, grid: 0.5, congas: 'THSTTTOO' },
+  samba: { ch: SAMBA_CH, solo: (bar) => (bar % 8 >= 4 ? SAMBA_SOLO[bar % 4] : null), push: [0.5, 1.5, 2.5, 3.5], chordLen: 0.22, grid: 0.25, congas: 'T.SH..OOT.SH.HOO' },
+};
+// Called by the music scheduler for every bar it schedules (`name` the tune, `beats` its bar).
+function ambBar(name, t0, bar, beat, beats) {
+  if (amb.paused) return;
+  const B = amb.band && BAND[name];
+  if (B) {
+    const c = B.ch[bar % 4], dest = amb.layers.scen.g, L = amb.bandLog;
+    const at = (b) => { L.notes++; if (Math.abs(b * 4 - Math.round(b * 4)) > 1e-6) L.offGrid++; return t0 + b * beat; };
+    accordion(mtof(c.root + 12), at(0), beat * 0.5, 0.05, dest);
+    accordion(mtof(c.fifth + 12), at(2), beat * 0.5, 0.045, dest);
+    for (const b of B.push) accChord(c.v.map(mtof), at(b), beat * B.chordLen, 0.02, dest);
+    const solo = B.solo(bar);
+    if (solo) for (const [b, n, d] of solo) accordion(mtof(n), at(b), d * beat * 0.92, 0.06, dest);
+    for (let k = 0; k < B.congas.length; k++) {
+      const ch = B.congas[k];
+      if (ch === '.') continue;
+      const t = at(k * B.grid);
+      if (ch === 'O') conga(t, false, 0.26, dest);
+      else if (ch === 'H') conga(t, true, 0.22, dest);
+      else if (ch === 'S') slapVoice(t, 0.2, dest);
+      else conga(t, false, 0.06, dest);
+    }
+    Object.assign(L, { bars: L.bars + 1, solos: L.solos + !!solo, tune: name, t0, beat, bar });
+  }
+  if (amb.club) {
+    for (let k = 0; k < beats; k++) clubKick(t0 + k * beat, amb.layers.bar.g);
+    amb.clubBars++;
+  }
+}
+
+Object.assign(audio, {
+  // The layer `name` at `level` 0..1 (its gain: × AMB_MIX), heard from `side` −1..1 (left..right of the camera).
+  // Schedules only on a change (levels in 1/50, sides in 1/20); the gain glides there (0.35 s).
+  ambLayer(name, level, side = 0) {
+    const L = amb?.layers[name];
+    if (!L) return;
+    const lv = Math.round(Math.max(0, Math.min(1, level)) * 50) / 50, sd = Math.round(Math.max(-1, Math.min(1, side)) * 20) / 20;
+    if (lv !== L.level) { L.level = lv; L.g.gain.setTargetAtTime(lv * AMB_MIX[name], ctx.currentTime, 0.35); }
+    if (sd !== L.side) { L.side = sd; L.pan.pan.setTargetAtTime(sd, ctx.currentTime, 0.25); }
+  },
+  // The stage's band and Tonga Tonga's bass: scheduled with the tune's next bars while on.
+  ambBand(on) { if (amb) amb.band = !!on; },
+  ambClub(on) { if (amb) amb.club = !!on; },
+  // Test hook (tools/scenarios/ljud.mjs): the channel's gain, every layer's level, side, gain now and
+  // RMS (over the last ~40 ms, after its gain), the band's and the club's log and the channel's RMS.
+  ambState() {
+    if (!amb) return null;
+    const rms = (an) => { an.getFloatTimeDomainData(amb.tmp); let s = 0; for (let i = 0; i < amb.tmp.length; i++) s += amb.tmp[i] * amb.tmp[i]; return Math.sqrt(s / amb.tmp.length); };
+    const tap = (node) => { const an = ctx.createAnalyser(); an.fftSize = 2048; node.connect(an); return an; };
+    if (!amb.an) { amb.tmp = new Float32Array(2048); amb.an = tap(amb.g); for (const k of AMB_LAYERS) amb.layers[k].an = tap(amb.layers[k].g); }
+    const layers = {};
+    for (const k of AMB_LAYERS) { const L = amb.layers[k]; layers[k] = { level: L.level, side: L.side, gain: +L.g.gain.value.toFixed(3), rms: +rms(L.an).toFixed(4) }; }
+    return { gain: +amb.g.gain.value.toFixed(3), paused: amb.paused, band: amb.band, club: amb.club, layers,
+      bandLog: { ...amb.bandLog }, clubBars: amb.clubBars, rms: +rms(amb.an).toFixed(4), tune: tuneName };
+  },
+  // Test hook: the music's next bar is bar `n` of its tune (a tune's bar-dependent parts without waiting).
+  jumpBar(n) { barJump = n; },
+  // Test hook: the channel's node, master's (a scenario records what they play) and the beds' { f, g }.
+  ambNodes() { return amb && { ambient: amb.g, master, beds: amb.beds }; },
+});
+
+// The one-shots, each into its layer (soundscape.js plays them while the layer is heard).
+audio.amb = {
+  // A wave: the wash coming up the sand (a low-passed noise swelling as its filter opens to about
+  // 1.1–1.7 kHz) and the foam drawing back (a soft hiss from the crest on). `len` s.
+  wave(len = 6) {
+    if (!amb) return;
+    const t = ctx.currentTime, up = len * 0.42, dest = amb.layers.waves.g;
+    const s = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain();
+    s.buffer = amb.buf; s.loop = true;
+    f.type = 'lowpass'; f.Q.value = 0.6;
+    f.frequency.setValueAtTime(260, t); f.frequency.exponentialRampToValueAtTime(1100 + 600 * arnd(), t + up); f.frequency.exponentialRampToValueAtTime(360, t + len);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.55, t + up); g.gain.exponentialRampToValueAtTime(0.0001, t + len);
+    s.connect(f).connect(g).connect(dest);
+    const h = ctx.createBufferSource(), hf = ctx.createBiquadFilter(), hg = ctx.createGain();
+    h.buffer = amb.buf; h.loop = true;
+    hf.type = 'bandpass'; hf.frequency.value = 3400; hf.Q.value = 0.6;
+    hg.gain.setValueAtTime(0.0001, t); hg.gain.setValueAtTime(0.0001, t + up);
+    hg.gain.exponentialRampToValueAtTime(0.06, t + up + 0.9); hg.gain.exponentialRampToValueAtTime(0.0001, t + len + 0.6);
+    h.connect(hf).connect(hg).connect(dest);
+    s.start(t, arnd() * 6.5); s.stop(t + len + 0.1);
+    h.start(t, arnd() * 6.5); h.stop(t + len + 0.7);
+  },
+  // The marina's gulls: one cry, or two birds answering each other (`gull`, pitched 0.88–1.14).
+  gulls() {
+    if (!amb) return;
+    via('hamn', () => {
+      audio.gull(0.7, 0.88 + 0.26 * arnd());
+      if (arnd() < 0.4) audio.gull(0.45, 0.9 + 0.24 * arnd(), 0.5 + 0.6 * arnd());
+    }, 3);
+  },
+  // A moored boat creaking at its rope: a slow sawtooth (each cycle a tick, 20 → 36 Hz or back)
+  // through a narrow band-pass, swelling and dying in under a second.
+  creak() {
+    if (!amb) return;
+    const t = ctx.currentTime, d = 0.45 + 0.5 * arnd(), rise = arnd() < 0.5;
+    const o = ctx.createOscillator(), f = ctx.createBiquadFilter(), g = ctx.createGain();
+    o.type = 'sawtooth';
+    o.frequency.setValueAtTime(rise ? 20 : 36, t); o.frequency.linearRampToValueAtTime(rise ? 36 : 20, t + d);
+    f.type = 'bandpass'; f.frequency.value = 520 + 420 * arnd(); f.Q.value = 9;
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.8, t + d * 0.4); g.gain.exponentialRampToValueAtTime(0.0001, t + d);
+    o.connect(f).connect(g).connect(amb.layers.hamn.g);
+    o.start(t); o.stop(t + d + 0.05);
+  },
+  // Water lapping at the quay and the hulls.
+  lap() {
+    if (!amb) return;
+    via('hamn', () => { audio.noise(0.32 + 0.2 * arnd(), 0.24, 420 + 200 * arnd(), 'lowpass', 0, 0.9); audio.sweep(0.3, 0.04, 1200, 450, 'bandpass', 1.4, 0.04); });
+  },
+  // A sailboat's halyard tapping its mast: two or three light metal tinks.
+  halyard() {
+    if (!amb) return;
+    const f = 1700 + 700 * arnd(), n = arnd() < 0.5 ? 2 : 3;
+    via('hamn', () => { for (let k = 0, d = 0; k < n; k++, d += 0.22 + 0.1 * arnd()) { audio.tone(f, 0.22, 'triangle', 0.03, null, d); audio.tone(f * 2.71, 0.08, 'sine', 0.012, null, d); } });
+  },
+  // A sheep's bell in Fataga's fold: two to four tinkles as it moves its head, each bell its own pitch.
+  tinkle() {
+    if (!amb) return;
+    const t = ctx.currentTime, f = 900 + 600 * arnd(), n = 2 + Math.floor(arnd() * 3);
+    for (let k = 0, d = 0; k < n; k++, d += 0.12 + 0.16 * arnd()) partials(SHEEP_BELL, f * (1 + 0.01 * arnd()), t + d, 0.5, 0.05 * (1 - 0.15 * k), amb.layers.fold.g);
+  },
+  // A bleat from the fold (`baa`, pitched 0.85–1.2).
+  baa() { if (amb) via('fold', () => audio.baa(0.85 + 0.35 * arnd()), 2.5); },
+  // Fataga's church bell in its gable: `n` strokes 1.3 s apart.
+  villageBell(n = 3) {
+    if (!amb) return;
+    const t = ctx.currentTime;
+    for (let k = 0; k < n; k++) partials(BELL, 660, t + k * 1.3, 2.2, 0.03, amb.layers.fold.g);
+  },
+  // Templo Ecuménico's bells: three (G, E, C) rung down in turn, `rounds` times.
+  peal(rounds = 3) {
+    if (!amb) return;
+    const t = ctx.currentTime;
+    let d = 0;
+    for (let r = 0; r < rounds; r++) for (const f of [392, 330, 262]) { partials(BELL, f, t + d, 3.2, 0.045, amb.layers.kyrka.g); d += 0.62; }
+  },
+  // Someone at La Medina's tables talking: three to seven syllables of formant-ish band-passed noise.
+  chatter() {
+    if (!amb) return;
+    const f0 = arnd() < 0.5 ? 420 + 200 * arnd() : 700 + 300 * arnd(), n = 3 + Math.floor(arnd() * 5);
+    via('bar', () => { for (let k = 0, d = 0; k < n; k++, d += 0.11 + 0.1 * arnd()) audio.noise(0.07 + 0.09 * arnd(), 0.26 + 0.14 * arnd(), f0 * (0.85 + 0.3 * arnd()), 'bandpass', d, 4); });
+  },
+  // A table laughing (`laugh`).
+  laugh() { if (amb) via('bar', () => audio.laugh(), 5); },
+  // Glasses: a clink, or two for a toast.
+  clink() {
+    if (!amb) return;
+    const t = ctx.currentTime, f = 2600 + 1500 * arnd(), n = arnd() < 0.35 ? 2 : 1;
+    for (let k = 0; k < n; k++) partials(GLASS, f * (1 + 0.04 * k), t + k * 0.09, 0.3, 0.035, amb.layers.bar.g);
+  },
+  // The murmur rising and falling: a new level for its two bands within a quarter of a second.
+  stir() {
+    if (!amb) return;
+    const t = ctx.currentTime;
+    amb.beds.murmur.g.gain.setTargetAtTime(0.08 + 0.1 * arnd(), t, 0.15);
+    amb.beds.murmur2.g.gain.setTargetAtTime(0.025 + 0.045 * arnd(), t, 0.12);
+  },
+};
 
 // ---- public-domain traditional melodies (§1.5, §12.1) ----------------------------------------
 // notes: [beat, midi, beats] (midi -1 = rest); chords: [bass, ...chord] per `beatsPerChord` beats.

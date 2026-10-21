@@ -3161,3 +3161,48 @@ export const TERRAZA = {
     aj: 'Aj!',                                                                         // [F*](t) Stig sunburnt, "Aj!" when touched (research-plot.md:296), relocated to free roam
   },
 };
+
+// Ljudlandskap per kvarter (free roam; feature 131, DESIGN §10.60; game/soundscape.js, the voices in
+// audio.js). Under the island's tune each part of the island has a layer of its own (`zones`), its level
+// 1 within `near` m of its spot and 0 past `far` m (smoothstep between): `waves` measured to the foam
+// line at z `line` (on the sea past it 0 m), the others to the landmark `lm`. Heard only on the island
+// with no mission running: a mission, a dialogue box, a cut (the letterbox), the clock's nap or morning
+// cut and the other level fade every layer out; in a car, the guagua or the excursion bus they are ×
+// `car` (the pedal boat has no engine: × 1), in a pursuit × `pursuit`. A layer comes from its side of
+// the camera, at most `pan` (full from 2 × `near` m out). The one-shots (`shots`: the kind in
+// audio.amb → its `layer`, the pause `every` [s, s] till the next, its `hours` of the island's clock,
+// `len` [s, s] a wave's length) play only while their layer is over `min`, so a zone nobody hears costs
+// nothing. The stage's band (Affe's accordion and Gabbe's congas, scheduled with the island tune's own
+// bars) plays while the stage's layer is up, from `band.hours`, with Affe and Gabbe both within `band.r`
+// m of `scen`; the island tune is ducked by `duck` × the stage's level then. Tonga Tonga's bass comes
+// through La Medina's wall from `club` [h, h). Random draws from `seed`. Invented (§1.6): every sound but
+// the band, which is the film's ("Affe spelar dragspel och Gabbe congas", research-plot.md:74) on the
+// island's stage; no line is spoken.
+export const LJUD = {
+  seed: 13100, min: 0.04, car: 0.55, pursuit: 0.5, pan: 0.7, duck: 0.25,
+  zones: {
+    waves: { line: 300.6, near: 25, far: 80 },
+    hamn: { lm: 'hamn', near: 30, far: 75 },
+    fold: { lm: 'fatagaFold', near: 22, far: 60 },
+    kyrka: { lm: 'kyrka', near: 20, far: 90 },
+    scen: { lm: 'scen', near: 14, far: 45 },
+    bar: { lm: 'kasbah', near: 16, far: 48 },
+  },
+  shots: {
+    wave: { layer: 'waves', every: [4.5, 7.5], len: [5, 7.5] },
+    gulls: { layer: 'hamn', every: [3, 9], hours: [6, 21] },
+    creak: { layer: 'hamn', every: [3.5, 9] },
+    lap: { layer: 'hamn', every: [1.2, 3.2] },
+    halyard: { layer: 'hamn', every: [6, 14] },
+    tinkle: { layer: 'fold', every: [4, 10] },
+    baa: { layer: 'fold', every: [12, 28] },
+    villageBell: { layer: 'fold', every: [35, 70], hours: [7, 21] },
+    peal: { layer: 'kyrka', every: [25, 45], hours: [8, 21] },
+    chatter: { layer: 'bar', every: [0.6, 2.2] },
+    laugh: { layer: 'bar', every: [9, 22] },
+    clink: { layer: 'bar', every: [2.5, 7] },
+    stir: { layer: 'bar', every: [0.25, 0.6] },
+  },
+  band: { r: 6, hours: [10, 23] },
+  club: [22, 4],
+};

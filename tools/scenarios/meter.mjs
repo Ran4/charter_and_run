@@ -155,6 +155,9 @@ export const SCENARIOS = {
     await T.shot('ui_pause');
     await T.ev(() => document.getElementById('pause').classList.remove('show'));
     // --- every tune and trad cue sounds ---
+    // The island's soundscape (§10.60) could hide a silent tune on master: off for these checks.
+    await T.ev(() => { __game.ljud.enabled = false; });
+    await T.sleep(1500);
     const tunes = {};
     for (const name of ['muzak', 'sol', 'skandal', 'vals', 'jul', 'samba']) {
       await T.ev((n) => window.__audio || import('/src/audio.js').then((m) => { window.__audio = m.audio; }), null);
@@ -176,6 +179,7 @@ export const SCENARIOS = {
     }
     T.log('trad', JSON.stringify(trad));
     if (audioOn) check(Object.values(trad).every((v) => parseFloat(v) > 5), 'trad cues have length');
+    await T.ev(() => { __game.ljud.enabled = true; });
     const sfx = await T.ev(() => {
       const a = window.__audio, out = [];
       for (const n of ['chime', 'pling', 'dingdong', 'beep', 'applause', 'heartbeat', 'rattle', 'flush', 'squeak', 'laugh', 'knock', 'slap', 'doorSlam', 'ambulance', 'baa', 'oink', 'thud', 'crash', 'coin', 'pickup', 'splash']) { try { a[n](); } catch (e) { out.push(n + ': ' + e.message); } }

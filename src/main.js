@@ -57,6 +57,7 @@ import { GolfCarts } from './game/golfCart.js';
 import { Traktor } from './game/traktor.js';
 import { Trampbat } from './game/trampbat.js';
 import { Terraza } from './game/terraza.js';
+import { Soundscape } from './game/soundscape.js';
 import { BoatTrip } from './game/boatTrip.js';
 import { Residents } from './game/residents.js';
 import { PoolBar } from './game/poolBar.js';
@@ -265,6 +266,7 @@ class Game {
     this.crane = new Crane(this);         // the building site's crane and its pallet; free roam: Stig rides it to the 3rd floor (§10.56)
     this.trampbat = new Trampbat(this);   // the raft's coins; free roam: a pedal boat from the beach's rental, out past the bound wall with Ole (§10.57)
     this.terraza = new Terraza(this);     // free roam: La Medina's roof terrace, its guests and bartender, the roof pool's board, the nap and the sunburn (§10.59)
+    this.ljud = new Soundscape(this);     // free roam: the island's soundscape, a layer per part of the island under the tune, the stage's band (§10.60)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -2320,7 +2322,10 @@ class Game {
       if (this.heartT <= 0) { this.heartT = 0.8; audio.heartbeat(); }
     } else if (this.lowpassOn !== false) { audio.setMusicLowpass(null); this.heartT = 0; }
     this.lowpassOn = sh.mode === 'panic' && sh.v >= (sh.cfg.hot ?? 70);
-    audio.duckMusic(sh.pursuit ? 0.5 : 1);
+    // The island's soundscape (§10.60): its layers from where he is; the tune a little down while the
+    // stage's band plays.
+    this.ljud.update(dt);
+    audio.duckMusic(sh.pursuit ? 0.5 : this.ljud.musicDuck);
     // The siren (§7.2, §10.34): a pursuit's (shame.js turns it on and off and sets its loudness by the
     // nearest pursuer), or the borrowed Guardia jeep's while H is held, at full loudness.
     audio.siren((sh.pursuit && !!sh.cfg.siren) || this.jeep.sirenOn);

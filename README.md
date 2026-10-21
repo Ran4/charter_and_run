@@ -444,6 +444,17 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   sitter kvar till nästa morgon, och så länge säger han "Aj!" varje gång någon stöter i honom (eller en
   bil). Tuppluren går bara på dagen; folket finns där från tio på förmiddagen till elva på kvällen, och
   under uppdrag är taket tomt.
+- **Ljudlandskap per kvarter** (mellan uppdragen): under öns låt har varje del av ön sitt eget ljud, som
+  tonas in när Stig närmar sig och ut när han går därifrån. Vid stranden sköljer vågorna in och drar sig
+  tillbaka, i hamnen skriker måsarna, båtarna knarrar mot förtöjningarna, vattnet kluckar mot kajen och en
+  fall slår mot en mast. I Fataga blåser det lite, fårens bjällror klingar vid fållan, ett får bräker och
+  byklockan slår ibland. Templo Ecuménicos klockor ringer då och då, och utanför La Medina sorlar det vid
+  borden med prat, skratt och klirrande glas. Vid SunTrip-scenen spelar Affe dragspel och Gabbe congas i
+  takt och tonart med öns låt (sol eller samba): humpa-humpa hela tiden, och när låtens melodi tar paus tar
+  Affe ett eget solo. Låten tonas ner lite medan de spelar. Ljuden hörs från rätt håll, så du hör hamnen
+  eller scenen innan du ser dem. På natten är måsarna och klockorna tysta, bandet spelar från tio på
+  förmiddagen till elva på kvällen, och efter tio på kvällen dunkar Tonga Tongas bas genom La Medinas vägg.
+  I bilen hörs ljuden svagare, och under uppdrag, dialoger och mellanscener är de tysta.
 - **Små grodorna i poolen** (efter slutet): julfesten är inte riktigt över. Varje gång du kommer in
   på Flamencos pooldäck (mellan nio på morgonen och elva på kvällen) vadar SunTrip-gänget ut i den
   grunda änden och ställer sig i ring runt Lasse i tomteluva. Affe spelar Små grodorna på dragspelet,
@@ -740,6 +751,10 @@ Allt som inte finns i filmen är märkt i koden. Det här har vi hittat på (DES
   liten stund.") med brännan till nästa morgon (i filmen blir Stig-Helmer bränd och säger "Aj!" när han
   blir rörd, och "Balkong med havsutsikt och kvällssol." står i broschyren; barerna en trappa upp är det
   riktiga nöjescentrets)
+- öns ljudlandskap under låten: vågorna, hamnens måsar, knarr och klucket, fårens bjällror, vinden och
+  byklockan i Fataga, Templo Ecuménicos klockor, sorlet vid La Medina och Tonga Tongas bas genom väggen,
+  och Affes dragspelsstämma och Gabbes congas på scenen (i filmen spelar Affe dragspel och Gabbe congas;
+  deras stämmor och Affes solon är egna, och hamnen finns inte i filmen)
 - poolfesten efter slutet: ringen runt Lasse, portierns promenad, att Stig hoppar med och
   takträknaren (i filmen dansar de andra Små grodorna i poolen på julfesten medan Stig-Helmer och Ole
   öppnar knäckebrödet, och Stig-Helmer dansar aldrig)
@@ -961,6 +976,7 @@ src/game/sisters.js             Systrarnas balkong in free roam before the grisf
 src/game/crane.js               Åk med byggkranen: the bygge's tower crane carrying its pallet to the 3rd floor and back, its dangle; in free roam the pallet a floor Stig rides, the mantra, the coins and the view up there, the thud of a fall
 src/game/trampbat.js            Hyr en trampbåt in free roam: the beach rental's pedal boat (a toy made for the ride), Ole's double beside Stig, its own water past the bound wall, the Rio exchange and the statistics, the raft's coins, ashore at the water's edge only, Ole pedalling it back, R, the ride's end
 src/game/utflykt.js             Utflykt med Lasse in free roam after fataga: the booking on the SunTrip office's sidewalk, the fade into SunTrip's bus beside Affe, the loop by Gando, Grisfesten and Fataga with Lasse on the radio, off at a stop, Fataga's two minutes and the missed bus, home
+src/game/soundscape.js          Ljudlandskap per kvarter in free roam: each part of the island's sound under the tune (the surf, the marina, Fataga's fold, Templo Ecuménico, the SunTrip stage's band on the tune's own bars, La Medina and Tonga Tonga's bass), faded by where Stig is, from its side of the camera (the voices in audio.js)
 src/game/terraza.js             Takterrassen på La Medina in free roam: the roof terrace's guests and bartender, the brochure line and his greetings, the tanks' coins during a visit, "¡Olé!" at a splash in the roof pool, the dozing pair's loungers, Stig's nap on his lounger and the sunburn with its "Aj!"
 src/game/hud.js                 HUD, minimap, big map, dialogue, portraits, objective card, banners
 src/game/camera.js, fx.js, markers.js
@@ -973,7 +989,7 @@ tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, 
                                 guardiajeep, fyren, klader, ringklocka, kyrkfrid, gatlopp, skidor,
                                 golfbil, battur, balkong, hytt, kaffe, meta, marknadstak, lifta,
                                 kikare, packhus, volley, kort, guagua, traktor, systrar, kran,
-                                trampbat, utflykt, terraza, calibrate, calibflight)
+                                trampbat, utflykt, terraza, ljud, calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
 tools/pool.mjs                  re-derives every random stage's timer from the ledger
@@ -1028,6 +1044,7 @@ node tools/shot.mjs traktor traktorshots # the tractor: E, 18 km/h, the farmer's
 node tools/shot.mjs systrar systrarshots # the sisters' balcony: the ask on 105's patio, the two shops, the broken bottle, the basket, the delivery, the waves, the parking line, a mission start; every scene as seen
 node tools/shot.mjs kran kranshots       # the crane: onto the pallet, the ride and the mantra, the dangle and a hop, the slab's coins and the toast, the thuds and the glide, a pursuit, a mission; the shots
 node tools/shot.mjs trampbat trampbatshots # the pedal boat: the sign's E, Ole pays, 7 km/h and the glide, past the bound wall, the Rio exchange and the statistics, its water, the raft's coins, E ashore, Ole pedalling back, R, a splash, a pursuit, a warp, a mission; the shots
+node tools/shot.mjs ljud ljudklipp       # the soundscape: every zone's layer and its sounds, the band on the tune's bars, the sides, a car, a pursuit, a dialogue, a cut, a mission, the pause, the flight level; WAV clips in OUT to listen to
 node tools/shot.mjs terraza terrazashots # La Medina's roof terrace: up the stairs, the guests, the bartender's greetings, the brochure, the tanks' coins, the board's hop into the roof pool and "¡Olé!", the nap and the burn, "Aj!", the morning, a mission start, the night; the shots
 node tools/shot.mjs grodorna grodtakt    # the pool fest after the end: the ring, the porter, Stig in the ring, eight on the beat
 node tools/shot.mjs artig                # Stig says sorry: kicks, run over, a pump, bins, carjackings and the driver's "Nej."
