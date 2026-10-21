@@ -255,7 +255,15 @@ opens with a summary of the rounds and the timer changes.
     the statistics; the raft's eight coins (out only during a ride) and Ole's lines; E ashore only at the
     water's edge (else the toast), Ole pedalling it back and gone out of view; R at the rental; a forced exit
     at sea a splash, a pursuit, a warp and a mission start ending the ride on the sand; the minimap's sea; the
-    shots, DESIGN §10.57)
+    shots, DESIGN §10.57), `utflykt utflyktKvar utflyktSpar` (Utflykt med Lasse, E on the SunTrip office's
+    sidewalk between missions after fataga: 50 pta, the cut with Lasse's "Hä-pååre! …", the fade into SunTrip's
+    bus beside Affe's bust with tourists at the windows, the chase camera on the bus; the whole loop of left
+    turns driven for real (about 3 minutes): Gando in the lane in front of bus 17's bay, Grisfesten, Fataga,
+    each stop within 1 m, Lasse on the radio, the tourist's and Stig's lines; E off at a stop, at Fataga the
+    two minutes' card, back on at the door, the missed bus ("Bussen har redan gått!"), home off by himself and
+    `records.utflykt`; the bus on without him at Gando, through Fataga aboard, the queue behind the parked bus
+    waiting, a warp and a mission start mid-ride, a car on the bus's spot, no trip from the wheel or in a
+    pursuit; `utflyktKvar` moves the bus near a stop with `utflykt.jump`, DESIGN §10.58)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

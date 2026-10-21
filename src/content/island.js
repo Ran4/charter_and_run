@@ -34,7 +34,8 @@
 // the honking queue behind it and the furrows' jolts (§10.54), and
 // the sisters' whisky errand from their balcony above room 105, the basket on the towel and the waves (§10.55),
 // and the building site's crane cycling its brick pallet to the 3rd floor, Stig riding it with the mantra,
-// the coins and the view up there and the thud of a fall off it (§10.56).
+// the coins and the view up there and the thud of a fall off it (§10.56), and SunTrip's excursion bus
+// to Fataga, Lasse guiding on its radio, the stops and the bus that goes without him (§10.58).
 
 export const HOMES_ISLAND = {
   ole: ['flamenco', 2.0, 1.0, 0],     // yaw 0: under the pergola, facing the pool (flamenco faces π)
@@ -2789,6 +2790,103 @@ export const GUAGUA = {
   bye: '¡Vámonos!',                                                         // [N] the driver, leaving without him
   byeLine: '¡Hasta luego, señor!',                                          // [N] the driver
   thanks: 'Tack så mycket!',                                                // [N] Stig (HYTT_TVA's)
+};
+
+// Utflykt med Lasse (free roam, DESIGN §10.58; game/utflykt.js). After fataga (`fromIndex`: the
+// missions' index past it), on the island with no mission running, E on the sidewalk in front of the
+// SunTrip office (`at` [x, z, yaw], below Lasse, facing the road; not a landmark, whose sight line would
+// clear the street furniture there: town.js inSight), within `r` m (`prompt`), books the excursion its
+// window promises:
+// Stig held, the cut to `shot` (world [x, y, z], from the road: Stig at the kerb, Lasse and the office
+// behind him), Lasse's `call` (his bubble within `lasseR` m, else the radio), `fare` pesetas
+// (`game.pay`), and after `callSecs` s the fade (`fadeSecs`, `holdSecs`): in the dark SunTrip's bus
+// (the `bus` type, Affe's bust at the wheel, random tourists at the `riders` windows and the one at
+// `tourist`) stands at the office's stop, Stig in the front row beside Affe (`game.seat`, side −1),
+// the chase camera behind the bus; `departAt` s after the fade-in it drives off. An AIDriver in
+// `route` mode at `cruise` m/s follows `loop` (nodes [i, j]; left turns only, AI buses cannot turn
+// right, §6.6): east on the z −40 road past Flamenco's back, up the town's east edge, west along the
+// inland road past Gando, the grisfest's gate and Fataga, down the west edge and east back to the
+// office (`stops`: the bus's middle [x, z, yaw] on the near lane, the door `door` m ahead of it on the
+// right). From `approach` m out it brakes at `brake` m/s² (at least `creep` m/s) and parks 0.4 m before
+// a stop (Gando's in the lane in front of bus 17's bay, never on it), or where it is when held up short of
+// it for `heldSecs` s. It stands `secs` s; with Stig
+// aboard E steps off (`offKeys`) onto `out` m from its middle at the door, on the sidewalk, facing its
+// way (the chase camera `offCam` rad off it, out over the sidewalk), and it goes
+// on `offGo` s later (Gando, Grisfesten) or after `wait` s (Fataga: the card `backText` with the time
+// left, Lasse's `offLine`, `warnLine` `warnAt` s before the end); E at its door (`boardPrompt`, within
+// `boardR` m, `boardSecs` s up the step) gets him back on, and it goes `backGo` s later (`backLine`).
+// Not back in time: it goes without him, Lasse's `missed` and Stig's `missedStig` `missedStigAt` s on;
+// more than `giveUpR` m off it, it goes at once and quietly. Through Fataga with Stig aboard: `stayLine`
+// as it goes on. Home again: `arrive.kontoret`, and `homeOff` s on he steps off by himself, Stig's
+// `thanks` `thanksAt` s later, the bus off `goAt` s after that. Lines: `legs[stop]` [t, who, text] from
+// a stop's departure while it drives that leg, `arrive[stop]` [t, who, text] from its arrival while it
+// stands there; who: lasse (the radio), affe (a bubble at the wheel), turist (a bubble at `tourist`'s
+// window), stig. A bus done with him drives on and is taken away `awayR` m from the camera and out of
+// its view, or `awayFar` m off. No SKANDAL; a mission start takes it all away.
+export const UTFLYKT = {
+  fromIndex: 11, at: [-14, -47.4, 0], r: 2.2, fare: 50, lasseR: 24,
+  prompt: '<b>E</b> Åk på utflykt till Fataga – {n} pta',                                   // [N]
+  boardPrompt: '<b>E</b> Kliv på bussen',                                                    // [N]
+  offKeys: '<b>E</b> Kliv av',                                                               // [N]
+  title: 'Utflykt',                                                                          // [N]
+  nextText: 'Nästa hållplats: {name}',                                                       // [N]
+  atText: 'Hållplats: {name}',                                                               // [N]
+  backText: 'Tillbaka till bussen!',                                                         // [N]
+  blocked: 'Det står en bil i vägen för bussen.',                                            // [N] toast
+  shot: { eye: [-10.6, 1.7, -40.6], look: [-14.6, 1.45, -52] },
+  callSecs: 2.2, fadeSecs: 0.8, holdSecs: 0.5, departAt: 1.0,
+  cruise: 11, approach: 40, brake: 3.0, creep: 1.5, heldSecs: 4,
+  door: 3.95, out: 3.4, offCam: 0.25, boardR: 3.0, boardSecs: 0.55,
+  offGo: 2.5, backGo: 2.0, warnAt: 30, giveUpR: 150, awayR: 60, awayFar: 160,
+  homeOff: 1.6, thanksAt: 1.0, goAt: 2.4, missedStigAt: 2.4,
+  riders: ['window2', 'window4', 'window5', 'window6'], tourist: 'window3',
+  loop: [[3, 3], [4, 3], [5, 3], [6, 3], [7, 3], [7, 2], [7, 1], [6, 1], [5, 1], [4, 1], [3, 1], [2, 1], [1, 1], [0, 1], [0, 2], [0, 3], [1, 3], [2, 3], [3, 3], [4, 3], [5, 3]],
+  stops: [
+    { key: 'kontoret', name: 'SunTrip', at: [-18, -37.25, Math.PI / 2] },                  // [N] the stops' names
+    { key: 'gando', name: 'Gando', at: [252, -202.75, -Math.PI / 2], secs: 9 },
+    { key: 'grisfesten', name: 'Grisfesten', at: [-76, -202.75, -Math.PI / 2], secs: 9 },
+    { key: 'fataga', name: 'Fataga', at: [-236, -202.75, -Math.PI / 2], secs: 16, wait: 120 },
+  ],
+  call: ['lasse', 'Hä-pååre! Femtio pesetas, så åker vi till Fataga.'],                      // [F*] his signature greeting (research-characters.md:442), the rest [N]
+  legs: {
+    kontoret: [
+      [0.6, 'affe', 'Då kör vi!'],                                                           // [N]
+      [3.0, 'lasse', 'Välkomna på utflykt med SunTrip! Vi åker via Gando och grisfesten till Fataga.'],   // [N]
+      [14, 'lasse', 'Ni bör inte dricka vattnet.'],                                          // [F*] his transfer-bus line (research-plot.md:246), relocated
+      [17.5, 'stig', 'Inte ens till tänderna?'],                                             // [N]
+      [34, 'stig', 'Jag har lite anlag för åksjuka.'],                                       // [F*](t) his line in the transfer bus (research-plot.md:248, research-characters.md:128), relocated
+    ],
+    gando: [
+      [3.0, 'turist', 'Är det här vi landade?'],                                             // [N]
+      [18, 'lasse', 'Till höger tomatfälten. Tomaterna härifrån åker ända hem till Sverige.'],   // [N]
+    ],
+    grisfesten: [
+      [2.5, 'turist', 'Är det långt kvar?'],                                                 // [N]
+      [5.0, 'affe', 'Två minuter.'],                                                         // [N]
+    ],
+    fataga: [
+      [3.0, 'lasse', 'Friskoteket börjar halv tio varje morgon.'],                           // [F*] his welcome-meeting line (research-plot.md:266), relocated
+      [20, 'lasse', 'Vi befinner oss i höjd med Egypten och 500 mil hemifrån… som väl är.'],  // [F*] the welcome meeting (research-plot.md:266), relocated
+    ],
+  },
+  arrive: {
+    gando: [[0.6, 'lasse', 'Gando! Den som saknar en väska kan fråga på hittegodset.']],     // [N]
+    grisfesten: [[0.6, 'lasse', 'Grisfesten är på torsdag och kostar 800 pesetas.']],        // [F*] his transfer-bus line (research-plot.md:246), relocated
+    fataga: [
+      [0.6, 'lasse', 'Fataga är en av de få ursprungliga byar som finns kvar på Gran Canaria.'],   // [F] the Fataga excursion (research-plot.md:335)
+      [5.6, 'lasse', 'Om ni vill köpa deras broderade dukar, så pruta inte. Prutning och sånt kan ni hålla på med på marknaden.'],   // [F] the same
+      [11.5, 'turist', 'Stackars människor som lever så här.'],                              // [F] a tourist on the same excursion (research-plot.md:335)
+    ],
+    kontoret: [[0.6, 'lasse', 'Tack för i dag, allihop!']],                                  // [N]
+  },
+  offLine: 'Bussen går om två minuter!',                                                     // [N] Lasse, Stig off at Fataga
+  warnLine: 'Bussen går om en halv minut!',                                                  // [N] Lasse
+  backLine: 'Alla med? Då kör vi!',                                                          // [N] Lasse, Stig back aboard at Fataga
+  stayLine: 'Ingen som vill titta på dukar? Då åker vi vidare.',                             // [N] Lasse, the bus on from Fataga with Stig aboard
+  missed: 'Bussen har redan gått!',                                                          // [N] Lasse (a wink at Siv's "Lasses utflyktsbuss till Fataga har redan gått!" in fataga's intro)
+  missedStig: 'Jag stod bara och tittade på dukarna.',                                       // [N] Stig
+  byeLine: 'Hej då, Olsson!',                                                                // [N] Affe, the bus on from Gando or Grisfesten without him
+  thanks: 'Tack så mycket!',                                                                 // [N] Stig (HYTT_TVA's)
 };
 
 // Traktorn med släpkärran (free roam, DESIGN §10.54; game/traktor.js). The farmer's small red tractor

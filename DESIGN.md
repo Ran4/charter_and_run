@@ -378,7 +378,14 @@ coins up there, Angerud's pitch "Högsta svenska standard och bra läge." as a t
 takes 200 pesetas, Stig and Ole pedalling a pedal boat out past the buoy line, Ole's lines on it, the
 raft's eight coins and Ole pedalling it back to the rental (free roam, §10.57; the notes list pedal boats
 on the beach only as unsure, research-setting.md:316, and the film has no rental; Ole's Rio exchange and
-his statistics are the film's, relocated, and the film ends with the four in a boat off Copacabana).
+his statistics are the film's, relocated, and the film ends with the four in a boat off Copacabana);
+SunTrip's excursion bus to Fataga between missions after fataga, booked on the sidewalk in front of the
+office for 50 pesetas, Stig in the front row beside Affe, its loop by Gando and the grisfest's gate, Lasse
+guiding on the bus's radio with the film's lines from the transfer bus and the welcome meeting, Stig's
+åksjuka, the stops, the two minutes at Fataga and the bus that goes without him with "Bussen har redan
+gått!" (free roam, §10.58; in the film Lasse's guiding and the tablecloth warning are heard at Fataga, the
+notes do not say he guides from the bus, and his microphone at the front is the transfer bus's from Gando,
+research-plot.md:246, 335).
 The film's flight has **no turbulence** and **no in-flight toilet scene**: both toilet scenes are
 at Arlanda (we keep them there). The plane's toilets are only an invented hideout.
 
@@ -3713,7 +3720,7 @@ Key **`charter-and-run-v1`** (localStorage):
   records: { simhopp: n, eslov: s, solkram: n, stunts: { planka: m, gula: m, garage: m }, stork: true,
              gatlopp: { won: 0..3, sex: true }, eslovSkidor: s, fiske: { fisk: n, sko: n, fena: n, knacke: n },
              kikare: ['flotte', 'fena', …], packhus: n, volley: { won: n, lost: n },
-             kort: { next: 0..2, bra: n, kort: n } },
+             kort: { next: 0..2, bra: n, kort: n }, utflykt: n },
   shop: { owned: ['hatt', 'glas', 'skjorta', 'nasa'], off: [ids], trapp: 0..2, trappT: s, bag: bool },
   gags: ['kamera', 'viking'] }
 ```
@@ -3746,7 +3753,8 @@ the most boxes filled in one shift at the packing shed's belt, saved at once whe
 at once at a match's end (feature 111, §10.50); `kort` { next, bra, kort }, the spot where the next tourist
 couple waits (0 the lighthouse, 1 the dunes, 2 LA MEDINA), the good pictures and all pictures taken for
 the couples, saved when a couple walks off (feature 110, §10.51); `guagua`, the guagua rides whose talk
-was heard through (the film's football talk plays until one has), saved at once (feature 112, §10.53). `shop`
+was heard through (the film's football talk plays until one has), saved at once (feature 112, §10.53);
+`utflykt`, the excursion bus's whole loops ridden home to the office, saved at once (feature 124, §10.58). `shop`
 (feature 34, §10.23):
 SunTrip-butiken's purchases (`owned`), the ones taken off at the counter (`off`), the Trapp Trull
 account's instalments still to pay (`trapp`) and its free-roam seconds towards the next (`trappT`,
@@ -8591,6 +8599,133 @@ film's, relocated [F*](t), in our bokmål.
   (§10.41), as the idea asked for the shark line. Ole on board is a double, not a rider bust: a bust can
   neither talk nor wave.
 
+### 10.58 Utflykt med Lasse – åk med SunTrip-bussen till Fataga (free roam; feature 124, 2026-10-21)
+
+`game/utflykt.js` (`Utflykt`, owned by Game as `utflykt`), config `UTFLYKT` in content/island.js, hooks
+in main.js (the constructor after the guagua,
+`utflykt.update` after `guagua.update`, the camera's focus `utflykt.camFocus(guagua.camFocus(hitch.camFocus(f)))`
+inside trampbat's, R blocked while `utflykt.onBus`, no coin or collectible picked up while `utflykt.onBus`,
+the card after the guagua's in `updateHud`'s free-roam chain, `utflykt.hint()` after the guagua's in the
+prompt line's chain, the bus's engine in `updateAudio`, `utflykt.reset('warp')` in `debugWarp`). The SunTrip
+office's window has promised UTFLYKT FATAGA (hotels.js `suntripOffice`) and a wall at Centro Nórdico SUNTRIP
+BUSSUTFLYKTER since Phase 1, and the only excursion bus was fataga's (`utflyktsbuss`, which Stig follows in
+a car of his own). Now, after fataga, the excursion runs between missions with Stig aboard. Lasse's guiding
+at Fataga and his tablecloth warning are the film's [F] (research-plot.md:335), heard where they belong; his
+transfer-bus lines (research-plot.md:246), his welcome-meeting lines (research-plot.md:266) and Stig's
+åksjuka (research-plot.md:248) are relocated [F*]. The ride, its loop and stops, Affe at the wheel, Lasse's
+guiding on the bus's radio and the bus that goes without him are ours [N] (§1.6).
+
+- **Live**: on the island with `missions.state === 'idle'` and `missions.index` ≥ `fromIndex` 11 (fataga done:
+  the bus must not spoil its intro's "Lasses utflyktsbuss till Fataga har redan gått!"), after the end too.
+  By day and by night.
+- **The booking** (`call()`, the interactable `utflykt`): on the sidewalk in front of the office, below
+  Lasse (`at` (−14, −47.4), facing the road; `spot`; not a landmark: a landmark's sight line clears the
+  street furniture near it, town.js `inSight`, and the world would change), within `r` 2.2 m: "E Åk på utflykt till Fataga – 50 pta" [N]. On foot on the ground, with no dialogue, cutaway, car,
+  carry, pursuit, bust or PANIK, not in the pool fest's ring, on the belt, in the gang's talk, the nap, the
+  SOLKRÄM scene, a toaster's game, on the rollerskis, in a street race, on a hitch or with the guagua
+  (`free()`). A car standing on the bus's spot at the office (its footprint, 0.4 m round; one driving
+  through does not count): the toast "Det står en bil i vägen för bussen." [N] and no trip. E: Stig held
+  (`inDialog`) facing the road, the camera cut to `shot` (eye (−10.6, 1.7, −40.6) on the road, look
+  (−14.6, 1.45, −52): Stig at the kerb, Lasse and the window with UTFLYKT FATAGA behind him), Lasse's
+  "Hä-pååre! Femtio pesetas, så åker vi till Fataga." [F*] (his signature, research-characters.md:442; the
+  rest ours) as his bubble when he is shown within `lasseR` 24 m, else on the radio, and `fare` 50 pesetas
+  (`game.pay`: Ole pays when the purse is short).
+- **Aboard**: `callSecs` 2.2 s later the picture fades out (`hud.fade`, `fadeSecs` 0.8 s). In the dark
+  SunTrip's bus (`new Car('bus')`, the SunTrip livery; `locked`, `noEnter`, `invulnerable`, `utflykt`; never
+  `car.traffic`; an unnamed car that has come to a stop on its spot since the booking is taken away) stands
+  at the office's stop on the z −40 road's eastbound lane (`stops[0]`, its middle at
+  (−18, −37.25) heading east, its door on the Flamenco side: a loop of left turns through the inland can
+  only pass the office going east), with Affe's bust at the wheel (`addBust`, his look as it is now; the
+  real Affe stays by the stage), random tourists' busts at windows 2, 4, 5 and 6 and the one who speaks at
+  window 3 (`tourist`), and Stig in the front row beside Affe (`game.seat(player, bus, −1)`: 'seated', the
+  bus never `playerCar`). The cut is released and the chase camera is behind the bus (`camFocus`: camera.js's
+  car branch; mouse look works). `holdSecs` 0.5 s later it fades in and he is free; `departAt` 1.0 s after
+  that the bus drives off. R does nothing from the fade to his step off (`onBus`), nor does H; he picks up
+  no coin or collectible on the way.
+- **The loop** (`loop`, `loopPath()`): an `AIDriver` in `route` mode at `cruise` 11 m/s (about 12 m/s on
+  the straights) on a LanePath over the nodes (3,3) → (7,3) → (7,1) → (0,1) → (0,3) → (4,3): east on the
+  z −40 road past Flamenco's back, up the town's east edge (x 280), west along the inland road (z −200) past
+  Gando, the bungalows, the golf course, the tomato fields, the grisfest's gate and Fataga, down the west edge
+  (x −280) and east back to the office; left turns only (AI buses cannot turn right, §6.6), about 1.4 km.
+  Four more nodes past the office (straight on, left at the town's edge, as the guagua's `extend`) let a bus
+  done with him drive on. The stops (`stops`: the bus's middle on the near lane, its door `door` 3.95 m
+  ahead of it on the right): Gando (252, −202.75) heading west, in the lane in front of bus 17's bay
+  (`busBay`, 16 m off), never on it; Grisfesten (−76, −202.75), its door at the farm's gate (`grisfestGate`;
+  named after the feast, never its host, §1.5); Fataga (−236, −202.75), its door at the village's stop
+  (`fatagaBus`); and the office. On its lane and heading its way, from `approach` 40 m before a stop's spot it
+  brakes at `brake` 3 m/s² (the cruise √(2·3·(d − 0.4)), at least `creep` 1.5 m/s), and 0.4 m before it
+  Affe parks: within 0.4 m of the spot, measured at all four. Measured in a headless run with traffic: the
+  office to Gando 47 s, Gando to Grisfesten 30 s, Grisfesten to Fataga 16 s, Fataga home 46 s; a whole trip
+  without stepping off is about 3 minutes from the booking. Traffic queued up to 32 m behind the parked bus
+  waits there (`patient`: its `blockedT` held under the AI's 3.5 s shove). Held up within its 40 m of a stop
+  (a car standing in its lane), the bus waits behind it too, and stood still `heldSecs` 4 s it stops where
+  it is (its door wherever it stands).
+- **The card and the keys**: driving "UTFLYKT · Nästa hållplats: {name}" [N]; at a stop with him aboard
+  "UTFLYKT · Hållplats: {name}" [N] and the prompt line "E Kliv av" [N] (not at the office).
+- **The lines** (`legs[stop]` from a stop's departure while the bus drives that leg, `arrive[stop]` from its
+  arrival while it stands there; Lasse's on the radio, Affe's at the wheel, the tourist's at her window and
+  Stig's as bubbles):
+  - from the office: Affe's "Då kör vi!" [N] at 0.6 s, Lasse's "Välkomna på utflykt med SunTrip! Vi åker
+    via Gando och grisfesten till Fataga." [N] at 3 s, "Ni bör inte dricka vattnet." [F*] at 14 s, Stig's
+    "Inte ens till tänderna?" [N] at 17.5 s and, on the way up to the inland road, his "Jag har lite anlag
+    för åksjuka." [F*](t) at 34 s;
+  - at Gando Lasse's "Gando! Den som saknar en väska kan fråga på hittegodset." [N]; from it the tourist's
+    "Är det här vi landade?" [N] at 3 s and Lasse's "Till höger tomatfälten. Tomaterna härifrån åker ända
+    hem till Sverige." [N] at 18 s;
+  - at Grisfesten Lasse's "Grisfesten är på torsdag och kostar 800 pesetas." [F*]; from it the tourist's
+    "Är det långt kvar?" [N] at 2.5 s and Affe's "Två minuter." [N] at 5 s;
+  - at Fataga Lasse's "Fataga är en av de få ursprungliga byar som finns kvar på Gran Canaria." [F] at 0.6
+    s, "Om ni vill köpa deras broderade dukar, så pruta inte. Prutning och sånt kan ni hålla på med på
+    marknaden." [F] at 5.6 s and the tourist's "Stackars människor som lever så här." [F] (in the film a
+    tourist's on the same excursion) at 11.5 s; from it Lasse's "Friskoteket börjar halv tio varje
+    morgon." [F*] at 3 s and "Vi befinner oss i höjd med Egypten och 500 mil hemifrån… som väl är." [F*]
+    at 20 s;
+  - home: Lasse's "Tack för i dag, allihop!" [N].
+  The film's welcome song is not heard in the bus, sung or played (§1.5), and no medicine is named.
+- **The stops** (`atStop()`): the bus stands `secs` 9 s at Gando and Grisfesten and 16 s at Fataga, its door
+  open (`audio.door`). With Stig aboard E steps him off (`off()`) onto the sidewalk, `out` 3.4 m from the
+  bus's middle at the door, facing the bus's way, the chase camera behind him turned `offCam` 0.25 rad off
+  it, out over the sidewalk (straight behind him it stood in the bus). At Gando and Grisfesten the bus goes
+  on `offGo` 2.5 s later at the earliest, with Affe's "Hej då, Olsson!" [N] if he stays off: his trip ends
+  there, a cheap ride to the far inland blocks. At Fataga it waits `wait` 120 s from his step off: the card
+  "UTFLYKT · Tillbaka till bussen!" [N] with the time left, Lasse's "Bussen går om två minuter!" [N] and,
+  `warnAt` 30 s before the end, "Bussen går om en halv minut!" [N]. E at its door ("E Kliv på bussen" [N],
+  within `boardR` 3 m, priority 5; `canBoard()`) takes him up the step into his seat (`boardSecs` 0.55 s, as
+  the guagua's), and it goes `backGo` 2 s later (not before the stop's `secs`), at Fataga with Lasse's
+  "Alla med? Då kör vi!" [N]. Not back in time: the bus goes without him, Lasse's "Bussen har redan gått!"
+  [N] (a wink at Siv's line in fataga's intro) and `missedStigAt` 2.4 s later Stig's "Jag stod bara och
+  tittade på dukarna." [N]. More than `giveUpR` 150 m off the bus (a car, the guagua): it goes at once and
+  quietly. Through Fataga with him aboard Lasse's "Ingen som vill titta på dukar? Då åker vi vidare." [N] as
+  it goes on.
+- **Home**: at the office's stop (Lasse's "Tack för i dag, allihop!") he steps off by himself `homeOff` 1.6 s
+  after it stops, onto the far sidewalk (Flamenco's side, (−14.05, −33.85)) as at a stop; `thanksAt` 1.0 s
+  later "Tack så mycket!" [N] (HYTT_TVA's), and `goAt` 2.4 s after his step off the bus drives on. A whole
+  loop adds one to `records.utflykt` (saved). No SKANDAL.
+- **Done with him**: a bus that went on without him, or after his trip home, drives on (`away`) and is
+  taken away `awayR` 60 m from the camera and out of its view, or `awayFar` 160 m off.
+- **Only between missions**: a mission start (or the other level) ends it at once (`reset('gone')`):
+  seated in the bus he is unseated on its kerb side (`exitSpot`), a cut, a hold and a fade under way are
+  lifted only if no mission has taken over, and every bus of the module's is removed. A debug warp does the
+  same ('warp'). In a mission there is no prompt and `call()` refuses. The buses are the module's own and
+  exist only in free roam (`recycleTraffic` skips `locked` cars); no stage, route, spawn or autopilot meets
+  them, so no mission, stage, timer, fixture or calibration pool changes (no bus stands in Fataga while its
+  sheep run).
+- **Tests**: `utflykt.spot`, `utflykt.sc` ({ phase: 'call' | 'fade' | 'ride' | 'stop' | 'board' | 'home', car, t, t0, at,
+  next, leg, aboard, ai (parked), tourist, goAt, arrT, offT, depT, held, hop }), `stops`, `away`, `queue`,
+  `trips`, `said` ([who, text, time]), `last` ({ kind: 'call' | 'blocked' | 'ride' | 'depart' | 'stop' |
+  'off' | 'board' | 'left' | 'missed' | 'gone' | 'home' | 'warp', t, … }), `car`, `onBus`, `riding`,
+  `canUse()`, `canBoard()`, `doorSpot()`, `side(car, along, out)`, `clear(s, make)`, `inView(car)`, `jump(i,
+  back)` (the bus driving on its lane `back` m before stop i), `reset(kind)`. Scenarios `utflykt`,
+  `utflyktKvar`, `utflyktSpar` (§16.4).
+- **Not done / changed** (deviations from the idea): the bus does not stand at the office between trips: E
+  on the sidewalk calls it, behind a fade (a bus parked for good in a lane jams it, and there is no room
+  for one off the road there), and it stops on the road's far lane with its door on the Flamenco side.
+  Stig does not turn green: no face has a tint (his line only). With him aboard the bus stands 16 s at
+  Fataga; the two minutes start when he steps off. Off at Gando or Grisfesten his trip ends there (he can
+  get back on while it still stands). The tourist's Fataga line is a tourist's, as in the film, not Fru
+  Storch's (fataga's). Lasse is not aboard: he guides on the radio, as in fataga. No minimap marker for
+  the bus or the booking spot.
+
 ## 11. HUD / UI strings (Swedish; `src/strings.js` owned by WP-H, created by Phase 0)
 
 `strings.js` exports `S` (flat object) and `fmt(key, vars)`. Engine code uses `S.key` only.
@@ -9110,6 +9245,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `src/game/volley.js` | new (feature 111, 2026-10-18) | — | `Volley` (`game.volley`): Strandvolley in free roam: the court's live ball (its physics: the sand, walls, the net, bodies, cars; the shadow and the landing ring), the free kick, the start (the fade, the marks), Stig's kick and header (`swing`, `ate`), Ole's set, Berra's and Robban's walk, bump, misses, smashes and serve, the points and their reasons, the thirst lines, the board, the end, the rematch, the walk off, the reset at a mission start (§10.50) |
 | `src/game/touristPhoto.js` | new (feature 110, 2026-10-18) | — | `TouristPhoto` (`game.kort`): "Kan du ta ett kort på oss?" in free roam: the tourist couples at the three spots in turn (their looks, the show and hide where nobody sees it, the ask, the wave, the walk back and off), the hand-over, the viewfinder (the scope, the lens's frame, the walk with its leash, on end), the reading (`judge`), the snap and the frozen picture (`grab`), the fetch and the thanks, the tips, `records.kort`, the end at once (§10.51) |
 | `src/game/guagua.js` | new (feature 112, 2026-10-18) | — | `Guagua` (`game.guagua`): Guaguan in free roam: the 13 stops' frames and interactables, the wait's cut, the green guagua from behind the camera with the driver's, two riders' and (on the film's ride) Ole's busts, its stop with the door by the bench (or where it is held up), the door's interactable, the seat beside the driver and the fare, the chase camera on the bus, the film's football talk and the later lines, the stop chosen with W/S, the fade off at it, the bus driving off and taken away out of sight, the reset at a mission start or a debug warp (§10.53) |
+| `src/game/utflykt.js` | new (feature 124, 2026-10-21) | — | `Utflykt` (`game.utflykt`): Utflykt med Lasse in free roam after fataga: the booking's interactable on the SunTrip office's sidewalk, the cut and Lasse's greeting, the fare, the fade into SunTrip's bus at the office's stop (Affe's bust, the tourists' busts) with Stig seated beside Affe, the loop (an AIDriver on the loop's LanePath, left turns only), the brake into each stop, the stops' card, keys and lines (Lasse on the radio, Affe's, the tourist's and Stig's bubbles), off at a stop and back on at the door, Fataga's two minutes and the missed bus, home and `records.utflykt`, the patient queue behind the parked bus, the buses done with him driven on and taken away out of sight, the reset at a mission start or a debug warp (§10.58) |
 | `src/game/sisters.js` | new (feature 117, 2026-10-18) | — | `Sisters` (`game.sisters`): Systrarnas balkong in free roam at index 11: Siv and Majsan perched on the balcony above 105 once Stig walks onto its patio by day, the ask's cut and dialogue, the whisky's two shops and the bottle in his hand (broken by a fall or R), the basket on the knotted towel and the delivery's cut and dialogue, Siv's reminder, Majsan's waves, the parking exchange by the west gable, the sisters home at a mission start (§10.55) |
 | `src/game/crane.js` | new (feature 118, 2026-10-20) | — | `Crane` (`game.crane`): Åk med byggkranen: the bygge's tower crane's cycle (the pallet from the yard to the 3rd floor's slab and back, eased moves, the jib's slew and the trolley), the pallet's dangle, the meshes' poses and the sling hidden by the camera's eye, the pallet as a floor that carries Stig between missions (`platformAt`), his arms out and the mantra up there, the slab's coins and Angerud's pitch as a toast, the thud of a long fall (`onLand`), the pallet home in a pursuit, Stig put down at a mission (§10.56) |
 | `src/game/packhus.js` | new (feature 109, 2026-10-18) | — | `Packhus` (`game.packhus`): Stig på löpande band in free roam: the foreman on the packing shed's yard (shown by day between missions, his wave, turn and call, his interactable, back to his spot after a knock), the shift (the fade, the belt, its zone, cleats, bins, signs and the tomato crate, built at the first shift; the two workers; the camera cut), the tomatoes (three instanced kinds with outlines: on the belt, flown to a crate, the bucket or the ground, dropped onto the pile, rolling), the crates (filled, stamped KONTROLLERAD AV G17 and stacked, a new one on the bin), the speed and the foreman's hurries, the collapse (TOMATRAS), the whole shift's pay, the record, Siv's line after, the tests' autopilot, the reset at a mission start (§10.49) |
@@ -9189,6 +9325,7 @@ Pause card `--sea`. Big-map/minimap outside fill sand `#d9bf86`. Icons: `.pryl-i
 | `tools/scenarios/kaffe.mjs` | new (feature 84) | — | kaffe, kaffestorch |
 | `tools/scenarios/lifta.mjs` | new (feature 106) | — | lifta, liftaFall |
 | `tools/scenarios/guagua.mjs` | new (feature 112) | — | guagua, guaguaKant, guaguaLinje |
+| `tools/scenarios/utflykt.mjs` | new (feature 124) | — | utflykt, utflyktKvar, utflyktSpar |
 | `tools/scenarios/traktor.mjs` | new (feature 121) | — | traktor, traktorshots |
 | `tools/scenarios/systrar.mjs` | new (feature 117) | — | systrar, systrarshots |
 | `tools/scenarios/kran.mjs` | new (feature 118) | — | kran, kranshots |
@@ -9225,7 +9362,7 @@ tourist couple's viewfinder the frozen branch takes Stig's walk from `kort.wish(
 traffic/peds skipped when `!levelDef.sim.*`) → `syncAll` (also
 writes `ch.x/y/z` from `car.seatWorld(ch.seatSide)` for every car-seated character, player
 included, so framing, bubbles and distance checks see where they really are) → `missions.update` →
-`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `tower.update` (feature 24) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `skis.update` (feature 71) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `stands.update` (feature 28) → `dogs.update` (feature 31) → `bathers.update` (feature 32) → `shop.update` (feature 34) → `toasters.update` (feature 33) → `bags.update` (feature 116) → `room107.update` (feature 38) → `solkram.update` (feature 35) → `stunts.update` (feature 40) → `chat.update` (feature 39) → `roofs.update` (feature 41) → `mic.update` (feature 44) → `birds.update` (feature 43) → `dream.update` (feature 57) → `jeep.update` (feature 51) → `fyren.update` (feature 52) → `bell.update` (feature 59) → `gatlopp.update` (feature 69) → `golf.update` (feature 74) → `battur.update` (feature 76) → `residents.update` (feature 77) → `hytt.update` (feature 80) → `bar.update` (feature 84) → `fiske.update` (feature 107) → `awnings.update` (feature 92) → `hitch.update` (feature 106) → `kikare.update` (feature 108) → `packhus.update` (feature 109) → `volley.update` (feature 111) → `kort.update` (feature 110) → `guagua.update` (feature 112) → `traktor.update` (feature 121; after `syncAll`, so its jolts go on top of the car's synced tilt) → `sisters.update` (feature 117) → `crane.update` (feature 118) → `trampbat.update` (feature 120) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
+`missions.updateFailed` → `shame.update` → `berraJob.update` (feature 2) → `glide.update` (feature 3) → `judges.update` (feature 4) → `tower.update` (feature 24) → `honk.update` (feature 5) → `day.update` (feature 30) → `film.update` (feature 6) → `eslov.update` (feature 7) → `skis.update` (feature 71) → `fest.update` (feature 8) → `sorry.update` (feature 11) → `pigs.update` (feature 15) → `belt.update` (feature 25) → `lapp.update` (feature 20) → `party.update` (feature 21) → `stands.update` (feature 28) → `dogs.update` (feature 31) → `bathers.update` (feature 32) → `shop.update` (feature 34) → `toasters.update` (feature 33) → `bags.update` (feature 116) → `room107.update` (feature 38) → `solkram.update` (feature 35) → `stunts.update` (feature 40) → `chat.update` (feature 39) → `roofs.update` (feature 41) → `mic.update` (feature 44) → `birds.update` (feature 43) → `dream.update` (feature 57) → `jeep.update` (feature 51) → `fyren.update` (feature 52) → `bell.update` (feature 59) → `gatlopp.update` (feature 69) → `golf.update` (feature 74) → `battur.update` (feature 76) → `residents.update` (feature 77) → `hytt.update` (feature 80) → `bar.update` (feature 84) → `fiske.update` (feature 107) → `awnings.update` (feature 92) → `hitch.update` (feature 106) → `kikare.update` (feature 108) → `packhus.update` (feature 109) → `volley.update` (feature 111) → `kort.update` (feature 110) → `guagua.update` (feature 112) → `utflykt.update` (feature 124) → `traktor.update` (feature 121; after `syncAll`, so its jolts go on top of the car's synced tilt) → `sisters.update` (feature 117) → `crane.update` (feature 118) → `trampbat.update` (feature 120) → `cabin.tick(dt·timeScale, t, game)` (flight only) →
 pickups/collectibles → props → `fx.tick` → `tickTown` → markers → camera → sun/sky → HUD → audio →
 traffic recycling (island) → autosave. `loop` then renders, and when `film.grabNow` is set calls
 `film.grab()` in the same task (Herr Storch's still from the frame's buffer, feature 6, §10.11), and when
@@ -9408,6 +9545,10 @@ game.guagua;       // Guagua (feature 112, §10.53): the guagua from the PARADA 
                    // riding, onBus, dest, sc, stops, away, queue, rides, last, free(), canUse(), canBoard(),
                    // leaving(stop), at(stop, along, out), busSpot(stop), doorSpot(), next(stop, k), start(stop),
                    // board(), reset(kind), inView(car), update(dt), objective(), hint(), camFocus(f), cfg (GUAGUA)
+game.utflykt;      // Utflykt (feature 124, §10.58): SunTrip's excursion bus from the office round to Fataga; live,
+                   // busy, car, onBus, riding, sc, spot, stops, away, queue, trips, said, last, free(), canUse(),
+                   // canBoard(), side(car, along, out), doorSpot(), clear(s, make), inView(car), call(), board(),
+                   // jump(i, back) (tests), reset(kind), update(dt), objective(), hint(), camFocus(f), cfg (UTFLYKT)
 game.traktor;      // Traktor (feature 121, §10.54): the farmer's tractor at the tomato fields' tool hut; car,
                    // farmer, extras (allChars), mode, t, near, jolt, queue, open(), isTraktor(car), mine(),
                    // prompt(car) (updateHud), refuse(kind) (enterCar), onHonk(car) (game.onHonk), tail(car,
@@ -10457,6 +10598,13 @@ shame.chase(car) (feature 60): a Land Rover's chase AI with the catch-up band (s
 //   guagua.onBus; tickPickups gives the coins a collector out of reach and skips the collectibles while
 //   guagua.onBus; updateHud takes guagua.objective() last and guagua.hint() last; updateAudio plays the
 //   bus's engine while he rides; debugWarp calls reset('warp')
+// utflykt.js (feature 124, §10.58): game.utflykt = new Utflykt(game) after the guagua (registers `utflykt`
+//   on the office's sidewalk and `utflykt-door` at a standing bus's door); update(dt) after guagua.update
+//   (not live: reset('gone'); the queue, the buses done with him, the patient queue, the call, the ride, the
+//   stops, the step up); the camera's focus is utflykt.camFocus(guagua.camFocus(hitch.camFocus(f)));
+//   handleOneShots' R returns while utflykt.onBus; tickPickups treats utflykt.onBus as guagua.onBus;
+//   updateHud takes utflykt.objective() after the guagua's and utflykt.hint() after the guagua's;
+//   updateAudio plays the bus's engine while he rides; debugWarp calls reset('warp')
 // sisters.js (feature 117, §10.55): game.sisters = new Sisters(game) after the guagua (registers
 //   `whisky:super`, `whisky:bar` and `whisky:korg`); update(dt) after guagua.update (not live: reset(); the
 //   basket's tween, the bottle in his hand, the ask on 105's patio, the sisters' turn, the passes, the
@@ -10477,7 +10625,7 @@ shame.chase(car) (feature 60): a Land Rover's chase AI with the catch-up band (s
 //   the wake); handleOneShots' E in a car asks trampbat.leave() before exitCar, and H sends no honk.press for
 //   a `horn: 'none'` car; resetPlayer asks trampbat.reset() first; debugWarp calls end('warp') while a boat is
 //   out; collectCoin hands a tagged coin to trampbat.onCoin; the camera's focus is
-//   trampbat.camFocus(guagua.camFocus(hitch.camFocus(f))); updateHud takes trampbat.hint() last; updateAudio
+//   trampbat.camFocus(utflykt.camFocus(guagua.camFocus(hitch.camFocus(f)))); updateHud takes trampbat.hint() last; updateAudio
 //   gives a `boat` no engine, skid sound or skid marks
 // hud.js: setKort({ fw, fh, hog, keys, par, sub, line, who, still, stamp } | null) (#kort, the viewfinder)
 // input.js: snap (Space, Mouse0, pad 0), turnCam (Mouse2, KeyV, pad 4)
@@ -11172,6 +11320,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `guagua`, `guaguaKant`, `guaguaLinje` [feature 112] | Guaguan – åk buss och snacka fotboll (§10.53). `guagua` at index 9 (free roam): 13 stops; a traffic guagua's prompt "E Ta bilen"; at the Plaza's stop "E Vänta på guaguan"; E: waiting, held, the cut, the card (GUAGUAN · Vänta vid hållplatsen.) and "Q Sluta vänta"; a guagua, locked, `noEnter`, the driver's bust, two riders and Ole's bust, set off out of the camera's view over 30 m behind its stop; it stops with its door by the bench (within 1 m, on the near lane), the camera back behind Stig, free, "E Kliv på guaguan", "¡Buenas! Ska señor med?"; E: seated in the bus as its passenger (side −1, no `playerCar`), 10 pta, the card (GUAGUAN · Nästa hållplats: Casa Lola) and the keys, the chase camera 5–22 m from the bus; R does nothing; Ole's "Las Palmas! Bra fotballag… Øverste divisjon!", Stig's "Hammarby är också ett bra lag.", the driver's "Bajen… Hammarby… Bajen…" and "Diez pesetas, señor."; S: Avenida del Mar, W: back; off at Casa Lola with the bus there (or just short of a car), the talk heard, a ride of 11–13.5 s, Stig on his feet within 0.3 m of the stop's place facing the bus's way, `records.guagua` 1, "¡Hasta luego, señor!", "Tack så mycket!", the bus off and taken away out of sight; a second ride with no Ole and the driver's own line, S: Playa, E: off there at once, `records.guagua` still 1; no SKANDAL. `guaguaKant` at index 9: the film's ride from Casa Lola with no Ole (his route passes Hotel Flamenco) and the driver's Las Palmas line; a debug warp mid-ride: off the bus on his feet, the bus gone, not counted; Q while waiting: the camera back, the bus driven by and away; walked off from the door: "¡Vámonos!", the bus leaves; a car on the stop: "Det står en bil på hållplatsen.", no bus; a van in the lane 13 m short: the bus held up behind it opens its door there, and at its door "E Kliv på guaguan"; no prompt at the wheel or in a pursuit, the prompt after it; a mission start mid-ride: off the bus, it gone, no card; in the mission no prompt and `start()` refuses; after it the prompt again; no SKANDAL while waiting or riding. `guaguaLinje` at index 9 (`records.guagua` 1): at every one of the 13 stops the bus set off out of view over 30 m off, its door within 1 m of the bench, a ride moving it over 40 m, off at the next stop in the loop with the bus there. Shots `guagua_prompt`, `_vantar`, `_kommer`, `_dorren`, `_ombord`, `_lasPalmas`, `_hammarby`, `_bajen`, `_framme`, `_akerivag`, `_andra`, `guagua_kant_utanOle`, `guagua_kant_kö`, `guagua_linje_<key>_vantar`, `_dorren`, `_ombord` |
 | `kran`, `kranshots` [feature 118] | Åk med byggkranen (§10.56). `kran`, after the end: the crane at (186, −184), P0 on the yard, P1 on the slab, its meshes; the island's fixed coins within 260; the slab's four coins along its north edge with `minY` 10.1; the 3rd floor's four corner columns solid to 12.75; the pallet on the yard at the start, a floor, for nobody but Stig (Ole, a pedestrian); from the 2nd floor beside the 3rd, jumps and double jumps take no slab coin; walking onto the pallet on the yard (a real W) he stands on it 0.42 m up; it lifts him (a ride), low no arms or mantra, over 3 m his arms out and one mantra; at the cruise height 18.02 under his feet and more mantras; over the frame the pallet swings (over 0.2 m) and carries him with his place on it kept; a hop (Space) in the air over it comes down on it, no thud; set down on the slab, his arms in; walking off north: the four coins (+100 pta) and "Högsta svenska standard och bra läge." as a toast, no mantra, once a visit; off the north edge: a thud on the ground (down, on his belly, drop 10.2) and "Jag är inte rädd." when he is up; off the slab's south edge to the 2nd floor no thud; off the pallet at the cruise height a thud (drop over 17, v over 25); with `bodega` and J held the glide instead, no thud; Stig waiting on the yard cuts the rest on the slab short; a pursuit (forced, nobody chasing): the pallet back, down and held on the yard, Stig on it stays on the ground, after the pursuit the cycle from `rest0`; at index 12 on the slab, a mission's state: put down at `kranFot` with no landing, the pallet no floor; in the started mission no floor. `kranshots`: the crane from the east street with the pallet going up, from the gate, Stig on the pallet at the cruise height from the side and in the chase camera over the frame, the slab from above with the pallet, the coins and Angerud's plot across the road, the view from the north edge with the toast |
 | `trampbat`, `trampbatshots` [feature 120] | Hyr en trampbåt (§10.57). `trampbat`, at index 9 between missions: the sign at (98, 255), the water's edge at (96, 301.8); the prompt `<b>E</b> Hyr trampbåt – 200 pta` from either side of the sign, none 4.2 m off, none and no rental with SKANDAL on the meter; with an empty purse Ole pays (the toast), at the water's edge facing the sea at y 0.15, Ole's double seated beside him (the real Ole where he was), both full size, the speedo "Trampbåt", the samba, the start lines; held W tops out at 1.9–2.0 m/s (the speedo 7), it glides on over 2.2 m in 2.5 s, no engine, horn, skid or honk event (H, W + A + Space); past the bound wall (z over 324.5) the Rio exchange in order with Ole waving, once a ride, then the statistics further out; at z 327 facing the sea the chase eye over 6.5 m behind it inside the wall's band; the minimap ahead at sea blue; never past z 352, x ±250 or onto the beach (301.8), "E Kliv i land" there; a buoy stops it; E at sea the toast and still in it; R back at the water's edge with the toast; the raft stops it, its eight coins (+200 pta), Ole's two raft lines; ashore at the water's edge on the sand at z 299.5 facing inland, the boat going back with Ole, the music back, "Tack för turen." and Ole's line, no prompt at the boat, Ole backing off the beach and pedalling east, gone once out of view (no pedal boat left in the cars); with 500 pta 200 go; a forced exit at sea: the splash, "Usch, vad blött.", on the sand; a pursuit: ashore (`ashore`, 'pursuit'); a warp: on foot at the deck, the boat gone; a mission start in the boat: ashore, the boat gone, no prompt at the sign in the mission, after it (Q) the rental again; after the end (index 13) in the boat with Ole too. `trampbatshots`: the rental with its sign and boats on the sand, the boat at the water's edge, Stig and Ole at sea from the side and the front, the view back over the beach and the town, the sunset with Ole's Rio line and his wave, the raft with its coins, the big map at sea (the arrow at the edge), Ole pedalling the boat back with Stig on the sand |
+| `utflykt`, `utflyktKvar`, `utflyktSpar` [feature 124] | Utflykt med Lasse (§10.58). `utflykt`: at index 10 no prompt on the office's sidewalk; at index 11 "E Åk på utflykt till Fataga – 50 pta" there; E: held, the cut, Lasse there with "Hä-pååre! …", 50 pta; after the fade SunTrip's bus at the office's stop on the eastbound lane (within 0.5 m), locked, `noEnter`, invulnerable, Affe's bust and five tourists, Stig its passenger (side −1, no `playerCar`), free, the card (UTFLYKT · Nästa hållplats: Gando), the chase camera 4–22 m from the bus; R does nothing; the whole loop driven: Gando within 1 m of its spot in the lane, over 10 m from bus 17's bay, a leg of 35–70 s, aboard with the card and "E Kliv av", the leg's lines (Affe's, Lasse's water line, Stig's two) and Lasse's Gando line; Grisfesten within 1 m with Lasse's 800-pesetas line and the tomato fields; Fataga within 1 m with Lasse's two lines, the tourist's "Stackars människor som lever så här." and the leg's two; E off onto the sidewalk at the door (y 0.15), the card "Tillbaka till bussen!" with 2:00, Lasse's two minutes; no door prompt in the village and the time running; at the door "E Kliv på bussen", back in his seat, "Alla med? Då kör vi!", on; home: off by himself on the sidewalk across from the office, no card, `records.utflykt` 1 (saved), the thanks, the leg home's line, the bus gone out of sight; no SKANDAL, no coin on the way. `utflyktKvar`: off at Gando, no card, the bus on without him with "Hej då, Olsson!"; through Fataga aboard with "Ingen som vill titta på dukar? …"; a debug warp mid-ride: off, the bus gone; off at Fataga (its wait shortened by the test) and not back: "Bussen har redan gått!" and Stig's line, no card; a car behind the parked bus waits over 6.5 m off it; a mission start mid-ride: off on his feet, the bus gone, no card; no prompt in the mission and `call()` refuses; after it the prompt again; no SKANDAL on a trip. `utflyktSpar`: a van on the bus's spot: the toast and no trip; no trip from the wheel; no prompt in a pursuit. Shots `utflykt_prompt`, `_kontoret`, `_ombord`, `_gando`, `_grisfesten`, `_fataga`, `_fataga_av`, `_dorren`, `_hem`, `_karta`, `utflykt_kvar_gando`, `_missad` |
 | `systrar`, `systrarshots` [feature 117] | Systrarnas balkong (§10.55). `systrar`: at index 10 and 12 walking onto 105's patio does nothing; at index 11 the sisters at the pool, free, and the sun cream's prompt by Majsan; by night walking in does nothing; by day (a real key press, the dialogue held) the ask: held, the cut, both sisters perched on their spots at the balcony's y, busy, spot `balkong105`, posed (no horn answer, no talk), Siv's glass, Majsan waving, the sun cream and the judges refused; the ask's lines in order, then the card and the beacon at the pool bar (the nearer shop); still up 1.5 s later, one ask; a kick under the balcony: no bark from up there; away and back in front: Siv's reminder, once an approach; at the bar's spot "E Köp en flaska whisky (250 pta)", at the coffee's spot the coffee's E; E (a real key): 250 pta, `carrying.whisky`, the bottle in his left hand, the bartender's line and Stig's, the card and the beacon at the balcony, no second bottle; a fling breaks it (the toast, back to buying); the supermercado with an empty purse: Ole pays, the voice from the door and Stig's line; in a car the bottle kept out of sight, on foot in his hand again; a car left south of the zone: no line; under the balcony "E Skicka upp whiskyn", E: held, the cut, the basket on its way down with Majsan leaning over, the bottle in it at `basketY`, up, the bottle in Siv's hand, the delivery's lines in order, done (no card or beacon), Majsan waving, and again on the next pass; a car left by the west gable: Majsan's line and Siv's answer, no neighbour's; the grisfest's talk with a bottle in hand, its start: the errand over, the bottle gone, both sisters home on the ground and not posed, nobody on the balcony in the running mission. `systrarshots`: the patio before, the ask's three lines, the card, the bar with its prompt and after buying, the bottle in his hand close and from the side, the supermercado, under the balcony, the basket down (two) and up, the delivery's three lines, after, Siv with her glass and the bottle close, the wave from the deck, the balcony from the street |
 | `rum107`, `troferum` [feature 38] | Rum 107 fylls med resans minnen (§10.25). `rum107`, at index 9 (free roam): the room bare on a fresh save (7 gadget, 7 fin and 3 julafton meshes built, none shown); E at the shelf with nothing found: "Inget att kontrollera.", he faces it, the card `Oles prylar 0/7 · Hajfenor 0/7`, Ole's "Hylla er tom…"; four gadgets and three fins collected (`collect`) show at once, each gadget in its own place 0.5 m apart standing on the shelf's 2.75; no prompt for `gap` s, then "Kontrollerad av G17.", 4/7 · 3/7 and "Fire av sju! Snart er hylla full."; before the unlocks the nap answers at the giraffe's spot and the boombox plays no samba (feature 67: "Bergsprängaren"); all seven: the samba unlock, "Spela samba" sets and saves the samba with Ole's "Ja, det er fint! Samba!", "Stäng av sambaen" while it plays (feature 67), "Spela samba" back with the sol tune; after `unlock('bodega')` the suitcase, the giraffe and the pack; E at the giraffe: held, the bed's hidden, "Precis en sån…", the prompt "Ställ tillbaka giraffen", back after `holdSecs`, at once 3 m off and with E; the nap beside his bed; a full shelf's "Alle sju! Nå er hylla full."; a reload dresses the room; at index 12 a mission start leaves none usable and the giraffe back; the flight level inert. `troferum`, at index 13: the room from the patio (`rum107Cam` at 5.5 and 7.5 m, buss17's and julafton's cuts) bare, mid-trip and after julafton, close shots of the shelf, the pile and the beds, Stig at the shelf, Stig with the giraffe, and the nap with the giraffe by his head |
 | `solkram` [feature 35] | Smörj in Majsans rygg (§10.26). At index 10 (fataga waiting, Majsan its giver at the pool) the talk and no SOLKRÄM; at index 11 beside Majsan "Smörj in ryggen", none at 22:00 or with Siv 5 m off her spot; E: the film's pair in a dialogue (and the marker `solkramFilm`), then her back turned (yaw π/2), Stig 0.97 m behind her facing her with `rub` 1 and his hands 0–0.2 m over her shoulder pivots and 0.03–0.2 m behind her middle, both sisters `busy`, the bottle, no prompt, the card (SOLKRÄM, `Håll E · släpp i det gröna`, `Majsans rygg`, the field `w0` wide with its middle in `at`, the marker) with no letterbox; E held (a real key) 0.6 s: the fill at 1/`secs` a second (0.6–1.3 ×), `rub` 2, `Håll… håll…`; let go in the stripe: 7, a record, Siv's `7` card, `SOLKRÄM 7 P` / `NYTT REKORD!`, `records.solkram` 7 in the save, then her three lines in order and at the end the camera, the sisters and the pose back, no bottle, `sjuPoang` (Siv's chatter, the toast, both markers saved); again: one of `again`, the field × `shrink`, 6 with "Sex, tycker jag." and the record kept (`REKORD 7 P`); the field's edge: 5 and "Giraffen, då? Fem."; short of it: early, no card, `FÖR LITE!`, "Var det allt?"; held to the end: over at 1, Siv's `–1` and laugh, Stig flailing 1.42 m behind her, the cream running, the shot from behind, three drops at 1.1 s, back to the front shot for Siv, the lines, the flail and the cream gone; no hold: "Jaha. Då får jag väl göra det själv."; six tries; a mission start with Siv's card up: the card down and the intro's cinematic kept; a reload: the record 7, `sjuPoang`, Siv's chatter and no film pair again; at index 13 after `unlock('bodega')` at 15:00 the pool fest's ring has Majsan (none), at 08:00 she is home and it is there; the flight level inert. Shots `solkram_0_prompt`, `_1_ready`, `_1b_hold`, `_2_sju`, `_3_after`, `_4_over`, `_5_minus` |
@@ -13745,3 +13894,19 @@ the fixer's group.
   The chase eye is never pulled in at sea (the bound wall); the minimap is blue past its canvas. Nothing
   is saved, and nothing in a mission, stage, timer, fixture or calibration pool changed. Scenarios
   `trampbat`, `trampbatshots` (§16.4).
+- Feature 124, "Utflykt med Lasse – åk med SunTrip-bussen till Fataga" (`features/implemented/utflykt_med_lasse.md`,
+  2026-10-21): the excursion the SunTrip office's window promises runs between missions after fataga (§10.58;
+  new `src/game/utflykt.js` (`game.utflykt`), `UTFLYKT` in content/island.js; main.js
+  (constructor, update, the camera's focus, R, `tickPickups`, `updateHud`'s card and hint, `updateAudio`,
+  `debugWarp`); §1.6, §10.5, §14.1–14.3, §14.8, §16.4). E on the office's sidewalk (50 pta, Ole when short), Lasse's
+  "Hä-pååre! …" and a fade put Stig in the front row of SunTrip's bus beside Affe's bust, tourists at the
+  windows; the bus drives a loop of left turns by itself (about 1.4 km: east past Flamenco's back, up the
+  east edge, west along the inland road, down the west edge, home), with stops at Gando (in the lane in front
+  of bus 17's bay), Grisfesten and Fataga, Lasse guiding on the radio with the film's Fataga lines [F] and his
+  transfer-bus and welcome-meeting lines relocated [F*], a tourist's "Stackars människor som lever så här."
+  [F] and Stig's åksjuka [F*](t). E steps off at a stop; at Fataga the bus waits two minutes for him (E at its
+  door gets him back on) and goes without him when they are up ("Bussen har redan gått!"); home he steps off
+  by himself and `records.utflykt` counts the loop. Traffic queued behind the parked bus waits. Measured with
+  traffic: the office to Gando 47 s, to Grisfesten 30 s, to Fataga 16 s, home 46 s. A mission start or a
+  warp takes him off and the bus away. Nothing in a mission, stage, timer, fixture or calibration pool
+  changed. Scenarios `utflykt`, `utflyktKvar`, `utflyktSpar` (§16.4).

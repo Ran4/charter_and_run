@@ -71,6 +71,7 @@ import { Packhus } from './game/packhus.js';
 import { Volley } from './game/volley.js';
 import { TouristPhoto } from './game/touristPhoto.js';
 import { Guagua } from './game/guagua.js';
+import { Utflykt } from './game/utflykt.js';
 import { Sisters } from './game/sisters.js';
 import { Crane } from './game/crane.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
@@ -257,6 +258,7 @@ class Game {
     this.volley = new Volley(this);       // the beach volleyball court's live ball; free roam: the match against Berra and Robban (§10.50)
     this.kort = new TouristPhoto(this);   // free roam: the tourist couple's picture at the lighthouse, the dunes and LA MEDINA (§10.51)
     this.guagua = new Guagua(this);       // free roam: the guagua from the PARADA stops, the football talk on the way (§10.53)
+    this.utflykt = new Utflykt(this);     // free roam after fataga: SunTrip's excursion bus from the office to Fataga, Lasse on its radio (§10.58)
     this.traktor = new Traktor(this);     // free roam: the farmer's tractor at the tomato fields, the farmer running after it (§10.54)
     this.sisters = new Sisters(this);     // free roam before the grisfest: Siv and Majsan on the balcony above 105, the whisky errand (§10.55)
     this.crane = new Crane(this);         // the building site's crane and its pallet; free roam: Stig rides it to the 3rd floor (§10.56)
@@ -699,6 +701,7 @@ class Game {
     if (this.volley.mode) this.volley.end('warp');   // off the volleyball court: the match off (§10.50)
     if (this.kort.busy) this.kort.end('warp');       // the tourist couple's camera down (§10.51)
     this.guagua.reset('warp');                       // off the guagua, the bus gone (§10.53)
+    this.utflykt.reset('warp');                      // off the excursion bus, the bus gone (§10.58)
     if (this.trampbat.boat) this.trampbat.end('warp');   // out of the pedal boat onto the sand, the boat gone (§10.57)
     if (this.playerCar) this.playerCar.place(x, z, yaw);
     else this.player.teleport(x, z, yaw);
@@ -1646,6 +1649,7 @@ class Game {
     this.volley.update(dt);
     this.kort.update(dt);
     this.guagua.update(dt);
+    this.utflykt.update(dt);
     this.traktor.update(dt);
     this.sisters.update(dt);
     this.crane.update(dt);
@@ -1665,10 +1669,10 @@ class Game {
     // with the arch post or beam over a speaker.
     const flx = f.x - CABIN_X;
     this.cam.openFloor = this.level === 'flight' && this.cabin.phase === 'gate' && flx > 14 && !(flx > 34.5 && f.z < 10.5);
-    // Standing in a hitch truck's bed (§10.47) or seated in the guagua (§10.53) the chase camera rides
-    // behind the truck or the bus.
+    // Standing in a hitch truck's bed (§10.47) or seated in the guagua (§10.53) or the excursion bus
+    // (§10.58) the chase camera rides behind the truck or the bus.
     // In the pedal boat out at sea the chase eye is never pulled in (§10.57: the bound wall behind him).
-    this.cam.update(dt, { ...this.trampbat.camFocus(this.guagua.camFocus(this.hitch.camFocus(f))), autoTurn: false, lookBack: input.down('lookBack') }, this.inDialog ? null : input.look(), this.cars);
+    this.cam.update(dt, { ...this.trampbat.camFocus(this.utflykt.camFocus(this.guagua.camFocus(this.hitch.camFocus(f)))), autoTurn: false, lookBack: input.down('lookBack') }, this.inDialog ? null : input.look(), this.cars);
     // Debug overview. The flight level's fog ends at 300 m (gate), so the camera comes in to ~85 m.
     if (this.aerial) { const k = this.level === 'flight' ? 0.17 : 1; camera.position.set(f.x, 420 * k, f.z + 260 * k); camera.lookAt(f.x, 0, f.z); camera.fov = 50; camera.updateProjectionMatrix(); }
     followSun(f.x, f.z);
@@ -1693,8 +1697,8 @@ class Game {
     const p = this.player;
     if (input.pressed('reset')) {
       // Never while busted-frozen or flailing (§14.3 frozenT, §5.9), nor on or by a hitch truck (§10.47)
-      // or getting on, in or off the guagua (§10.53).
-      if (this.frozenT > 0 || this.shame.panicT > 0 || this.hitch.onTruck || this.guagua.onBus) return;
+      // or getting on, in or off the guagua (§10.53) or the excursion bus (§10.58).
+      if (this.frozenT > 0 || this.shame.panicT > 0 || this.hitch.onTruck || this.guagua.onBus || this.utflykt.onBus) return;
       this.belt.release(false);   // off his bag on the baggage belt first (§10.16)
       if (p.seatId) { if (this.stageLocksSeat()) return; this.standPlayer(); }
       // A reset spills a carry: R is never a free teleport to a carry goal.
@@ -2050,8 +2054,9 @@ class Game {
 
   tickPickups(dt) {
     const f = this.focus();
-    // A passenger in the guagua (§10.53) picks nothing up on the way: the coins out of his reach.
-    const ride = this.guagua.onBus;
+    // A passenger in the guagua (§10.53) or the excursion bus (§10.58) picks nothing up on the way: the
+    // coins out of his reach.
+    const ride = this.guagua.onBus || this.utflykt.onBus;
     const col = ride ? { x: f.x, y: -1e4, z: f.z, r: 0 } : this.playerCar ? { x: f.x, y: f.y, z: f.z, r: 2.2 } : { x: f.x, y: f.y, z: f.z, r: 0.7 };
     tickCoins(dt, this.time, col, this);
     for (const [setName, list] of Object.entries(this.collectibles)) {
@@ -2211,11 +2216,11 @@ class Game {
     // shop's wet-paint card (§7.2), the church's while Guardia Civil waits outside (§7.2), the Berra
     // job's (§10.6), Eslövloppet's (§10.12), Eslövrundan's (§10.39), the grisbil's pigs' (§10.15), a G17 toaster's scale
     // (§10.24), José's street race's (§10.38), a hitch's (§10.47), a shift at the packing shed's belt
-    // (§10.49), a lost suitcase on his head (§10.52), the guagua's (§10.53) or the sisters' whisky errand's
-    // (§10.55), if any.
+    // (§10.49), a lost suitcase on his head (§10.52), the guagua's (§10.53), the excursion bus's (§10.58) or
+    // the sisters' whisky errand's (§10.55), if any.
     hud.setObjective(this.missions.objective() || this.solkram.objective() || this.shame.paint.objective() || this.shame.church.objective() || this.berraJob.objective() || this.eslov.objective() || this.skis.objective()
       || this.pigs.objective() || this.toasters.objective() || this.gatlopp.objective() || this.hitch.objective() || this.packhus.objective() || this.bags.objective() || this.guagua.objective()
-      || this.sisters.objective());
+      || this.utflykt.objective() || this.sisters.objective());
     hud.setSpeedo(this.playerCar);
     if (this.missions.state !== 'failed') {
       let prompt = '';
@@ -2236,9 +2241,9 @@ class Game {
       if (this.belt.seated && !this.inDialog) prompt = this.belt.cfg.prompt;
       // Fishing at the pier's end (§10.45): the wait's hint and the dive's "E Dra upp!".
       // Or the keys in a hitch truck's bed (§10.47), at the packing shed's belt (§10.49), in a volleyball
-      // match (§10.50) or waiting for and in the guagua (§10.53).
+      // match (§10.50), waiting for and in the guagua (§10.53) or at the excursion bus's stops (§10.58).
       // In the pedal boat at the water's edge, "E Kliv i land" (§10.57).
-      const fh = this.fiske.hint() ?? this.hitch.hint() ?? this.packhus.hint() ?? this.volley.hint() ?? this.guagua.hint() ?? this.trampbat.hint();
+      const fh = this.fiske.hint() ?? this.hitch.hint() ?? this.packhus.hint() ?? this.volley.hint() ?? this.guagua.hint() ?? this.utflykt.hint() ?? this.trampbat.hint();
       if (fh != null) prompt = fh;
       hud.setPrompt(prompt);
     }
@@ -2280,6 +2285,12 @@ class Game {
     } else if (this.guagua.riding) {
       // Seated in the guagua (§10.53): its engine.
       const r = this.guagua.car;
+      audio.engine(true, r.revs, r.ctrl.throttle);
+      audio.skid(0);
+      audio.horn(false);
+    } else if (this.utflykt.riding) {
+      // Seated in the excursion bus (§10.58): its engine.
+      const r = this.utflykt.car;
       audio.engine(true, r.revs, r.ctrl.throttle);
       audio.skid(0);
       audio.horn(false);

@@ -3,7 +3,6 @@
 # markörer: ⟨par N⟩ = de två raderna med samma N körs samtidigt (var sin worktree/gren, sedan rebase på main och push), ⟨solo⟩ = körs ensam; ta grupperna uppifrån och ned
 - features/roster.md – Röster – ett fullt röstsatt spel (ElevenLabs, som Saab- och Seinfeld-spelen; svara på de öppna frågorna i §13 först) [L] ⟨solo⟩
 - features/takterrassen_pa_la_medina.md – 122. Takterrassen på La Medina vaknar [M] ⟨par 16⟩
-- features/utflykt_med_lasse.md – 124. Utflykt med Lasse – åk med SunTrip-bussen till Fataga [L] ⟨par 16⟩
 - features/glass_till_majsan.md – 126. Glass till Majsan innan den smälter [M] ⟨par 17⟩
 - features/ljudlandskap_per_kvarter.md – 131. Ljudlandskap per kvarter [M] ⟨par 17⟩
 - features/helan_gar_festen.md – 134. Helan går från balkongen [M] ⟨par 18⟩
@@ -16,6 +15,7 @@
 - features/butaneron.md – 143. Butaneron och gasolbilen [M] ⟨solo⟩
 
 # Färdiga features (lägg till [färdig: yyyy-mm-dd hh:mm] i slutet)
+- features/implemented/utflykt_med_lasse.md – 124. Utflykt med Lasse – åk med SunTrip-bussen till Fataga [L] [färdig: 2026-10-21 02:05]
 - features/implemented/trampbat.md – 120. Hyr en trampbåt (200 PTA/H) [L] [färdig: 2026-10-21 00:21]
 - features/implemented/kranen_pa_bygget.md – 118. Åk med byggkranen [L] [färdig: 2026-10-20 23:12]
 - features/implemented/systrarnas_balkong_whisky.md – 117. Systrarnas balkong – ”Vi är väl inte på nåt jäkla vernissage?” [M] [färdig: 2026-10-18 05:44]
