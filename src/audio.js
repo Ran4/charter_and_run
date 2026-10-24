@@ -6,16 +6,21 @@
 //   Public-domain traditional one-shots (audio.trad): smaGrodorna, hejTomtegubbar, helanGar. They
 //   are written down from memory (traditional tunes, so any faithful variant is free to use).
 //   Graph:  music voices -> musicBus (duckMusic) -> tradDuck (ducked under a trad cue)
-//             -> musicFilter (FLYGRÄDSLA low-pass) -> master
-//           trad voices -> tradBus -> master;  sfx -> sfx -> master;  cabin drone -> sfx
+//             -> musicFilter (FLYGRÄDSLA low-pass) -> vduck -> master
+//           trad voices -> tradBus -> vduck -> master;  sfx -> sfx -> master;  cabin drone -> sfx
+//           engine -> engDuck -> sfx;  voice clips (voice.js) -> voiceChain(mode) -> voiceBus -> master
 //           island soundscape: a layer's voices -> its gain -> its panner -> ambient -> master
 //   Cabin drone: its own channel (drone(level, bright)), never touched by the car-engine code.
 //   Soundscape (feature 131, §10.60): the `ambient` channel straight into master, so the fear
 //   low-pass, tradDuck and duckMusic leave it alone; game/soundscape.js sets its layers. Its layer
 //   `fest` (feature 134, §10.63: gain -> a low-pass -> panner) carries the balcony party's Helan går,
 //   on a clock of its own; game/helanGar.js sets it.
+//   The voices (DESIGN §12.4) are the one thing that is not synthesised: recorded clips, played by
+//   voice.js through a chain per mode (voiceChain). While anyone speaks the music and the trad tunes
+//   step back ~8 dB and the engine ~4 dB (voiceDuck: its own gain nodes, so the pursuit's duckMusic,
+//   set every frame, multiplies with it).
 
-let ctx, master, sfx, musicBus, tradDuck, musicFilter, tradBus, noiseBuf;
+let ctx, master, sfx, musicBus, tradDuck, musicFilter, tradBus, noiseBuf, vduck, engDuck, voiceBus, voiceVerb;
 let eng, skid, hornNodes, music, drone, siren;
 let tuneName = 'muzak', pendingTune = null;
 let duckNow = 1, lowpassNow = null;
@@ -23,8 +28,22 @@ let amb = null, into = null;   // the soundscape's channel; `into`: where tone/n
 let barJump = null;             // test hook (jumpBar): the next bar's number
 
 const MUSIC_GAIN = 0.3;
+const VOICE_GAIN = 1.0;
+// A walkie-talkie's grit (the radio mode): a soft clip.
+const RADIO_CURVE = (() => { const n = 1024, c = new Float32Array(n); for (let i = 0; i < n; i++) { const x = i / (n - 1) * 2 - 1; c[i] = Math.tanh(2.2 * x) / Math.tanh(2.2); } return c; })();
 export const TUNES = {};
 export function registerTune(name, def) { TUNES[name] = def; }
+
+// A short synthesised room: stereo noise decaying over `secs`, darker as it goes.
+function makeRoom(secs) {
+  const n = Math.round(ctx.sampleRate * secs), b = ctx.createBuffer(2, n, ctx.sampleRate);
+  for (let ch = 0; ch < 2; ch++) {
+    const d = b.getChannelData(ch);
+    let lp = 0;
+    for (let i = 0; i < n; i++) { const k = i / n; lp += (Math.random() * 2 - 1 - lp) * (0.6 - 0.45 * k); d[i] = lp * Math.pow(1 - k, 3); }
+  }
+  return b;
+}
 
 function makeNoise() {
   const b = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
@@ -49,11 +68,18 @@ export const audio = {
     comp.threshold.value = -14;
     master.connect(comp).connect(ctx.destination);
     sfx = ctx.createGain(); sfx.gain.value = 1; sfx.connect(master);
-    musicFilter = ctx.createBiquadFilter(); musicFilter.type = 'lowpass'; musicFilter.frequency.value = 20000; musicFilter.Q.value = 0.9; musicFilter.connect(master);
+    // (under speech the music and the trad tunes step back: voiceDuck)
+    vduck = ctx.createGain(); vduck.gain.value = 1; vduck.connect(master);
+    musicFilter = ctx.createBiquadFilter(); musicFilter.type = 'lowpass'; musicFilter.frequency.value = 20000; musicFilter.Q.value = 0.9; musicFilter.connect(vduck);
     tradDuck = ctx.createGain(); tradDuck.gain.value = 1; tradDuck.connect(musicFilter);
     musicBus = ctx.createGain(); musicBus.gain.value = this.musicOn ? MUSIC_GAIN * duckNow : 0; musicBus.connect(tradDuck);
-    tradBus = ctx.createGain(); tradBus.gain.value = 0.55; tradBus.connect(master);
+    tradBus = ctx.createGain(); tradBus.gain.value = 0.55; tradBus.connect(vduck);
     noiseBuf = makeNoise();
+    // The voices (voice.js): their own bus beside the effects and the music, and a small room for
+    // the loudspeakers and the voices in the world.
+    voiceBus = ctx.createGain(); voiceBus.gain.value = VOICE_GAIN; voiceBus.connect(master);
+    voiceVerb = ctx.createConvolver(); voiceVerb.buffer = makeRoom(0.9); voiceVerb.connect(master);
+    engDuck = ctx.createGain(); engDuck.gain.value = 1; engDuck.connect(sfx);
 
     // Cabin drone (§12.2): looped noise through a low-pass 300 -> 900 Hz (bright), a 45 Hz saw for
     // the airframe rumble, and a faint turbine whine that rises with `bright`. A slow LFO on the
@@ -84,7 +110,7 @@ export const audio = {
     eng.o1.type = 'sawtooth'; eng.o2.type = 'square';
     eng.f.type = 'lowpass'; eng.f.Q.value = 4;
     eng.g.gain.value = 0;
-    eng.o1.connect(eng.f); eng.o2.connect(eng.f); eng.f.connect(eng.g).connect(sfx);
+    eng.o1.connect(eng.f); eng.o2.connect(eng.f); eng.f.connect(eng.g).connect(engDuck);
     eng.o1.start(); eng.o2.start();
 
     skid = { g: ctx.createGain(), f: ctx.createBiquadFilter(), s: ctx.createBufferSource() };
@@ -475,6 +501,92 @@ export const audio = {
     this._tradT = setTimeout(() => { if (ctx) tradDuck.gain.setTargetAtTime(1, ctx.currentTime, 0.4); }, len * 1000);
     return len;
   },
+  // ------------------------------------------------------------------------------------------
+  // Voices (voice.js plays the clips; the chain they go through is here, DESIGN §12.4)
+
+  get ctx() { return ctx; },
+  get duckLevel() { return vduck ? vduck.gain.value : 1; },   // the music under speech (tests)
+  // While anybody speaks the music and the trad tunes drop ~8 dB and the engine ~4 dB (0.1 s down,
+  // 0.6 s back).
+  voiceDuck(on) {
+    if (!ctx) return;
+    const t = ctx.currentTime;
+    vduck.gain.setTargetAtTime(on ? 0.4 : 1, t, on ? 0.035 : 0.2);
+    engDuck.gain.setTargetAtTime(on ? 0.63 : 1, t, on ? 0.035 : 0.2);
+  },
+  // The ears: the camera (position, forward, up).
+  setListener(x, y, z, fx, fy, fz, ux, uy, uz) {
+    const L = ctx?.listener;
+    if (!L) return;
+    if (L.positionX) {
+      const t = ctx.currentTime;
+      L.positionX.setValueAtTime(x, t); L.positionY.setValueAtTime(y, t); L.positionZ.setValueAtTime(z, t);
+      L.forwardX.setValueAtTime(fx, t); L.forwardY.setValueAtTime(fy, t); L.forwardZ.setValueAtTime(fz, t);
+      L.upX.setValueAtTime(ux, t); L.upY.setValueAtTime(uy, t); L.upZ.setValueAtTime(uz, t);
+    } else { L.setPosition(x, y, z); L.setOrientation(fx, fy, fz, ux, uy, uz); }
+  },
+  // One line's way to the voice bus, by mode: 'dialog' dry and centred; 'radio' a walkie-talkie
+  // (300-3400 Hz, a little grit); 'pa' a loudspeaker (band-passed, a little room); 'car' a
+  // passenger, a little to the right; 'world' from where the speaker stands (setPos), fading with
+  // distance, with a little room; 'film' the film night's projector (low-passed, a faint hum).
+  // muffle: heard from inside a car. Pitch and tempo are never touched.
+  voiceChain(mode = 'dialog', { muffle = false } = {}) {
+    const c = ctx, nodes = [], srcs = [];
+    const mk = (n) => { nodes.push(n); return n; };
+    const filt = (type, f, q = 0.8) => { const b = mk(c.createBiquadFilter()); b.type = type; b.frequency.value = f; b.Q.value = q; return b; };
+    const input = mk(c.createGain()), out = mk(c.createGain());
+    let head = input, panner = null, room = 0;
+    if (mode === 'radio') {
+      const sh = mk(c.createWaveShaper()), g = mk(c.createGain());
+      sh.curve = RADIO_CURVE; g.gain.value = 1.2;
+      head.connect(filt('highpass', 300)).connect(filt('lowpass', 3400, 0.9)).connect(sh).connect(g);
+      head = g;
+    } else if (mode === 'pa') {
+      const g = mk(c.createGain()); g.gain.value = 1.15;
+      head.connect(filt('highpass', 380, 0.7)).connect(filt('peaking', 2200, 1)).connect(filt('lowpass', 5200, 0.7)).connect(g);
+      head = g; room = 0.35;
+    } else if (mode === 'car') {
+      const p = mk(c.createStereoPanner());
+      p.pan.value = 0.3;
+      head.connect(p); head = p;
+    } else if (mode === 'world') {
+      panner = mk(c.createPanner());
+      Object.assign(panner, { panningModel: 'equalpower', distanceModel: 'inverse', refDistance: 4, rolloffFactor: 1.1, maxDistance: 90 });
+      head.connect(panner); head = panner; room = 0.1;
+    } else if (mode === 'film') {
+      const lp = filt('lowpass', 2800, 0.7);
+      head.connect(filt('highpass', 220, 0.7)).connect(lp); head = lp;
+      const hum = c.createBufferSource(), hg = mk(c.createGain());
+      hum.buffer = noiseBuf; hum.loop = true; hg.gain.value = 0.012;
+      hum.connect(filt('bandpass', 1400, 0.6)).connect(hg).connect(out);
+      hum.start(); srcs.push(hum); nodes.push(hum);
+    }
+    if (muffle) { const lp = filt('lowpass', 1100, 0.5); head.connect(lp); head = lp; }
+    head.connect(out).connect(voiceBus);
+    if (room) { const v = mk(c.createGain()); v.gain.value = room; out.connect(v).connect(voiceVerb); }
+    return {
+      input, out, panner,
+      setPos(x, y, z) { if (panner.positionX) { const t = c.currentTime; panner.positionX.setTargetAtTime(x, t, 0.03); panner.positionY.setTargetAtTime(y, t, 0.03); panner.positionZ.setTargetAtTime(z, t, 0.03); } else panner.setPosition(x, y, z); },
+      dispose() { for (const s of srcs) { try { s.stop(); } catch (e) { /* stopped */ } } for (const n of nodes) { try { n.disconnect(); } catch (e) { /* gone */ } } },
+    };
+  },
+  // Tests: the RMS (dBFS) of the music (after the voices' duck) and of the voices as they leave
+  // their buses, over ~0.7 s (analysers made on first use).
+  levels() {
+    if (!ctx) return null;
+    if (!this._meters) {
+      this._meters = {};
+      for (const [k, node] of [['music', vduck], ['voice', voiceBus]]) { const a = ctx.createAnalyser(); a.fftSize = 32768; node.connect(a); this._meters[k] = a; }
+    }
+    const out = {};
+    for (const [k, a] of Object.entries(this._meters)) {
+      const d = new Float32Array(a.fftSize); a.getFloatTimeDomainData(d);
+      let e = 0; for (const v of d) e += v * v;
+      out[k] = +(10 * Math.log10(e / d.length + 1e-12)).toFixed(1);
+    }
+    return out;
+  },
+
   // The audio clock in seconds while the context runs, else null (none yet, or suspended).
   clock() { return ctx && ctx.state === 'running' ? ctx.currentTime : null; },
   // Test hook (tools/scenarios/meter.mjs): RMS of the master output over the last ~40 ms, the

@@ -1,5 +1,68 @@
 # Röster – ett fullt röstsatt Charter & Run
 
+**Implementerat.** Byggt 2026-10-21–24 som jobb 1 av två (avsnitt 10.1), DESIGN §12.4. Replikerna i de 13
+uppdragen, mantrat (tre tagningar), "Prata med gänget", SKANDAL och free roam-featurerna (utom mikrofonen och
+tutan) är tal: 775 klipp, 36 minuter, 19 MB i `assets/voice/` (`index.json` och en mp3 per replik), sagda av
+32 roller med Voice Library-röster och `eleven_v4`. Spelet anropar inget API. Ole pratar norska, och
+lokalbefolkningen (Josés mamma och pappa, Carmencita, portiern, souvenirförsäljaren, grisbonden, städerskan,
+hittegodsexpediten, telefonisten och Guardia Civil) säger sin svenska undertext på spanska. Dialogrutans text
+skrivs fram i takt med talet, radion låter som en walkie-talkie och kaptenen som en högtalare, en replik ute på ön
+hörs från den som pratar, musiken och motorn tonas ner under talet, och munnarna följer klippens kurva.
+Pausmenyn har RÖSTER: PÅ / AV. Koden: `src/voice.js` (kön, platserna och pausen), `src/content/script.js`
+(`allLines()`, klockrepliken i ord) och `scriptFeatures.js`, `audio.voiceChain`, `hud.runDialog`/`_sayLine`,
+`game.say`/`speak`/`radio`, verktyget `tools/voice/` (voice.mjs, analyze.py, review.mjs, cast.json, lines.json,
+qc.json) och make-målen `voice`, `voice-cast`, `voice-review`, `voice-check` och `voice-hear`. CLAUDE.md
+"Voices" har regeln att en ny feature gör sina egna klipp, högst 1 500 tecken.
+
+*Rollerna:*
+- **Huvudrollerna**, valda på betalda provläsningar (vad lokal taligenkänning hörde, tonhöjd, tempo och roll):
+  - Stig: Christer
+  - Ole: Thomas Magne, bokmål
+  - Lasse: Kim
+  - Berra: Mathias
+  - Robban: Sovn
+  - Siv: Sanna Hartfield
+  - Majsan: Elin, lägre än Siv så att systrarna hörs isär
+  - Angerud: Andreas
+  - José: Rafa N, en spansk röst som talar svenska
+  - Josés mamma: Rosa
+- **De 22 små rollerna:** valda på Voice Librarys gratisprov.
+
+*Kostnad:* 29 836 credits enligt API:ets `character-cost`, under taket på 30 000:
+- provläsningar 3 281
+- replikerna 25 658 tecken
+- omtagningar ungefär 890
+- en kontroll av nyckeln 10
+
+Kontots egen räknare visade 29 946. Kvar på kontot: 15 047 (nollställs 2026-11-09).
+
+*Avvikelser:*
+- **Jobb 2 väntar.** Det är statisternas pool, ropen, småpratet, mikrofonen, tutan och figurerna utan roll:
+  541 repliker, 12 781 tecken, ungefär 14 000 credits. Det ligger i `features/roster_v2.md`, under "Vänta med
+  dessa".
+- **Josés brytning går inte att mäta.** Språkigenkänningen ger båda kandidaterna 0,99–1,00 svenska, precis som
+  de svenska rösterna. Ingen har lyssnat i högtalare, så lyssna på provlyssningssidan (`make voice-review`)
+  och byt med `node tools/voice/voice.mjs choose jose <id>` om den låter för svensk.
+- **Nio spanska repliker saknade spanska.** De spanska rollerna hade nio repliker med svensk undertext utan
+  spansk `tts`: Guardian tre, grisbonden tre, telefonisten två och souvenirförsäljaren en. De sades först
+  på svenska och fick sedan en `tts`. Kontrollen märkte det bara delvis, eftersom faster-whisper översätter
+  svenskt tal till spanska när den ombeds höra spanska. Fällan står i CLAUDE.md "Voices" och DESIGN §12.4.
+- **Taket stoppade den sista omtagningsrundan.** Tio repliker behåller sin bästa tagning (`note` i
+  `lines.json`). Verktyget föll först inte tillbaka för fyra av dem, som då saknade klipp. Det är rättat:
+  en omtagning som taket stoppar faller nu tillbaka på replikens bästa tagning.
+- **31 klipp ligger på granskningslistan.** Det är korta repliker och interjektioner, siffror som Whisper
+  skriver med siffror, och namn som "Hammarby…?" och "Cabalho folkloristico". Inget av dem är fel ord
+  enligt taligenkänningen för rätt språk.
+- **Ingenting har spelats upp i högtalare.** Allt är kontrollerat med lokal taligenkänning per språk och med
+  Praats tonhöjd.
+
+*Verifierat:*
+- **`vstory`** (berättelsen med rösterna på): 320 repliker sagda, 306 med röst och 10 pratbubblor
+  släppta efter 2,5 s väntan. 5 repliker klipptes av (1,6 %), ingen pratade i munnen på någon, ingen
+  radiotoast försvann för tidigt, alla repliker fanns i `allLines()` och inget klipp misslyckades att ladda.
+- **`voice`, `prata`, `story` och `fullstory`:** `RESULT: PASS`. `story` slutar i `#13 idle`.
+- **`make voice-check`:** ok. Alla 775 repliker i omfånget har klipp.
+
 *Replikerna blir riktigt tal i stället för pip. Stig-Helmer pratar, Ole pratar norska, Berra och Robban
 göteborgska, och lokalbefolkningen pratar spanska under svenska undertexter, precis som i filmen.
 Talet görs i förväg med ElevenLabs och checkas in som små mp3-filer, så spelet anropar aldrig något
@@ -442,6 +505,39 @@ credits).
   hela spelet med poolen ungefär en timme och 25–30 MB.
 - **En ändrad replik** kostar lika många credits som den har tecken.
 
+### 10.1 Uppdelningen i två jobb (2026-10-23)
+
+Utvecklaren har 45 000 credits och får nya varje månad, och delade arbetet i två jobb. Siffrorna är
+torrkörningens (`make voice DRY=1`, `allLines()` med alla free roam-featurer, 1 313 repliker och
+37 955 tecken).
+
+| | Repliker | Tecken / credits |
+|---|---|---|
+| **Jobb 1 (den här featuren), högst 30 000 credits** | | |
+| version 1: uppdragen, mantrat (3 tagningar), "Prata med gänget" med klockans 24 former, SKANDAL | 479 | 16 773 |
+| free roam-featurernas repliker av rollfigurerna (54 featurer), utom mikrofonen och tutan | 293 | 8 401 |
+| summa i `scope` | 772 | 25 174 |
+| provläsningar för de tio största rollerna (2–3 kandidater × 75–180 tecken) | | 3 281 |
+| omtagningar, inom taket (`MAX`) | | ~1 500 |
+| **summa jobb 1** | | **~30 000** |
+| **Jobb 2: `features/roster_v2.md`** (väntar tills utvecklaren säger till) | | |
+| ropen, småpratet, mikrofonen, tutan, statisternas och figurerna utan rolls free roam-repliker | 541 | 12 781 |
+| poolen med tio röster (statisternas repliker sägs med flera röster), pilot, omtagningar | | |
+| **summa jobb 2** | | **~14 000** |
+
+- **Varför mikrofonen och tutan väntar:** de är de enda free roam-featurerna där publik eller
+  statister svarar rollfigurerna, och de ska låta som en helhet med poolen. Tillsammans är de 2 573
+  tecken, så jobb 1 ryms då under 30 000.
+- **I `cast.json`:** `scope.parts` är `mission`, `mantra`, `talk`, `skandal` och `feature`, och
+  `scope.not` är `feature:mikrofon` och `feature:honk`. En replik är i omfånget bara när talaren har
+  en roll i `cast.json`; statisterna (`@tourist` med flera) väntar på poolen.
+- **Utfallet av jobb 1 (2026-10-24):** 775 klipp (777 repliker i omfånget och 25 388 tecken; Berras
+  "…zzz" är `skip` och Sivs "…" har inget att säga), 36 minuter och 19 MB. Det kostade **29 836
+  credits** enligt API:ets `character-cost`: provläsningar 3 281, replikerna 25 658, omtagningar ~890
+  och en kontroll av nyckeln 10. Kontots egen räknare visade 29 946. Taket stoppade den sista
+  omtagningsrundan, så tio repliker har kvar sin bästa tagning (`note` i `lines.json`). Kvar på kontot:
+  15 047 credits (nollställs 2026-11-09), och jobb 2 behöver ungefär 14 000.
+
 ## 11. Byggordning
 
 Varje steg kan landa för sig, och spelet fungerar hela tiden. Pipet finns kvar som reserv.
@@ -467,6 +563,11 @@ Varje steg kan landa för sig, och spelet fungerar hela tiden. Pipet finns kvar 
 7. **Läppsynken.**
 8. **Version 2**, gärna som en egen feature (som Saab-spelets "resten av replikerna"): free
    roam-featurerna, poolen, ropen, `vpool` och `vfree`.
+
+**Uppdelningen (avsnitt 10.1):** steg 0–7 är jobb 1, och jobb 1 tar dessutom free roam-featurernas
+repliker av rollfigurerna från steg 8 (inkopplingen av deras talare, `scope` med `feature`), utom
+mikrofonen och tutan. Resten av steg 8 är jobb 2, `features/roster_v2.md`, under "Vänta med dessa
+tills spelaren säger till" i `features/TODO.md`.
 
 ## 12. Att tänka på
 

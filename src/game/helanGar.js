@@ -241,6 +241,7 @@ export class HelanGar {
       affe: make(g.npc('affe')?.def ?? g.charDef('affe')),
       gabbe: make(g.npc('gabbe')?.def ?? g.charDef('gabbe')),
     };
+    this.bodies.affe.key = 'affe';   // (his voice, voice.js: the double's def may be an outfit's copy)
     return this.bodies;
   }
   who(key) { return key === 'stig' ? this.g.player : this.bodies?.[key] ?? null; }

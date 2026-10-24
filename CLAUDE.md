@@ -307,9 +307,44 @@ opens with a summary of the rounds and the timer changes.
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)
+  - `voice vstory` (the voices, DESIGN §12.4: the queue with a made-up manifest; the story with the
+    voices on and the real clips: cut off under 5 %, never two at once, nothing said outside
+    `allLines()`; run `vstory` after touching dialogue, radio, bubbles or the runner's outro)
 - Test mode is `?test=1` (no title, no pointer lock, dialogue auto-advances, `timeScale` 3,
-  `&ts=n` overrides). `?fresh` skips the save, `?mission=N` starts at index N (0–12).
-  `window.__game`, `__lm(name)`, `__props`, `__missions()`, `__stats()` are exposed.
+  `&ts=n` overrides; the voices off unless `&voice`). `?fresh` skips the save, `?mission=N` starts at
+  index N (0–12). `window.__game`, `__lm(name)`, `__props`, `__missions()`, `__stats()`, `__voice`
+  are exposed. Chrome runs muted (`--mute-audio`): never play a sound in the speakers; listen with the
+  tools (`make voice-hear`, the soundscape's WAVs and Python).
+
+## Voices
+
+The lines are spoken: ElevenLabs clips made ahead of time and checked in (`assets/voice/`, DESIGN
+§12.4, `features/implemented/roster.md`); the game never calls an API.
+
+- **The key** is `ELEVENLABS_API_KEY` in `.env` (git-ignored, with `.cache/`). Never print, cat or grep
+  `.env`, never commit it, never paste the key anywhere; only `tools/voice/` reads it, into a request
+  header. Voice Library voices only (no Voice Design, no clones of real people), no account upgrade.
+  The key has a credit cap of its own besides the account's balance: test it with a request that costs
+  more than what may be left on it (a 4-credit "Hei!" passed once with 7 left).
+- **Make targets:** `make voice DRY=1` (what is missing in cast.json's scope and what it costs, no
+  request), `make voice` (makes it: WHO=a,b LIMIT=n MAX=chars ALL=1 PART=p PRUNE=1 REPROCESS=1),
+  `make voice-cast WHO=x` (paid auditions), `make voice-review` (the review page, port 8846),
+  `make voice-check` (no requests; exit 1 if a line in scope has no clip), `make voice-hear` (free).
+  Check `df -h /` before a big run.
+- **A feature that adds or changes a spoken line** (a bubble, the radio, the dialogue box) lists it
+  with its speaker in `src/content/scriptFeatures.js` (a generator per table, part
+  `feature:<name>`; a line built at runtime in every form it takes), gives a body-less speaker an
+  anchor with `who` and a double its `key` (so `voice.voiceFor` finds the role), and makes its own
+  clips: `make voice DRY=1 PART=feature:<name>`, then `make voice PART=feature:<name> MAX=1500`. **At
+  most 1 500 characters per feature;** over that, or a speaker with no role in `tools/voice/cast.json`
+  (a passer-by: the pool of `features/roster_v2.md`), stop and ask the user. Spanish-speaking locals
+  get a Spanish `tts` in `tools/voice/lines.json` (marked as our translation) for every line whose
+  text is Swedish: without one the Spanish voice says the Swedish, and the check may not notice
+  (faster-whisper asked for Spanish translates Swedish speech into Spanish); digits and capitals
+  that are not abbreviations get a `tts` in words. Put the numbers (lines, chars, credits spent) in the
+  report. A line without a clip beeps as before, so nothing breaks without one.
+- **The manifest** `assets/voice/index.json` is one clip a line, sorted: two features' clips merge in
+  git. After a conflict take either side and run `node tools/voice/voice.mjs manifest`.
 
 ## Conventions that bite
 

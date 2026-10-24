@@ -111,7 +111,7 @@ export class Hitch {
 
   // The farmer's bubble anchor: over his head at the wheel.
   anchor(car) {
-    const a = (car.hitchAnchor ||= { x: 0, y: 0, z: 0, height: 1.25 });
+    const a = (car.hitchAnchor ||= { x: 0, y: 0, z: 0, height: 1.25, who: this.cfg.driver });   // (his voice, voice.js)
     car.seatWorld(1, a);
     return a;
   }

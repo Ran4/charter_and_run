@@ -467,6 +467,13 @@ with existing fields so nothing blocks.
 | `pax` | Medpassagerare | anonymous voice for (t) lines (a fellow tourist; not for the Spaniards' lines) | 280 | `#fff8e6` | random 1979 tourist (brown/orange clothes) |
 | `telefonist` | Telefonisten | portrait only: the Las Palmas telephone-station clerk, "Hytt två!" (Phase 3) | 330 | `#d8321e` | skin ES, hair `short` `0x1d1426`, glasses, pale-blue shirt `0xd8e4f0` longSleeves + collar |
 
+The `voice` column is the pitch of the dialogue box's beeps (`audio.talk`), still used for a line with
+no clip. The spoken voices (§12.4) are in `tools/voice/cast.json`, a role per key: its language
+(`sv`; `no` for Ole; `es` for `mamma`, `pappa`, `carmencita`, `portier`, `souvenir`, `grisbonde`,
+`stadare`, `hittegods`, `telefonist`, `guardia` and the second officer's voice `guardia2`, who say
+their Swedish subtitle in Spanish; José Swedish with an accent) and its Voice Library voice. `eslov`,
+`camarero` and `varden` have no role yet (version 2, `features/roster_v2.md`); `vardinna2` says nothing.
+
 Removed Bigmouth keys: `nick maurice andrew steve jay jessi connie duke shame` (delete from
 `CHARS`; the monster/ghost/wizard builders may stay as dead code).
 
@@ -5756,7 +5763,9 @@ the bodega after the end (the gate's men's room, §8.1), Lasse's oath, Robban's 
   `to: 'julafton'` until julafton is done, `'end'` after the end), narrowed by `hours` ([from, to) on
   the free-roam clock, §10.10: Ole's "Morn, gutten min!" 06–11; the clock reads 15:00 in test mode) and
   `pryl` (Ole's watch found: then he asks Stig the time, and Stig reads it off in Spanish, Norwegian and
-  Swedish time, `{es}` / `{no}`). E again plays the next one in table order after the one that person
+  Swedish time, `{es}` / `{no}`, in words to the half hour as the mic's announcer reads the clock so that
+  the line can be voiced: "Tre spansk tid. Fyra norsk och svensk." at 15:00, "Halv fyra …" from a
+  quarter past; script.js `clockLine`, §12.4). E again plays the next one in table order after the one that person
   last played, round and round (per session, not saved).
 - **The table** (12 people, 33 exchanges, 2–4 lines each; tags in content/island.js):
   - Ole: Rio (buss17–julafton); the donkey, "Undrar vad åsna heter på spanska." / "Cabalho
@@ -9687,7 +9696,7 @@ touched only on a change, the still apart from the rest); `hud.setKort(null)` hi
 
 ---
 
-## 12. Music and sound (src/audio.js; WP-H; all synthesised)
+## 12. Music and sound (src/audio.js; WP-H; all synthesised but the voices, §12.4)
 
 ### 12.1 Tunes (`audio.setTune(name)` switches at the next bar; scheduler reads the tune table per bar)
 
@@ -9778,6 +9787,77 @@ Scheduler fixes (Phase 0): catch-up guard `if (next < ctx.currentTime) next = ct
 | `glide()` | feature 3 (§10.7), arms out: two soft band-passed noise sweeps up, 450 → 1500 Hz (0.7 s) and 900 → 2400 Hz (0.5 s, +0.15 s) |
 | `jingle(kind)` | `start`, `complete`, `fail`, `pryl` (replaces `record`) |
 | `trad(name)` | §12.1 |
+
+### 12.4 Voices (src/voice.js, tools/voice/; `features/implemented/roster.md`)
+
+The lines are spoken: clips made ahead of time with ElevenLabs (`eleven_v4`, Voice Library voices
+only, never a clone of an actor) and checked in. The game never calls an API.
+
+- **The script:** `allLines()` in `src/content/script.js` (pure) lists every line said aloud as
+  `{ who, text, part }`: the missions' tuples read from `src/game/missions/*.js` by a regex (they
+  import three, so they are read, not imported), the tables (mantra, `talk`, SKANDAL) and, from
+  `src/content/scriptFeatures.js`, one generator per free-roam table (`feature:<name>`), `chatter` and
+  `barks`. `who` is a role key (CHARS), `guardia2` (the second officer's voice: the two take turns
+  among the Guardia Civil, and every officer line is listed for both) or a pseudo-speaker `@<what>`
+  (a passer-by: version 2, `features/roster_v2.md`). A line built while the game runs is listed in
+  every form: Stig's clock answer to Ole's watch (`clockLine`, §10.28) is in words to the half hour,
+  "Tre spansk tid. Fyra norsk och svensk.", 24 forms.
+- **Languages:** Swedish; Ole in bokmål (`no`); the locals (José's mother and father, Carmencita,
+  the porter, the souvenir seller, the pig farmer, the cleaner, the lost-and-found clerk, the
+  telephonist, the Guardia Civil) say their Swedish subtitle **in Spanish** (the line's `tts` in
+  `tools/voice/lines.json`, our translation, so marked), as in the film; José speaks Swedish with an
+  accent (a Spanish-native voice). The subtitle on screen is always the code's text.
+- **The clips:** `assets/voice/<who>/<hash>.mp3`, mono 64 kbps 44.1 kHz, −20 LUFS, limiter −1.5 dBTP,
+  trimmed; the name a hash of who, the spoken text, language, voice, model, settings, retake and
+  take. The manifest `assets/voice/index.json`: `{ _fps: 30, who: { text: clip | [clip, …] } }`,
+  clip `{ f, d (s), t (each subtitle character's start in 1/100 s), lip (the mouth, 64 levels a
+  frame) }`, a list for a line with `takes` (said in turn: the mantra has 3). One clip a line,
+  sorted, so two features' clips merge in git (after a conflict: either side, then
+  `node tools/voice/voice.mjs manifest`).
+- **The tool** (`tools/voice/voice.mjs`, make targets in CLAUDE.md "Voices"): a dry run with chars and
+  credits per role, a hard cap per run (`MAX`, default 25 000), every take heard by a local recogniser
+  per language (`analyze.py`: KBLab kb-whisper-small, NbAiLab nb-whisper-small, faster-whisper medium
+  for Spanish) and retaken up to twice when the words are wrong (WER > 0.25) or the pace far off;
+  short lines and interjections go to the review page (`make voice-review`). `tools/voice/cast.json`:
+  the roles (`lang`, `voice_id`, candidates), and `scope`: the parts made (`parts` less `not`, for
+  speakers with a role). `voice-check` (no requests) exits 1 when a line in scope has no clip. A
+  Spanish role's line whose text is Swedish needs its Spanish `tts`: faster-whisper asked for Spanish
+  translates Swedish speech into Spanish, so the check can pass a Spanish voice saying the Swedish.
+- **Playback** (`voice.play(who, text, { slot, mode, at, ch, wait, must, now, delay, start, drop, tag
+  })` → handle | null): two slots, `main` (the dialogue box, the radio, the PA) and `bubble`; one voice
+  in each and never two at once; a dialogue line breaks in on everything; radio and PA lines queue
+  behind whoever is talking for 6 s (`must`, a stage's `RadioSeq`: never dropped; a RadioSeq's pause
+  counts from when its last line ended); a bubble's voice waits at most 2.5 s, else it is dropped (the
+  bubble shows anyway); nothing queued starts while the dialogue box is up; the same speaker waits for
+  himself; the runner's outro waits until it is quiet (at most 3.4 s after its 1.6). **No clip, no
+  voice:** a line without one (a role with no voice, outside the scope, a clip that won't load, the
+  voices off) returns null, takes no turn and does what it did before (the dialogue box's and the
+  radio's beeps; a bubble is silent).
+- **The paths:** `hud.runDialog` prefetches the conversation; a line with a clip is said (`_sayLine`):
+  the text typed in step with the speech (the clip's `t`), the first skip shows it all, the second goes
+  on (the voice fades out in 80 ms), `autoDialog` waits for the end and 0.4 s; a PA line (`cue.pa`)
+  starts 0.9 s after the chime. `game.say` → `game.speak`: the bubble's voice from where the speaker
+  stands (`world`, or `car` beside Stig in his car), the bubble and `sayEnd` held while it is said.
+  `game.radio`: its toast goes up when the line is said and stays for the clip + 0.9 s. Anchors with no
+  body carry `who` (`{ x, y, z, height, who }`).
+- **The sound** (`audio.voiceChain(mode)` → `voiceBus` (1.0) → master): `dialog` dry and centred;
+  `radio` 300–3 400 Hz and a soft clip (Lasse, Levander, a stage's radio); `pa` 380 Hz–5.2 kHz with a
+  2.2 kHz peak and a little room (the captain, the airport, a `pa` cue); `car` panned 0.3; `world` a
+  PannerNode at the speaker (inverse, ref 4 m, max 90 m), low-passed at 1.1 kHz while Stig sits in a
+  car; `film` 220 Hz–2.8 kHz with a projector hiss (for lines heard on Herr Storch's film; the film
+  night has none yet, so nothing uses it). While anyone speaks the music and the trad tunes
+  drop to 0.4 (`vduck`) and the engine to 0.63 (`engDuck`), 0.035 s down and 0.2 s back (time
+  constants; their own gains, so the pursuit's `duckMusic` is untouched). Pitch and tempo never change;
+  the voices run on the AudioContext's clock, not `timeScale`.
+- **Mouths:** `voice.update()` every frame gives the speaker's `anim.mouth` (0..1) from the clip's lip
+  curve (loudness, shut on m/b/p), for bubbles too; models.js opens the mouth by it
+  (`0.32 + mouth × 0.98`) instead of the sine flap.
+- **The pause** holds a line where it is and goes on afterwards; the pause menu's `RÖSTER: PÅ / AV`
+  (`#voices`, localStorage `charter-and-run-voice`) turns them off (the beeps of before). Only the 24
+  latest clips are kept decoded.
+- **Tests:** `?test=1` has the voices off (and never asks for the manifest) unless `&voice`;
+  `&voicemanifest=<url>` loads another manifest. Chrome runs with `--mute-audio` (§16.2). Scenarios
+  `voice`, `vstory` (§16.4). `window.__voice` is the voice object (`log`, `said`, `failed`).
 
 ---
 
@@ -10336,11 +10416,20 @@ game.placeNpcs(force = false)             // §4.5; force also re-applies levelD
                                           // (applyOutfits) except during an outro (§10.4)
 game.setNpcOutfit(key, name);  game.setPlayerOutfit(name)   // re-render portraits
 game.stomp()       // feature 3: J in the air (vy −18, stomping, the kick sound); the glide's tap calls it
-game.say(target, text, secs = 2);  game.radio(who, text)   // say: at least 1 + 0.045 s a character
-                                          // (halved in test mode; Phase 3, §11.4); an empty text or
-                                          // secs <= 0 is an unsay
-game.unsay(target)                        // takes target's bubble down now (hud.unsay); saying(t)
-                                          // false, sayEnd back to the bubbles still up (Phase 3)
+game.say(target, text, secs = 2, o = {}) -> voice handle | null   // say: at least 1 + 0.045 s a
+                                          // character (halved in test mode; Phase 3, §11.4); an empty
+                                          // text or secs <= 0 is an unsay. With a clip (§12.4) the line
+                                          // is said too (game.speak) and the bubble and sayEnd held
+                                          // while it is; o.who the voice if not target's, o.mode, o.wait
+game.speak(t, text, o = {}) -> handle | null   // just the voice of a bubble (slot bubble, mode world /
+                                          // car); o.bubble the bubble to hold, o.count false: never
+                                          // holds sayEnd (the mantra's auto-bubble)
+game.radio(who, text, o = {}) -> handle | null   // with a clip: queued (o.wait 6 s, o.must for ever),
+                                          // its toast when it is said (clip + 0.9 s), mode radio /
+                                          // car (a passenger) / pa (o.pa, 'pa', 'kapten': after the
+                                          // chime); without one the toast now and 8 beeps, as before
+game.unsay(target)                        // takes target's bubble down now (hud.unsay) and stops its
+                                          // voice; saying(t) false, sayEnd back to the bubbles still up
 game.bark(ch, kind) -> text               // kind ouch | getUp | kicked | carjack: a line from the
                                           // speaker's table (Ole / local / Swedish; §14.10, r2)
 npc.steer?(h) -> { x, z } | null          // feature 2: a free-roam module walking an NPC; fixedStep
@@ -11466,8 +11555,10 @@ fx.splash(x, z, n = 16, sp = 3, up = 4)   // n drops thrown out at sp m/s and up
 //   it; hud.unsay(target) takes it down, Phase 3) and overlapping bubbles stack upwards, the
 //   newer above (Phase 2), with a tail to its speaker behind the older one (cls lead, Phase 3 r3);
 //   wrapped at 300 px, kept on screen and under the top HUD row and a
-//   shown objective card (Phase 3). hud.toast(text, cls,
-//   secs?) (by length, ≤ 3 at once), hud.clearToasts() (runDialog calls it), hideBanner() drops
+//   shown objective card (Phase 3); it returns the bubble { b, target, until } (game.say holds
+//   `until` while its voice is said, §12.4). hud.toast(text, cls, secs?, minSecs = 0) -> the element
+//   (by length, at least minSecs: a radio line's clip + 0.9 s; ≤ 3 at once), hud.clearToasts()
+//   (runDialog calls it), hideBanner() drops
 //   only `show` (Phase 3, §11.4, §11.7). hud.showScore(main, sub, record, secs = 4.5) /
 //   hud.hideScore(): the diving judges' result line #score (feature 4, §10.8); hud.liveScore(main,
 //   secs = 1.2): the same line kept up without the pop (feature 40, §10.27); banner cls stamp (and
@@ -11973,7 +12064,10 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
   before index `TO`; each `M[k](T)` ends with `T.waitIdle(k + 1)`.
 - Test mode (`?test=1`): no title, no pointer lock, `autoDialog`, **dialogue 220 chars/s with a
   short auto-advance pad**, `timeScale = 3` (cabin phases, timelines, turbulence, mantra seconds),
-  haggle zones 0.6 and speeds × 0.5. Rabbit counts ≤ 6.
+  haggle zones 0.6 and speeds × 0.5. Rabbit counts ≤ 6. The voices are off (§12.4) unless the query
+  has `&voice` (`QUERY='&voice'` puts it on every `fresh`).
+- Chrome runs with `--mute-audio` (`tools/lib.mjs`): never a sound from the speakers; the audio graph
+  still runs, so `audio.level()`, `audio.levels()` and the voices' timing are measured as before.
 
 ### 16.3 Story scripts (outline; F/G own the real scripts)
 
@@ -12075,7 +12169,7 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `solkram` [feature 35] | Smörj in Majsans rygg (§10.26). At index 10 (fataga waiting, Majsan its giver at the pool) the talk and no SOLKRÄM; at index 11 beside Majsan "Smörj in ryggen", none at 22:00 or with Siv 5 m off her spot; E: the film's pair in a dialogue (and the marker `solkramFilm`), then her back turned (yaw π/2), Stig 0.97 m behind her facing her with `rub` 1 and his hands 0–0.2 m over her shoulder pivots and 0.03–0.2 m behind her middle, both sisters `busy`, the bottle, no prompt, the card (SOLKRÄM, `Håll E · släpp i det gröna`, `Majsans rygg`, the field `w0` wide with its middle in `at`, the marker) with no letterbox; E held (a real key) 0.6 s: the fill at 1/`secs` a second (0.6–1.3 ×), `rub` 2, `Håll… håll…`; let go in the stripe: 7, a record, Siv's `7` card, `SOLKRÄM 7 P` / `NYTT REKORD!`, `records.solkram` 7 in the save, then her three lines in order and at the end the camera, the sisters and the pose back, no bottle, `sjuPoang` (Siv's chatter, the toast, both markers saved); again: one of `again`, the field × `shrink`, 6 with "Sex, tycker jag." and the record kept (`REKORD 7 P`); the field's edge: 5 and "Giraffen, då? Fem."; short of it: early, no card, `FÖR LITE!`, "Var det allt?"; held to the end: over at 1, Siv's `–1` and laugh, Stig flailing 1.42 m behind her, the cream running, the shot from behind, three drops at 1.1 s, back to the front shot for Siv, the lines, the flail and the cream gone; no hold: "Jaha. Då får jag väl göra det själv."; six tries; a mission start with Siv's card up: the card down and the intro's cinematic kept; a reload: the record 7, `sjuPoang`, Siv's chatter and no film pair again; at index 13 after `unlock('bodega')` at 15:00 the pool fest's ring has Majsan (none), at 08:00 she is home and it is there; the flight level inert. Shots `solkram_0_prompt`, `_1_ready`, `_1b_hold`, `_2_sju`, `_3_after`, `_4_over`, `_5_minus` |
 | `skjortbyte`, `garderob` [feature 36] | Skjortbytet (§7.2). `skjortbyte`, at index 6 (free roam, the shirt): on foot with both Land Rovers chasing for 9 s, no `onRam` (their wall hits are no rams on him, `main.onCarImpact`); no hideout prompt at the wardrobe without a pursuit (feature 67's "Byt kläder" there, `klader`); in one (the officer 40 m off on the pool deck): `Byt till kostymen`, the `friend` marker, the shirt taunt among the `taunts`; E: frozen 2.5 s, the wardrobe open with the suit, "De letar ju efter skjortan…", he faces it, no second prompt; then the suit, `islandOutfit` hawaii, no pursuit, no fine, the cooldown, the shirt on the hanger, the banner, the doors shut; the officer walks onto the patio (within 1 m of the spot), "¿Dónde está el de la camisa?", the scene (cinematic and cut), "Buenas tardes.", the scene over as he walks on, no back prompt meanwhile, out of sight, Ole's "Du kan ikke gå sånn her nede! …", one line only; the save keeps hawaii; a pursuit in the suit: no hideout, no back, no shirt taunt, no marker; back: `Byt till hawaiiskjortan`, the shirt on the hanger, "Är den inte lite skrikig?", the shirt, Ole's "sterke farger"; the cooldown (the porter's untouched); the officer on the walk 6 m off: busted in the wardrobe, fined, still in the shirt, the doors shut; under the dotted shirt (bought, `shop.refresh`): no hideout, no shirt taunt, and without it again; the officer 20.6 m off on the pool deck (placed and E in one frame): he makes it, and the officer comes on from where he was; a mission start while he walks off: the shirt back on, the officer gone, neither prompt; index 5 (the suit): no prompt, no shirt taunt; the flight level: no wardrobe. `garderob`: shots of the wardrobe shut from the patio and with Stig at it, open with the suit (from the room and the patio), the change done, the officer looking, "Buenas tardes." in the scene, the officer walking off with Ole's radio, back to the shirt |
 | `stunthopp`, `stuntzoner` [feature 40] | Stunthopp med G17-stämpel (§10.27), driven by a route follower in his car's `ai` (pure pursuit, as calibrate's), the peds and traffic near the bygge sent away. `stunthopp`, at index 11 (free roam): `stunt_planka` at (182, −161.4); the plank's ground 4.42 at its end, 3.6 near its foot, the ground past it; the route up the big ramp, round the S at 3.5 m/s, flat out along the strip: off the plank's end (`airFrom` y over 4.3, zone `planka`), `LUFTTID 0,n S` on the result line with no sub, the mantra said in the air; the verdict: passed, one flight, 0.85–1.05 s and 14.5–20 m (0.93 s, 16.4 m), the banner KONTROLLERAD AV G17 (cls `stamp`, not `fail`), the card `LUFTTID 0,9 S · 16 M · +100 PTA` / `NYTT REKORD: BYGGET – DRÖMPLANET` (record), +100 pta, `records.stunts.planka` its distance, no SKANDAL, "Godkänd av G17. Det är ju jag."; stopped on the dream plane's lot (x 205–222) with over 80 hp; out of the car: arms out facing `pryl_kamera`, down after 3 s; the plank again: passed, no pay, the card's `REKORD 16 M`; the best set to 10: a record, +25; the save (v 1, `records.stunts`) and a reload keep it; a parked car at (205, −161.4): UNDERKÄND (`krock`, cls `stamp fail`), the card with the name, no pay, the fail line. `stuntzoner`: the yellow ramp at 20 m/s from the yard: `gula`, two flights, over 0.7 s and 14 m, +100; at 16 m/s into the big ramp's side: UNDERKÄND; at 6 m/s a hop under 6 m: no verdict, no line; off deck 1's front edge of `frameRamps[0]` at 14 m/s: `garage`, +100; a mission started (`T.startMission`): not `live`, no jump, no line, no verdict; at index 9 (before fataga) the yellow ramp's stamp GODKÄND; the flight level inert. Shots `stunt_planka_luft`, `_stampel`, `stunt_dromplanet`, `stunt_underkand`, `stunt_gula_luft`, `_stampel`, `stunt_garage`, `stunt_godkand` |
-| `prata` [feature 39] | Prata med gänget (§10.28). The table: 12 people, 33 exchanges of 2–4 lines, speakers the person, Stig or a `with`, windows on known missions (none of Angerud's after the end), no ä or ö in Ole's lines, no line a chatter line (CHATTER, CHATTER_FLIGHT, unlocks'), a source tag on every line row in content/island.js; who can be talked to and with what at every island index 5–13 (at 15:00, at 08:00, at 15:00 with Ole's watch found; the pool fest out of its hours let go first): every exchange somewhere, Ole's Rio at 9 and none at 12 (the giver), no Lasse at 5–6 (the giver), the gang at the airport at 5, Majsan's julfest at 12 and not 11, no Angerud and Berra's "Ska du ha?" after the end. At index 9 by Ole under the pergola: `chat` / Ole, `E Prata med Ole`; E (a real key): Stig turned to him, no `inDialog`, no talk prompt and an empty prompt while it runs, the Rio lines in order, nothing else said meanwhile (no chatter), a line at a time (2.2–6 s apart), the NPCs within 9 m quiet ≥ 3 s after; E again the donkey, again Rio; with the klocka the watch, "15:00 spansk tid. 16:00 norsk och svensk."; the morning one at 08:00, not at 15:00; warped 9 m off mid-talk: `left`, no more lines; Robban's customs with Berra's "Va? Var jag med där?"; Siv (the giver) a `talk`; a mission begun mid-talk: `free roam`, the bubble down. Index 12: within 1.4 m of Majsan the `solkram` interactable, at 2.5 m the talk, the julfest's four lines; Ole (the giver) none. Index 13 after `unlock('bodega')`: at 15:00 on the deck the fest's dancers not to be talked to; Berra at the bodega (the Berra job held off) "Ska du ha?" …; Angerud hidden, none; at 08:00 Lasse's oath with `oath` on Stig during his line and off after; Ole's Concorde with `wings` and the arms down after. The flight level: nothing. Shots `prata_1_prompt`, `_2_rio`, `_3_julfest`, `_4_bodega`, `_5_eden`, `_6_concorde` |
+| `prata` [feature 39] | Prata med gänget (§10.28). The table: 12 people, 33 exchanges of 2–4 lines, speakers the person, Stig or a `with`, windows on known missions (none of Angerud's after the end), no ä or ö in Ole's lines, no line a chatter line (CHATTER, CHATTER_FLIGHT, unlocks'), a source tag on every line row in content/island.js; who can be talked to and with what at every island index 5–13 (at 15:00, at 08:00, at 15:00 with Ole's watch found; the pool fest out of its hours let go first): every exchange somewhere, Ole's Rio at 9 and none at 12 (the giver), no Lasse at 5–6 (the giver), the gang at the airport at 5, Majsan's julfest at 12 and not 11, no Angerud and Berra's "Ska du ha?" after the end. At index 9 by Ole under the pergola: `chat` / Ole, `E Prata med Ole`; E (a real key): Stig turned to him, no `inDialog`, no talk prompt and an empty prompt while it runs, the Rio lines in order, nothing else said meanwhile (no chatter), a line at a time (2.2–6 s apart), the NPCs within 9 m quiet ≥ 3 s after; E again the donkey, again Rio; with the klocka the watch, "Tre spansk tid. Fyra norsk och svensk." (words to the half hour, §12.4); the morning one at 08:00, not at 15:00; warped 9 m off mid-talk: `left`, no more lines; Robban's customs with Berra's "Va? Var jag med där?"; Siv (the giver) a `talk`; a mission begun mid-talk: `free roam`, the bubble down. Index 12: within 1.4 m of Majsan the `solkram` interactable, at 2.5 m the talk, the julfest's four lines; Ole (the giver) none. Index 13 after `unlock('bodega')`: at 15:00 on the deck the fest's dancers not to be talked to; Berra at the bodega (the Berra job held off) "Ska du ha?" …; Angerud hidden, none; at 08:00 Lasse's oath with `oath` on Stig during his line and off after; Ole's Concorde with `wings` and the arms down after. The flight level: nothing. Shots `prata_1_prompt`, `_2_rio`, `_3_julfest`, `_4_bodega`, `_5_eden`, `_6_concorde` |
 | `takhopp` [feature 41] | Hoppet mellan hotelltaken (§10.29), at index 13 (free roam): `ROOF_JUMP` live, the roofs HOTEL ATLÁNTICO and APARTAMENTOS SOL DE INVIERNO, both floors at 21.09 (`groundAt` from 25 on each roof and at `takSolTopp`, `takAtlTopp`, `takUtsikt`), the gap 3.68 m with no floor in it, the lift room a wall (23.05), 17 coins, the gap's two palms at 8 m, no 99 m slab solid under the roofs; at `takSolLobby` the prompt "Ta trappan upp", E fades to black and puts him on the roof at `takSolTopp` facing the gap (yaw −π/2, `on` `sol`, `climbs` 1), `slump` and "Sju våningar…", no coin collected there, the prompt "Ta trappan ner"; W + Shift along the coins (a frame hook aims the camera) and a jump 1.2 m before the edge (as Space does): over the gap `dive.gap`, `leap`, the mantra once, down on ATLÁNTICO (`last.kind` `roof`, `gap`, the arms in), at least 11 coins on the way; run to `takUtsikt`: "Nu har jag havsutsikt." once (not again after a step away on the roof), at least 4 coins of the stash; `takAtlTopp`: "Ta trappan ner", E: out of ATLÁNTICO's lobby 2.8 m from `takAtlLobby`, facing out, no stairs there; on the roof again the view line again; sprinting off ATLÁNTICO's west edge at z 62: `leap` (not `bomb`, not `gap`), the mantra, a belly flop in the pool next door (x 53.9–64.8, v > 28, `down`) and its splash; with J 3 m under the roof a cannonball (`bomb`, `waterSplash` with bomb, no flop); a SKANDAL pursuit: no "Ta trappan" prompt at the lobby. At index 9, up by the stairs: the runner's state set to `intro` alone (a real start's intro stands him by the giver at once): `put` once to `takSolLobby`, out of the lobby with no landing over 6 m/s; from the roof `missions.begin()`: no landing over 6 m/s, on the ground; in the mission no `roof` block, every slab solid and stair tower to 99, the palms to 99, no roof floor at (100, 60), no `takhopp` prompt. Shots `takhopp_paret`, `_ascensor`, `_uppe`, `_glipan`, `_atlantico`, `_utsikt`, `_kvallssol`, `_nere`, `_fall`, `_plask` |
 | `mikrofon`, `utrop` [feature 44] | Mikrofonen på scenen (§10.30). `mikrofon`: every line in MIKROFON has its source tag in content/island.js and Ole's have no ä or ö; `clockWords` (tre, halv fyra from a quarter past, fyra from a quarter to, tolv, halv två); at index 9 (free roam, 15:00): no mic prompt from the lawn 2.8 m in front of the stand, at `mikrofon` the prompt "Läs ett utrop" and three guests seated at the terrace; E (a real key): `vatten`, Stig turned to the terrace (within 0.05 rad), the glasses up at once, his line first, three spit lines with the glasses down and `yell`, the camera behind him (`camOff`, within 0.1), no prompt while it plays, no announcement from E in the cooldown; E: `grisfest`, the free gang (Fru Storch, Ole, Robban, Berra, Herr Storch; not Siv, the giver, or Majsan, her extra) and six tourists, the gang `npcPosed`, out of `honk.free`, `spot` `mic`, busy; everyone within 0.8 m of his place, a cheer, then in order Robban's Benidorm, Fru Storch's coffee, "Ja.", "Norsk, da?", "Ja.", and no chatter from Affe or Gabbe meanwhile; E: "Klockan är tre spansk tid…" and Ole's lost watch; with the klocka found at 15:30 "halv fyra" and the watch's line; E: `friskotek`, everyone leaving slumped, the guests slumped (and up again), the tourist's and Berra's lines; the crowd gone: the tourists hidden, the gang free and within 3 m of home; eight bathers forced onto the pool's loungers: E: `hajar`, all eight up, running from the pool flailing (over 3 m further in 1.5 s), "Hjälp!", "En haj!", Lasse's line and Stig's answer, then no flailing and nobody back on those loungers; the fin squashed: the turn skips the shark; the grisfest again, Stig warped 21 m off after Fru Storch's question: no "Ja." or "Norsk, da?"; `missions.begin()` with the crowd on the lawn: no crowd, extras or guests, the gang let go, no prompt. `utrop`: one tourist from each entry's outermost start to a place (under 20 s, within 0.6 m: west 9.6 s, east 14.4 s, south 10.8 s); the guests at 09:00 and 22:30, none at 23:30 or 05:00 (after a cut), at 15:00 again; no prompt in a SKANDAL pursuit; index 6 (friskotek): six tourists only, no question time, the giver and his extras not taken; index 13 after `unlock('bodega')`: none of the pool fest's dancers in the crowd; the flight level (index 2) inert. Shots `mikrofon_1_prompt`, `_2_vatten`, `_3_publiken`, `_4_hurra`, `_5_norsk`, `_6_friskotek`, `_7_hajar`, `utrop_1_friskotek`, `utrop_2_efter_slutet` |
 | `faglar`, `storken` [feature 43] | Fåglarna som lyfter (§10.31). `faglar`, at index 6 (free roam): `live`; the flocks `plaza` 15 `duva`, `kiosk` 8 `mas`, `piren` 9 `mas`, `charca` the two herons and the stork; the herons at (−255, 169.5) and (−249, 179), y 0.15 (where nature.js drew them); every ground spot `spotFree` (no bird a solid); shots of the four flocks; standing still 2.5 m from a pigeon for 2.5 s: no lift; a sprint in from the south: the first lift `plaza`, cause `foot`, the four north pigeons still on the ground; "Oj! Förlåt, förlåt!" and `placate` 1, then 0; at least six pigeons up, the gulls untouched; 14 m off and still: every pigeon back down 22–70 s after the first take-off (37–42 s measured), each within 1.01 m (its steps) of its spot; a pedestrian and a traffic car put among them: no lift; his car west along the beach through the kiosk's sand spots from 40 m: the gulls lift (`car`), no gull still on the ground within 6 m of the moving car (11.6 m at 18–26 m/s), at most two left on the ground; at the quay a standing car: no lift; H: the pier's first lift `horn`, the whole pier up 2 s later; the pigeons up again, then `T.startMission()`: not `live`, every bird on its spot, the stork home; in the mission a sprint among the pigeons: no lift; index 2 (the flight level): not `live`, no lift. `storken`, at index 7 (the Storches on the beach; at 6 the friskotek holds them): `pair()`, the stork home, no `records.stork`; a sprint at the lagoon from the east: the stork `out` (one trip), both herons `fly`; it lands 1.8 m from Fru Storch, farther from Herr Storch, facing her; Stig 9.5 m off: the scene, "Oj, en stork!" then Fru Storch's "Vi heter faktiskt Storch, inte Stork.", Herr Storch `film` and posed, `records.stork` true in the game and the save; `back` with the camera down, then home on its spot (within 0.01 m); a trip nobody follows (`waitSecs` set to 4): home without a stork line; a third, followed: "Oj, en stork!" and the filming but no correction; `T.startMission()` then: the stork home, the camera down, not posed; index 13 after `unlock('bodega')`: no pair, and scared it circles with the herons (`fly`, no trip). Shots `faglar_plaza`, `_kiosk`, `_piren`, `_charca`, `_lyfter`, `_lyfter2`, `_lyfter3`, `_cirklar`, `_landat`, `_bil`, `_tuta`, `_uppdrag`, `storken_flyger`, `_landat`, `_rattelse`, `_filmar` |
@@ -12091,6 +12185,8 @@ T = { page, ev, frames, sleep, shot, hold(keys, ms), tap(key), fresh(query),
 | `talk` [Phase 0] | `autoDialog = false`, walk to Ole at `gateQueue`, E, Space twice |
 | `fullstory` [Phase 0b] | swaps the literal §8 missions (`tools/fixtures/full-missions.js`) into `MISSIONS` and plays all 13 per §16.3 (`FROM`/`TO` as `story`); must end `#13 idle`, `RESULT: PASS` |
 | `kinds` [Phase 0b] | fixture data checks; haggle misses fail; follow `minDist` fails; smooth/fragile bars (teleports never count); carry spill; checkpoint retry re-applies night + `vals` and revives plates at `dansgolv`; destroy default spawn; grab at the wreck; scene `exitCar`; Phase 3: follow shows no bar before the start and a head-on quarry does not fail it, `retryCar` (the last car reused, a typed named car, `park`), getInCar `atHome` and a wrecked `missionCar` failing, a frame-only scene stopping the car dead, a scene cutting a `collect` guest's bubbles (3 frames in: no bubble over the guest or Stig, no empty one) and keeping his placement |
+| `voice` [roster] | the voices' queue with a made-up manifest (out/voicetest/: tones of known length, a lip curve with a closure, a clip that won't load; §12.4): a dialogue line waits for its clip and its text types in step; a bubble never talks over a main line; radio queues behind the dialogue and its toast goes up when it is said; the same speaker waits for himself; a clip that won't load beeps; the mouth follows the curve and shuts on the closure; the music ducks and comes back; the pause holds a line; the voices off: `play()` is null |
+| `vstory` [roster] | `story` with the voices on and the real manifest (`FROM`/`TO` work), then: lines said, voiced, dropped; cut off (> 0.25 s unsaid) under 5 %; two voices at once (> 0.3 s) none; radio toasts gone before their line none; clips that would not load none; every line said by a speaker that is not in `allLines()` a failure (lines by no voice, the pool of version 2, are only counted) |
 | `heads` [E] | light face check: one head per hair style and hat, plus the portraits (run after any head/hat change) |
 | `flightshots` [A1] | review shots of the gate and cabin (lounge, toilet, trolley waiting for a downed player, …) |
 | `sceneryPeek`, `flightseq`, `dc8` [A2] | outside views of the flight scenery; the takeoff→cruise chain driven through `cabin.setPhase`; the parked airframe |
@@ -14760,3 +14856,32 @@ the fixer's group.
   an evening. The neighbours' calls wait while the party talks. The clock is held at 15:00 in test mode, so
   no mission, stage, timer, fixture or calibration pool changed; nothing is saved. Scenarios `helan`,
   `helanshots`, `helanklipp` (§16.4).
+
+## Changelog (voices)
+
+- Voices, version 1 (`features/implemented/roster.md`, 2026-10-24): the lines are spoken (§12.4). Every
+  line of the 13 missions, the mantra (3 takes), "Prata med gänget", SKANDAL and the free-roam features
+  but the mic (`feature:mikrofon`) and the horn (`feature:honk`) is said by its role: 775 clips, 36
+  minutes, 19 MB in `assets/voice/` (`index.json` and one mp3 a line), 32 roles in `tools/voice/cast.json`
+  with Voice Library voices (`eleven_v4`), never a clone of an actor. Stig Christer, Ole Thomas Magne
+  (bokmål), Lasse Kim, Berra Mathias, Robban Sovn, Siv Sanna Hartfield, Majsan Elin, Angerud Andreas,
+  José Rafa N (a Spanish-native voice saying the Swedish) and José's mother Rosa (Spanish) chosen on
+  paid auditions (what a local recogniser heard, pitch, pace, the part; `.cache/voice/cast/`); the 22
+  small roles on Voice Library's free previews. The locals say their Swedish subtitle in Spanish (the
+  line's `tts` in `tools/voice/lines.json`). New `src/voice.js` (the queue, the slots, the pause,
+  `RÖSTER: PÅ / AV` in the pause menu), `src/content/script.js` (`allLines()`, `clockLine`) and
+  `src/content/scriptFeatures.js` (one generator per free-roam table), `audio.voiceChain` with the
+  modes and the duck (§12.4), the dialogue box typing in step with the speech, the radio toast held for
+  its clip, the mouths from the clips' lip curves (models.js), anchors and doubles carrying their
+  role (`who`, `key`: glide, beachDream, hitch, guagua, utflykt, helanGar, paintshop). Stig's clock answer
+  to Ole's watch is in words to the half hour (§10.28). `hud.say` returns the bubble, `hud.toast`
+  returns its element and takes `minSecs` (§14.3). The tool `tools/voice/` (voice.mjs, analyze.py,
+  review.mjs, cast.json with `scope`, lines.json, qc.json, lexicon.pls) and the make targets `voice`,
+  `voice-cast`, `voice-review`, `voice-check`, `voice-hear` (CLAUDE.md "Voices", with the rule that a
+  feature makes its own clips, at most 1 500 chars). Cost: 29 836 credits by the API's
+  `character-cost` (auditions 3 281, the lines 25 658, retakes ~890, a key check 10), the cap of 30 000
+  for this first of two jobs (roster.md §10.1); the cap stopped the last retake round, and a line whose
+  retake it stopped keeps its best take (voice.mjs falls back to it). Test mode has the voices off unless
+  `&voice`, so no mission, stage, timer, fixture or calibration pool changed. Scenarios `voice` and
+  `vstory` (§16.4). The rest (the passers-by's pool, the barks, the chatter, the mic, the horn, the
+  speakers with no role: 541 lines, 12 781 chars) is `features/roster_v2.md`.

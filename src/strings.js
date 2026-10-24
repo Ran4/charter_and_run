@@ -94,6 +94,8 @@ export const S = {
   musicOff: 'MUSIK: AV',
   musicSamba: 'MUSIK: SAMBA',
   soundBtnOn: 'LJUD: PÅ',
+  voicesBtnOn: 'RÖSTER: PÅ',   // the voices (DESIGN §12.4); off: the beeps of before
+  voicesBtnOff: 'RÖSTER: AV',
   soundBtnOff: 'LJUD: AV',
   erase: 'RADERA RESAN',
   eraseConfirm: 'Vill du radera resan och börja om på Arlanda?',

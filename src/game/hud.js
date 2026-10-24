@@ -10,6 +10,12 @@ import { blocks, BOX, CIRCLE } from '../world/collision.js';
 import { audio } from '../audio.js';
 import { S, fmt, pta } from '../strings.js';
 import { NAMED_CARS } from '../content/index.js';
+import { voice } from '../voice.js';
+
+// How a dialogue line with a clip is heard (voice.js modes), by speaker: the captain and the
+// airport's loudspeaker over the PA, Dr Levander down the telephone. A line whose cue has `pa` is
+// heard over the PA too, after the chime.
+const DIALOG_MODE = { pa: 'pa', kapten: 'pa', levander: 'radio' };
 
 const $ = (id) => document.getElementById(id);
 const el = (tag, cls, parent, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html !== undefined) e.innerHTML = html; parent?.appendChild(e); return e; };
@@ -290,13 +296,15 @@ export const hud = {
   },
 
   // Up long enough to read (radio lines run to 100 characters): 2.4–7 s by length unless `secs`
-  // says otherwise. At most three at once: a fourth pushes the oldest out.
-  toast(text, cls = '', secs) {
+  // says otherwise, and at least `minSecs` (a radio line's voice and a beat). At most three at once:
+  // a fourth pushes the oldest out.
+  toast(text, cls = '', secs, minSecs = 0) {
     const t = el('div', 'toast ' + cls, this.toastsEl, text);
-    const ms = (secs ?? Math.min(7, Math.max(2.4, 1 + t.textContent.length * 0.06))) * 1000;
+    const ms = Math.max(minSecs, secs ?? Math.min(7, Math.max(2.4, 1 + t.textContent.length * 0.06))) * 1000;
     const live = [...this.toastsEl.children].filter((e) => !e.classList.contains('out'));
     if (live.length > 3) dropToast(live[0]);
     setTimeout(() => dropToast(t), ms);
+    return t;
   },
   // Gameplay toasts do not carry over into a dialogue (runDialog); its own cue toasts come after.
   clearToasts() { for (const t of this.toastsEl.children) dropToast(t); },
@@ -602,14 +610,23 @@ export const hud = {
   // ------------------------------------------------------------------------------------------
   // Dialogue: lines of { who, text, cue }. game.cue(cue) fires when a line starts. Resolves when
   // the last line is dismissed (auto-advances when game.autoDialog).
+  // With the voices on (voice.js), a line with a clip is said (_sayLine): the text is typed out in
+  // time with the speech, and the line is done when the speech is. The first press of the skip key
+  // shows the whole text while the voice goes on; the second goes on to the next line (the voice
+  // fades out). autoDialog waits for the end of the clip and 0.4 s. A line without a clip types and
+  // beeps as before, and nobody else's voice goes on under it.
   async runDialog(lines, game) {
     this.dialogActive = true;
     this.dialog.classList.add('show');
     document.body.classList.add('in-dialog');
     this.clearToasts();
+    voice.prefetch(lines.map((l) => [l.who, l.text]));
     const speed = game.dialogSpeed || 55, pad = game.testMode ? 8 : 30;
     for (const line of lines) {
       if (line.cue) game.cue(line.cue);
+      // (_sayLine's voice.play notes the line it says; one without a clip is noted here)
+      if (voice.has(line.who, line.text)) { await this._sayLine(line, game); continue; }
+      if (voice.enabled) { voice.note(line.who, line.text); voice.interrupt(); }
       const def = game.charDef(line.who);
       const img = this.dialog.querySelector('img');
       img.src = this.portraits[line.who] || '';
@@ -653,18 +670,68 @@ export const hud = {
     document.body.classList.remove('in-dialog');
     this.dialogActive = false;
   },
+  // One line with a clip (runDialog): its portrait and name, then the voice, the text in step.
+  async _sayLine(line, game) {
+    const def = game.charDef(line.who);
+    this.dialog.querySelector('img').src = this.portraits[line.who] || '';
+    this.dialog.style.setProperty('--ring', def?.ring || '#f7c31b');
+    this.dialog.querySelector('.dlg-name').textContent = upper(def?.name || line.who);
+    const textEl = this.dialog.querySelector('.dlg-text'), text = line.text;
+    textEl.textContent = '';
+    textEl.dataset.rest = text;
+    const pa = !!line.cue?.pa, mode = pa ? 'pa' : DIALOG_MODE[line.who] || 'dialog';
+    const ch = game.npc(line.who) || null;
+    voice.interrupt();
+    // (over the PA the chime goes first: 0.9 s, game.cue's dingdong)
+    let u = null, wait = pa ? 0.9 : 0, shown = 0, full = false, after = 0, typed = 0;
+    const show = (n) => { if (n > shown) { shown = n; textEl.textContent = text.slice(0, n); textEl.dataset.rest = text.slice(n); } };
+    await new Promise((resolve) => {
+      const step = (dt) => {
+        if (!u && wait > 0) wait -= dt;
+        if (!u && wait <= 0 && !after) {
+          u = voice.play(line.who, text, { slot: 'main', mode, now: true, ch, tag: 'dialog' });
+          if (u) game.setTalker(line.who);
+          else after = 1e-6;   // (the clip went: typed as before, no voice)
+        }
+        const speaking = !!u && u.speaking();
+        if (!full) {
+          let n = 0;
+          if (u) {
+            const s = voice.now() - u.t0, t = u.clip.t;
+            if (t) while (n < t.length && t[n] <= s * 100) n++;
+            else n = Math.floor(text.length * s / u.dur);
+          } else if (wait <= 0) n = Math.floor(typed += dt * (game.dialogSpeed || 55));
+          if (u && !speaking) n = text.length;
+          show(Math.min(text.length, n));
+          if (shown >= text.length) full = true;
+        }
+        if (u && !speaking) { game.setTalker(null); after += dt; }
+        else if (!u && full) after += dt;
+        if (game.input.pressed('skip')) {
+          if (!full) { full = true; show(text.length); }
+          else { u?.stop(0.08); game.offFrame(step); resolve(); return; }
+        }
+        if (game.autoDialog && full && !speaking && after >= 0.4) { game.offFrame(step); resolve(); }
+      };
+      game.onFrame(step);
+    });
+    game.setTalker(null);
+  },
 
   // Speech bubbles over characters in the world. One bubble per speaker: a new line replaces the
   // speaker's live bubble. Bubbles that would overlap on screen stack upwards, the newer one above
   // (scripted lines, Ole's barks and the mantra over neighbouring seats). A bubble wraps at 300 px
   // and stays on screen, under the coins / meter row and under a shown objective card; a stacked
   // bubble with no room left above waits, hidden, until the ones below it are gone.
+  // Returns the bubble ({ b, target, until }): Game.say holds it up while its voice is said.
   say(target, text, secs = 2) {
-    if (!target) return;
+    if (!target) return null;
     const list = (this._bubbles ||= []);
     for (let k = list.length - 1; k >= 0; k--) if (list[k].target === target) { list[k].b.remove(); list.splice(k, 1); }
     const b = el('div', 'bubble', this.bubbles, text);
-    list.push({ b, target, until: performance.now() + secs * 1000 });
+    const it = { b, target, until: performance.now() + secs * 1000 };
+    list.push(it);
+    return it;
   },
   // Takes the speaker's live bubble down now (a line cut short by a scene). Returns when the last
   // bubble still up ends (0 if none), so Game.unsay can pull its `sayEnd` back.

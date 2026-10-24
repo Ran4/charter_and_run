@@ -188,7 +188,9 @@ export const SCENARIOS = {
     await T.ev(() => { const g = __game; g.collected.prylar.add('klocka'); g.chat.lastId.ole = 'asna'; });
     last = await talk(T);
     T.log('klokka', JSON.stringify(last));
-    check(last.id === 'klokka' && /^\d\d:\d\d spansk tid\. \d\d:\d\d norsk och svensk\.$/.test(last.lines[3][1]) && last.lines[3][1].startsWith('15:'), `the watch with the times (${last.lines[3]?.[1]})`);
+    // (the times in words to the half hour, so that the line can be voiced: 15:00 is "Tre", Ole's
+    // "Fyra" an hour on; src/content/script.js clockLine)
+    check(last.id === 'klokka' && last.lines[3][1] === 'Tre spansk tid. Fyra norsk och svensk.', `the watch with the times (${last.lines[3]?.[1]})`);
     // The morning one only in the morning.
     r = await T.ev(() => { const g = __game, a = g.chat.options('ole').map((e) => e.id); g.day.h = 8; const b = g.chat.options('ole').map((e) => e.id); g.day.h = 15; return { a, b }; });
     check(!r.a.includes('morn') && r.b.includes('morn'), `"Morn, gutten min!" at 08:00, not at 15:00 (${JSON.stringify(r)})`);

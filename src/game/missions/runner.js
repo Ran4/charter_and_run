@@ -13,6 +13,7 @@ import { MISSIONS } from './index.js';
 import { retryCar } from './kinds/core.js';
 import { lm, routeAim } from '../../world/layout.js';
 import { audio } from '../../audio.js';
+import { voice } from '../../voice.js';
 import { hud } from '../hud.js';
 import { S, fmt, pta } from '../../strings.js';
 import { METERS } from '../../meters.js';
@@ -223,6 +224,8 @@ export class MissionRunner {
     // reveals later out of the banner wait (Phase 3 r3: Angerud at his bar door through asnan's).
     for (const k of def.outroHide || []) g.hideNpc(k);
     await g.wait(1.6);
+    // (a line still being said, the stage's radio, is said to the end first: up to 5 s in all)
+    if (voice.enabled) await voice.waitQuiet(0, 3.4);
     // The outro: exit the car, place people, pick the speaker and the camera.
     if (g.playerCar) g.exitCar(true);
     let speaker = null;

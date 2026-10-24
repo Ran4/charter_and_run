@@ -5,6 +5,7 @@
 import { THREE, initGfx, renderer, scene, camera, followSun, tickSky, setSkyPalette, setCloudsVisible, setShadows, setNightLights } from './gfx.js';
 import { input } from './input.js';
 import { audio } from './audio.js';
+import { voice } from './voice.js';
 import { buildTown, parkedCars, tickTown } from './world/town.js';
 import { finalizeProps, tickProps, breakProp, propsNear, props as allProps } from './world/props.js';
 import { lm, landmarks, routeAim, N, P, HALF, LANE, CURB, nodeX, nodeZ, neighbors, blockInterior } from './world/layout.js';
@@ -172,6 +173,11 @@ class Game {
     input.init(renderer.domElement);
     input.onUnlock = () => { if (this.started && !TEST) this.pause(true); };
     hud.init();
+    // The voices (voice.js, DESIGN §12.4): clips for the lines that have one; the turns they take.
+    voice.init();
+    voice.inCar = () => !!this.playerCar;
+    voice.held = () => hud.dialogActive;
+    voice.ctx = () => this.missions?.state ?? null;
     fx.init(scene);
     try { await Promise.race([document.fonts.load('40px "Luckiest Guy"'), new Promise((r) => setTimeout(r, 2500))]); } catch (e) { /* fall back to Impact */ }
     setLoading(S.loading[1]);
@@ -311,8 +317,10 @@ class Game {
     audio.skid(0);
     audio.horn(false);
     if (on) audio.pauseLoops(); else audio.resumeLoops();
+    voice.pause(on);
     if (on) {
       const b = document.getElementById('music'); if (b) b.textContent = this.musicLabel();
+      const vb = document.getElementById('voices'); if (vb) vb.textContent = voice.setting ? S.voicesBtnOn : S.voicesBtnOff;
       // N mutes without touching the button: show the real state.
       const sb = document.getElementById('sound'); if (sb) sb.textContent = audio.muted ? S.soundBtnOff : S.soundBtnOn;
     }
@@ -1209,14 +1217,37 @@ class Game {
   // the stage kinds' lineSecs): a 97-character chatter line no longer goes after 2.6 s.
   // An empty line or secs <= 0 is not a line: it takes t's bubble down (unsay), never an empty pill
   // held up by that minimum.
-  say(target, text, secs = 2) {
+  // The line is said too when it has a clip (voice.js, `speak`): the bubble shows at once and stays up
+  // while its voice waits its turn and is said. Returns the voice's handle, or null (no clip, the
+  // voices off). o.who: the voice, if not the target's own; o.mode, o.wait: as voice.play.
+  say(target, text, secs = 2, o = {}) {
     const t = typeof target === 'string' ? this.npc(target) : target;
-    if (!t) return;
-    if (!text || secs <= 0) { this.unsay(t); return; }
+    if (!t) return null;
+    if (!text || secs <= 0) { this.unsay(t); return null; }
     secs = Math.max(secs, (1 + String(text).length * 0.045) * (this.testMode ? 0.5 : 1));
-    hud.say(t, text, secs);
+    const it = hud.say(t, text, secs);
     t.sayEnd = performance.now() + secs * 1000;
     this.sayEnd = Math.max(this.sayEnd || 0, t.sayEnd);
+    return this.speak(t, text, { ...o, bubble: it });
+  }
+  // The voice of a line said in the world (voice.js 'bubble' slot), from where the speaker stands: a
+  // passenger in Stig's car beside him ('car'), anyone else from their place ('world'), the anchor
+  // `{ x, y, z, height, who }` of a speaker with no body. o.bubble: the bubble held up while it is
+  // said; the speaker's `sayEnd` (and Game's) follow the voice unless o.count === false (the mantra's
+  // auto-bubble, which never holds anything back).
+  speak(t, text, o = {}) {
+    const ch = t?.root ? t : null;
+    const passenger = !!ch?.car && ch.car === this.playerCar;
+    const u = voice.play(o.who || voice.voiceFor(t), text, {
+      slot: 'bubble', mode: o.mode || (passenger ? 'car' : 'world'), at: t, ch, wait: o.wait, tag: o.tag,
+      start: (u) => {
+        const end = performance.now() + (u.dur + 0.4) * 1000;
+        if (o.bubble) o.bubble.until = Math.max(o.bubble.until, end);
+        if (o.count !== false) { t.sayEnd = Math.max(t.sayEnd || 0, end); this.sayEnd = Math.max(this.sayEnd || 0, end); }
+      },
+    });
+    if (u) t.voiceU = u;
+    return u;
   }
   // Takes t's bubble down at once (a line cut by a dialogue or cutaway). The cut line no longer
   // counts as said: `saying(t)` is false and `sayEnd` falls back to the bubbles still up, so it does
@@ -1224,14 +1255,33 @@ class Game {
   unsay(target) {
     const t = typeof target === 'string' ? this.npc(target) : target;
     if (!t) return;
+    if (t.voiceU?.speaking()) t.voiceU.stop(0.08);   // (its voice stops with it)
     const now = performance.now(), rest = hud.unsay(t);
     if ((t.sayEnd ?? 0) > now) t.sayEnd = now;
     if ((this.sayEnd || 0) > now) this.sayEnd = Math.max(now, rest);
   }
   saying(t) { return performance.now() < (t?.sayEnd ?? 0); }
-  radio(who, text) {
-    hud.toast(`<img class="radio-face" src="${hud.portraits[who] || ''}"><b>${CHARS[who]?.name || who}:</b> ${text}`, 'radio');
+  // A line over the walkie-talkie, with the speaker's portrait. With a clip (voice.js 'main' slot)
+  // it waits its turn (o.wait s, 6; o.must: for ever, a stage's radio) and its toast goes up when it
+  // is said, for at least as long as it takes; heard over the radio, or from beside him (a passenger
+  // in his car), or over the PA (the captain, the airport's loudspeaker, o.pa: after the chime).
+  // Without one: the toast now and the beeps, as before. Returns the voice's handle or null.
+  radio(who, text, o = {}) {
+    const html = `<img class="radio-face" src="${hud.portraits[who] || ''}"><b>${CHARS[who]?.name || who}:</b> ${text}`;
+    const n = this.npc(who), passenger = !!n?.car && n.car === this.playerCar;
+    const mode = o.pa || who === 'pa' || who === 'kapten' ? 'pa' : passenger ? 'car' : 'radio';
+    const u = voice.play(who, text, {
+      slot: 'main', mode, ch: n && n.state !== 'hidden' ? n : null, wait: o.wait ?? 6, must: o.must, delay: o.pa ? 0.9 : 0, tag: o.tag,
+      start: (u) => {
+        const t = hud.toast(html, 'radio', null, u.dur + 0.9);
+        // (the tests count a toast pushed out, or cleared, before its line was said)
+        u.ended.then(() => { u.rec.toastGone = !t.isConnected || t.classList.contains('out'); });
+      },
+    });
+    if (u) return u;
+    hud.toast(html, 'radio');
     for (let k = 0; k < 8; k++) setTimeout(() => audio.talk(CHARS[who]?.voice || 300), k * 70);
+    return null;
   }
   setTalker(who) { this.talker = who; }
 
@@ -1246,7 +1296,7 @@ class Game {
     const cab = this.cabin;
     if (c.pa) audio.dingdong();
     if (c.say) this.say(this.npc(c.say[0]), c.say[1], c.say[2] ?? 2.6);
-    if (c.radio) this.radio(c.radio[0], c.radio[1]);
+    if (c.radio) this.radio(c.radio[0], c.radio[1], { pa: c.pa });
     if (c.sfx) {
       if (JINGLES.includes(c.sfx)) audio.jingle(c.sfx);
       else if (typeof audio[c.sfx] === 'function') audio[c.sfx]();
@@ -1618,6 +1668,7 @@ class Game {
     let n = 0;
     while (this.acc >= STEP && n < 4) { this.fixedStep(STEP); this.acc -= STEP; n++; }
     if (n === 4) this.acc = 0;
+    voice.update();
     this.syncAll(dt, false);
     this.missions.update(dt);
     this.missions.updateFailed(dt);
@@ -1818,7 +1869,7 @@ class Game {
         // The auto-bubble waits while any other bubble is up (straight to hud, so it does not
         // count itself): it covered the takeoff's scripted lines and replaced Stig's own.
         this.mantraSayT -= h;
-        if (this.mantraSayT <= 0 && performance.now() >= (this.sayEnd || 0)) { this.mantraSayT = 2.5; hud.say(p, S.mantraLine, 2.2); }
+        if (this.mantraSayT <= 0 && performance.now() >= (this.sayEnd || 0)) { this.mantraSayT = 2.5; this.speak(p, S.mantraLine, { bubble: hud.say(p, S.mantraLine, 2.2), count: false }); }
       }
     } else {
       if (this.mantraHeldT > 0 || this.mantraOn) this.mantraWindUp = 0.3;
@@ -2053,7 +2104,7 @@ class Game {
       const n = this.npcs[k];
       if (n.state === 'hidden') { n.root.visible = false; continue; }
       const near = dist(n.x, n.z, this.player.x, this.player.z);
-      n.anim.talk = talker === k;
+      n.anim.talk = talker === k || n.anim.mouth != null;
       const giver = ms.state === 'idle' && ms.current?.giver === k && ms.current.level === this.level;
       // Posed (npcPosed): no wave, turn or chatter; Robban waves Stig over to the sleeping Berra as a
       // giver does. An answer to the horn waves from further off (§10.9); the rollerskier waves his
@@ -2078,7 +2129,7 @@ class Game {
     }
     if (!title) {
       const p = this.player;
-      p.anim.talk = talker === PLAYER_KEY;
+      p.anim.talk = talker === PLAYER_KEY || p.anim.mouth != null;
       if (this.spinT > 0) { this.spinT -= dt; p.anim.spin = (1 - this.spinT / 0.4) * Math.PI * 2; } else p.anim.spin = 0;
       p.sync(dt);
       if (ms.state === 'idle') this.placeNpcs();
@@ -2383,6 +2434,7 @@ function setLoading(text) {
 
 const game = new Game();
 window.__game = game;
+window.__voice = voice;
 window.__lm = lm;
 window.__props = allProps;
 window.__missions = () => MISSIONS;
@@ -2400,3 +2452,4 @@ document.getElementById('resume').addEventListener('click', () => game.pause(fal
 document.getElementById('reset').addEventListener('click', () => { if (confirm(S.eraseConfirm)) game.resetSave(); });
 document.getElementById('music').addEventListener('click', (e) => { e.target.textContent = game.cycleMusic(); });
 document.getElementById('sound').addEventListener('click', (e) => { audio.setMuted(!audio.muted); e.target.textContent = audio.muted ? S.soundBtnOff : S.soundBtnOn; });
+document.getElementById('voices').addEventListener('click', (e) => { voice.setSetting(!voice.setting); e.target.textContent = voice.setting ? S.voicesBtnOn : S.voicesBtnOff; });

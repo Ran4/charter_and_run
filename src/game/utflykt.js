@@ -143,7 +143,7 @@ export class Utflykt {
 
   // Bubble anchors: Affe at the wheel, the tourist at the window.
   anchor(car) {
-    const a = (car.utflyktAnchor ||= { x: 0, y: 0, z: 0, height: 1.25 });
+    const a = (car.utflyktAnchor ||= { x: 0, y: 0, z: 0, height: 1.25, who: 'affe' });   // (his voice, voice.js)
     car.seatWorld(1, a);
     return a;
   }

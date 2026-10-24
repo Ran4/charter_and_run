@@ -5,7 +5,7 @@ URL  := http://$(HOST):$(PORT)/
 FEATURES_PORT ?= 8850
 FEATURES_URL  := http://$(HOST):$(FEATURES_PORT)/
 
-.PHONY: run serve test features
+.PHONY: run serve test features voice voice-cast voice-review voice-check voice-hear
 .DEFAULT_GOAL := run
 
 # Serve the game and open it in the browser once the server answers. Ctrl-C stops the server.
@@ -48,3 +48,24 @@ test: | node_modules
 
 node_modules:
 	npm install
+
+# The voices (features/implemented/roster.md, DESIGN §12.4, tools/voice/voice.mjs; the key in .env,
+# never committed). `make voice DRY=1` says what would be made and what it costs, without a request;
+# `make voice` makes what is missing in cast.json's scope (WHO=a,b LIMIT=n MAX=chars ALL=1 PRUNE=1
+# REPROCESS=1; PART=feature:x only that part of the script, a new feature's lines, scope or not).
+VOICE_FLAGS = $(if $(DRY),--dry) $(if $(WHO),--who $(WHO)) $(if $(LIMIT),--limit $(LIMIT)) $(if $(PART),--part $(PART)) $(if $(MAX),--max $(MAX)) $(if $(ALL),--all) $(if $(PRUNE),--prune)
+voice:
+	node tools/voice/voice.mjs $(if $(REPROCESS),reprocess $(if $(WHO),--who $(WHO)),$(VOICE_FLAGS))
+# Paid auditions for a role: each of its candidates in cast.json says the role's preview text
+# (SEARCH=n finds n more Voice Library candidates first).
+voice-cast:
+	node tools/voice/voice.mjs cast $(WHO) $(if $(SEARCH),--search $(SEARCH))
+# The review page: the candidates, the review list, every line by mission and part.
+voice-review:
+	PORT=$(or $(REVIEWPORT),8846) node tools/voice/review.mjs
+# No requests: lines in scope without a clip, the manifest, orphans; exit 1 if anything is missing.
+voice-check:
+	node tools/voice/voice.mjs check
+# Listen to the clips as the game plays them (free): pitch and words per role.
+voice-hear:
+	node tools/voice/voice.mjs hear $(if $(WHO),--who $(WHO))

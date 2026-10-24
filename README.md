@@ -92,6 +92,24 @@ rätt håll. När planet börjar skaka visas **TURBULENS!**, och står han upp g
 | **Städerskan** | ett kort besök på julafton. |
 | och fler | Kontrollanten, Sulan, Killen från flygplatsen, Bungalowförsäljaren, Souvenirförsäljaren, Rullskidåkaren, Grisbonden, Grisfestvärden, Telefonisten (bara rösten: "Hytt två!"), Guardia Civil |
 
+## Röster
+
+Replikerna är tal. Stig-Helmer, Ole, Majsan, Sivan, Berra, Robban, Angerud, Lasse och de andra
+pratar i dialogrutan, på radion, i högtalarna och i pratbubblorna, och texten skrivs fram i takt med
+talet. Ole pratar norska, och lokalbefolkningen (Josés mamma, portiern, Guardia Civil och de andra)
+pratar **spanska** under den svenska undertexten, som i filmen. José pratar svenska med brytning.
+Radion låter som en walkie-talkie och kaptenen som en högtalare, och en replik ute på ön hörs från där
+den som pratar står (dämpad om Stig sitter i en bil). Munnen följer talet, och musiken tonas ner medan
+någon pratar.
+
+- **Pausmenyn:** RÖSTER: PÅ / AV. Avstängt blir det pip som förut.
+- **Ingen pratar i munnen på någon:** en replik väntar på sin tur, och en pratbubbla som inte hinner
+  sägas visas ändå.
+- **Det som inte har röst än** (statisterna, ropen, småpratet, mikrofonen och tutan) låter som förut
+  och kommer i version 2 (`features/roster_v2.md`).
+- Talet är gjort i förväg med ElevenLabs (röster ur Voice Library, ingen kloning av filmens
+  skådespelare) och ligger i `assets/voice/`. Spelet anropar ingen tjänst.
+
 ## Uppdragen (13)
 
 | # | uppdrag | ger uppdraget | vad du gör |
@@ -931,10 +949,14 @@ src/level.js                    LEVELS (flight, island): spawn, camera profile, 
 src/meters.js                   METERS.flygradsla (panic mode) and METERS.skandal (pursuit mode)
 src/strings.js                  S / fmt(): every UI string, in Swedish
 src/gfx.js                      renderer, toon materials, inverted-hull outlines, GeoBuilder, sky palettes
-src/input.js, audio.js          keyboard/mouse/gamepad; synthesised sfx, siren, tunes (muzak, sol, jul, skandal, vals, samba)
+src/input.js, audio.js          keyboard/mouse/gamepad; synthesised sfx, siren, tunes (muzak, sol, jul, skandal, vals, samba);
+                                the voices' chains (radio, PA, in the world), their bus and the duck under speech
+src/voice.js                    the voices (DESIGN §12.4): the clips' manifest, the queue (nobody talks over
+                                anybody), the mouths, the setting; no clip = the beeps of before
 src/content/                    data with source tags: flight.js (gate/cabin homes, chatter, Ole's
                                 statistics), island.js (homes, barks, COLLECTIBLES, UNLOCKS, named cars),
-                                index.js (merges them)
+                                index.js (merges them); script.js allLines(): every line said aloud and who
+                                says it (the voices' script), scriptFeatures.js its free-roam tables
 src/world/cabin.js              the gate set and the DC-8 cabin at x = 3000: collision, seat map, trolley,
                                 turbulence, fear, interactables, flight phases
 src/world/flightScenery.js      the airframe and the scenery animated past the stationary cabin
@@ -1027,11 +1049,16 @@ tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, 
                                 guardiajeep, fyren, klader, ringklocka, kyrkfrid, gatlopp, skidor,
                                 golfbil, battur, balkong, hytt, kaffe, meta, marknadstak, lifta,
                                 kikare, packhus, volley, kort, guagua, traktor, systrar, kran,
-                                trampbat, utflykt, terraza, ljud, glass, torg, calibrate,
-                                calibflight)
+                                trampbat, utflykt, terraza, ljud, glass, torg, voice,
+                                calibrate, calibflight)
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
 tools/pool.mjs                  re-derives every random stage's timer from the ledger
+tools/voice/                    the voices (make voice, voice-cast, voice-review, voice-check, voice-hear):
+                                voice.mjs (ElevenLabs, the check by local speech recognition in analyze.py,
+                                the processing, the manifest), cast.json (roles, voices, scope), lines.json
+                                (directions: tts, takes, retakes), review.mjs (the review page)
+assets/voice/                   the clips, <who>/<hash>.mp3, and index.json (checked in; .env never)
 DESIGN.md                       design bible and module contracts (the source of truth)
 HANDOFF.md                      the state at `phase3`, known issues, workflow lessons, gotchas
 notes/calibration-samples.md    the raw-sample ledger: every calibration run, pooled by stage and code
@@ -1050,6 +1077,7 @@ saves screenshots to `out/` (or `OUT=dir`). The last line is `RESULT: PASS` or
 node tools/shot.mjs                      # lists every scenario
 node tools/shot.mjs story                # plays all 13 missions: must end '#13 idle', 'no errors', 'RESULT: PASS'
 FROM=5 TO=8 node tools/shot.mjs story    # missions 6–8 only (indices 5–7)
+node tools/shot.mjs voice vstory         # the voices: the queue with a made-up manifest; the story with the voices on
 node tools/shot.mjs start walk aerial drive traffic title talk missions views transition levels api
 node tools/shot.mjs gate cabin trolley turbulence panic flightshots          # the flight level
 node tools/shot.mjs phases sceneryPeek flightseq dc8                         # flight scenery

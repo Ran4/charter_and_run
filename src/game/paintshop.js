@@ -170,7 +170,9 @@ export class PaintShop {
     const f = g.focus(), d = dist(car.x, car.z, f.x, f.z);
     car.ai.cruise = d < 14 ? c.driveBy.speed * 0.5 : c.driveBy.speed;
     if (d < 10) {
-      g.say({ get x() { return car.x; }, get y() { return car.y; }, get z() { return car.z; }, height: 2.6 }, c.driveBy.line, 2.6);
+      // (its officer's voice: one of the two, taking turns as the Land Rovers' taunts do, shame.js)
+      const who = (car.voice ||= ++this.sh.voices % 2 ? 'guardia' : 'guardia2');
+      g.say({ get x() { return car.x; }, get y() { return car.y; }, get z() { return car.z; }, height: 2.6, who }, c.driveBy.line, 2.6);
       this.jeep = null;
     }
   }

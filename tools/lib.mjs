@@ -10,7 +10,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.png': 'image/png' };
+const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.png': 'image/png', '.mp3': 'audio/mpeg' };
 
 export async function launch({ port, out, w = 1280, h = 720 }) {
   fs.mkdirSync(out, { recursive: true });
@@ -28,7 +28,10 @@ export async function launch({ port, out, w = 1280, h = 720 }) {
 
   const browser = await puppeteer.launch({
     executablePath: '/usr/bin/google-chrome', headless: true,
-    args: ['--no-sandbox', '--disable-dev-shm-usage', '--enable-gpu', '--ignore-gpu-blocklist', '--use-gl=angle', '--use-angle=gl', `--window-size=${w},${h}`, '--autoplay-policy=no-user-gesture-required'],
+    args: ['--no-sandbox', '--disable-dev-shm-usage', '--enable-gpu', '--ignore-gpu-blocklist', '--use-gl=angle', '--use-angle=gl', `--window-size=${w},${h}`, '--autoplay-policy=no-user-gesture-required',
+      // (never a sound from the speakers: the graph still runs, so audio.level() and the voices' timing
+      // are measured as before)
+      '--mute-audio'],
   });
   const page = await browser.newPage();
   await page.setViewport({ width: w, height: h, deviceScaleFactor: 1 });

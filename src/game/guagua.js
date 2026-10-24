@@ -173,7 +173,7 @@ export class Guagua {
     return a;
   }
   oleAnchor(car, bust) {
-    const a = (car.oleAnchor ||= { x: 0, y: 0, z: 0, height: 1.25 }), p = bust.position;
+    const a = (car.oleAnchor ||= { x: 0, y: 0, z: 0, height: 1.25, who: 'ole' }), p = bust.position;   // (his voice, voice.js)
     const c = Math.cos(car.yaw), sn = Math.sin(car.yaw);
     a.x = car.x + p.x * c + p.z * sn;
     a.y = car.y + p.y;

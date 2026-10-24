@@ -1,15 +1,16 @@
 # Gör dessa grejer (flytta filen till features/implemented/ och uppdatera den när du är klar, och
 # flytta den överst till "färdiga features"-sektionen nedan)
 # markörer: ⟨par N⟩ = de två raderna med samma N körs samtidigt (var sin worktree/gren, sedan rebase på main och push), ⟨solo⟩ = körs ensam; ta grupperna uppifrån och ned
-- features/roster.md – Röster – ett fullt röstsatt spel (ElevenLabs, som Saab- och Seinfeld-spelen; svara på de öppna frågorna i §13 först) [L] ⟨solo⟩
 
 # Vänta med dessa tills spelaren säger till
 # markörer som ovan: ⟨par N⟩ = de två raderna med samma N körs samtidigt, ⟨solo⟩ = körs ensam; här från par 6 och uppåt så att taggarna är unika när rader köas en och en
 - features/bungalowen_ar_sald.md – 138. Bungalowen är såld [S] ⟨par 19⟩
 - features/kvarteren_tands.md – 140. Kvarteren tänds – adventsstjärnor och tända fönster [S] ⟨par 19⟩
 - features/butaneron.md – 143. Butaneron och gasolbilen [M] ⟨solo⟩
+- features/roster_v2.md – Röster, version 2 – statisterna, ropen och resten av replikerna (poolen med tio röster; ~14 000 ElevenLabs-credits) [M] ⟨solo⟩
 
 # Färdiga features (lägg till [färdig: yyyy-mm-dd hh:mm] i slutet)
+- features/implemented/roster.md – Röster – ett fullt röstsatt spel (ElevenLabs, som Saab- och Seinfeld-spelen; version 1, resten i roster_v2.md) [L] [färdig: 2026-10-24 11:53]
 - features/implemented/helan_gar_festen.md – 134. Helan går från balkongen [M] [färdig: 2026-10-21 04:27]
 - features/implemented/torgliv_siesta_och_paseo.md – 135. Liv på torget – siesta och paseo [L] [färdig: 2026-10-21 04:26]
 - features/implemented/glass_till_majsan.md – 126. Glass till Majsan innan den smälter [M] [färdig: 2026-10-21 03:16]

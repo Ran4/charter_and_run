@@ -1,0 +1,399 @@
+{
+ "angerud": {
+  "500 pesetas…? Det här är ju min fru.": {
+   "note": "siffrorna i ord (det rösten säger; undertexten är som förut)",
+   "tts": "Femhundra pesetas…? Det här är ju min fru."
+  },
+  "God jul, moster.": {
+   "auto": true,
+   "note": "retake 2 not made (the cap); kept the take with WER 0.333",
+   "retake": 0
+  },
+  "Jag har inte fått resan gratis. Jag har betalat 3 000 för den.": {
+   "note": "uttalet: siffror, förkortningar",
+   "tts": "Jag har inte fått resan gratis. Jag har betalat tretusen för den."
+  },
+  "Ska du ta och springa upp på rum 113 och hämta mina röka?": {
+   "note": "uttalet: siffror, förkortningar",
+   "tts": "Ska du ta och springa upp på rum hundratretton och hämta mina röka?"
+  }
+ },
+ "berra": {
+  "Och Karin Falk!": {
+   "auto": true,
+   "retake": 1
+  },
+  "Robban! Sulan har varit på Pepes Bodega. De häller 80-procentig rom på vinflaskor.": {
+   "note": "uttalet: siffror, förkortningar",
+   "tts": "Robban! Sulan har varit på Pepes Bodega. De häller åttioprocentig rom på vinflaskor."
+  },
+  "Zzz… Pepes Bodega… zzz…": {
+   "auto": true,
+   "note": "retake 1 not made (the cap); kept the take with WER 0.5"
+  },
+  "…zzz": {
+   "note": "en snarkning: röstsätts inte (som djurens repliker)",
+   "skip": true
+  }
+ },
+ "carmencita": {
+  "Det är inte han. Den andre!": {
+   "note": "vår översättning till spanska: undertexten är repliken i koden (lokalbefolkningen talar spanska, DESIGN §12.4)",
+   "tts": "No es él. ¡El otro!"
+  },
+  "Han var lång, mörkhårig… hade glasögon och mustasch.": {
+   "note": "vår översättning till spanska: undertexten är repliken i koden (lokalbefolkningen talar spanska, DESIGN §12.4)",
+   "tts": "Era alto, moreno… llevaba gafas y bigote."
+  },
+  "Jag lägger det bakom disken.": {
+   "note": "vår översättning till spanska: undertexten är repliken i koden (lokalbefolkningen talar spanska, DESIGN §12.4)",
+   "tts": "Lo dejo detrás del mostrador."
+  },
+  "Nej tack. Jag röker inte.": {
+   "note": "vår översättning till spanska: undertexten är repliken i koden (lokalbefolkningen talar spanska, DESIGN §12.4)",
+   "tts": "No, gracias. No fumo."
+  }
+ },
+ "grisbonde": {
+  "Det fattas grisar, señor!": {
+   "note": "vår översättning till spanska: undertexten är repliken i koden (lokalbefolkningen talar spanska, DESIGN §12.4)",
+   "tts": "¡Faltan cerdos, señor!"
+  },
+  "Ta bilen, señor. Ställ den vid hotellet – jag hämtar den på torsdag.": {
+   "note": "vår översättning till spanska: undertexten är repliken i koden (lokalbefolkningen talar spanska, DESIGN §12.4)",
+   "tts": "Coja el coche, señor. Déjelo en el hotel, que lo recojo el jueves."
+  },
+  "Till stan, señor? Hoppa upp bak!": {
+   "note": "vår översättning till spanska: undertexten är repliken i koden (lokalbefolkningen talar spanska, DESIGN §12.4)",
+   "tts": "¿A la ciudad, señor? ¡Suba atrás!"
+  },
+  "¡Gracias, señor! Alla grisar hemma!": {
+   "note": "vår översättning till spanska: undertexten är repliken i koden (lokalbefolkningen talar spanska, DESIGN §12.4)",
+   "tts": "¡Gracias, señor! ¡Todos los cerdos en casa!"
+  }
+ },
+ "guardia": {
+  "De där svenskarna är heltokiga!": {
+   "note": "vår översättning till spanska: undertexten är repliken i koden (lokalbefolkningen talar spanska, DESIGN §12.4)",
+   "tts": "¡Estos suecos están locos!"
+  },
+  "Det… är… en… kyr-ka.": {
+   "note": "vår översättning till spanska: undertexten är repliken i koden (lokalbefolkningen talar spanska, DESIGN §12.4)",
+   "tts": "Es… u-na… i-gle-sia."
+  },
+  "En målad bil…?": {
+   "note": "vår översättning till spanska: undertexten är repliken i koden (lokalbefolkningen talar spanska, DESIGN §12.4)",
+   "tts": "¿Un coche pintado…?"
+  },
+  "Ursäkta, är det din bil?": {
+   "note": "vår översättning till spanska: undertexten är repliken i koden (lokalbefolkningen talar spanska, DESIGN §12.4)",
+   "tts": "Perdone, ¿es suyo este coche?"
+  }
+ },
+ "guardia2": {
+  "De där svenskarna är heltokiga!": {
+   "note": "vår översättning till spanska: undertexten är repliken i koden (lokalbefolkningen talar spanska, DESIGN §12.4)",
+   "tts": "¡Estos suecos están locos!"
+  },
+  "Det… är… en… kyr-ka.": {
+   "note": "vår översättning till spanska: undertexten är repliken i koden (lokalbefolkningen talar spanska, DESIGN §12.4)",
+   "tts": "Es… u-na… i-gle-sia."
+  },
+  "En målad bil…?": {
+   "note": "vår översättning till spanska: undertexten är repliken i koden (lokalbefolkningen talar spanska, DESIGN §12.4)",
+   "tts": "¿Un coche pintado…?"
+  },
+  "Ursäkta, är det din bil?": {
+   "note": "vår översättning till spanska: undertexten är repliken i koden (lokalbefolkningen talar spanska, DESIGN §12.4)",
+   "tts": "Perdone, ¿es suyo este coche?"
+  }
+ },
+ "herrStorch": {
+  "Blir'e inge film?": {
+   "auto": true,
+   "retake": 2
+  }
+ },
+ "hittegods": {
+  "Hittelön.": {
+   "note": "vår översättning till spanska: undertexten är repliken i koden (lokalbefolkningen talar spanska, DESIGN §12.4)",
+   "tts": "La recompensa."
+  }
+ },
+ "kapten": {
+  "Vi beräknas landa om en timme och 35 minuter. Vädret i Las Palmas är bra – soldis och 22 grader varmt.": {
+   "note": "siffrorna i ord (det rösten säger; undertexten är som förut)",
+   "tts": "Vi beräknas landa om en timme och trettiofem minuter. Vädret i Las Palmas är bra – soldis och tjugotvå grader varmt."
+  }
+ },
+ "lasse": {
+  "Alla är välkomna på julfesten. Men man måste ha julmat och en julklapp för 100 pesetas.": {
+   "note": "siffrorna i ord (det rösten säger; undertexten är som förut)",
+   "tts": "Alla är välkomna på julfesten. Men man måste ha julmat och en julklapp för hundra pesetas."
+  },
+  "Grisfesten är på torsdag och kostar 800 pesetas.": {
+   "note": "siffrorna i ord (det rösten säger; undertexten är som förut)",
+   "tts": "Grisfesten är på torsdag och kostar åttahundra pesetas."
+  },
+  "Grisfesten är på torsdag och kostar 800 pesetas. Några frågor?": {
+   "note": "siffrorna i ord (det rösten säger; undertexten är som förut)",
+   "tts": "Grisfesten är på torsdag och kostar åttahundra pesetas. Några frågor?"
+  },
+  "Klockan 12. Ställ väskorna utanför receptionen.": {
+   "note": "siffrorna i ord (det rösten säger; undertexten är som förut)",
+   "tts": "Klockan tolv. Ställ väskorna utanför receptionen."
+  },
+  "SunTrips buss nummer 17 står där borta!": {
+   "note": "siffrorna i ord (det rösten säger; undertexten är som förut)",
+   "tts": "SunTrips buss nummer sjutton står där borta!"
+  },
+  "Vi befinner oss i höjd med Egypten och 500 mil hemifrån… som väl är.": {
+   "note": "siffrorna i ord (det rösten säger; undertexten är som förut)",
+   "tts": "Vi befinner oss i höjd med Egypten och femhundra mil hemifrån… som väl är."
+  }
+ },
+ "majsan": {
+  "Jag har köpt en julklapp till dig.": {
+   "auto": true,
+   "note": "retake 2 not made (the cap); kept the take with WER 0",
+   "retake": 0
+  },
+  "Jag vaccinerade mig och tänkte att jag kunde ta lite FR-terapi samtidigt.": {
+   "note": "uttalet: siffror, förkortningar",
+   "tts": "Jag vaccinerade mig och tänkte att jag kunde ta lite eff-ärr-terapi samtidigt."
+  },
+  "Mm… precis lagom.": {
+   "auto": true,
+   "note": "retake 1 not made (the cap); kept the take with WER 0.333"
+  }
+ },
+ "mamma": {
+  "Det är hon som vill ta min Josito ifrån mig.": {
+   "note": "vår översättning till spanska: undertexten är repliken i koden (lokalbefolkningen talar spanska, DESIGN §12.4)",
+   "tts": "Es ella la que me quiere quitar a mi Josito."
+  },
+  "Inga svenskor!": {
+   "note": "vår översättning till spanska: undertexten är repliken i koden (lokalbefolkningen talar spanska, DESIGN §12.4)",
+   "tts": "¡Nada de suecas!"
+  },
+  "Ni har dragit skam över vår familj!": {
+   "note": "vår översättning till spanska: undertexten är repliken i koden (lokalbefolkningen talar spanska, DESIGN §12.4)",
+   "tts": "¡Habéis traído la vergüenza a nuestra familia!"
+  },
+  "Stackars människor. Släpas runt på dagarna som en skock får…!": {
+   "note": "vår översättning till spanska: undertexten är repliken i koden (lokalbefolkningen talar spanska, DESIGN §12.4)",
+   "tts": "¡Pobre gente! Todo el día de aquí para allá, como un rebaño de ovejas…"
+  },
+  "Så gammal! Du skickar mig i graven!": {
+   "note": "vår översättning till spanska: undertexten är repliken i koden (lokalbefolkningen talar spanska, DESIGN §12.4)",
+   "tts": "¡Tan vieja! ¡Me vas a llevar a la tumba!"
+  }
+ },
+ "ole": {
+  "Cabalho folkloristico… nativo!": {
+   "auto": true,
+   "note": "retake 2 not made (the cap); kept the take with WER 0.333",
+   "retake": 0
+  },
+  "Concorde til Rio! 2 300 km i timen!": {
+   "auto": true,
+   "note": "retake 2 not made (the cap); kept the take with WER 0.5",
+   "retake": 0,
+   "tts": "Concorde til Rio! To tusen tre hundre kilometer i timen!"
+  },
+  "Du vet vel at det er 50 prosent sjanse å overleve en flyulykke.": {
+   "note": "tallene i ord: ellers leser stemmen dem på svensk eller engelsk",
+   "tts": "Du vet vel at det er femti prosent sjanse å overleve en flyulykke."
+  },
+  "Ja… Kvarts og digital. Level her, input, FM, tape, tape run.": {
+   "note": "FM utskrivet på norska (det rösten säger)",
+   "tts": "Ja… Kvarts og digital. Level her, input, eff-emm, tape, tape run."
+  },
+  "Jeg gir deg to hundre. Det er… 18 norske kroner.": {
+   "note": "tallene i ord: ellers leser stemmen dem på svensk eller engelsk",
+   "tts": "Jeg gir deg to hundre. Det er… atten norske kroner."
+  },
+  "Min drøm er å fly med Concorde fra Paris til Rio. 2 300 km i timen. Det er flyging!": {
+   "note": "tallene i ord: ellers leser stemmen dem på svensk eller engelsk",
+   "tts": "Min drøm er å fly med Concorde fra Paris til Rio. To tusen tre hundre kilometer i timen. Det er flyging!"
+  },
+  "Neida, det er bare å spørre: Skal vi danse! Eller kjør litt større: Sånn! … Voulez-vous danse avec moi? Fransk.": {
+   "auto": true,
+   "retake": 1
+  },
+  "PIP-PIP-PIP! Kalkulator – med vekkerklokke!": {
+   "note": "versalerna i gemener: ljudet, inte en förkortning",
+   "tts": "Pip-pip-pip! Kalkulator – med vekkerklokke!"
+  },
+  "Så… så kommer flyvertinnen. Juice, whisky.": {
+   "auto": true,
+   "retake": 1
+  },
+  "Trå, Stig-Helmer! Trå!": {
+   "auto": true,
+   "note": "retake 1 not made (the cap); kept the take with WER 0.5"
+  }
+ },
+ "pappa": {
+  "¡Gracias, señor!": {
+   "note": "vår översättning till spanska: undertexten är repliken i koden (lokalbefolkningen talar spanska, DESIGN §12.4)",
+   "tts": "¡Gracias, señor!"
+  }
+ },
+ "pax": {
+  "Jag betalade bara 995. Sista minuten.": {
+   "auto": true,
+   "note": "uttalet: siffror, förkortningar",
+   "retake": 1,
+   "tts": "Jag betalade bara niohundranittiofem. Sista minuten."
+  },
+  "Sch…": {
+   "note": "en hyssjning: viskad",
+   "tts": "[whispers] Sch…"
+  }
+ },
+ "portier": {
+  "De där svenskarna är heltokiga!": {
+   "note": "vår översättning till spanska: undertexten är repliken i koden (lokalbefolkningen talar spanska, DESIGN §12.4)",
+   "tts": "¡Estos suecos están locos!"
+  },
+  "Det tror jag inte.": {
+   "note": "vår översättning till spanska: undertexten är repliken i koden (lokalbefolkningen talar spanska, DESIGN §12.4)",
+   "tts": "No lo creo."
+  },
+  "Det är förbjudet att ta med damer på rummet. Men för 500 pesetas kanske vi kommer överens.": {
+   "note": "vår översättning till spanska: undertexten är repliken i koden (lokalbefolkningen talar spanska, DESIGN §12.4)",
+   "tts": "Está prohibido subir señoras a la habitación. Pero por quinientas pesetas, quizás nos pongamos de acuerdo."
+  },
+  "Jaså, din fru…?": {
+   "note": "vår översättning till spanska: undertexten är repliken i koden (lokalbefolkningen talar spanska, DESIGN §12.4)",
+   "tts": "Ah, ¿su señora…?"
+  },
+  "…för 500 pesetas kanske vi kommer överens.": {
+   "note": "vår översättning till spanska: undertexten är repliken i koden (lokalbefolkningen talar spanska, DESIGN §12.4)",
+   "tts": "…por quinientas pesetas, quizás nos pongamos de acuerdo."
+  }
+ },
+ "robban": {
+  "Fan Berra, ja ä tösstig.": {
+   "auto": true,
+   "retake": 1
+  },
+  "Här är 25 pesetas. Avdrag för tappningarna.": {
+   "note": "siffrorna i ord (det rösten säger; undertexten är som förut)",
+   "tts": "Här är tjugofem pesetas. Avdrag för tappningarna."
+  },
+  "Här är 50 pesetas. Avdrag för tappningarna.": {
+   "note": "siffrorna i ord (det rösten säger; undertexten är som förut)",
+   "tts": "Här är femtio pesetas. Avdrag för tappningarna."
+  },
+  "Här är 75 pesetas. Avdrag för tappningarna.": {
+   "note": "siffrorna i ord (det rösten säger; undertexten är som förut)",
+   "tts": "Här är sjuttiofem pesetas. Avdrag för tappningarna."
+  },
+  "Ja, herre jävlar, minns du Benidorm? Snacka om grisfest!": {
+   "auto": true,
+   "retake": 1
+  },
+  "Åttioprocentig rom. På vinflaskor!": {
+   "auto": true,
+   "note": "retake 2 not made (the cap); kept the take with WER 0.5",
+   "retake": 0
+  }
+ },
+ "siv": {
+  "Du har väl med dig dom fyra p:na? Pass, pesetas, p-piller, piljetter.": {
+   "note": "uttalet: siffror, förkortningar",
+   "tts": "Du har väl med dig dom fyra pe-na? Pass, pesetas, p-piller, piljetter."
+  },
+  "Pizza-racern, då? Han får fem poäng.": {
+   "auto": true,
+   "note": "retake 2 not made (the cap); kept the take with WER 0.286",
+   "retake": 0
+  }
+ },
+ "souvenir": {
+  "300 pesetas! Sista pris!": {
+   "note": "vår översättning till spanska: undertexten är repliken i koden (lokalbefolkningen talar spanska, DESIGN §12.4)",
+   "tts": "¡Trescientas pesetas! ¡Último precio!"
+  },
+  "400 pesetas. Titta, den är jättelustig.": {
+   "note": "vår översättning till spanska: undertexten är repliken i koden (lokalbefolkningen talar spanska, DESIGN §12.4)",
+   "tts": "Cuatrocientas pesetas. Mire, es muy graciosa."
+  },
+  "500 pesetas.": {
+   "note": "vår översättning till spanska: undertexten är repliken i koden (lokalbefolkningen talar spanska, DESIGN §12.4)",
+   "tts": "Quinientas pesetas."
+  },
+  "Hallå där!": {
+   "note": "vår översättning till spanska: undertexten är repliken i koden (lokalbefolkningen talar spanska, DESIGN §12.4)",
+   "tts": "¡Oiga, señores!"
+  },
+  "Hallå där! ¡Jirafa!": {
+   "note": "vår översättning till spanska: undertexten är repliken i koden (lokalbefolkningen talar spanska, DESIGN §12.4)",
+   "tts": "¡Oiga, señor! ¡Jirafa!"
+  },
+  "Jävla smålänningar!": {
+   "lang": "sv",
+   "note": "filmens replik på svenska, med säljarens spanska brytning (hans röst har spanska som modersmål)"
+  },
+  "Kör till.": {
+   "note": "vår översättning till spanska: undertexten är repliken i koden (lokalbefolkningen talar spanska, DESIGN §12.4)",
+   "tts": "Trato hecho."
+  }
+ },
+ "stadare": {
+  "God jul! Hoppsan. Stör jag?": {
+   "note": "vår översättning till spanska: undertexten är repliken i koden (lokalbefolkningen talar spanska, DESIGN §12.4)",
+   "tts": "¡Feliz Navidad! ¡Uy! ¿Molesto?"
+  },
+  "Limpio!": {
+   "note": "vår översättning till spanska: undertexten är repliken i koden (lokalbefolkningen talar spanska, DESIGN §12.4)",
+   "tts": "¡Limpio!"
+  }
+ },
+ "stig": {
+  "AKUREYRI? Då har den kommit lite fel.": {
+   "note": "versalerna i gemener: ett ortnamn, inte en förkortning",
+   "tts": "Akureyri? Då har den kommit lite fel."
+  },
+  "Ja, hej. SunTrips buss 17, tack.": {
+   "note": "siffrorna i ord (det rösten säger; undertexten är som förut)",
+   "tts": "Ja, hej. SunTrips buss sjutton, tack."
+  },
+  "Jag kan flyga, jag är inte rädd.": {
+   "note": "mantrat sägs varje gång J hålls: tre tagningar i tur och ordning",
+   "takes": 3
+  },
+  "Om du köper en brödrost, och det står 'Kontrollerad av G17', så är det jag.": {
+   "note": "uttalet: siffror, förkortningar",
+   "tts": "Om du köper en brödrost, och det står 'Kontrollerad av G sjutton', så är det jag."
+  },
+  "Ville hon inte sitta med er?": {
+   "auto": true,
+   "note": "retake 1 not made (the cap); kept the take with WER 0.333"
+  }
+ },
+ "sulan": {
+  "Det är 80-procentig rom.": {
+   "auto": true,
+   "note": "uttalet: siffror, förkortningar",
+   "retake": 2,
+   "tts": "Det är åttioprocentig rom."
+  }
+ },
+ "telefonist": {
+  "Hytt två!": {
+   "note": "vår översättning till spanska: undertexten är repliken i koden (lokalbefolkningen talar spanska, DESIGN §12.4)",
+   "tts": "¡Cabina dos!"
+  },
+  "Ingen plats på parkeringen, señor!": {
+   "note": "vår översättning till spanska: undertexten är repliken i koden (lokalbefolkningen talar spanska, DESIGN §12.4)",
+   "tts": "¡No hay sitio en el aparcamiento, señor!"
+  },
+  "Señor, betala!": {
+   "note": "vår översättning till spanska: undertexten är repliken i koden (lokalbefolkningen talar spanska, DESIGN §12.4)",
+   "tts": "¡Señor, pague!"
+  }
+ }
+}

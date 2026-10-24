@@ -109,12 +109,14 @@ function withTick(st, tick) {
 }
 
 // World bubbles one after another, stopping as soon as the mission is over. `who` is a character
-// key or a { x, y, z, height } anchor (for 'pax', a passenger bust with no Character).
+// key or a { x, y, z, height, who } anchor (for 'pax', a passenger bust with no Character). A line
+// with a voice is said to the end before the next.
 async function bubbles(g, m, lines) {
   for (const [who, text, secs = 2.8] of lines) {
     if (g.missions.m !== m) return;
-    g.say(who, text, secs);
+    const u = g.say(who, text, secs);
     await g.wait((secs + 0.1) * (g.testMode ? 0.5 : 1));   // the speaker's bubble has gone (one per speaker)
+    if (u) await u.ended;
   }
 }
 
@@ -129,7 +131,7 @@ function rowSixComplaint(g, m) {
   if (!c.trolleyStopped || Math.abs(t.z - rowZ(6)) > 1.4 || dist(p.x, p.z, a.x, a.z) > 7.5) return;
   this.complained = true;
   const s = ['6D', '7D', '5D', '6E', '7C'].map((id) => c.seats[id]).find((q) => q?.taken === 'bust') || c.seats['6D'];
-  const pax = { x: s.x, y: s.y, z: s.z, height: 1.0 };
+  const pax = { x: s.x, y: s.y, z: s.z, height: 1.0, who: 'pax' };
   bubbles(g, m, [
     ['angerud', 'Kallar ni det här \'varm middag\'? Så ser det inte ut när jag flyger reguljärt.', 3.6],   // [F](t)
     ['angerud', 'Jag har inte fått resan gratis. Jag har betalat 3 000 för den.', 3.2],                    // [F](t)

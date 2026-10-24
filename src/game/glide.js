@@ -171,7 +171,7 @@ export class Glide {
     if (this.on) {
       this.sayT -= dt;
       // The auto-bubble waits while any other bubble is up (as the mantra's).
-      if (this.sayT <= 0 && performance.now() >= (g.sayEnd || 0)) { this.sayT = c.sayEvery; hud.say(p, S.mantraLine, 2.2); }
+      if (this.sayT <= 0 && performance.now() >= (g.sayEnd || 0)) { this.sayT = c.sayEvery; g.speak(p, S.mantraLine, { bubble: hud.say(p, S.mantraLine, 2.2), count: false }); }
       const ole = g.npc(c.oleShout[0]);
       if (!this.oleSaid && this.t >= c.oleAfter && g.time - this.oleT >= c.oleEvery && ole && ole.state === 'normal'
         && dist(ole.x, ole.z, p.x, p.z) < c.oleR) {

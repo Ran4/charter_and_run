@@ -1111,7 +1111,8 @@ export function animateCharacter(m, st, dt) {
   m.neck.rotation.y += st.look || 0;
   // The big mouth.
   if (m.mouth) {
-    let target = st.talk ? 0.35 + Math.abs(Math.sin(t * 17 + Math.sin(t * 5) * 2)) * 0.95 : st.flung || st.yell || st.flail ? 1.1 : 0.32;
+    // (with a voice clip playing, voice.js: the clip's loudness, 0..1, shut on m, b and p)
+    let target = st.mouth != null ? 0.32 + st.mouth * 0.98 : st.talk ? 0.35 + Math.abs(Math.sin(t * 17 + Math.sin(t * 5) * 2)) * 0.95 : st.flung || st.yell || st.flail ? 1.1 : 0.32;
     if (st.laugh) target = 0.8 + Math.abs(Math.sin(t * 14)) * 0.5;
     if (st.slump && !st.talk) target = 0.55;
     m.mouth.scale.y += (target - m.mouth.scale.y) * Math.min(1, dt * 25);

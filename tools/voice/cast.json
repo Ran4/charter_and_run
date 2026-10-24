@@ -1,0 +1,1050 @@
+{
+  "_about": "Rollbesättningen för tools/voice/voice.mjs (DESIGN §12.4, features/implemented/roster.md). voice_id: rösten som säger rollens repliker (null = ingen röst: repliken piper som förut). lang: språket rösten talar (sv, no, es; language_code till eleven_v4). Rösterna kommer från Voice Library (de läggs till på kontot när de används och tar ingen egen röstplats; kontot har 10 av 10 egna röster upptagna). candidates: röster att provlyssna (make voice-cast WHO=x, provlyssningssidan make voice-review); audition: false = vald på Voice Librarys gratisprov, ingen betald provläsning. design: bara en beskrivning av rollen. scope: vilka delar av manuset (allLines, src/content/script.js) som röstsätts av make voice: version 1 (uppdragen, mantrat, Prata med gänget, SKANDAL) och free roam-featurernas repliker; not: delar som väntar på version 2 (features/roster_v2.md). En replik är i omfånget bara när talaren har en roll här. Att byta röst gör om rollens klipp.",
+  "model": "eleven_v4",
+  "language": "sv",
+  "creditsPerChar": 1,
+  "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75
+  },
+  "lufs": -20,
+  "scope": {
+    "parts": [
+      "mission",
+      "mantra",
+      "talk",
+      "skandal",
+      "feature"
+    ],
+    "not": [
+      "feature:mikrofon",
+      "feature:honk"
+    ]
+  },
+  "roles": {
+    "stig": {
+      "lang": "sv",
+      "voice_id": "CpPiT1LUZxBP5fFkxF9r",
+      "name": "Christer",
+      "source": "library",
+      "design": "Stig-Helmer Olsson, a Swedish man of 35-40 from Stockholm (Södermalm, Hammarby): polite, cautious and a little hesitant, never loud; the mantra said hastily and nervously.",
+      "candidates": [
+        {
+          "voice_id": "kkwvaJeTPw4KK0sBdyvD",
+          "owner": "2c908625c571a943074711177164438e13a0a7ea0e42e362d207159cfae1e560",
+          "name": "Bengt - Calm and Soft",
+          "lang": "sv",
+          "accent": "stockholm",
+          "age": "middle_aged",
+          "gender": "male",
+          "notice_days": 730,
+          "about": "Middle-aged Swedish male with a calm tone. Works well for audiobook narration.",
+          "preview": {
+            "f0": 108,
+            "f0lo": 89.5,
+            "f0hi": 132.2
+          }
+        },
+        {
+          "voice_id": "CpPiT1LUZxBP5fFkxF9r",
+          "owner": "744debe76a4db951dca5c76da1fc89b2678b2cef2fc44b004101cd8228f342c9",
+          "name": "Christer",
+          "lang": "sv",
+          "accent": "stockholm",
+          "age": "middle_aged",
+          "gender": "male",
+          "notice_days": 180,
+          "about": "A clear, engaging voice ideal for book reading and educational content, delivering information with warmth, clarity, and a natural storytelling style.",
+          "preview": {
+            "f0": 109.9,
+            "f0lo": 93.2,
+            "f0hi": 139.8
+          }
+        },
+        {
+          "voice_id": "SrEXuatZsaPiMUKtNYnc",
+          "owner": "64cbc624eb5aab4e95a968e1f41d75402277cca6e549036ed17e56ea33bbbc9e",
+          "name": "Henrik - Calm and composed",
+          "lang": "sv",
+          "accent": "standard",
+          "age": "middle_aged",
+          "gender": "male",
+          "notice_days": 4015,
+          "about": "A quiet, reassuring voice of a Swedish male with a controlled, steady pace, soft articulation, and an even tone.",
+          "preview": {
+            "f0": 118.8,
+            "f0lo": 94.1,
+            "f0hi": 131.1
+          }
+        }
+      ],
+      "previewText": "Vad ska de göra? Jag kan flyga, jag är inte rädd. Looping med en jumbo? Det går väl inte? Kan du se till mitt handbagage ett tag, jag måste…"
+    },
+    "ole": {
+      "lang": "no",
+      "voice_id": "3XGVM0BScQbNxcC3uOPZ",
+      "name": "Thomas Magne - Ads, Storytelling",
+      "source": "library",
+      "design": "Ole Bramserud, a Norwegian man of about 40 (østnorsk bokmål): jovial, loud and self-confident, a gadget expert who laughs easily. Never Swedish.",
+      "candidates": [
+        {
+          "voice_id": "3XGVM0BScQbNxcC3uOPZ",
+          "owner": "658639f5b857751151a8f7dccb46529afaeec9455ac9cae6af628d1ab024037a",
+          "name": "Thomas Magne - Ads, Storytelling",
+          "lang": "no",
+          "accent": "standard",
+          "age": "middle_aged",
+          "gender": "male",
+          "notice_days": 730,
+          "about": "A Norwegian radio voice with a personal and engaging delivery style. Suitable for hosting, music presentation, jingles, interviews, and storytelling segments that foster a sense of closeness with the ",
+          "preview": {
+            "f0": 129.5,
+            "f0lo": 97.1,
+            "f0hi": 163.8
+          }
+        },
+        {
+          "voice_id": "9pRpxWU0T7UFt2oEMH6n",
+          "owner": "807802b5200bc0ad924295862022e42131d81fa5fc99fe76fa31026e1758c229",
+          "name": "Martin - Clear and Comforting",
+          "lang": "no",
+          "accent": "oslo",
+          "age": "middle_aged",
+          "gender": "male",
+          "notice_days": 730,
+          "about": "Energetic, Norwegian, young adult, male with good pronunciation. Good for story telling, books, presentations and news.",
+          "preview": {
+            "f0": 112.9,
+            "f0lo": 89.1,
+            "f0hi": 148.9
+          }
+        },
+        {
+          "voice_id": "s2xtA7B2CTXPPlJzch1v",
+          "owner": "3ecf7d5a3435a45c391d35aa79fff38fbf397fa8b2d18e62f33c34707f552fba",
+          "name": "Dennis - Clear and Pleasant",
+          "lang": "no",
+          "accent": "oslo",
+          "age": "middle_aged",
+          "gender": "male",
+          "notice_days": 365,
+          "about": "This voice is perfect for informational, educational, and conversational voiceover - with good dynamic and tone for different use cases.",
+          "preview": {
+            "f0": 124.7,
+            "f0lo": 98.2,
+            "f0hi": 186.1
+          }
+        }
+      ],
+      "previewText": "Rutinekontroll. Narkotika, våpen, bomber… Du ser nervøs ut, du. Første gang du flyr? Du vet vel at det er femti prosent sjanse å overleve en flyulykke."
+    },
+    "lasse": {
+      "lang": "sv",
+      "voice_id": "ZMs9a3j1SLzirC7aygJQ",
+      "name": "Kim - Svenska Swedish",
+      "source": "library",
+      "design": "Lasse, the SunTrip tour guide, a Swedish man of about 35: cheerful, selling, an announcer's voice.",
+      "candidates": [
+        {
+          "voice_id": "ZMs9a3j1SLzirC7aygJQ",
+          "owner": "777d90cc28dbbb0d21585768d3ca03d776faf3312c4ded9f75c582b98deac7ea",
+          "name": "Kim - Svenska Swedish",
+          "lang": "sv",
+          "accent": "standard",
+          "age": "middle_aged",
+          "gender": "male",
+          "notice_days": 30,
+          "about": "Middle-aged male voice. Suitable for Social media.",
+          "preview": {
+            "f0": 125.5,
+            "f0lo": 101.4,
+            "f0hi": 138.2
+          }
+        },
+        {
+          "voice_id": "ISDDl0xPNLMD73L5PQj4",
+          "owner": "64cbc624eb5aab4e95a968e1f41d75402277cca6e549036ed17e56ea33bbbc9e",
+          "name": "Filip - Energetic and expressive",
+          "lang": "sv",
+          "accent": "standard",
+          "age": "young",
+          "gender": "male",
+          "notice_days": 4015,
+          "about": "A lively, animated voice of a young Swedish male with a bright tone, dynamic pitch range, and an engaging, rhythmic cadence.",
+          "preview": {
+            "f0": 176.2,
+            "f0lo": 117.8,
+            "f0hi": 218.5
+          }
+        }
+      ],
+      "previewText": "Den dyker upp. Det gör de alltid. Affe, du får ta transfern. Olsson! Du ser ut som en man med körkort. SunTrips buss nummer 17 står där borta!"
+    },
+    "berra": {
+      "lang": "sv",
+      "voice_id": "1uZ0SLDbZd88cfCPzFQo",
+      "name": "Mathias - Strong and Charismatic",
+      "source": "library",
+      "design": "Berra, a Gothenburg man of about 40: hoarse and eager, always after a drink.",
+      "candidates": [
+        {
+          "voice_id": "1uZ0SLDbZd88cfCPzFQo",
+          "owner": "62a172f17a5645418cab4217f84e0efaa6bf24f7d484901d167e290ca49744db",
+          "name": "Mathias - Strong and Charismatic",
+          "lang": "sv",
+          "accent": "gothenburg",
+          "age": "middle_aged",
+          "gender": "male",
+          "notice_days": 180,
+          "about": "strong, charismatic, and energetic male voice.",
+          "preview": {
+            "f0": 139.4,
+            "f0lo": 126.1,
+            "f0hi": 160.1
+          }
+        },
+        {
+          "voice_id": "njwuv7Q1d4N9viz5Km60",
+          "owner": "cd064fb8a07b4900415b6784107d22cf8fecc67f426957361b4363027460da21",
+          "name": "Erik - Casual",
+          "lang": "sv",
+          "accent": "gothenburg",
+          "age": "young",
+          "gender": "male",
+          "notice_days": 730,
+          "about": "A natural and positive dialect from Västra Götaland. ",
+          "preview": {
+            "f0": 159.3,
+            "f0lo": 138.7,
+            "f0hi": 198.4
+          }
+        }
+      ],
+      "previewText": "Hur mår du? Jaha… Ja, själv tar jag mig ett järn. Ska du ha? Nej, vem fan gör det? Och Karin Falk! Har du köpt vin? De häller upp och allt är klart?"
+    },
+    "robban": {
+      "lang": "sv",
+      "voice_id": "D0uDQmfJ5m6E0Fcfubxr",
+      "name": "Sovn - Deep",
+      "source": "library",
+      "design": "Robban, Berra's mate, a Gothenburg man of about 40: clear Gothenburg dialect, slower and lazier than Berra.",
+      "candidates": [
+        {
+          "voice_id": "D0uDQmfJ5m6E0Fcfubxr",
+          "owner": "460d6d8a39424c57691b0c25ada4b7f5871ca21445d27deabeeb4bdf34860faa",
+          "name": "Sovn - Deep",
+          "lang": "sv",
+          "accent": "gothenburg",
+          "age": "young",
+          "gender": "male",
+          "notice_days": 730,
+          "about": "A male voice from Halland county in Sweden",
+          "preview": {
+            "f0": 92.8,
+            "f0lo": 69,
+            "f0hi": 136
+          }
+        },
+        {
+          "voice_id": "zA8eaG1JhG82rhuCip6v",
+          "owner": "0d9cdb52e4caa5da8982884c5118f0b3df792554ccca6bedfa79fa2167b27ad9",
+          "name": "Andreas - Natural",
+          "lang": "sv",
+          "accent": "gothenburg",
+          "age": "young",
+          "gender": "male",
+          "notice_days": 730,
+          "about": "Natural Swedish voice with a warm, clear tone and relaxed delivery. Perfect for social media, commercials, ads, podcasts, and voiceover work. A true all-round voice that sounds authentic and present -",
+          "preview": {
+            "f0": 161.4,
+            "f0lo": 141.3,
+            "f0hi": 188.7
+          }
+        }
+      ],
+      "previewText": "Han måste vara bror med Lennart Swahn. Och Magnus Uggla! Vad hette det, sa du? Glöm aldrig det, du. Nej, skärpning nu, Berra, annars får vi ena jävla problem här."
+    },
+    "siv": {
+      "lang": "sv",
+      "voice_id": "ZSHzpa6aUvhjzShiBmYw",
+      "name": "Sanna Hartfield - Sassy and Natural",
+      "source": "library",
+      "design": "Siv (Sivan), a Swedish woman of about 35: flirtatious, quick and cocky, laughs easily.",
+      "candidates": [
+        {
+          "voice_id": "ZSHzpa6aUvhjzShiBmYw",
+          "owner": "3d1fa6a5595e0a31fff8d7c1a2f2794b91ca87ddd200066dfbdfcef662a65a1b",
+          "name": "Sanna Hartfield - Sassy and Natural",
+          "lang": "sv",
+          "accent": "stockholm",
+          "age": "middle_aged",
+          "gender": "female",
+          "notice_days": 730,
+          "about": "Middle aged Professional, Swedish & sassy female voice. Perfect for Ads, TV, radio, social & audio books. Let's go Scandi...",
+          "preview": {
+            "f0": 203.4,
+            "f0lo": 150.6,
+            "f0hi": 262.1
+          }
+        },
+        {
+          "voice_id": "6t6kdi8hAnBYTTvzE62o",
+          "owner": "342d4931a9e841b9b6bf4680347dd71510bbb4ee085bd26cfc1baedcca9ba2ce",
+          "name": "Malin - Professional Commercial",
+          "lang": "sv",
+          "accent": "standard",
+          "age": "young",
+          "gender": "female",
+          "notice_days": 730,
+          "about": "Warm, energetic and positive Swedish female voice. Professional commercial narrator with experience in advertising, corporate communication, explainer videos and information films. Friendly, trustwort",
+          "preview": {
+            "f0": 205.8,
+            "f0lo": 160,
+            "f0hi": 357.5
+          }
+        }
+      ],
+      "previewText": "Du har väl med dig dom fyra pe-na? Pass, pesetas, p-piller, piljetter. Pass, pesetas, piral och piljetter! Jag dör! Såg du vad han stötte på dig? Han som såg ut som en giraff."
+    },
+    "majsan": {
+      "lang": "sv",
+      "voice_id": "dJzZcvlDgItQyHtAWC1J",
+      "name": "Elin",
+      "source": "library",
+      "design": "Majsan, Siv's sister, a Swedish woman of about 30: warm, a little shy, soft.",
+      "candidates": [
+        {
+          "voice_id": "HqmZnnvy6tCQd8EGWKRT",
+          "owner": "5bef9583ed80e9300f3cb1fbdcad0e849f658837038f9625845d8aaa06c5c8ec",
+          "name": "Eva - Calm and Resonant",
+          "lang": "sv",
+          "accent": "standard",
+          "age": "young",
+          "gender": "female",
+          "notice_days": 180,
+          "about": "Eva's voice possesses a calm, resonant texture, often with a subtly breathy delivery that prevents it from sounding sharp or harsh. Her moderate, steady cadence, combined with excellent control over t",
+          "preview": {
+            "f0": 209.1,
+            "f0lo": 161.7,
+            "f0hi": 473.9
+          }
+        },
+        {
+          "voice_id": "dJzZcvlDgItQyHtAWC1J",
+          "owner": "8d0e32e6de033f80eb56350c6cc1a50532d33b03860326362a7af19cc5111d7c",
+          "name": "Elin",
+          "lang": "sv",
+          "accent": "standard",
+          "age": "young",
+          "gender": "female",
+          "notice_days": 30,
+          "about": "Pleasant and calm. ",
+          "preview": {
+            "f0": 160.7,
+            "f0lo": 148.9,
+            "f0hi": 208.7
+          }
+        }
+      ],
+      "previewText": "Jag har piral. Sex, tycker jag. Mindre än pizza-racern? Det är kombinationen av sol och… Ta pepparn. Om han blir närgången. Stig-Helmer, kan inte du hålla ett öga på dem? Diskret."
+    },
+    "angerud": {
+      "lang": "sv",
+      "voice_id": "wVebHqxy2EFBILywVrdC",
+      "name": "Andreas - Deep, Manly & Dramatic",
+      "source": "library",
+      "design": "Gösta Angerud, a Stockholm company director of about 55: choleric, loud and easily irritated, upper class.",
+      "candidates": [
+        {
+          "voice_id": "wVebHqxy2EFBILywVrdC",
+          "owner": "04353e9aec2715b0fb17a04b56318a3d57e6f427fcb6a4d69c0ac9aa767d1c25",
+          "name": "Andreas - Deep, Manly & Dramatic",
+          "lang": "sv",
+          "accent": "standard",
+          "age": "middle_aged",
+          "gender": "male",
+          "notice_days": 730,
+          "about": "Deep manly, calm and articulate voice from a professional actor. Multilingual. Perfect for narrative, storytelling, commercials, social media information and more. Works excellent for swedish, english",
+          "preview": {
+            "f0": 96.4,
+            "f0lo": 80.6,
+            "f0hi": 130
+          }
+        },
+        {
+          "voice_id": "Z1ccg5tzsZwHwwOgNW6U",
+          "owner": "d11fe20165a183f458b632176e84935a1699fdf9833beddf728b5d4e659022e8",
+          "name": "Zébulon",
+          "lang": "sv",
+          "accent": "stockholm",
+          "age": "middle_aged",
+          "gender": "male",
+          "notice_days": 730,
+          "about": "Deep, warm, articulate, and expressive professional Swedish male voice-over artist. ",
+          "preview": {
+            "f0": 83.5,
+            "f0lo": 72.1,
+            "f0hi": 106.1
+          }
+        }
+      ],
+      "previewText": "Kallar ni det här 'varm middag'? Så ser det inte ut när jag flyger reguljärt. Jag har inte fått resan gratis. Jag har betalat tretusen för den."
+    },
+    "jose": {
+      "lang": "sv",
+      "voice_id": "iJQjCIhyynnZMKT6NN3H",
+      "name": "Rafa N - Joyful, Lively & Expressive",
+      "source": "library",
+      "design": "José, a Spaniard of about 30 who lives in Sweden: eager and proud; Swedish with a Spanish accent (a voice whose mother tongue is Spanish, speaking Swedish).",
+      "candidates": [
+        {
+          "voice_id": "iJQjCIhyynnZMKT6NN3H",
+          "owner": "7398804d9eaf2f463899a907587c33a390591775784f87857b6d0e1e4e3e66f6",
+          "name": "Rafa N - Joyful, Lively & Expressive",
+          "lang": "es",
+          "accent": "peninsular",
+          "age": "middle_aged",
+          "gender": "male",
+          "notice_days": 730,
+          "about": "A lively and expressive Spanish male voice built for the fast-paced world of social media. Rafa N delivers with punch, rhythm, and personality — perfect for grabbing attention in the first seconds and",
+          "preview": {
+            "f0": 143.5,
+            "f0lo": 93.8,
+            "f0hi": 217.5
+          }
+        },
+        {
+          "voice_id": "97uDgYCxMwY7BodSS4WM",
+          "owner": "f5deb6018e4d36555ac88c73351cf67958b2cd00e56d4135c061bf58724fcf88",
+          "name": "Pipe - Friendly",
+          "lang": "es",
+          "accent": "peninsular",
+          "age": "middle_aged",
+          "gender": "male",
+          "notice_days": 730,
+          "about": "Friendly and approachable. ",
+          "preview": {
+            "f0": 166.9,
+            "f0lo": 112.9,
+            "f0hi": 232
+          }
+        }
+      ],
+      "previewText": "Jag ska inte bort, jag ska hem. Jag ska bjuda dig på ett ställe som inga turister kommer till. Äkta spanska maten på en restaurang. Kanarisk specialitet! Ropa vieja – gamla kläder."
+    },
+    "mamma": {
+      "lang": "es",
+      "voice_id": "ypIbR1aohyRSdDv25DPr",
+      "name": "Rosa - Neutral, Calm and Genuine",
+      "source": "library",
+      "design": "José's mother, a Canarian woman of about 60: overbearing and dramatic. Speaks Spanish (the Swedish line is the subtitle).",
+      "candidates": [
+        {
+          "voice_id": "ypIbR1aohyRSdDv25DPr",
+          "owner": "86f9bba4aeeb8c0d2e2493106122d5cbe328a4c3e5ba93de7104b4c590700807",
+          "name": "Rosa - Neutral, Calm and Genuine",
+          "lang": "es",
+          "accent": "peninsular",
+          "age": "old",
+          "gender": "female",
+          "notice_days": 365,
+          "about": "Spanish from Spain with Neutral Accent of an Old Woman with a calm and peaceful voice. Excellent for narrative, books, tales, storytelling, ASMR , etc",
+          "preview": {
+            "f0": 175,
+            "f0lo": 126.9,
+            "f0hi": 277.7
+          }
+        },
+        {
+          "voice_id": "9oWKy782oltLmeuOUdq7",
+          "owner": "6e9605ddc8bae8a622ba03bbb2eea1792f034bca6eac236f7c726c97d32e7ccb",
+          "name": "Alegria Sana - Diplomatic and Confident",
+          "lang": "es",
+          "accent": "peninsular",
+          "age": "old",
+          "gender": "female",
+          "notice_days": 730,
+          "about": "Mature voice, optimal for providing certainty in conversations.",
+          "preview": {
+            "f0": 233.2,
+            "f0lo": 141.5,
+            "f0hi": 278.9
+          }
+        }
+      ],
+      "previewText": "¡Josito! ¡Josito! ¡Nada de suecas! ¡Tan vieja! ¡Me vas a llevar a la tumba!"
+    },
+    "levander": {
+      "lang": "sv",
+      "voice_id": "FCScQnyNrlLIxPiB3Bsd",
+      "name": "RJay - The Storytelling Educator",
+      "source": "library",
+      "design": "Dr Levander, a Swedish man of about 50: soft, calm and hypnotic, a little ingratiating. Heard over the telephone.",
+      "candidates": [
+        {
+          "voice_id": "FCScQnyNrlLIxPiB3Bsd",
+          "owner": "b2c54ee7650936e5cec3421163c7040b4bd72dbfae89c1ca2498ad69177234bf",
+          "name": "RJay - The Storytelling Educator",
+          "lang": "sv",
+          "accent": "standard",
+          "age": "middle_aged",
+          "gender": "male",
+          "notice_days": 90,
+          "about": "Do you want to attract listeners while also increasing the chances of them remember your message? Then you need a voice that is simultaneously attractive, humble and consistent. It is scientifically a",
+          "preview": {
+            "f0": 100.6,
+            "f0lo": 66.5,
+            "f0hi": 145.7
+          },
+          "audition": false
+        }
+      ]
+    },
+    "kapten": {
+      "lang": "sv",
+      "voice_id": "Usqct4k3NL8fhoirqv2W",
+      "name": "Johan - Informative",
+      "source": "library",
+      "design": "The captain, a Swedish man of about 50: calm, a little monotone, over the PA.",
+      "candidates": [
+        {
+          "voice_id": "Usqct4k3NL8fhoirqv2W",
+          "owner": "6d5078d9af098d63497f5c71e4ebe2c5c1bffe516e3eff659b79e1a73cb87b15",
+          "name": "Johan - Informative",
+          "lang": "sv",
+          "accent": "standard",
+          "age": "middle_aged",
+          "gender": "male",
+          "notice_days": 730,
+          "about": "Calm, steady, and instructive voice. ",
+          "preview": {
+            "f0": 112.1,
+            "f0lo": 103.9,
+            "f0hi": 135.9
+          },
+          "audition": false
+        }
+      ]
+    },
+    "vardinna": {
+      "lang": "sv",
+      "voice_id": "kpTdKfohzvarfFPnwuHW",
+      "name": "Louise - Calm & Clear Narration",
+      "source": "library",
+      "design": "The stewardess, a Swedish woman: professionally friendly, 1970s airline.",
+      "candidates": [
+        {
+          "voice_id": "kpTdKfohzvarfFPnwuHW",
+          "owner": "17f3d10a30c42fdac07a6f26feda26b7892eea50287931c0727fcf66ceb0fd46",
+          "name": "Louise - Calm & Clear Narration",
+          "lang": "sv",
+          "accent": "stockholm",
+          "age": "middle_aged",
+          "gender": "female",
+          "notice_days": 90,
+          "about": "Louise’s voice is calm, clear, and naturally soothing, with a warm presence that keeps listeners engaged. Her smooth pacing and precise articulation make her ideal for narration, audiobooks, documenta",
+          "preview": {
+            "f0": 165,
+            "f0lo": 133.2,
+            "f0hi": 222.1
+          },
+          "audition": false
+        }
+      ]
+    },
+    "pa": {
+      "lang": "sv",
+      "voice_id": "zyfJspwEDo0sxPeFmtsn",
+      "name": "Malin - Professional Swedish Narration",
+      "source": "library",
+      "design": "The airport's loudspeaker, a neutral Swedish woman's voice.",
+      "candidates": [
+        {
+          "voice_id": "zyfJspwEDo0sxPeFmtsn",
+          "owner": "b8cc4c6375a34ce67ea2b558b7f86aadca244d61e6301b769e5bc140225ff452",
+          "name": "Malin - Professional Swedish Narration",
+          "lang": "sv",
+          "accent": "standard",
+          "age": "middle_aged",
+          "gender": "female",
+          "notice_days": 730,
+          "about": "Clear and natural Swedish narration voice. Perfect for e-learning, guides, explainers, corporate content, commercials and information films. Clear articulation, engaging and trustworthy.",
+          "preview": {
+            "f0": 201.4,
+            "f0lo": 134.1,
+            "f0hi": 263.2
+          },
+          "audition": false
+        }
+      ]
+    },
+    "fruStorch": {
+      "lang": "sv",
+      "voice_id": "tPrL2xYfkQnwJhHMMdRM",
+      "name": "Saga - Content & Ads",
+      "source": "library",
+      "design": "Fru Storch, a young Swedish woman from Mjölby on her honeymoon: perky, corrects people (\"Storch, inte Stork\").",
+      "candidates": [
+        {
+          "voice_id": "tPrL2xYfkQnwJhHMMdRM",
+          "owner": "c4d1f34c61453bb58126b5868521de9fdc49bb8cd19cb9deb62fdfea4c91d301",
+          "name": "Saga - Content & Ads",
+          "lang": "sv",
+          "accent": "standard",
+          "age": "young",
+          "gender": "female",
+          "notice_days": 730,
+          "about": "Relatable, bright, and energetic Swedish female voice (early-to-mid 20s tone) with a natural Stockholm accent. Perfect for social media campaigns, lifestyle vlogs, and commercial storytelling. Clear, ",
+          "preview": {
+            "f0": 184.6,
+            "f0lo": 85.4,
+            "f0hi": 295.2
+          },
+          "audition": false
+        }
+      ]
+    },
+    "herrStorch": {
+      "lang": "sv",
+      "voice_id": "nQnObYhERMRKcoUcZUyA",
+      "name": "Atlas",
+      "source": "library",
+      "design": "Herr Storch, a young Swedish man from Mjölby: taciturn (\"Lite film.\").",
+      "candidates": [
+        {
+          "voice_id": "nQnObYhERMRKcoUcZUyA",
+          "owner": "3cc03a9a85a6dff608e0c61c748fffcffb0b08ed9ab2bdb2c0537cc24336b6b2",
+          "name": "Atlas",
+          "lang": "sv",
+          "accent": "standard",
+          "age": "young",
+          "gender": "male",
+          "notice_days": 180,
+          "about": "A calm, confident, and natural voice with warmth and quiet authority. It feels human, grounded, and present. Perfect for modern storytelling, social media narration, and AI voices that should sound re",
+          "preview": {
+            "f0": 87.3,
+            "f0lo": 81.7,
+            "f0hi": 438.2
+          },
+          "audition": false
+        }
+      ]
+    },
+    "gabbe": {
+      "lang": "sv",
+      "voice_id": "bV7jikEEhdB4L9kKI5lU",
+      "name": "Sven - Deep and steady",
+      "source": "library",
+      "design": "Gabbe, SunTrip's guide and band man: relaxed, a darker voice.",
+      "candidates": [
+        {
+          "voice_id": "bV7jikEEhdB4L9kKI5lU",
+          "owner": "64cbc624eb5aab4e95a968e1f41d75402277cca6e549036ed17e56ea33bbbc9e",
+          "name": "Sven - Deep and steady",
+          "lang": "sv",
+          "accent": "standard",
+          "age": "middle_aged",
+          "gender": "male",
+          "notice_days": 4015,
+          "about": "A steady, grounded voice of a Swedish male with a clean, light accent, balanced cadence, and a smooth, relaxed resonance.",
+          "preview": {
+            "f0": 123.3,
+            "f0lo": 109.6,
+            "f0hi": 155.5
+          },
+          "audition": false
+        }
+      ]
+    },
+    "affe": {
+      "lang": "sv",
+      "voice_id": "ouhIFI5XkmBelRRcJe51",
+      "name": "Ola Paulakoski - Natural, Soft and Warm",
+      "source": "library",
+      "design": "Affe, SunTrip's guide with the accordion: relaxed and tired.",
+      "candidates": [
+        {
+          "voice_id": "ouhIFI5XkmBelRRcJe51",
+          "owner": "f7a0e0fc2ed6c11703fd30474b143b1ec7bd4a1893bde9e52c5334b13eb5bf72",
+          "name": "Ola Paulakoski - Natural, Soft and Warm",
+          "lang": "sv",
+          "accent": "standard",
+          "age": "middle_aged",
+          "gender": "male",
+          "notice_days": 730,
+          "about": "Relaxed swedish male voice, suitable for audio books or short commercial. ",
+          "preview": {
+            "f0": 137.2,
+            "f0lo": 113.7,
+            "f0hi": 180.8
+          },
+          "audition": false
+        }
+      ]
+    },
+    "sulan": {
+      "lang": "sv",
+      "voice_id": "4r815lcewEwv1BQ1Jize",
+      "name": "Niels Joaquin",
+      "source": "library",
+      "design": "Sulan, a Swedish man at Arlanda with a tip about cheap rum.",
+      "candidates": [
+        {
+          "voice_id": "4r815lcewEwv1BQ1Jize",
+          "owner": "07e8102f0af0a87694cdd09db562bc56e612df83ccbf816542850d98be3ca52a",
+          "name": "Niels Joaquin",
+          "lang": "sv",
+          "accent": "scanian",
+          "age": "middle_aged",
+          "gender": "male",
+          "notice_days": 730,
+          "about": "This is a natural voice for storytelling, meditation, and speech.",
+          "preview": {
+            "f0": 116.1,
+            "f0lo": 80.7,
+            "f0hi": 133.9
+          },
+          "audition": false
+        }
+      ]
+    },
+    "kontrollant": {
+      "lang": "sv",
+      "voice_id": "OK5EmHXWwHrd5FnZlPcs",
+      "name": "Stefan - Calm & Instructive",
+      "source": "library",
+      "design": "The ticket inspector at the gate, a Swedish official.",
+      "candidates": [
+        {
+          "voice_id": "OK5EmHXWwHrd5FnZlPcs",
+          "owner": "7e2a5d70c27c3ca2e8bd50a79f8afce2cbeb7190a77af3f8519a520e7c0644f1",
+          "name": "Stefan - Calm & Instructive",
+          "lang": "sv",
+          "accent": "standard",
+          "age": "middle_aged",
+          "gender": "male",
+          "notice_days": 730,
+          "about": "Calm and Instructive.",
+          "preview": {
+            "f0": 122.9,
+            "f0lo": 104.1,
+            "f0hi": 153.3
+          },
+          "audition": false
+        }
+      ]
+    },
+    "saljare": {
+      "lang": "sv",
+      "voice_id": "udYyrf479S13dvDwegia",
+      "name": "Benny",
+      "source": "library",
+      "design": "The bungalow salesman, a slick Swedish man.",
+      "candidates": [
+        {
+          "voice_id": "udYyrf479S13dvDwegia",
+          "owner": "543c3119ce04c7138b5afc54b917639eb2e7726e95471a4d744adc4d62294a7b",
+          "name": "Benny",
+          "lang": "sv",
+          "accent": "stockholm",
+          "age": "middle_aged",
+          "gender": "male",
+          "notice_days": 180,
+          "about": "Warm Swedish narration voice, versatile and engaging, suited for audiobooks, storytelling, social media, and a wide range of genres, including crime, fantasy, children’s stories, and humor.",
+          "preview": {
+            "f0": 106.6,
+            "f0lo": 92.3,
+            "f0hi": 128.7
+          },
+          "audition": false
+        }
+      ]
+    },
+    "pax": {
+      "lang": "sv",
+      "voice_id": "LJGqDlSQqFnmhbStEO8I",
+      "name": "David",
+      "source": "library",
+      "design": "A fellow passenger, a Swedish man.",
+      "candidates": [
+        {
+          "voice_id": "LJGqDlSQqFnmhbStEO8I",
+          "owner": "8e47a2b5b20c6351092d443c1a87e821c345b9565cca08309ba3c37f020a3efa",
+          "name": "David",
+          "lang": "sv",
+          "accent": "standard",
+          "age": "middle_aged",
+          "gender": "male",
+          "notice_days": null,
+          "about": "Calm, pleasant, and trustworthy voice.",
+          "preview": {
+            "f0": 88.6,
+            "f0lo": 74.7,
+            "f0hi": 113
+          },
+          "audition": false
+        }
+      ]
+    },
+    "pappa": {
+      "lang": "es",
+      "voice_id": "7qXldmK3yFlWBHejdkpP",
+      "name": "Julio",
+      "source": "library",
+      "design": "José's father, an old Canarian man. Spanish.",
+      "candidates": [
+        {
+          "voice_id": "7qXldmK3yFlWBHejdkpP",
+          "owner": "ea5c04d5ee51c42a6564abd230946b5501439d4c3cb2b1cf4cad4bd9dc01cdeb",
+          "name": "Julio",
+          "lang": "es",
+          "accent": "peninsular",
+          "age": "old",
+          "gender": "male",
+          "notice_days": 730,
+          "about": "Mature male voice. Deep, clear, and with perfect diction. Speaking Peninsular Spanish. ",
+          "preview": {
+            "f0": 84.4,
+            "f0lo": 69,
+            "f0hi": 116.2
+          },
+          "audition": false
+        }
+      ]
+    },
+    "carmencita": {
+      "lang": "es",
+      "voice_id": "YRVxGxyKO1sjJJ3SqaLg",
+      "name": "Estrellita",
+      "source": "library",
+      "design": "Carmencita, a Canarian woman. Spanish.",
+      "candidates": [
+        {
+          "voice_id": "YRVxGxyKO1sjJJ3SqaLg",
+          "owner": "cffcdc4ef94dcbb46f7060bd658bd06f52a5b65de6372fbb4ecc4b06e72ec37c",
+          "name": "Estrellita",
+          "lang": "es",
+          "accent": "canary islands",
+          "age": "young",
+          "gender": "female",
+          "notice_days": 730,
+          "about": "A warm, lively, and approachable voice with Southern nuances. ",
+          "preview": {
+            "f0": 231.6,
+            "f0lo": 200.4,
+            "f0hi": 271.6
+          },
+          "audition": false
+        }
+      ]
+    },
+    "portier": {
+      "lang": "es",
+      "voice_id": "qWOnfHUc12LWMm9bXkUC",
+      "name": "Alexus",
+      "source": "library",
+      "design": "The porter at Hotel Flamenco, a Canarian man: \"Momento.\" Spanish.",
+      "candidates": [
+        {
+          "voice_id": "qWOnfHUc12LWMm9bXkUC",
+          "owner": "8df98a8d65a9cd3abae3dc303d8b177db4db04c3ffca5cf0d17c3036927f28a0",
+          "name": "Alexus",
+          "lang": "es",
+          "accent": "canary islands",
+          "age": "middle_aged",
+          "gender": "male",
+          "notice_days": 365,
+          "about": "A natural, warm, and approachable young-adult male voice. It features a clear, relaxed, mid-to-low pitch, with crisp pronunciation and a conversational pace. The delivery sounds direct, human, and aut",
+          "preview": {
+            "f0": 115.5,
+            "f0lo": 83.2,
+            "f0hi": 141.5
+          },
+          "audition": false
+        }
+      ]
+    },
+    "souvenir": {
+      "lang": "es",
+      "voice_id": "LcMajEnHqf3tUTha5ppa",
+      "name": "Mateo - Engaging, Warm and Emotive",
+      "source": "library",
+      "design": "The souvenir seller at the market, a middle-aged Canarian man. Spanish; his \"Jävla smålänningar!\" in Swedish with his accent.",
+      "candidates": [
+        {
+          "voice_id": "LcMajEnHqf3tUTha5ppa",
+          "owner": "ff2ae3b59b1adf8a3049241b075f5b4aa38c4dafb7ffbdbf39affbc960dd25f6",
+          "name": "Mateo - Engaging, Warm and Emotive",
+          "lang": "es",
+          "accent": "andalusian",
+          "age": "middle_aged",
+          "gender": "male",
+          "notice_days": 730,
+          "about": "An authentic, warm, and engaging male voice from Southern Spain (Andalusian accent). Perfect for documentaries, true crime, and storytelling. Unlike robotic neutral voices, this voice carries emotion,",
+          "preview": {
+            "f0": 108,
+            "f0lo": 83.2,
+            "f0hi": 140.4
+          },
+          "audition": false
+        }
+      ]
+    },
+    "grisbonde": {
+      "lang": "es",
+      "voice_id": "syjZiIvIUSwKREBfMpKZ",
+      "name": "Jacobo Montoro - Full and Gentle",
+      "source": "library",
+      "design": "The pig farmer, a rustic Canarian man. Spanish.",
+      "candidates": [
+        {
+          "voice_id": "syjZiIvIUSwKREBfMpKZ",
+          "owner": "72662d6c46d3bdad3f0f08a7e851c4869873a26d5d852113ef46f5c6674ac6b5",
+          "name": "Jacobo Montoro - Full and Gentle",
+          "lang": "es",
+          "accent": "andalusian",
+          "age": "middle_aged",
+          "gender": "male",
+          "notice_days": 30,
+          "about": "Warm middle-aged male voice with an accent from southern Spain. Perfect for narrative with a local spin. ",
+          "preview": {
+            "f0": 103.6,
+            "f0lo": 79.3,
+            "f0hi": 136.9
+          },
+          "audition": false
+        }
+      ]
+    },
+    "stadare": {
+      "lang": "es",
+      "voice_id": "OgAcRHdVLdLpidpAVSz8",
+      "name": "Veronica -  Calm & Friendly",
+      "source": "library",
+      "design": "The cleaning lady at Hotel Flamenco, a Canarian woman. Spanish.",
+      "candidates": [
+        {
+          "voice_id": "OgAcRHdVLdLpidpAVSz8",
+          "owner": "c5c9f609b3c693a05eb394e5eca23dc5c1f90d0590f06563af9c743d0a324a88",
+          "name": "Veronica -  Calm & Friendly",
+          "lang": "es",
+          "accent": "canary islands",
+          "age": "middle_aged",
+          "gender": "female",
+          "notice_days": 730,
+          "about": "Calm female voice. ",
+          "preview": {
+            "f0": 142.2,
+            "f0lo": 125.4,
+            "f0hi": 232
+          },
+          "audition": false
+        }
+      ]
+    },
+    "hittegods": {
+      "lang": "es",
+      "voice_id": "Thkz4r8fshqG13klONQh",
+      "name": "Carlos",
+      "source": "library",
+      "design": "The young man at the airport's lost and found, a Canarian. Spanish.",
+      "candidates": [
+        {
+          "voice_id": "Thkz4r8fshqG13klONQh",
+          "owner": "521983e670bf2d6906bc8b873a8d4ab1753e7faaa81b2f1e6ed8223f7a2833bd",
+          "name": "Carlos",
+          "lang": "es",
+          "accent": "canary islands",
+          "age": "young",
+          "gender": "male",
+          "notice_days": 730,
+          "about": "Very natural voice with a Canarian accent.",
+          "preview": {
+            "f0": 123.6,
+            "f0lo": 100.5,
+            "f0hi": 138.8
+          },
+          "audition": false
+        }
+      ]
+    },
+    "telefonist": {
+      "lang": "es",
+      "voice_id": "nBwP3V9cnubnfoXiV64G",
+      "name": "Yerom - Canary & Friendly",
+      "source": "library",
+      "design": "The clerk at the telephone station, a Canarian man. Spanish.",
+      "candidates": [
+        {
+          "voice_id": "nBwP3V9cnubnfoXiV64G",
+          "owner": "82af17eead24100b895550d419198bffa86e220c1eb73c3179975949f66265b9",
+          "name": "Yerom - Canary & Friendly",
+          "lang": "es",
+          "accent": "canary islands",
+          "age": "young",
+          "gender": "male",
+          "notice_days": 730,
+          "about": "Yeroma's voice with intonations, Canarian accent with the Spanish language.",
+          "preview": {
+            "f0": 120.4,
+            "f0lo": 97.1,
+            "f0hi": 156.7
+          },
+          "audition": false
+        }
+      ]
+    },
+    "guardia": {
+      "lang": "es",
+      "voice_id": "sAGvECw4aXyojkGBisG4",
+      "name": "Helmut - Clear, Warm and Powerful",
+      "source": "library",
+      "design": "A Guardia Civil officer, a Spanish man: curt. The first of the two officers' voices.",
+      "candidates": [
+        {
+          "voice_id": "sAGvECw4aXyojkGBisG4",
+          "owner": "3cd1fc036e2c4ee74abef4047e8a67689123967891a082d67e584e4c30f4bc62",
+          "name": "Helmut - Clear, Warm and Powerful",
+          "lang": "es",
+          "accent": "andalusian",
+          "age": "middle_aged",
+          "gender": "male",
+          "notice_days": 730,
+          "about": "Middle-aged male voice. Great for Social media.",
+          "preview": {
+            "f0": 104.9,
+            "f0lo": 90.9,
+            "f0hi": 126.8
+          },
+          "audition": false
+        }
+      ]
+    },
+    "guardia2": {
+      "lang": "es",
+      "voice_id": "svj03RH3i7SeP6ikII3q",
+      "name": "Juanka Dominguez - Actor",
+      "source": "library",
+      "design": "A Guardia Civil officer, a Spanish man: curt. The second of the two officers' voices (they take turns, voice.js).",
+      "candidates": [
+        {
+          "voice_id": "svj03RH3i7SeP6ikII3q",
+          "owner": "b2b1f19d4846f75acd48c2b14a17ce901c705ae0cb86fab8e069444cc8268695",
+          "name": "Juanka Dominguez - Actor",
+          "lang": "es",
+          "accent": "andalusian",
+          "age": "young",
+          "gender": "male",
+          "notice_days": 730,
+          "about": "Warm, deep, and expressive Spanish male voice from Spain. Perfect for commercials, storytelling, audiobooks, cinematic narration, AI assistants, social media content, and emotional voiceovers. Clear p",
+          "preview": {
+            "f0": 113.9,
+            "f0lo": 96.4,
+            "f0hi": 132.3
+          },
+          "audition": false
+        }
+      ]
+    }
+  }
+}

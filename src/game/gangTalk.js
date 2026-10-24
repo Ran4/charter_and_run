@@ -14,8 +14,7 @@
 
 import { TALK_ISLAND } from '../content/index.js';
 import { MISSIONS } from './missions/index.js';
-import { hhmm } from './dayClock.js';
-import { fmt } from '../strings.js';
+import { clockLine } from '../content/script.js';
 import { dist, yawTo } from '../util.js';
 
 export class GangTalk {
@@ -114,13 +113,14 @@ export class GangTalk {
     const g = this.g, c = this.cfg, p = g.player, n = g.npc(r.key);
     if (!this.active()) { this.stop('free roam', true); return; }
     if (!this.free(r.key) || g.playerCar || p.state !== 'normal' || dist(n.x, n.z, p.x, p.z) > c.leaveR) { this.stop('left'); return; }
-    if (g.time < r.at) return;
+    if (g.time < r.at || r.u?.speaking()) return;   // (a line with a voice is said to the end)
     this.unpose();
     if (r.i >= r.ex.lines.length) { this.stop('done'); return; }
     const [who, text, o] = r.ex.lines[r.i++];
     if (who !== 'stig' && who !== r.key && !this.free(who)) { this.stop('third'); return; }
-    const ch = g.npc(who), line = fmt(text, { es: hhmm(g.day.h), no: hhmm(g.day.h + 1) });
-    g.say(ch, line, c.secs);
+    // (the clock in words, to the half hour, so that the line can be voiced: DESIGN §12.4)
+    const ch = g.npc(who), line = text.includes('{es}') ? clockLine(text, g.day.h) : text;
+    r.u = g.say(ch, line, c.secs);
     this.up.push({ who: ch, end: ch.sayEnd });
     if (o?.anim) { ch.anim[o.anim] = true; r.pose = [ch, o.anim]; }
     r.at = g.time + Math.max(0, (ch.sayEnd - performance.now()) / 1000) + c.gap;

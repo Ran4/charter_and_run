@@ -74,6 +74,7 @@ export class Shame {
     this.locked = false;     // missions can freeze the meter (pursuit mode only)
     this.forced = false;     // missions can force a pursuit
     this.tauntT = 3;
+    this.voices = 0;       // the Land Rovers' officers so far (their two voices take turns)
     this.caughtT = 0;
     this.resetCarBust();
     this.leaving = [];
@@ -569,7 +570,8 @@ export class Shame {
         if (this.tauntT <= 0 && near < 40 && c.taunts?.length) {
           this.tauntT = 4 + Math.random() * 3;
           const src = (this.officer && this.officer.state !== 'hidden' && this.officer) || this.pursuers.find((h) => !h.dead);
-          if (src) g.say(src.bust ? { x: src.x, y: src.y, z: src.z, height: 2.6 } : src, pick(this.closet.taunts(c.taunts)), 2.2);
+          // (a Land Rover's officer: its bust, with one of the two officers' voices, voice.js)
+          if (src) g.say(src.bust ? { x: src.x, y: src.y, z: src.z, height: 2.6, who: (src.voice ||= ++this.voices % 2 ? 'guardia' : 'guardia2') } : src, pick(this.closet.taunts(c.taunts)), 2.2);
         }
         if (this.pursuit) this.carBustTick(dt);
       }

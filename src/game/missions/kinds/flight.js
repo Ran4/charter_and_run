@@ -24,7 +24,7 @@ async function bubbles(g, m, lines) {
     if (scene()) return false;
     if (cue) g.cue(cue);
     const secs = lineSecs(g, text), n = g.npc(who);
-    g.say(n, text, secs);
+    const u = g.say(n, text, secs);
     await new Promise((resolve) => {
       let t = 0;
       const tick = (dt) => {
@@ -32,7 +32,8 @@ async function bubbles(g, m, lines) {
         // The speaker's bubble comes down at the HUD this frame (an empty `say` used to replace it,
         // which Game.say's minimum reading time then held up as an empty pill for 1 s).
         if (scene()) g.unsay(n);
-        if (scene() || t >= secs * 0.8) { g.offFrame(tick); resolve(); }
+        // (a line with a voice: the next one waits until it has been said)
+        if (scene() || (t >= secs * 0.8 && !u?.speaking())) { g.offFrame(tick); resolve(); }
       };
       g.onFrame(tick);
     });

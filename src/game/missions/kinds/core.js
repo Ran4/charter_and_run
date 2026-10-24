@@ -94,7 +94,9 @@ function reboard(g, n) {
 }
 
 // Radio lines fired in order: [who, text, cue?] (cue.gap = seconds after the previous line; any
-// other cue field is applied with the line) or a plain string spoken by `who`.
+// other cue field is applied with the line) or a plain string spoken by `who`. A line with a voice
+// clip is never dropped from the queue (`must`), and the gap after it counts from when it was said
+// to the end (the clock waits while it waits or is said: DESIGN §12.4).
 export class RadioSeq {
   constructor(lines, { first = 6, gap = [9, 13], who = null } = {}) {
     this.lines = lines || [];
@@ -111,20 +113,21 @@ export class RadioSeq {
   }
   get done() { return this.i >= this.lines.length; }
   tick(g, dt) {
-    if (this.done) return;
+    if (this.done || this.u?.speaking()) return;
     this.t -= dt;
     if (this.t > 0) return;
     const l = this.lines[this.i++];
     const [who, text, cue] = Array.isArray(l) ? l : [this.who, l, null];
     if (cue) { const { gap, ...rest } = cue; if (Object.keys(rest).length) g.cue(rest); }
-    g.radio(who, text);
+    this.u = g.radio(who, text, { must: true, pa: !!cue?.pa });
     if (!this.done) this.t = this.delay(this.i);
   }
 }
 
 // An overheard exchange (goto.overhear): when the player comes within `r` of `at`, the lines play
 // once as world bubbles on the speakers (or radio toasts with `radio: true`). A speaker who is
-// absent, hidden or far from `at` speaks from an anchor built on the landmark.
+// absent, hidden or far from `at` speaks from an anchor built on the landmark (with the speaker's
+// voice, `who`). The next line waits while a line's voice is still said.
 export class Overhear {
   constructor(spec) {
     this.s = spec;
@@ -137,10 +140,10 @@ export class Overhear {
   anchor(g, who) {
     const n = g.npc(who), l = this.l;
     if (n && n.state !== 'hidden' && dist(n.x, n.z, l.x, l.z) < Math.max(this.s.r, 12)) return n;
-    return { x: l.x, y: g.groundAt(l.x, l.z), z: l.z, height: 1.9 };
+    return { x: l.x, y: g.groundAt(l.x, l.z), z: l.z, height: 1.9, who };
   }
   tick(g, dt) {
-    if (this.state === 'done') return;
+    if (this.state === 'done' || this.u?.speaking()) return;
     if (this.state === 'wait') {
       const f = g.focus();
       if (dist(f.x, f.z, this.l.x, this.l.z) >= this.s.r) return;
@@ -154,8 +157,7 @@ export class Overhear {
     const [who, text, cue] = lines[this.i++];
     if (cue) g.cue(cue);
     const secs = lineSecs(g, text);
-    if (this.s.radio) g.radio(who, text);
-    else g.say(this.anchor(g, who), text, secs);
+    this.u = this.s.radio ? g.radio(who, text) : g.say(this.anchor(g, who), text, secs);
     this.t = secs;
   }
 }

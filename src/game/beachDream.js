@@ -166,7 +166,7 @@ export class BeachDream {
   // Majsan of the dream: a Character of her look as it is now, never in the world's lists.
   majsan() {
     const def = this.g.npc('majsan')?.def;
-    if (!this.double) { this.double = new Character(def); scene.add(this.double.root); }
+    if (!this.double) { this.double = new Character(def); this.double.key = 'majsan'; scene.add(this.double.root); }
     else if (this.double.def !== def) this.double.setDef(def);
     return this.double;
   }
