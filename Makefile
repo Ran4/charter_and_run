@@ -5,7 +5,7 @@ URL  := http://$(HOST):$(PORT)/
 FEATURES_PORT ?= 8850
 FEATURES_URL  := http://$(HOST):$(FEATURES_PORT)/
 
-.PHONY: run serve test features voice voice-cast voice-review voice-check voice-hear
+.PHONY: run serve test features voice voice-cast voice-check voice-hear
 .DEFAULT_GOAL := run
 
 # Serve the game and open it in the browser once the server answers. Ctrl-C stops the server.
@@ -60,9 +60,6 @@ voice:
 # (SEARCH=n finds n more Voice Library candidates first).
 voice-cast:
 	node tools/voice/voice.mjs cast $(WHO) $(if $(SEARCH),--search $(SEARCH))
-# The review page: the candidates, the review list, every line by mission and part.
-voice-review:
-	PORT=$(or $(REVIEWPORT),8846) node tools/voice/review.mjs
 # No requests: lines in scope without a clip, the manifest, orphans; exit 1 if anything is missing.
 voice-check:
 	node tools/voice/voice.mjs check

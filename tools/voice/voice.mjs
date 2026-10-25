@@ -18,8 +18,8 @@
 //   node tools/voice/voice.mjs hear [--who a,b]   listen to the clips as the game plays them (free)
 //   node tools/voice/voice.mjs manifest      just rewrite assets/voice/index.json
 //   node tools/voice/voice.mjs cast <who> [--search n]
-//        auditions: each candidate in cast.json says the role's preview text (paid), measured, for the
-//        review page (make voice-review). A voice already auditioned for another role is copied.
+//        auditions: each candidate in cast.json says the role's preview text (paid), measured and
+//        listed (.cache/voice/cast/<who>/). A voice already auditioned for another role is copied.
 //   node tools/voice/voice.mjs choose <who> <voice_id | none>
 //
 // The files: tools/voice/cast.json (the roles: voice, language, settings, candidates, scope),
@@ -311,7 +311,7 @@ export function analyze(jobs) {
   return r.stdout.trim().split('\n').filter(Boolean).map((s) => JSON.parse(s));
 }
 // A take is rejected when the recogniser heard other words (WER over 0.25), or when it is far too
-// slow or fast for the role. Short lines and interjections are never rejected: they go to review.
+// slow or fast for the role. Short lines and interjections are never rejected, only flagged.
 function verdict(l, a, tempo) {
   const cps = l.spoken.replace(/\[[^\]]*\]\s*/g, '').length / Math.max(0.2, a.dur - 0.14);
   const flags = [];
@@ -455,8 +455,6 @@ async function check() {
   if (missing.length) { console.log(`MISSING (${missing.length}):`); for (const l of missing) console.log(`  ${l.who} [${l.part}] ${l.id ? '' : '(no voice) '}"${l.text}"`); }
   if (unlisted.length) console.log(`not in the manifest (run: node tools/voice/voice.mjs manifest): ${unlisted.length}`);
   if (orph.length) console.log(`orphans (PRUNE=1 removes them): ${orph.join(', ')}`);
-  const review = Object.values(readJson(QCF, {})).filter((q) => q.verdict !== 'ok' && lines.some((l) => l.have && l.who === q.who && l.text === q.text && l.take === q.take && (l.alt || 0) === (q.alt || 0)));
-  if (review.length) console.log(`on the review list: ${review.length} (make voice-review)`);
   if (missing.length || unlisted.length) process.exitCode = 1;
   else console.log('voice-check ok');
 }

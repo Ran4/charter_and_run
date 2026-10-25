@@ -328,8 +328,7 @@ The lines are spoken: ElevenLabs clips made ahead of time and checked in (`asset
   more than what may be left on it (a 4-credit "Hei!" passed once with 7 left).
 - **Make targets:** `make voice DRY=1` (what is missing in cast.json's scope and what it costs, no
   request), `make voice` (makes it: WHO=a,b LIMIT=n MAX=chars ALL=1 PART=p PRUNE=1 REPROCESS=1),
-  `make voice-cast WHO=x` (paid auditions), `make voice-review` (the review page, port 8846),
-  `make voice-check` (no requests; exit 1 if a line in scope has no clip), `make voice-hear` (free).
+  `make voice-cast WHO=x` (paid auditions), `make voice-check` (no requests; exit 1 if a line in scope has no clip), `make voice-hear` (free).
   Check `df -h /` before a big run.
 - **A feature that adds or changes a spoken line** (a bubble, the radio, the dialogue box) lists it
   with its speaker in `src/content/scriptFeatures.js` (a generator per table, part

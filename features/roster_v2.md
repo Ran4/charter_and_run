@@ -26,7 +26,7 @@ rollbesättning och inkoppling; verktyget har allt utom poolen · Kostar ElevenL
 ## 1. Det som redan finns
 
 - `tools/voice/voice.mjs` (torrkörning, tak, kontroll med lokal taligenkänning, omtagningar,
-  efterbehandling, manifestet), `review.mjs`, `analyze.py`. Make-målen står i CLAUDE.md ("Voices").
+  efterbehandling, manifestet), `analyze.py`. Make-målen står i CLAUDE.md ("Voices").
 - `src/content/script.js` `allLines()` och `src/content/scriptFeatures.js`: varje tabell med sin
   talare. Pseudotalarna (`@tourist`, `@local`, `@shopClerk`, `@guaguaDriver`, `@foreman`,
   `@bartender`, `@farmer`, `@coupleWoman`, `@coupleMan`, `@partyGuestMan`, `@partyGuestWoman`,

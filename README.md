@@ -1054,10 +1054,10 @@ tools/scenarios/*.mjs           scenarios (core, flight, scenery, island, cast, 
 tools/story/                    the story scripts (common, flight, island)
 tools/fixtures/full-missions.js the literal DESIGN §8 missions, played by `fullstory`
 tools/pool.mjs                  re-derives every random stage's timer from the ledger
-tools/voice/                    the voices (make voice, voice-cast, voice-review, voice-check, voice-hear):
+tools/voice/                    the voices (make voice, voice-cast, voice-check, voice-hear):
                                 voice.mjs (ElevenLabs, the check by local speech recognition in analyze.py,
                                 the processing, the manifest), cast.json (roles, voices, scope), lines.json
-                                (directions: tts, takes, retakes), review.mjs (the review page)
+                                (directions: tts, takes, retakes)
 assets/voice/                   the clips, <who>/<hash>.mp3, and index.json (checked in; .env never)
 DESIGN.md                       design bible and module contracts (the source of truth)
 HANDOFF.md                      the state at `phase3`, known issues, workflow lessons, gotchas

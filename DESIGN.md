@@ -9818,7 +9818,7 @@ only, never a clone of an actor) and checked in. The game never calls an API.
   credits per role, a hard cap per run (`MAX`, default 25 000), every take heard by a local recogniser
   per language (`analyze.py`: KBLab kb-whisper-small, NbAiLab nb-whisper-small, faster-whisper medium
   for Spanish) and retaken up to twice when the words are wrong (WER > 0.25) or the pace far off;
-  short lines and interjections go to the review page (`make voice-review`). `tools/voice/cast.json`:
+  short lines and interjections are only flagged (qc.json's verdict `review`). `tools/voice/cast.json`:
   the roles (`lang`, `voice_id`, candidates), and `scope`: the parts made (`parts` less `not`, for
   speakers with a role). `voice-check` (no requests) exits 1 when a line in scope has no clip. A
   Spanish role's line whose text is Swedish needs its Spanish `tts`: faster-whisper asked for Spanish
@@ -14885,3 +14885,6 @@ the fixer's group.
   `&voice`, so no mission, stage, timer, fixture or calibration pool changed. Scenarios `voice` and
   `vstory` (§16.4). The rest (the passers-by's pool, the barks, the chatter, the mic, the horn, the
   speakers with no role: 541 lines, 12 781 chars) is `features/roster_v2.md`.
+- The review page is gone (2026-10-25, the user's call): `tools/voice/review.mjs`, `make voice-review` and
+  `voice-check`'s count of the review list. The check's verdicts stay in qc.json; a role's voice is
+  changed with `node tools/voice/voice.mjs choose <who> <id>`.

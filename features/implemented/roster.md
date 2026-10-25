@@ -10,8 +10,9 @@ skrivs fram i takt med talet, radion låter som en walkie-talkie och kaptenen so
 hörs från den som pratar, musiken och motorn tonas ner under talet, och munnarna följer klippens kurva.
 Pausmenyn har RÖSTER: PÅ / AV. Koden: `src/voice.js` (kön, platserna och pausen), `src/content/script.js`
 (`allLines()`, klockrepliken i ord) och `scriptFeatures.js`, `audio.voiceChain`, `hud.runDialog`/`_sayLine`,
-`game.say`/`speak`/`radio`, verktyget `tools/voice/` (voice.mjs, analyze.py, review.mjs, cast.json, lines.json,
-qc.json) och make-målen `voice`, `voice-cast`, `voice-review`, `voice-check` och `voice-hear`. CLAUDE.md
+`game.say`/`speak`/`radio`, verktyget `tools/voice/` (voice.mjs, analyze.py, cast.json, lines.json,
+qc.json) och make-målen `voice`, `voice-cast`, `voice-check` och `voice-hear`. Provlyssningssidan
+(`review.mjs`, `make voice-review`) togs bort 2026-10-25 på användarens begäran. CLAUDE.md
 "Voices" har regeln att en ny feature gör sina egna klipp, högst 1 500 tecken.
 
 *Rollerna:*
@@ -41,7 +42,7 @@ Kontots egen räknare visade 29 946. Kvar på kontot: 15 047 (nollställs 2026-1
   541 repliker, 12 781 tecken, ungefär 14 000 credits. Det ligger i `features/roster_v2.md`, under "Vänta med
   dessa".
 - **Josés brytning går inte att mäta.** Språkigenkänningen ger båda kandidaterna 0,99–1,00 svenska, precis som
-  de svenska rösterna. Ingen har lyssnat i högtalare, så lyssna på provlyssningssidan (`make voice-review`)
+  de svenska rösterna. Ingen har lyssnat i högtalare, så lyssna på provläsningarna i `.cache/voice/cast/jose/`
   och byt med `node tools/voice/voice.mjs choose jose <id>` om den låter för svensk.
 - **Nio spanska repliker saknade spanska.** De spanska rollerna hade nio repliker med svensk undertext utan
   spansk `tts`: Guardian tre, grisbonden tre, telefonisten två och souvenirförsäljaren en. De sades först
