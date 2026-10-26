@@ -297,6 +297,21 @@ export const audio = {
   splat() { this.noise(0.22, 0.3, 600, 'lowpass', 0, 1.2); this.sweep(0.3, 0.1, 1400, 400, 'bandpass', 2, 0.03); },
   // The golf cart's horn (§10.40): a short, feeble pip-pip.
   pipHorn() { for (const d of [0, 0.14]) { this.tone(1245, 0.08, 'square', 0.035, 1175, d); this.tone(2490, 0.06, 'sine', 0.01, null, d); } },
+  // The butanero's spanner on a full butano bottle (§10.65): a dull tick and the steel's ring, its upper
+  // partials dying first; `v` 0..1 (his caller's distance).
+  clonk(v = 1) {
+    if (!ctx || v <= 0) return;
+    const t = ctx.currentTime, f = 610 * (1 + 0.02 * (Math.random() - 0.5));
+    this.noise(0.03, 0.22 * v, 2200, 'bandpass', 0, 2);
+    partials(BOTTLE_RING, f, t, 0.75, 0.07 * v, into || sfx);
+  },
+  // A butano bottle off the gas truck bursting where it lands (§10.65): a bang, the gas's hiss.
+  gasPop(v = 1) {
+    if (!ctx || v <= 0) return;
+    this.noise(0.32, 0.42 * v, 900, 'lowpass', 0, 1.2);
+    this.tone(78, 0.28, 'sine', 0.32 * v, 42);
+    this.sweep(0.6, 0.1 * v, 3200, 700, 'bandpass', 1.4, 0.04);
+  },
   horn(on) {
     if (!ctx) return;
     if (on && !hornNodes) {
@@ -1015,6 +1030,8 @@ const BELL = [[0.5, 0.6, 1], [1, 1, 0.7], [1.19, 0.5, 0.55], [1.5, 0.3, 0.45], [
 // A sheep's bell and a glass: [partial, level, decay] of sine partials, dying fast.
 const SHEEP_BELL = [[1, 1, 1], [2.76, 0.55, 0.6], [5.4, 0.3, 0.35], [8.93, 0.15, 0.2]];
 const GLASS = [[1, 1, 1], [1.58, 0.45, 0.7], [2.33, 0.25, 0.4]];
+// A full butano bottle struck with a spanner (§10.65): a steel shell's inharmonic ring, damped by the gas.
+const BOTTLE_RING = [[1, 1, 1], [2.32, 0.5, 0.55], [4.1, 0.3, 0.3], [6.3, 0.14, 0.18]];
 function partials(parts, f, t, d, v, dest) { for (const [m, a, k] of parts) osc('sine', f * m, t, d * k, envGain(t, 0.003, v * a, d * k, dest)); }
 // A conga slap: a sharp band-passed crack over a short high tone.
 function slapVoice(t, v, dest) {

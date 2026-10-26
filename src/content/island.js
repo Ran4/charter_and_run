@@ -2079,6 +2079,7 @@ export const NAMED_CARS = {
   grisbilFollow: 'Grisbilen', utflyktsbuss: 'Utflyktsbussen', guardia1: 'Guardia-jeepen',   // [N]
   golfbil1: 'Golfbilen', golfbil2: 'Golfbilen',   // [N] feature 74 (§10.40)
   traktor: 'Traktorn',                            // [N] feature 121 (§10.54)
+  butanero: 'Gasolbilen',                         // [N] feature 143 (§10.65)
 };
 
 export const LEVEL_OUTFITS_ISLAND = { ole: 'sol', berra: 'sol', robban: 'sol', angerud: 'sol', majsan: 'sol', siv: 'sol', lasse: 'sol' };
@@ -3436,4 +3437,82 @@ export const HELAN = {
   sigh: 'Jag har haft två grisfester i veckan.',                                 // [F*](t) Affe's in the bus (research-plot.md:231), between two rounds
   dropAt: 5.2, fall: 2.6, land: 0.9, pickR: 1.4, rest: 40, pay: 50,
   toast: 'En servett med {n} pta – till en sangria.',                           // [N]
+};
+
+// Butaneron och gasolbilen (free roam; feature 143, DESIGN §10.65; game/butano.js). On the island with no
+// mission running (`missions.state === 'idle'`), no street race and by day (`hours`) one gas truck (`name`:
+// the car type `butanero`, car.js; never traffic) drives a slow lap at `cruise` m/s: from its spot `depot`
+// ([x, z, yaw]) before GASOLINA's BUTANO rack (block (4,3)) out over the forecourt (`exit`: points [x, z], a
+// corner ['q', control x, z, end x, z] curving from the point before), the lanes `nodes` (drivers.js
+// LanePath) round the bungalows of (5,4), and back in from the x 40 road (`entry`) to the depot and `over` m
+// on (the lap's end). It stops at the bungalows `stops` (each matched by its `door` to a bungalowR lot,
+// town.js dogLots; `who`: the resident, a Spanish 'local' or a Swedish 'tourist') with its bed `bed` m behind
+// the gate, and at the depot: braking at `brake` m/s² (never under `creep`) from `approach` m, parked 0.4 m
+// short or after `heldSecs` s held up. Traffic queued behind it waits (never the AI's shove) and honks after
+// `queue.after` s, again every `queue.every` s. At a house the butanero (`man`, ours) is out at the passenger
+// door `outAt` s after it stops and walks at `walk` m/s to the bed's side; there he knocks a bottle with his
+// spanner in bursts of `knock.n` strokes `knock.period` s apart every `knock.every` s, `call` with each burst's
+// first (at most `knock.bursts` bursts with nobody coming). The resident comes out of the door `comeAt` s
+// after the first call (chance `come`, always on the house's first visit this session), walks over with an
+// empty bottle, says `buy[who]`, gets a full one `swapAt` s later and the butanero's `thanks`, and walks home.
+// Driving on a house's street (within `driveCallR` m of it) he calls `call` from the cab every `driveCall` s.
+// At the depot he steps out of the driver's door, fetches a bottle at the rack (`rack`: [x, z, yaw]) in
+// `rackSecs` s and puts it in the bed; the truck sets off on a new lap `depotSecs` s after it stopped.
+// Stig on foot within `offer.r` m of him at a house while he knocks is a customer (once a stop, at most every
+// `offer.every` s): `offer.ask` with a bottle held out, `offer.yesAt` s later Stig's `offer.yes`, he pays
+// `offer.price` (game.pay: Ole pays when short; the toast `offer.toast`), the butanero's `offer.thanks` and
+// Stig's `offer.after`; he carries it in both arms at walk speed (`records.butano` counts them, saved). A car
+// stows it; a fall, a knock or R bursts it (no coins, no SKANDAL) and Stig says `popLine`. E at the truck
+// with the butanero at the wheel is a carjacking (main.enterCar): he tumbles out of it himself and shouts
+// `robbed` in turn every `shoutEvery` s after his truck for `sulkSecs` s; with him out at a house E just takes
+// it. At its wheel every hard knock (a crash of `jolt.crash`, a landing of `jolt.land`, `jolt.two` throws two)
+// throws a bottle off the back of the bed, at most every `jolt.gap` s (`jolt.fly`: m/s kept of the truck's
+// speed, back, to the side, up): it bursts where it lands with sparks and smoke, `pop.coins` coins and
+// `pop.shame` SKANDAL, until the bed is empty; a wreck throws the rest (coins, no SKANDAL). The card `title`
+// · `text` while he drives it. Left `awayR` m behind out of view, or wrecked, it goes, and a new lap starts
+// where nobody sees it (`spawnR` m off at least) once the butanero is gone too. Invented (§1.6): the
+// butanero is in the research's street life (research-setting.md:322) and the bottles are Spain's orange
+// since 1957 (:318); the truck, the lap, the call, the customer and the bursting bottles are ours.
+export const BUTANERO = {
+  name: 'butanero', hours: [8, 20],
+  depot: [66, -6, Math.PI / 2], over: 8, rack: [68.6, -9.3, Math.PI],
+  exit: [[74, -6], [86, -6], ['q', 98, -6, 98, 6], [98, 26], ['q', 98, 42.75, 110, 42.75], [120, 42.75]],
+  nodes: [[5, 4], [6, 4], [6, 5], [5, 5], [5, 4], [5, 3], [4, 3]],
+  entry: [['q', 37.25, -42.75, 37.25, -31.5], [37.25, -16], ['q', 37.25, -6, 47.25, -6], [56, -6]],
+  stops: [
+    { door: [183.2, 59.9], who: 'local' },
+    { door: [182, 81.7], who: 'tourist' },
+    { door: [137.4, 100.2], who: 'tourist' },   // by the BUNGALOWS LOS CACTUS sign (the idea's picture 1)
+  ],
+  bed: 1.4, cruise: 5.5, creep: 1.2, brake: 2.2, approach: 28, heldSecs: 6,
+  queue: { r: 24, lat: 2.2, after: 4, every: 5 },
+  man: { kind: 'adult', name: 'Butaneron', scale: 1.0, wide: 1.06, skin: 0xb07a50, hair: 'short', hairC: 0x1d1426, brows: 0x1d1426, nose: 'big',
+    mustache: 0x1d1426, stache: 'thick', shirt: 0x4a6a9a, longSleeves: true, pants: 0x4a6a9a, shoes: 0x2a2a2a, hat: 'cap', hatC: 0xf07a1e, peakC: 0x2a2a30, voice: 165, local: true },
+  outAt: 0.6, walk: 1.5,
+  knock: { period: 0.62, n: 3, every: 4.4, bursts: 3 },
+  call: '¡Butanooo!',                                                          // [N] the butanero's street cry, the spanner on a bottle
+  driveCall: 9, driveCallR: 70,
+  come: 0.75, comeAt: 1.4, neighbourWalk: 1.3, swapAt: 1.3,
+  buy: {
+    local: '¡Una, por favor!',                                                 // [N] a Spanish resident
+    tourist: 'Eh… una, por favor.',                                            // [N] a Swedish resident, in his best Spanish
+  },
+  thanks: '¡Gracias! ¡Hasta el jueves!',                                       // [N] the butanero
+  rackSecs: 2.2, depotSecs: 12,
+  offer: {
+    r: 2.2, every: 120, yesAt: 1.3, leaveR: 3.6, price: 150,
+    ask: '¿Butano, señor?',                                                    // [N] the butanero, a bottle held out to Stig
+    yes: 'Eh… ja. Tack.',                                                      // [N] Stig, who never ordered one
+    thanks: '¡Gracias, señor!',                                                // [N] the butanero
+    after: 'Vi har ju ingen spis på rummet…',                                  // [N] Stig, the bottle in his arms
+    toast: 'En gasolflaska: {n} pta.',                                         // [N]
+  },
+  popLine: 'Oj då.',                                                           // [N] Stig, his own bottle burst
+  robbed: ['¡Mi camión!', '¡Ladrón! ¡Mi butano!', '¡Las bombonas, señor!'],   // [N] · [N] · [N] the butanero after his truck
+  shoutEvery: 2.8, sulkSecs: 8,
+  jolt: { land: 6, crash: 6.5, two: 13, gap: 0.5, fly: { keep: 0.5, back: 1.4, side: 2.6, up: 5.2 } },
+  pop: { coins: 2, shame: 3, sparks: 14 }, wreckCoins: 1,
+  title: 'Gasolbilen',                                                         // [N]
+  text: 'Flaskor på flaket: {n} av {m}. Kör försiktigt!',                      // [N]
+  awayR: 60, spawnR: 55, seenR: 75, earR: 55,
 };

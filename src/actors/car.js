@@ -1,7 +1,7 @@
 // Cars: cartoon models with open cabins (so you can see who's driving) and an arcade physics
 // model — bicycle steering, lateral grip, handbrake drifts, ramps, rigid-body bumps.
 
-import { THREE, GeoBuilder, toonMesh, MAT, mat, PRIM, textCanvas, toonGradient } from '../gfx.js';
+import { THREE, GeoBuilder, toonMesh, MAT, mat, PRIM, textCanvas, toonGradient, outlineGeometry, outlineMat } from '../gfx.js';
 import { queryBlocks, obbVsBlock, obbVsObb, groundAt, topAt, RAMP } from '../world/collision.js';
 import { clamp, damp, pick } from '../util.js';
 import { fx as FX } from '../game/fx.js';
@@ -20,6 +20,8 @@ import { fx as FX } from '../game/fx.js';
 // For the pedal boat (feature 120, §10.57): boat (it skips the 'bound' walls in collideStatic; the sea
 // that holds it is game/trampbat.js's, and main.js gives it no engine, skid or horn), coast (the drag
 // in m/s² with no pedal down, default 2.2: a boat glides on), horn 'none' (no horn at all).
+// For the gas truck (feature 143, §10.65): butano (a steel rack on the bed with BOTTLE_SLOTS' orange
+// bottles, each one an instance a jolt can throw off: setBottle; BUTANO on both doors).
 // Car fields set by game code: noEnter (never offered to the player), noExplode (damage -> dead +
 // steam, no fire; also from the spec), isPursuer, riders[] (decorative busts), locked. Physics
 // numbers are Bigmouth's except the ones §6.6 lists.
@@ -42,6 +44,8 @@ export const CAR_TYPES = {
   taxi: { name: 'Taxi', ...SEDAN, color: 0xe8dcb8, taxi: true },
   guardia: { name: 'Guardia Civil', len: 4.2, wid: 1.9, bodyH: 1.45, cabinH: 0, wheelR: 0.4, maxSpeed: 30, accel: 12, grip: 9, steer: 0.58, mass: 2000, hp: 160, color: 0x2e5e3e, tall: true, guardia: true },
   grisbil: { name: 'Grisbilen', ...PICKUP, maxSpeed: 34, accel: 14, color: 0xa8442a, pigs: true },
+  // The butanero's gas truck (feature 143, §10.65): a cream flatbed laden with bottles, never in traffic.
+  butanero: { name: 'Gasolbilen', ...PICKUP, maxSpeed: 26, accel: 10, mass: 2300, color: 0xf4efe0, butano: true },
   // The golf carts at the clubhouse (feature 74, §10.40): ×1.2 for the player, about 23 km/h.
   golfbil: { name: 'Golfbil', len: 2.4, wid: 1.3, bodyH: 0.45, cabinH: 1.48, wheelR: 0.25, wheelInset: 0.12, maxSpeed: 5.5, accel: 6, grip: 11, steer: 0.75, mass: 450, hp: 80,
     color: 0xf4f4f0, toy: true, governed: true, horn: 'pip', electric: true, noExplode: true, build: buildGolfbil },
@@ -369,6 +373,43 @@ export function pigMesh(s) {
   return _pigMesh[s].clone();
 }
 
+// The gas truck's dressing (feature 143, §10.65): an orange band along the sides, BUTANO on both doors
+// (no maker's name or mark, §1.5), and a steel rack round the bed that holds the bottles upright: corner
+// posts, two rails a side, one across behind the cab and one over the tailgate.
+const BUTANO_C = 0xf07a1e, RACK = 0x8a8f99;
+function butanoRack(ctx) {
+  const { g, s, L, W, y0, top } = ctx;
+  const z0 = -L / 2 + 0.12, z1 = -L * 0.07 - 0.04, zm = (z0 + z1) / 2;
+  for (const sx of [-1, 1]) {
+    g.box(BUTANO_C, sx * (W / 2 + 0.006), y0 + s.bodyH * 0.18, 0, 0.012, 0.12, L - 0.12);
+    decal(ctx, 'BUTANO', 0.76, 0.2, sx, y0 + s.bodyH * 0.44, 0.12, { fg: '#f07a1e' });
+    for (const z of [z0, z1]) g.box(RACK, sx * (W / 2 - 0.08), top + 0.48, z, 0.06, 0.96, 0.06);
+    for (const y of [0.5, 0.92]) g.box(RACK, sx * (W / 2 - 0.08), top + y, zm, 0.05, 0.05, z1 - z0);
+  }
+  for (const z of [z0, z1]) g.box(RACK, 0, top + 0.92, z, W - 0.16, 0.05, 0.05);
+  g.box(RACK, 0, top + 0.5, z1, W - 0.16, 0.05, 0.05);
+}
+// The bottles on the bed: [x, z] car-local on the bed floor, three across and four deep. Back to front,
+// so a jolt throws the tailgate's row off first (game/butano.js).
+export const BOTTLE_SLOTS = [];
+for (const z of [-2.14, -1.64, -1.14, -0.64]) for (const x of [-0.55, 0, 0.55]) BOTTLE_SLOTS.push([x, z]);
+// An orange butano bottle (the prop's shape, props.js `butano`, at `s`): the foot ring, the body, its
+// dome, the collar, the valve and its cap; the origin on the ground under it.
+export function butanoBottle(g, s = 1, y = 0) {
+  g.cyl(0xc85a10, 0, y + 0.03 * s, 0, 0.19 * s, 0.06 * s, 14);
+  g.cyl(BUTANO_C, 0, y + 0.36 * s, 0, 0.2 * s, 0.6 * s, 14);
+  g.sphere(BUTANO_C, 0, y + 0.66 * s, 0, 0.4 * s, 0.24 * s, 0.4 * s);
+  g.cyl(0xc85a10, 0, y + 0.76 * s, 0, 0.15 * s, 0.05 * s, 10);
+  g.cyl(0x9a9a9a, 0, y + 0.79 * s, 0, 0.05 * s, 0.08 * s, 8);
+  g.cyl(INK, 0, y + 0.84 * s, 0, 0.06 * s, 0.03 * s, 8);
+}
+export const BOTTLE_S = 0.92;
+let _bottleGeo = null;
+export function bottleGeo() {
+  if (!_bottleGeo) { const g = new GeoBuilder(); butanoBottle(g, BOTTLE_S); _bottleGeo = g.build(); }
+  return _bottleGeo;
+}
+
 function taxiSign(ctx) {
   const { g, s, L, W, top } = ctx;
   const [c0, c1] = s.cabin, rz = ((c0 + c1) / 2) * L - 0.05, ry = top + s.cabinH + 0.13;
@@ -643,6 +684,7 @@ function buildCarModel(s, color) {
   else if (s.tall) vanBody(ctx, { cabLen: s.icecream ? 2.2 : 2.1 });
   else carBody(ctx);
   if (s.pigs) pigsIn(ctx);
+  if (s.butano) butanoRack(ctx);
   if (s.taxi) taxiSign(ctx);
   if (s.icecream) icecreamDress(ctx);
   return { geo: g.build(), glass: glass.empty ? null : glass.build(), extras };
@@ -697,6 +739,19 @@ export class Car {
         this.tilt.add(mesh);
         this.pigs.push({ mesh, in: true });
       }
+    }
+    // The gas truck's bottles (§10.65): one instance each of BOTTLE_SLOTS, `bottles[i]` true while
+    // bottle i stands on the bed (setBottle). A burnt wreck hides them with the decals.
+    this.bottles = [];
+    if (spec.butano) {
+      const geo = bottleGeo(), n = BOTTLE_SLOTS.length;
+      const im = new THREE.InstancedMesh(geo, MAT.toon, n), om = new THREE.InstancedMesh(outlineGeometry(geo), outlineMat(0.03), n);
+      om.instanceMatrix = im.instanceMatrix;
+      im.castShadow = true;
+      im.frustumCulled = om.frustumCulled = false;
+      this.rack = { im, om, top: spec.wheelR * 0.95 + spec.bodyH };
+      this.tilt.add(im, om);
+      for (let i = 0; i < n; i++) { this.bottles.push(true); this.setBottle(i, true); }
     }
     // Wheels: two axles of spec.wheelR at ±wz, or the spec's own axles (the tractor); `k` turns a
     // wheel of another radius at its own rate.
@@ -942,6 +997,7 @@ export class Car {
         this.body.material = MAT.burnt;
         for (const e of this.decals) e.visible = false;
         for (const p of this.pigs) p.mesh.visible = false;
+        if (this.rack) this.rack.im.visible = this.rack.om.visible = false;
         FX.explosion(this.x, this.y + 0.5, this.z);
         this.vy = 6; this.air = true;
         this.w += (Math.random() - 0.5) * 3;
@@ -957,6 +1013,25 @@ export class Car {
     this.body.material = MAT.toon;
     for (const e of this.decals) e.visible = true;
     for (const p of this.pigs) p.mesh.visible = p.in;
+    if (this.rack) this.rack.im.visible = this.rack.om.visible = true;
+  }
+
+  // Bottle i of the gas truck's bed on (standing in its slot) or off (thrown off: game/butano.js).
+  setBottle(i, on) {
+    const r = this.rack;
+    if (!r || i < 0 || i >= this.bottles.length) return;
+    this.bottles[i] = on;
+    const [x, z] = BOTTLE_SLOTS[i];
+    r.im.setMatrixAt(i, on ? _bm.makeTranslation(x, r.top, z) : _bm.makeScale(0, 0, 0));
+    r.im.instanceMatrix.needsUpdate = true;
+  }
+  // Where bottle i stands, in world space (from the physics state, like seatWorld).
+  bottleWorld(i, out = { x: 0, y: 0, z: 0 }) {
+    const [lx, lz] = BOTTLE_SLOTS[i], c = Math.cos(this.yaw), sn = Math.sin(this.yaw);
+    out.x = this.x + lx * c + lz * sn;
+    out.y = this.y + this.rack.top;
+    out.z = this.z - lx * sn + lz * c;
+    return out;
   }
 
   // Pig i of the bed on (in it) or off (tumbled off, carried, in the pen: game/pigTruck.js).
@@ -1046,6 +1121,7 @@ export class Car {
 
 const _blocks = [];
 const _hit = {};
+const _bm = new THREE.Matrix4();
 function fx_smoke(x, y, z, dark) { FX.smoke(x, y, z, dark); }
 
 // Pairwise car-car collisions with a rigid-body impulse.

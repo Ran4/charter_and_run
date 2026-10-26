@@ -309,7 +309,12 @@ opens with a summary of the rounds and the timer changes.
     index 12; DESIGN §10.3), `kvarter` (Kvarteren tänds, the slabs' and bungalows' lit windows, a
     television's blue, the lobbies and the advent stars' glow in the one `nightGlow` mesh, drawn while the
     sky is dark (a test sets `day.set(22)`); Flamenco's four room stars and none in 107; the lots' own
-    draws, so the world builds as before; DESIGN §10.64)
+    draws, so the world builds as before; DESIGN §10.64), `butano butanoshots` (Butaneron och gasolbilen,
+    the gas truck's lap by day from GASOLINA's BUTANO rack round the bungalows of (5,4): a house's stop with the
+    spanner, "¡Butanooo!" and the resident's swap, Stig taken for a customer (150 pta, the bottle in his arms
+    at walk speed, burst by R, stowed in a car), the carjacking and the butanero's shouts, the bottles off by a
+    crash, a landing and a wreck, the new lap out of sight, a mission start; `butano.jump(k)` puts the truck
+    before a stop; DESIGN §10.65)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

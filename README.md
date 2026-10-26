@@ -516,6 +516,17 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   sken. På Hotel Flamencos bottenvåning hänger en adventsstjärna i rum 105, 109, 111 och 115, men inte i
   rum 107: Stig-Helmers julklapp var ju julmat och en dalahäst. Ljusen syns också i grisfestens natt och i
   solnedgångarna. Påhittad scenografi i andan "svenskar utomlands".
+- **Butaneron och gasolbilen** (mellan uppdragen, på dagen): en gräddvit flakbil full av orange
+  gasolflaskor och med BUTANO på dörrarna kryper ett varv från BUTANO-stället vid bensinstationen GASOLINA
+  runt bungalowerna sydost om den och tillbaka. Vid tre hus stannar den: butaneron i orange keps kliver ut,
+  slår på en flaska med skiftnyckeln och ropar "¡Butanooo!", och ut kommer grannen med en tom flaska och går
+  hem med en full. Vid stället hämtar han en ny flaska till flaket. Står Stig-Helmer bredvid honom medan han
+  slår tas han för en kund: "¿Butano, señor?" – "Eh… ja. Tack." – och så har han betalat 150 pta för en
+  flaska han aldrig beställt ("Vi har ju ingen spis på rummet…"). Med flaskan i famnen går han (ingen sprint);
+  sätter han sig i en bil blir den kvar där, och ramlar han eller trycker **R** smäller den. Med butaneron
+  vid ratten är **E** en kapning: han ramlar ur och skriker efter sin bil ("¡Mi camión!"). Vid ratten
+  flyger en flaska av flaket vid varje hård smäll och poppar med gnistor, rök, mynt och lite SKANDAL, tills
+  flaket är tomt. Påhittat: filmen har ingen butanero, men han finns i researchens gatuliv.
 - **Små grodorna i poolen** (efter slutet): julfesten är inte riktigt över. Varje gång du kommer in
   på Flamencos pooldäck (mellan nio på morgonen och elva på kvällen) vadar SunTrip-gänget ut i den
   grunda änden och ställer sig i ring runt Lasse i tomteluva. Affe spelar Små grodorna på dragspelet,
@@ -1043,6 +1054,7 @@ src/game/volley.js              Strandvolley in free roam: the court's live ball
 src/game/touristPhoto.js        "Kan du ta ett kort på oss?" in free roam: the tourist couples at the lighthouse, the dunes and LA MEDINA, their camera's viewfinder (the scope, on end), the reading, the snap, the tips
 src/game/guagua.js              Guaguan in free roam: the 13 PARADA GUAGUA stops, the wait, the green guagua that stops at the bench, the seat beside the driver, the film's football talk, the stop chosen with W/S, the fade off there
 src/game/traktor.js             Traktorn med släpkärran in free roam: the farmer's tractor at the tomato fields (a toy: never a mission's), the farmer running after it, the furrows' jolts and the åksjuka, the honking queue, the fetch home
+src/game/butano.js              Butaneron och gasolbilen in free roam by day: the gas truck's lap from GASOLINA's BUTANO rack round the bungalows of (5,4), the butanero's spanner and call, the residents' swap, Stig taken for a customer and his bottle, the carjacking, the bottles that fly off and burst
 src/game/sisters.js             Systrarnas balkong in free roam before the grisfest: Siv and Majsan on the balcony above 105, the ask, the whisky's shops, the basket on the towel, the waves, the parking line
 src/game/crane.js               Åk med byggkranen: the bygge's tower crane carrying its pallet to the 3rd floor and back, its dangle; in free roam the pallet a floor Stig rides, the mantra, the coins and the view up there, the thud of a fall
 src/game/trampbat.js            Hyr en trampbåt in free roam: the beach rental's pedal boat (a toy made for the ride), Ole's double beside Stig, its own water past the bound wall, the Rio exchange and the statistics, the raft's coins, ashore at the water's edge only, Ole pedalling it back, R, the ride's end
@@ -1122,6 +1134,7 @@ node tools/shot.mjs volley volleyfree volleyshots   # beach volleyball: the prom
 node tools/shot.mjs kort kortshots       # the tourist couples: the ask, the viewfinder, on end at the compass rose, the snap and the tip, the dunes and LA MEDINA, a miss, a speck, the locks; every view
 node tools/shot.mjs guagua guaguaKant guaguaLinje  # the guagua: the wait, the stop, the step in and the fare, the football talk, W/S, the fade off; Q, walking off, a car on the stop, held up, the locks, a mission start; every stop
 node tools/shot.mjs traktor traktorshots # the tractor: E, 18 km/h, the farmer's chase and give-up, the rows' jolts and the åksjuka, the honking queue, the fetch home, the mission lock; the shots
+node tools/shot.mjs butano butanoshots   # the gas truck: a house's stop, the call and the swap, Stig as a customer and his bottle (burst, stowed), the carjacking, the bottles off by a crash, a landing and a wreck, the new lap out of sight, a mission start; the shots
 node tools/shot.mjs systrar systrarshots # the sisters' balcony: the ask on 105's patio, the two shops, the broken bottle, the basket, the delivery, the waves, the parking line, a mission start; every scene as seen
 node tools/shot.mjs kran kranshots       # the crane: onto the pallet, the ride and the mantra, the dangle and a hop, the slab's coins and the toast, the thuds and the glide, a pursuit, a mission; the shots
 node tools/shot.mjs trampbat trampbatshots # the pedal boat: the sign's E, Ole pays, 7 km/h and the glide, past the bound wall, the Rio exchange and the statistics, its water, the raft's coins, E ashore, Ole pedalling back, R, a splash, a pursuit, a warp, a mission; the shots

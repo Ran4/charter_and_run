@@ -19,7 +19,7 @@
 // (the barks' speakers); TALK_ISLAND is script.js's own (part 'talk'). Lines written in a module's
 // code (peds.js's dodge shouts, cabin.js's passengers and trolley) stay there.
 
-import { BAGGAGE_BELT, BALKONG, BARKS, BATHERS, BATTUR, BERRA_JOB, BIRDS, BRODROST, BUNGALOW_SOLD, BUTIK,
+import { BAGGAGE_BELT, BALKONG, BARKS, BATHERS, BATTUR, BERRA_JOB, BIRDS, BRODROST, BUNGALOW_SOLD, BUTANERO, BUTIK,
   CHATTER, COLLECTIBLES, DAY, DOGS, ESLOV, FISKE, FRUKTSTAND, FYREN, GAGS, GATLOPP, GLASS, GLIDE, GOLFBIL,
   GRISFEST_FREE, GUAGUA, GUARDIA_JEEP, HELAN, HITTELON, HOMES_ISLAND, HONK, HYTT_TVA, KAFFE, KIKARE, KORT,
   KRANEN, LAPPLISA, LIFTA, LOCAL_CAST, LOPANDE_BAND, MARKNADSTAK, MIKROFON, NAMED_CARS, PIG_TRUCK,
@@ -53,7 +53,7 @@ export function* featureLines() {
     takhopp, fyren, ringklocka, mikrofon, birds, strandkyssen, stunthopp, honk, day, storchFilm, eslov,
     skidor, gatlopp, poolFest, baggageBelt, fruktstand, marknadstak, bathers, balkong, dogs, golfbil,
     hyttTva, butik, gags, battur, kaffe, fiske, lifta, kikare, lopandeBand, volley, kort, guagua,
-    utflykt, traktorn, systrarna, kranen, trampbat, terraza, ljud, glass, torg, helan, closet, kyrkfrid,
+    utflykt, traktorn, butanero, systrarna, kranen, trampbat, terraza, ljud, glass, torg, helan, closet, kyrkfrid,
     paintshop]) yield* gen();
 }
 
@@ -597,6 +597,18 @@ function* traktorn() {
   yield ['@farmer', t.back, part];
   yield ['stig', t.backStig, part];
   for (const s of [...t.sick, ...t.honked]) yield ['stig', s, part];
+}
+
+// Butaneron och gasolbilen (§10.65, butano.js): bubbles. The butanero is a Character of BUTANERO.man
+// (ours, no key: '@butanero', a voice of the passers-by's pool, features/roster_v2.md), his call from the
+// cab a bubble at the wheel; a house's resident a passer-by ('@local', '@tourist'); Stig over himself.
+// The toast and the card are shown only.
+function* butanero() {
+  const t = BUTANERO, part = 'feature:butanero';
+  for (const s of [t.call, t.thanks, t.offer.ask, t.offer.thanks, ...t.robbed]) yield ['@butanero', s, part];
+  yield ['@local', t.buy.local, part];
+  yield ['@tourist', t.buy.tourist, part];
+  for (const s of [t.offer.yes, t.offer.after, t.popLine]) yield ['stig', s, part];
 }
 
 // Systrarnas balkong (§10.55, sisters.js): `ask` and `deliver` in the dialogue box; the shops' lines,

@@ -728,6 +728,23 @@ const PROP_GEO = {
     for (const sx of [-1, 1]) g.box(0x3a2a1e, sx * 0.13, 0.25, -0.03, 0.022, 0.44, 0.012, 0, 0.08, sx * 0.2);
   },
   glasstrut: iceCone,   // the HELADOS kiosk's ice cream (anim.glass, game/glass.js); its scoops: glassScoops
+  // Butaneron (anim.butano, game/butano.js, §10.65): a butano bottle at 0.7 of the street's (props.js
+  // `butano`), the origin in its middle, where both hands hold it; and the butanero's spanner, its grip at
+  // the origin and the jaw 0.27 down -y, so it hangs on along the forearm.
+  gasflaska(g) {
+    const s = 0.7, y = -0.42 * s;
+    g.cyl(0xc85a10, 0, y + 0.03 * s, 0, 0.19 * s, 0.06 * s, 14);
+    g.cyl(0xf07a1e, 0, y + 0.36 * s, 0, 0.2 * s, 0.6 * s, 14);
+    g.sphere(0xf07a1e, 0, y + 0.66 * s, 0, 0.4 * s, 0.24 * s, 0.4 * s);
+    g.cyl(0xc85a10, 0, y + 0.76 * s, 0, 0.15 * s, 0.05 * s, 10);
+    g.cyl(0x9a9a9a, 0, y + 0.79 * s, 0, 0.05 * s, 0.08 * s, 8);
+    g.cyl(0x1d1426, 0, y + 0.84 * s, 0, 0.06 * s, 0.03 * s, 8);
+  },
+  llave(g) {
+    g.box(0x8a8f99, 0, -0.12, 0, 0.035, 0.26, 0.022);
+    g.box(0x8a8f99, 0, -0.27, 0, 0.095, 0.05, 0.026);
+    g.box(0x3a3f44, 0, -0.29, 0, 0.032, 0.035, 0.028);
+  },
 };
 // Glass till Majsan (game/glass.js, §10.61): a wafer cone, its point down, a darker rim round its top
 // (GLASS_TOP); the origin where a hand holds it. The scoops are glassScoops' own meshes, so they can melt.
@@ -1158,7 +1175,7 @@ function heldPose(m, st, t, place = false) {
   const h = m.def.held;
   if (!h || !PROP_GEO[h]) return;
   const [R, L] = m.arms;
-  const busy = st.wings || st.cupUp || st.cupHeld || st.push || st.rub || st.hold || st.flail || st.oath || st.dance || st.laugh || st.mirror || st.film || st.camShow || st.giraffe || st.butterKnife || st.ticket || st.carryOver || st.shoeOff || st.calc || st.groda || st.placate || st.tap || st.scratch || st.point || st.cheer || st.wave || st.fish || st.thumb || st.ride || st.kikare || st.sort || st.volley || st.foto || st.whisky || st.glass || st.kick > 0;
+  const busy = st.wings || st.cupUp || st.cupHeld || st.push || st.rub || st.hold || st.flail || st.oath || st.dance || st.laugh || st.mirror || st.film || st.camShow || st.giraffe || st.butterKnife || st.ticket || st.carryOver || st.shoeOff || st.calc || st.groda || st.placate || st.tap || st.scratch || st.point || st.cheer || st.wave || st.fish || st.thumb || st.ride || st.kikare || st.sort || st.volley || st.foto || st.whisky || st.glass || st.butano || st.kick > 0;
   const pose = !place && !busy;
   const moving = st.speed > 0.3;
   switch (h) {
@@ -1610,6 +1627,24 @@ function poseFlags(m, st, t) {
     const p = prop(m, 'glasstrut');
     inHand(m, p, eat ? 0 : 1, 0, 0.035, 0);
     glassScoops(p, st.glassK ?? 1);
+  }
+  if (st.butano) {
+    // Butaneron (game/butano.js, §10.65): 'carry', a butano bottle hugged before the belly in both arms,
+    // leaning back a little under its weight (a neighbour, Stig with his); 'out', held out before him (the
+    // butanero to a customer); 'knock', the butanero's spanner on a bottle in the bed: `butanoK` (0..1)
+    // runs a stroke, the arm up by 0.35, held, and down onto the bottle at 1 (the clonk).
+    if (st.butano === 'knock') {
+      const k = Math.max(0, Math.min(1, st.butanoK ?? 0.5));
+      const a = k < 0.35 ? -0.95 - 0.95 * (k / 0.35) : k < 0.85 ? -1.9 : -1.9 + 0.95 * ((k - 0.85) / 0.15);
+      R.rotation.set(a, 0, 0.12);
+      inHand(m, prop(m, 'llave'), 0, 0, 0, 0, a, 0, 0);
+    } else {
+      const out = st.butano === 'out';
+      R.rotation.set(out ? -1.22 : -0.66, 0, out ? 0.3 : 0.44);
+      L.rotation.set(out ? -1.22 : -0.66, 0, out ? -0.3 : -0.44);
+      if (!out && !st.seated) m.body.rotation.x -= 0.06;
+      between(m, prop(m, 'gasflaska'), 0, 0.03, out ? 0.04 : 0.1);
+    }
   }
 }
 

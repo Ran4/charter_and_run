@@ -80,6 +80,7 @@ import { Glass } from './game/glass.js';
 import { Torgliv } from './game/torgliv.js';
 import { HelanGar } from './game/helanGar.js';
 import { Crane } from './game/crane.js';
+import { Butanero } from './game/butano.js';
 import { MissionRunner, MISSIONS } from './game/missions/index.js';
 import { Bang, Beacon, GuideArrow } from './game/markers.js';
 import { LEVELS, ISLAND_PALETTES } from './level.js';
@@ -279,6 +280,7 @@ class Game {
     this.glass = new Glass(this);         // free roam: an ice cream from the beach's HELADOS kiosk for Majsan, melting on the way (§10.61)
     this.torg = new Torgliv(this);        // free roam: the centre's people, the market's siesta, the plaza's paseo, the bells (§10.62)
     this.helan = new HelanGar(this);      // free roam: Helan går from a balcony party every evening, found by ear (§10.63)
+    this.butano = new Butanero(this);     // free roam by day: the butanero's gas truck round the bungalows, his call, the bottles (§10.65)
     this.cam = new CamRig(camera);
     this.load();
     this.cabin.onPhase(() => { if (this.level === 'flight') hud.setMapSource(this.cabin.mapSource(this.cabin.phase)); });
@@ -737,10 +739,11 @@ class Game {
     this.skis.giveBack('car');   // the borrowed rollerskis go back to the skier (§10.39)
     this.jeep.onEnter(car);   // the Guardia jeep at the barracks: the loan, SKANDAL (§10.34)
     if (car.driverBust) {
-      // Carjacking: the driver tumbles out and is not happy about it.
+      // Carjacking: the driver tumbles out and is not happy about it. The gas truck's is the butanero
+      // himself (§10.65).
       car.tilt.remove(car.driverBust);
       car.driverBust = null;
-      const ped = this.peds.reduce((best, p) => (!best || dist(p.char.x, p.char.z, this.player.x, this.player.z) > dist(best.char.x, best.char.z, this.player.x, this.player.z) ? p : best), null);
+      const ped = this.butano.carjack(car) ? null : this.peds.reduce((best, p) => (!best || dist(p.char.x, p.char.z, this.player.x, this.player.z) > dist(best.char.x, best.char.z, this.player.x, this.player.z) ? p : best), null);
       if (ped && ped.char.state !== 'seated') {
         const e = this.exitSpot(car, 1);
         ped.char.teleport(e.x, e.z);
@@ -879,6 +882,7 @@ class Game {
     out.push(...this.kort.extras);    // the tourist couple who want their picture taken (§10.51)
     out.push(...this.traktor.extras); // the farmer out of his hut after his tractor (§10.54)
     out.push(...this.torg.extras);    // the centre's vendors, sitters and paseo walkers (§10.62; the seated skipped by state)
+    out.push(...this.butano.extras);  // the butanero and a resident out at his truck (§10.65)
     return out;
   }
 
@@ -1086,6 +1090,7 @@ class Game {
         else if (!other.isTarget && !other.locked) this.shame.add(Math.min(9, impact * 0.55));
       }
       this.pigs.jolt(pc, 'crash', impact);   // the grisbil's pigs tumble off in free roam (§10.15)
+      this.butano.jolt(pc, 'crash', impact); // the gas truck's bottles fly off and burst (§10.65)
       this.stunts.onImpact();                // a jump in the air or just landed: UNDERKÄND (§10.27)
     }
     this.hitch.onImpact(a, b, impact);       // a knock to the hitch truck shakes Stig in its bed (§10.47)
@@ -1096,6 +1101,7 @@ class Game {
     if (car === this.playerCar) { audio.thud(); this.cam.shake = Math.min(1, this.cam.shake + impact * 0.03); }
     fx.dust(car.x, car.z, 6);
     this.pigs.jolt(car, 'land', impact);
+    this.butano.jolt(car, 'land', impact);
     this.hitch.onImpact(car, null, impact);
   }
   onCarDestroyed(car) {
@@ -1116,6 +1122,7 @@ class Game {
       car.ai = null;
     }
     car.deadT = 0;
+    this.butano.onDestroyed(car);   // the gas truck's last bottles go up (§10.65)
   }
   onCharHit(ch, car, speed) {
     const byPlayer = car === this.playerCar;
@@ -1540,10 +1547,10 @@ class Game {
     if (top) return { type: 'it', it: top };
     // Not with Berra on his shoulders (§10.6): the carry would follow him into the mission. A lost
     // suitcase on his head (§10.52) goes back to its spot at the mission's start instead, and the
-    // sisters' whisky (§10.55) and the ice cream (§10.61) are gone; the ice cream is Majsan's, so not
-    // her talk while he has it or hands it to her.
+    // sisters' whisky (§10.55), the ice cream (§10.61) and the butano bottle (§10.65) are gone; the ice
+    // cream is Majsan's, so not her talk while he has it or hands it to her.
     const glass = this.carrying?.glass && ms.current?.giver !== 'majsan';
-    if (ms.state === 'idle' && ms.current && ms.current.level === this.level && (!this.carrying || this.carrying.bag || this.carrying.whisky || glass) && !this.glass?.scene) {
+    if (ms.state === 'idle' && ms.current && ms.current.level === this.level && (!this.carrying || this.carrying.bag || this.carrying.whisky || this.carrying.butano || glass) && !this.glass?.scene) {
       const g = this.npcs[ms.current.giver];
       if (g && g.state !== 'hidden' && dist(g.x, g.z, p.x, p.z) < 3.4 && Math.abs(g.y - p.y) < 2) return { type: 'talk', who: g };
     }
@@ -1729,6 +1736,7 @@ class Game {
     this.glass.update(dt);
     this.torg.update(dt);
     this.helan.update(dt);
+    this.butano.update(dt);
     if (this.level === 'flight') this.cabin.tick(dt * this.timeScale, this.time, this);
     this.bumpedT = Math.max(0, this.bumpedT - dt);
     this.frozenT = Math.max(0, this.frozenT - dt);
@@ -1957,6 +1965,7 @@ class Game {
     this.kort.step(h);    // the tourist couple (§10.51)
     this.traktor.step(h); // the farmer running after his tractor (§10.54)
     this.torg.step(h);    // the centre's vendors, sitters and paseo (§10.62)
+    this.butano.step(h);  // the butanero and a resident at his truck (§10.65)
     this.carsVsPeople();
   }
 
@@ -1970,7 +1979,7 @@ class Game {
     // tourists at the SunTrip stage (§10.30), the queue at Flamenco's reception (§10.37), the foreman
     // on the packing shed's yard (§10.49), the tourist couple (§10.51) and the centre's people standing or
     // walking (§10.62; its sitters are knocked off their seats by `torg.kick` below).
-    const people = (this.levelDef.sim.peds ? this.peds.map((ped) => ped.char) : []).concat(this.party.extras, this.bathers.loose, this.mic.extras, this.bell.extras, this.packhus.extras, this.kort.extras, this.torg.extras);
+    const people = (this.levelDef.sim.peds ? this.peds.map((ped) => ped.char) : []).concat(this.party.extras, this.bathers.loose, this.mic.extras, this.bell.extras, this.packhus.extras, this.kort.extras, this.torg.extras, this.butano.extras);
     for (const c of people) {
       if (c.state !== 'normal' || Math.abs(c.y - y) > 1.6 || dist(c.x, c.z, x, z) > r + 0.4) continue;
       c.fling(dx * 7 + (c.x - x) * 2, 5, dz * 7 + (c.z - z) * 2);
@@ -2305,7 +2314,7 @@ class Game {
     // the sisters' whisky errand's (§10.55) or the ice cream for Majsan's (§10.61), if any.
     hud.setObjective(this.missions.objective() || this.solkram.objective() || this.shame.paint.objective() || this.shame.church.objective() || this.berraJob.objective() || this.eslov.objective() || this.skis.objective()
       || this.pigs.objective() || this.toasters.objective() || this.gatlopp.objective() || this.hitch.objective() || this.packhus.objective() || this.bags.objective() || this.guagua.objective()
-      || this.utflykt.objective() || this.sisters.objective() || this.glass.objective());
+      || this.utflykt.objective() || this.sisters.objective() || this.glass.objective() || this.butano.objective());
     hud.setSpeedo(this.playerCar);
     if (this.missions.state !== 'failed') {
       let prompt = '';

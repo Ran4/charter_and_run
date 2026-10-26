@@ -25,6 +25,8 @@
 // 'low' before the chest (game/sisters.js).
 // `glass`: the HELADOS kiosk's ice cream, `glassK` (1..0) of it left: true in the left hand before his
 // chest, 'out' held out before him, 'eat' in the right hand, up to the mouth now and then (game/glass.js).
+// `butano`: a butano bottle, 'carry' hugged before the belly, 'out' held out before him; 'knock', the
+// butanero's spanner on a bottle in his truck's bed, `butanoK` the stroke's 0..1 (game/butano.js).
 // `perchAt(x, y, z, yaw)`: standing ('normal') where no solid holds him (the sisters on the balcony
 // above room 105, game/sisters.js): no physics, no fling, until a teleport puts him back on the ground.
 
@@ -33,7 +35,7 @@ import { queryBlocks, circleVsBlock, groundAt, groundInfo, topAt, RAMP } from '.
 import { dampAngle, yawTo } from '../util.js';
 
 export const STEP = 0.45;
-export const ANIM_FLAGS = ['wings', 'cupUp', 'cupHeld', 'push', 'planeSeat', 'hold', 'flail', 'oath', 'dance', 'laugh', 'slump', 'shoeOff', 'mirror', 'film', 'camShow', 'giraffe', 'butterKnife', 'carryOver', 'glide', 'swan', 'calc', 'ski', 'groda', 'ticket', 'leap', 'bomb', 'placate', 'rub', 'eyesShut', 'tap', 'scratch', 'point', 'fish', 'thumb', 'ride', 'kikare', 'sort', 'volley', 'foto', 'whisky', 'glass'];
+export const ANIM_FLAGS = ['wings', 'cupUp', 'cupHeld', 'push', 'planeSeat', 'hold', 'flail', 'oath', 'dance', 'laugh', 'slump', 'shoeOff', 'mirror', 'film', 'camShow', 'giraffe', 'butterKnife', 'carryOver', 'glide', 'swan', 'calc', 'ski', 'groda', 'ticket', 'leap', 'bomb', 'placate', 'rub', 'eyesShut', 'tap', 'scratch', 'point', 'fish', 'thumb', 'ride', 'kikare', 'sort', 'volley', 'foto', 'whisky', 'glass', 'butano'];
 export const GRAV = 24;
 const _blocks = [], _hit = {};
 

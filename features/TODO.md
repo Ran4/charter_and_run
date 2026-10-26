@@ -1,13 +1,13 @@
 # Gör dessa grejer (flytta filen till features/implemented/ och uppdatera den när du är klar, och
 # flytta den överst till "färdiga features"-sektionen nedan)
 # markörer: ⟨par N⟩ = de två raderna med samma N körs samtidigt (var sin worktree/gren, sedan rebase på main och push), ⟨solo⟩ = körs ensam; ta grupperna uppifrån och ned
-- features/butaneron.md – 143. Butaneron och gasolbilen [M] ⟨solo⟩
 
 # Vänta med dessa tills spelaren säger till
 # markörer som ovan: ⟨par N⟩ = de två raderna med samma N körs samtidigt, ⟨solo⟩ = körs ensam; här från par 6 och uppåt så att taggarna är unika när rader köas en och en
 - features/roster_v2.md – Röster, version 2 – statisterna, ropen och resten av replikerna (poolen med tio röster; ~14 000 ElevenLabs-credits) [M] ⟨solo⟩
 
 # Färdiga features (lägg till [färdig: yyyy-mm-dd hh:mm] i slutet)
+- features/implemented/butaneron.md – 143. Butaneron och gasolbilen [M] ⟨solo⟩ [färdig: 2026-10-26 22:00]
 - features/implemented/kvarteren_tands.md – 140. Kvarteren tänds – adventsstjärnor och tända fönster [S] [färdig: 2026-10-26 20:21]
 - features/implemented/bungalowen_ar_sald.md – 138. Bungalowen är såld [S] ⟨par 19⟩ [färdig: 2026-10-26 20:14]
 - features/implemented/roster.md – Röster – ett fullt röstsatt spel (ElevenLabs, som Saab- och Seinfeld-spelen; version 1, resten i roster_v2.md) [L] [färdig: 2026-10-24 11:53]
