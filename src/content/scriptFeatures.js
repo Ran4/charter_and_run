@@ -19,8 +19,8 @@
 // (the barks' speakers); TALK_ISLAND is script.js's own (part 'talk'). Lines written in a module's
 // code (peds.js's dodge shouts, cabin.js's passengers and trolley) stay there.
 
-import { BAGGAGE_BELT, BALKONG, BARKS, BATHERS, BATTUR, BERRA_JOB, BIRDS, BRODROST, BUTIK, CHATTER,
-  COLLECTIBLES, DAY, DOGS, ESLOV, FISKE, FRUKTSTAND, FYREN, GAGS, GATLOPP, GLASS, GLIDE, GOLFBIL,
+import { BAGGAGE_BELT, BALKONG, BARKS, BATHERS, BATTUR, BERRA_JOB, BIRDS, BRODROST, BUNGALOW_SOLD, BUTIK,
+  CHATTER, COLLECTIBLES, DAY, DOGS, ESLOV, FISKE, FRUKTSTAND, FYREN, GAGS, GATLOPP, GLASS, GLIDE, GOLFBIL,
   GRISFEST_FREE, GUAGUA, GUARDIA_JEEP, HELAN, HITTELON, HOMES_ISLAND, HONK, HYTT_TVA, KAFFE, KIKARE, KORT,
   KRANEN, LAPPLISA, LIFTA, LOCAL_CAST, LOPANDE_BAND, MARKNADSTAK, MIKROFON, NAMED_CARS, PIG_TRUCK,
   POOL_FEST, POOL_JUDGES, RINGKLOCKA, RUM107, SKIDOR, SOLKRAM, STAFF_CAST, STIG_SORRY, STORCH_FILM,
@@ -48,13 +48,20 @@ function forms(text, vars) {
 }
 
 export function* featureLines() {
-  for (const gen of [chatter, chatterFlight, barks, stigSorry, pigTruck, lapplisa, guardiaJeep,
+  for (const gen of [bungalowSold, chatter, chatterFlight, barks, stigSorry, pigTruck, lapplisa, guardiaJeep,
     collectibles, hittelon, brodrost, rum107, solkram, glide, berraJob, grisfestFree, poolJudges, tower,
     takhopp, fyren, ringklocka, mikrofon, birds, strandkyssen, stunthopp, honk, day, storchFilm, eslov,
     skidor, gatlopp, poolFest, baggageBelt, fruktstand, marknadstak, bathers, balkong, dogs, golfbil,
     hyttTva, butik, gags, battur, kaffe, fiske, lifta, kikare, lopandeBand, volley, kort, guagua,
     utflykt, traktorn, systrarna, kranen, trampbat, terraza, ljud, glass, torg, helan, closet, kyrkfrid,
     paintshop]) yield* gen();
+}
+
+// Bungalowen är såld (§10.3, feature 138): the seller's lines after the end are the `bodega` unlock's
+// chatter (bubbles), listed first so that they keep the feature's part (and its clips: the chatter waits
+// for version 2).
+function* bungalowSold() {
+  for (const t of BUNGALOW_SOLD.saljare) yield ['saljare', t, 'feature:bungalow_sold'];
 }
 
 // Chatter (main.js, bubbles): an idle NPC near Stig says one of his lines; on the island an unlock's

@@ -11542,5 +11542,19 @@
   ],
   "verdict": "retake",
   "dur": 3.303
+ },
+ "c561f45ac7f6": {
+  "who": "saljare",
+  "text": "Tjena moss… Jag var tvungen att sälja tomten i morse. De skrev på.",
+  "take": 0,
+  "alt": 0,
+  "lang": "sv",
+  "heard": "Tjena moss! Jag var tvungen att sälja tomten i morse. De skrev på.",
+  "wer": 0,
+  "f0": 151.1,
+  "cps": 13,
+  "flags": [],
+  "verdict": "ok",
+  "dur": 5.236
  }
 }

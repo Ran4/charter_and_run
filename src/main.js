@@ -1435,7 +1435,7 @@ class Game {
         this.spawnParked(pc);
       }
     }
-    if (u.hook) worldHooks[u.hook]?.(true);
+    for (const h of [].concat(u.hook ?? [])) worldHooks[h]?.(true);   // a hook's name or a list of them
     if (u.home) Object.assign(this.homeOverrides, u.home);
     if (u.outfit) Object.assign(this.outfitOverrides, u.outfit);   // worn from the next forced placement (placeNpcs(true))
     if (u.chatter) Object.assign(this.chatterOverrides, u.chatter);

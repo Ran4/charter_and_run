@@ -303,7 +303,10 @@ opens with a summary of the rounds and the timer changes.
     black); the song in the soundscape's layer `fest` on its own 104 bpm clock, near / d from 14 m, out at
     150 m, from its side, muffled with distance, the tune ducked only near it; the exchange under it and the
     napkin of 50 pta once an evening, the sung line, "Skål!" and Affe's sigh; the minimap's dot with the
-    music off; `helanklipp` records WAVs in OUT; DESIGN §10.63)
+    music off; `helanklipp` records WAVs in OUT; DESIGN §10.63), `sald` (Bungalowen är såld, after the
+    end: the red band VENDIDO · SÅLD across both faces of the SE VENDE board at Angerud's show bungalow, the
+    seller's three new lines by his table instead of his show lines, a reload from the save, nothing at
+    index 12; DESIGN §10.3)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

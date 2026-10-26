@@ -9,7 +9,9 @@
 //   fataga   (0,0)              the mountain village: white houses, tile roofs, lanes, church with
 //                               a bell gable, the well (pryl_kniv), embroidered tablecloths, sheepfold
 //   golf     (4,0)              fairway, bunkers, pond (fena_golf), green 18, clubhouse
-//   bungalow (5,0)              Angerud's show bungalow on red rock: plot wall, pool (fena_bungalow)
+//   bungalow (5,0)              Angerud's show bungalow on red rock: plot wall, pool (fena_bungalow),
+//                               the SE VENDE board and its VENDIDO · SÅLD band after the end
+//                               (worldHooks.bungalowSold)
 //   bygge    (5,1)              half-built hotel frame, ramps up to the 2nd-floor slab (pryl_klocka),
 //                               tower crane (its moving parts `CRANE`, game/crane.js: the pallet up to
 //                               the 3rd floor), hoarding PRÓXIMAMENTE · HOTEL NUEVA ESTOCOLMO II
@@ -22,6 +24,7 @@
 import { THREE, GeoBuilder, MAT, PRIM, mat, makeWedge, toonMesh } from '../../gfx.js';
 import { CURB } from '../layout.js';
 import { box, circle, ramp } from '../collision.js';
+import { worldHooks } from '../registry.js';
 
 const PI = Math.PI;
 
@@ -905,6 +908,18 @@ function bungalowTomt(f, W, ctx) {
   f.cyl(0xf4f4f0, -6, CURB + 1.3, 16, 0.04, 2.6, 5);
   f.cone(BUTANO, -6, CURB + 2.6, 16, 1.4, 0.5, 10);
   postSign(f, 'SE VENDE · BUNGALOW\n4 RUM OCH KÖK', 18, 19, 7, 2.2, 1.5, 0, { bg: '#f7c31b', fg: '#1d1426', scale: 0.62 });   // [F*] the bungalow seller's line, relocated to the sign
+  // Bungalowen är såld (feature 138): after the end a red band lies across the board on both faces,
+  // rising to the right as seen from either side (the back's own roll is twice the band's, as its half
+  // turn mirrors the parent's), just off the board's planes (front 19.07, back 18.93); no collider.
+  // worldHooks.bungalowSold(on) shows it (the `bodega` unlock's second hook).
+  const SOLD_ROLL = 0.22;
+  const sold = f.sign('VENDIDO · SÅLD', 18, 1.5 + 1.1, 19.1, 6.6, 0.64, 0, { bg: '#d8321e', fg: '#fff8e6', border: '#fff8e6', scale: 0.86, double: true });   // [N]
+  sold.rotation.z = SOLD_ROLL;
+  sold.name = 'bungalowSold';
+  const soldBack = sold.getObjectByName('signBack');
+  if (soldBack) { soldBack.position.z = -0.2; soldBack.rotation.z = 2 * SOLD_ROLL; }
+  sold.visible = false;
+  worldHooks.bungalowSold = (on) => { sold.visible = !!on; };
   // Other plots for sale: survey stakes with red tape, a small sign.
   const stake = (x, z) => { f.box(0xf4f4f0, x, CURB, z, 0.1, 0.9, 0.1); f.box(RED, x, CURB + 0.7, z, 0.12, 0.2, 0.12); };
   const tape = (ax, az, bx, bz) => {

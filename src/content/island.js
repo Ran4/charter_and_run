@@ -787,6 +787,18 @@ export const SOLKRAM = {
   record: 'REKORD {n} P', newRecord: 'NYTT REKORD!',                              // [N] · [N] (as the diving judges')
 };
 
+// Bungalowen är såld (feature 138, §10.3): after the end the red band VENDIDO · SÅLD lies across
+// the SE VENDE board at Angerud's show bungalow (nature.js, worldHooks.bungalowSold: the `bodega`
+// unlock's second hook), and the seller at his table by the gate has given up his show lines for
+// these (the unlock's `chatter`): julafton's room-113 line at the plot itself (research-plot.md:374),
+// opened with his greeting from the subtitles (research-characters.md:495); the showing's down
+// payment (research-plot.md:291) as his next try at the plot next door (never why this one went);
+// and that plot, on paper. Nothing about Angerud's hospital (§1.2).
+export const BUNGALOW_SOLD = {
+  saljare: ['Tjena moss… Jag var tvungen att sälja tomten i morse. De skrev på.' /* [F*] */,
+    '50 000 är kontantinsatsen.' /* [F*] */, 'Tomten bredvid är kvar. Fyra rum och kök – på ritningen.' /* [N] */],
+};
+
 export const UNLOCKS = {
   // The bodega's unlock also leaves the west Guardia jeep at the Casa Cuartel open between missions,
   // with a toast of its own (GUARDIA_JEEP, game/guardiaJeep.js, §10.34).
@@ -802,7 +814,9 @@ export const UNLOCKS = {
   // Små grodorna (§10.13): the Christmas party is not quite over. Lasse keeps his Santa outfit
   // (`outfit`, merged over the island's set), and he, Affe, Gabbe and Fru Storch stay on Flamenco's
   // pool deck by the plastic tree (Herr Storch films on the beach, §10.11).
-  bodega: { hook: 'bodegaLit', label: ['Pepes Bodega', 'bodega'],
+  // Bungalowen är såld (feature 138): the band on the bungalow's board (`hook` is a list) and the
+  // seller's lines (BUNGALOW_SOLD).
+  bodega: { hook: ['bodegaLit', 'bungalowSold'], label: ['Pepes Bodega', 'bodega'],
     home: { berra: ['bodega', -1.5, 0.5], robban: ['bodega', 1.5, 0.5], angerud: null,
       lasse: ['flamencoPool', -3.4, 2.8], fruStorch: ['flamencoPool', 0.6, 2.6], affe: ['flamencoPool', 4.6, 2.4], gabbe: ['flamencoPool', 6.0, 1.2] },
     outfit: { lasse: 'jul' },
@@ -810,7 +824,8 @@ export const UNLOCKS = {
       herrStorch: ['Lite film.' /* [F*](t) */, 'Locket är av nu, ska du veta.' /* [N] */],
       // Prata med gänget (§10.28): two lines the end made stale, the grisfest's bus and the lost bag.
       gabbe: ['Natturen går klockan nio!' /* [N] */, 'God fortsättning! Natturen går som vanligt.' /* [N] */],
-      hittegods: ['Inga fler väskor, señor? ¡Feliz Navidad!' /* [N] */] },
+      hittegods: ['Inga fler väskor, señor? ¡Feliz Navidad!' /* [N] */],
+      saljare: BUNGALOW_SOLD.saljare },
     witness: { text: 'Linsskyddet är av – nu finns det bevis!', evidence: true },   // [N] the offence counts
     toast: 'Pepes Bodega har öppnat – på baksidan av hotellet.' },                   // [N]
   // Jag kan flyga (§10.7): the glide comes with `bodega` (julafton); this unlock only carries its
