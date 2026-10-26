@@ -306,7 +306,10 @@ opens with a summary of the rounds and the timer changes.
     music off; `helanklipp` records WAVs in OUT; DESIGN §10.63), `sald` (Bungalowen är såld, after the
     end: the red band VENDIDO · SÅLD across both faces of the SE VENDE board at Angerud's show bungalow, the
     seller's three new lines by his table instead of his show lines, a reload from the save, nothing at
-    index 12; DESIGN §10.3)
+    index 12; DESIGN §10.3), `kvarter` (Kvarteren tänds, the slabs' and bungalows' lit windows, a
+    television's blue, the lobbies and the advent stars' glow in the one `nightGlow` mesh, drawn while the
+    sky is dark (a test sets `day.set(22)`); Flamenco's four room stars and none in 107; the lots' own
+    draws, so the world builds as before; DESIGN §10.64)
   - `fullstory kinds` (the literal DESIGN §8 missions in `tools/fixtures/full-missions.js`, and
     stage-kind checks; keep the fixture in step with §8)
   - `calibrate calibflight` (slow timer and FLYGRÄDSLA calibration; env vars in DESIGN §16.4)

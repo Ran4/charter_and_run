@@ -430,6 +430,7 @@ function flamencoRooms(f, rnd, glow) {
       const cc = pick(CURTAINS, rnd);
       f.box(cc, bx - gw / 2 + 0.35, C + 0.12, SZ1 + 0.08, 0.6, 2.3, 0.04);
       f.box(cc, bx + gw / 2 - 0.35, C + 0.12, SZ1 + 0.08, 0.6, 2.3, 0.04);
+      roomStar(f, bx, ROOM_STARS[num]);
       // A planter with bougainvillea closes most of the patio front.
       f.box(TERRA_D, bx, C, -8.95, bw - 2.6, 0.55, 0.7);
       f.box(0x4a403c, bx, C + 0.55, -8.95, bw - 2.8, 0.04, 0.5);
@@ -484,6 +485,21 @@ function bed(f, x, z, w, blanket) {
   f.box(blanket, x, C + 0.5, z + 0.3, w - 0.02, 0.05, 1.35);
   f.box(TRIM, x, C + 0.5, z - 0.75, w - 0.3, 0.12, 0.38);
   f.solid(x, z, w, 2.05, C + 0.55, 'furniture');
+}
+
+// Kvarteren tänds (feature 140, DESIGN §10.64): a paper advent star hangs in each closed room's glass
+// door, lit after dark (NIGHT) like the town's (town.js adventStar); 107 between them has none: his
+// Christmas present was food and a dalahäst [N]. No draws: [paper, glow] per room.
+const ROOM_STARS = { 105: [RED, 0xff7a58], 109: [0xfafafa, 0xfff4d8], 111: [ORANGE, 0xffb45a], 115: [SUN, 0xffe27a] };
+function roomStar(f, bx, [c, g]) {
+  const y = C + 1.7, z = SZ1 + 0.16;
+  f.boxC(c, bx, y, z, 0.5, 0.5, 0.1, 0, 0, PI / 4);
+  f.boxC(c, bx, y, z, 0.5, 0.5, 0.1);
+  f.boxC(0xfff1b8, bx, y, z + 0.03, 0.18, 0.18, 0.1, 0, 0, PI / 4);
+  f.boxC(0xfafafa, bx, C + 2.255, z, 0.02, 0.61, 0.02);   // its string, from the lintel
+  if (!NIGHT) return;
+  f.boxC(g, bx, y, z + 0.085, 0.42, 0.42, 0.01, 0, 0, PI / 4, NIGHT);
+  f.boxC(g, bx, y, z + 0.085, 0.42, 0.42, 0.01, 0, 0, 0, NIGHT);
 }
 
 // Room 107: Stig-Helmer and Ole share it (overbooking). Two single beds, Ole's boombox, and over

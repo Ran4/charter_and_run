@@ -510,6 +510,12 @@ reagera och sikta. Misslyckas du väljer du: **E** försöker igen från senaste
   redan från vägen. Försäljaren står kvar vid sitt bord vid grinden, men visningsreplikerna är borta:
   "Tjena moss… Jag var tvungen att sälja tomten i morse. De skrev på.", och i nästa andetag försöker
   han sälja tomten bredvid ("50 000 är kontantinsatsen.").
+- **Kvarteren tänds** (på kvällen och natten): när det mörknar tänds fönstren i lägenhetshotellen och
+  bungalowerna, ungefär vartannat i varmt gult eller dovt orange, och här och där lyser ett blått tv-sken
+  (bara ljus, ingen bild). Lobbyerna i gatuplanet lyser, och svenskarnas pappstjärnor i fönstren får eget
+  sken. På Hotel Flamencos bottenvåning hänger en adventsstjärna i rum 105, 109, 111 och 115, men inte i
+  rum 107: Stig-Helmers julklapp var ju julmat och en dalahäst. Ljusen syns också i grisfestens natt och i
+  solnedgångarna. Påhittad scenografi i andan "svenskar utomlands".
 - **Små grodorna i poolen** (efter slutet): julfesten är inte riktigt över. Varje gång du kommer in
   på Flamencos pooldäck (mellan nio på morgonen och elva på kvällen) vadar SunTrip-gänget ut i den
   grunda änden och ställer sig i ring runt Lasse i tomteluva. Affe spelar Små grodorna på dragspelet,

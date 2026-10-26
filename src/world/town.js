@@ -252,13 +252,36 @@ function pool(f, lx, lz, w, d, rimC = 0xeae6dc) {
   f.box(0xd8dde2, lx + w / 2 - 1.1, CURB, lz - d / 2 - 0.15, 0.06, 0.9, 0.06);
 }
 
-// A paper advent star in a window (the Swedish guests brought one; §6.9 charter Sweden).
+// Kvarteren tänds (feature 140, DESIGN §10.64): after dark the apartment slabs' and the bungalows'
+// windows light up in nightGlow, and so do the paper advent stars. Each lot draws from its own `lit`
+// (residential: mulberry32(9000 + …)), never the block's `r`, so the world builds as before. A pane is
+// 0.004 deep, a few millimetres in front of its glass. `LIT_STATS` counts what was lit (the scenario).
+const LIT = [0xffd890, 0xffe6b0, 0xffc870, 0xffd890, 0xe8a060];   // the hotels' warm NIGHT_COLS and a dull orange
+const TV = 0x8fb0f0;   // a television's cold blue: plain light, no picture (§1.5)
+const STAR_GLOW = new Map([[C.red, 0xff7a58], [0xfafafa, 0xfff4d8], [C.orange, 0xffb45a], [C.sun, 0xffe27a]]);
+export const LIT_STATS = { slabs: 0, bungalows: 0, windows: 0, panes: 0, tv: 0, lobbies: 0, stars: 0 };
+// A window's pane with chance `p` (a share `tv` of them blue), local to the lot frame like f.boxC.
+function litPane(f, lit, p, tv, lx, y, lz, w, h, d) {
+  LIT_STATS.windows++;
+  if (lit() >= p) return;
+  const blue = lit() < tv;
+  f.boxC(blue ? TV : LIT[Math.floor(lit() * LIT.length)], lx, y, lz, w, h, d, 0, 0, 0, nightGlow);
+  LIT_STATS.panes++;
+  if (blue) LIT_STATS.tv++;
+}
+
+// A paper advent star in a window (the Swedish guests brought one; §6.9 charter Sweden). After dark
+// its own glow (§10.64) shines just in front of the paper, a little smaller, so the outlined rim frames it.
 function adventStar(f, lx, y, lz, r = rnd) {
   const c = pick([C.red, 0xfafafa, C.orange, C.sun], r);
   f.boxC(c, lx, y, lz, 0.5, 0.5, 0.1, 0, 0, Math.PI / 4);
   f.boxC(c, lx, y, lz, 0.5, 0.5, 0.1);
   f.boxC(0xfff1b8, lx, y, lz - 0.03, 0.18, 0.18, 0.1, 0, 0, Math.PI / 4);
   f.boxC(0xfafafa, lx, y + 0.6, lz, 0.02, 0.7, 0.02);
+  const g = STAR_GLOW.get(c);
+  f.boxC(g, lx, y, lz - 0.085, 0.42, 0.42, 0.01, 0, 0, Math.PI / 4, nightGlow);
+  f.boxC(g, lx, y, lz - 0.085, 0.42, 0.42, 0.01, 0, 0, 0, nightGlow);
+  LIT_STATS.stars++;
 }
 
 // Hotel trampoline ("studsmatta"): a 'bounce' floor.
@@ -294,7 +317,8 @@ function frontWall(f, LW, lz, gaps) {
 // bungalowR lot: one-storey whitewashed cube on red-ochre gravel, flat or terracotta roof, garden
 // wall, bougainvillea, butano bottles, sometimes a pool, a trampoline (1 in 8), a parked car.
 
-function bungalowLot(f, LW, LD, r, corner = false) {
+// `lit`: the lot's own draws for its lit windows (§10.64).
+function bungalowLot(f, LW, LD, r, corner, lit) {
   const hw = R(8.2, 11, r), hd = R(6.8, 8.8, r), h = R(3.0, 3.4, r);
   const front = R(7.2, 9, r), hx = R(-1, 1, r), cz = front + hd / 2;
   const wall = pick(WALLS, r), door = pick(DOORS, r), shut = pick(SHUTTERS, r);
@@ -336,12 +360,14 @@ function bungalowLot(f, LW, LD, r, corner = false) {
     f.box(shut, wx + 0.85, CURB + 0.95, front - 0.07, 0.52, 1.36, 0.08);
     f.box(C.white2, wx, CURB + 0.9, front - 0.12, 1.5, 0.08, 0.24);
     if (r() < 0.2) adventStar(f, wx, CURB + 1.55, front - 0.14, r);
+    litPane(f, lit, 0.4, 0.12, wx, CURB + 1.625, front - 0.095, 1.1, 1.2, 0.004);
   }
-  for (const s of [-1, 1]) {   // back windows
+  for (const s of [-1, 1]) {   // back windows (their glass sits in the wall: the pane goes on its face)
     const wx = hx + s * hw * 0.28;
     f.box(C.glassDark, wx, CURB + 1.0, front + hd - 0.06, 1.15, 1.25, 0.1);
     f.box(shut, wx - 0.85, CURB + 0.95, front + hd - 0.03, 0.52, 1.36, 0.08);
     f.box(shut, wx + 0.85, CURB + 0.95, front + hd - 0.03, 0.52, 1.36, 0.08);
+    litPane(f, lit, 0.4, 0.12, wx, CURB + 1.625, front + hd + 0.006, 1.1, 1.2, 0.004);
   }
   f.box(door, hx, CURB, front + hd - 0.06, 1.0, 2.1, 0.12);
   for (const s of [-1, 1]) {   // side windows
@@ -349,7 +375,9 @@ function bungalowLot(f, LW, LD, r, corner = false) {
     f.boxC(C.glassDark, sx, CURB + 1.6, cz, 0.1, 1.1, 1.0);
     f.boxC(shut, sx + s * 0.03, CURB + 1.6, cz - 0.75, 0.08, 1.2, 0.45);
     f.boxC(shut, sx + s * 0.03, CURB + 1.6, cz + 0.75, 0.08, 1.2, 0.45);
+    litPane(f, lit, 0.4, 0.12, sx + s * 0.054, CURB + 1.6, cz, 0.004, 1.05, 0.95);
   }
+  LIT_STATS.bungalows++;
   // Arcaded porch (pillars + tiled lintel; you walk under it, 2.5D collision has no ceilings).
   const porch = r() < 0.55;
   if (porch) {
@@ -427,8 +455,9 @@ const CAFES = [
 ];
 
 // A 4-7 storey 1970s apartment-hotel slab: balcony rows, concrete fins, awnings, towels, roof sign.
-// `id`: the residential lot (bi, bj, side, k), for the walkable roofs (ROOF_JUMP).
-function slabLot(f, LW, LD, r, id) {
+// `id`: the residential lot (bi, bj, side, k), for the walkable roofs (ROOF_JUMP); `lit`: the lot's
+// own draws for its lit windows (§10.64).
+function slabLot(f, LW, LD, r, id, lit) {
   const floors = 4 + Math.floor(r() * 4), fh = 2.9, H = floors * fh;
   const w = R(15.2, 17.4, r), d = R(10, 12, r), front = R(6.2, 7.6, r), cz = front + d / 2;
   const wall = pick([C.white, C.white2, C.white, C.cream, C.ochreWall], r);
@@ -439,6 +468,7 @@ function slabLot(f, LW, LD, r, id) {
   // Ground floor: glass lobby band, entrance canopy on two poles, forecourt paving.
   f.box(C.glassDark, 0, CURB, front - 0.04, w - 2.4, 2.4, 0.1);
   f.box(0xd8cbb4, 0, CURB, front - 0.07, w + 0.1, 0.35, 0.12);
+  if (lit() < 0.75) { f.box(0xffe0a0, 0, CURB + 0.35, front - 0.093, w - 2.5, 2.0, 0.004, 0, nightGlow); LIT_STATS.lobbies++; }   // the lobby (§10.64)
   f.box(accent, 0, CURB + 2.65, front - 1.5, 5.4, 0.2, 3.0);
   for (const s of [-1, 1]) { f.box(C.white2, s * 2.5, CURB, front - 2.85, 0.16, 2.65, 0.16); f.circ(s * 2.5, front - 2.85, 0.12, 99, 'pole'); }
   f.ceiling(0, front - 1.5, 5.4, 3.0, CURB + 2.65, CURB + 2.85);   // the chase camera stays under it
@@ -466,7 +496,12 @@ function slabLot(f, LW, LD, r, id) {
       if ((spot.awning = r() < 0.32)) f.boxC(pick(AWNINGS, r), ux, y + fh - 0.45, front - 0.62, uw - 0.5, 0.07, 1.35, 0, -0.32);
       if (r() < 0.35) f.boxC(pick(TOWELS, r), ux + R(-0.6, 0.6, r), y + 0.62, front - 1.44, 0.62, 0.78, 0.04);
       if ((spot.plant = r() < 0.12)) f.boxC(0x2f8a4a, ux - uw / 3, y + 0.4, front - 1.0, 0.5, 0.5, 0.5);   // potted plant
-      if (r() < 0.07) adventStar(f, ux + uw / 4, y + 1.75, front - 0.12, r);                  // Swedes abroad
+      const star = r() < 0.07;
+      if (star) adventStar(f, ux + uw / 4, y + 1.75, front - 0.12, r);                  // Swedes abroad
+      // Its window after dark (§10.64), between the fins and inside the glass's ends; a star's window
+      // is seldom lit too, so the star shows against a dark room.
+      const x0 = Math.max(-w / 2 + 0.42, ux - uw / 2 + 0.13), x1 = Math.min(w / 2 - 0.42, ux + uw / 2 - 0.13);
+      litPane(f, lit, star ? 0.25 : 0.55, 0.09, (x0 + x1) / 2, y + 1.2, front - 0.075, x1 - x0, 1.96, 0.004);
     }
   }
   for (let u = 0; u <= units; u++) f.box(wall === C.white ? C.white2 : C.white, -w / 2 + u * uw, CURB + fh - 0.2, front - 0.72, 0.22, H - fh + 0.2, 1.46);
@@ -477,12 +512,24 @@ function slabLot(f, LW, LD, r, id) {
   f.box(stC, stx, CURB, stz, 3.4, H + 1.6, 2.4);
   f.box(0xd8e6ee, stx + st * 1.71, CURB + 1.2, stz, 0.06, H - 1.0, 0.9);
   const stair = f.solid(stx, stz, 3.4, 2.4, 99);
-  // Sides and back: small windows per floor.
+  // Sides and back: small windows per floor. After dark (§10.64) each side window may be lit, and the
+  // back's glass strip in pieces a balcony unit wide, none behind the stair tower.
   for (let fl = 0; fl < floors; fl++) {
     const y = CURB + fl * fh + 1.0;
-    for (const s of [-1, 1]) f.boxC(C.glassDark, s * (w / 2 + 0.03), y + 0.55, cz + d * 0.22, 0.08, 1.1, 1.2);
-    if (fl > 0) f.boxC(C.glass, 0, y + 0.5, front + d + 0.03, w - 2, 1.2, 0.08);
+    for (const s of [-1, 1]) {
+      f.boxC(C.glassDark, s * (w / 2 + 0.03), y + 0.55, cz + d * 0.22, 0.08, 1.1, 1.2);
+      litPane(f, lit, 0.35, 0.09, s * (w / 2 + 0.075), y + 0.55, cz + d * 0.22, 0.004, 1.05, 1.15);
+    }
+    if (fl > 0) {
+      f.boxC(C.glass, 0, y + 0.5, front + d + 0.03, w - 2, 1.2, 0.08);
+      for (let u = 0; u < units; u++) {
+        const x0 = Math.max(-w / 2 + 1.02, -w / 2 + u * uw + 0.1), x1 = Math.min(w / 2 - 1.02, -w / 2 + (u + 1) * uw - 0.1);
+        if (x1 > stx - 1.75 && x0 < stx + 1.75) continue;
+        litPane(f, lit, 0.4, 0.09, (x0 + x1) / 2, y + 0.5, front + d + 0.075, x1 - x0, 1.15, 0.004);
+      }
+    }
   }
+  LIT_STATS.slabs++;
   // Roof: parapet, lift room, water tanks, antennas, the hotel sign on posts.
   const top = CURB + H;
   f.box(C.white2, 0, top, cz, w + 0.3, 0.6, d + 0.3);
@@ -676,8 +723,9 @@ function residential(bi, bj, b, S, F, type) {
       let f;
       if (!ew) f = side === 0 ? new Frame(S, F, b.x0 + along, b.z0, 0) : new Frame(S, F, b.x1 - along, b.z1, Math.PI);
       else f = side === 0 ? new Frame(S, F, b.x0, b.z1 - along, Math.PI / 2) : new Frame(S, F, b.x1, b.z0 + along, -Math.PI / 2);
-      if (type === 'bungalowR') bungalowLot(f, LW, LD, r, side === 0 && k === 0);
-      else if (k !== special) slabLot(f, LW, LD, r, `${bi},${bj},${side},${k}`);
+      const lit = mulberry32(9000 + bi * 13 + bj * 101 + side * 3 + k);   // its lit windows' own draws (§10.64)
+      if (type === 'bungalowR') bungalowLot(f, LW, LD, r, side === 0 && k === 0, lit);
+      else if (k !== special) slabLot(f, LW, LD, r, `${bi},${bj},${side},${k}`, lit);
       else if ((bi + bj + side) % 2) frameLot(f, LW, LD, r);
       else poolLot(f, LW, LD, r);
     }
